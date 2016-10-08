@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcFundamentalInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcFundamentalInformation" >
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="sec_cust_code" property="secCustCode" jdbcType="VARCHAR" />
+    <result column="sec_cust_name" property="secCustName" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="platform_type" property="platformType" jdbcType="VARCHAR" />
+    <result column="order_source" property="orderSource" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="finished_time" property="finishedTime" jdbcType="TIMESTAMP" />
+    <result column="abolish_mark" property="abolishMark" jdbcType="INTEGER" />
+    <result column="abolish_time" property="abolishTime" jdbcType="TIMESTAMP" />
+    <result column="abolisher" property="abolisher" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    order_code, order_time, cust_code, cust_name, sec_cust_code, sec_cust_name, order_type, 
+    business_type, cust_order_code, notes, store_code, store_name, platform_type, order_source, 
+    product_type, product_name, finished_time, abolish_mark, abolish_time, abolisher, 
+    creation_time, creator
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xescm.ofc.domain.OfcFundamentalInformationExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ofc_fundamental_information
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.xescm.ofc.domain.OfcFundamentalInformationExample" >
+    delete from ofc_fundamental_information
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" >
+    insert into ofc_fundamental_information (order_code, order_time, cust_code, 
+      cust_name, sec_cust_code, sec_cust_name, 
+      order_type, business_type, cust_order_code, 
+      notes, store_code, store_name, 
+      platform_type, order_source, product_type, 
+      product_name, finished_time, abolish_mark, 
+      abolish_time, abolisher, creation_time, 
+      creator)
+    values (#{orderCode,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP}, #{custCode,jdbcType=VARCHAR}, 
+      #{custName,jdbcType=VARCHAR}, #{secCustCode,jdbcType=VARCHAR}, #{secCustName,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{custOrderCode,jdbcType=VARCHAR}, 
+      #{notes,jdbcType=VARCHAR}, #{storeCode,jdbcType=VARCHAR}, #{storeName,jdbcType=VARCHAR}, 
+      #{platformType,jdbcType=VARCHAR}, #{orderSource,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{finishedTime,jdbcType=TIMESTAMP}, #{abolishMark,jdbcType=INTEGER}, 
+      #{abolishTime,jdbcType=TIMESTAMP}, #{abolisher,jdbcType=VARCHAR}, #{creationTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" >
+    insert into ofc_fundamental_information
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderCode != null" >
+        order_code,
+      </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
+      <if test="custCode != null" >
+        cust_code,
+      </if>
+      <if test="custName != null" >
+        cust_name,
+      </if>
+      <if test="secCustCode != null" >
+        sec_cust_code,
+      </if>
+      <if test="secCustName != null" >
+        sec_cust_name,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="businessType != null" >
+        business_type,
+      </if>
+      <if test="custOrderCode != null" >
+        cust_order_code,
+      </if>
+      <if test="notes != null" >
+        notes,
+      </if>
+      <if test="storeCode != null" >
+        store_code,
+      </if>
+      <if test="storeName != null" >
+        store_name,
+      </if>
+      <if test="platformType != null" >
+        platform_type,
+      </if>
+      <if test="orderSource != null" >
+        order_source,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="finishedTime != null" >
+        finished_time,
+      </if>
+      <if test="abolishMark != null" >
+        abolish_mark,
+      </if>
+      <if test="abolishTime != null" >
+        abolish_time,
+      </if>
+      <if test="abolisher != null" >
+        abolisher,
+      </if>
+      <if test="creationTime != null" >
+        creation_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="custCode != null" >
+        #{custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="secCustCode != null" >
+        #{secCustCode,jdbcType=VARCHAR},
+      </if>
+      <if test="secCustName != null" >
+        #{secCustName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="custOrderCode != null" >
+        #{custOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="notes != null" >
+        #{notes,jdbcType=VARCHAR},
+      </if>
+      <if test="storeCode != null" >
+        #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null" >
+        #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="platformType != null" >
+        #{platformType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSource != null" >
+        #{orderSource,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="finishedTime != null" >
+        #{finishedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="abolishMark != null" >
+        #{abolishMark,jdbcType=INTEGER},
+      </if>
+      <if test="abolishTime != null" >
+        #{abolishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="abolisher != null" >
+        #{abolisher,jdbcType=VARCHAR},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xescm.ofc.domain.OfcFundamentalInformationExample" resultType="java.lang.Integer" >
+    select count(*) from ofc_fundamental_information
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ofc_fundamental_information
+    <set >
+      <if test="record.orderCode != null" >
+        order_code = #{record.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderTime != null" >
+        order_time = #{record.orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.custCode != null" >
+        cust_code = #{record.custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custName != null" >
+        cust_name = #{record.custName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secCustCode != null" >
+        sec_cust_code = #{record.secCustCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secCustName != null" >
+        sec_cust_name = #{record.secCustName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderType != null" >
+        order_type = #{record.orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessType != null" >
+        business_type = #{record.businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custOrderCode != null" >
+        cust_order_code = #{record.custOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notes != null" >
+        notes = #{record.notes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeCode != null" >
+        store_code = #{record.storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeName != null" >
+        store_name = #{record.storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platformType != null" >
+        platform_type = #{record.platformType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderSource != null" >
+        order_source = #{record.orderSource,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productType != null" >
+        product_type = #{record.productType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productName != null" >
+        product_name = #{record.productName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.finishedTime != null" >
+        finished_time = #{record.finishedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.abolishMark != null" >
+        abolish_mark = #{record.abolishMark,jdbcType=INTEGER},
+      </if>
+      <if test="record.abolishTime != null" >
+        abolish_time = #{record.abolishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.abolisher != null" >
+        abolisher = #{record.abolisher,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creationTime != null" >
+        creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null" >
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ofc_fundamental_information
+    set order_code = #{record.orderCode,jdbcType=VARCHAR},
+      order_time = #{record.orderTime,jdbcType=TIMESTAMP},
+      cust_code = #{record.custCode,jdbcType=VARCHAR},
+      cust_name = #{record.custName,jdbcType=VARCHAR},
+      sec_cust_code = #{record.secCustCode,jdbcType=VARCHAR},
+      sec_cust_name = #{record.secCustName,jdbcType=VARCHAR},
+      order_type = #{record.orderType,jdbcType=VARCHAR},
+      business_type = #{record.businessType,jdbcType=VARCHAR},
+      cust_order_code = #{record.custOrderCode,jdbcType=VARCHAR},
+      notes = #{record.notes,jdbcType=VARCHAR},
+      store_code = #{record.storeCode,jdbcType=VARCHAR},
+      store_name = #{record.storeName,jdbcType=VARCHAR},
+      platform_type = #{record.platformType,jdbcType=VARCHAR},
+      order_source = #{record.orderSource,jdbcType=VARCHAR},
+      product_type = #{record.productType,jdbcType=VARCHAR},
+      product_name = #{record.productName,jdbcType=VARCHAR},
+      finished_time = #{record.finishedTime,jdbcType=TIMESTAMP},
+      abolish_mark = #{record.abolishMark,jdbcType=INTEGER},
+      abolish_time = #{record.abolishTime,jdbcType=TIMESTAMP},
+      abolisher = #{record.abolisher,jdbcType=VARCHAR},
+      creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

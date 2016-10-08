@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcDistributionBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    <id column="trans_code" property="transCode" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="urgent" property="urgent" jdbcType="INTEGER" />
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="departure_place_code" property="departurePlaceCode" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="destination_code" property="destinationCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="cubage_str" property="cubageStr" jdbcType="DECIMAL" />
+    <result column="total_standard_box" property="totalStandardBox" jdbcType="INTEGER" />
+    <result column="trans_require" property="transRequire" jdbcType="VARCHAR" />
+    <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+    <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
+    <result column="consignor_code" property="consignorCode" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignee_code" property="consigneeCode" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
+    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    trans_code, goods_type, urgent, departure_place, departure_place_code, destination, 
+    destination_code, quantity, weight, cubage, cubage_str, total_standard_box, trans_require, 
+    pickup_time, expected_arrived_time, consignor_code, consignor_name, consignee_code, 
+    consignee_name, carrier_code, carrier_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ofc_distribution_basic_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ofc_distribution_basic_info
+    where trans_code = #{transCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ofc_distribution_basic_info
+    where trans_code = #{transCode,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfoExample" >
+    delete from ofc_distribution_basic_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    insert into ofc_distribution_basic_info (trans_code, goods_type, urgent, 
+      departure_place, departure_place_code, destination, 
+      destination_code, quantity, weight, 
+      cubage, cubage_str, total_standard_box, 
+      trans_require, pickup_time, expected_arrived_time, 
+      consignor_code, consignor_name, consignee_code, 
+      consignee_name, carrier_code, carrier_name
+      )
+    values (#{transCode,jdbcType=VARCHAR}, #{goodsType,jdbcType=VARCHAR}, #{urgent,jdbcType=INTEGER}, 
+      #{departurePlace,jdbcType=VARCHAR}, #{departurePlaceCode,jdbcType=VARCHAR}, #{destination,jdbcType=VARCHAR}, 
+      #{destinationCode,jdbcType=VARCHAR}, #{quantity,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL}, 
+      #{cubage,jdbcType=DECIMAL}, #{cubageStr,jdbcType=DECIMAL}, #{totalStandardBox,jdbcType=INTEGER}, 
+      #{transRequire,jdbcType=VARCHAR}, #{pickupTime,jdbcType=TIMESTAMP}, #{expectedArrivedTime,jdbcType=TIMESTAMP}, 
+      #{consignorCode,jdbcType=VARCHAR}, #{consignorName,jdbcType=VARCHAR}, #{consigneeCode,jdbcType=VARCHAR}, 
+      #{consigneeName,jdbcType=VARCHAR}, #{carrierCode,jdbcType=VARCHAR}, #{carrierName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    insert into ofc_distribution_basic_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="transCode != null" >
+        trans_code,
+      </if>
+      <if test="goodsType != null" >
+        goods_type,
+      </if>
+      <if test="urgent != null" >
+        urgent,
+      </if>
+      <if test="departurePlace != null" >
+        departure_place,
+      </if>
+      <if test="departurePlaceCode != null" >
+        departure_place_code,
+      </if>
+      <if test="destination != null" >
+        destination,
+      </if>
+      <if test="destinationCode != null" >
+        destination_code,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="cubage != null" >
+        cubage,
+      </if>
+      <if test="cubageStr != null" >
+        cubage_str,
+      </if>
+      <if test="totalStandardBox != null" >
+        total_standard_box,
+      </if>
+      <if test="transRequire != null" >
+        trans_require,
+      </if>
+      <if test="pickupTime != null" >
+        pickup_time,
+      </if>
+      <if test="expectedArrivedTime != null" >
+        expected_arrived_time,
+      </if>
+      <if test="consignorCode != null" >
+        consignor_code,
+      </if>
+      <if test="consignorName != null" >
+        consignor_name,
+      </if>
+      <if test="consigneeCode != null" >
+        consignee_code,
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name,
+      </if>
+      <if test="carrierCode != null" >
+        carrier_code,
+      </if>
+      <if test="carrierName != null" >
+        carrier_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="transCode != null" >
+        #{transCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsType != null" >
+        #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="urgent != null" >
+        #{urgent,jdbcType=INTEGER},
+      </if>
+      <if test="departurePlace != null" >
+        #{departurePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="departurePlaceCode != null" >
+        #{departurePlaceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="destination != null" >
+        #{destination,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationCode != null" >
+        #{destinationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="cubage != null" >
+        #{cubage,jdbcType=DECIMAL},
+      </if>
+      <if test="cubageStr != null" >
+        #{cubageStr,jdbcType=DECIMAL},
+      </if>
+      <if test="totalStandardBox != null" >
+        #{totalStandardBox,jdbcType=INTEGER},
+      </if>
+      <if test="transRequire != null" >
+        #{transRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupTime != null" >
+        #{pickupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expectedArrivedTime != null" >
+        #{expectedArrivedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consignorCode != null" >
+        #{consignorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorName != null" >
+        #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeCode != null" >
+        #{consigneeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeName != null" >
+        #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="carrierCode != null" >
+        #{carrierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="carrierName != null" >
+        #{carrierName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ofc_distribution_basic_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ofc_distribution_basic_info
+    <set >
+      <if test="record.transCode != null" >
+        trans_code = #{record.transCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodsType != null" >
+        goods_type = #{record.goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urgent != null" >
+        urgent = #{record.urgent,jdbcType=INTEGER},
+      </if>
+      <if test="record.departurePlace != null" >
+        departure_place = #{record.departurePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departurePlaceCode != null" >
+        departure_place_code = #{record.departurePlaceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.destination != null" >
+        destination = #{record.destination,jdbcType=VARCHAR},
+      </if>
+      <if test="record.destinationCode != null" >
+        destination_code = #{record.destinationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quantity != null" >
+        quantity = #{record.quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="record.weight != null" >
+        weight = #{record.weight,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cubage != null" >
+        cubage = #{record.cubage,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cubageStr != null" >
+        cubage_str = #{record.cubageStr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.totalStandardBox != null" >
+        total_standard_box = #{record.totalStandardBox,jdbcType=INTEGER},
+      </if>
+      <if test="record.transRequire != null" >
+        trans_require = #{record.transRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pickupTime != null" >
+        pickup_time = #{record.pickupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expectedArrivedTime != null" >
+        expected_arrived_time = #{record.expectedArrivedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.consignorCode != null" >
+        consignor_code = #{record.consignorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consignorName != null" >
+        consignor_name = #{record.consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consigneeCode != null" >
+        consignee_code = #{record.consigneeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consigneeName != null" >
+        consignee_name = #{record.consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.carrierCode != null" >
+        carrier_code = #{record.carrierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.carrierName != null" >
+        carrier_name = #{record.carrierName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ofc_distribution_basic_info
+    set trans_code = #{record.transCode,jdbcType=VARCHAR},
+      goods_type = #{record.goodsType,jdbcType=VARCHAR},
+      urgent = #{record.urgent,jdbcType=INTEGER},
+      departure_place = #{record.departurePlace,jdbcType=VARCHAR},
+      departure_place_code = #{record.departurePlaceCode,jdbcType=VARCHAR},
+      destination = #{record.destination,jdbcType=VARCHAR},
+      destination_code = #{record.destinationCode,jdbcType=VARCHAR},
+      quantity = #{record.quantity,jdbcType=DECIMAL},
+      weight = #{record.weight,jdbcType=DECIMAL},
+      cubage = #{record.cubage,jdbcType=DECIMAL},
+      cubage_str = #{record.cubageStr,jdbcType=DECIMAL},
+      total_standard_box = #{record.totalStandardBox,jdbcType=INTEGER},
+      trans_require = #{record.transRequire,jdbcType=VARCHAR},
+      pickup_time = #{record.pickupTime,jdbcType=TIMESTAMP},
+      expected_arrived_time = #{record.expectedArrivedTime,jdbcType=TIMESTAMP},
+      consignor_code = #{record.consignorCode,jdbcType=VARCHAR},
+      consignor_name = #{record.consignorName,jdbcType=VARCHAR},
+      consignee_code = #{record.consigneeCode,jdbcType=VARCHAR},
+      consignee_name = #{record.consigneeName,jdbcType=VARCHAR},
+      carrier_code = #{record.carrierCode,jdbcType=VARCHAR},
+      carrier_name = #{record.carrierName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    update ofc_distribution_basic_info
+    <set >
+      <if test="goodsType != null" >
+        goods_type = #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="urgent != null" >
+        urgent = #{urgent,jdbcType=INTEGER},
+      </if>
+      <if test="departurePlace != null" >
+        departure_place = #{departurePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="departurePlaceCode != null" >
+        departure_place_code = #{departurePlaceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="destination != null" >
+        destination = #{destination,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationCode != null" >
+        destination_code = #{destinationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="cubage != null" >
+        cubage = #{cubage,jdbcType=DECIMAL},
+      </if>
+      <if test="cubageStr != null" >
+        cubage_str = #{cubageStr,jdbcType=DECIMAL},
+      </if>
+      <if test="totalStandardBox != null" >
+        total_standard_box = #{totalStandardBox,jdbcType=INTEGER},
+      </if>
+      <if test="transRequire != null" >
+        trans_require = #{transRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupTime != null" >
+        pickup_time = #{pickupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expectedArrivedTime != null" >
+        expected_arrived_time = #{expectedArrivedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consignorCode != null" >
+        consignor_code = #{consignorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorName != null" >
+        consignor_name = #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeCode != null" >
+        consignee_code = #{consigneeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name = #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="carrierCode != null" >
+        carrier_code = #{carrierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="carrierName != null" >
+        carrier_name = #{carrierName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where trans_code = #{transCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    update ofc_distribution_basic_info
+    set goods_type = #{goodsType,jdbcType=VARCHAR},
+      urgent = #{urgent,jdbcType=INTEGER},
+      departure_place = #{departurePlace,jdbcType=VARCHAR},
+      departure_place_code = #{departurePlaceCode,jdbcType=VARCHAR},
+      destination = #{destination,jdbcType=VARCHAR},
+      destination_code = #{destinationCode,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      weight = #{weight,jdbcType=DECIMAL},
+      cubage = #{cubage,jdbcType=DECIMAL},
+      cubage_str = #{cubageStr,jdbcType=DECIMAL},
+      total_standard_box = #{totalStandardBox,jdbcType=INTEGER},
+      trans_require = #{transRequire,jdbcType=VARCHAR},
+      pickup_time = #{pickupTime,jdbcType=TIMESTAMP},
+      expected_arrived_time = #{expectedArrivedTime,jdbcType=TIMESTAMP},
+      consignor_code = #{consignorCode,jdbcType=VARCHAR},
+      consignor_name = #{consignorName,jdbcType=VARCHAR},
+      consignee_code = #{consigneeCode,jdbcType=VARCHAR},
+      consignee_name = #{consigneeName,jdbcType=VARCHAR},
+      carrier_code = #{carrierCode,jdbcType=VARCHAR},
+      carrier_name = #{carrierName,jdbcType=VARCHAR}
+    where trans_code = #{transCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

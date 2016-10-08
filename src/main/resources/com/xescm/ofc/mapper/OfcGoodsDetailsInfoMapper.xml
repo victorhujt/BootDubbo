@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    <id column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="reserved_field01" property="reservedField01" jdbcType="VARCHAR" />
+    <result column="reserved_field02" property="reservedField02" jdbcType="VARCHAR" />
+    <result column="reserved_field03" property="reservedField03" jdbcType="VARCHAR" />
+    <result column="reserved_field04" property="reservedField04" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    goods_code, goods_name, goods_spec, unit, quantity, unit_price, reserved_field01, 
+    reserved_field02, reserved_field03, reserved_field04
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ofc_goods_details_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ofc_goods_details_info
+    where goods_code = #{goodsCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ofc_goods_details_info
+    where goods_code = #{goodsCode,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfoExample" >
+    delete from ofc_goods_details_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    insert into ofc_goods_details_info (goods_code, goods_name, goods_spec, 
+      unit, quantity, unit_price, 
+      reserved_field01, reserved_field02, reserved_field03, 
+      reserved_field04)
+    values (#{goodsCode,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR}, #{goodsSpec,jdbcType=VARCHAR}, 
+      #{unit,jdbcType=VARCHAR}, #{quantity,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, 
+      #{reservedField01,jdbcType=VARCHAR}, #{reservedField02,jdbcType=VARCHAR}, #{reservedField03,jdbcType=VARCHAR}, 
+      #{reservedField04,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    insert into ofc_goods_details_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="goodsName != null" >
+        goods_name,
+      </if>
+      <if test="goodsSpec != null" >
+        goods_spec,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="unitPrice != null" >
+        unit_price,
+      </if>
+      <if test="reservedField01 != null" >
+        reserved_field01,
+      </if>
+      <if test="reservedField02 != null" >
+        reserved_field02,
+      </if>
+      <if test="reservedField03 != null" >
+        reserved_field03,
+      </if>
+      <if test="reservedField04 != null" >
+        reserved_field04,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSpec != null" >
+        #{goodsSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="reservedField01 != null" >
+        #{reservedField01,jdbcType=VARCHAR},
+      </if>
+      <if test="reservedField02 != null" >
+        #{reservedField02,jdbcType=VARCHAR},
+      </if>
+      <if test="reservedField03 != null" >
+        #{reservedField03,jdbcType=VARCHAR},
+      </if>
+      <if test="reservedField04 != null" >
+        #{reservedField04,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ofc_goods_details_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ofc_goods_details_info
+    <set >
+      <if test="record.goodsCode != null" >
+        goods_code = #{record.goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodsName != null" >
+        goods_name = #{record.goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodsSpec != null" >
+        goods_spec = #{record.goodsSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unit != null" >
+        unit = #{record.unit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quantity != null" >
+        quantity = #{record.quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="record.unitPrice != null" >
+        unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.reservedField01 != null" >
+        reserved_field01 = #{record.reservedField01,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reservedField02 != null" >
+        reserved_field02 = #{record.reservedField02,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reservedField03 != null" >
+        reserved_field03 = #{record.reservedField03,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reservedField04 != null" >
+        reserved_field04 = #{record.reservedField04,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ofc_goods_details_info
+    set goods_code = #{record.goodsCode,jdbcType=VARCHAR},
+      goods_name = #{record.goodsName,jdbcType=VARCHAR},
+      goods_spec = #{record.goodsSpec,jdbcType=VARCHAR},
+      unit = #{record.unit,jdbcType=VARCHAR},
+      quantity = #{record.quantity,jdbcType=DECIMAL},
+      unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      reserved_field01 = #{record.reservedField01,jdbcType=VARCHAR},
+      reserved_field02 = #{record.reservedField02,jdbcType=VARCHAR},
+      reserved_field03 = #{record.reservedField03,jdbcType=VARCHAR},
+      reserved_field04 = #{record.reservedField04,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    update ofc_goods_details_info
+    <set >
+      <if test="goodsName != null" >
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSpec != null" >
+        goods_spec = #{goodsSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="reservedField01 != null" >
+        reserved_field01 = #{reservedField01,jdbcType=VARCHAR},
+      </if>
+      <if test="reservedField02 != null" >
+        reserved_field02 = #{reservedField02,jdbcType=VARCHAR},
+      </if>
+      <if test="reservedField03 != null" >
+        reserved_field03 = #{reservedField03,jdbcType=VARCHAR},
+      </if>
+      <if test="reservedField04 != null" >
+        reserved_field04 = #{reservedField04,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where goods_code = #{goodsCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    update ofc_goods_details_info
+    set goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_spec = #{goodsSpec,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      reserved_field01 = #{reservedField01,jdbcType=VARCHAR},
+      reserved_field02 = #{reservedField02,jdbcType=VARCHAR},
+      reserved_field03 = #{reservedField03,jdbcType=VARCHAR},
+      reserved_field04 = #{reservedField04,jdbcType=VARCHAR}
+    where goods_code = #{goodsCode,jdbcType=VARCHAR}
+  </update>
+</mapper>
