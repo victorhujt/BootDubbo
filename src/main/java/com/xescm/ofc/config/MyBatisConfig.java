@@ -42,15 +42,3 @@ public class MyBatisConfig {
     }
 
 }
-
-/*
-public class MyBatisConfig {
-
-    @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource);
-        return sessionFactory.getObject();
-    }
-}
-*/
