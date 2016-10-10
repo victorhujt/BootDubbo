@@ -71,6 +71,28 @@ public class OfcGoodsDetailsInfo {
     private String notes;
 
     /**
+     * 创建日期
+     */
+    @Column(name = "creation_time")
+    private Date creationTime;
+
+    /**
+     * 创建人员
+     */
+    private String creator;
+
+    /**
+     * 操作人员
+     */
+    private String operator;
+
+    /**
+     * 操作时间
+     */
+    @Column(name = "oper_time")
+    private Date operTime;
+
+    /**
      * 获取货品代码
      *
      * @return goods_code - 货品代码
@@ -266,5 +288,77 @@ public class OfcGoodsDetailsInfo {
      */
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    /**
+     * 获取创建日期
+     *
+     * @return creation_time - 创建日期
+     */
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    /**
+     * 设置创建日期
+     *
+     * @param creationTime 创建日期
+     */
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    /**
+     * 获取创建人员
+     *
+     * @return creator - 创建人员
+     */
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * 设置创建人员
+     *
+     * @param creator 创建人员
+     */
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * 获取操作人员
+     *
+     * @return operator - 操作人员
+     */
+    public String getOperator() {
+        return operator;
+    }
+
+    /**
+     * 设置操作人员
+     *
+     * @param operator 操作人员
+     */
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    /**
+     * 获取操作时间
+     *
+     * @return oper_time - 操作时间
+     */
+    public Date getOperTime() {
+        return operTime;
+    }
+
+    /**
+     * 设置操作时间
+     *
+     * @param operTime 操作时间
+     */
+    public void setOperTime(Date operTime) {
+        this.operTime = operTime;
     }
 }

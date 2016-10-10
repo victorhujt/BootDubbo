@@ -15,5 +15,9 @@
     <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
     <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>

@@ -14,5 +14,6 @@
     <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
     <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

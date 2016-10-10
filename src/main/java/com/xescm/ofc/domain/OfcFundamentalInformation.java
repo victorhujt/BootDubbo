@@ -137,6 +137,17 @@ public class OfcFundamentalInformation {
     private String creator;
 
     /**
+     * 操作人员
+     */
+    private String operator;
+
+    /**
+     * 操作时间
+     */
+    @Column(name = "operTime")
+    private Date opertime;
+
+    /**
      * 获取订单编号
      *
      * @return order_code - 订单编号
@@ -530,5 +541,41 @@ public class OfcFundamentalInformation {
      */
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    /**
+     * 获取操作人员
+     *
+     * @return operator - 操作人员
+     */
+    public String getOperator() {
+        return operator;
+    }
+
+    /**
+     * 设置操作人员
+     *
+     * @param operator 操作人员
+     */
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    /**
+     * 获取操作时间
+     *
+     * @return operTime - 操作时间
+     */
+    public Date getOpertime() {
+        return opertime;
+    }
+
+    /**
+     * 设置操作时间
+     *
+     * @param opertime 操作时间
+     */
+    public void setOpertime(Date opertime) {
+        this.opertime = opertime;
     }
 }

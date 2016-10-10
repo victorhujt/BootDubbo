@@ -1,7 +1,6 @@
 package com.xescm.ofc.service.impl;
 
 
-import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import org.springframework.stereotype.Service;
 

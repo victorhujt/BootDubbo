@@ -27,5 +27,7 @@
     <result column="abolisher" property="abolisher" jdbcType="VARCHAR" />
     <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
     <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operTime" property="opertime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>

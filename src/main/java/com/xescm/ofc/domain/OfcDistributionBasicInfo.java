@@ -129,6 +129,28 @@ public class OfcDistributionBasicInfo {
     private String orderCode;
 
     /**
+     * 创建时间
+     */
+    @Column(name = "creation_time")
+    private Date creationTime;
+
+    /**
+     * 创建人员
+     */
+    private String creator;
+
+    /**
+     * 操作人员
+     */
+    private String operator;
+
+    /**
+     * 操作时间
+     */
+    @Column(name = "oper_time")
+    private Date operTime;
+
+    /**
      * 获取运输单号
      *
      * @return trans_code - 运输单号
@@ -504,5 +526,77 @@ public class OfcDistributionBasicInfo {
      */
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
+    }
+
+    /**
+     * 获取创建时间
+     *
+     * @return creation_time - 创建时间
+     */
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    /**
+     * 设置创建时间
+     *
+     * @param creationTime 创建时间
+     */
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    /**
+     * 获取创建人员
+     *
+     * @return creator - 创建人员
+     */
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * 设置创建人员
+     *
+     * @param creator 创建人员
+     */
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * 获取操作人员
+     *
+     * @return operator - 操作人员
+     */
+    public String getOperator() {
+        return operator;
+    }
+
+    /**
+     * 设置操作人员
+     *
+     * @param operator 操作人员
+     */
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    /**
+     * 获取操作时间
+     *
+     * @return oper_time - 操作时间
+     */
+    public Date getOperTime() {
+        return operTime;
+    }
+
+    /**
+     * 设置操作时间
+     *
+     * @param operTime 操作时间
+     */
+    public void setOperTime(Date operTime) {
+        this.operTime = operTime;
     }
 }
