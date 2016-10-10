@@ -1,105 +1,270 @@
 package com.xescm.ofc.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.Date;
 
+@Table(name = "ofc_goods_details_info")
 public class OfcGoodsDetailsInfo {
+    /**
+     * 货品代码
+     */
+    @Column(name = "goods_code")
     private String goodsCode;
 
+    /**
+     * 货品名称
+     */
+    @Column(name = "goods_name")
     private String goodsName;
 
+    /**
+     * 货品规格
+     */
+    @Column(name = "goods_spec")
     private String goodsSpec;
 
+    /**
+     * 单位
+     */
     private String unit;
 
+    /**
+     * 数量
+     */
     private BigDecimal quantity;
 
+    /**
+     * 单价
+     */
+    @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
-    private String reservedField01;
+    /**
+     * 生产批次
+     */
+    @Column(name = "production_batch")
+    private String productionBatch;
 
-    private String reservedField02;
+    /**
+     * 生产日期
+     */
+    @Column(name = "production_time")
+    private Date productionTime;
 
-    private String reservedField03;
+    /**
+     * 失效日期
+     */
+    @Column(name = "invalid_time")
+    private Date invalidTime;
 
-    private String reservedField04;
+    /**
+     * 订单编号
+     */
+    @Column(name = "order_code")
+    private String orderCode;
 
+    /**
+     * 备注
+     */
+    private String notes;
+
+    /**
+     * 获取货品代码
+     *
+     * @return goods_code - 货品代码
+     */
     public String getGoodsCode() {
         return goodsCode;
     }
 
+    /**
+     * 设置货品代码
+     *
+     * @param goodsCode 货品代码
+     */
     public void setGoodsCode(String goodsCode) {
-        this.goodsCode = goodsCode == null ? null : goodsCode.trim();
+        this.goodsCode = goodsCode;
     }
 
+    /**
+     * 获取货品名称
+     *
+     * @return goods_name - 货品名称
+     */
     public String getGoodsName() {
         return goodsName;
     }
 
+    /**
+     * 设置货品名称
+     *
+     * @param goodsName 货品名称
+     */
     public void setGoodsName(String goodsName) {
-        this.goodsName = goodsName == null ? null : goodsName.trim();
+        this.goodsName = goodsName;
     }
 
+    /**
+     * 获取货品规格
+     *
+     * @return goods_spec - 货品规格
+     */
     public String getGoodsSpec() {
         return goodsSpec;
     }
 
+    /**
+     * 设置货品规格
+     *
+     * @param goodsSpec 货品规格
+     */
     public void setGoodsSpec(String goodsSpec) {
-        this.goodsSpec = goodsSpec == null ? null : goodsSpec.trim();
+        this.goodsSpec = goodsSpec;
     }
 
+    /**
+     * 获取单位
+     *
+     * @return unit - 单位
+     */
     public String getUnit() {
         return unit;
     }
 
+    /**
+     * 设置单位
+     *
+     * @param unit 单位
+     */
     public void setUnit(String unit) {
-        this.unit = unit == null ? null : unit.trim();
+        this.unit = unit;
     }
 
+    /**
+     * 获取数量
+     *
+     * @return quantity - 数量
+     */
     public BigDecimal getQuantity() {
         return quantity;
     }
 
+    /**
+     * 设置数量
+     *
+     * @param quantity 数量
+     */
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
+    /**
+     * 获取单价
+     *
+     * @return unit_price - 单价
+     */
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
+    /**
+     * 设置单价
+     *
+     * @param unitPrice 单价
+     */
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public String getReservedField01() {
-        return reservedField01;
+    /**
+     * 获取生产批次
+     *
+     * @return production_batch - 生产批次
+     */
+    public String getProductionBatch() {
+        return productionBatch;
     }
 
-    public void setReservedField01(String reservedField01) {
-        this.reservedField01 = reservedField01 == null ? null : reservedField01.trim();
+    /**
+     * 设置生产批次
+     *
+     * @param productionBatch 生产批次
+     */
+    public void setProductionBatch(String productionBatch) {
+        this.productionBatch = productionBatch;
     }
 
-    public String getReservedField02() {
-        return reservedField02;
+    /**
+     * 获取生产日期
+     *
+     * @return production_time - 生产日期
+     */
+    public Date getProductionTime() {
+        return productionTime;
     }
 
-    public void setReservedField02(String reservedField02) {
-        this.reservedField02 = reservedField02 == null ? null : reservedField02.trim();
+    /**
+     * 设置生产日期
+     *
+     * @param productionTime 生产日期
+     */
+    public void setProductionTime(Date productionTime) {
+        this.productionTime = productionTime;
     }
 
-    public String getReservedField03() {
-        return reservedField03;
+    /**
+     * 获取失效日期
+     *
+     * @return invalid_time - 失效日期
+     */
+    public Date getInvalidTime() {
+        return invalidTime;
     }
 
-    public void setReservedField03(String reservedField03) {
-        this.reservedField03 = reservedField03 == null ? null : reservedField03.trim();
+    /**
+     * 设置失效日期
+     *
+     * @param invalidTime 失效日期
+     */
+    public void setInvalidTime(Date invalidTime) {
+        this.invalidTime = invalidTime;
     }
 
-    public String getReservedField04() {
-        return reservedField04;
+    /**
+     * 获取订单编号
+     *
+     * @return order_code - 订单编号
+     */
+    public String getOrderCode() {
+        return orderCode;
     }
 
-    public void setReservedField04(String reservedField04) {
-        this.reservedField04 = reservedField04 == null ? null : reservedField04.trim();
+    /**
+     * 设置订单编号
+     *
+     * @param orderCode 订单编号
+     */
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+
+    /**
+     * 获取备注
+     *
+     * @return notes - 备注
+     */
+    public String getNotes() {
+        return notes;
+    }
+
+    /**
+     * 设置备注
+     *
+     * @param notes 备注
+     */
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

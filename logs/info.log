@@ -1,77 +1,221 @@
-2016-10-08 18:17:57 INFO  [org.springframework.boot.StartupInfoLogger:48] - Starting XescmOfcApplication on DESKTOP-2OQCS08 with PID 2284 (D:\workspaceidea\xescm-ofc\target\classes started by lyh in D:\workspaceidea\xescm-ofc)
-2016-10-08 18:17:57 INFO  [org.springframework.boot.SpringApplication:665] - The following profiles are active: test
-2016-10-08 18:17:57 INFO  [org.springframework.context.support.AbstractApplicationContext:581] - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1eb03f: startup date [Sat Oct 08 18:17:57 CST 2016]; root of context hierarchy
-2016-10-08 18:17:57 INFO  [org.hibernate.validator.internal.util.Version:30] - HV000001: Hibernate Validator 5.2.4.Final
-2016-10-08 18:17:59 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'myBatisConfig' of type [class com.xescm.ofc.config.MyBatisConfig$$EnhancerBySpringCGLIB$$313eaea7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:17:59 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'dataSource' of type [class org.apache.tomcat.jdbc.pool.DataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'sqlSessionFactoryBean' of type [class org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcWarehouseInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcOrderStatusMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcGoodsDetailsInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFundamentalInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFinanceInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcDistributionBasicInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:00 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2320460c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:18:01 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:87] - Tomcat initialized with port(s): 8080 (http)
-2016-10-08 18:18:01 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting service Tomcat
-2016-10-08 18:18:01 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting Servlet Engine: Apache Tomcat/8.5.5
-2016-10-08 18:18:01 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring embedded WebApplicationContext
-2016-10-08 18:18:01 INFO  [org.springframework.boot.context.embedded.EmbeddedWebApplicationContext:276] - Root WebApplicationContext: initialization completed in 4085 ms
-2016-10-08 18:18:01 INFO  [org.springframework.boot.web.servlet.ServletRegistrationBean:190] - Mapping servlet: 'dispatcherServlet' to [/]
-2016-10-08 18:18:02 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'characterEncodingFilter' to: [/*]
-2016-10-08 18:18:02 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
-2016-10-08 18:18:02 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'httpPutFormContentFilter' to: [/*]
-2016-10-08 18:18:02 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'requestContextFilter' to: [/*]
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter:534] - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1eb03f: startup date [Sat Oct 08 18:17:57 CST 2016]; root of context hierarchy
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/]}" onto public java.lang.String com.xescm.ofc.controller.test.test()
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-2016-10-08 18:18:02 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-2016-10-08 18:18:03 INFO  [org.springframework.jmx.export.MBeanExporter:431] - Registering beans for JMX exposure on startup
-2016-10-08 18:18:03 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing ProtocolHandler ["http-nio-8080"]
-2016-10-08 18:18:03 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting ProtocolHandler [http-nio-8080]
-2016-10-08 18:18:03 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Using a shared selector for servlet write/read
-2016-10-08 18:18:03 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:185] - Tomcat started on port(s): 8080 (http)
-2016-10-08 18:18:03 INFO  [org.springframework.boot.StartupInfoLogger:57] - Started XescmOfcApplication in 6.585 seconds (JVM running for 7.887)
-2016-10-08 18:19:47 INFO  [org.springframework.boot.StartupInfoLogger:48] - Starting XescmOfcApplication on DESKTOP-2OQCS08 with PID 15560 (D:\workspaceidea\xescm-ofc\target\classes started by lyh in D:\workspaceidea\xescm-ofc)
-2016-10-08 18:19:47 INFO  [org.springframework.boot.SpringApplication:665] - The following profiles are active: test
-2016-10-08 18:19:47 INFO  [org.springframework.context.support.AbstractApplicationContext:581] - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1fa9b76: startup date [Sat Oct 08 18:19:47 CST 2016]; root of context hierarchy
-2016-10-08 18:19:47 INFO  [org.hibernate.validator.internal.util.Version:30] - HV000001: Hibernate Validator 5.2.4.Final
-2016-10-08 18:19:49 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'myBatisConfig' of type [class com.xescm.ofc.config.MyBatisConfig$$EnhancerBySpringCGLIB$$5e666117] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:49 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'dataSource' of type [class org.apache.tomcat.jdbc.pool.DataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'sqlSessionFactoryBean' of type [class org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcWarehouseInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcOrderStatusMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcGoodsDetailsInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFundamentalInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFinanceInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcDistributionBasicInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:50 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$5047f87c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2016-10-08 18:19:51 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:87] - Tomcat initialized with port(s): 8080 (http)
-2016-10-08 18:19:51 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting service Tomcat
-2016-10-08 18:19:51 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting Servlet Engine: Apache Tomcat/8.5.5
-2016-10-08 18:19:51 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring embedded WebApplicationContext
-2016-10-08 18:19:51 INFO  [org.springframework.boot.context.embedded.EmbeddedWebApplicationContext:276] - Root WebApplicationContext: initialization completed in 3659 ms
-2016-10-08 18:19:51 INFO  [org.springframework.boot.web.servlet.ServletRegistrationBean:190] - Mapping servlet: 'dispatcherServlet' to [/]
-2016-10-08 18:19:51 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'characterEncodingFilter' to: [/*]
-2016-10-08 18:19:51 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
-2016-10-08 18:19:51 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'httpPutFormContentFilter' to: [/*]
-2016-10-08 18:19:51 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'requestContextFilter' to: [/*]
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter:534] - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1fa9b76: startup date [Sat Oct 08 18:19:47 CST 2016]; root of context hierarchy
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/]}" onto public java.lang.String com.xescm.ofc.controller.test.test()
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-2016-10-08 18:19:52 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-2016-10-08 18:19:52 INFO  [org.springframework.jmx.export.MBeanExporter:431] - Registering beans for JMX exposure on startup
-2016-10-08 18:19:52 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing ProtocolHandler ["http-nio-8080"]
-2016-10-08 18:19:52 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting ProtocolHandler [http-nio-8080]
-2016-10-08 18:19:52 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Using a shared selector for servlet write/read
-2016-10-08 18:19:52 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:185] - Tomcat started on port(s): 8080 (http)
-2016-10-08 18:19:52 INFO  [org.springframework.boot.StartupInfoLogger:57] - Started XescmOfcApplication in 5.833 seconds (JVM running for 6.935)
-2016-10-08 18:20:03 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring FrameworkServlet 'dispatcherServlet'
-2016-10-08 18:20:03 INFO  [org.springframework.web.servlet.FrameworkServlet:489] - FrameworkServlet 'dispatcherServlet': initialization started
-2016-10-08 18:20:03 INFO  [org.springframework.web.servlet.FrameworkServlet:508] - FrameworkServlet 'dispatcherServlet': initialization completed in 32 ms
+2016-10-10 10:54:55 INFO  [org.springframework.boot.StartupInfoLogger:48] - Starting XescmOfcApplication on DESKTOP-2OQCS08 with PID 12412 (D:\workspaceidea\xescm-ofc\target\classes started by lyh in D:\workspaceidea\xescm-ofc)
+2016-10-10 10:54:55 INFO  [org.springframework.boot.SpringApplication:665] - The following profiles are active: test
+2016-10-10 10:54:56 INFO  [org.springframework.context.support.AbstractApplicationContext:581] - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@17ca589: startup date [Mon Oct 10 10:54:56 CST 2016]; root of context hierarchy
+2016-10-10 10:54:56 INFO  [org.hibernate.validator.internal.util.Version:30] - HV000001: Hibernate Validator 5.2.4.Final
+2016-10-10 10:54:57 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'myBatisConfig' of type [class com.xescm.ofc.config.MyBatisConfig$$EnhancerBySpringCGLIB$$ede7fa5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'dataSource' of type [class org.apache.tomcat.jdbc.pool.DataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'sqlSessionFactoryBean' of type [class org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcWarehouseInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcOrderStatusMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcGoodsDetailsInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFundamentalInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFinanceInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcDistributionBasicInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:58 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c0170a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:54:59 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:87] - Tomcat initialized with port(s): 8080 (http)
+2016-10-10 10:54:59 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting service Tomcat
+2016-10-10 10:54:59 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting Servlet Engine: Apache Tomcat/8.5.5
+2016-10-10 10:54:59 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring embedded WebApplicationContext
+2016-10-10 10:54:59 INFO  [org.springframework.boot.context.embedded.EmbeddedWebApplicationContext:276] - Root WebApplicationContext: initialization completed in 3407 ms
+2016-10-10 10:54:59 INFO  [org.springframework.boot.web.servlet.ServletRegistrationBean:190] - Mapping servlet: 'dispatcherServlet' to [/]
+2016-10-10 10:54:59 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'characterEncodingFilter' to: [/*]
+2016-10-10 10:54:59 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2016-10-10 10:54:59 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2016-10-10 10:54:59 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'requestContextFilter' to: [/*]
+2016-10-10 10:54:59 WARN  [org.springframework.context.support.AbstractApplicationContext:549] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'test': Unsatisfied dependency expressed through field 'ofcOrderStatusService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean found for dependency [com.xescm.ofc.service.OfcOrderStatusService]: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2016-10-10 10:54:59 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Stopping service Tomcat
+2016-10-10 10:54:59 WARN  [org.apache.juli.logging.DirectJDKLog:179] - The web application [ROOT] appears to have started a thread named [Abandoned connection cleanup thread] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.lang.Object.wait(Native Method)
+ java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:135)
+ com.mysql.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:43)
+2016-10-10 10:54:59 INFO  [org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer:101] - 
+
+Error starting ApplicationContext. To display the auto-configuration report re-run your application with 'debug' enabled.
+2016-10-10 10:55:00 ERROR [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter:42] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field ofcOrderStatusService in com.xescm.ofc.controller.test required a bean of type 'com.xescm.ofc.service.OfcOrderStatusService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.xescm.ofc.service.OfcOrderStatusService' in your configuration.
+
+2016-10-10 10:55:36 INFO  [org.springframework.boot.StartupInfoLogger:48] - Starting XescmOfcApplication on DESKTOP-2OQCS08 with PID 12460 (D:\workspaceidea\xescm-ofc\target\classes started by lyh in D:\workspaceidea\xescm-ofc)
+2016-10-10 10:55:36 INFO  [org.springframework.boot.SpringApplication:665] - The following profiles are active: test
+2016-10-10 10:55:36 INFO  [org.springframework.context.support.AbstractApplicationContext:581] - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1ffd111: startup date [Mon Oct 10 10:55:36 CST 2016]; root of context hierarchy
+2016-10-10 10:55:36 INFO  [org.hibernate.validator.internal.util.Version:30] - HV000001: Hibernate Validator 5.2.4.Final
+2016-10-10 10:55:37 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'myBatisConfig' of type [class com.xescm.ofc.config.MyBatisConfig$$EnhancerBySpringCGLIB$$3415e431] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'dataSource' of type [class org.apache.tomcat.jdbc.pool.DataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'sqlSessionFactoryBean' of type [class org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcWarehouseInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcOrderStatusMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcGoodsDetailsInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFundamentalInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFinanceInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcDistributionBasicInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$25f77b96] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:55:38 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:87] - Tomcat initialized with port(s): 8080 (http)
+2016-10-10 10:55:38 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting service Tomcat
+2016-10-10 10:55:38 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting Servlet Engine: Apache Tomcat/8.5.5
+2016-10-10 10:55:38 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring embedded WebApplicationContext
+2016-10-10 10:55:38 INFO  [org.springframework.boot.context.embedded.EmbeddedWebApplicationContext:276] - Root WebApplicationContext: initialization completed in 2112 ms
+2016-10-10 10:55:39 INFO  [org.springframework.boot.web.servlet.ServletRegistrationBean:190] - Mapping servlet: 'dispatcherServlet' to [/]
+2016-10-10 10:55:39 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'characterEncodingFilter' to: [/*]
+2016-10-10 10:55:39 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2016-10-10 10:55:39 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2016-10-10 10:55:39 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'requestContextFilter' to: [/*]
+2016-10-10 10:55:39 WARN  [org.springframework.context.support.AbstractApplicationContext:549] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'test': Unsatisfied dependency expressed through field 'ofcOrderStatusService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean found for dependency [com.xescm.ofc.service.OfcOrderStatusService]: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2016-10-10 10:55:39 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Stopping service Tomcat
+2016-10-10 10:55:39 WARN  [org.apache.juli.logging.DirectJDKLog:179] - The web application [ROOT] appears to have started a thread named [Abandoned connection cleanup thread] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.lang.Object.wait(Native Method)
+ java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:135)
+ com.mysql.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:43)
+2016-10-10 10:55:39 INFO  [org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer:101] - 
+
+Error starting ApplicationContext. To display the auto-configuration report re-run your application with 'debug' enabled.
+2016-10-10 10:55:39 ERROR [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter:42] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field ofcOrderStatusService in com.xescm.ofc.controller.test required a bean of type 'com.xescm.ofc.service.OfcOrderStatusService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.xescm.ofc.service.OfcOrderStatusService' in your configuration.
+
+2016-10-10 10:57:16 INFO  [org.springframework.boot.StartupInfoLogger:48] - Starting XescmOfcApplication on DESKTOP-2OQCS08 with PID 13832 (D:\workspaceidea\xescm-ofc\target\classes started by lyh in D:\workspaceidea\xescm-ofc)
+2016-10-10 10:57:16 INFO  [org.springframework.boot.SpringApplication:665] - The following profiles are active: test
+2016-10-10 10:57:16 INFO  [org.springframework.context.support.AbstractApplicationContext:581] - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1b21521: startup date [Mon Oct 10 10:57:16 CST 2016]; root of context hierarchy
+2016-10-10 10:57:16 INFO  [org.hibernate.validator.internal.util.Version:30] - HV000001: Hibernate Validator 5.2.4.Final
+2016-10-10 10:57:17 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'myBatisConfig' of type [class com.xescm.ofc.config.MyBatisConfig$$EnhancerBySpringCGLIB$$364dfbea] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'dataSource' of type [class org.apache.tomcat.jdbc.pool.DataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'sqlSessionFactoryBean' of type [class org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcWarehouseInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcOrderStatusMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcGoodsDetailsInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFundamentalInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcFinanceInformationMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'ofcDistributionBasicInfoMapper' of type [class org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:328] - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$282f934f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-10-10 10:57:18 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:87] - Tomcat initialized with port(s): 8080 (http)
+2016-10-10 10:57:18 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting service Tomcat
+2016-10-10 10:57:18 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting Servlet Engine: Apache Tomcat/8.5.5
+2016-10-10 10:57:18 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring embedded WebApplicationContext
+2016-10-10 10:57:18 INFO  [org.springframework.boot.context.embedded.EmbeddedWebApplicationContext:276] - Root WebApplicationContext: initialization completed in 2157 ms
+2016-10-10 10:57:19 INFO  [org.springframework.boot.web.servlet.ServletRegistrationBean:190] - Mapping servlet: 'dispatcherServlet' to [/]
+2016-10-10 10:57:19 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'characterEncodingFilter' to: [/*]
+2016-10-10 10:57:19 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2016-10-10 10:57:19 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2016-10-10 10:57:19 INFO  [org.springframework.boot.web.servlet.AbstractFilterRegistrationBean:258] - Mapping filter: 'requestContextFilter' to: [/*]
+2016-10-10 10:57:19 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter:534] - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1b21521: startup date [Mon Oct 10 10:57:16 CST 2016]; root of context hierarchy
+2016-10-10 10:57:20 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/]}" onto public java.lang.String com.xescm.ofc.controller.test.test()
+2016-10-10 10:57:20 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2016-10-10 10:57:20 INFO  [org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry:543] - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2016-10-10 10:57:20 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2016-10-10 10:57:20 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2016-10-10 10:57:20 INFO  [org.springframework.web.servlet.handler.AbstractUrlHandlerMapping:354] - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2016-10-10 10:57:20 INFO  [org.springframework.jmx.export.MBeanExporter:431] - Registering beans for JMX exposure on startup
+2016-10-10 10:57:20 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing ProtocolHandler ["http-nio-8080"]
+2016-10-10 10:57:20 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Starting ProtocolHandler [http-nio-8080]
+2016-10-10 10:57:20 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Using a shared selector for servlet write/read
+2016-10-10 10:57:20 INFO  [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer:185] - Tomcat started on port(s): 8080 (http)
+2016-10-10 10:57:20 INFO  [org.springframework.boot.StartupInfoLogger:57] - Started XescmOfcApplication in 4.382 seconds (JVM running for 5.207)
+2016-10-10 10:57:30 INFO  [org.apache.juli.logging.DirectJDKLog:179] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+2016-10-10 10:57:30 INFO  [org.springframework.web.servlet.FrameworkServlet:489] - FrameworkServlet 'dispatcherServlet': initialization started
+2016-10-10 10:57:31 INFO  [org.springframework.web.servlet.FrameworkServlet:508] - FrameworkServlet 'dispatcherServlet': initialization completed in 38 ms
+2016-10-10 10:57:31 ERROR [org.apache.juli.logging.DirectJDKLog:181] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.builder.BuilderException: Error invoking SqlProvider method (tk.mybatis.mapper.provider.base.BaseInsertProvider.dynamicSQL).  Cause: java.lang.InstantiationException: tk.mybatis.mapper.provider.base.BaseInsertProvider] with root cause
+java.lang.InstantiationException: tk.mybatis.mapper.provider.base.BaseInsertProvider
+	at java.lang.Class.newInstance(Class.java:368)
+	at org.apache.ibatis.builder.annotation.ProviderSqlSource.createSqlSource(ProviderSqlSource.java:71)
+	at org.apache.ibatis.builder.annotation.ProviderSqlSource.getBoundSql(ProviderSqlSource.java:63)
+	at org.apache.ibatis.mapping.MappedStatement.getBoundSql(MappedStatement.java:278)
+	at org.apache.ibatis.executor.statement.BaseStatementHandler.<init>(BaseStatementHandler.java:64)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.<init>(PreparedStatementHandler.java:39)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.<init>(RoutingStatementHandler.java:45)
+	at org.apache.ibatis.session.Configuration.newStatementHandler(Configuration.java:468)
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:46)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:105)
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:71)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:152)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:141)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:358)
+	at com.sun.proxy.$Proxy47.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:240)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:51)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:52)
+	at com.sun.proxy.$Proxy59.insertSelective(Unknown Source)
+	at com.xescm.ofc.service.impl.BaseService.save(BaseService.java:55)
+	at com.xescm.ofc.service.impl.BaseService$$FastClassBySpringCGLIB$$e4d17ebc.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:651)
+	at com.xescm.ofc.service.impl.OfcOrderStatusServiceImpl$$EnhancerBySpringCGLIB$$c67fffd4.save(<generated>)
+	at com.xescm.ofc.controller.test.test(test.java:23)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:221)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:114)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:827)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:738)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:897)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:861)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:89)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:77)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:108)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:784)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:802)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1410)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)

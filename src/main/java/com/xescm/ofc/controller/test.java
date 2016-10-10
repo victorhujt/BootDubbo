@@ -1,10 +1,8 @@
 package com.xescm.ofc.controller;
 
 import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.mapper.OfcOrderStatusMapper;
+import com.xescm.ofc.service.OfcOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,15 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class test {
+
     @Autowired
-    private OfcOrderStatusMapper ofcOrderStatusMapper;
+    private OfcOrderStatusService ofcOrderStatusService;
 
     @RequestMapping("/")
     public String test(){
-        OfcOrderStatus oos = new OfcOrderStatus();
-        oos.setCustCode(1+"");
-        oos.setCustName("测试");
-        ofcOrderStatusMapper.insert(oos);
+        OfcOrderStatus record = new OfcOrderStatus();
+        record.setOrderCode("3");
+        record.setOrderType("啦啦啦啦");
+        ofcOrderStatusService.save(record);
         return "success";
     }
 
