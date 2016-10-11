@@ -67,13 +67,13 @@ public class OfcFundamentalInformation {
     private String notes;
 
     /**
-     * 客户编码
+     * 店铺编码
      */
     @Column(name = "store_code")
     private String storeCode;
 
     /**
-     * 客户名称
+     * 店铺名称
      */
     @Column(name = "store_name")
     private String storeName;

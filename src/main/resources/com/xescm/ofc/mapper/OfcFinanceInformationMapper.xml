@@ -12,7 +12,7 @@
     <result column="collect_service_charge" property="collectServiceCharge" jdbcType="DECIMAL" />
     <result column="collect_flag" property="collectFlag" jdbcType="VARCHAR" />
     <result column="count_flag" property="countFlag" jdbcType="VARCHAR" />
-    <result column="order_code" property="orderCode" jdbcType="TIMESTAMP" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
     <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
     <result column="creator" property="creator" jdbcType="VARCHAR" />

@@ -29,6 +29,7 @@ public class MyBatisConfig {
     public SqlSessionFactory sqlSessionFactoryBean() throws Exception{
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource());
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.xescm.ofc.domain");
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();//加载配置文件用查找器
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/com/xescm/ofc/mapper/*.xml"));//加载mapper配置文件
         sqlSessionFactoryBean.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);

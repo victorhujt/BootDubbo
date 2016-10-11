@@ -1,7 +1,8 @@
 package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcFinanceInformation;
-import tk.mybatis.mapper.common.Mapper;
+import com.xescm.ofc.utils.MyMapper;
 
-public interface OfcFinanceInformationMapper extends Mapper<OfcFinanceInformation> {
+public interface OfcFinanceInformationMapper extends MyMapper<OfcFinanceInformation> {
+
 }

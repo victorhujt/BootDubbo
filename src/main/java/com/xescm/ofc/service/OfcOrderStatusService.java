@@ -1,5 +1,7 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OfcOrderStatus;
+
 /**
  * Created by lyh on 2016/10/10.
  */

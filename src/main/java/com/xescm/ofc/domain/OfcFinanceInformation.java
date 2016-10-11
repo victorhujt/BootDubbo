@@ -53,7 +53,7 @@ public class OfcFinanceInformation {
      * 订单编号
      */
     @Column(name = "order_code")
-    private Date orderCode;
+    private String orderCode;
 
     /**
      * 备注
@@ -213,7 +213,7 @@ public class OfcFinanceInformation {
      *
      * @return order_code - 订单编号
      */
-    public Date getOrderCode() {
+    public String getOrderCode() {
         return orderCode;
     }
 
@@ -222,7 +222,7 @@ public class OfcFinanceInformation {
      *
      * @param orderCode 订单编号
      */
-    public void setOrderCode(Date orderCode) {
+    public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
 

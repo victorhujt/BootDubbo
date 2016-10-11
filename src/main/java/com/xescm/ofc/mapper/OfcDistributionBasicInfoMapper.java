@@ -1,7 +1,8 @@
 package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.utils.MyMapper;
 import tk.mybatis.mapper.common.Mapper;
 
-public interface OfcDistributionBasicInfoMapper extends Mapper<OfcDistributionBasicInfo> {
+public interface OfcDistributionBasicInfoMapper extends MyMapper<OfcDistributionBasicInfo> {
 }
