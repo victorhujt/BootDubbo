@@ -31,4 +31,95 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  <delete id="deleteByOrderCode" parameterType="java.lang.String" >
+    <!--
+      根据订单编号进行删除
+    -->
+    delete from ofc_distribution_basic_info
+    where order_code = #{orderCode,jdbcType=VARCHAR}
+  </delete>
+  <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    <!--
+      根据订单号进行修改
+    -->
+    update ofc_distribution_basic_info
+    <set >
+      <if test="transCode != null" >
+        trans_code = #{transCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsType != null" >
+        goods_type = #{goodsType,jdbcType=INTEGER},
+      </if>
+      <if test="urgent != null" >
+        urgent = #{urgent,jdbcType=INTEGER},
+      </if>
+      <if test="departurePlace != null" >
+        departure_place = #{departurePlace,jdbcType=INTEGER},
+      </if>
+      <if test="departurePlaceCode != null" >
+        departure_place_code = #{departurePlaceCode,jdbcType=INTEGER},
+      </if>
+      <if test="destination != null" >
+        destination = #{destination,jdbcType=INTEGER},
+      </if>
+      <if test="destinationCode != null" >
+        destination_code = #{destinationCode,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="cubage != null" >
+        cubage = #{cubage,jdbcType=INTEGER},
+      </if>
+      <if test="totalStandardBox != null" >
+        total_standard_box = #{totalStandardBox,jdbcType=INTEGER},
+      </if>
+      <if test="transRequire != null" >
+        trans_require = #{transRequire,jdbcType=INTEGER},
+      </if>
+      <if test="pickupTime != null" >
+        pickup_time = #{pickupTime,jdbcType=INTEGER},
+      </if>
+      <if test="expectedArrivedTime != null" >
+        expected_arrived_time = #{expectedArrivedTime,jdbcType=INTEGER},
+      </if>
+      <if test="consignorCode != null" >
+        consignor_code = #{consignorCode,jdbcType=INTEGER},
+      </if>
+      <if test="consignorName != null" >
+        consignor_name = #{consignorName,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeCode != null" >
+        consignee_code = #{consigneeCode,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name = #{consigneeName,jdbcType=INTEGER},
+      </if>
+      <if test="carrierCode != null" >
+        carrier_code = #{carrierCode,jdbcType=INTEGER},
+      </if>
+      <if test="carrierName != null" >
+        carrier_name = #{carrierName,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null" >
+        order_code = #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="operTime != null" >
+        oper_time = #{operTime,jdbcType=INTEGER}
+      </if>
+    </set>
+    where order_code = #{orderCode,jdbcType=VARCHAR}
+  </update>
 </mapper>

@@ -2,7 +2,10 @@ package com.xescm.ofc.service.impl;
 
 
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.mapper.OfcDistributionBasicInfoMapper;
+import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,4 +13,17 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistributionBasicInfo> implements OfcDistributionBasicInfoService{
+    @Autowired
+    private OfcDistributionBasicInfoMapper ofcDistributionBasicInfoMapper;
+
+    @Override
+    public int deleteByOrderCode(Object key) {
+        ofcDistributionBasicInfoMapper.deleteByOrderCode(key);
+        return 0;
+    }
+
+    @Override
+    public int updateByOrderCode(Object key) {
+        return 0;
+    }
 }

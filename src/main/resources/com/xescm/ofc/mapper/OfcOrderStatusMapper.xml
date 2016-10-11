@@ -16,4 +16,11 @@
     <result column="notes" property="notes" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
   </resultMap>
+  <delete id="deleteByOrderCode" parameterType="java.lang.String" >
+    <!--
+      根据订单编号进行删除
+    -->
+    delete from ofc_order_status
+    where order_code = #{orderCode,jdbcType=VARCHAR}
+  </delete>
 </mapper>
