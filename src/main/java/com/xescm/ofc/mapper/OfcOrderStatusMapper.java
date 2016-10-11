@@ -4,4 +4,5 @@ import com.xescm.ofc.domain.OfcOrderStatus;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface OfcOrderStatusMapper extends Mapper<OfcOrderStatus> {
+    int deleteByOrderCode(Object key);
 }
