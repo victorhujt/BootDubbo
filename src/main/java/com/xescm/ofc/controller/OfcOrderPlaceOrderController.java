@@ -2,6 +2,7 @@ package com.xescm.ofc.controller;
 
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class OfcOrderPlaceOrderController {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     public PubUtils pubUtils=new PubUtils();
+    private OrderConst orderConst=new OrderConst();
     /**
      * 下单接口
      * @param ofcGoodsDetailsInfo
@@ -49,25 +51,6 @@ public class OfcOrderPlaceOrderController {
                              @ModelAttribute("ofcWarehouseInformation")OfcWarehouseInformation ofcWarehouseInformation
                              ){
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        try {
-            if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
-                ofcFundamentalInformation.setOrderCode("SO"+PrimaryGenerater.getInstance()
-                        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单已创建");
-                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
-                ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
-                ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
-                ofcWarehouseInformationService.save(ofcWarehouseInformation);
-            }else{
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单已更新");
-            }
-        } catch (Exception e) {
-            return "fail";
-        }
-
         /*if (ofcFundamentalInformation.getOrderType().equals("1")){
             ofcFundamentalInformation.setCustCode("001");
             ofcFundamentalInformation.setCustName("众品");
@@ -85,16 +68,44 @@ public class OfcOrderPlaceOrderController {
                 ofcFundamentalInformation.setBusinessType("01");
             }
         }*/
-        ofcFundamentalInformation.setOrderTime(new Date());
+        ofcFundamentalInformation.setOrderCode("SO20161010000005");
         ofcFundamentalInformation.setStoreCode("000");
         ofcFundamentalInformation.setStoreName("线下销售");
         ofcFundamentalInformation.setOrderSource("手动");
-        ofcFundamentalInformation.setCreationTime(new Date());
-        ofcFundamentalInformation.setCreator("001");
-        ofcFundamentalInformation.setOperator("001");
-        ofcFundamentalInformation.setOpertime(new Date());
+        try {
+            if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
+                ofcFundamentalInformation.setOrderCode("SO"+PrimaryGenerater.getInstance()
+                        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
+                ofcFundamentalInformation.setOrderTime(new Date());
+                ofcFundamentalInformation.setCreationTime(new Date());
+                ofcFundamentalInformation.setCreator("001");
+                ofcFundamentalInformation.setOperator("001");
+                ofcFundamentalInformation.setOpertime(new Date());
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单已创建");
+                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
+                ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+            }else{
+                ofcFundamentalInformation.setOrderCode("SO20161010000005");
+                ofcFundamentalInformation.setOperator("001");
+                ofcFundamentalInformation.setOpertime(new Date());
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单已更新");
+                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
+                ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+                ofcFundamentalInformationService.update(ofcFundamentalInformation);
+            }
+        } catch (Exception e) {
+            return "fail";
+        }
 
-        ofcFundamentalInformationService.save(ofcFundamentalInformation);
         return "success";
     }
 
@@ -104,9 +115,8 @@ public class OfcOrderPlaceOrderController {
         ofcOrderStatus.setBusinessType(ofcFundamentalInformation.getBusinessType());
         ofcOrderStatus.setCustName(ofcFundamentalInformation.getCustName());
         ofcOrderStatus.setCustCode(ofcFundamentalInformation.getCustName());
-        ofcOrderStatus.setOrderStatus("0");
+        ofcOrderStatus.setOrderStatus(orderConst.PENDINGAUDIT);
         ofcOrderStatus.setLastedOperTime(new Date());
-
         ofcOrderStatus.setOperator("001");
         ofcOrderStatusService.save(ofcOrderStatus);
     }
@@ -135,6 +145,14 @@ public class OfcOrderPlaceOrderController {
         ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOpertime());
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
         return ofcWarehouseInformation;
+    }
+
+    @RequestMapping("/goodsScans")
+    public String placeOrder(@ModelAttribute("ofcGoodsDetailsInfo")OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
+        ofcGoodsDetailsInfo.setGoodsCode("1");
+        ofcGoodsDetailsInfo.setGoodsCode("1");
+        ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+        return "success";
     }
 
     @RequestMapping(value="/index")

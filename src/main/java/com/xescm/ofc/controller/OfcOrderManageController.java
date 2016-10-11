@@ -2,6 +2,7 @@ package com.xescm.ofc.controller;
 
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,20 +39,21 @@ public class OfcOrderManageController {
     }
 
     public PubUtils pubUtils=new PubUtils();
+    private OrderConst orderConst=new OrderConst();
 
     @RequestMapping("/orderOrNotAudit")
     public String orderAudit(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
                              @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-
-        if((!ofcOrderStatus.getOrderStatus().equals("2"))
-                && (!ofcOrderStatus.getOrderStatus().equals("3"))
-                && (!ofcOrderStatus.getOrderStatus().equals("4"))){
-            if (ofcOrderStatus.getOrderStatus().equals("1")){
-                ofcOrderStatus.setOrderStatus("0");
+        ofcOrderStatus.setOrderStatus("1");
+        if((!ofcOrderStatus.getOrderStatus().equals(orderConst.IMPLEMENTATIONIN))
+                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCANCELED))){
+            if (ofcOrderStatus.getOrderStatus().equals(orderConst.ALREADYEXAMINE)){
+                ofcOrderStatus.setOrderStatus(orderConst.PENDINGAUDIT);
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单反审核完成");
-            }else if(ofcOrderStatus.getOrderStatus().equals("0")){
-                ofcOrderStatus.setOrderStatus("1");
+            }else if(ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT)){
+                ofcOrderStatus.setOrderStatus(orderConst.ALREADYEXAMINE);
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
             }
@@ -67,11 +69,11 @@ public class OfcOrderManageController {
     @RequestMapping("/orderDelete")
     public String orderDelete(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
                             @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        //if(ofcOrderStatus.getOrderStatus().equals("0")){
-            ofcFundamentalInformationService.deleteByKey("SO20161010000012");
-            ofcDistributionBasicInfoService.deleteByOrderCode("SO20161010000012");
-            ofcOrderStatusService.deleteByOrderCode("SO20161010000012");
-            ofcWarehouseInformationService.deleteByOrderCode("SO20161010000012");
+        //if(ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT)){
+            ofcFundamentalInformationService.deleteByKey("SO20161010000005");
+            ofcDistributionBasicInfoService.deleteByOrderCode("SO20161010000005");
+            ofcOrderStatusService.deleteByOrderCode("SO20161010000005");
+            ofcWarehouseInformationService.deleteByOrderCode("SO20161010000005");
             return "success";
         //}else {
             //return "fail";
@@ -81,10 +83,10 @@ public class OfcOrderManageController {
     @RequestMapping("/orderCancel")
     public String orderCancel(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
                               @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        if((!ofcOrderStatus.getOrderStatus().equals("0"))
-                && (!ofcOrderStatus.getOrderStatus().equals("3"))
-                && (!ofcOrderStatus.getOrderStatus().equals("4"))){
-            ofcOrderStatus.setOrderStatus("4");
+        if((!ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT))
+                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCANCELED))){
+            ofcOrderStatus.setOrderStatus(orderConst.HASBEENCANCELED);
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                     +" "+"订单已取消");
             ofcOrderStatus.setOperator("001");
