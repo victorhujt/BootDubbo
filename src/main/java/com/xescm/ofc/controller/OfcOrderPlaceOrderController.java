@@ -19,7 +19,7 @@ import java.util.Date;
  * Created by lyh on 2016/10/8.
  */
 @RestController
-public class OfcOrderPlaceOrder {
+public class OfcOrderPlaceOrderController {
 
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
@@ -41,6 +41,7 @@ public class OfcOrderPlaceOrder {
      * @param ofcWarehouseInformation
      * @return
      */
+
     @RequestMapping("/placeOrEditOrder")
     public String placeOrder(@ModelAttribute("ofcGoodsDetailsInfo")OfcGoodsDetailsInfo ofcGoodsDetailsInfo,
                              @ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,

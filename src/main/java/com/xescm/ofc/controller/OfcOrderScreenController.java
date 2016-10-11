@@ -25,7 +25,7 @@ import java.util.Map;
  已取消:4
  */
 @Controller
-@RequestMapping(value = "/orderScreen")
+/*@RequestMapping(value = "/orderScreen")*/
 public class OfcOrderScreenController {
     /*
     订单查询界面一进来,一条数据都没有, 这样可以减轻.
@@ -37,18 +37,25 @@ public class OfcOrderScreenController {
     @Autowired
     private OfcOrderScreenService ofcOrderScreenService;
 
-    @RequestMapping(value = "/index")
+    @RequestMapping(value = "/orderScreen")
     public String orderScreen(){
-        return "OrderScreen";
+        return "order_screen";
     }
 
     @RequestMapping(value = "/orderScreenByCondition")
-    public String orderScreenByCondition(OrderScreenCondition orderScreenCondition, Map<String,Object> map) throws IOException {
+    public String orderScreenByCondition(OrderScreenCondition orderScreenCondition, Map<String,Object> map, String tag) throws IOException {
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-        System.out.println("==============="+orderScreenCondition);
-        map.put("orderList",orderScreenResults);
-        map.put("test","test1111");
+        System.out.println("===============" + orderScreenCondition);
+        map.put("orderList", orderScreenResults);
+        map.put("test", "test1111");
         System.out.println("1111111111111111111111");
-        return "OrderScreen";
+        if (tag.equals("screen")) {
+            return "order_screen";
+        } else if (tag.equals("manage")) {
+            return "order_manage";
+        } else {
+            return "error";
+        }
+
     }
 }

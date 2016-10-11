@@ -253,8 +253,9 @@ ${test!"null"}
     </h1>
 </div>
 
-<form action="/orderScreen/orderScreenByCondition" method="post" id="screenOrderForm">
-    <#--订单日期<input id="orderTimePre" name="orderTimePre" />至<input id="orderTimeSuf" name="orderTimeSuf"/>-->
+<form action="/orderScreenByCondition" method="post" id="screenOrderForm">
+    <input type="hidden" name="tag" value="manage">
+<#--订单日期<input id="orderTimePre" name="orderTimePre" />至<input id="orderTimeSuf" name="orderTimeSuf"/>-->
     订单编号<input id="orderCode" name="orderCode"/>
     客户订单编号<input id="custOrderCode" name="custOrderCode"/><br/>
     订单状态<input id="orderStatus" name="orderStatus"/>

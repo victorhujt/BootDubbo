@@ -4,18 +4,22 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ydx on 2016/10/11.
  */
-@RestController
-public class OfcOrderManage {
+@Controller
+public class OfcOrderManageController {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
@@ -26,6 +30,13 @@ public class OfcOrderManage {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+
+
+    @RequestMapping(value = "/orderManage")
+    public String orderManage(){
+        return "order_manage";
+    }
+
     public PubUtils pubUtils=new PubUtils();
 
     @RequestMapping("/orderOrNotAudit")
