@@ -48,7 +48,26 @@
         ofi.store_name storeName
         FROM
           ofc_fundamental_information ofi
-        LEFT JOIN ofc_order_status oos ON ofi.order_code = oos.order_code
+        LEFT JOIN (
+        SELECT
+        s.*
+        FROM
+        ofc_order_status s,
+        (
+        SELECT
+        s.order_code,
+        max(s.lasted_oper_time) val
+        FROM
+        ofc_order_status s
+        GROUP BY
+        s.order_code
+        ) b
+        WHERE
+        s.order_code = b.order_code
+        AND s.lasted_oper_time = b.val
+        ORDER BY
+        s.order_code
+        ) oos ON ofi.order_code = oos.order_code
         LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
         LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
             <where>
@@ -74,5 +93,6 @@
                     AND ofi.business_type = #{businessType}
                 </if>
         </where>
+        GROUP BY ofi.order_code
     </select>
 </mapper>
