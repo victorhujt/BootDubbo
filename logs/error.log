@@ -316,3 +316,48 @@ java.lang.NullPointerException: null
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:745)
+2016-10-12 15:54:12 ERROR [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter:42] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field ofcOrderPlaceService in com.xescm.ofc.controller.OfcOrderPlaceOrderController required a bean of type 'com.xescm.ofc.service.OfcOrderPlaceService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.xescm.ofc.service.OfcOrderPlaceService' in your configuration.
+
+2016-10-12 15:55:53 ERROR [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter:42] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field ofcOrderPlaceService in com.xescm.ofc.controller.OfcOrderPlaceOrderController required a bean of type 'com.xescm.ofc.service.OfcOrderPlaceService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.xescm.ofc.service.OfcOrderPlaceService' in your configuration.
+
+2016-10-12 15:56:53 ERROR [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter:42] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field ofcOrderPlaceService in com.xescm.ofc.controller.OfcOrderPlaceOrderController required a bean of type 'com.xescm.ofc.service.OfcOrderPlaceService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.xescm.ofc.service.OfcOrderPlaceService' in your configuration.
+
