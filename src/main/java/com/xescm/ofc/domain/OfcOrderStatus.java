@@ -6,21 +6,7 @@ import java.util.Date;
 
 @Table(name = "ofc_order_status")
 public class OfcOrderStatus {
-    @Override
-    public String toString() {
-        return "OfcOrderStatus{" +
-                "orderCode='" + orderCode + '\'' +
-                ", orderType='" + orderType + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", custCode='" + custCode + '\'' +
-                ", custName='" + custName + '\'' +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", statusDesc='" + statusDesc + '\'' +
-                ", lastedOperTime=" + lastedOperTime +
-                ", notes='" + notes + '\'' +
-                ", operator='" + operator + '\'' +
-                '}';
-    }
+
 
     /**
      * 订单编号

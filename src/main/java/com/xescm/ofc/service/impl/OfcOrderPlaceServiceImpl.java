@@ -5,6 +5,7 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,35 +32,31 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO) {
         ModelMapper modelMapper = new ModelMapper();
-        OfcGoodsDetailsInfo ofcGoodsDetailsInfo=new OfcGoodsDetailsInfo();
-        OfcFundamentalInformation ofcFundamentalInformation=new OfcFundamentalInformation();
-        OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
-        OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
-        ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
-        ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
-        ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
-        ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
+        OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
+        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        if (ofcFundamentalInformation.getOrderType().equals("1")){
+        if (ofcFundamentalInformation.getOrderType().equals(OrderConst.WAREHOUSEDISTRIBUTIONORDER)){
             ofcFundamentalInformation.setCustCode("001");
             ofcFundamentalInformation.setCustName("众品");
-            if(ofcWarehouseInformation.getProvideTransport().equals("1")){
+            ofcWarehouseInformation.setProvideTransport(1);
+            if(ofcWarehouseInformation.getProvideTransport().toString().equals("1")){
                 ofcFundamentalInformation.setSecCustCode("001");
                 ofcFundamentalInformation.setSecCustName("众品");
             }
-        }else {
+        }else if(ofcFundamentalInformation.getOrderType().equals(OrderConst.TRANSPORTORDER)){
             ofcFundamentalInformation.setSecCustCode("001");
             ofcFundamentalInformation.setSecCustName("众品");
             if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                     .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
-                ofcFundamentalInformation.setBusinessType("00");
+                ofcFundamentalInformation.setBusinessType(OrderConst.WITHTHECITY);
             }else{
-                ofcFundamentalInformation.setBusinessType("01");
+                ofcFundamentalInformation.setBusinessType(OrderConst.WITHTHETRUNK);
             }
         }
-        ofcFundamentalInformation.setOrderCode("SO20161010000005");
-        ofcFundamentalInformation.setStoreCode("000");
-        ofcFundamentalInformation.setStoreName("线下销售");
+//        ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());
+        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());
         ofcFundamentalInformation.setOrderSource("手动");
 
         try {
@@ -80,7 +77,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcWarehouseInformationService.save(ofcWarehouseInformation);
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
             }else{
-                ofcFundamentalInformation.setOrderCode("SO20161010000005");
                 ofcFundamentalInformation.setOperator("001");
                 ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
@@ -94,9 +90,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "false";
+            return String.valueOf(Wrapper.ERROR_CODE);
         }
-        return "true";
+        return String.valueOf(Wrapper.SUCCESS_CODE);
     }
 
     public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation){
@@ -116,7 +112,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcDistributionBasicInfo.setTransCode("111111111");
         ofcDistributionBasicInfo.setDeparturePlaceCode("001");
         ofcDistributionBasicInfo.setDestinationCode("001");
-        ofcDistributionBasicInfo.setTotalStandardBox(0);
+        ofcDistributionBasicInfo.setTotalStandardBox(8);
         ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
         ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());

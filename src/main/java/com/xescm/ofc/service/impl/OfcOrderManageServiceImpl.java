@@ -30,7 +30,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public String orderAudit(String orderCode,String orderStatus) {
-        System.out.println("======"+orderCode);
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);

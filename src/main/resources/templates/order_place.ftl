@@ -15,20 +15,10 @@
     <script language="javascript">
 
         $(function () {
-            $("#btn_add").click(function () {
-                $("#myModalLabel").text("新增");
-                $('#myAddModal').modal();
-
+            $("#screenOrderBtn").click(function () {
+                $("#orderPlaceConTable").submit;
+                alert(${orderPlaceResult!"null"});
             });
-
-            $("#btn_edit_submit").click(function () {
-                $("#updateStaffForm").submit();
-            });
-
-            $("#btn_add_submit").click(function () {
-                $("#addStaffForm").submit();
-            });
-
         });
     </script>
 
@@ -42,7 +32,7 @@
     </h1>
 </div>
 
-<form action="/orderPlaceCon" method="post" id="">
+<form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
     <input type="hidden" name="tag" value="manage">
 
 
@@ -202,7 +192,7 @@
 
 
 <hr/>
-    <button type="submit" id="screenOrderBtn">下单</button>
+    <button type="button" id="screenOrderBtn">下单</button>
 </form>
 
 <br/></br/>
