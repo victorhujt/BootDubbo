@@ -49,30 +49,33 @@
     <h2>订单中心下单</h2>
     <h3>基本信息</h3>
     <#--订单日期<input id="orderTimePre" name="orderTimePre" />-->
-    <#--订单类型
+    订单类型
     <select id="" name="orderType">
-        <option value="运输订单">运输订单</option>
-        <option value="仓配订单">仓配订单</option>
+        <option value="0">运输订单</option>
+        <option value="1">仓配订单</option>
     </select>
     业务类型
     <select id="" name="businessType">
-        <option value="销售出库">销售出库</option>
-        <option value="调拨出库">调拨出库</option>
-        <option value="报损出库">报损出库</option>
-        <option value="其他出库">其他出库</option>
+        <option value="00">城配</option>
+        <option value="01">干线</option>
         <option value="----------">----------</option>
-        <option value="采购入库">采购入库</option>
-        <option value="调拨入库">调拨入库</option>
-        <option value="退货入库">退货入库</option>
-        <option value="加工入库">加工入库</option>
-    </select>-->
+        <option value="10">销售出库</option>
+        <option value="11">调拨出库</option>
+        <option value="12">报损出库</option>
+        <option value="13">其他出库</option>
+        <option value="----------">----------</option>
+        <option value="14">采购入库</option>
+        <option value="15">调拨入库</option>
+        <option value="16">退货入库</option>
+        <option value="17">加工入库</option>
+    </select>
     客户订单编号<input id="custOrderCode" name="custOrderCode"/>
     店铺
-    <#--<select id="" name="storeCode">
+    <select id="" name="storeCode">
         <option value="线下销售">线下销售</option>
         <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
         <option value="众品京东旗舰店">众品京东旗舰店</option>
-    </select>-->
+    </select>
     备注
     <input id="" name="notes"/>
     <h3>货品明细</h3>
@@ -199,8 +202,7 @@
 
 
 <hr/>
-    <button type="submit" id="screenOrderBtn">下单!</button>
-   5
+    <button type="submit" id="screenOrderBtn">下单</button>
 </form>
 
 <br/></br/>

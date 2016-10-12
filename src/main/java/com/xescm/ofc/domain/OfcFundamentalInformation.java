@@ -6,48 +6,6 @@ import java.util.Date;
 @Table(name = "ofc_fundamental_information")
 public class OfcFundamentalInformation {
 
-    /*@Transient
-    private OfcOrderStatus ofcOrderStatus;
-    @Transient
-    private OfcDistributionBasicInfo ofcDistributionBasicInfo;
-    @Transient
-    private OfcWarehouseInformation ofcWarehouseInformation;
-    @Transient
-    private OfcFinanceInformation ofcFinanceInformation;
-
-    public OfcOrderStatus getOfcOrderStatus() {
-        return ofcOrderStatus;
-    }
-
-    public void setOfcOrderStatus(OfcOrderStatus ofcOrderStatus) {
-        this.ofcOrderStatus = ofcOrderStatus;
-    }
-
-    public OfcDistributionBasicInfo getOfcDistributionBasicInfo() {
-        return ofcDistributionBasicInfo;
-    }
-
-    public void setOfcDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        this.ofcDistributionBasicInfo = ofcDistributionBasicInfo;
-    }
-
-    public OfcWarehouseInformation getOfcWarehouseInformation() {
-        return ofcWarehouseInformation;
-    }
-
-    public void setOfcWarehouseInformation(OfcWarehouseInformation ofcWarehouseInformation) {
-        this.ofcWarehouseInformation = ofcWarehouseInformation;
-    }
-
-    public OfcFinanceInformation getOfcFinanceInformation() {
-        return ofcFinanceInformation;
-    }
-
-    public void setOfcFinanceInformation(OfcFinanceInformation ofcFinanceInformation) {
-        this.ofcFinanceInformation = ofcFinanceInformation;
-    }
-*/
-
 
     /**
      * 订单编号
