@@ -31,14 +31,10 @@ public class OfcOrderManageController {
     @RequestMapping("/orderOrNotAudit")
     public void orderAudit(String orderCode,  String orderStatus,HttpServletResponse response){
         try {
-            ofcOrderManageService.orderAudit(orderCode,orderStatus);
-            response.getWriter().print(Wrapper.SUCCESS_CODE);
+            String result = ofcOrderManageService.orderAudit(orderCode,orderStatus);
+            response.getWriter().print(result);
         } catch (Exception e) {
-            try {
-                response.getWriter().print(Wrapper.ERROR_CODE);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
@@ -50,14 +46,10 @@ public class OfcOrderManageController {
     @RequestMapping("/orderDelete")
     public void orderDelete(String orderCode,  String orderStatus,HttpServletResponse response){
         try {
-            ofcOrderManageService.orderDelete(orderCode,orderStatus);
-            response.getWriter().print(Wrapper.SUCCESS_CODE);
+            String result = ofcOrderManageService.orderDelete(orderCode,orderStatus);
+            response.getWriter().print(result);
         } catch (Exception e) {
-            try {
-                response.getWriter().print(Wrapper.ERROR_CODE);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
@@ -69,14 +61,10 @@ public class OfcOrderManageController {
     @RequestMapping("/orderCancel")
     public void orderCancel(String orderCode, String orderStatus, HttpServletResponse response){
         try {
-            ofcOrderManageService.orderCancel(orderCode,orderStatus);
-            response.getWriter().print(Wrapper.SUCCESS_CODE);
+            String result = ofcOrderManageService.orderCancel(orderCode,orderStatus);
+            response.getWriter().print(result);
         } catch (Exception e) {
-            try {
-                response.getWriter().print(Wrapper.ERROR_CODE);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 

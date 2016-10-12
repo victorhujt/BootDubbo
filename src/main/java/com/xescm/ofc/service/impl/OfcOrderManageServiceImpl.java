@@ -4,6 +4,7 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +50,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
-            return "success";
+            return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            return "fail";
+            return String.valueOf(Wrapper.ERROR_CODE);
         }
     }
 
@@ -62,9 +63,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
             ofcOrderStatusService.deleteByOrderCode(orderCode);
             ofcWarehouseInformationService.deleteByOrderCode(orderCode);
-            return "success";
+            return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            return "fail";
+            return String.valueOf(Wrapper.ERROR_CODE);
        }
     }
 
@@ -82,9 +83,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
-            return "success";
+            return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            return "fail";
+            return String.valueOf(Wrapper.ERROR_CODE);
         }
     }
 

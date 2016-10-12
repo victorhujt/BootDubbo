@@ -44,7 +44,11 @@
             $( "#confirmSure" ).click(function () {
                $.get("/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                    $("#confirmBox").modal('hide');
-                   window.location.href="/orderScreenByCondition?tag=manage";
+                   if(data == 200){
+                       window.location.href="/orderScreenByCondition?tag=manage";
+                   } else {
+                       alert("删除订单失败,请联系管理员!");
+                   }
                });
            });
         }
@@ -55,7 +59,11 @@
             $( "#confirmSure" ).click(function () {
                 $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                     $("#confirmBox").modal('hide');
+                    if(data == 200){
                         window.location.href="/orderScreenByCondition?tag=manage";
+                    } else {
+                        alert("审核订单失败,请联系管理员!");
+                    }
 
                 });
             });
