@@ -36,8 +36,7 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderOrNotAudit")
-    @ResponseBody
-    public String orderAudit(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+    public String orderAudit(OfcOrderDTO ofcOrderDTO){
         try {
             ofcOrderManageService.orderAudit(ofcOrderDTO);
         } catch (Exception e) {
@@ -52,7 +51,7 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderDelete")
-    public String orderDelete(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+    public String orderDelete(OfcOrderDTO ofcOrderDTO){
         try {
             ofcOrderManageService.orderDelete(ofcOrderDTO);
         } catch (Exception e) {
@@ -67,7 +66,7 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderCancel")
-    public String orderCancel(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+    public String orderCancel(OfcOrderDTO ofcOrderDTO){
         try {
             ofcOrderManageService.orderCancel(ofcOrderDTO);
         } catch (Exception e) {

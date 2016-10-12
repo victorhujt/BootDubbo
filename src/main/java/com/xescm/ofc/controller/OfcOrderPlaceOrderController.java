@@ -51,7 +51,7 @@ public class OfcOrderPlaceOrderController {
      * @return
      */
     @RequestMapping("/goodsScans")
-    public String placeOrder(@ModelAttribute("ofcGoodsDetailsInfo")OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
+    public String placeOrder(OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);

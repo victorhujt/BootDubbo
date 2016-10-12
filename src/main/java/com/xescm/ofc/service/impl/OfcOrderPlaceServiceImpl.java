@@ -1,12 +1,17 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.mapper.OfcDistributionBasicInfoMapper;
+import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
+import com.xescm.ofc.mapper.OfcOrderStatusMapper;
+import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,17 +19,16 @@ import java.util.Date;
 /**
  * Created by ydx on 2016/10/12.
  */
-public class OfcOrderPlaceServiceImpl extends BaseService<OfcOrderDTO> implements OfcOrderPlaceService {
+@Service
+public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
+    private OfcOrderStatusMapper ofcOrderStatusMapper;
     @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
     @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
     @Autowired
-    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
-    private OfcWarehouseInformationService ofcWarehouseInformationService;
+    private OfcDistributionBasicInfoMapper ofcDistributionBasicInfoMapper;
 
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO) {
@@ -61,7 +65,7 @@ public class OfcOrderPlaceServiceImpl extends BaseService<OfcOrderDTO> implement
         ofcFundamentalInformation.setOrderSource("手动");
 
         try {
-            if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
+            if (ofcFundamentalInformationMapper.selectOne(ofcFundamentalInformation)==null){
                 ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
                         .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
                 ofcFundamentalInformation.setOrderTime(new Date());
@@ -74,9 +78,9 @@ public class OfcOrderPlaceServiceImpl extends BaseService<OfcOrderDTO> implement
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
                 ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                 ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
-                ofcWarehouseInformationService.save(ofcWarehouseInformation);
-                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                ofcDistributionBasicInfoMapper.insert(ofcDistributionBasicInfo);
+                ofcWarehouseInformationMapper.insert(ofcWarehouseInformation);
+                ofcFundamentalInformationMapper.insert(ofcFundamentalInformation);
             }else{
                 ofcFundamentalInformation.setOrderCode("SO20161010000005");
                 ofcFundamentalInformation.setOperator("001");
@@ -86,9 +90,9 @@ public class OfcOrderPlaceServiceImpl extends BaseService<OfcOrderDTO> implement
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
                 ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                 ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
-                ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
-                ofcFundamentalInformationService.update(ofcFundamentalInformation);
+                ofcDistributionBasicInfoMapper.updateByOrderCode(ofcDistributionBasicInfo);
+                ofcWarehouseInformationMapper.updateByOrderCode(ofcWarehouseInformation);
+                ofcFundamentalInformationMapper.updateByPrimaryKey(ofcFundamentalInformation);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,7 +110,7 @@ public class OfcOrderPlaceServiceImpl extends BaseService<OfcOrderDTO> implement
         ofcOrderStatus.setOrderStatus(OrderConst.PENDINGAUDIT);
         ofcOrderStatus.setLastedOperTime(new Date());
         ofcOrderStatus.setOperator("001");
-        ofcOrderStatusService.save(ofcOrderStatus);
+        ofcOrderStatusMapper.insert(ofcOrderStatus);
     }
 
     public OfcDistributionBasicInfo upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo

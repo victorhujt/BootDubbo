@@ -1,10 +1,12 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.mapper.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,17 +14,16 @@ import java.util.Date;
 /**
  * Created by ydx on 2016/10/12.
  */
-public class OfcOrderManageServiceImpl extends BaseService<OfcOrderDTO> implements OfcOrderManageService {
+@Service
+public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
+    private OfcOrderStatusMapper ofcOrderStatusMapper;
     @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
     @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
     @Autowired
-    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
-    private OfcWarehouseInformationService ofcWarehouseInformationService;
+    private OfcDistributionBasicInfoMapper ofcDistributionBasicInfoMapper;
 
     @Override
     public String orderAudit(OfcOrderDTO ofcOrderDTO) {
@@ -43,7 +44,8 @@ public class OfcOrderManageServiceImpl extends BaseService<OfcOrderDTO> implemen
             }
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
+            //ofcOrderStatusService.save(ofcOrderStatus);
+            ofcOrderStatusMapper.insert(ofcOrderStatus);
             return "success";
         }else {
             return "fail";
@@ -55,10 +57,10 @@ public class OfcOrderManageServiceImpl extends BaseService<OfcOrderDTO> implemen
         OfcFundamentalInformation ofcFundamentalInformation;
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         //if(ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT)){
-        ofcFundamentalInformationService.deleteByKey("SO20161010000005");
-        ofcDistributionBasicInfoService.deleteByOrderCode("SO20161010000005");
-        ofcOrderStatusService.deleteByOrderCode("SO20161010000005");
-        ofcWarehouseInformationService.deleteByOrderCode("SO20161010000005");
+        ofcFundamentalInformationMapper.deleteByPrimaryKey("SO20161010000005");
+        ofcDistributionBasicInfoMapper.deleteByOrderCode("SO20161010000005");
+        ofcOrderStatusMapper.deleteByOrderCode("SO20161010000005");
+        ofcWarehouseInformationMapper.deleteByOrderCode("SO20161010000005");
         return "success";
         //}else {
         //return "fail";
@@ -77,7 +79,7 @@ public class OfcOrderManageServiceImpl extends BaseService<OfcOrderDTO> implemen
                     +" "+"订单已取消");
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
+            //ofcOrderStatusService.save(ofcOrderStatus);
             return "success";
         }else {
             return "fail";
