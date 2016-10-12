@@ -28,21 +28,15 @@
             $("#btn_add_submit").click(function () {
                 $("#addStaffForm").submit();
             });
-
         });
 
         function editOrder(orderCode) {
 
             /*$("#myModalLabel").text("修改");*/
             $('#myEditModal').modal();
-            /*
-             $.get("/getStaffById",{"staffId":id},function (data) {
-                 $("#staffId").val(data.id);
-                 $("#staffName").val(data.name);
-                 $("#staffAge").val(data.age);
-                 $("#staffTelephone").val(data.telephone);
-                 $("#staffAddress").val(data.address);
-             },"json");*/
+             $.get("/getOrderDetailByCode",{"orderCode":orderCode},function (data) {
+                 location.href="/placeOrEditOrder?ofcOrderDTO="+data;
+             },"json");
         }
 
         function deleteOrder(ordercode) {

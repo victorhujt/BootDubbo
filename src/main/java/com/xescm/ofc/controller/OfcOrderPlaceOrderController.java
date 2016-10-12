@@ -77,6 +77,7 @@ public class OfcOrderPlaceOrderController {
         ofcFundamentalInformation.setOrderSource("手动");
         try {
             if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
+                //如果该订单不存在, 就是新下单
                 ofcFundamentalInformation.setOrderCode("SO"+PrimaryGenerater.getInstance()
                         .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
                 ofcFundamentalInformation.setOrderTime(new Date());
@@ -93,6 +94,7 @@ public class OfcOrderPlaceOrderController {
                 ofcWarehouseInformationService.save(ofcWarehouseInformation);
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
             }else{
+                //如果该订单已经存在就是修改订单
                 ofcFundamentalInformation.setOrderCode("SO20161010000005");
                 ofcFundamentalInformation.setOperator("001");
                 ofcFundamentalInformation.setOpertime(new Date());
