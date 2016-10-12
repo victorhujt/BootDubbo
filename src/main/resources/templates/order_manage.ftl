@@ -31,52 +31,60 @@
         });
 
         function editOrder(orderCode) {
-
-            /*$("#myModalLabel").text("修改");*/
+            /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
             $('#myEditModal').modal();
              $.get("/getOrderDetailByCode",{"orderCode":orderCode},function (data) {
                  location.href="/placeOrEditOrder?ofcOrderDTO="+data;
              },"json");
         }
 
-        function deleteOrder(ordercode) {
+        function deleteOrder(ordercode,orderStatus) {
             $("#confirmBox").modal();
            $("#boxmsg").text("您确定要删除此订单?");
             $( "#confirmSure" ).click(function () {
-               $.get("/orderDelete",{"orderCode":orderCode},function (data) {
+               $.get("/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                    $("#confirmBox").modal('hide');
-                   window.location.href="/orderScreenByCondition";
+                   window.location.href="/orderScreenByCondition?tag=manage";
                });
            });
         }
 
-        function reviewOrder(ordercode) {
+        function reviewOrder(ordercode,orderStatus) {
             $("#confirmBox").modal();
             $("#boxmsg").text("您确定要审核此订单?");
             $( "#confirmSure" ).click(function () {
-                $.get("/orderOrNotAudit",{"orderCode":ordercode},function (data) {
+                $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                     $("#confirmBox").modal('hide');
-                    window.location.href="/orderScreenByCondition";
+                        window.location.href="/orderScreenByCondition?tag=manage";
+
                 });
             });
         }
-        function reReviewOrder(ordercode) {
+        function reReviewOrder(ordercode,orderStatus) {
             $("#confirmBox").modal();
             $("#boxmsg").text("您确定要反审核此订单?");
             $("#confirmSure").click(function () {
-                $.get("/orderOrNotAudit",{"ofcFundamentalInformation.orderCode":ordercode},function (data) {
+                $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                     $("#confirmBox").modal('hide');
-                    window.location.href="/orderScreenByCondition";
+                    if(data == 200){
+                        window.location.href="/orderScreenByCondition?tag=manage";
+                    } else {
+                        alert("反审核订单失败,请联系管理员!");
+                    }
                 });
             });
         }
-        function cancelOrder(ordercode) {
+        function cancelOrder(ordercode,orderStatus) {
             $("#confirmBox").modal();
             $("#boxmsg").text("您确定要取消此订单?");
             $( "#confirmSure" ).click(function () {
-                $.get("/orderCancel",{"orderCode":ordercode},function (data) {
+                $.get("/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                     $("#confirmBox").modal('hide');
-                    window.location.href="/orderScreenByCondition";
+                    if(data == 200){
+                        window.location.href="/orderScreenByCondition?tag=manage";
+                    } else {
+                        alert("取消订单失败,请联系管理员!");
+                    }
                 });
             });
         }
@@ -107,159 +115,9 @@
 </div><!-- /.modal -->
 
 
-<div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">新增</h4>
-            </div>
-
-
-            <form action="/insertStaff" method="post" id="addStaffForm">
-
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label for="txt_departmentname">订单编号</label>
-                        <input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname"
-                               placeholder="订单编号">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">客户订单编号</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="客户订单编号">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">订单日期</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="订单日期">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">订单类型</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="订单类型">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">业务类型</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="业务类型">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">订单状态</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="订单状态">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">收货方名称</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="收货方名称">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">仓库名称</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="仓库名称">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">店铺</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="店铺">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_statu">备注</label>
-                        <input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="备注">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><span
-                            class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
-                    </button>
-                    <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span
-                            class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存
-                    </button>
-                </div>
-        </div>
-        </form>
-    </div>
-</div>
 
 
 
-
-<div class="modal fade" id="myEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">修改</h4>
-            </div>
-            <form action="/insertStaff" method="post" id="addStaffForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="txt_departmentname">订单编号</label>
-                        <input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname"
-                               placeholder="订单编号">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">客户订单编号</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="客户订单编号">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">订单日期</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="订单日期">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">订单类型</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="订单类型">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_parentdepartment">业务类型</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
-                               placeholder="业务类型">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">订单状态</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="订单状态">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">收货方名称</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="收货方名称">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">仓库名称</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="仓库名称">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_departmentlevel">店铺</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
-                               placeholder="店铺">
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_statu">备注</label>
-                        <input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="备注">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><span
-                            class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
-                    </button>
-                    <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span
-                            class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存
-                    </button>
-                </div>
-        </div>
-        </form>
-    </div>
-</div>
-${test!"null"}
 <div class="page-header">
     <h1>xescm_ofc
     </h1>
@@ -302,11 +160,11 @@ dto  参数,给后端当参数,或者返回的dot.
     <tr class="active">
         <td style="width: 10%;">
             <div class="btn-group" role="group">
-                <button type="button" id="btn_update1" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}')" class="btn btn-default">审核</button>
+                <button type="button" id="btn_update1" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">审核</button>
                 <button type="button" id="btn_update2" +${order_index} onclick="editOrder('${order.orderCode!"null"}')" class="btn btn-default">编辑</button>
-                <button type="button" id="btn_delete3" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}')" class="btn btn-default">删除</button>
-                <button type="button" id="btn_update4" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}')" class="btn btn-default">反审核</button>
-                <button type="button" id="btn_delete5" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}')" class="btn btn-default">取消</button>
+                <button type="button" id="btn_delete3" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">删除</button>
+                <button type="button" id="btn_update4" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">反审核</button>
+                <button type="button" id="btn_delete5" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">取消</button>
             </div>
         </td>
         <td style="width: 10%;">${order.orderCode!"null"}</td>

@@ -4,6 +4,7 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,81 +25,79 @@ import java.util.Map;
 @Controller
 public class OfcOrderManageController {
     @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
-    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
-    private OfcWarehouseInformationService ofcWarehouseInformationService;
-
+    private OfcOrderManageService ofcOrderManageService;
 
     @RequestMapping(value = "/orderManage")
     public String orderManage(){
         return "order_manage";
     }
 
-    public PubUtils pubUtils=new PubUtils();
-    private OrderConst orderConst=new OrderConst();
-
-    /*订单的审核和反审核*/
+    /**
+     * 订单审核/反审核
+     * @param
+     * @return
+     */
     @RequestMapping("/orderOrNotAudit")
-    @ResponseBody
-    public String orderAudit(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
-                             @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        ofcOrderStatus.setOrderStatus("1");
-        if((!ofcOrderStatus.getOrderStatus().equals(orderConst.IMPLEMENTATIONIN))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCANCELED))){
-            if (ofcOrderStatus.getOrderStatus().equals(orderConst.ALREADYEXAMINE)){
-                ofcOrderStatus.setOrderStatus(orderConst.PENDINGAUDIT);
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单反审核完成");
-            }else if(ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT)){
-                ofcOrderStatus.setOrderStatus(orderConst.ALREADYEXAMINE);
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单审核完成");
+    public void orderAudit(String orderCode,  String orderStatus,HttpServletResponse response){
+        System.out.println("-------------"+orderCode);
+        try {
+            ofcOrderManageService.orderAudit(orderCode,orderStatus);
+            response.getWriter().print(Wrapper.SUCCESS_CODE);
+        } catch (Exception e) {
+            try {
+                response.getWriter().print(Wrapper.ERROR_CODE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
-            ofcOrderStatus.setOperator("001");
-            ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
-            return "success";
-        }else {
-            return "fail";
         }
     }
 
+    /**
+     * 订单删除
+     * @param orderCode
+     * @return
+     */
     @RequestMapping("/orderDelete")
-    public String orderDelete(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
-                            @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        //if(ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT)){
-            ofcFundamentalInformationService.deleteByKey("SO20161010000005");
-            ofcDistributionBasicInfoService.deleteByOrderCode("SO20161010000005");
-            ofcOrderStatusService.deleteByOrderCode("SO20161010000005");
-            ofcWarehouseInformationService.deleteByOrderCode("SO20161010000005");
-            return "success";
-        //}else {
-            //return "fail";
-        //}
+    public void orderDelete(String orderCode ,String orderStatus, HttpServletResponse response){
+        System.out.println("==============="+orderCode);
+        try {
+            ofcOrderManageService.orderDelete(orderCode,orderStatus);
+            response.getWriter().print(Wrapper.SUCCESS_CODE);
+        } catch (Exception e) {
+            try {
+                response.getWriter().print(Wrapper.ERROR_CODE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
+    /**
+     * 订单取消
+     * @param orderCode
+     * @return
+     */
     @RequestMapping("/orderCancel")
-    public String orderCancel(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
-                              @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        if((!ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCANCELED))){
-            ofcOrderStatus.setOrderStatus(orderConst.HASBEENCANCELED);
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已取消");
-            ofcOrderStatus.setOperator("001");
-            ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
-            return "success";
-        }else {
-            return "fail";
+    public void orderCancel(String orderCode, String orderStatus, HttpServletResponse response){
+        try {
+            ofcOrderManageService.orderCancel(orderCode,orderStatus);
+            response.getWriter().print(Wrapper.SUCCESS_CODE);
+        } catch (Exception e) {
+            try {
+                response.getWriter().print(Wrapper.ERROR_CODE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    @RequestMapping(value = "/getOrderDetailByCode")
+    public void getOrderDetailByCode(String orderCode, HttpServletResponse response){
+        OfcOrderDTO ofcOrderDTO = ofcOrderManageService.getOrderDetailByCode(orderCode);
+        try {
+            response.getWriter().print(ofcOrderDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

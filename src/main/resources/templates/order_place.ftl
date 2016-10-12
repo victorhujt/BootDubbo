@@ -200,7 +200,7 @@
 
 <hr/>
     <button type="submit" id="screenOrderBtn">下单!</button>
-    <#--点完下单后, 清除所有文本框的数据-->
+   5
 </form>
 
 <br/></br/>
