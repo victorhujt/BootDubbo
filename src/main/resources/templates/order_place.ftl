@@ -11,14 +11,13 @@
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <#--日期控件-->
+    <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
 
     <script language="javascript">
 
         $(function () {
-            $("#screenOrderBtn").click(function () {
-                $("#orderPlaceConTable").submit;
-                alert(${orderPlaceResult!"null"});
-            });
+
         });
     </script>
 
@@ -38,7 +37,7 @@
 
     <h2>订单中心下单</h2>
     <h3>基本信息</h3>
-    <#--订单日期<input id="orderTimePre" name="orderTimePre" />-->
+    订单日期<#--<input id="orderTime" name="orderTime" onClick="WdatePicker()"/>-->
     订单类型
     <select id="" name="orderType">
         <option value="0">运输订单</option>
@@ -67,10 +66,9 @@
         <option value="众品京东旗舰店">众品京东旗舰店</option>
     </select>
     备注
-    <input id="" name="notes"/>
+    <input id="" name="notes" onClick="WdatePicker()"/>
     <h3>货品明细</h3>
 <#--
-
     <table class="table table-hover" width="80%" align="center">
         <!-- On rows &ndash;&gt;
         <tr class="active" style="height: 15px">
@@ -192,7 +190,7 @@
 
 
 <hr/>
-    <button type="button" id="screenOrderBtn">下单</button>
+    <button type="submit" id="screenOrderBtn">下单</button>
 </form>
 
 <br/></br/>

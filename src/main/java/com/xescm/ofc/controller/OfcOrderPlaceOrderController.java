@@ -39,6 +39,7 @@ public class OfcOrderPlaceOrderController {
         System.out.println(ofcOrderDTO);
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO);
+            System.out.println("========="+result);
             map.put("orderPlaceResult",result);
         } catch (Exception e) {
             e.printStackTrace();

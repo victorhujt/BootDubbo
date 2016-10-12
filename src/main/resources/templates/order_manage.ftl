@@ -57,14 +57,13 @@
             $("#confirmBox").modal();
             $("#boxmsg").text("您确定要审核此订单?");
             $( "#confirmSure" ).click(function () {
-                $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
+                $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
                     $("#confirmBox").modal('hide');
                     if(data == 200){
                         window.location.href="/orderScreenByCondition?tag=manage";
                     } else {
                         alert("审核订单失败,请联系管理员!");
                     }
-
                 });
             });
         }
@@ -72,7 +71,7 @@
             $("#confirmBox").modal();
             $("#boxmsg").text("您确定要反审核此订单?");
             $("#confirmSure").click(function () {
-                $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
+                $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
                     $("#confirmBox").modal('hide');
                     if(data == 200){
                         window.location.href="/orderScreenByCondition?tag=manage";
