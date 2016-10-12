@@ -49,7 +49,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
-            System.out.println("======```````````"+ofcOrderStatus);
             ofcOrderStatusService.save(ofcOrderStatus);
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {

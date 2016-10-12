@@ -16,7 +16,7 @@ import java.util.Date;
  * Created by ydx on 2016/10/12.
  */
 @Service
-public class OfcOrderPlaceServiceImpl  implements OfcOrderPlaceService {
+public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
@@ -35,10 +35,10 @@ public class OfcOrderPlaceServiceImpl  implements OfcOrderPlaceService {
         OfcFundamentalInformation ofcFundamentalInformation=new OfcFundamentalInformation();
         OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
         OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
-        ofcOrderDTO = modelMapper.map(ofcGoodsDetailsInfo, OfcOrderDTO.class);
-        ofcOrderDTO = modelMapper.map(ofcFundamentalInformation, OfcOrderDTO.class);
-        ofcOrderDTO = modelMapper.map(ofcDistributionBasicInfo, OfcOrderDTO.class);
-        ofcOrderDTO = modelMapper.map(ofcWarehouseInformation, OfcOrderDTO.class);
+        ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
+        ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
+        ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         if (ofcFundamentalInformation.getOrderType().equals("1")){
             ofcFundamentalInformation.setCustCode("001");

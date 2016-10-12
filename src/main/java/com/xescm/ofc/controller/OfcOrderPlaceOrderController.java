@@ -34,7 +34,7 @@ public class OfcOrderPlaceOrderController {
      * @param map
      * @return
      */
-    @RequestMapping("/placeOrEditOrder")
+    @RequestMapping("/orderPlaceCon")
     public String orderPlace(OfcOrderDTO ofcOrderDTO, Map<String, Object> map){
         System.out.println(ofcOrderDTO);
         try {
@@ -51,7 +51,7 @@ public class OfcOrderPlaceOrderController {
      * @return
      */
     @RequestMapping("/goodsScans")
-    public String placeOrder(@ModelAttribute("ofcGoodsDetailsInfo")OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
+    public String placeOrder(OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
