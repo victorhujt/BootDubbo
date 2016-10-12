@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,46 +33,70 @@ public class OfcOrderManageController {
 
     /**
      * 订单审核/反审核
-     * @param ofcOrderDTO
+     * @param
      * @return
      */
     @RequestMapping("/orderOrNotAudit")
     public String orderAudit(OfcOrderDTO ofcOrderDTO){
         try {
-            ofcOrderManageService.orderAudit(ofcOrderDTO);
+            ofcOrderManageService.orderAudit(orderCode,orderStatus);
+            response.getWriter().print(Wrapper.SUCCESS_CODE);
         } catch (Exception e) {
-            return "";
+            try {
+                response.getWriter().print(Wrapper.ERROR_CODE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
-        return "";
     }
 
     /**
      * 订单删除
-     * @param ofcOrderDTO
+     * @param orderCode
      * @return
      */
     @RequestMapping("/orderDelete")
-    public String orderDelete(OfcOrderDTO ofcOrderDTO){
+    public String orderDelete(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
         try {
-            ofcOrderManageService.orderDelete(ofcOrderDTO);
+            ofcOrderManageService.orderDelete(orderCode,orderStatus);
+            response.getWriter().print(Wrapper.SUCCESS_CODE);
         } catch (Exception e) {
-            return "";
+            try {
+                response.getWriter().print(Wrapper.ERROR_CODE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         return "";
     }
 
     /**
      * 订单取消
-     * @param ofcOrderDTO
+     * @param orderCode
      * @return
      */
     @RequestMapping("/orderCancel")
-    public String orderCancel(OfcOrderDTO ofcOrderDTO){
+    public void orderCancel(String orderCode, String orderStatus, HttpServletResponse response){
         try {
-            ofcOrderManageService.orderCancel(ofcOrderDTO);
+            ofcOrderManageService.orderCancel(orderCode,orderStatus);
+            response.getWriter().print(Wrapper.SUCCESS_CODE);
         } catch (Exception e) {
-            return "";
+            try {
+                response.getWriter().print(Wrapper.ERROR_CODE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         return "";
+    }
+
+    @RequestMapping(value = "/getOrderDetailByCode")
+    public void getOrderDetailByCode(String orderCode, HttpServletResponse response){
+        OfcOrderDTO ofcOrderDTO = ofcOrderManageService.getOrderDetailByCode(orderCode);
+        try {
+            response.getWriter().print(ofcOrderDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

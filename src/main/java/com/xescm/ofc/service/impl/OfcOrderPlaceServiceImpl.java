@@ -1,10 +1,6 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.mapper.OfcDistributionBasicInfoMapper;
-import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
-import com.xescm.ofc.mapper.OfcOrderStatusMapper;
-import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PrimaryGenerater;
@@ -19,16 +15,17 @@ import java.util.Date;
 /**
  * Created by ydx on 2016/10/12.
  */
-@Service
-public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
+public class OfcOrderPlaceServiceImpl extends BaseService<OfcOrderDTO> implements OfcOrderPlaceService {
     @Autowired
-    private OfcOrderStatusMapper ofcOrderStatusMapper;
+    private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
-    private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
-    private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
-    private OfcDistributionBasicInfoMapper ofcDistributionBasicInfoMapper;
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Autowired
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO) {
@@ -65,34 +62,34 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource("手动");
 
         try {
-            if (ofcFundamentalInformationMapper.selectOne(ofcFundamentalInformation)==null){
+            if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
                 ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
                         .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
                 ofcFundamentalInformation.setOrderTime(new Date());
                 ofcFundamentalInformation.setCreationTime(new Date());
                 ofcFundamentalInformation.setCreator("001");
                 ofcFundamentalInformation.setOperator("001");
-                ofcFundamentalInformation.setOpertime(new Date());
+                ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单已创建");
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
                 ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                 ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                ofcDistributionBasicInfoMapper.insert(ofcDistributionBasicInfo);
-                ofcWarehouseInformationMapper.insert(ofcWarehouseInformation);
-                ofcFundamentalInformationMapper.insert(ofcFundamentalInformation);
+                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                ofcFundamentalInformationService.save(ofcFundamentalInformation);
             }else{
                 ofcFundamentalInformation.setOrderCode("SO20161010000005");
                 ofcFundamentalInformation.setOperator("001");
-                ofcFundamentalInformation.setOpertime(new Date());
+                ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单已更新");
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
                 ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                 ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                ofcDistributionBasicInfoMapper.updateByOrderCode(ofcDistributionBasicInfo);
-                ofcWarehouseInformationMapper.updateByOrderCode(ofcWarehouseInformation);
-                ofcFundamentalInformationMapper.updateByPrimaryKey(ofcFundamentalInformation);
+                ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+                ofcFundamentalInformationService.update(ofcFundamentalInformation);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +107,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setOrderStatus(OrderConst.PENDINGAUDIT);
         ofcOrderStatus.setLastedOperTime(new Date());
         ofcOrderStatus.setOperator("001");
-        ofcOrderStatusMapper.insert(ofcOrderStatus);
+        ofcOrderStatusService.save(ofcOrderStatus);
     }
 
     public OfcDistributionBasicInfo upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo
@@ -123,7 +120,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
         ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
         ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
-        ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOpertime());
+        ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
         return ofcDistributionBasicInfo;
     }
 
@@ -134,7 +131,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcWarehouseInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
         ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
-        ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOpertime());
+        ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOperTime());
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
         return ofcWarehouseInformation;
     }

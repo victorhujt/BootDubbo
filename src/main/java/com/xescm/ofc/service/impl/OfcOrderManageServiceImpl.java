@@ -1,7 +1,6 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.mapper.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.OrderConst;
 import com.xescm.ofc.utils.PubUtils;
@@ -15,21 +14,26 @@ import java.util.Date;
  * Created by ydx on 2016/10/12.
  */
 @Service
-public class OfcOrderManageServiceImpl implements OfcOrderManageService {
+public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
-    private OfcOrderStatusMapper ofcOrderStatusMapper;
+    private OfcOrderStatusService ofcOrderStatusService;
+
     @Autowired
-    private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
-    private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
-    private OfcDistributionBasicInfoMapper ofcDistributionBasicInfoMapper;
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Autowired
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
-    public String orderAudit(OfcOrderDTO ofcOrderDTO) {
-        OfcFundamentalInformation ofcFundamentalInformation;
-        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        ofcOrderStatus.setOrderStatus("1");
+    public String orderAudit(String orderCode,String orderStatus) {
+        System.out.println("======"+orderCode);
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(orderCode);
+        ofcOrderStatus.setOrderStatus(orderStatus);
+        System.out.println(ofcOrderStatus);
         if((!ofcOrderStatus.getOrderStatus().equals(OrderConst.IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCANCELED))){
@@ -44,8 +48,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
-            //ofcOrderStatusService.save(ofcOrderStatus);
-            ofcOrderStatusMapper.insert(ofcOrderStatus);
+            ofcOrderStatusService.save(ofcOrderStatus);
             return "success";
         }else {
             return "fail";
@@ -53,24 +56,23 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     }
 
     @Override
-    public String orderDelete(OfcOrderDTO ofcOrderDTO) {
-        OfcFundamentalInformation ofcFundamentalInformation;
-        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        //if(ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT)){
-        ofcFundamentalInformationMapper.deleteByPrimaryKey("SO20161010000005");
-        ofcDistributionBasicInfoMapper.deleteByOrderCode("SO20161010000005");
-        ofcOrderStatusMapper.deleteByOrderCode("SO20161010000005");
-        ofcWarehouseInformationMapper.deleteByOrderCode("SO20161010000005");
-        return "success";
-        //}else {
-        //return "fail";
-        //}
+    public String orderDelete(String orderCode,String orderStatus) {
+        if(orderStatus.equals(OrderConst.PENDINGAUDIT)){
+            ofcFundamentalInformationService.deleteByKey(orderCode);
+            ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
+            ofcOrderStatusService.deleteByOrderCode(orderCode);
+            ofcWarehouseInformationService.deleteByOrderCode(orderCode);
+            return "success";
+        }else {
+            return "fail";
+       }
     }
 
     @Override
-    public String orderCancel(OfcOrderDTO ofcOrderDTO) {
-        OfcFundamentalInformation ofcFundamentalInformation;
-        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+    public String orderCancel(String orderCode,String orderStatus) {
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(orderCode);
+        ofcOrderStatus.setOrderStatus(orderStatus);
         if((!ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCANCELED))){
@@ -79,10 +81,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     +" "+"订单已取消");
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
-            //ofcOrderStatusService.save(ofcOrderStatus);
+            ofcOrderStatusService.save(ofcOrderStatus);
             return "success";
         }else {
             return "fail";
         }
+    }
+
+    @Override
+    public OfcOrderDTO getOrderDetailByCode(String orderCode) {
+        return null;
     }
 }

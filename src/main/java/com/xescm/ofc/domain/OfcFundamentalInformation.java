@@ -6,7 +6,7 @@ import java.util.Date;
 @Table(name = "ofc_fundamental_information")
 public class OfcFundamentalInformation {
 
-    @Transient
+    /*@Transient
     private OfcOrderStatus ofcOrderStatus;
     @Transient
     private OfcDistributionBasicInfo ofcDistributionBasicInfo;
@@ -46,14 +46,8 @@ public class OfcFundamentalInformation {
     public void setOfcFinanceInformation(OfcFinanceInformation ofcFinanceInformation) {
         this.ofcFinanceInformation = ofcFinanceInformation;
     }
+*/
 
-    public Date getOperTime() {
-        return operTime;
-    }
-
-    public void setOperTime(Date operTime) {
-        this.operTime = operTime;
-    }
 
     /**
      * 订单编号
@@ -616,7 +610,7 @@ public class OfcFundamentalInformation {
      *
      * @return operTime - 操作时间
      */
-    public Date getOpertime() {
+    public Date getOperTime() {
         return operTime;
     }
 
@@ -625,7 +619,8 @@ public class OfcFundamentalInformation {
      *
      * @param opertime 操作时间
      */
-    public void setOpertime(Date opertime) {
+    public void setOperTime(Date opertime) {
         this.operTime = opertime;
     }
+
 }

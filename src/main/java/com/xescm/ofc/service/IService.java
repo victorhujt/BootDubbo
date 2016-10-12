@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OfcOrderDTO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
@@ -59,5 +60,6 @@ public interface IService<T> {
 	
 	/** 根据example条件和RowBounds进行分页查询 */
 	List<T> selectByExampleAndRowBounds(Object example, RowBounds rowBounds);
+
 
 }
