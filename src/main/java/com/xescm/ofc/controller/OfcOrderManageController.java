@@ -1,22 +1,14 @@
 package com.xescm.ofc.controller;
 
-import com.xescm.ofc.domain.*;
-import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.OrderConst;
-import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.service.OfcOrderManageService;
+import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ydx on 2016/10/11.
@@ -37,7 +29,7 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderOrNotAudit")
-    public String orderAudit(OfcOrderDTO ofcOrderDTO){
+    public void orderAudit(String orderCode,  String orderStatus,HttpServletResponse response){
         try {
             ofcOrderManageService.orderAudit(orderCode,orderStatus);
             response.getWriter().print(Wrapper.SUCCESS_CODE);
@@ -56,7 +48,7 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderDelete")
-    public String orderDelete(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+    public void orderDelete(String orderCode,  String orderStatus,HttpServletResponse response){
         try {
             ofcOrderManageService.orderDelete(orderCode,orderStatus);
             response.getWriter().print(Wrapper.SUCCESS_CODE);
@@ -67,7 +59,6 @@ public class OfcOrderManageController {
                 e1.printStackTrace();
             }
         }
-        return "";
     }
 
     /**
@@ -87,7 +78,6 @@ public class OfcOrderManageController {
                 e1.printStackTrace();
             }
         }
-        return "";
     }
 
     @RequestMapping(value = "/getOrderDetailByCode")

@@ -34,7 +34,7 @@ public class OfcOrderPlaceOrderController {
      * @param map
      * @return
      */
-    @RequestMapping("/placeOrEditOrder")
+    @RequestMapping("/orderPlaceCon")
     public String orderPlace(OfcOrderDTO ofcOrderDTO, Map<String, Object> map){
         System.out.println(ofcOrderDTO);
         try {
