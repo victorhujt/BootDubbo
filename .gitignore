@@ -15,6 +15,7 @@ target/
 *.ipr
 .mvn/
 mvn*
+logs/
 ### NetBeans ###
 nbproject/private/
 build/

@@ -6,6 +6,8 @@ import com.xescm.ofc.service.OfcOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by lyh on 2016/10/10.
  */
@@ -17,5 +19,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public int deleteByOrderCode(Object key) {
         ofcOrderStatusMapper.deleteByOrderCode(key);
         return 0;
+    }
+
+    @Override
+    public List<OfcOrderStatus> orderStatusScreen(Object key) {
+        return ofcOrderStatusMapper.orderStatusScreen(key);
     }
 }

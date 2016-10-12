@@ -94,8 +94,6 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
-${test!"null"}
 <div class="page-header">
     <h1>xescm_ofc
     </h1>
@@ -113,7 +111,6 @@ ${test!"null"}
 </form>
 
 <br/></br/>
-<button id="btn_add" class="btn btn-default" type="submit" style="float: right">Insert Staff</button>
 <table class="table table-hover" width="80%" align="center">
     <!-- On rows -->
     <tr class="active" style="height: 15px">
