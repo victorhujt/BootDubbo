@@ -23,81 +23,56 @@ import java.util.Map;
 @Controller
 public class OfcOrderManageController {
     @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
-    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
-    private OfcWarehouseInformationService ofcWarehouseInformationService;
-
+    private OfcOrderManageService ofcOrderManageService;
 
     @RequestMapping(value = "/orderManage")
     public String orderManage(){
         return "order_manage";
     }
 
-    public PubUtils pubUtils=new PubUtils();
-    private OrderConst orderConst=new OrderConst();
-
-    /*订单的审核和反审核*/
+    /**
+     * 订单审核/反审核
+     * @param ofcOrderDTO
+     * @return
+     */
     @RequestMapping("/orderOrNotAudit")
     @ResponseBody
-    public String orderAudit(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
-                             @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        ofcOrderStatus.setOrderStatus("1");
-        if((!ofcOrderStatus.getOrderStatus().equals(orderConst.IMPLEMENTATIONIN))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCANCELED))){
-            if (ofcOrderStatus.getOrderStatus().equals(orderConst.ALREADYEXAMINE)){
-                ofcOrderStatus.setOrderStatus(orderConst.PENDINGAUDIT);
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单反审核完成");
-            }else if(ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT)){
-                ofcOrderStatus.setOrderStatus(orderConst.ALREADYEXAMINE);
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单审核完成");
-            }
-            ofcOrderStatus.setOperator("001");
-            ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
-            return "success";
-        }else {
-            return "fail";
+    public String orderAudit(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+        try {
+            ofcOrderManageService.orderAudit(ofcOrderDTO);
+        } catch (Exception e) {
+            return "";
         }
+        return "";
     }
 
+    /**
+     * 订单删除
+     * @param ofcOrderDTO
+     * @return
+     */
     @RequestMapping("/orderDelete")
-    public String orderDelete(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
-                            @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        //if(ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT)){
-            ofcFundamentalInformationService.deleteByKey("SO20161010000005");
-            ofcDistributionBasicInfoService.deleteByOrderCode("SO20161010000005");
-            ofcOrderStatusService.deleteByOrderCode("SO20161010000005");
-            ofcWarehouseInformationService.deleteByOrderCode("SO20161010000005");
-            return "success";
-        //}else {
-            //return "fail";
-        //}
+    public String orderDelete(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+        try {
+            ofcOrderManageService.orderDelete(ofcOrderDTO);
+        } catch (Exception e) {
+            return "";
+        }
+        return "";
     }
 
+    /**
+     * 订单取消
+     * @param ofcOrderDTO
+     * @return
+     */
     @RequestMapping("/orderCancel")
-    public String orderCancel(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
-                              @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
-        if((!ofcOrderStatus.getOrderStatus().equals(orderConst.PENDINGAUDIT))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(orderConst.HASBEENCANCELED))){
-            ofcOrderStatus.setOrderStatus(orderConst.HASBEENCANCELED);
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已取消");
-            ofcOrderStatus.setOperator("001");
-            ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
-            return "success";
-        }else {
-            return "fail";
+    public String orderCancel(@ModelAttribute("ofcOrderDTO")OfcOrderDTO ofcOrderDTO){
+        try {
+            ofcOrderManageService.orderCancel(ofcOrderDTO);
+        } catch (Exception e) {
+            return "";
         }
+        return "";
     }
 }
