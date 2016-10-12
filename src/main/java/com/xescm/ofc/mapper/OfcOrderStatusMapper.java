@@ -4,7 +4,7 @@ import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.utils.MyMapper;
 import tk.mybatis.mapper.common.Mapper;
 
-public interface OfcOrderStatusMapper extends Mapper<OfcOrderStatus> {
+public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
     int deleteByOrderCode(Object key);
 
 }

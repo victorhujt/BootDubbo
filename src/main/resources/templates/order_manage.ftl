@@ -31,7 +31,7 @@
 
         });
 
-        function editOrder() {
+        function editOrder(orderCode) {
 
             /*$("#myModalLabel").text("修改");*/
             $('#myEditModal').modal();
@@ -45,29 +45,47 @@
              },"json");*/
         }
 
-
-        function deleteOrder() {
-            $("#delConfirm").modal();
-            /* $( "#delStaffConfirm" ).click(function () {
-                 $.get("/deleteStaffById",{"staffId":id},function (data) {
-                     $("#delConfirm").modal('hide');
-                     window.location.href="/";
-                 });
-             });*/
+        function deleteOrder(ordercode) {
+            $("#confirmBox").modal();
+           $("#boxmsg").text("您确定要删除此订单?");
+            $( "#confirmSure" ).click(function () {
+               $.get("/orderDelete",{"orderCode":orderCode},function (data) {
+                   $("#confirmBox").modal('hide');
+                   window.location.href="/orderScreenByCondition";
+               });
+           });
         }
 
-        function reviewOrder() {
-            $("#delConfirm").modal();
+        function reviewOrder(ordercode) {
+            $("#confirmBox").modal();
+            $("#boxmsg").text("您确定要审核此订单?");
+            $( "#confirmSure" ).click(function () {
+                $.get("/orderOrNotAudit",{"orderCode":ordercode},function (data) {
+                    $("#confirmBox").modal('hide');
+                    window.location.href="/orderScreenByCondition";
+                });
+            });
         }
-        function reReviewOrder() {
-            $("#delConfirm").modal();
+        function reReviewOrder(ordercode) {
+            $("#confirmBox").modal();
+            $("#boxmsg").text("您确定要反审核此订单?");
+            $("#confirmSure").click(function () {
+                $.get("/orderOrNotAudit",{"ofcFundamentalInformation.orderCode":ordercode},function (data) {
+                    $("#confirmBox").modal('hide');
+                    window.location.href="/orderScreenByCondition";
+                });
+            });
         }
-        function cancelOrder() {
-            $("#delConfirm").modal();
+        function cancelOrder(ordercode) {
+            $("#confirmBox").modal();
+            $("#boxmsg").text("您确定要取消此订单?");
+            $( "#confirmSure" ).click(function () {
+                $.get("/orderCancel",{"orderCode":ordercode},function (data) {
+                    $("#confirmBox").modal('hide');
+                    window.location.href="/orderScreenByCondition";
+                });
+            });
         }
-
-
-
     </script>
 
     <title>xescm_ofc</title>
@@ -75,8 +93,8 @@
 
 <body>
 
-<!--删除弹出的确认框-->
-<div class="modal fade" id="delConfirm">
+<!--确认框-->
+<div class="modal fade" id="confirmBox">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -84,11 +102,11 @@
                 <h4 class="modal-title">Modal title</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure?&hellip;</p>
+                <p id="boxmsg">Are you sure?&hellip;</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="delStaffConfirm">Sure</button>
+                <button type="button" class="btn btn-primary" id="confirmSure">Sure</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -282,16 +300,19 @@ ${test!"null"}
         <td style="width: 15%">备注</td>
 
     </tr>
-
+<#--
+vo  value object  拼出来的结果集
+dto  参数,给后端当参数,或者返回的dot.
+-->
 <#list orderList! as order>
     <tr class="active">
         <td style="width: 10%;">
             <div class="btn-group" role="group">
-                <button type="button" id="btn_update" +${order_index} onclick="reviewOrder()"class="btn btn-default">审核</button>
-                <button type="button" id="btn_update" +${order_index} onclick="editOrder()"class="btn btn-default">编辑</button>
-                <button type="button" id="btn_delete" +${order_index} onclick="deleteOrder()" class="btn btn-default">删除</button>
-                <button type="button" id="btn_update" +${order_index} onclick="reReviewOrder()"class="btn btn-default">反审核</button>
-                <button type="button" id="btn_delete" +${order_index} onclick="cancelOrder()" class="btn btn-default">取消</button>
+                <button type="button" id="btn_update1" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}')" class="btn btn-default">审核</button>
+                <button type="button" id="btn_update2" +${order_index} onclick="editOrder('${order.orderCode!"null"}')" class="btn btn-default">编辑</button>
+                <button type="button" id="btn_delete3" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}')" class="btn btn-default">删除</button>
+                <button type="button" id="btn_update4" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}')" class="btn btn-default">反审核</button>
+                <button type="button" id="btn_delete5" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}')" class="btn btn-default">取消</button>
             </div>
         </td>
         <td style="width: 10%;">${order.orderCode!"null"}</td>

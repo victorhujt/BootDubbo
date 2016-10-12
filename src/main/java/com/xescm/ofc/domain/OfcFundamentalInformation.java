@@ -5,6 +5,56 @@ import java.util.Date;
 
 @Table(name = "ofc_fundamental_information")
 public class OfcFundamentalInformation {
+
+    @Transient
+    private OfcOrderStatus ofcOrderStatus;
+    @Transient
+    private OfcDistributionBasicInfo ofcDistributionBasicInfo;
+    @Transient
+    private OfcWarehouseInformation ofcWarehouseInformation;
+    @Transient
+    private OfcFinanceInformation ofcFinanceInformation;
+
+    public OfcOrderStatus getOfcOrderStatus() {
+        return ofcOrderStatus;
+    }
+
+    public void setOfcOrderStatus(OfcOrderStatus ofcOrderStatus) {
+        this.ofcOrderStatus = ofcOrderStatus;
+    }
+
+    public OfcDistributionBasicInfo getOfcDistributionBasicInfo() {
+        return ofcDistributionBasicInfo;
+    }
+
+    public void setOfcDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        this.ofcDistributionBasicInfo = ofcDistributionBasicInfo;
+    }
+
+    public OfcWarehouseInformation getOfcWarehouseInformation() {
+        return ofcWarehouseInformation;
+    }
+
+    public void setOfcWarehouseInformation(OfcWarehouseInformation ofcWarehouseInformation) {
+        this.ofcWarehouseInformation = ofcWarehouseInformation;
+    }
+
+    public OfcFinanceInformation getOfcFinanceInformation() {
+        return ofcFinanceInformation;
+    }
+
+    public void setOfcFinanceInformation(OfcFinanceInformation ofcFinanceInformation) {
+        this.ofcFinanceInformation = ofcFinanceInformation;
+    }
+
+    public Date getOperTime() {
+        return operTime;
+    }
+
+    public void setOperTime(Date operTime) {
+        this.operTime = operTime;
+    }
+
     /**
      * 订单编号
      */
@@ -144,8 +194,8 @@ public class OfcFundamentalInformation {
     /**
      * 操作时间
      */
-    @Column(name = "operTime")
-    private Date opertime;
+    @Column(name = "oper_time")
+    private Date operTime;
 
     /**
      * 获取订单编号
@@ -567,7 +617,7 @@ public class OfcFundamentalInformation {
      * @return operTime - 操作时间
      */
     public Date getOpertime() {
-        return opertime;
+        return operTime;
     }
 
     /**
@@ -576,6 +626,6 @@ public class OfcFundamentalInformation {
      * @param opertime 操作时间
      */
     public void setOpertime(Date opertime) {
-        this.opertime = opertime;
+        this.operTime = opertime;
     }
 }

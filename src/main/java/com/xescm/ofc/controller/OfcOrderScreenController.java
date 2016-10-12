@@ -45,10 +45,7 @@ public class OfcOrderScreenController {
     @RequestMapping(value = "/orderScreenByCondition")
     public String orderScreenByCondition(OrderScreenCondition orderScreenCondition, Map<String,Object> map, String tag) throws IOException {
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-        System.out.println("===============" + orderScreenCondition);
         map.put("orderList", orderScreenResults);
-        map.put("test", "test1111");
-        System.out.println("1111111111111111111111");
         if (tag.equals("screen")) {
             return "order_screen";
         } else if (tag.equals("manage")) {

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by lyh on 2016/10/8.
@@ -41,6 +42,8 @@ public class OfcOrderPlaceOrderController {
      * @param ofcWarehouseInformation
      * @return
      */
+
+
 
     @RequestMapping("/placeOrEditOrder")
     public String placeOrder(@ModelAttribute("ofcGoodsDetailsInfo")OfcGoodsDetailsInfo ofcGoodsDetailsInfo,
@@ -137,9 +140,21 @@ public class OfcOrderPlaceOrderController {
         return ofcWarehouseInformation;
     }
 
-    @RequestMapping(value="/index")
-    public ModelAndView index(HttpServletRequest request, HttpServletResponse response){
-        return new ModelAndView("index");
+
+    @RequestMapping("/orderPlaceCon")
+    public String orderPlace(OfcOrderDTO ofcOrderDTO, Map<String, Object> map){
+        System.out.println(ofcOrderDTO);
+        //ofcFundamentalInformationService.orderPlace(ofcOrderDTO);
+        return "order_place";
     }
+
+
+    @RequestMapping(value="/orderPlace")
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response){
+        return new ModelAndView("order_place");
+    }
+
+
+
 
 }

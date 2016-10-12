@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -39,7 +40,9 @@ public class OfcOrderManageController {
 
     public PubUtils pubUtils=new PubUtils();
 
+    /*订单的审核和反审核*/
     @RequestMapping("/orderOrNotAudit")
+    @ResponseBody
     public String orderAudit(@ModelAttribute("ofcFundamentalInformation")OfcFundamentalInformation ofcFundamentalInformation,
                              @ModelAttribute("ofcOrderStatus")OfcOrderStatus ofcOrderStatus){
 
