@@ -28,10 +28,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-
+    ModelMapper modelMapper = new ModelMapper();
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
@@ -132,4 +131,5 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
         return ofcWarehouseInformation;
     }
+
 }
