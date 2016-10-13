@@ -33,8 +33,8 @@
         function editOrder(orderCode) {
             /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
             $('#myEditModal').modal();
-             $.get("/getOrderDetailByCode",{"orderCode":orderCode},function (data) {
-                 location.href="/placeOrEditOrder?ofcOrderDTO="+data;
+             $.get("/getOrderDetailByCode",{"orderCode":orderCode,"orderStatus":orderStatus},function (data) {
+                 $("#confirmBox").modal('hide');
              },"json");
         }
 
@@ -169,7 +169,7 @@ dto  参数,给后端当参数,或者返回的dot.
         <td style="width: 10%;">
             <div class="btn-group" role="group">
                 <button type="button" id="btn_update1" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">审核</button>
-                <button type="button" id="btn_update2" +${order_index} onclick="editOrder('${order.orderCode!"null"}')" class="btn btn-default">编辑</button>
+                <button type="button" id="btn_update2" +${order_index} onclick="editOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">编辑</button>
                 <button type="button" id="btn_delete3" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">删除</button>
                 <button type="button" id="btn_update4" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">反审核</button>
                 <button type="button" id="btn_delete5" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-default">取消</button>

@@ -78,4 +78,17 @@
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </update>
+
+  <!--
+      根据订单号进行查询对应数据
+    -->
+  <select id="ofcWarehouseInformationSelect" parameterType="com.xescm.ofc.domain.OfcWarehouseInformation" resultMap="BaseResultMap">
+    SELECT * FROM ofc_warehouse_information ofw
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        ofw.order_code =#{orderCode}
+      </if>
+    </where>
+    ORDER BY ofw.oper_time DESC limit 1
+  </select>
 </mapper>
