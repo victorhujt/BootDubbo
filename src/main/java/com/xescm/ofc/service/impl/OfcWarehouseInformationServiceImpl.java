@@ -24,4 +24,9 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     public int updateByOrderCode(Object key) {
         return 0;
     }
+
+    @Override
+    public OfcWarehouseInformation selectByOrderCode(Object key) {
+        return OfcWarehouseInformationMapper.sel;
+    }
 }

@@ -122,4 +122,17 @@
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </update>
+
+  <!--
+      根据订单号进行查询对应数据
+    -->
+  <select id="ofcDistributionBasicInfoSelect" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" resultMap="BaseResultMap">
+    SELECT * FROM ofc_distribution_basic_info ofd
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        ofd.order_code =#{orderCode}
+      </if>
+    </where>
+    ORDER BY ofd.oper_time DESC limit 1
+  </select>
 </mapper>

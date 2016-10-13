@@ -33,8 +33,8 @@
         function editOrder(orderCode) {
             /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
             $('#myEditModal').modal();
-             $.get("/getOrderDetailByCode",{"orderCode":orderCode},function (data) {
-                 location.href="/placeOrEditOrder?orderCode="+orderCode;
+             $.get("/getOrderDetailByCode",{"orderCode":orderCode,"orderStatus":orderStatus},function (data) {
+                 $("#confirmBox").modal('hide');
              },"json");
         }
 
