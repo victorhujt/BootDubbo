@@ -29,7 +29,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
-    public String orderAudit(String orderCode,String orderStatus) {
+    public String orderAudit(String orderCode,String orderStatus, String reviewTag) {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
@@ -37,14 +37,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if((!ofcOrderStatus.getOrderStatus().equals(OrderConst.IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCANCELED))){
-            if (ofcOrderStatus.getOrderStatus().equals(OrderConst.ALREADYEXAMINE)){
+            if (ofcOrderStatus.getOrderStatus().equals(OrderConst.ALREADYEXAMINE)&&reviewTag.equals("rereview")){
                 ofcOrderStatus.setOrderStatus(OrderConst.PENDINGAUDIT);
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单反审核完成");
-            }else if(ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT)){
+            }else if(ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT)&&reviewTag.equals("review")){
                 ofcOrderStatus.setOrderStatus(OrderConst.ALREADYEXAMINE);
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
+            }else {
+                return String.valueOf(Wrapper.ERROR_CODE);
             }
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());

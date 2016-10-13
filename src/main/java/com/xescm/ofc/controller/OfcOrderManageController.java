@@ -29,9 +29,10 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderOrNotAudit")
-    public void orderAudit(String orderCode,  String orderStatus,HttpServletResponse response){
+    public void orderAudit(String orderCode,  String orderStatus, String reviewTag,HttpServletResponse response){
         try {
-            String result = ofcOrderManageService.orderAudit(orderCode,orderStatus);
+            String result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag);
+            System.out.println("============"+result);
             response.getWriter().print(result);
         } catch (Exception e) {
             e.printStackTrace();
