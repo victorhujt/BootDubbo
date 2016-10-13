@@ -7,5 +7,6 @@ import tk.mybatis.mapper.common.Mapper;
 public interface OfcDistributionBasicInfoMapper extends MyMapper<OfcDistributionBasicInfo> {
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
-    OfcDistributionBasicInfo ofcDistributionBasicInfoSelect(String orderCode);
+    OfcDistributionBasicInfo ofcDistributionBasicInfoSelect(Object key);
+    String getOrderCodeByTransCode(String transCode);
 }

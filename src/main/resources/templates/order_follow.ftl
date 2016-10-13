@@ -4,76 +4,73 @@
 </head>
 <body>
     <h2>订单跟踪</h2>
-    <form action="" method="post">
-    <select id="u200_input" data-label="lsl_条件类型">
-        <option value="订单编号">订单编号</option>
-        <option value="客户订单编号">客户订单编号</option>
-        <option value="运输单号">运输单号</option>
+    <form action="/orderFollowCon" method="post">
+    <select id="u200_input" data-label="lsl_条件类型" name="followTag">
+        <option value="orderCode">订单编号</option>
+        <option value="custOrderCode">客户订单编号</option>
+        <option value="transCode">运输单号</option>
     </select>
-    <input  id="" name=""/> <button type="submit">查询</button>
-
+    <input  id="" name="code"/> <button type="submit">查询</button>
 
     </form>
     <h2>订单跟踪记录</h2>
     订单日期
-    ${ofcOrderDTO.orderTime?string("MM-dd-yyyy")}&nbsp;&nbsp;&nbsp;
+    <#--${ofcOrderDTO.orderTime?string("MM-dd-yyyy")}&nbsp;&nbsp;&nbsp;-->
     订单编号
-    ${ofcOrderDTO.orderCode!"null"}&nbsp;&nbsp;&nbsp;
+    ${orderCode!"null"}&nbsp;&nbsp;&nbsp;
     客户订单编号
-    ${ofcOrderDTOcustOrderCode.custOrderCode!"null"}&nbsp;&nbsp;&nbsp;
+    ${custOrderCode!"null"}&nbsp;&nbsp;&nbsp;
     订单状态
-    ${ofcOrderDTO.orderStatus!"null"}&nbsp;&nbsp;&nbsp;
+    ${orderStatus!"null"}&nbsp;&nbsp;&nbsp;
     订单类型
-    ${ofcOrderDTO.orderType!"null"}&nbsp;&nbsp;&nbsp;
+    ${orderType!"null"}&nbsp;&nbsp;&nbsp;
     业务类型
-    ${ofcOrderDTO.businessType!"null"}&nbsp;&nbsp;&nbsp;
-
+    ${businessType!"null"}&nbsp;&nbsp;&nbsp;
 
     备注
-    ${ofcOrderDTO.notes!"null"}&nbsp;&nbsp;&nbsp;
-
+    ${notes!"null"}&nbsp;&nbsp;&nbsp;
 
     货品类型
-    ${ofcOrderDTO.goodsType!"null"}&nbsp;&nbsp;&nbsp;
+    ${goodsType!"null"}&nbsp;&nbsp;&nbsp;
     出发地
-    ${ofcOrderDTO.departurePlace!"null"}&nbsp;&nbsp;&nbsp;
+    ${departurePlace!"null"}&nbsp;&nbsp;&nbsp;
     目的地
 
-    ${ofcOrderDTO.destination!"null"}&nbsp;&nbsp;&nbsp;
+    ${destination!"null"}&nbsp;&nbsp;&nbsp;
 
     数量
-    ${ofcOrderDTO.quantity!"null"}&nbsp;&nbsp;&nbsp;
+    ${quantity!"null"}&nbsp;&nbsp;&nbsp;
 
 
     重量
 
-    ${ofcOrderDTO.weight!"null"}&nbsp;&nbsp;&nbsp;
+    ${weight!"null"}&nbsp;&nbsp;&nbsp;
     体积
 
-    ${ofcOrderDTO.cubage!"null"}&nbsp;&nbsp;&nbsp;
+    ${cubage!"null"}&nbsp;&nbsp;&nbsp;
 
     运输要求
 
-    ${ofcOrderDTO.transRequire!"null"}&nbsp;&nbsp;&nbsp;
+    ${transRequire!"null"}&nbsp;&nbsp;&nbsp;
 
     运输单号
 
-    ${ofcOrderDTO.transCode!"null"}&nbsp;&nbsp;&nbsp;
+    ${transCode!"null"}&nbsp;&nbsp;&nbsp;
 
     车牌号
-    ${ofcOrderDTO.plateNumber!"null"}&nbsp;&nbsp;&nbsp;
+    ${plateNumber!"null"}&nbsp;&nbsp;&nbsp;
 
     司机姓名
 
-    ${ofcOrderDTO.driverName!"null"}&nbsp;&nbsp;&nbsp;
+    ${driverName!"null"}&nbsp;&nbsp;&nbsp;
 
     联系电话
-    ${ofcOrderDTO.contactNumber!"null"}&nbsp;&nbsp;&nbsp;
+    ${contactNumber!"null"}&nbsp;&nbsp;&nbsp;
 
     收货地址
-    ${ofcOrderDTO.destination!"null"}&nbsp;&nbsp;&nbsp;
+    ${odestination!"null"}&nbsp;&nbsp;&nbsp;
 
-    <hr style="height: 10px">
+    <hr />
 
 <#--下面是订单状态信息-->
     订单跟踪信息

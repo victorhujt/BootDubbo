@@ -126,13 +126,27 @@
   <!--
       根据订单号进行查询对应数据
     -->
-  <select id="ofcDistributionBasicInfoSelect" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" resultMap="BaseResultMap">
+  <select id="ofcDistributionBasicInfoSelect" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT * FROM ofc_distribution_basic_info ofd
+        WHERE ofd.order_code =#{orderCode,jdbcType=VARCHAR}
+    ORDER BY ofd.oper_time DESC limit 1
+  </select>
+
+  <!--
+    根据运输单号查订单号
+  -->
+
+
+  <select id="getOrderCodeByTransCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    odbi.order_code
+    from
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
     <where>
-      <if test="orderCode!=null and orderCode!=''">
-        ofd.order_code =#{orderCode}
+      <if test="transCode!=null and transCode!=''">
+        AND odbi.trans_code =#{transCode,jdbcType=VARCHAR}
       </if>
     </where>
-    ORDER BY ofd.oper_time DESC limit 1
   </select>
 </mapper>

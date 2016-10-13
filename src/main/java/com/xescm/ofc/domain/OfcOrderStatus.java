@@ -245,4 +245,20 @@ public class OfcOrderStatus {
     public void setOperator(String operator) {
         this.operator = operator;
     }
+
+    @Override
+    public String toString() {
+        return "OfcOrderStatus{" +
+                "orderCode='" + orderCode + '\'' +
+                ", orderType='" + orderType + '\'' +
+                ", businessType='" + businessType + '\'' +
+                ", custCode='" + custCode + '\'' +
+                ", custName='" + custName + '\'' +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", statusDesc='" + statusDesc + '\'' +
+                ", lastedOperTime=" + lastedOperTime +
+                ", notes='" + notes + '\'' +
+                ", operator='" + operator + '\'' +
+                '}';
+    }
 }

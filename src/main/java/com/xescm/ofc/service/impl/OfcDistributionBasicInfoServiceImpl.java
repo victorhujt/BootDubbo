@@ -26,4 +26,19 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
     public int updateByOrderCode(Object key) {
         return 0;
     }
+
+    @Override
+    public OfcDistributionBasicInfo distributionBasicInfoSelect(String orderCode) {
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoMapper.ofcDistributionBasicInfoSelect(orderCode);
+        if(ofcDistributionBasicInfo == null){
+            return new OfcDistributionBasicInfo();
+        }
+        return ofcDistributionBasicInfo;
+    }
+
+    @Override
+    public String getOrderCodeByTransCode(String transCode) {
+        String orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(transCode);
+        return orderCode;
+    }
 }

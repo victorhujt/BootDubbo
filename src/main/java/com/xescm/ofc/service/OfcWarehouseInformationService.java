@@ -12,5 +12,5 @@ public interface OfcWarehouseInformationService extends IService<OfcWarehouseInf
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
     //获取仓储订单信息
-    OfcWarehouseInformation getWarehouseInformation(String orderCode);
+    OfcWarehouseInformation warehouseInformationSelect(String code);
 }

@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundamentalInformation> implements OfcFundamentalInformationService{
 
-    public String orderPlace(OfcOrderDTO ofcOrderDTO) {
+    @Autowired
+    private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
 
-        return null;
+    @Override
+    public String getOrderCodeByCustOrderCode(String custOrderCode) {
+        String orderCode = ofcFundamentalInformationMapper.getOrderCodeByCustOrderCode(custOrderCode);
+        return orderCode;
     }
-
 }

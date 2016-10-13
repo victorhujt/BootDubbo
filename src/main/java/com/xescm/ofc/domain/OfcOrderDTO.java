@@ -1,5 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.xescm.ofc.service.*;
+
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,6 +10,8 @@ import java.util.Date;
  * Created by lyh on 2016/10/11.
  */
 public class OfcOrderDTO {
+
+
     /*基本信息表*/
     private String orderCode;
     private Date orderTime;
@@ -607,5 +612,74 @@ public class OfcOrderDTO {
 
     public void setCountFlag(String countFlag) {
         this.countFlag = countFlag;
+    }
+
+    @Override
+    public String toString() {
+        return "OfcOrderDTO{" +
+                "orderCode='" + orderCode + '\'' +
+                ", orderTime=" + orderTime +
+                ", custCode='" + custCode + '\'' +
+                ", custName='" + custName + '\'' +
+                ", secCustCode='" + secCustCode + '\'' +
+                ", secCustName='" + secCustName + '\'' +
+                ", orderType='" + orderType + '\'' +
+                ", businessType='" + businessType + '\'' +
+                ", custOrderCode='" + custOrderCode + '\'' +
+                ", notes='" + notes + '\'' +
+                ", storeCode='" + storeCode + '\'' +
+                ", storeName='" + storeName + '\'' +
+                ", platformType='" + platformType + '\'' +
+                ", orderSource='" + orderSource + '\'' +
+                ", productType='" + productType + '\'' +
+                ", productName='" + productName + '\'' +
+                ", finishedTime=" + finishedTime +
+                ", abolishMark=" + abolishMark +
+                ", abolishTime=" + abolishTime +
+                ", abolisher='" + abolisher + '\'' +
+                ", creator='" + creator + '\'' +
+                ", creationTime=" + creationTime +
+                ", operator='" + operator + '\'' +
+                ", operTime=" + operTime +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", statusDesc='" + statusDesc + '\'' +
+                ", lastedOperTime=" + lastedOperTime +
+                ", transCode='" + transCode + '\'' +
+                ", goodsType='" + goodsType + '\'' +
+                ", urgent=" + urgent +
+                ", departurePlace='" + departurePlace + '\'' +
+                ", departurePlaceCode='" + departurePlaceCode + '\'' +
+                ", destination='" + destination + '\'' +
+                ", destinationCode='" + destinationCode + '\'' +
+                ", quantity=" + quantity +
+                ", weight=" + weight +
+                ", cubage='" + cubage + '\'' +
+                ", totalStandardBox=" + totalStandardBox +
+                ", transRequire='" + transRequire + '\'' +
+                ", pickupTime=" + pickupTime +
+                ", expectedArrivedTime=" + expectedArrivedTime +
+                ", consignorCode='" + consignorCode + '\'' +
+                ", consignorName='" + consignorName + '\'' +
+                ", consigneeCode='" + consigneeCode + '\'' +
+                ", consigneeName='" + consigneeName + '\'' +
+                ", carrierCode='" + carrierCode + '\'' +
+                ", carrierName='" + carrierName + '\'' +
+                ", supportName='" + supportName + '\'' +
+                ", supportCode='" + supportCode + '\'' +
+                ", provideTransport=" + provideTransport +
+                ", shipmentTime=" + shipmentTime +
+                ", arriveTime=" + arriveTime +
+                ", warehouseName='" + warehouseName + '\'' +
+                ", plateNumber='" + plateNumber + '\'' +
+                ", driverName='" + driverName + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                ", serviceCharge=" + serviceCharge +
+                ", orderAmount=" + orderAmount +
+                ", paymentAmount=" + paymentAmount +
+                ", collectLoanAmount=" + collectLoanAmount +
+                ", collectServiceCharge=" + collectServiceCharge +
+                ", collectFlag='" + collectFlag + '\'' +
+                ", countFlag='" + countFlag + '\'' +
+                '}';
     }
 }

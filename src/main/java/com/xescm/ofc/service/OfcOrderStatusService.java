@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface OfcOrderStatusService extends IService<OfcOrderStatus>{
     int deleteByOrderCode(Object key);
-    List<OfcOrderStatus> orderStatusScreen(Object key);
+    List<OfcOrderStatus> orderStatusScreen(String code,String followTag);
     //获取订单最新状态
-    OfcOrderStatus getOrderStatus(String orderCode);
+    OfcOrderStatus orderStatusSelect(String code,String followTag);
 }
