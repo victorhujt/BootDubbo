@@ -78,4 +78,8 @@ public class OfcOrderManageController {
             e.printStackTrace();
         }
     }
+    @RequestMapping(value = "/orderTest")
+    public String test(){
+        return "test";
+    }
 }
