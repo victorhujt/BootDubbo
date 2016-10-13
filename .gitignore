@@ -16,6 +16,8 @@ target/
 .mvn/
 mvn*
 logs/
+*.log
+*.log*
 ### NetBeans ###
 nbproject/private/
 build/

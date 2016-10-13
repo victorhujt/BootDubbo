@@ -25,12 +25,12 @@
   </delete>
 
   <select id="orderStatusScreen" parameterType="com.xescm.ofc.domain.OfcOrderStatus" resultMap="BaseResultMap">
-      SELECT status_desc FROM ofc_order_status s
-      <where>
-        <if test="orderCode!=null and orderCode!=''">
-          s.order_code =#{orderCode}
-        </if>
-      </where>
-      ORDER BY ORDER BY s.lasted_oper_time ASC
+    SELECT status_desc FROM ofc_order_status s
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        s.order_code =#{orderCode}
+      </if>
+    </where>
+    ORDER BY ORDER BY s.lasted_oper_time ASC
   </select>
 </mapper>
