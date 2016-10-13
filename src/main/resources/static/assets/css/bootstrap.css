@@ -1293,6 +1293,8 @@ p {
 small,
 .small {
   font-size: 85%;
+  position: absolute;
+  top:0;
 }
 mark,
 .mark {
