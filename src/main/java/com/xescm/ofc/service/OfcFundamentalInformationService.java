@@ -9,4 +9,6 @@ import com.xescm.ofc.domain.OfcOrderDTO;
 public interface OfcFundamentalInformationService extends IService<OfcFundamentalInformation>{
 
     String orderPlace(OfcOrderDTO ofcOrderDTO);
+
+    OfcFundamentalInformation getFundamentalInformation(String orderCode);
 }

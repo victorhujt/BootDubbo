@@ -11,4 +11,6 @@ import com.xescm.ofc.domain.OfcWarehouseInformation;
 public interface OfcWarehouseInformationService extends IService<OfcWarehouseInformation>{
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
+    //获取仓储订单信息
+    OfcWarehouseInformation getWarehouseInformation(String orderCode);
 }

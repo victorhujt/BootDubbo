@@ -13,24 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundamentalInformation> implements OfcFundamentalInformationService{
 
-    /*@Autowired
-    private OfcOrderStatusService orderStatusService;
-    @Autowired
-    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
-    private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
-    private OfcFinanceInformationService ofcFinanceInformationService;*/
-
     public String orderPlace(OfcOrderDTO ofcOrderDTO) {
 
         return null;
     }
-
-
-
-
 
 }

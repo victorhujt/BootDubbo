@@ -8,4 +8,6 @@ import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 public interface OfcDistributionBasicInfoService extends IService<OfcDistributionBasicInfo> {
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
+
+    OfcDistributionBasicInfo getDistributionBasicInfo(String orderCode);
 }
