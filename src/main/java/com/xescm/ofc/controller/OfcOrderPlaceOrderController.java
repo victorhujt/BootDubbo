@@ -2,19 +2,13 @@ package com.xescm.ofc.controller;
 
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.OrderConst;
-import com.xescm.ofc.utils.PrimaryGenerater;
-import com.xescm.ofc.utils.PubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -31,20 +25,19 @@ public class OfcOrderPlaceOrderController {
     /**
      * 下单
      * @param ofcOrderDTO
-     * @param map
+     * @param response
      * @return
      */
     @RequestMapping("/orderPlaceCon")
-    public String orderPlace(OfcOrderDTO ofcOrderDTO, Map<String, Object> map){
+    public void orderPlace(OfcOrderDTO ofcOrderDTO, String tag, HttpServletResponse response){
         System.out.println(ofcOrderDTO);
         try {
-            String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO);
+            String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
             System.out.println("========="+result);
-            map.put("orderPlaceResult",result);
+            //response.getWriter().print(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "order_place";
     }
 
     /**

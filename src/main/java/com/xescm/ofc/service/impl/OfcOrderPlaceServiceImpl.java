@@ -2,7 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.OrderConst;
+import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.wrap.Wrapper;
@@ -30,13 +30,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     ModelMapper modelMapper = new ModelMapper();
     @Override
-    public String placeOrder(OfcOrderDTO ofcOrderDTO) {
+    public String placeOrder(OfcOrderDTO ofcOrderDTO,String tag) {
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        if (ofcFundamentalInformation.getOrderType().equals(OrderConst.WAREHOUSEDISTRIBUTIONORDER)){
+        if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
             ofcFundamentalInformation.setCustCode("001");
             ofcFundamentalInformation.setCustName("众品");
             ofcWarehouseInformation.setProvideTransport(1);
@@ -44,38 +44,41 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcFundamentalInformation.setSecCustCode("001");
                 ofcFundamentalInformation.setSecCustName("众品");
             }
-        }else if(ofcFundamentalInformation.getOrderType().equals(OrderConst.TRANSPORTORDER)){
+        }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
             ofcFundamentalInformation.setSecCustCode("001");
             ofcFundamentalInformation.setSecCustName("众品");
             if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                     .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
-                ofcFundamentalInformation.setBusinessType(OrderConst.WITHTHECITY);
+                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
             }else{
-                ofcFundamentalInformation.setBusinessType(OrderConst.WITHTHETRUNK);
+                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
             }
         }
 //        ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());
         ofcFundamentalInformation.setOrderSource("手动");
-
         try {
-            if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
-                ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
-                        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
-                ofcFundamentalInformation.setOrderTime(new Date());
-                ofcFundamentalInformation.setCreationTime(new Date());
-                ofcFundamentalInformation.setCreator("001");
-                ofcFundamentalInformation.setOperator("001");
-                ofcFundamentalInformation.setOperTime(new Date());
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单已创建");
-                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
-                ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
-                ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
-                ofcWarehouseInformationService.save(ofcWarehouseInformation);
-                ofcFundamentalInformationService.save(ofcFundamentalInformation);
-            }else{
+            if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){
+                if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
+                    ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
+                            .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
+                    ofcFundamentalInformation.setOrderTime(new Date());
+                    ofcFundamentalInformation.setCreationTime(new Date());
+                    ofcFundamentalInformation.setCreator("001");
+                    ofcFundamentalInformation.setOperator("001");
+                    ofcFundamentalInformation.setOperTime(new Date());
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            +" "+"订单已创建");
+                    upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
+                    ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                    ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                    ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                    ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                    ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                }else{
+                    return String.valueOf(Wrapper.ERROR_CODE);
+                }
+            }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){
                 ofcFundamentalInformation.setOperator("001");
                 ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
@@ -86,6 +89,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                 ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
                 ofcFundamentalInformationService.update(ofcFundamentalInformation);
+            }else {
+                return String.valueOf(Wrapper.ERROR_CODE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,7 +105,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setBusinessType(ofcFundamentalInformation.getBusinessType());
         ofcOrderStatus.setCustName(ofcFundamentalInformation.getCustName());
         ofcOrderStatus.setCustCode(ofcFundamentalInformation.getCustName());
-        ofcOrderStatus.setOrderStatus(OrderConst.PENDINGAUDIT);
+        ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
         ofcOrderStatus.setLastedOperTime(new Date());
         ofcOrderStatus.setOperator("001");
         ofcOrderStatusService.save(ofcOrderStatus);

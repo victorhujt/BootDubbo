@@ -2,8 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.OrderConst;
-import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,15 +33,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
         System.out.println(ofcOrderStatus);
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConst.IMPLEMENTATIONIN))
-                && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCANCELED))){
-            if (ofcOrderStatus.getOrderStatus().equals(OrderConst.ALREADYEXAMINE)&&reviewTag.equals("rereview")){
-                ofcOrderStatus.setOrderStatus(OrderConst.PENDINGAUDIT);
+        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.IMPLEMENTATIONIN))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
+            if (ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.ALREADYEXAMINE)&&reviewTag.equals("rereview")){
+                ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单反审核完成");
-            }else if(ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT)&&reviewTag.equals("review")){
-                ofcOrderStatus.setOrderStatus(OrderConst.ALREADYEXAMINE);
+            }else if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
+                ofcOrderStatus.setOrderStatus(OrderConstEnum.ALREADYEXAMINE);
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
             }else {
@@ -59,7 +58,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public String orderDelete(String orderCode,String orderStatus) {
-        if(orderStatus.equals(OrderConst.PENDINGAUDIT)){
+        if(orderStatus.equals(OrderConstEnum.PENDINGAUDIT)){
             ofcFundamentalInformationService.deleteByKey(orderCode);
             ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
             ofcOrderStatusService.deleteByOrderCode(orderCode);
@@ -75,10 +74,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConst.PENDINGAUDIT))
-                && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(OrderConst.HASBEENCANCELED))){
-            ofcOrderStatus.setOrderStatus(OrderConst.HASBEENCANCELED);
+        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
+            ofcOrderStatus.setOrderStatus(OrderConstEnum.HASBEENCANCELED);
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                     +" "+"订单已取消");
             ofcOrderStatus.setOperator("001");

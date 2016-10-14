@@ -7,7 +7,6 @@ import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
-    public OfcOrderDTO orderDtoSelect(String code,String dtoTag) throws InvocationTargetException {
+    public OfcOrderDTO orderDtoSelect(String code,String dtoTag) {
         String orderCode = null;
         String custOrderCode =null;
         String transCode = null;
@@ -59,10 +58,10 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
                 OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
                 try {
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
