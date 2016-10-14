@@ -31,7 +31,6 @@
     <h1>xescm_ofc
     </h1>
 </div>
-
 <form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
     <input type="hidden" name="tag" value="manage">
 

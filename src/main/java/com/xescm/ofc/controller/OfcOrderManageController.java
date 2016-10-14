@@ -6,10 +6,16 @@ import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
+
+import static org.apache.coyote.http11.Constants.a;
 
 /**
  * Created by ydx on 2016/10/11.
@@ -76,20 +82,20 @@ public class OfcOrderManageController {
      * 进入订单编辑
      * @param orderCode
      * @param dtotag
-     * @param response
      * @return
      */
     @RequestMapping(value = "/getOrderDetailByCode")
-    public String getOrderDetailByCode(String orderCode, String dtotag,HttpServletResponse response){
+    public String getOrderDetailByCode(String orderCode, String dtotag, Map<String,Object> map){
+        OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
         try {
-            OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
+            ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
+            if (ofcOrderDTO!=null){
+                map.put("orderInfo", ofcOrderDTO);
+                return "order_edit";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "order_edit";
-    }
-    @RequestMapping(value = "/orderTest")
-    public String test(){
-        return "test";
+        return "order_manage";
     }
 }
