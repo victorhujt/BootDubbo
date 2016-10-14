@@ -17,58 +17,58 @@
     订单日期
     <#--${ofcOrderDTO.orderTime?string("MM-dd-yyyy")}&nbsp;&nbsp;&nbsp;-->
     订单编号
-    ${orderCode!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.orderCode)!"null"}&nbsp;&nbsp;&nbsp;
     客户订单编号
-    ${custOrderCode!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.custOrderCode)!"null"}&nbsp;&nbsp;&nbsp;
     订单状态
-    ${orderStatus!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.orderStatus)!"null"}&nbsp;&nbsp;&nbsp;
     订单类型
-    ${orderType!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.orderType)!"null"}&nbsp;&nbsp;&nbsp;
     业务类型
-    ${businessType!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.businessType)!"null"}&nbsp;&nbsp;&nbsp;
 
     备注
-    ${notes!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.notes)!"null"}&nbsp;&nbsp;&nbsp;
 
     货品类型
-    ${goodsType!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.goodsType)!"null"}&nbsp;&nbsp;&nbsp;
     出发地
-    ${departurePlace!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.departurePlace)!"null"}&nbsp;&nbsp;&nbsp;
     目的地
 
-    ${destination!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.destination)!"null"}&nbsp;&nbsp;&nbsp;
 
     数量
-    ${quantity!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.quantity)!"null"}&nbsp;&nbsp;&nbsp;
 
 
     重量
 
-    ${weight!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.weight)!"null"}&nbsp;&nbsp;&nbsp;
     体积
 
-    ${cubage!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.cubage)!"null"}&nbsp;&nbsp;&nbsp;
 
     运输要求
 
-    ${transRequire!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.transRequire)!"null"}&nbsp;&nbsp;&nbsp;
 
     运输单号
 
-    ${transCode!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.transCode)!"null"}&nbsp;&nbsp;&nbsp;
 
     车牌号
-    ${plateNumber!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.plateNumber)!"null"}&nbsp;&nbsp;&nbsp;
 
     司机姓名
 
-    ${driverName!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.driverName)!"null"}&nbsp;&nbsp;&nbsp;
 
     联系电话
-    ${contactNumber!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.contactNumber)!"null"}&nbsp;&nbsp;&nbsp;
 
     收货地址
-    ${odestination!"null"}&nbsp;&nbsp;&nbsp;
+    ${(ofcOrderDTO.odestination)!"null"}&nbsp;&nbsp;&nbsp;
 
     <hr />
 
@@ -87,7 +87,7 @@
     <#list orderStatusList! as orderStatus>
         <tr class="active">
 
-            <td style="width: 10%;">${orderStatus.statusDesc!"null"}</td>
+            <td style="width: 10%;">${(orderStatus.statusDesc)!"null"}</td>
         </tr>
     </#list>
     </table>

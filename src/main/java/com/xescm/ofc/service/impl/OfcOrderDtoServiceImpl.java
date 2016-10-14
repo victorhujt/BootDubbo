@@ -4,10 +4,14 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by lyh on 2016/10/13.
@@ -27,7 +31,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
-    public OfcOrderDTO orderDtoSelect(String code,String dtoTag) {
+    public OfcOrderDTO orderDtoSelect(String code,String dtoTag) throws InvocationTargetException {
         String orderCode = null;
         String custOrderCode =null;
         String transCode = null;
@@ -53,11 +57,17 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-                ofcFundamentalInformation.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
-                ofcFundamentalInformation.setOfcWarehouseInformation(ofcWarehouseInformation);
-                ofcFundamentalInformation.setOfcOrderStatus(ofcOrderStatus);
-                ModelMapper modelMapper = new ModelMapper();
-                OfcOrderDTO ofcOrderDTO = modelMapper.map(ofcFundamentalInformation,OfcOrderDTO.class);
+                OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
+                try {
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
                 return ofcOrderDTO;
             }
         }else{

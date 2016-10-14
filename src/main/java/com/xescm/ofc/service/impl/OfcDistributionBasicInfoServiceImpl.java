@@ -8,6 +8,9 @@ import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by lyh on 2016/10/10.
  */
@@ -38,7 +41,11 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public String getOrderCodeByTransCode(String transCode) {
-        String orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(transCode);
+        String custCode = "001";
+        Map<String,String> mapperMap = new HashMap<>();
+        mapperMap.put("custCode",custCode);
+        mapperMap.put("transCode",transCode);
+        String orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(mapperMap);
         return orderCode;
     }
 }
