@@ -34,7 +34,7 @@ public class OfcOrderPlaceOrderController {
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
             System.out.println("========="+result);
-            //response.getWriter().print(result);
+            response.getWriter().print(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
