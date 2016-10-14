@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class OfcOrderFollowController {
     private OfcOrderStatusService ofcOrderStatusService;
 
     @RequestMapping("/orderFollowCon")
-    public String orderFollowCon(String code, String followTag, Map<String,Object> map){
+    public String orderFollowCon(String code, String followTag, Map<String,Object> map) throws InvocationTargetException {
         OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);
         List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);
         map.put("ofcOrderDTO",ofcOrderDTO);

@@ -30,18 +30,14 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <!--<resultMap id="revCustOrderCode" type="string">
+  <resultMap id="convCustOrderCode" type="java.lang.String">
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
-  </resultMap>-->
-  <select id="getOrderCodeByCustOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+  </resultMap>
+  <select id="getOrderCodeByCustOrderCode" parameterType="java.lang.String" resultMap="convCustOrderCode">
     select
     ofi.order_code
     from
     ofc_fundamental_information ofi
-    <where>
-    <if test="custOrderCode!=null and custOrderCode!=''">
-      AND ofi.cust_order_code =#{custOrderCode}
-    </if>
-    </where>
+      WHERE ofi.cust_order_code =#{custOrderCode}
   </select>
 </mapper>

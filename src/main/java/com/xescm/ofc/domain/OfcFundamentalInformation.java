@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Table(name = "ofc_fundamental_information")
 public class OfcFundamentalInformation {
+
     /**
      * 订单编号
      */

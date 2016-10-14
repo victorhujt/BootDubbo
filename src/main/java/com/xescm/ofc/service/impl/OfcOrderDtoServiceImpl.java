@@ -53,8 +53,17 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-                /*ModelMapper modelMapper = new ModelMapper();
-                OfcOrderDTO ofcOrderDTO = modelMapper.map(ofcFundamentalInformation,OfcOrderDTO.class);
+                OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
+                try {
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
                 return ofcOrderDTO;
             }
         }else{

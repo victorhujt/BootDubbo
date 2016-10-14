@@ -135,18 +135,18 @@
   <!--
     根据运输单号查订单号
   -->
+  <resultMap id="convTransCode" type="java.lang.String" >
+     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+  </resultMap>
 
-
-  <select id="getOrderCodeByTransCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="getOrderCodeByTransCode" parameterType="java.util.Map" resultMap="convTransCode">
     select
     odbi.order_code
     from
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
-    <where>
-      <if test="transCode!=null and transCode!=''">
-        AND odbi.trans_code =#{transCode,jdbcType=VARCHAR}
-      </if>
-    </where>
+        WHERE odbi.trans_code =#{transCode,jdbcType=VARCHAR}
+        AND ofi.cust_code = #{custCode,jdbcType=VARCHAR}
+        ORDER BY odbi.oper_time DESC limit 1
   </select>
 </mapper>

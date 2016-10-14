@@ -11,7 +11,6 @@ import java.util.Date;
  */
 public class OfcOrderDTO {
 
-
     /*基本信息表*/
     private String orderCode;
     private Date orderTime;
