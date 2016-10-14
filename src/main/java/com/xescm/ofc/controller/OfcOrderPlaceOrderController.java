@@ -3,6 +3,7 @@ package com.xescm.ofc.controller;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,7 +15,7 @@ import java.util.Map;
 /**
  * Created by lyh on 2016/10/8.
  */
-@RestController
+@Controller
 public class OfcOrderPlaceOrderController {
 
     @Autowired
@@ -29,14 +30,15 @@ public class OfcOrderPlaceOrderController {
      * @return
      */
     @RequestMapping("/orderPlaceCon")
-    public void orderPlace(OfcOrderDTO ofcOrderDTO, String tag, HttpServletResponse response){
+    public String orderPlace(OfcOrderDTO ofcOrderDTO, String tag, HttpServletResponse response){
         System.out.println(ofcOrderDTO);
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
             System.out.println("========="+result);
-            //response.getWriter().print(result);
+            return "order_place";
         } catch (Exception e) {
             e.printStackTrace();
+            return "order_place";
         }
     }
 
