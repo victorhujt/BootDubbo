@@ -58,10 +58,10 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
                 OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
                 try {
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {

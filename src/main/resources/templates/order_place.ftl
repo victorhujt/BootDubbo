@@ -32,7 +32,7 @@
 </div>
 
 <form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
-    <input type="hidden" name="tag" value="manage">
+    <input type="hidden" name="tag" value="place">
 
 
     <h2>订单中心下单</h2>
@@ -40,23 +40,23 @@
     订单日期<#--<input id="orderTime" name="orderTime" onClick="WdatePicker()"/>-->
     订单类型
     <select id="" name="orderType">
-        <option value="0">运输订单</option>
-        <option value="1">仓配订单</option>
+        <option value="60">运输订单</option>
+        <option value="61">仓配订单</option>
     </select>
     业务类型
     <select id="" name="businessType">
-        <option value="00">城配</option>
-        <option value="01">干线</option>
+        <option value="600">城配</option>
+        <option value="601">干线</option>
         <option value="----------">----------</option>
-        <option value="10">销售出库</option>
-        <option value="11">调拨出库</option>
-        <option value="12">报损出库</option>
-        <option value="13">其他出库</option>
+        <option value="610">销售出库</option>
+        <option value="611">调拨出库</option>
+        <option value="612">报损出库</option>
+        <option value="613">其他出库</option>
         <option value="----------">----------</option>
-        <option value="14">采购入库</option>
-        <option value="15">调拨入库</option>
-        <option value="16">退货入库</option>
-        <option value="17">加工入库</option>
+        <option value="620">采购入库</option>
+        <option value="621">调拨入库</option>
+        <option value="622">退货入库</option>
+        <option value="623">加工入库</option>
     </select>
     客户订单编号<input id="custOrderCode" name="custOrderCode"/>
     店铺

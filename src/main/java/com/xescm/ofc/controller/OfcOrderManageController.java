@@ -88,6 +88,7 @@ public class OfcOrderManageController {
     public String getOrderDetailByCode(String orderCode, String dtotag, Map<String,Object> map){
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
         try {
+            orderCode=orderCode.replace(",","");
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             if (ofcOrderDTO!=null){
                 map.put("orderInfo", ofcOrderDTO);

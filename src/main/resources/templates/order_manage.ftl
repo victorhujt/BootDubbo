@@ -32,7 +32,8 @@
 
         function editOrder(orderCode) {
             /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-            $("#screenOrderForm").attr("action","/getOrderDetailByCode?orderCode="+orderCode);
+            alert(orderCode);
+            $("#screenOrderForm").attr("action","/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
             $("#screenOrderForm").submit();
         }
 
@@ -130,7 +131,6 @@
 
 <form action="/orderScreenByCondition" method="post" id="screenOrderForm">
     <input type="hidden" name="tag" value="manage">
-    <input type="hidden" name="dtotag" value="orderCode">
 <#--订单日期<input id="orderTimePre" name="orderTimePre" />至<input id="orderTimeSuf" name="orderTimeSuf"/>-->
     订单编号<input id="orderCode" name="orderCode"/>
     客户订单编号<input id="custOrderCode" name="custOrderCode"/><br/>
