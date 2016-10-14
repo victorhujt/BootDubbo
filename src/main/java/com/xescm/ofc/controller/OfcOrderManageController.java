@@ -1,6 +1,7 @@
 package com.xescm.ofc.controller;
 
 import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.io.IOException;
 public class OfcOrderManageController {
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
+    @Autowired
+    private OfcOrderDtoService ofcOrderDtoService;
 
     @RequestMapping(value = "/orderManage")
     public String orderManage(){
@@ -69,14 +72,21 @@ public class OfcOrderManageController {
         }
     }
 
+    /**
+     * 进入订单编辑
+     * @param orderCode
+     * @param dtotag
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/getOrderDetailByCode")
-    public void getOrderDetailByCode(String orderCode, HttpServletResponse response){
-        OfcOrderDTO ofcOrderDTO = ofcOrderManageService.getOrderDetailByCode(orderCode);
+    public String getOrderDetailByCode(String orderCode, String dtotag,HttpServletResponse response){
         try {
-            response.getWriter().print(ofcOrderDTO);
+            OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "order_edit";
     }
     @RequestMapping(value = "/orderTest")
     public String test(){

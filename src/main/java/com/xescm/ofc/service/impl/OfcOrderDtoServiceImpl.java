@@ -53,10 +53,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-                ofcFundamentalInformation.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
-                ofcFundamentalInformation.setOfcWarehouseInformation(ofcWarehouseInformation);
-                ofcFundamentalInformation.setOfcOrderStatus(ofcOrderStatus);
-                ModelMapper modelMapper = new ModelMapper();
+                /*ModelMapper modelMapper = new ModelMapper();
                 OfcOrderDTO ofcOrderDTO = modelMapper.map(ofcFundamentalInformation,OfcOrderDTO.class);
                 return ofcOrderDTO;
             }
