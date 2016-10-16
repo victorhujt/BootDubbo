@@ -190,7 +190,7 @@
 
 
 <hr/>
-    <button type="button" id="screenOrderBtn">下单</button>
+    <button type="button" id="screenOrderBtn">确定</button>
 </form>
 
 <br/></br/>
