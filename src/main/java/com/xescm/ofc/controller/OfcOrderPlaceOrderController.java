@@ -35,6 +35,9 @@ public class OfcOrderPlaceOrderController {
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
             System.out.println("========="+result);
+            if(tag.equals("manage")){
+                return "order_manage";
+            }
             return "order_place";
         } catch (Exception e) {
             e.printStackTrace();

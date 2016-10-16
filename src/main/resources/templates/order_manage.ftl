@@ -4,12 +4,13 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
-    <title>Tables - Ace Admin</title>
+    <title>订单管理</title>
 
     <meta name="description" content="Static &amp; Dynamic Tables">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <script src="components/bootbox.js/bootbox.js"></script>
     <script src="js/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
@@ -191,7 +192,7 @@
                             <div class="pull-right tableTools-container"><div class="dt-buttons btn-overlap btn-group"><a class="dt-button buttons-collection buttons-colvis btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-search bigger-110 blue"></i> <span class="hidden">Show/hide columns</span></span></a><a class="dt-button buttons-copy buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-copy bigger-110 pink"></i> <span class="hidden">Copy to clipboard</span></span></a><a class="dt-button buttons-csv buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-database bigger-110 orange"></i> <span class="hidden">Export to CSV</span></span></a><a class="dt-button buttons-excel buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-excel-o bigger-110 green"></i> <span class="hidden">Export to Excel</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_1" src="components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-pdf buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-pdf-o bigger-110 red"></i> <span class="hidden">Export to PDF</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_2" src="components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-print btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-print bigger-110 grey"></i> <span class="hidden">Print</span></span></a></div></div>
                         </div>
                         <div class="table-header">
-                            订单列表
+                            筛选条件
                         </div>
 
                         <!-- div.table-responsive -->
@@ -205,10 +206,19 @@
 
                                     <div id="dynamic-table_filter" class="dataTables_length">
                                         <label>
-                                            &nbsp;&nbsp;&nbsp;订单日期:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            订单编号:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            客户订单编号:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            订单状态:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            &nbsp;&nbsp;&nbsp;订单日期:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                            至<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker()">
+                                            订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            订单状态:
+                                            <select id="" name="orderStatus">
+                                                <option value="">----</option>
+                                                <option value="10">待审核</option>
+                                                <option value="20">已审核</option>
+                                                <option value="30">执行中</option>
+                                                <option value="40">已完成</option>
+                                                <option value="50">已取消</option>
+                                            </select>
                                         </label>
                                     </div>
 
@@ -219,31 +229,33 @@
                                             订单类型:
                                             <select id="" name="orderType">
                                                 <option value="">----</option>
-                                                <option value="0">运输订单</option>
-                                                <option value="1">仓配订单</option>
+                                                <option value="60">运输订单</option>
+                                                <option value="61">仓配订单</option>
                                             </select>
                                             业务类型:
                                             <select id="" name="businessType">
                                                 <option value="">----</option>
-                                                <option value="00">城配</option>
-                                                <option value="01">干线</option>
+                                                <option value="600">城配</option>
+                                                <option value="601">干线</option>
                                                 <option value="----------">----------</option>
-                                                <option value="10">销售出库</option>
-                                                <option value="11">调拨出库</option>
-                                                <option value="12">报损出库</option>
-                                                <option value="13">其他出库</option>
+                                                <option value="610">销售出库</option>
+                                                <option value="611">调拨出库</option>
+                                                <option value="612">报损出库</option>
+                                                <option value="613">其他出库</option>
                                                 <option value="----------">----------</option>
-                                                <option value="14">采购入库</option>
-                                                <option value="15">调拨入库</option>
-                                                <option value="16">退货入库</option>
-                                                <option value="17">加工入库</option>
+                                                <option value="620">采购入库</option>
+                                                <option value="621">调拨入库</option>
+                                                <option value="622">退货入库</option>
+                                                <option value="623">加工入库</option>
                                             </select>
 
                                             <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('screenOrderForm').submit();">搜索</span>
                                         </label>
                                     </div>
                                     <br/>
-
+                                    <div class="table-header">
+                                        订单列表
+                                    </div>
                                     <div class="col-xs-12">
                                         <div class="dataTables_length" id="dynamic-table_length">
                                             <label>Display
@@ -310,12 +322,16 @@
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-                                        <td>${order.orderType!"null"}</td>
+                                        <td>
+                                        ${order.orderType!"null"}
+                                        </td>
                                         <td class="hidden-480">
                                         ${order.businessType!"null"}
                                         </td>
                                         <td class="hidden-480">
-                                            <span class="label label-sm label-success">${order.orderStatus!"null"}</span>
+                                            <span class="label label-sm label-success">
+                                           <#-- <#if order.orderStatus!"null" == 10>待审核</#if>-->
+                                            </span>
                                         </td>
                                         <td class="hidden-480">
                                         ${order.consigneeName!"null"}
@@ -353,8 +369,8 @@
         <!-- #section:basics/footer -->
         <div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application © 2013-2014
+							<span class="blue bolder">Xescm</span>
+							Application © 2016
 						</span>
 
             &nbsp; &nbsp;
@@ -503,7 +519,6 @@
 
         $.fn.dataTable.Buttons.swfPath = "components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
         $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
 
 
         ////
