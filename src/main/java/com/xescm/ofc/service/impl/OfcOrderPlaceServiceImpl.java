@@ -62,7 +62,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
                     ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
                             .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
-                    ofcFundamentalInformation.setOrderTime(new Date());
+                    //ofcFundamentalInformation.setOrderTime(new Date());
                     ofcFundamentalInformation.setCreationTime(new Date());
                     ofcFundamentalInformation.setCreator("001");
                     ofcFundamentalInformation.setOperator("001");
