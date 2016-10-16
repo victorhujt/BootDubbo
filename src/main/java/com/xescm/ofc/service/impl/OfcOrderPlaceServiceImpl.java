@@ -79,7 +79,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     return String.valueOf(Wrapper.ERROR_CODE);
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){
-
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode()).equals("")){
+                    ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
+                }
                 ofcFundamentalInformation.setOperator("001");
                 ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())

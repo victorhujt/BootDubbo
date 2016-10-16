@@ -27,7 +27,7 @@
   <!--订单状态列表查询-->
   <select id="orderStatusScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
-    status_desc
+    oos.notes
     FROM
     ofc_order_status oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
