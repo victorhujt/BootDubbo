@@ -14,10 +14,7 @@
     <script language="javascript">
 
         $(function () {
-            $("#screenOrderBtn").click(function () {
-                $("#orderPlaceConTable").submit;
-                alert(${orderPlaceResult!"null"});
-            });
+
         });
     </script>
 
@@ -31,8 +28,18 @@
     </h1>
 </div>
 <form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
-    <input type="hidden" name="tag" value="manage">
 
+    <input type="hidden" name="tag" value="manage">
+    <#--补全页面中没有的订单信息-->
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
+    <input type="hidden" name="">
 
     <h2>订单中心编辑</h2>
     <h3>基本信息</h3>
@@ -190,7 +197,7 @@
 
 
 <hr/>
-    <button type="button" id="screenOrderBtn">下单</button>
+    <button type="submit" id="screenOrderBtn">保存修改</button>
 </form>
 
 <br/></br/>

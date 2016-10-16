@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <script src="components/bootbox.js/bootbox.js"></script>
     <script src="js/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
@@ -205,10 +206,19 @@
 
                                     <div id="dynamic-table_filter" class="dataTables_length">
                                         <label>
-                                            &nbsp;&nbsp;&nbsp;订单日期:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            订单编号:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            客户订单编号:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            订单状态:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            &nbsp;&nbsp;&nbsp;订单日期:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                            至<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker()">
+                                            订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            订单状态:
+                                            <select id="" name="orderStatus">
+                                                <option value="">----</option>
+                                                <option value="10">待审核</option>
+                                                <option value="20">已审核</option>
+                                                <option value="30">执行中</option>
+                                                <option value="40">已完成</option>
+                                                <option value="50">已取消</option>
+                                            </select>
                                         </label>
                                     </div>
 
@@ -219,24 +229,24 @@
                                             订单类型:
                                             <select id="" name="orderType">
                                                 <option value="">----</option>
-                                                <option value="0">运输订单</option>
-                                                <option value="1">仓配订单</option>
+                                                <option value="60">运输订单</option>
+                                                <option value="61">仓配订单</option>
                                             </select>
                                             业务类型:
                                             <select id="" name="businessType">
                                                 <option value="">----</option>
-                                                <option value="00">城配</option>
-                                                <option value="01">干线</option>
+                                                <option value="600">城配</option>
+                                                <option value="601">干线</option>
                                                 <option value="----------">----------</option>
-                                                <option value="10">销售出库</option>
-                                                <option value="11">调拨出库</option>
-                                                <option value="12">报损出库</option>
-                                                <option value="13">其他出库</option>
+                                                <option value="610">销售出库</option>
+                                                <option value="611">调拨出库</option>
+                                                <option value="612">报损出库</option>
+                                                <option value="613">其他出库</option>
                                                 <option value="----------">----------</option>
-                                                <option value="14">采购入库</option>
-                                                <option value="15">调拨入库</option>
-                                                <option value="16">退货入库</option>
-                                                <option value="17">加工入库</option>
+                                                <option value="620">采购入库</option>
+                                                <option value="621">调拨入库</option>
+                                                <option value="622">退货入库</option>
+                                                <option value="623">加工入库</option>
                                             </select>
 
                                             <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('screenOrderForm').submit();">搜索</span>
@@ -310,12 +320,16 @@
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-                                        <td>${order.orderType!"null"}</td>
+                                        <td>
+                                        ${order.orderType!"null"}
+                                        </td>
                                         <td class="hidden-480">
                                         ${order.businessType!"null"}
                                         </td>
                                         <td class="hidden-480">
-                                            <span class="label label-sm label-success">${order.orderStatus!"null"}</span>
+                                            <span class="label label-sm label-success">
+                                           <#-- <#if order.orderStatus!"null" == 10>待审核</#if>-->
+                                            </span>
                                         </td>
                                         <td class="hidden-480">
                                         ${order.consigneeName!"null"}
@@ -353,8 +367,8 @@
         <!-- #section:basics/footer -->
         <div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application © 2013-2014
+							<span class="blue bolder">Xescm</span>
+							Application © 2016
 						</span>
 
             &nbsp; &nbsp;
@@ -503,7 +517,6 @@
 
         $.fn.dataTable.Buttons.swfPath = "components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
         $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
 
 
         ////
