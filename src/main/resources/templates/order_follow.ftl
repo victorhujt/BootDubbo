@@ -41,6 +41,7 @@
     <script src="components/html5shiv/dist/html5shiv.min.js"></script>
     <script src="components/respond/dest/respond.min.js"></script>
     <![endif]-->
+    <script src="js/jquery.js"></script>
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -197,7 +198,7 @@
                                                     <option value="transCode">运输单号</option>
                                                 </select>
                                                 <input name="code" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('followOrderForm').submit();">查询</span>
+                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="orderFollow()">查询</span>
 
                                             </label>
                                         </div>
@@ -419,4 +420,16 @@
 <script src="assets/js/src/ace.settings-skin.js"></script>
 <script src="assets/js/src/ace.widget-on-reload.js"></script>
 <script src="assets/js/src/ace.searchbox-autocomplete.js"></script>
+<script type="text/javascript">
+    function orderFollow() {
+        /*进行非空校验，然后进行查询*/
+        var code=$("input[name='code']").val();
+        if(code==""||code==null){
+            alert("请先输入数据再进行查询");
+            return false;
+        }else{
+            $("#followOrderForm").submit();
+        }
+    }
+</script>
 </body></html>

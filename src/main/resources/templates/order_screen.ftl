@@ -306,7 +306,7 @@
 
 
                                         <td>
-                                            <a href="#">${order.orderCode!"null"}</a>
+                                            <a href="/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>

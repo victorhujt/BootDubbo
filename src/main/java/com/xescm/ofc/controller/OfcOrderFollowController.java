@@ -37,6 +37,15 @@ public class OfcOrderFollowController {
         return "order_follow";
     }
 
+    @RequestMapping("/orderDetails")
+    public String orderDetails(String code, String followTag, Map<String,Object> map) throws InvocationTargetException{
+        OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);
+        List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);
+        map.put("ofcOrderDTO",ofcOrderDTO);
+        map.put("orderStatusList",ofcOrderStatuses);
+        return "order_detail";
+    }
+
 
 
 }
