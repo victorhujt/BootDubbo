@@ -206,7 +206,7 @@
 
                                     <div id="dynamic-table_filter" class="dataTables_length">
                                         <label>
-                                            &nbsp;&nbsp;&nbsp;订单日期:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                            &nbsp;&nbsp;&nbsp;订单日期:<input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
                                             至<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker()">
                                             订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                             客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -323,15 +323,29 @@
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>
                                         <td>
-                                        ${order.orderType!"null"}
+                                            <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
+                                            <#if order.orderType ??><#if order.orderType == '61'>仓储订单</#if></#if>
                                         </td>
                                         <td class="hidden-480">
-                                        ${order.businessType!"null"}
+                                            <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '601'>干线</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '610'>销售出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '611'>调拨出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '612'>报损出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '613'>其他出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '620'>采购入库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '621'>调拨入库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '622'>退货入库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '623'>加工入库</#if></#if>
                                         </td>
                                         <td class="hidden-480">
-                                            <span class="label label-sm label-success">
-                                           <#-- <#if order.orderStatus!"null" == 10>待审核</#if>-->
-                                            </span>
+
+                                            <#if order.orderStatus ??><#if order.orderStatus == '10'><span class="label label-sm label-yellow">待审核</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '20'><span class="label label-sm label-warning">已审核</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '30'><span class="label label-sm label-info">执行中</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '40'><span class="label label-sm label-success">已完成</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '50'><span class="label label-sm label-default">已取消</span></#if></#if>
+
                                         </td>
                                         <td class="hidden-480">
                                         ${order.consigneeName!"null"}

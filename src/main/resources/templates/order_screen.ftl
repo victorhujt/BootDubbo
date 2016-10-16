@@ -278,7 +278,6 @@
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">订单操作</th>
                                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
                                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
                                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
@@ -304,15 +303,6 @@
                                                 <span class="lbl"></span>
                                             </label>
                                         </td>
-                                        <td>
-
-                                            <button type="button" id="review" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-minier btn-yellow">审核</button>
-                                            <button type="button" id="edit" +${order_index} onclick="editOrder('${order.orderCode!"null"}')"  class="btn btn-minier btn-success">编辑</button>
-                                            <button type="button" id="cancel" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-danger">删除</button>
-                                            <button type="button" id="rereview" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-inverse">反审核</button>
-                                            <button type="button" id="cancel" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-default">取消</button>
-
-                                        </td>
 
 
                                         <td>
@@ -320,12 +310,30 @@
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>
-                                        <td>${order.orderType!"null"}</td>
-                                        <td class="hidden-480">
-                                        ${order.businessType!"null"}
+                                        <td>
+                                            <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
+                                            <#if order.orderType ??><#if order.orderType == '61'>仓储订单</#if></#if>
                                         </td>
                                         <td class="hidden-480">
-                                            <span class="label label-sm label-success">${order.orderStatus!"null"}</span>
+                                            <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '601'>干线</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '610'>销售出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '611'>调拨出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '612'>报损出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '613'>其他出库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '620'>采购入库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '621'>调拨入库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '622'>退货入库</#if></#if>
+                                            <#if order.businessType ??><#if order.businessType == '623'>加工入库</#if></#if>
+                                        </td>
+                                        <td class="hidden-480">
+
+                                            <#if order.orderStatus ??><#if order.orderStatus == '10'><span class="label label-sm label-yellow">待审核</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '20'><span class="label label-sm label-warning">已审核</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '30'><span class="label label-sm label-info">执行中</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '40'><span class="label label-sm label-success">已完成</span></#if></#if>
+                                            <#if order.orderStatus ??><#if order.orderStatus == '50'><span class="label label-sm label-default">已取消</span></#if></#if>
+
                                         </td>
                                         <td class="hidden-480">
                                         ${order.consigneeName!"null"}
