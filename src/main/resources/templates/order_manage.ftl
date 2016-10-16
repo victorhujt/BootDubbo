@@ -321,10 +321,10 @@
                                             <a href="#">${order.orderCode!"null"}</a>
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
-                                        <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+                                        <td class="hidden-480">${((order.orderTime)?string("yyyy-MM-dd HH:mm:ss"))!}</td>
                                         <td>
                                             <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
-                                            <#if order.orderType ??><#if order.orderType == '61'>仓储订单</#if></#if>
+                                            <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>
                                         </td>
                                         <td class="hidden-480">
                                             <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
