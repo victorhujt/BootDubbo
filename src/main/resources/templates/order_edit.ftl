@@ -212,7 +212,6 @@
 
 
                                                     客户订单编号:<input name="custOrderCode" type="text" <#if orderInfo.custOrderCode?? >value="${orderInfo.custOrderCode}"</#if>>
-                                                    是否需要运输<input type="checkbox" />
                                                     &nbsp;&nbsp;&nbsp;
                                                     订单类型:
 
@@ -221,22 +220,28 @@
                                                         <option value="60" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)== '60')>selected="selected"</#if></#if>>运输订单</option>
                                                         <option value="61" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)== '61')>selected="selected"</#if></#if>>仓配订单</option>
                                                     </select>
-                                                    业务类型:
-                                                    <select id="" name="businessType">
-                                                        <option value="">----</option>
-                                                        <option value="600" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '600')>selected="selected"</#if></#if>>城配</option>
-                                                        <option value="601" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '601')>selected="selected"</#if></#if>>干线</option>
-                                                        <option value="----------">----------</option>
-                                                        <option value="610" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '610')>selected="selected"</#if></#if>>销售出库</option>
-                                                        <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '611')>selected="selected"</#if></#if>>调拨出库</option>
-                                                        <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '612')>selected="selected"</#if></#if>>报损出库</option>
-                                                        <option value="613" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '613')>selected="selected"</#if></#if>>其他出库</option>
-                                                        <option value="----------">----------</option>
-                                                        <option value="620" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '620')>selected="selected"</#if></#if>>采购入库</option>
-                                                        <option value="621" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '621')>selected="selected"</#if></#if>>调拨入库</option>
-                                                        <option value="622" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '622')>selected="selected"</#if></#if>>退货入库</option>
-                                                        <option value="623" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '623')>selected="selected"</#if></#if>>加工入库</option>
-                                                    </select>
+                                                    <span id="businessTypeDiv" style="display: none">
+                                                        业务类型:
+                                                        <select id="" name="businessType">
+                                                            <option value="">----</option>
+                                                            <option value="600" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '600')>selected="selected"</#if></#if>>城配</option>
+                                                            <option value="601" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '601')>selected="selected"</#if></#if>>干线</option>
+                                                            <option value="----------">----------</option>
+                                                            <option value="610" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '610')>selected="selected"</#if></#if>>销售出库</option>
+                                                            <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '611')>selected="selected"</#if></#if>>调拨出库</option>
+                                                            <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '612')>selected="selected"</#if></#if>>报损出库</option>
+                                                            <option value="613" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '613')>selected="selected"</#if></#if>>其他出库</option>
+                                                            <option value="----------">----------</option>
+                                                            <option value="620" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '620')>selected="selected"</#if></#if>>采购入库</option>
+                                                            <option value="621" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '621')>selected="selected"</#if></#if>>调拨入库</option>
+                                                            <option value="622" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '622')>selected="selected"</#if></#if>>退货入库</option>
+                                                            <option value="623" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '623')>selected="selected"</#if></#if>>加工入库</option>
+                                                        </select>
+                                                    </span>
+                                                    <span id="provideTransportDiv" style="display: none">
+                                                        是否需要运输
+                                                        <input type="checkbox" name = "provideTransport" />
+                                                    </span>
                                                     店铺:
                                                     <select id="" name="storeCode" value="${(orderInfo.storeName)!"0"}">
                                                         <option value="">----</option>
@@ -269,11 +274,11 @@
                                                     <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                 </li>
 
-                                                <li class="">
+                                                <li class="tranfr">
                                                     <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
                                                 </li>
 
-                                                <li class="">
+                                                <li class="storeLi" style="display:none">
                                                     <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
                                                 </li>
                                             </ul>
@@ -618,6 +623,26 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+    $(function(){
+        $("#orderType").change(function () {
+            if($(this).children('option:selected').val() == '61'){
+                $("#provideTransportDiv").show();
+                $("#businessTypeDiv").show();
+                $('.storeLi').show();
+                $('.tranfr').hide();
+
+            }
+            if($(this).children('option:selected').val() == '60'){
+
+                $("#provideTransportDiv").hide();
+                $("#businessTypeDiv").hide();
+                $('.tranfr').show();
+                $('.storeLi').hide();
+            }
+        });
+
+    })
+
 
     jQuery(function($) {
 
