@@ -457,6 +457,57 @@
                                 <div class="page-header">
                                     <h4>货品信息</h4>
                                 </div>
+                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                    <thead>
+                                    <tr role="row">
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">序号</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品编码</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产日期</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">失效日期</th>
+                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                    </thead>
+                                    <tbody>
+                                    <#--
+                                            vo  value object  拼出来的结果集
+                                            dto  参数,给后端当参数,或者返回的dot.
+                                    -->
+                                    <#list goodsDetailsList! as goodsDetails>
+                                    <tr role="row" class="odd">
+                                        <td>
+                                        ${(goodsDetails_index+1)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.goodsCode)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.goodsName)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.goodsSpec)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.unit)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.productionBatch)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.productionTime)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.invalidTime)!"null"}
+                                        </td>
+                                        <td>
+                                        ${(goodsDetails.quantity)!"null"}
+                                        </td>
+                                    </tr>
+                                    </#list>
+                                    </tbody>
+                                </table>
                                 <div class="page-header">
                                     <h4>订单跟踪信息</h4>
                                 </div>
@@ -473,7 +524,7 @@
                                     <#list orderStatusList! as orderStatus>
                                     <tr role="row" class="odd">
                                         <td>
-                                        ${(orderStatus.notes)!"null"}
+                                        ${orderStatus_index},${(orderStatus.notes)!"null"}
                                         </td>
                                     </tr>
                                     </#list>

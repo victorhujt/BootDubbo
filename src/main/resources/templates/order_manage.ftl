@@ -308,14 +308,24 @@
                                         </td>
                                         <td>
 
-                                            <button type="button" id="review" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-minier btn-yellow">审核</button>
-                                            <button type="button" id="edit" +${order_index} onclick="editOrder('${order.orderCode!"null"}')"  class="btn btn-minier btn-success">编辑</button>
-                                            <button type="button" id="cancel" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-danger">删除</button>
-                                            <button type="button" id="rereview" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-inverse">反审核</button>
-                                            <button type="button" id="cancel" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-default">取消</button>
-
+                                            <#if order.orderStatus?? >
+                                                <#if ((order.orderStatus)== '10')>
+                                                    <button type="button" id="review" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-minier btn-yellow">审核</button>
+                                                    <button type="button" id="edit" +${order_index} onclick="editOrder('${order.orderCode!"null"}')"  class="btn btn-minier btn-success">编辑</button>
+                                                    <button type="button" id="cancel" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-danger">删除</button>
+                                                </#if>
+                                            </#if>
+                                            <#if order.orderStatus?? >
+                                                <#if ((order.orderStatus)== '20')>
+                                                    <button type="button" id="rereview" +${order_index} onclick="reReviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-inverse">反审核</button>
+                                                </#if>
+                                            </#if>
+                                            <#if order.orderStatus?? >
+                                                <#if ((order.orderStatus)== '20') || (order.orderStatus)=='30'>
+                                                    <button type="button" id="cancel" +${order_index} onclick="cancelOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-default">取消</button>
+                                                </#if>
+                                            </#if>
                                         </td>
-
 
                                         <td>
                                             <a href="/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
