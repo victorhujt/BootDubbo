@@ -21,4 +21,18 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <!--订单货品列表查询-->
+  <select id="goodsDetailsScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    oos.*
+    FROM
+    ofc_goods_details_info oos
+    LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        oos.order_code =#{orderCode}
+      </if>
+    </where>
+  </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.xescm.ofc.controller;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.service.*;
@@ -22,6 +23,8 @@ public class OfcOrderFollowController {
     private OfcOrderDtoService ofcOrderDtoService;
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
+    @Autowired
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
     @RequestMapping("/orderFollowCon")
     public String orderFollowCon(String code, String followTag, Map<String,Object> map) throws InvocationTargetException {
@@ -41,8 +44,10 @@ public class OfcOrderFollowController {
     public String orderDetails(String code, String followTag, Map<String,Object> map) throws InvocationTargetException{
         OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);
         List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);
+        List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(code,followTag);
         map.put("ofcOrderDTO",ofcOrderDTO);
         map.put("orderStatusList",ofcOrderStatuses);
+        map.put("goodsDetailsList",goodsDetailsList);
         return "order_detail";
     }
 
