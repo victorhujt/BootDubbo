@@ -206,8 +206,8 @@
 
                                         <div id="dynamic-table_filter" class="dataTables_length">
                                             <label>
-                                                &nbsp;&nbsp;&nbsp;订单日期:<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
-                                                至<input type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker()">
+                                                &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                至<input name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 订单状态:
@@ -309,7 +309,7 @@
                                             <a href="/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
-                                        <td class="hidden-480">${order.orderTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+                                        <td class="hidden-480">${(order.orderTime?string("yyyy-MM-dd HH:mm:ss"))!}</td>
                                         <td>
                                             <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
                                             <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>

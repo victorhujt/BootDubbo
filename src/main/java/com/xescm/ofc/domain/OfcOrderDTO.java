@@ -1,6 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xescm.ofc.service.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Transient;
 import java.math.BigDecimal;
@@ -13,6 +15,8 @@ public class OfcOrderDTO {
 
     /*基本信息表*/
     private String orderCode;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderTime;
     private String custCode;
     private String custName;
@@ -28,13 +32,21 @@ public class OfcOrderDTO {
     private String orderSource;
     private String productType;
     private String productName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date finishedTime;
     private Integer abolishMark;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date abolishTime;
     private String abolisher;
     private String creator;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date creationTime;
     private String operator;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date operTime;
 
     /*订单状态表*/
@@ -46,6 +58,8 @@ public class OfcOrderDTO {
 //    private String custName;
     private String orderStatus;
     private String statusDesc;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date lastedOperTime;
 //    private String notes;
 //    private String operator;
@@ -63,7 +77,11 @@ public class OfcOrderDTO {
     private String cubage;
     private Integer totalStandardBox;
     private String transRequire;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date pickupTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date expectedArrivedTime;
     private String consignorCode;
     private String consignorName;
@@ -81,7 +99,11 @@ public class OfcOrderDTO {
     private String supportName;
     private String supportCode;
     private Integer provideTransport;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date shipmentTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date arriveTime;
     private String warehouseName;
     private String plateNumber;

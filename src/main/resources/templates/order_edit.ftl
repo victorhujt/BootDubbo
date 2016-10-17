@@ -208,7 +208,7 @@
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
-                                                    &nbsp;&nbsp;&nbsp;订单日期:<input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                                    &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
 
                                                     客户订单编号:<input name="custOrderCode" type="text" <#if orderInfo.custOrderCode?? >value="${orderInfo.custOrderCode}"</#if>>
@@ -304,8 +304,7 @@
                                                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
                                                                 <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
                                                                 失效日期</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
+
 
                                                         </thead>
                                                         <tbody>
@@ -345,12 +344,7 @@
                                                             <td class="hidden-480">
                                                                 <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
                                                             </td>
-                                                            <td class="hidden-480">
-                                                                <input name="storeCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td class="hidden-480">
-                                                                <input name="notes" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
+
 
                                                         </tr>
 
@@ -362,7 +356,7 @@
 
                                                 </div>
 
-                                                <div id="profile4" class="tab-pane active">
+                                                <div id="profile4" class="tab-pane">
 
                                                     <div class="page-header">
                                                         <h4>运输基本信息</h4>
@@ -392,9 +386,9 @@
                                                                 目的地:
                                                                 <input name="destination" <#if orderInfo.destination?? >value="${orderInfo.destination}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                 取货时间:
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                <input name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 期望送达时间:
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                <input name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 是否加急:<input type="checkbox" />
 
                                                             </label>
@@ -465,7 +459,7 @@
 
                                                 </div>
 
-                                                <div id="dropdown14" class="tab-pane active">
+                                                <div id="dropdown14" class="tab-pane">
 
                                                     <div class="page-header">
                                                         <h4>仓配基本信息</h4>
@@ -480,7 +474,7 @@
                                                                     <option value="60" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>仓库2</option>
                                                                 </select>
 
-                                                                入库预计到达时间:<input name=""  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                入库预计到达时间:<input name="arriveTime"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 车牌号:<input name="plateNumber" <#if orderInfo.plateNumber?? >value="${orderInfo.plateNumber}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                 司机姓名:<input name="driverName" <#if orderInfo.driverName?? >value="${orderInfo.driverName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
                                                                 &nbsp;&nbsp;&nbsp;
