@@ -40,15 +40,17 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcFundamentalInformation.setCustCode("001");
             ofcFundamentalInformation.setCustName("众品");
             ofcFundamentalInformation.setAbolishMark(0); //作废标记为0, 表明未作废
-            ofcWarehouseInformation.setProvideTransport(1);
+            ofcWarehouseInformation.setProvideTransport(1);//别忘了改!
             if(ofcWarehouseInformation.getProvideTransport().toString().equals("1")){
                 ofcFundamentalInformation.setSecCustCode("001");
                 ofcFundamentalInformation.setSecCustName("众品");
             }
         }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+            ofcFundamentalInformation.setCustCode("001");
+            ofcFundamentalInformation.setCustName("众品");
             ofcFundamentalInformation.setSecCustCode("001");
             ofcFundamentalInformation.setSecCustName("众品");
-            ofcFundamentalInformation.setAbolishMark(0);
+            ofcFundamentalInformation.setAbolishMark(0);//作废标记为0, 表明未作废
             if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                     .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
@@ -60,10 +62,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
-            if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){
+            if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
                 if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
-                    ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
-                            .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
+                        ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
+                                .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
                     //ofcFundamentalInformation.setOrderTime(new Date());
                     ofcFundamentalInformation.setCreationTime(new Date());
                     ofcFundamentalInformation.setCreator("001");
@@ -72,15 +74,21 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单已创建");
                     upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
-                    ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                    if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+                        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                        ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                    }
+                    if(ofcWarehouseInformation.getProvideTransport().toString().equals("1")&&ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
+                        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                        ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                    }
                     ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
-                    ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
                     ofcWarehouseInformationService.save(ofcWarehouseInformation);
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                 }else{
                     return String.valueOf(Wrapper.ERROR_CODE);
                 }
-            }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){
+            }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode()).equals("")){
                     ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
                 }
@@ -118,10 +126,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     public OfcDistributionBasicInfo upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo
             ,OfcFundamentalInformation ofcFundamentalInformation){
-        ofcDistributionBasicInfo.setTransCode("111111111");
+        ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
         ofcDistributionBasicInfo.setDeparturePlaceCode("001");
         ofcDistributionBasicInfo.setDestinationCode("001");
-        ofcDistributionBasicInfo.setTotalStandardBox(8);
         ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
         ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
