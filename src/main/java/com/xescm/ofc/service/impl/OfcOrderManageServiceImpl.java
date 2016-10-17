@@ -86,6 +86,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
+            OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+            ofcFundamentalInformation.setAbolisher("001");
+            ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
             return String.valueOf(Wrapper.ERROR_CODE);

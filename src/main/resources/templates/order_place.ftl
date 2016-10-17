@@ -211,14 +211,14 @@
 
 
                                                     客户订单编号:<input name="custOrderCode" type="text">
-                                                    是否需要运输<input type="checkbox" />
+
                                                     &nbsp;&nbsp;&nbsp;
                                                     订单类型:
-                                                    <select id="" name="orderType">
-                                                        <option value="">----</option>
+                                                    <select id="orderTypeSel" name="orderType">
                                                         <option value="60">运输订单</option>
                                                         <option value="61">仓配订单</option>
                                                     </select>
+                                                    <span id="businessTypeDiv" style="display: none">
                                                     业务类型:
                                                     <select id="" name="businessType">
                                                         <option value="">----</option>
@@ -235,9 +235,14 @@
                                                         <option value="622">退货入库</option>
                                                         <option value="623">加工入库</option>
                                                     </select>
+                                                        </span>
+
+                                                    <span id="provideTransportDiv" style="display: none">
+                                                        是否需要运输
+                                                        <input type="checkbox" name = "provideTransport" />
+                                                    </span>
                                                     店铺:
                                                     <select id="" name="storeCode">
-                                                        <option value="">----</option>
                                                         <option value="线下销售">线下销售</option>
                                                         <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
                                                         <option value="众品京东旗舰店">众品京东旗舰店</option>
@@ -249,7 +254,7 @@
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                 </label>
                                             </div>
 
@@ -271,9 +276,10 @@
                                                     <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
                                                 </li>
 
-                                                <li class="">
-                                                    <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
-                                                </li>
+                                                    <li class="storeLi" style="display:none">
+                                                        <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
+                                                    </li>
+
                                             </ul>
 
                                             <div class="tab-content">
@@ -366,15 +372,16 @@
                                                             <label>
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 货品类型:<select id="" name="goodsType">
-                                                                <option value="">----</option>
-                                                                <option value="60">货品类型1</option>
-                                                                <option value="61">货品类型2</option>
+
+                                                                <option value="货品类型1">货品类型1</option>
+                                                                <option value="货品类型2">货品类型2</option>
                                                             </select>
                                                                 数量:<input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
 
                                                                 重量:<input name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                 体积:<input name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
+                                                                合计标准箱:<input name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
 
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 出发地:
@@ -450,9 +457,7 @@
                                                         <select><option value="">--区/县--</option></select>
                                                         <select><option value="">--乡镇/街道--</option></select>
                                                         <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
                                                     </div>
-
                                                 </div>
 
                                                 <div id="dropdown14" class="tab-pane">
@@ -466,8 +471,8 @@
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 仓库名称:<select id="" name="wareHouseName">
                                                                 <option value="">----</option>
-                                                                <option value="60">仓库1</option>
-                                                                <option value="61">仓库2</option>
+                                                                <option value="仓库1">仓库1</option>
+                                                                <option value="仓库2">仓库2</option>
                                                             </select>
                                                                 入库预计到达时间:<input name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 车牌号:<input name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -613,69 +618,27 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-    function editOrder(orderCode) {
-        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        $("#screenOrderForm").attr("action","/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
-        $("#screenOrderForm").submit();
-    }
 
-    function deleteOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要删除此订单?");
-        if(result == true) {
-            $.get("/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-                $("#confirmBox").modal('hide');
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("删除订单失败,请联系管理员!");
-                }
-            });
-        }
+    $(function(){
+        $("#orderTypeSel").change(function () {
+            if($(this).children('option:selected').val() == '61'){
+                $("#provideTransportDiv").show();
+                $("#businessTypeDiv").show();
+                $('.storeLi').show();
+
+            }
+            if($(this).children('option:selected').val() == '60'){
+
+                $("#provideTransportDiv").hide();
+                $("#businessTypeDiv").hide();
+            }
+        });
+
+    })
 
 
-    }
-
-    function reviewOrder(ordercode,orderStatus) {
-
-        var result  = confirm("您确定要审核订单?");
-        if(result == true) {
-            $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("审核订单失败,请联系管理员!");
-                }
-            });
-        }
-
-    }
-    function reReviewOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要反审核此订单?");
-        if(result == true) {
-            $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("反审核订单失败,请联系管理员!");
-                }
-            });
-        }
-    }
-    function cancelOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要取消此订单?");
-        if(result == true) {
-            $.get("/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("取消订单失败,请联系管理员!");
-                }
-            });
-        }
-
-    }
     jQuery(function($) {
+
 
 
 
@@ -692,9 +655,6 @@
                 else $(this).tooltip({container: 'body', title: $(this).text()});
             });
         }, 500);
-
-
-
 
 
         /////////////////////////////////
