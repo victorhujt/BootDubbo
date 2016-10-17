@@ -324,7 +324,7 @@
                                     <#list orderStatusList! as orderStatus>
                                     <tr role="row" class="odd">
                                         <td>
-                                        ${(orderStatus.notes)!"null"}
+                                        . ${(orderStatus.notes)!"null"}
                                         </td>
                                     </tr>
                                     </#list>
