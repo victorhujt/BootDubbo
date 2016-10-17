@@ -39,6 +39,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
             ofcFundamentalInformation.setCustCode("001");
             ofcFundamentalInformation.setCustName("众品");
+            ofcFundamentalInformation.setAbolishMark(0); //作废标记为0, 表明未作废
             ofcWarehouseInformation.setProvideTransport(1);
             if(ofcWarehouseInformation.getProvideTransport().toString().equals("1")){
                 ofcFundamentalInformation.setSecCustCode("001");
@@ -47,6 +48,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
             ofcFundamentalInformation.setSecCustCode("001");
             ofcFundamentalInformation.setSecCustName("众品");
+            ofcFundamentalInformation.setAbolishMark(0);
             if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                     .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
@@ -55,8 +57,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
         }
 //        ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());
-        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());
-        ofcFundamentalInformation.setOrderSource("手动");
+        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
+        ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){
                 if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){

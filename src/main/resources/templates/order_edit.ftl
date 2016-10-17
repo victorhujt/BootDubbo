@@ -618,68 +618,7 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-    function editOrder(orderCode) {
-        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        $("#screenOrderForm").attr("action","/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
-        $("#screenOrderForm").submit();
-    }
 
-    function deleteOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要删除此订单?");
-        if(result == true) {
-            $.get("/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-                $("#confirmBox").modal('hide');
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("删除订单失败,请联系管理员!");
-                }
-            });
-        }
-
-
-    }
-
-    function reviewOrder(ordercode,orderStatus) {
-
-        var result  = confirm("您确定要审核订单?");
-        if(result == true) {
-            $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("审核订单失败,请联系管理员!");
-                }
-            });
-        }
-
-    }
-    function reReviewOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要反审核此订单?");
-        if(result == true) {
-            $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("反审核订单失败,请联系管理员!");
-                }
-            });
-        }
-    }
-    function cancelOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要取消此订单?");
-        if(result == true) {
-            $.get("/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("取消订单失败,请联系管理员!");
-                }
-            });
-        }
-
-    }
     jQuery(function($) {
 
 
