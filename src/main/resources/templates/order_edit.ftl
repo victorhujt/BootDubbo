@@ -223,10 +223,7 @@
                                                     <span id="businessTypeDiv" style="display: none">
                                                         业务类型:
                                                         <select id="" name="businessType">
-                                                            <option value="">----</option>
-                                                            <option value="600" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '600')>selected="selected"</#if></#if>>城配</option>
-                                                            <option value="601" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '601')>selected="selected"</#if></#if>>干线</option>
-                                                            <option value="----------">----------</option>
+
                                                             <option value="610" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '610')>selected="selected"</#if></#if>>销售出库</option>
                                                             <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '611')>selected="selected"</#if></#if>>调拨出库</option>
                                                             <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '612')>selected="selected"</#if></#if>>报损出库</option>
@@ -240,7 +237,7 @@
                                                     </span>
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input type="checkbox" name = "provideTransport" />
+                                                        <input id="provideTransport" type="checkbox" name = "provideTransport" />
                                                     </span>
                                                     店铺:
                                                     <select id="" name="storeCode" value="${(orderInfo.storeName)!"0"}">
@@ -638,6 +635,13 @@
                 $("#businessTypeDiv").hide();
                 $('.tranfr').show();
                 $('.storeLi').hide();
+            }
+        });
+        $("#provideTransport").change(function () {
+            if($(this).prop("checked")){
+                $('.tranfr').show();
+            }else{
+                $('.tranfr').hide();
             }
         });
 
