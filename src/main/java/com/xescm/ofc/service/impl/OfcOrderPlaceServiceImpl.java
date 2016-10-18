@@ -36,33 +36,38 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
-            ofcFundamentalInformation.setCustCode("001");
-            ofcFundamentalInformation.setCustName("众品");
-            ofcFundamentalInformation.setAbolishMark(0); //作废标记为0, 表明未作废
-            ofcWarehouseInformation.setProvideTransport(1);//别忘了改!
-            if(ofcWarehouseInformation.getProvideTransport().toString().equals("1")){
-                ofcFundamentalInformation.setSecCustCode("001");
-                ofcFundamentalInformation.setSecCustName("众品");
-            }
-        }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
-            ofcFundamentalInformation.setCustCode("001");
-            ofcFundamentalInformation.setCustName("众品");
-            ofcFundamentalInformation.setSecCustCode("001");
-            ofcFundamentalInformation.setSecCustName("众品");
-            ofcFundamentalInformation.setAbolishMark(0);//作废标记为0, 表明未作废
-            if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
-                    .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
-                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
-            }else{
-                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
-            }
-        }
+
 //        ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
+
+                if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
+                    ofcFundamentalInformation.setCustCode("001");
+                    ofcFundamentalInformation.setCustName("众品");
+                    ofcFundamentalInformation.setAbolishMark(0); //作废标记为0, 表明未作废
+//            ofcWarehouseInformation.setProvideTransport(1);//别忘了改!
+                    if(ofcWarehouseInformation.getProvideTransport()!=null && ofcWarehouseInformation.getProvideTransport().toString().equals("1")){
+                        ofcFundamentalInformation.setSecCustCode("001");
+                        ofcFundamentalInformation.setSecCustName("众品");
+                    }
+                }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+                    ofcFundamentalInformation.setCustCode("001");
+                    ofcFundamentalInformation.setCustName("众品");
+                    ofcFundamentalInformation.setSecCustCode("001");
+                    ofcFundamentalInformation.setSecCustName("众品");
+                    ofcFundamentalInformation.setAbolishMark(0);//作废标记为0, 表明未作废
+                    if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
+                            .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                    }else{
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                    }
+                }
+
+
+
                 if (ofcFundamentalInformationService.selectOne(ofcFundamentalInformation)==null){
                         ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
                                 .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
@@ -78,7 +83,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
                     }
-                    if(ofcWarehouseInformation.getProvideTransport().toString().equals("1")&&ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
+                    if(ofcWarehouseInformation.getProvideTransport()!=null && ofcWarehouseInformation.getProvideTransport().toString().equals("1") && ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                         ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
                     }
@@ -89,6 +94,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     return String.valueOf(Wrapper.ERROR_CODE);
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
+
+                if(ofcWarehouseInformation.getProvideTransport()!=null && ofcWarehouseInformation.getProvideTransport().toString().equals("1")){
+                    ofcFundamentalInformation.setSecCustCode("001");
+                    ofcFundamentalInformation.setSecCustName("众品");
+                }else if(ofcWarehouseInformation.getProvideTransport()!=null && ofcWarehouseInformation.getProvideTransport().toString().equals("0")){
+                    ofcFundamentalInformation.setSecCustCode("");
+                    ofcFundamentalInformation.setSecCustName("");
+                }
+
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode()).equals("")){
                     ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
                 }

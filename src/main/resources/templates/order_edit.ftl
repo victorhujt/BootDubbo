@@ -181,7 +181,7 @@
                 <!-- /section:settings.box -->
                 <div class="page-header">
                     <h1>
-                        我要下单
+                        订单编辑
                     </h1>
                 </div><!-- /.page-header -->
 
@@ -215,8 +215,8 @@
                                                     &nbsp;&nbsp;&nbsp;
                                                     订单类型:
 
-                                                    <select id="orderType" name="orderType" value="${(orderInfo.orderType)!"00"}">
-                                                        <option value="">----</option>
+                                                    <select id="orderType" name="orderType" value="${(orderInfo.orderType)!"60"}">
+
                                                         <option value="60" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)== '60')>selected="selected"</#if></#if>>运输订单</option>
                                                         <option value="61" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)== '61')>selected="selected"</#if></#if>>仓配订单</option>
                                                     </select>
@@ -237,11 +237,11 @@
                                                     </span>
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input id="provideTransport" type="checkbox" name = "provideTransport" />
+                                                        <input id="provideTransport" type="checkbox"  name = "provideTransport" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
                                                     </span>
                                                     店铺:
-                                                    <select id="" name="storeCode" value="${(orderInfo.storeName)!"0"}">
-                                                        <option value="">----</option>
+                                                    <select id="" name="storeCode" value="${(orderInfo.storeName)!""}">
+
                                                         <option value="线下销售" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '线下销售')>selected="selected"</#if></#if>>线下销售</option>
                                                         <option value="众品天猫生鲜旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品天猫生鲜旗舰店')>selected="selected"</#if></#if>>众品天猫生鲜旗舰店</option>
                                                         <option value="众品京东旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品京东旗舰店')>selected="selected"</#if></#if>>众品京东旗舰店</option>
@@ -253,7 +253,7 @@
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" value="${orderInfo.notes}"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" value="${(orderInfo.notes)!""}"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
                                                 </label>
                                             </div>
 
@@ -391,7 +391,7 @@
                                                                 <input name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 期望送达时间:
                                                                 <input name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input type="checkbox" />
+                                                                是否加急:<input type="checkbox" name="urgent" <#if orderInfo.urgent?? ><#if ((orderInfo.urgent) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
 
                                                             </label>
                                                         </div>
@@ -621,6 +621,25 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
     $(function(){
+
+        if($("#orderType").val()== '60'){
+            $("#provideTransportDiv").hide();
+            $("#businessTypeDiv").hide();
+            $('.tranfr').show();
+            $('.storeLi').hide();
+        }
+        if($("#orderType").val()== '61'){
+            $("#provideTransportDiv").show();
+            $("#businessTypeDiv").show();
+            $('.storeLi').show();
+            $('.tranfr').hide();
+            if($("#provideTransport").prop("checked")){
+                $('.tranfr').show();
+            }else{
+                $('.tranfr').hide();
+            }
+        }
+
         $("#orderType").change(function () {
             if($(this).children('option:selected').val() == '61'){
                 $("#provideTransportDiv").show();

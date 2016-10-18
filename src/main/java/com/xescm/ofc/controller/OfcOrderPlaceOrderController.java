@@ -34,13 +34,9 @@ public class OfcOrderPlaceOrderController {
     @RequestMapping("/orderPlaceCon")
     public String orderPlace(OfcOrderDTO ofcOrderDTO, String tag, HttpServletResponse response){
         System.out.println(ofcOrderDTO);
-        System.out.println("111111111111111111111");
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
-            System.out.println("====1111====="+result);
             if(tag.equals("manage")){
-
-
                 return "order_manage";
             }
             return "order_place";

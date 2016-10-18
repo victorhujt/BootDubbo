@@ -235,7 +235,7 @@
 
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input  id="provideTransport" type="checkbox" name = "provideTransport" />
+                                                        <input  id="provideTransport" type="checkbox" name = "provideTransport" onclick="this.value=this.checked?1:0"/>
                                                     </span>
                                                     店铺:
                                                     <select id="" name="storeCode">
@@ -388,7 +388,7 @@
                                                                 <input name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 期望送达时间:
                                                                 <input name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input type="checkbox" />
+                                                                是否加急:<input type="checkbox" name="urgent" value="0" onclick="this.value=this.checked?1:0"/>
 
                                                             </label>
                                                         </div>
@@ -617,6 +617,7 @@
 
     $(function(){
 
+
         $("#orderTypeSel").change(function () {
             if($(this).children('option:selected').val() == '61'){
                 $("#provideTransportDiv").show();
@@ -624,12 +625,14 @@
                 $('.storeLi').show();
                 $('.transLi').hide();
 
+
             }
             if($(this).children('option:selected').val() == '60'){
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();
                 $("#businessTypeDiv").hide();
+
             }
         });
         $("#provideTransport").change(function () {
