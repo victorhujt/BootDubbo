@@ -5,6 +5,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,11 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
         }else {
             throw new BusinessException();
         }
+    }
+
+    @Override
+    public String deleteByOrderCode(Object orderCode,Object goodsCode) {
+        ofcGoodsDetailsInfoMapper.deleteByOrderCode(orderCode,goodsCode);
+        return String.valueOf(Wrapper.SUCCESS_CODE);
     }
 }

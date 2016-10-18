@@ -1,6 +1,8 @@
 package com.xescm.ofc.controller;
 
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.wrap.Wrapper;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.coyote.http11.Constants.a;
@@ -26,6 +29,8 @@ public class OfcOrderManageController {
     private OfcOrderManageService ofcOrderManageService;
     @Autowired
     private OfcOrderDtoService ofcOrderDtoService;
+    @Autowired
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
     @RequestMapping(value = "/orderManage")
     public String orderManage(){
@@ -90,7 +95,9 @@ public class OfcOrderManageController {
         try {
             orderCode=orderCode.replace(",","");
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
             if (ofcOrderDTO!=null){
+                map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
                 map.put("orderInfo", ofcOrderDTO);
                 return "order_edit";
             }
@@ -98,5 +105,20 @@ public class OfcOrderManageController {
             e.printStackTrace();
         }
         return "order_manage";
+    }
+
+    /**
+     * 订单删除
+     * @param orderCode
+     * @return
+     */
+    @RequestMapping("/goodsDelete")
+    public void goodsDelete(String orderCode,  String goodsCode,HttpServletResponse response){
+        try {
+            String result = ofcGoodsDetailsInfoService.deleteByOrderCode(orderCode,goodsCode);
+            response.getWriter().print(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
