@@ -92,9 +92,11 @@ public class OfcOrderManageController {
     @RequestMapping(value = "/getOrderDetailByCode")
     public String getOrderDetailByCode(String orderCode, String dtotag, Map<String,Object> map){
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
+
         try {
             orderCode=orderCode.replace(",","");
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
+            System.out.println(ofcOrderDTO);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
             if (ofcOrderDTO!=null){
                 map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);

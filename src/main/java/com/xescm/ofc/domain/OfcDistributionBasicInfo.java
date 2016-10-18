@@ -1,9 +1,11 @@
 package com.xescm.ofc.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "ofc_distribution_basic_info")
 public class OfcDistributionBasicInfo {
@@ -12,12 +14,6 @@ public class OfcDistributionBasicInfo {
      */
     @Column(name = "trans_code")
     private String transCode;
-
-    /**
-     * 货品类型
-     */
-    @Column(name = "goods_type")
-    private String goodsType;
 
     /**
      * 是否加急
@@ -77,12 +73,16 @@ public class OfcDistributionBasicInfo {
     /**
      * 取货时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "pickup_time")
     private Date pickupTime;
 
     /**
      * 期望送货时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "expected_arrived_time")
     private Date expectedArrivedTime;
 
@@ -166,24 +166,6 @@ public class OfcDistributionBasicInfo {
      */
     public void setTransCode(String transCode) {
         this.transCode = transCode;
-    }
-
-    /**
-     * 获取货品类型
-     *
-     * @return goods_type - 货品类型
-     */
-    public String getGoodsType() {
-        return goodsType;
-    }
-
-    /**
-     * 设置货品类型
-     *
-     * @param goodsType 货品类型
-     */
-    public void setGoodsType(String goodsType) {
-        this.goodsType = goodsType;
     }
 
     /**

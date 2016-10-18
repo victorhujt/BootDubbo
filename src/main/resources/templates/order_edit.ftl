@@ -237,7 +237,7 @@
                                                     </span>
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input id="provideTransport" type="checkbox"  name = "provideTransport" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
+                                                        <input id="provideTransport" type="checkbox"  name = "" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
                                                     </span>
                                                     店铺:
                                                     <select id="" name="storeCode" value="${(orderInfo.storeName)!""}">
@@ -253,7 +253,7 @@
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" value="${(orderInfo.notes)!""}"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" value="${(orderInfo.notes)!""}"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </label>
                                             </div>
 
@@ -314,7 +314,7 @@
                                                         <#list ofcGoodsDetailsList! as goodsDetails>
                                                         <tr role="row" class="odd">
                                                             <td class="center">
-                                                                <button type="button" id=""    class="btn btn-minier btn-danger" onclick="deleteGoods('${goodsDetails.orderCode!"null"}','${goodsDetails.goodsCode!"null"}')">删除</button>
+                                                                <button type="button" id=""    class="btn btn-minier btn-danger" onclick="deleteGoods('${(goodsDetails.orderCode)!"null"}','${goodsDetails.goodsCode!"null"}')">删除</button>
                                                             </td>
                                                             <td>
                                                                 序号
@@ -371,8 +371,8 @@
                                                                 货品类型:
                                                                 <select id="" name="goodsType" value="${(orderInfo.goodsType)!""}">
                                                                 <option value="">----</option>
-                                                                <option value="60" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '0')>selected="selected"</#if></#if>>货品类型1</option>
-                                                                <option value="60" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>货品类型2</option>
+                                                                <option value="货品类型1" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '0')>selected="selected"</#if></#if>>货品类型1</option>
+                                                                <option value="货品类型2" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>货品类型2</option>
 
                                                             </select>
                                                                 数量:<input name="quantity" <#if orderInfo.quantity?? >value="${orderInfo.quantity}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -390,7 +390,7 @@
                                                                 <input name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 期望送达时间:
                                                                 <input name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input type="checkbox" name="urgent" <#if orderInfo.urgent?? ><#if ((orderInfo.urgent) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
+                                                                是否加急:<input type="checkbox" name="" <#if orderInfo.urgent?? ><#if ((orderInfo.urgent) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
 
                                                             </label>
                                                         </div>
@@ -471,8 +471,8 @@
                                                                 &nbsp;&nbsp;&nbsp;仓库名称:
                                                                 <select id="" name="wareHouseName"  value="${(orderInfo.wareHouseName)!""}">
                                                                     <option value="">----</option>
-                                                                    <option value="60" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '0')>selected="selected"</#if></#if>>仓库1</option>
-                                                                    <option value="60" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>仓库2</option>
+                                                                    <option value="仓库1" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '0')>selected="selected"</#if></#if>>仓库1</option>
+                                                                    <option value="仓库2" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>仓库2</option>
                                                                 </select>
 
                                                                 入库预计到达时间:<input name="arriveTime" <#if orderInfo.arriveTime?? >value="${((orderInfo.arriveTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if>  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">

@@ -1,8 +1,10 @@
 package com.xescm.ofc.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "ofc_warehouse_information")
 public class OfcWarehouseInformation {
@@ -27,12 +29,16 @@ public class OfcWarehouseInformation {
     /**
      * 出库发货时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "shipment_time")
     private Date shipmentTime;
 
     /**
      * 入库预计到达时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "arrive_time")
     private Date arriveTime;
 
@@ -69,6 +75,8 @@ public class OfcWarehouseInformation {
     /**
      * 创建日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "creation_time")
     private Date creationTime;
 
@@ -85,8 +93,16 @@ public class OfcWarehouseInformation {
     /**
      * 操作时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
+
+    /**
+     * 仓库编码
+     */
+    @Column(name = "warehouse_code")
+    private String warehouseCode;
 
     /**
      * 获取供应商名称
@@ -338,5 +354,23 @@ public class OfcWarehouseInformation {
      */
     public void setOperTime(Date operTime) {
         this.operTime = operTime;
+    }
+
+    /**
+     * 获取仓库编码
+     *
+     * @return warehouse_code - 仓库编码
+     */
+    public String getWarehouseCode() {
+        return warehouseCode;
+    }
+
+    /**
+     * 设置仓库编码
+     *
+     * @param warehouseCode 仓库编码
+     */
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
     }
 }

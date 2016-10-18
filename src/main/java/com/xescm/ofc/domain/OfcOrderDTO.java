@@ -66,7 +66,7 @@ public class OfcOrderDTO {
 
     /*运输订单信息*/
     private String transCode;
-    private String goodsType;
+    //private String goodsType;
     private Integer urgent;
     private String departurePlace;
     private String departurePlaceCode;
@@ -106,6 +106,7 @@ public class OfcOrderDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date arriveTime;
     private String warehouseName;
+    private String warehouseCode;
     private String plateNumber;
     private String driverName;
     private String contactNumber;
@@ -130,7 +131,13 @@ public class OfcOrderDTO {
 //    private String creator;
 //    private String operator;
 //    private Date operTime;
+    public String getWarehouseCode() {
+        return warehouseCode;
+    }
 
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
+    }
     public String getOrderCode() {
         return orderCode;
     }
@@ -355,13 +362,6 @@ public class OfcOrderDTO {
         this.transCode = transCode;
     }
 
-    public String getGoodsType() {
-        return goodsType;
-    }
-
-    public void setGoodsType(String goodsType) {
-        this.goodsType = goodsType;
-    }
 
     public Integer getUrgent() {
         return urgent;
@@ -635,72 +635,5 @@ public class OfcOrderDTO {
         this.countFlag = countFlag;
     }
 
-    @Override
-    public String toString() {
-        return "OfcOrderDTO{" +
-                "orderCode='" + orderCode + '\'' +
-                ", orderTime=" + orderTime +
-                ", custCode='" + custCode + '\'' +
-                ", custName='" + custName + '\'' +
-                ", secCustCode='" + secCustCode + '\'' +
-                ", secCustName='" + secCustName + '\'' +
-                ", orderType='" + orderType + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", custOrderCode='" + custOrderCode + '\'' +
-                ", notes='" + notes + '\'' +
-                ", storeCode='" + storeCode + '\'' +
-                ", storeName='" + storeName + '\'' +
-                ", platformType='" + platformType + '\'' +
-                ", orderSource='" + orderSource + '\'' +
-                ", productType='" + productType + '\'' +
-                ", productName='" + productName + '\'' +
-                ", finishedTime=" + finishedTime +
-                ", abolishMark=" + abolishMark +
-                ", abolishTime=" + abolishTime +
-                ", abolisher='" + abolisher + '\'' +
-                ", creator='" + creator + '\'' +
-                ", creationTime=" + creationTime +
-                ", operator='" + operator + '\'' +
-                ", operTime=" + operTime +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", statusDesc='" + statusDesc + '\'' +
-                ", lastedOperTime=" + lastedOperTime +
-                ", transCode='" + transCode + '\'' +
-                ", goodsType='" + goodsType + '\'' +
-                ", urgent=" + urgent +
-                ", departurePlace='" + departurePlace + '\'' +
-                ", departurePlaceCode='" + departurePlaceCode + '\'' +
-                ", destination='" + destination + '\'' +
-                ", destinationCode='" + destinationCode + '\'' +
-                ", quantity=" + quantity +
-                ", weight=" + weight +
-                ", cubage='" + cubage + '\'' +
-                ", totalStandardBox=" + totalStandardBox +
-                ", transRequire='" + transRequire + '\'' +
-                ", pickupTime=" + pickupTime +
-                ", expectedArrivedTime=" + expectedArrivedTime +
-                ", consignorCode='" + consignorCode + '\'' +
-                ", consignorName='" + consignorName + '\'' +
-                ", consigneeCode='" + consigneeCode + '\'' +
-                ", consigneeName='" + consigneeName + '\'' +
-                ", carrierCode='" + carrierCode + '\'' +
-                ", carrierName='" + carrierName + '\'' +
-                ", supportName='" + supportName + '\'' +
-                ", supportCode='" + supportCode + '\'' +
-                ", provideTransport=" + provideTransport +
-                ", shipmentTime=" + shipmentTime +
-                ", arriveTime=" + arriveTime +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", plateNumber='" + plateNumber + '\'' +
-                ", driverName='" + driverName + '\'' +
-                ", contactNumber='" + contactNumber + '\'' +
-                ", serviceCharge=" + serviceCharge +
-                ", orderAmount=" + orderAmount +
-                ", paymentAmount=" + paymentAmount +
-                ", collectLoanAmount=" + collectLoanAmount +
-                ", collectServiceCharge=" + collectServiceCharge +
-                ", collectFlag='" + collectFlag + '\'' +
-                ", countFlag='" + countFlag + '\'' +
-                '}';
-    }
+
 }
