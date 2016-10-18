@@ -221,10 +221,6 @@
                                                     <span id="businessTypeDiv" style="display: none">
                                                     业务类型:
                                                     <select id="" name="businessType">
-                                                        <option value="">----</option>
-                                                        <option value="600">城配</option>
-                                                        <option value="601">干线</option>
-                                                        <option value="----------">----------</option>
                                                         <option value="610">销售出库</option>
                                                         <option value="611">调拨出库</option>
                                                         <option value="612">报损出库</option>
@@ -239,7 +235,7 @@
 
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input type="checkbox" name = "provideTransport" />
+                                                        <input  id="provideTransport" type="checkbox" name = "provideTransport" />
                                                     </span>
                                                     店铺:
                                                     <select id="" name="storeCode">
@@ -272,7 +268,7 @@
                                                     <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                 </li>
 
-                                                <li class="">
+                                                <li class="transLi">
                                                     <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
                                                 </li>
 
@@ -620,17 +616,27 @@
 <script type="text/javascript">
 
     $(function(){
+
         $("#orderTypeSel").change(function () {
             if($(this).children('option:selected').val() == '61'){
                 $("#provideTransportDiv").show();
                 $("#businessTypeDiv").show();
                 $('.storeLi').show();
+                $('.transLi').hide();
 
             }
             if($(this).children('option:selected').val() == '60'){
-
+                $('.transLi').show();
+                $('.storeLi').hide();
                 $("#provideTransportDiv").hide();
                 $("#businessTypeDiv").hide();
+            }
+        });
+        $("#provideTransport").change(function () {
+            if($(this).prop("checked")){
+                $('.transLi').show();
+            }else{
+                $('.transLi').hide();
             }
         });
 
