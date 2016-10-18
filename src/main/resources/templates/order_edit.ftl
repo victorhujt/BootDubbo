@@ -201,7 +201,7 @@
                             <!-- div.dataTables_borderWrap -->
                             <div>
                                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                    <form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
+                                    <form action="" method="post" id="">
                                         <input type="hidden" name="tag" value="manage">
                                         <input type="hidden" name="orderCode" <#if orderInfo.orderCode?? >value="${orderInfo.orderCode}"</#if>">
                                         <div class="row">

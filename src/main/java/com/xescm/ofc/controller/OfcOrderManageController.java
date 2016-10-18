@@ -111,13 +111,13 @@ public class OfcOrderManageController {
 
     /**
      * 订单删除
-     * @param orderCode
+     * @param ofcGoodsDetailsInfo
      * @return
      */
     @RequestMapping("/goodsDelete")
-    public void goodsDelete(String orderCode,  String goodsCode,HttpServletResponse response){
+    public void goodsDelete(OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
         try {
-            String result = ofcGoodsDetailsInfoService.deleteByOrderCode(orderCode,goodsCode);
+            String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
             response.getWriter().print(result);
         } catch (Exception e) {
             e.printStackTrace();

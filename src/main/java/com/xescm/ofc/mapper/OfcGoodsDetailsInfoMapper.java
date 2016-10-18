@@ -10,5 +10,5 @@ import java.util.Map;
 
 public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo> {
     List<OfcGoodsDetailsInfo> goodsDetailsScreen(Map<String,String> mapperMap);
-    int deleteByOrderCode(Object orderCode,Object goodsCode);
+    int deleteByOrderCode(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
 }
