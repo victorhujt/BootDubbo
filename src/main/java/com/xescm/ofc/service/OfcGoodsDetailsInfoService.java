@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface OfcGoodsDetailsInfoService extends IService<OfcGoodsDetailsInfo>{
     List<OfcGoodsDetailsInfo> goodsDetailsScreenList(String code, String followTag);
+    String deleteByOrderCode(Object orderCode,Object goodsCode);
 }

@@ -311,10 +311,10 @@
                                                         </thead>
                                                         <tbody>
                                                         <#--货品明细-->
-
+                                                        <#list ofcGoodsDetailsList! as goodsDetails>
                                                         <tr role="row" class="odd">
                                                             <td class="center">
-                                                                <button type="button" id=""    class="btn btn-minier btn-danger">删除</button>
+                                                                <button type="button" id=""    class="btn btn-minier btn-danger" onclick="deleteGoods('${goodsDetails.orderCode!"null"}','${goodsDetails.goodsCode!"null"}')">删除</button>
                                                             </td>
                                                             <td>
                                                                 序号
@@ -322,34 +322,33 @@
                                                             </td>
 
                                                             <td>
-                                                                <input name="goodsCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="goodsCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.goodsCode)!""}">
                                                             </td>
                                                             <td>
-                                                                <input name="goodsName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="goodsName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.goodsName)!""}">
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="goodsSpec" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="goodsSpec" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.goodsSpec)!""}">
                                                             </td>
                                                             <td>
-                                                                <input name="unit" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="unit" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.unit)!""}">
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.quantity)!""}">
                                                             </td>
                                                             <td class="hidden-480">
 
-                                                                <input name="productionBatch" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="productionBatch" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.productionBatch)!""}">
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.productionTime)!""}">
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.invalidTime)!""}">
                                                             </td>
-
 
                                                         </tr>
-
+                                                        </#list>
                                                         </tbody>
                                                     </table>
                                                     <div class="row">
@@ -666,6 +665,21 @@
 
     })
 
+    function deleteGoods(ordercode,goodsCode) {
+        var result  = confirm("您确定要删除此货品?");
+        if(result == true) {
+            $.get("/goodsDelete",{"orderCode":ordercode,"goodsCode":goodsCode},function (data) {
+                $("#confirmBox").modal('hide');
+                if(data == 200){
+                    window.location.href="/orderScreenByCondition?tag=manage";
+                } else {
+                    alert("删除货品失败,请联系管理员!");
+                }
+            });
+        }
+
+
+    }
 
     jQuery(function($) {
 

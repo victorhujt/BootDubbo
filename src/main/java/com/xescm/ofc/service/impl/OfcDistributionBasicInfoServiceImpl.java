@@ -27,6 +27,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public int updateByOrderCode(Object key) {
+        ofcDistributionBasicInfoMapper.updateByOrderCode(key);
         return 0;
     }
 

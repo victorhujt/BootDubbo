@@ -17,11 +17,13 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
     @Override
     public int deleteByOrderCode(Object key) {
+        ofcWarehouseInformationMapper.deleteByOrderCode(key);
         return 0;
     }
 
     @Override
     public int updateByOrderCode(Object key) {
+        ofcWarehouseInformationMapper.updateByOrderCode(key);
         return 0;
     }
 
