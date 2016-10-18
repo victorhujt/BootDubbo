@@ -36,8 +36,8 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     }
 
     @Override
-    public String deleteByOrderCode(Object orderCode,Object goodsCode) {
-        ofcGoodsDetailsInfoMapper.deleteByOrderCode(orderCode,goodsCode);
+    public String deleteByOrderCode(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
+        ofcGoodsDetailsInfoMapper.deleteByOrderCode(ofcGoodsDetailsInfo);
         return String.valueOf(Wrapper.SUCCESS_CODE);
     }
 }
