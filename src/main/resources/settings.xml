@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<!-- 本地Maven储存库地址，用来定义本地的Maven库的存储地址，即从Maven仓库中下载的文件的存储的位置 -->
+	<localRepository>C:\Users\lyh\.m2\repository</localRepository>
+	<mirrors>  <!--ljj local private nexus (1) -->
+		<mirror>
+			<id>nexus-public</id>
+			<mirrorOf>public</mirrorOf>
+			<url>http://60.205.82.135:8081/nexus/content/groups/public</url>
+		</mirror>
+	</mirrors>
+	<!-- profile 用来定义仓库的地址和插件仓库的地址，用来发布、获取构件 -->
+	<profiles>
+		<profile>
+			<id>nexus</id>
+			<repositories>
+				<repository>
+					<id>nexus</id>
+					<name>local private nexus</name>
+					<url>http://60.205.82.135:8081/nexus/content/groups/public</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>jboss</id>
+					<name>localJboss</name>
+					<url>https://repository.jboss.org/nexus/content/groups/public</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>nexus</id>
+					<name>local private nexus</name>
+					<url>http://60.205.82.135:8081/nexus/content/groups/public</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+	<!-- 激活配置，指定哪些配置被激活 -->
+	<activeProfiles>
+		<activeProfile>nexus</activeProfile>
+	</activeProfiles>
+</settings>
