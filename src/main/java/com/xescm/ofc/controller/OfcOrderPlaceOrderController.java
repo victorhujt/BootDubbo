@@ -59,10 +59,7 @@ public class OfcOrderPlaceOrderController {
         return "order_place";
     }
 
-    @RequestMapping(value="/orderPlace")
-    public ModelAndView index(HttpServletRequest request, HttpServletResponse response){
-        return new ModelAndView("order_place");
-    }
+
 
 
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<#assign base=request.contextPath />
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
@@ -8,41 +9,40 @@
 
     <meta name="description" content="Static &amp; Dynamic Tables">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <script src="components/bootbox.js/bootbox.js"></script>
-    <script src="js/jquery.js"></script>
+
     <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="${base}/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="${base}/components/font-awesome/css/font-awesome.css">
 
     <!-- page specific plugin styles -->
 
     <!-- text fonts -->
-    <link rel="stylesheet" href="assets/css/ace-fonts.css">
+    <link rel="stylesheet" href="${base}/assets/css/ace-fonts.css">
 
     <!-- ace styles -->
-    <link rel="stylesheet" href="assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style">
+    <link rel="stylesheet" href="${base}/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style">
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <link rel="stylesheet" href="${base}/assets/css/ace-part2.css" class="ace-main-stylesheet" />
     <![endif]-->
-    <link rel="stylesheet" href="assets/css/ace-skins.css">
-    <link rel="stylesheet" href="assets/css/ace-rtl.css">
+    <link rel="stylesheet" href="${base}/assets/css/ace-skins.css">
+    <link rel="stylesheet" href="${base}/assets/css/ace-rtl.css">
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="assets/css/ace-ie.css" />
+    <link rel="stylesheet" href="${base}/assets/css/ace-ie.css" />
     <![endif]-->
 
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
-    <script src="assets/js/ace-extra.js"></script><style>@keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-moz-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-webkit-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-ms-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-o-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}.ace-save-state{animation-duration:10ms;-o-animation-duration:10ms;-ms-animation-duration:10ms;-moz-animation-duration:10ms;-webkit-animation-duration:10ms;animation-delay:0s;-o-animation-delay:0s;-ms-animation-delay:0s;-moz-animation-delay:0s;-webkit-animation-delay:0s;animation-name:nodeInserted;-o-animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted}</style>
+    <script src="${base}/assets/js/ace-extra.js"></script><style>@keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-moz-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-webkit-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-ms-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-o-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}.ace-save-state{animation-duration:10ms;-o-animation-duration:10ms;-ms-animation-duration:10ms;-moz-animation-duration:10ms;-webkit-animation-duration:10ms;animation-delay:0s;-o-animation-delay:0s;-ms-animation-delay:0s;-moz-animation-delay:0s;-webkit-animation-delay:0s;animation-name:nodeInserted;-o-animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted}</style>
 
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
     <!--[if lte IE 8]>
-    <script src="components/html5shiv/dist/html5shiv.min.js"></script>
-    <script src="components/respond/dest/respond.min.js"></script>
+    <script src="${base}/components/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="${base}/components/respond/dest/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -77,10 +77,10 @@
                 <!-- #section:basics/content.searchbox -->
                 <div class="nav-search" id="nav-search">
                     <form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off">
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
+                                <span class="input-icon">
+                                    <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                    <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                </span>
                     </form>
                 </div><!-- /.nav-search -->
 
@@ -105,7 +105,7 @@
                                         <option data-skin="skin-1" value="#222A2D">#222A2D</option>
                                         <option data-skin="skin-2" value="#C6487E">#C6487E</option>
                                         <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-                                    </select><div class="dropdown dropdown-colorpicker">		<a data-toggle="dropdown" class="dropdown-toggle"><span class="btn-colorpicker" style="background-color:#438EB9"></span></a><ul class="dropdown-menu dropdown-caret"><li><a class="colorpick-btn selected" style="background-color:#438EB9;" data-color="#438EB9"></a></li><li><a class="colorpick-btn" style="background-color:#222A2D;" data-color="#222A2D"></a></li><li><a class="colorpick-btn" style="background-color:#C6487E;" data-color="#C6487E"></a></li><li><a class="colorpick-btn" style="background-color:#D0D0D0;" data-color="#D0D0D0"></a></li></ul></div>
+                                    </select><div class="dropdown dropdown-colorpicker">        <a data-toggle="dropdown" class="dropdown-toggle"><span class="btn-colorpicker" style="background-color:#438EB9"></span></a><ul class="dropdown-menu dropdown-caret"><li><a class="colorpick-btn selected" style="background-color:#438EB9;" data-color="#438EB9"></a></li><li><a class="colorpick-btn" style="background-color:#222A2D;" data-color="#222A2D"></a></li><li><a class="colorpick-btn" style="background-color:#C6487E;" data-color="#C6487E"></a></li><li><a class="colorpick-btn" style="background-color:#D0D0D0;" data-color="#D0D0D0"></a></li></ul></div>
                                 </div>
                                 <span>&nbsp; Choose Skin</span>
                             </div>
@@ -189,7 +189,7 @@
                     <div class="col-xs-12">
 
                         <div class="clearfix">
-                            <div class="pull-right tableTools-container"><div class="dt-buttons btn-overlap btn-group"><a class="dt-button buttons-collection buttons-colvis btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-search bigger-110 blue"></i> <span class="hidden">Show/hide columns</span></span></a><a class="dt-button buttons-copy buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-copy bigger-110 pink"></i> <span class="hidden">Copy to clipboard</span></span></a><a class="dt-button buttons-csv buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-database bigger-110 orange"></i> <span class="hidden">Export to CSV</span></span></a><a class="dt-button buttons-excel buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-excel-o bigger-110 green"></i> <span class="hidden">Export to Excel</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_1" src="components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-pdf buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-pdf-o bigger-110 red"></i> <span class="hidden">Export to PDF</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_2" src="components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-print btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-print bigger-110 grey"></i> <span class="hidden">Print</span></span></a></div></div>
+                            <div class="pull-right tableTools-container"><div class="dt-buttons btn-overlap btn-group"><a class="dt-button buttons-collection buttons-colvis btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-search bigger-110 blue"></i> <span class="hidden">Show/hide columns</span></span></a><a class="dt-button buttons-copy buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-copy bigger-110 pink"></i> <span class="hidden">Copy to clipboard</span></span></a><a class="dt-button buttons-csv buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-database bigger-110 orange"></i> <span class="hidden">Export to CSV</span></span></a><a class="dt-button buttons-excel buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-excel-o bigger-110 green"></i> <span class="hidden">Export to Excel</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_1" src="${base}/components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-pdf buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-pdf-o bigger-110 red"></i> <span class="hidden">Export to PDF</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_2" src="${base}/components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-print btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-print bigger-110 grey"></i> <span class="hidden">Print</span></span></a></div></div>
                         </div>
                         <div class="table-header">
                             筛选条件
@@ -202,75 +202,75 @@
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
                                 <form action="/orderScreenByCondition" method="post" id="screenOrderForm">
                                     <input type="hidden" name="tag" value="manage"/>
-                                <div class="row">
+                                    <div class="row">
 
-                                    <div id="dynamic-table_filter" class="dataTables_length">
-                                        <label>
-                                            &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                            至<input name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                            订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                            订单状态:
-                                            <select id="" name="orderStatus">
-                                                <option value="">----</option>
-                                                <option value="10">待审核</option>
-                                                <option value="20">已审核</option>
-                                                <option value="30">执行中</option>
-                                                <option value="40">已完成</option>
-                                                <option value="50">已取消</option>
-                                            </select>
-                                        </label>
-                                    </div>
-
-                                    <div id="dynamic-table_filter" class="dataTables_length">
-                                        <label>
-
-                                            &nbsp;&nbsp;&nbsp;
-                                            订单类型:
-                                            <select id="" name="orderType">
-                                                <option value="">----</option>
-                                                <option value="60">运输订单</option>
-                                                <option value="61">仓配订单</option>
-                                            </select>
-                                            业务类型:
-                                            <select id="" name="businessType">
-                                                <option value="">----</option>
-                                                <option value="600">城配</option>
-                                                <option value="601">干线</option>
-                                                <option value="----------">----------</option>
-                                                <option value="610">销售出库</option>
-                                                <option value="611">调拨出库</option>
-                                                <option value="612">报损出库</option>
-                                                <option value="613">其他出库</option>
-                                                <option value="----------">----------</option>
-                                                <option value="620">采购入库</option>
-                                                <option value="621">调拨入库</option>
-                                                <option value="622">退货入库</option>
-                                                <option value="623">加工入库</option>
-                                            </select>
-
-                                            <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('screenOrderForm').submit();">搜索</span>
-                                        </label>
-                                    </div>
-                                    <br/>
-                                    <div class="table-header">
-                                        订单列表
-                                    </div>
-                                    <div class="col-xs-12">
-                                        <div class="dataTables_length" id="dynamic-table_length">
-                                            <label>Display
-                                                <select aria-controls="dynamic-table" class="form-control input-sm">
-                                                    <option value="10">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
+                                        <div id="dynamic-table_filter" class="dataTables_length">
+                                            <label>
+                                                &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                至<input name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                订单状态:
+                                                <select id="" name="orderStatus">
+                                                    <option value="">----</option>
+                                                    <option value="10">待审核</option>
+                                                    <option value="20">已审核</option>
+                                                    <option value="30">执行中</option>
+                                                    <option value="40">已完成</option>
+                                                    <option value="50">已取消</option>
                                                 </select>
-                                                records
                                             </label>
                                         </div>
-                                    </div>
 
-                                </div>
+                                        <div id="dynamic-table_filter" class="dataTables_length">
+                                            <label>
+
+                                                &nbsp;&nbsp;&nbsp;
+                                                订单类型:
+                                                <select id="" name="orderType">
+                                                    <option value="">----</option>
+                                                    <option value="60">运输订单</option>
+                                                    <option value="61">仓配订单</option>
+                                                </select>
+                                                业务类型:
+                                                <select id="" name="businessType">
+                                                    <option value="">----</option>
+                                                    <option value="600">城配</option>
+                                                    <option value="601">干线</option>
+                                                    <option value="----------">----------</option>
+                                                    <option value="610">销售出库</option>
+                                                    <option value="611">调拨出库</option>
+                                                    <option value="612">报损出库</option>
+                                                    <option value="613">其他出库</option>
+                                                    <option value="----------">----------</option>
+                                                    <option value="620">采购入库</option>
+                                                    <option value="621">调拨入库</option>
+                                                    <option value="622">退货入库</option>
+                                                    <option value="623">加工入库</option>
+                                                </select>
+
+                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('screenOrderForm').submit();">搜索</span>
+                                            </label>
+                                        </div>
+                                        <br/>
+                                        <div class="table-header">
+                                            订单列表
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="dataTables_length" id="dynamic-table_length">
+                                                <label>Display
+                                                    <select aria-controls="dynamic-table" class="form-control input-sm">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    records
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </form>
                                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                     <thead>
@@ -298,7 +298,7 @@
                                     </thead>
                                     <tbody>
                                     <#--订单列表数据-->
-                                <#list orderList! as order>
+                                    <#list orderList! as order>
                                     <tr role="row" class="odd">
                                         <td class="center">
                                             <label class="pos-rel">
@@ -312,7 +312,7 @@
                                                 <#if ((order.orderStatus)== '10')>
                                                     <button type="button" id="review" +${order_index} onclick="reviewOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')" class="btn btn-minier btn-yellow">审核</button>
                                                     <button type="button" id="edit" +${order_index} onclick="editOrder('${order.orderCode!"null"}')"  class="btn btn-minier btn-success">编辑</button>
-                                                    <button type="button" id="cancel" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-danger">删除</button>
+                                                    <button type="button" id="delete" +${order_index} onclick="deleteOrder('${order.orderCode!"null"}','${order.orderStatus!"null"}')"  class="btn btn-minier btn-danger">删除</button>
                                                 </#if>
                                             </#if>
                                             <#if order.orderStatus?? >
@@ -371,7 +371,7 @@
                                         </td>
 
                                     </tr>
-                                </#list>
+                                    </#list>
                                     </tbody>
                                 </table>
                                 <div class="row">
@@ -392,25 +392,25 @@
     <div class="footer-inner">
         <!-- #section:basics/footer -->
         <div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">Xescm</span>
-							Application © 2016
-						</span>
+                        <span class="bigger-120">
+                            <span class="blue bolder">Xescm</span>
+                            Application © 2016
+                        </span>
 
             &nbsp; &nbsp;
             <span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
+                            <a href="#">
+                                <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+                            </a>
 
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
+                            <a href="#">
+                                <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+                            </a>
 
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span>
+                            <a href="#">
+                                <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+                            </a>
+                        </span>
         </div>
 
         <!-- /section:basics/footer -->
@@ -426,52 +426,52 @@
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
-<script src="components/jquery/dist/jquery.js"></script>
-
+<script src="${base}/components/jquery/dist/jquery.js"></script>
+<script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
 <!--[if IE]>
-<script src="components/jquery.1x/dist/jquery.js"></script>
+<script src="${base}/components/jquery.1x/dist/jquery.js"></script>
 <![endif]-->
 <script type="text/javascript">
-    if('ontouchstart' in document.documentElement) document.write("<script src='components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
+    if('ontouchstart' in document.documentElement) document.write("<script src='${base}/components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
 </script>
-<script src="components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="${base}/components/bootstrap/dist/js/bootstrap.js"></script>
 
 <!-- page specific plugin scripts -->
-<script src="components/datatables/media/js/jquery.dataTables.js"></script>
-<script src="components/_mod/datatables/jquery.dataTables.bootstrap.js"></script>
-<script src="components/datatables.net-buttons/js/dataTables.buttons.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.flash.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.html5.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.print.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.colVis.js"></script>
-<script src="components/datatables.net-select/js/dataTables.select.js"></script>
+<script src="${base}/components/datatables/media/js/jquery.dataTables.js"></script>
+<script src="${base}/components/_mod/datatables/jquery.dataTables.bootstrap.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/dataTables.buttons.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.flash.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.html5.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.print.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.colVis.js"></script>
+<script src="${base}/components/datatables.net-select/js/dataTables.select.js"></script>
 
 <!-- ace scripts -->
-<script src="assets/js/src/elements.scroller.js"></script>
-<script src="assets/js/src/elements.colorpicker.js"></script>
-<script src="assets/js/src/elements.fileinput.js"></script>
-<script src="assets/js/src/elements.typeahead.js"></script>
-<script src="assets/js/src/elements.wysiwyg.js"></script>
-<script src="assets/js/src/elements.spinner.js"></script>
-<script src="assets/js/src/elements.treeview.js"></script>
-<script src="assets/js/src/elements.wizard.js"></script>
-<script src="assets/js/src/elements.aside.js"></script>
-<script src="assets/js/src/ace.js"></script>
-<script src="assets/js/src/ace.basics.js"></script>
-<script src="assets/js/src/ace.scrolltop.js"></script>
-<script src="assets/js/src/ace.ajax-content.js"></script>
-<script src="assets/js/src/ace.touch-drag.js"></script>
-<script src="assets/js/src/ace.sidebar.js"></script>
-<script src="assets/js/src/ace.sidebar-scroll-1.js"></script>
-<script src="assets/js/src/ace.submenu-hover.js"></script>
-<script src="assets/js/src/ace.widget-box.js"></script>
-<script src="assets/js/src/ace.settings.js"></script>
-<script src="assets/js/src/ace.settings-rtl.js"></script>
-<script src="assets/js/src/ace.settings-skin.js"></script>
-<script src="assets/js/src/ace.widget-on-reload.js"></script>
-<script src="assets/js/src/ace.searchbox-autocomplete.js"></script>
+<script src="${base}/assets/js/src/elements.scroller.js"></script>
+<script src="${base}/assets/js/src/elements.colorpicker.js"></script>
+<script src="${base}/assets/js/src/elements.fileinput.js"></script>
+<script src="${base}/assets/js/src/elements.typeahead.js"></script>
+<script src="${base}/assets/js/src/elements.wysiwyg.js"></script>
+<script src="${base}/assets/js/src/elements.spinner.js"></script>
+<script src="${base}/assets/js/src/elements.treeview.js"></script>
+<script src="${base}/assets/js/src/elements.wizard.js"></script>
+<script src="${base}/assets/js/src/elements.aside.js"></script>
+<script src="${base}/assets/js/src/ace.js"></script>
+<script src="${base}/assets/js/src/ace.basics.js"></script>
+<script src="${base}/assets/js/src/ace.scrolltop.js"></script>
+<script src="${base}/assets/js/src/ace.ajax-content.js"></script>
+<script src="${base}/assets/js/src/ace.touch-drag.js"></script>
+<script src="${base}/assets/js/src/ace.sidebar.js"></script>
+<script src="${base}/assets/js/src/ace.sidebar-scroll-1.js"></script>
+<script src="${base}/assets/js/src/ace.submenu-hover.js"></script>
+<script src="${base}/assets/js/src/ace.widget-box.js"></script>
+<script src="${base}/assets/js/src/ace.settings.js"></script>
+<script src="${base}/assets/js/src/ace.settings-rtl.js"></script>
+<script src="${base}/assets/js/src/ace.settings-skin.js"></script>
+<script src="${base}/assets/js/src/ace.widget-on-reload.js"></script>
+<script src="${base}/assets/js/src/ace.searchbox-autocomplete.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
@@ -524,6 +524,7 @@
         }
     }
     function cancelOrder(ordercode,orderStatus) {
+
         var result  = confirm("您确定要取消此订单?");
         if(result == true) {
             $.get("/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
@@ -541,7 +542,7 @@
 
 
 
-        $.fn.dataTable.Buttons.swfPath = "components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
+        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo ${base}/components will be replaced by correct assets path
         $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
 
 
@@ -636,16 +637,16 @@
 </script>
 
 <!-- the following scripts are used in demo only for onpage help and you don't need them -->
-<link rel="stylesheet" href="assets/css/ace.onpage-help.css">
-<link rel="stylesheet" href="docs/assets/js/themes/sunburst.css">
+<link rel="stylesheet" href="${base}/assets/css/ace.onpage-help.css">
+<link rel="stylesheet" href="${base}/docs/assets/js/themes/sunburst.css">
 
 <script type="text/javascript"> ace.vars['base'] = '..'; </script>
-<script src="assets/js/src/elements.onpage-help.js"></script>
-<script src="assets/js/src/ace.onpage-help.js"></script>
-<script src="docs/assets/js/rainbow.js"></script>
-<script src="docs/assets/js/language/generic.js"></script>
-<script src="docs/assets/js/language/html.js"></script>
-<script src="docs/assets/js/language/css.js"></script>
-<script src="docs/assets/js/language/javascript.js"></script>
+<script src="${base}/assets/js/src/elements.onpage-help.js"></script>
+<script src="${base}/assets/js/src/ace.onpage-help.js"></script>
+<script src="${base}/docs/assets/js/rainbow.js"></script>
+<script src="${base}/docs/assets/js/language/generic.js"></script>
+<script src="${base}/docs/assets/js/language/html.js"></script>
+<script src="${base}/docs/assets/js/language/css.js"></script>
+<script src="${base}/docs/assets/js/language/javascript.js"></script>
 
 </body></html>

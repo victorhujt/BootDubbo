@@ -128,10 +128,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation){
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        ofcOrderStatus.setOrderType(ofcFundamentalInformation.getOrderType());
-        ofcOrderStatus.setBusinessType(ofcFundamentalInformation.getBusinessType());
-        ofcOrderStatus.setCustName(ofcFundamentalInformation.getCustName());
-        ofcOrderStatus.setCustCode(ofcFundamentalInformation.getCustName());
         ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());

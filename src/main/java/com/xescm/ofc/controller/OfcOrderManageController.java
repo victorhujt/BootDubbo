@@ -32,10 +32,6 @@ public class OfcOrderManageController {
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
-    @RequestMapping(value = "/orderManage")
-    public String orderManage(){
-        return "order_manage";
-    }
 
     /**
      * 订单审核/反审核

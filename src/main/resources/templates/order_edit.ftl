@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<#assign base=request.contextPath />
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
@@ -8,41 +9,41 @@
 
     <meta name="description" content="Static &amp; Dynamic Tables">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <script src="components/bootbox.js/bootbox.js"></script>
-    <script src="js/jquery.js"></script>
+
+    <script src="${pageContext.request.contextPath}js/jquery.js"></script>
     <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="${base}/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="${base}/components/font-awesome/css/font-awesome.css">
 
     <!-- page specific plugin styles -->
 
     <!-- text fonts -->
-    <link rel="stylesheet" href="assets/css/ace-fonts.css">
+    <link rel="stylesheet" href="${base}/assets/css/ace-fonts.css">
 
     <!-- ace styles -->
-    <link rel="stylesheet" href="assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style">
+    <link rel="stylesheet" href="${base}/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style">
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <link rel="stylesheet" href="${base}/assets/css/ace-part2.css" class="ace-main-stylesheet" />
     <![endif]-->
-    <link rel="stylesheet" href="assets/css/ace-skins.css">
-    <link rel="stylesheet" href="assets/css/ace-rtl.css">
+    <link rel="stylesheet" href="${base}/assets/css/ace-skins.css">
+    <link rel="stylesheet" href="${base}/assets/css/ace-rtl.css">
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="assets/css/ace-ie.css" />
+    <link rel="stylesheet" href="${base}/assets/css/ace-ie.css" />
     <![endif]-->
 
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
-    <script src="assets/js/ace-extra.js"></script><style>@keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-moz-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-webkit-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-ms-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-o-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}.ace-save-state{animation-duration:10ms;-o-animation-duration:10ms;-ms-animation-duration:10ms;-moz-animation-duration:10ms;-webkit-animation-duration:10ms;animation-delay:0s;-o-animation-delay:0s;-ms-animation-delay:0s;-moz-animation-delay:0s;-webkit-animation-delay:0s;animation-name:nodeInserted;-o-animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted}</style>
+    <script src="${base}/assets/js/ace-extra.js"></script><style>@keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-moz-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-webkit-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-ms-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-o-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}.ace-save-state{animation-duration:10ms;-o-animation-duration:10ms;-ms-animation-duration:10ms;-moz-animation-duration:10ms;-webkit-animation-duration:10ms;animation-delay:0s;-o-animation-delay:0s;-ms-animation-delay:0s;-moz-animation-delay:0s;-webkit-animation-delay:0s;animation-name:nodeInserted;-o-animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted}</style>
 
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
     <!--[if lte IE 8]>
-    <script src="components/html5shiv/dist/html5shiv.min.js"></script>
-    <script src="components/respond/dest/respond.min.js"></script>
+    <script src="${base}/components/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="${base}/components/respond/dest/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -77,10 +78,10 @@
                 <!-- #section:basics/content.searchbox -->
                 <div class="nav-search" id="nav-search">
                     <form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off">
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
+                                <span class="input-icon">
+                                    <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                    <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                </span>
                     </form>
                 </div><!-- /.nav-search -->
 
@@ -105,7 +106,7 @@
                                         <option data-skin="skin-1" value="#222A2D">#222A2D</option>
                                         <option data-skin="skin-2" value="#C6487E">#C6487E</option>
                                         <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-                                    </select><div class="dropdown dropdown-colorpicker">		<a data-toggle="dropdown" class="dropdown-toggle"><span class="btn-colorpicker" style="background-color:#438EB9"></span></a><ul class="dropdown-menu dropdown-caret"><li><a class="colorpick-btn selected" style="background-color:#438EB9;" data-color="#438EB9"></a></li><li><a class="colorpick-btn" style="background-color:#222A2D;" data-color="#222A2D"></a></li><li><a class="colorpick-btn" style="background-color:#C6487E;" data-color="#C6487E"></a></li><li><a class="colorpick-btn" style="background-color:#D0D0D0;" data-color="#D0D0D0"></a></li></ul></div>
+                                    </select><div class="dropdown dropdown-colorpicker">        <a data-toggle="dropdown" class="dropdown-toggle"><span class="btn-colorpicker" style="background-color:#438EB9"></span></a><ul class="dropdown-menu dropdown-caret"><li><a class="colorpick-btn selected" style="background-color:#438EB9;" data-color="#438EB9"></a></li><li><a class="colorpick-btn" style="background-color:#222A2D;" data-color="#222A2D"></a></li><li><a class="colorpick-btn" style="background-color:#C6487E;" data-color="#C6487E"></a></li><li><a class="colorpick-btn" style="background-color:#D0D0D0;" data-color="#D0D0D0"></a></li></ul></div>
                                 </div>
                                 <span>&nbsp; Choose Skin</span>
                             </div>
@@ -203,7 +204,7 @@
                                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
                                     <form action="" method="post" id="">
                                         <input type="hidden" name="tag" value="manage">
-                                        <input type="hidden" name="orderCode" <#if orderInfo.orderCode?? >value="${orderInfo.orderCode}"</#if>">
+                                            <input type="hidden" name="orderCode" <#if orderInfo.orderCode?? >value="${orderInfo.orderCode}"</#if>">
                                         <div class="row">
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
@@ -368,18 +369,12 @@
                                                         <div id="dynamic-table_filter" class="dataTables_length">
                                                             <label>
                                                                 &nbsp;&nbsp;&nbsp;
-                                                                货品类型:
-                                                                <select id="" name="goodsType" value="${(orderInfo.goodsType)!""}">
-                                                                <option value="">----</option>
-                                                                <option value="货品类型1" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '0')>selected="selected"</#if></#if>>货品类型1</option>
-                                                                <option value="货品类型2" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>货品类型2</option>
 
-                                                            </select>
-                                                                数量:<input name="quantity" <#if orderInfo.quantity?? >value="${orderInfo.quantity}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                数量:<input name="quantity" <#if orderInfo.quantity?? >value="${orderInfo.quantity}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
 
-                                                                重量:<input name="weight" <#if orderInfo.weight?? >value="${orderInfo.weight}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                体积:<input name="cubage" <#if orderInfo.cubage?? >value="${orderInfo.cubage}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
+                                                                重量:<input name="weight" <#if orderInfo.weight?? >value="${orderInfo.weight}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                体积:<input name="cubage" <#if orderInfo.cubage?? >value="${orderInfo.cubage}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
                                                                 合计标准箱:<input name="totalStandardBox" <#if orderInfo.totalStandardBox?? >value="${orderInfo.totalStandardBox}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 出发地:
@@ -471,8 +466,8 @@
                                                                 &nbsp;&nbsp;&nbsp;仓库名称:
                                                                 <select id="" name="wareHouseName"  value="${(orderInfo.wareHouseName)!""}">
                                                                     <option value="">----</option>
-                                                                    <option value="仓库1" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '0')>selected="selected"</#if></#if>>仓库1</option>
-                                                                    <option value="仓库2" <#if orderInfo.goodsType?? ><#if ((orderInfo.goodsType)== '1')>selected="selected"</#if></#if>>仓库2</option>
+                                                                    <option value="仓库1" <#if orderInfo.wareHouseName?? ><#if ((orderInfo.wareHouseName)== '0')>selected="selected"</#if></#if>>仓库1</option>
+                                                                    <option value="仓库2" <#if orderInfo.wareHouseName?? ><#if ((orderInfo.wareHouseName)== '1')>selected="selected"</#if></#if>>仓库2</option>
                                                                 </select>
 
                                                                 入库预计到达时间:<input name="arriveTime" <#if orderInfo.arriveTime?? >value="${((orderInfo.arriveTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if>  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
@@ -536,25 +531,25 @@
     <div class="footer-inner">
         <!-- #section:basics/footer -->
         <div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">Xescm</span>
-							Application © 2016
-						</span>
+                        <span class="bigger-120">
+                            <span class="blue bolder">Xescm</span>
+                            Application © 2016
+                        </span>
 
             &nbsp; &nbsp;
             <span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
+                            <a href="#">
+                                <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+                            </a>
 
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
+                            <a href="#">
+                                <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+                            </a>
 
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span>
+                            <a href="#">
+                                <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+                            </a>
+                        </span>
         </div>
 
         <!-- /section:basics/footer -->
@@ -570,56 +565,59 @@
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
-<script src="components/jquery/dist/jquery.js"></script>
-
+<script src="${base}/components/jquery/dist/jquery.js"></script>
+<script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
 <!--[if IE]>
-<script src="components/jquery.1x/dist/jquery.js"></script>
+<script src="${base}/components/jquery.1x/dist/jquery.js"></script>
 <![endif]-->
 <script type="text/javascript">
-    if('ontouchstart' in document.documentElement) document.write("<script src='components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
+    if('ontouchstart' in document.documentElement) document.write("<script src='${base}/components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
 </script>
-<script src="components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="${base}/components/bootstrap/dist/js/bootstrap.js"></script>
 
 <!-- page specific plugin scripts -->
-<script src="components/datatables/media/js/jquery.dataTables.js"></script>
-<script src="components/_mod/datatables/jquery.dataTables.bootstrap.js"></script>
-<script src="components/datatables.net-buttons/js/dataTables.buttons.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.flash.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.html5.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.print.js"></script>
-<script src="components/datatables.net-buttons/js/buttons.colVis.js"></script>
-<script src="components/datatables.net-select/js/dataTables.select.js"></script>
+<script src="${base}/components/datatables/media/js/jquery.dataTables.js"></script>
+<script src="${base}/components/_mod/datatables/jquery.dataTables.bootstrap.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/dataTables.buttons.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.flash.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.html5.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.print.js"></script>
+<script src="${base}/components/datatables.net-buttons/js/buttons.colVis.js"></script>
+<script src="${base}/components/datatables.net-select/js/dataTables.select.js"></script>
 
 <!-- ace scripts -->
-<script src="assets/js/src/elements.scroller.js"></script>
-<script src="assets/js/src/elements.colorpicker.js"></script>
-<script src="assets/js/src/elements.fileinput.js"></script>
-<script src="assets/js/src/elements.typeahead.js"></script>
-<script src="assets/js/src/elements.wysiwyg.js"></script>
-<script src="assets/js/src/elements.spinner.js"></script>
-<script src="assets/js/src/elements.treeview.js"></script>
-<script src="assets/js/src/elements.wizard.js"></script>
-<script src="assets/js/src/elements.aside.js"></script>
-<script src="assets/js/src/ace.js"></script>
-<script src="assets/js/src/ace.basics.js"></script>
-<script src="assets/js/src/ace.scrolltop.js"></script>
-<script src="assets/js/src/ace.ajax-content.js"></script>
-<script src="assets/js/src/ace.touch-drag.js"></script>
-<script src="assets/js/src/ace.sidebar.js"></script>
-<script src="assets/js/src/ace.sidebar-scroll-1.js"></script>
-<script src="assets/js/src/ace.submenu-hover.js"></script>
-<script src="assets/js/src/ace.widget-box.js"></script>
-<script src="assets/js/src/ace.settings.js"></script>
-<script src="assets/js/src/ace.settings-rtl.js"></script>
-<script src="assets/js/src/ace.settings-skin.js"></script>
-<script src="assets/js/src/ace.widget-on-reload.js"></script>
-<script src="assets/js/src/ace.searchbox-autocomplete.js"></script>
+<script src="${base}/assets/js/src/elements.scroller.js"></script>
+<script src="${base}/assets/js/src/elements.colorpicker.js"></script>
+<script src="${base}/assets/js/src/elements.fileinput.js"></script>
+<script src="${base}/assets/js/src/elements.typeahead.js"></script>
+<script src="${base}/assets/js/src/elements.wysiwyg.js"></script>
+<script src="${base}/assets/js/src/elements.spinner.js"></script>
+<script src="${base}/assets/js/src/elements.treeview.js"></script>
+<script src="${base}/assets/js/src/elements.wizard.js"></script>
+<script src="${base}/assets/js/src/elements.aside.js"></script>
+<script src="${base}/assets/js/src/ace.js"></script>
+<script src="${base}/assets/js/src/ace.basics.js"></script>
+<script src="${base}/assets/js/src/ace.scrolltop.js"></script>
+<script src="${base}/assets/js/src/ace.ajax-content.js"></script>
+<script src="${base}/assets/js/src/ace.touch-drag.js"></script>
+<script src="${base}/assets/js/src/ace.sidebar.js"></script>
+<script src="${base}/assets/js/src/ace.sidebar-scroll-1.js"></script>
+<script src="${base}/assets/js/src/ace.submenu-hover.js"></script>
+<script src="${base}/assets/js/src/ace.widget-box.js"></script>
+<script src="${base}/assets/js/src/ace.settings.js"></script>
+<script src="${base}/assets/js/src/ace.settings-rtl.js"></script>
+<script src="${base}/assets/js/src/ace.settings-skin.js"></script>
+<script src="${base}/assets/js/src/ace.widget-on-reload.js"></script>
+<script src="${base}/assets/js/src/ace.searchbox-autocomplete.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+
     $(function(){
+
+
 
         if($("#orderType").val()== '60'){
             $("#provideTransportDiv").hide();
@@ -682,10 +680,19 @@
     }
 
     jQuery(function($) {
+        $("#bootbox-regular").on(ace.click_event, function() {
+            bootbox.prompt("What is your name?", function(result) {
+                if (result === null) {
+
+                } else {
+
+                }
+            });
+        });
 
 
 
-        $.fn.dataTable.Buttons.swfPath = "components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
+        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo ${base}/components will be replaced by correct assets path
         $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
 
 
@@ -780,16 +787,16 @@
 </script>
 
 <!-- the following scripts are used in demo only for onpage help and you don't need them -->
-<link rel="stylesheet" href="assets/css/ace.onpage-help.css">
-<link rel="stylesheet" href="docs/assets/js/themes/sunburst.css">
+<link rel="stylesheet" href="${base}/assets/css/ace.onpage-help.css">
+<link rel="stylesheet" href="${base}/docs/assets/js/themes/sunburst.css">
 
 <script type="text/javascript"> ace.vars['base'] = '..'; </script>
-<script src="assets/js/src/elements.onpage-help.js"></script>
-<script src="assets/js/src/ace.onpage-help.js"></script>
-<script src="docs/assets/js/rainbow.js"></script>
-<script src="docs/assets/js/language/generic.js"></script>
-<script src="docs/assets/js/language/html.js"></script>
-<script src="docs/assets/js/language/css.js"></script>
-<script src="docs/assets/js/language/javascript.js"></script>
+<script src="${base}/assets/js/src/elements.onpage-help.js"></script>
+<script src="${base}/assets/js/src/ace.onpage-help.js"></script>
+<script src="${base}/docs/assets/js/rainbow.js"></script>
+<script src="${base}/docs/assets/js/language/generic.js"></script>
+<script src="${base}/docs/assets/js/language/html.js"></script>
+<script src="${base}/docs/assets/js/language/css.js"></script>
+<script src="${base}/docs/assets/js/language/javascript.js"></script>
 
 </body></html>

@@ -37,10 +37,7 @@ public class OfcOrderScreenController {
     @Autowired
     private OfcOrderScreenService ofcOrderScreenService;
 
-    @RequestMapping(value = "/orderScreen")
-    public String orderScreen(){
-        return "order_screen";
-    }
+
 
     @RequestMapping(value = "/orderScreenByCondition")
     public String orderScreenByCondition(OrderScreenCondition orderScreenCondition, Map<String,Object> map, String tag) throws IOException {

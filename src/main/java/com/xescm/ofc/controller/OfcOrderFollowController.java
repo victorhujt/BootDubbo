@@ -35,10 +35,6 @@ public class OfcOrderFollowController {
         return "order_follow";
     }
 
-    @RequestMapping("/orderFollow")
-    public String orderFollow(String code, String followTag, Map<String,Object> map){
-        return "order_follow";
-    }
 
     @RequestMapping("/orderDetails")
     public String orderDetails(String code, String followTag, Map<String,Object> map) throws InvocationTargetException{
