@@ -1,6 +1,6 @@
 package com.xescm.ofc.feign.api;
 
-import com.xescm.csc.model.dto.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 
 import feign.Headers;

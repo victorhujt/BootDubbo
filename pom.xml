@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.xescm.uam</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.4</version>
 			<exclusions>
 				<exclusion>
 					<groupId>tk.mybatis</groupId>
@@ -131,6 +131,11 @@
 		<dependency>
 			<groupId>com.netflix.feign</groupId>
 			<artifactId>feign-jackson</artifactId>
+			<version>8.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-sax</artifactId>
 			<version>8.7.0</version>
 		</dependency>
 
