@@ -1,15 +1,16 @@
 package com.xescm.ofc.web.rest;
 
-import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
+import com.xescm.ofc.service.OfcOrderDtoService;
+import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import springfox.documentation.schema.Model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
