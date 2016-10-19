@@ -16,53 +16,53 @@ public class RestConfig {
     /**
      * 订单中心的URL地址
      */
-    private String ofc;
+    private String ofcUrl;
 
     /**
      * 用户中心UAM地址
      */
-    private String uam;
+    private String uamUrl;
     
     /**
      * 资源中心View调用
      */
-    private String rmc;
+    private String rmcUrl;
 
     /**
      * 客户中心
      */
-    private String csc;
+    private String cscUrl;
 
 
-    public String getOfc() {
-        return ofc;
+    public String getOfcUrl() {
+        return ofcUrl;
     }
 
-    public void setOfc(String ofc) {
-        this.ofc = ofc;
+    public void setOfcUrl(String ofcUrl) {
+        this.ofcUrl = ofcUrl;
     }
 
-    public String getUam() {
-        return uam;
+    public String getUamUrl() {
+        return uamUrl;
     }
 
-    public void setUam(String uam) {
-        this.uam = uam;
+    public void setUamUrl(String uamUrl) {
+        this.uamUrl = uamUrl;
     }
 
-    public String getRmc() {
-        return rmc;
+    public String getRmcUrl() {
+        return rmcUrl;
     }
 
-    public void setRmc(String rmc) {
-        this.rmc = rmc;
+    public void setRmcUrl(String rmcUrl) {
+        this.rmcUrl = rmcUrl;
     }
 
-    public String getCsc() {
-        return csc;
+    public String getCscUrl() {
+        return cscUrl;
     }
 
-    public void setCsc(String csc) {
-        this.csc = csc;
+    public void setCscUrl(String cscUrl) {
+        this.cscUrl = cscUrl;
     }
 }
