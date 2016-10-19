@@ -1,10 +1,11 @@
-/*
 package com.xescm.ofc.config;
 
-import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import com.google.common.base.Predicates;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -21,9 +22,9 @@ public class SwaggerConfiguration {
 	public Docket reservationApi() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
 				.paths(Predicates.not(PathSelectors.regex("/error"))) // Exclude
-																		// Spring
-																		// error
-																		// controllers
+				// Spring
+				// error
+				// controllers
 				.build().useDefaultResponseMessages(false);
 	}
 
@@ -34,4 +35,4 @@ public class SwaggerConfiguration {
 		Contact contact = new Contact(name, url, email);
 		return new ApiInfoBuilder().title("接口文档").description("用户中心API").contact(contact).build();
 	}
-}*/
+}
