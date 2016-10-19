@@ -567,7 +567,7 @@
                                                     </span>
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input id="provideTransport" type="checkbox"  name = "" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
+                                                        <input id="provideTransport" type="checkbox"  name = "provideTransport" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
                                                     </span>
                                                     店铺:
                                                     <select id="" name="storeCode" value="${(orderInfo.storeName)!""}">
@@ -615,7 +615,7 @@
 
                                                     <!--货品明细-->
 
-                                                    <span style="cursor:pointer" id="goodsListDivBlock"><button class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
+                                                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
 
                                                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                                         <thead>
@@ -732,7 +732,7 @@
                                                     <div class="page-header">
                                                         <h4>发货方信息</h4>
                                                     </div>
-                                                    <span style="cursor:pointer" id="consignorListDivBlock"><button class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                                    <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div class="">
                                                         名称:
                                                         <input name="consignorName" <#if orderInfo.consignorName?? >value="${orderInfo.consignorName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -759,7 +759,7 @@
                                                     <div class="page-header">
                                                         <h4>收货方信息</h4>
                                                     </div>
-                                                    <span style="cursor:pointer" id="consigneeListDivBlock"><button class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div class="">
                                                         名称:
                                                         <input name="consigneeName" <#if orderInfo.consigneeName?? >value="${orderInfo.consigneeName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -812,7 +812,7 @@
                                                     <div class="page-header">
                                                         <h4>供应商信息</h4>
                                                     </div>
-                                                    <span style="cursor:pointer" id="supportListDivBlock"><button class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                                    <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div class="">
                                                         名称:
                                                         <input name="supportName" <#if orderInfo.supportName?? >value="${orderInfo.supportName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >

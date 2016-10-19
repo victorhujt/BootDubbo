@@ -6,7 +6,6 @@
       WARNING - @mbg.generated
     -->
     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
-    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
     <result column="urgent" property="urgent" jdbcType="INTEGER" />
     <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
     <result column="departure_place_code" property="departurePlaceCode" jdbcType="VARCHAR" />
@@ -46,9 +45,6 @@
     <set >
       <if test="transCode != null" >
         trans_code = #{transCode,jdbcType=VARCHAR},
-      </if>
-      <if test="goodsType != null" >
-        goods_type = #{goodsType,jdbcType=INTEGER},
       </if>
       <if test="urgent != null" >
         urgent = #{urgent,jdbcType=INTEGER},

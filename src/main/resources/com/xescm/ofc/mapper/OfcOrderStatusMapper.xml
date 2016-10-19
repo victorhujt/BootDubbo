@@ -6,10 +6,6 @@
       WARNING - @mbg.generated
     -->
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
-    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
-    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
-    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
-    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
     <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
     <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP" />
