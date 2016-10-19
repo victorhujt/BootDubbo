@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RequestMapping("/ofc")
 @Controller
-public class OfcCJumpontroller extends BaseController{
+public class OfcJumpontroller extends BaseController{
 
     @RequestMapping(value="/orderPlace")
     public ModelAndView index(Model model, HttpServletRequest request, HttpServletResponse response){
