@@ -11,10 +11,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
     <script src="js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+    <script language="javascript" type="text/javascript" src="${base}/js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="${base}/assets/css/bootstrap.css">
     <link rel="stylesheet" href="${base}/components/font-awesome/css/font-awesome.css">
+
+    <style type="text/css">
+        #goodsListDiv {
+
+            position:fixed;
+
+            left:138px;
+
+            top:91px;
+
+            width:946px;
+
+            height:294px;
+
+            z-index:3;
+
+            border:solid #7A7A7A 4px;
+
+        }
+
+        #consignorListDiv {
+            position:fixed;
+
+            left:138px;
+
+            top:91px;
+
+            width:946px;
+
+            height:294px;
+
+            z-index:3;
+
+            border:solid #7A7A7A 4px;
+        }
+
+        #consigneeListDiv {
+            position:fixed;
+
+            left:138px;
+
+            top:91px;
+
+            width:946px;
+
+            height:294px;
+
+            z-index:3;
+
+            border:solid #7A7A7A 4px;
+        }
+
+
+        #supportListDiv {
+            position:fixed;
+
+            left:138px;
+
+            top:91px;
+
+            width:946px;
+
+            height:294px;
+
+            z-index:3;
+
+            border:solid #7A7A7A 4px;
+        }
+    </style>
 
     <!-- page specific plugin styles -->
 
@@ -49,6 +118,272 @@
 
 <body class="no-skin">
 <!-- #section:basics/navbar.layout -->
+<!--goodsListDiv-->
+<div class="modal-content" id="goodsListDiv" style="display: none;">
+    <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">货品列表</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            <input type="checkbox" class="ace">
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+
+                    </thead>
+                    <tbody>
+                    <#list orderList! as order>
+                    <tr role="row" class="odd">
+                        <td class="center">
+                            <label class="pos-rel">
+                                <input type="checkbox" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+
+
+                        <td>
+
+                        </td>
+                        <td>${order.custOrderCode!"null"}</td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+
+                    </tr>
+                    </#list>
+                    </tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+</div>
+<!--consignorListDiv-->
+<div class="modal-content" id="consignorListDiv" style="display: none;">
+    <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">发货方联系人</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            选择
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">传真</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">Email</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+
+                    </thead>
+                    <tbody>
+                    <#list orderList! as order>
+                    <tr role="row" class="odd">
+                        <td class="center">
+                            <label class="pos-rel">
+                                <input type="radio" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+
+
+                        <td>
+
+                        </td>
+                        <td>${order.custOrderCode!"null"}</td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+
+                    </tr>
+                    </#list>
+                    </tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+</div>
+
+<!--consigneeListDiv-->
+<div class="modal-content" id="consigneeListDiv" style="display: none;">
+    <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">收货方联系人</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            选择
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">传真</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">Email</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+                    </thead>
+                    <tbody>
+                    <#list orderList! as order>
+                    <tr role="row" class="odd">
+                        <td class="center">
+                            <label class="pos-rel">
+                                <input type="radio" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+
+
+                        <td>
+
+                        </td>
+                        <td>${order.custOrderCode!"null"}</td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+
+                    </tr>
+                    </#list>
+                    </tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+</div>
+
+
+<!--supportListDiv-->
+<div class="modal-content" id="supportListDiv" style="display: none;">
+    <div class="modal-header"><span id="supportListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">供应商联系人</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            选择
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">传真</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">Email</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+
+                    </thead>
+                    <tbody>
+                    <#list orderList! as order>
+                    <tr role="row" class="odd">
+                        <td class="center">
+                            <label class="pos-rel">
+                                <input type="radio" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+
+
+                        <td>
+
+                        </td>
+                        <td>${order.custOrderCode!"null"}</td>
+                        <td class="hidden-480">
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="hidden-480">
+
+                        </td>
+
+                    </tr>
+                    </#list>
+                    </tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+</div>
+
+
+
+
+
 
 
 <!-- /section:basics/navbar.layout -->
@@ -284,7 +619,7 @@
 
                                                     <!--货品明细-->
 
-                                                    <button class="btn btn-info" id="bootbox-confirm">添加货品</button>
+                                                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
 
                                                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                                         <thead>
@@ -403,7 +738,7 @@
                                                     <div class="page-header">
                                                         <h4>发货方信息</h4>
                                                     </div>
-                                                    <button class="btn btn-info" id="bootbox-confirm">选择</button>
+                                                    <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
                                                     <div class="">
                                                         名称:
                                                         <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -430,7 +765,7 @@
                                                     <div class="page-header">
                                                         <h4>收货方信息</h4>
                                                     </div>
-                                                    <button class="btn btn-info" id="bootbox-confirm">选择</button>
+                                                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
                                                     <div class="">
                                                         名称:
                                                         <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -480,7 +815,7 @@
                                                     <div class="page-header">
                                                         <h4>供应商信息</h4>
                                                     </div>
-                                                    <button class="btn btn-info" id="bootbox-confirm">选择</button>
+                                                    <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div class="">
                                                         名称:
                                                         <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -615,6 +950,82 @@
     $(function(){
 
 
+
+
+        $("#goodsListDivBlock").click(function(){
+
+            $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#goodsListDivNoneTop").click(function(){
+
+            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#goodsListDivNoneBottom").click(function(){
+
+            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+
+        $("#consignorListDivBlock").click(function(){
+
+            $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#consignorListDivNoneTop").click(function(){
+
+            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#consignorListDivNoneBottom").click(function(){
+
+            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#consigneeListDivBlock").click(function(){
+
+            $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#consigneeListDivNoneTop").click(function(){
+
+            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#consigneeListDivNoneBottom").click(function(){
+
+            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#supportListDivBlock").click(function(){
+
+            $("#supportListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#supportListDivNoneTop").click(function(){
+
+            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#supportListDivNoneBottom").click(function(){
+
+            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+
         $("#orderTypeSel").change(function () {
             if($(this).children('option:selected').val() == '61'){
                 $("#provideTransportDiv").show();
@@ -648,7 +1059,7 @@
 
 
 
-        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo ${base}/components will be replaced by correct ${base}/assets path
+        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
         $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
 
 
