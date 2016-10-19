@@ -10,7 +10,7 @@
     <meta name="description" content="Static &amp; Dynamic Tables">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <script src="${pageContext.request.contextPath}js/jquery.js"></script>
+    <script src="${base}/js/jquery.js"></script>
     <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="${base}/assets/css/bootstrap.css">

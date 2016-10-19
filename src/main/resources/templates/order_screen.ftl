@@ -343,10 +343,10 @@
                                         ${order.warehouseName!"null"}
                                         </td>
                                         <td class="hidden-480">
-                                        ${order.notes!"null"}
+                                        ${order.store!"null"}
                                         </td>
                                         <td class="hidden-480">
-                                        ${order.store!"null"}
+                                        ${order.notes!"null"}
                                         </td>
 
                                     </tr>

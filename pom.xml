@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.xescm.uam</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>1.0.4</version>
+			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>tk.mybatis</groupId>
@@ -116,6 +116,13 @@
 			<artifactId>feign-jackson</artifactId>
 			<version>${feign.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

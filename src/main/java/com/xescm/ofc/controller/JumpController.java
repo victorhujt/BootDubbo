@@ -14,10 +14,12 @@ import java.util.Map;
 @RequestMapping("/ofc")
 @Controller
 public class JumpController {
+
     @RequestMapping(value="/orderPlace")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response){
         return new ModelAndView("order_place");
     }
+
     @RequestMapping(value = "/orderManage")
     public String orderManage(){
         return "order_manage";
@@ -32,7 +34,6 @@ public class JumpController {
     public String orderFollow(String code, String followTag, Map<String,Object> map){
         return "order_follow";
     }
-
 
     @RequestMapping(value = "/test")
     public String demoorderScreen(){

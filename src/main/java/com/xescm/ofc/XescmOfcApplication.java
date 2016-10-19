@@ -1,9 +1,9 @@
 package com.xescm.ofc;
 
-import com.xescm.uam.utils.jwt.JwtApiFilter;
+/*import com.xescm.uam.utils.jwt.JwtApiFilter;
 import com.xescm.uam.utils.jwt.JwtViewFilter;
 import com.xescm.uam.utils.jwt.SimpleCORSFilter;
-import com.xescm.uam.utils.jwt.TokenUtils;
+import com.xescm.uam.utils.jwt.TokenUtils;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

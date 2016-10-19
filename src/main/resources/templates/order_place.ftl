@@ -9,7 +9,7 @@
 
     <meta name="description" content="Static &amp; Dynamic Tables">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <script src="${base}/components/bootbox.js/bootbox.js"></script>
+
     <script src="js/jquery.js"></script>
     <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <!-- bootstrap & fontawesome -->
@@ -563,7 +563,7 @@
 
 <!--[if !IE]> -->
 <script src="${base}/components/jquery/dist/jquery.js"></script>
-
+<script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
 <!--[if IE]>
