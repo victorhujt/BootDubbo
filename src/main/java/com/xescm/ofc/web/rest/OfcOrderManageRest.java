@@ -1,10 +1,11 @@
-package com.xescm.ofc.controller;
+package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
+import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.ofc.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.schema.Model;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,8 +25,9 @@ import static org.apache.coyote.http11.Constants.a;
 /**
  * Created by ydx on 2016/10/11.
  */
+@RequestMapping(value = "/ofc")
 @Controller
-public class OfcOrderManageController {
+public class OfcOrderManageRest extends BaseController{
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
     @Autowired
@@ -39,7 +42,10 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderOrNotAudit")
-    public void orderAudit(String orderCode,  String orderStatus, String reviewTag,HttpServletResponse response){
+    public void orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单code orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单状态code orderStatus={}", orderStatus);
+        logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
         try {
             String result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag);
             System.out.println("============"+result);
@@ -55,7 +61,9 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderDelete")
-    public void orderDelete(String orderCode,  String orderStatus,HttpServletResponse response){
+    public void orderDelete(Model model, String orderCode,  String orderStatus,HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单code orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单状态code orderStatus={}", orderStatus);
         try {
             String result = ofcOrderManageService.orderDelete(orderCode,orderStatus);
             response.getWriter().print(result);
@@ -70,7 +78,9 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/orderCancel")
-    public void orderCancel(String orderCode, String orderStatus, HttpServletResponse response){
+    public void orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单code orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单状态code orderStatus={}", orderStatus);
         try {
             String result = ofcOrderManageService.orderCancel(orderCode,orderStatus);
             response.getWriter().print(result);
@@ -86,7 +96,9 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping(value = "/getOrderDetailByCode")
-    public String getOrderDetailByCode(String orderCode, String dtotag, Map<String,Object> map){
+    public String getOrderDetailByCode(Model model, String orderCode, String dtotag, Map<String,Object> map){
+        logger.debug("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
 
         try {
@@ -111,7 +123,8 @@ public class OfcOrderManageController {
      * @return
      */
     @RequestMapping("/goodsDelete")
-    public void goodsDelete(OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
+    public void goodsDelete(Model model, OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单删除实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
             response.getWriter().print(result);

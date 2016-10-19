@@ -187,7 +187,7 @@
                 </div><!-- /.page-header -->
 
                 <div class="row">
-                    <form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
+                    <form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
                         <div class="col-xs-12">
 
                             <div class="clearfix">
@@ -666,7 +666,7 @@
     function deleteGoods(ordercode,goodsCode) {
         var result  = confirm("您确定要删除此货品?");
         if(result == true) {
-            $.get("/goodsDelete",{"orderCode":ordercode,"goodsCode":goodsCode},function (data) {
+            $.get("/ofc/goodsDelete",{"orderCode":ordercode,"goodsCode":goodsCode},function (data) {
                 $("#confirmBox").modal('hide');
                 if(data == 200){
                     window.location.href="/orderScreenByCondition?tag=manage";

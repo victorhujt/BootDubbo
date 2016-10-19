@@ -522,7 +522,7 @@
                 </div><!-- /.page-header -->
 
                 <div class="row">
-                    <form action="/orderPlaceCon" method="post" id="orderPlaceConTable">
+                    <form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
                         <div class="col-xs-12">
 
                             <div class="clearfix">

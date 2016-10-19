@@ -200,7 +200,7 @@
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form action="/orderScreenByCondition" method="post" id="screenOrderForm">
+                                <form action="/ofc/orderScreenByCondition" method="post" id="screenOrderForm">
                                     <input type="hidden" name="tag" value="manage"/>
                                     <div class="row">
 
@@ -328,7 +328,7 @@
                                         </td>
 
                                         <td>
-                                            <a href="/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
+                                            <a href="/ofc/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${((order.orderTime)?string("yyyy-MM-dd HH:mm:ss"))!}</td>
@@ -484,10 +484,10 @@
     function deleteOrder(ordercode,orderStatus) {
         var result  = confirm("您确定要删除此订单?");
         if(result == true) {
-            $.get("/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
+            $.get("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                 $("#confirmBox").modal('hide');
                 if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
                 } else {
                     alert("删除订单失败,请联系管理员!");
                 }
@@ -501,9 +501,9 @@
 
         var result  = confirm("您确定要审核订单?");
         if(result == true) {
-            $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
+            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
                 if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
                 } else {
                     alert("审核订单失败,请联系管理员!");
                 }
@@ -514,9 +514,9 @@
     function reReviewOrder(ordercode,orderStatus) {
         var result  = confirm("您确定要反审核此订单?");
         if(result == true) {
-            $.get("/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
+            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
                 if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
                 } else {
                     alert("反审核订单失败,请联系管理员!");
                 }
@@ -527,10 +527,10 @@
 
         var result  = confirm("您确定要取消此订单?");
         if(result == true) {
-            $.get("/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
+            $.get("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
 
                 if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
                 } else {
                     alert("取消订单失败,请联系管理员!");
                 }

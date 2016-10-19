@@ -189,7 +189,7 @@
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form action="/orderFollowCon" method="post" id="followOrderForm">
+                                <form action="/ofc/orderFollowCon" method="post" id="followOrderForm">
                                     <div class="row">
                                         <div id="dynamic-table_filter" class="dataTables_length">
                                             <label>

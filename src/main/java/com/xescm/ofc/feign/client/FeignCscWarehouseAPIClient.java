@@ -25,7 +25,7 @@ public class FeignCscWarehouseAPIClient {
     public FeignCscWarehouseAPI getApi() {
         FeignCscWarehouseAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder()).target(FeignCscWarehouseAPI.class, restConfig.getCsc());
+                .decoder(new JacksonDecoder()).target(FeignCscWarehouseAPI.class, restConfig.getCscUrl());
         return res;
     }
     Wrapper<?> getCscWarehouseByCustomerId(@Param("customerId") String customerId){

@@ -26,7 +26,7 @@ public class FeignCscSupplierAPIClient {
     public FeignCscSupplierAPI getApi() {
         FeignCscSupplierAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder()).target(FeignCscSupplierAPI.class, restConfig.getCsc());
+                .decoder(new JacksonDecoder()).target(FeignCscSupplierAPI.class, restConfig.getCscUrl());
         return res;
     }
     public Wrapper<?> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto){

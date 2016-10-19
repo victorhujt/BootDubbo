@@ -28,7 +28,7 @@ public class FeignCscCustomerAPIClient {
     public FeignCscCustomerAPI getApi() {
         FeignCscCustomerAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder()).target(FeignCscCustomerAPI.class, restConfig.getCsc());
+                .decoder(new JacksonDecoder()).target(FeignCscCustomerAPI.class, restConfig.getCscUrl());
         return res;
     }
 

@@ -201,7 +201,7 @@
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form action="/orderScreenByCondition" method="post" id="screenOrderForm">
+                                <form action="/ofc/orderScreenByCondition" method="post" id="screenOrderForm">
                                     <input type="hidden" name="tag" value="screen"/>
                                     <div class="row">
 
@@ -307,7 +307,7 @@
 
 
                                         <td>
-                                            <a href="/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
+                                            <a href="/ofc/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
                                         <td class="hidden-480">${(order.orderTime?string("yyyy-MM-dd HH:mm:ss"))!}</td>
