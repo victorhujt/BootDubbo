@@ -1,4 +1,11 @@
-
+<title>我要下单</title>
+<!-- <link rel="stylesheet" href="${request.contextPath}/static/plugins/laypage/skin/laypage.css" /> -->
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <p>
+        我要下单
+    </p>
+</div>
 <style type="text/css">
     #goodsListDiv {
 
@@ -186,8 +193,6 @@
     </div>
     <div class="modal-footer"><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-
-
 <!--supportListDiv-->
 <div class="modal-content" id="supportListDiv" style="display: none;">
     <div class="modal-header"><span id="supportListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -228,182 +233,40 @@
     </div>
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
+<div class="row">
+    <form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
+        <div class="col-xs-12">
 
+            <div class="clearfix">
 
-
-
-
-
-
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <script type="text/javascript">
-        try{ace.settings.loadState('main-container')}catch(e){}
-    </script>
-
-
-    <!-- /section:basics/sidebar -->
-    <div class="main-content">
-        <div class="main-content-inner">
-            <!-- #section:basics/content.breadcrumbs -->
-            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
-                <ul class="breadcrumb">
-                    <li>
-                        <i class="ace-icon fa fa-home home-icon"></i>
-                        <a href="#">xescm</a>
-                    </li>
-
-                    <li>
-                        <a href="#">ofc</a>
-                    </li>
-                    <li class="active">order_place</li>
-                </ul><!-- /.breadcrumb -->
-
-                <!-- #section:basics/content.searchbox -->
-                <div class="nav-search" id="nav-search">
-                    <form class="form-search">
-                                <span class="input-icon">
-                                    <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                    <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                </span>
-                    </form>
-                </div><!-- /.nav-search -->
-
-                <!-- /section:basics/content.searchbox -->
+            </div>
+            <div class="table-header">
+                基本信息
             </div>
 
-            <!-- /section:basics/content.breadcrumbs -->
-            <div class="page-content">
-                <!-- #section:settings.box -->
-                <div class="ace-settings-container" id="ace-settings-container">
-                    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-                        <i class="ace-icon fa fa-cog bigger-130"></i>
-                    </div>
+            <!-- div.table-responsive -->
 
-                    <div class="ace-settings-box clearfix" id="ace-settings-box">
-                        <div class="pull-left width-50">
-                            <!-- #section:settings.skins -->
-                            <div class="ace-settings-item">
-                                <div class="pull-left">
-                                    <select id="skin-colorpicker" class="hide">
-                                        <option data-skin="no-skin" value="#438EB9">#438EB9</option>
-                                        <option data-skin="skin-1" value="#222A2D">#222A2D</option>
-                                        <option data-skin="skin-2" value="#C6487E">#C6487E</option>
-                                        <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-                                    </select><div class="dropdown dropdown-colorpicker">        <a data-toggle="dropdown" class="dropdown-toggle"><span class="btn-colorpicker" style="background-color:#438EB9"></span></a><ul class="dropdown-menu dropdown-caret"><li><a class="colorpick-btn selected" style="background-color:#438EB9;" data-color="#438EB9"></a></li><li><a class="colorpick-btn" style="background-color:#222A2D;" data-color="#222A2D"></a></li><li><a class="colorpick-btn" style="background-color:#C6487E;" data-color="#C6487E"></a></li><li><a class="colorpick-btn" style="background-color:#D0D0D0;" data-color="#D0D0D0"></a></li></ul></div>
-                                </div>
-                                <span>&nbsp; Choose Skin</span>
-                            </div>
+            <!-- div.dataTables_borderWrap -->
+            <div>
+                <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <form action="" method="post" id="">
+                        <input type="hidden" name="tag" value="place">
+                        <div class="row">
 
-                            <!-- /section:settings.skins -->
-
-                            <!-- #section:settings.navbar -->
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-navbar" autocomplete="off">
-                                <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
-                            </div>
-
-                            <!-- /section:settings.navbar -->
-
-                            <!-- #section:settings.sidebar -->
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar" autocomplete="off">
-                                <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
-                            </div>
-
-                            <!-- /section:settings.sidebar -->
-
-                            <!-- #section:settings.breadcrumbs -->
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-breadcrumbs" autocomplete="off">
-                                <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-                            </div>
-
-                            <!-- /section:settings.breadcrumbs -->
-
-                            <!-- #section:settings.rtl -->
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" autocomplete="off">
-                                <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
-                            </div>
-
-                            <!-- /section:settings.rtl -->
-
-                            <!-- #section:settings.container -->
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-add-container" autocomplete="off">
-                                <label class="lbl" for="ace-settings-add-container">
-                                    Inside
-                                    <b>.container</b>
-                                </label>
-                            </div>
-
-                            <!-- /section:settings.container -->
-                        </div><!-- /.pull-left -->
-
-                        <div class="pull-left width-50">
-                            <!-- #section:basics/sidebar.options -->
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-hover" autocomplete="off">
-                                <label class="lbl" for="ace-settings-hover"> Submenu on Hover</label>
-                            </div>
-
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-compact" autocomplete="off">
-                                <label class="lbl" for="ace-settings-compact"> Compact Sidebar</label>
-                            </div>
-
-                            <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-highlight" autocomplete="off">
-                                <label class="lbl" for="ace-settings-highlight"> Alt. Active Item</label>
-                            </div>
-
-                            <!-- /section:basics/sidebar.options -->
-                        </div><!-- /.pull-left -->
-                    </div><!-- /.ace-settings-box -->
-                </div><!-- /.ace-settings-container -->
-
-                <!-- /section:settings.box -->
-                <div class="page-header">
-                    <h1>
-                        我要下单
-                    </h1>
-                </div><!-- /.page-header -->
-
-                <div class="row">
-                    <form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
-                        <div class="col-xs-12">
-
-                            <div class="clearfix">
-
-                            </div>
-                            <div class="table-header">
-                                基本信息
-                            </div>
-
-                            <!-- div.table-responsive -->
-
-                            <!-- div.dataTables_borderWrap -->
-                            <div>
-                                <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                    <form action="" method="post" id="">
-                                        <input type="hidden" name="tag" value="place">
-                                        <div class="row">
-
-                                            <div id="dynamic-table_filter" class="dataTables_length">
-                                                <label>
-                                                    &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                            <div id="dynamic-table_filter" class="dataTables_length">
+                                <label>
+                                    &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
 
-                                                    客户订单编号:<input name="custOrderCode" type="text">
+                                    客户订单编号:<input name="custOrderCode" type="text">
 
-                                                    &nbsp;&nbsp;&nbsp;
-                                                    订单类型:
-                                                    <select id="orderTypeSel" name="orderType">
-                                                        <option value="60">运输订单</option>
-                                                        <option value="61">仓配订单</option>
-                                                    </select>
-                                                    <span id="businessTypeDiv" style="display: none">
+                                    &nbsp;&nbsp;&nbsp;
+                                    订单类型:
+                                    <select id="orderTypeSel" name="orderType">
+                                        <option value="60">运输订单</option>
+                                        <option value="61">仓配订单</option>
+                                    </select>
+                                    <span id="businessTypeDiv" style="display: none">
                                                     业务类型:
                                                     <select id="" name="businessType">
                                                         <option value="610">销售出库</option>
@@ -418,380 +281,288 @@
                                                     </select>
                                                         </span>
 
-                                                    <span id="provideTransportDiv" style="display: none">
+                                    <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
                                                         <input  id="provideTransport" type="checkbox" name = "provideTransport" onclick="this.value=this.checked?1:0"/>
                                                     </span>
-                                                    店铺:
-                                                    <select id="" name="storeCode">
-                                                        <option value="线下销售">线下销售</option>
-                                                        <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
-                                                        <option value="众品京东旗舰店">众品京东旗舰店</option>
-                                                    </select>
+                                    店铺:
+                                    <select id="" name="storeCode">
+                                        <option value="线下销售">线下销售</option>
+                                        <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
+                                        <option value="众品京东旗舰店">众品京东旗舰店</option>
+                                    </select>
 
 
-                                                </label>
-                                            </div>
+                                </label>
+                            </div>
 
-                                            <div id="dynamic-table_filter" class="dataTables_length">
-                                                <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                </label>
-                                            </div>
+                            <div id="dynamic-table_filter" class="dataTables_length">
+                                <label>
+                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                </label>
+                            </div>
 
-                                            <br/>
+                            <br/>
 
-                                        </div>
-                                    </form>
-
-
-                                    <div class="col-sm-6">
-                                        <!-- #section:elements.tab.option -->
-                                        <div class="tabbable" style="float: left; text-align: left; margin: 0 auto; width: 1300px;" >
-                                            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
-                                                <li class="active">
-                                                    <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
-                                                </li>
-
-                                                <li class="transLi">
-                                                    <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
-                                                </li>
-
-                                                <li class="storeLi" style="display:none">
-                                                    <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
-                                                </li>
-
-                                            </ul>
-
-                                            <div class="tab-content">
-                                                <div id="home4" class="tab-pane active">
-
-                                                    <!--货品明细-->
-
-                                                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
-
-                                                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                                        <thead>
-                                                        <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                                                            操作
-                                                        </th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
-                                                            </th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
-                                                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
-                                                                生产日期</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
-                                                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
-                                                                失效日期</th>
+                        </div>
+                    </form>
 
 
-                                                        </thead>
-                                                        <tbody>
-                                                        <#--货品明细-->
+                    <div class="col-sm-6">
+                        <!-- #section:elements.tab.option -->
+                        <div class="tabbable" style="float: left; text-align: left; margin: 0 auto; width: 1300px;" >
+                            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
+                                </li>
 
-                                                        <tr role="row" class="odd">
-                                                            <td class="center">
-                                                                <button type="button" id=""    class="btn btn-minier btn-danger">删除</button>
-                                                            </td>
-                                                            <td>
-                                                                序号
+                                <li class="transLi">
+                                    <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
+                                </li>
 
-                                                            </td>
+                                <li class="storeLi" style="display:none">
+                                    <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
+                                </li>
 
-                                                            <td>
-                                                                <input name="goodsCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td>
-                                                                <input name="goodsName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td class="hidden-480">
-                                                                <input name="goodsSpec" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td>
-                                                                <input name="unit" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td class="hidden-480">
-                                                                <input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td class="hidden-480">
+                            </ul>
 
-                                                                <input name="productionBatch" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td class="hidden-480">
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
-                                                            <td class="hidden-480">
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
-                                                            </td>
+                            <div class="tab-content">
+                                <div id="home4" class="tab-pane active">
 
+                                    <!--货品明细-->
 
-                                                        </tr>
+                                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
 
-                                                        </tbody>
-                                                    </table>
-                                                    <div class="row">
-                                                        <div class="col-xs-6">
-                                                            <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div></div><div class="col-xs-6"><div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="dynamic-table" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">3</a></li><li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next"><a href="#">Next</a></li></ul></div></div></div>
-
-                                                </div>
-
-                                                <div id="profile4" class="tab-pane">
-
-                                                    <div class="page-header">
-                                                        <h4>运输基本信息</h4>
-                                                    </div>
-
-                                                    <div class="row">
-
-                                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                                            <label>
-                                                                &nbsp;&nbsp;&nbsp;
-
-                                                                数量:<input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                        <thead>
+                                        <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                            操作
+                                        </th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
+                                            </th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
+                                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+                                                生产日期</th>
+                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
+                                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+                                                失效日期</th>
 
 
-                                                                重量:<input name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                体积:<input name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
-                                                                合计标准箱:<input name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                        </thead>
+                                        <tbody>
+                                        <#--货品明细-->
 
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                出发地:
-                                                                <input name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
-                                                                目的地:
-                                                                <input name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
-                                                                取货时间:
-                                                                <input name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                期望送达时间:
-                                                                <input name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input type="checkbox" name="urgent" value="0" onclick="this.value=this.checked?1:0"/>
+                                        <tr role="row" class="odd">
+                                            <td class="center">
+                                                <button type="button" id=""    class="btn btn-minier btn-danger">删除</button>
+                                            </td>
+                                            <td>
+                                                序号
 
-                                                            </label>
-                                                        </div>
+                                            </td>
 
-                                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                                            <label>
-                                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
-                                                            </label>
-                                                        </div>
+                                            <td>
+                                                <input name="goodsCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td>
+                                                <input name="goodsName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td class="hidden-480">
+                                                <input name="goodsSpec" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td>
+                                                <input name="unit" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td class="hidden-480">
+                                                <input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td class="hidden-480">
 
-                                                        <br/>
-
-                                                    </div>
-
-                                                    <div class="page-header">
-                                                        <h4>发货方信息</h4>
-                                                    </div>
-                                                    <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
-                                                    <div class="">
-                                                        名称:
-                                                        <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        地址:
-                                                        <select><option value="">--省--</option></select>
-                                                        <select><option value="">--市--</option></select>
-                                                        <select><option value="">--区/县--</option></select>
-                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                                    </div>
+                                                <input name="productionBatch" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td class="hidden-480">
+                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
+                                            <td class="hidden-480">
+                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6">
+                                            </td>
 
 
-                                                    <div class="page-header">
-                                                        <h4>收货方信息</h4>
-                                                    </div>
-                                                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
-                                                    <div class="">
-                                                        名称:
-                                                        <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        地址:
-                                                        <select><option value="">--省--</option></select>
-                                                        <select><option value="">--市--</option></select>
-                                                        <select><option value="">--区/县--</option></select>
-                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                    </div>
-                                                </div>
+                                        </tr>
 
-                                                <div id="dropdown14" class="tab-pane">
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div></div><div class="col-xs-6"><div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="dynamic-table" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">3</a></li><li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next"><a href="#">Next</a></li></ul></div></div></div>
 
-                                                    <div class="page-header">
-                                                        <h4>仓配基本信息</h4>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                                            <label>
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                仓库名称:<select id="" name="wareHouseName">
-                                                                <option value="">----</option>
-                                                                <option value="仓库1">仓库1</option>
-                                                                <option value="仓库2">仓库2</option>
-                                                            </select>
-                                                                入库预计到达时间:<input name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                车牌号:<input name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                司机姓名:<input name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                联系电话:
-                                                                <input name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                            </label>
-                                                        </div>
-                                                        <br/>
-                                                    </div>
-                                                    <div class="page-header">
-                                                        <h4>供应商信息</h4>
-                                                    </div>
-                                                    <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
-                                                    <div class="">
-                                                        名称:
-                                                        <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        地址:
-                                                        <select><option value="">--省--</option></select>
-                                                        <select><option value="">--市--</option></select>
-                                                        <select><option value="">--区/县--</option></select>
-                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                </div>
 
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <div id="profile4" class="tab-pane">
+
+                                    <div class="page-header">
+                                        <h4>运输基本信息</h4>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div id="dynamic-table_filter" class="dataTables_length">
+                                            <label>
+                                                &nbsp;&nbsp;&nbsp;
+
+                                                数量:<input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+
+                                                重量:<input name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                体积:<input name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
+                                                合计标准箱:<input name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+
+                                                &nbsp;&nbsp;&nbsp;
+                                                出发地:
+                                                <input name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                目的地:
+                                                <input name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                取货时间:
+                                                <input name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                期望送达时间:
+                                                <input name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                是否加急:<input type="checkbox" name="urgent" value="0" onclick="this.value=this.checked?1:0"/>
+
+                                            </label>
                                         </div>
 
-                                        <!-- /section:elements.tab.option -->
+                                        <div id="dynamic-table_filter" class="dataTables_length">
+                                            <label>
+                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                            </label>
+                                        </div>
+
+                                        <br/>
+
+                                    </div>
+
+                                    <div class="page-header">
+                                        <h4>发货方信息</h4>
+                                    </div>
+                                    <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
+                                    <div class="">
+                                        名称:
+                                        <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        联系人:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        联系电话:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        传真:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        Email:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        <br/>邮编:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        地址:
+                                        <select><option value="">--省--</option></select>
+                                        <select><option value="">--市--</option></select>
+                                        <select><option value="">--区/县--</option></select>
+                                        <select><option value="">--乡镇/街道--</option></select>
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                    </div>
+
+
+                                    <div class="page-header">
+                                        <h4>收货方信息</h4>
+                                    </div>
+                                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
+                                    <div class="">
+                                        名称:
+                                        <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        联系人:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        联系电话:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        传真:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        Email:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        <br/>邮编:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        地址:
+                                        <select><option value="">--省--</option></select>
+                                        <select><option value="">--市--</option></select>
+                                        <select><option value="">--区/县--</option></select>
+                                        <select><option value="">--乡镇/街道--</option></select>
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                    </div>
+                                </div>
+
+                                <div id="dropdown14" class="tab-pane">
+
+                                    <div class="page-header">
+                                        <h4>仓配基本信息</h4>
+                                    </div>
+                                    <div class="row">
+                                        <div id="dynamic-table_filter" class="dataTables_length">
+                                            <label>
+                                                &nbsp;&nbsp;&nbsp;
+                                                仓库名称:<select id="" name="wareHouseName">
+                                                <option value="">----</option>
+                                                <option value="仓库1">仓库1</option>
+                                                <option value="仓库2">仓库2</option>
+                                            </select>
+                                                入库预计到达时间:<input name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                车牌号:<input name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                司机姓名:<input name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                &nbsp;&nbsp;&nbsp;
+                                                联系电话:
+                                                <input name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                            </label>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                    <div class="page-header">
+                                        <h4>供应商信息</h4>
+                                    </div>
+                                    <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                    <div class="">
+                                        名称:
+                                        <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        联系人:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        联系电话:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        传真:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        Email:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        <br/>邮编:
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        地址:
+                                        <select><option value="">--省--</option></select>
+                                        <select><option value="">--市--</option></select>
+                                        <select><option value="">--区/县--</option></select>
+                                        <select><option value="">--乡镇/街道--</option></select>
+                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>
-
-                    </form>
+                        <!-- /section:elements.tab.option -->
+                    </div>
                 </div>
-
-                <!-- PAGE CONTENT ENDS -->
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.page-content -->
-</div>
-</div><!-- /.main-content -->
-
-<div class="footer">
-    <div class="footer-inner">
-        <!-- #section:basics/footer -->
-        <div class="footer-content">
-                        <span class="bigger-120">
-                            <span class="blue bolder">Xescm</span>
-                            Application © 2016
-                        </span>
-
-            &nbsp; &nbsp;
-            <span class="action-buttons">
-                            <a href="#">
-                                <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-                            </a>
-
-                            <a href="#">
-                                <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-                            </a>
-
-                            <a href="#">
-                                <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-                            </a>
-                        </span>
+            </div>
         </div>
 
-        <!-- /section:basics/footer -->
-    </div>
+        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>
+
+    </form>
 </div>
-
-<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-</a>
-</div><!-- /.main-container -->
-
-
-<!-- basic scripts -->
-
-<!--[if !IE]> -->
-<script src="${base}/components/jquery/dist/jquery.js"></script>
-<script src="${base}/components/bootbox.js/bootbox.js"></script>
-<!-- <![endif]-->
-
-<!--[if IE]>
-<script src="${base}/components/jquery.1x/dist/jquery.js"></script>
-<![endif]-->
-<script type="text/javascript">
-    if('ontouchstart' in document.documentElement) document.write("<script src='${base}/components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
-</script>
-<script src="${base}/components/bootstrap/dist/js/bootstrap.js"></script>
-
-<!-- page specific plugin scripts -->
-<script src="${base}/components/datatables/media/js/jquery.dataTables.js"></script>
-<script src="${base}/components/_mod/datatables/jquery.dataTables.bootstrap.js"></script>
-<script src="${base}/components/datatables.net-buttons/js/dataTables.buttons.js"></script>
-<script src="${base}/components/datatables.net-buttons/js/buttons.flash.js"></script>
-<script src="${base}/components/datatables.net-buttons/js/buttons.html5.js"></script>
-<script src="${base}/components/datatables.net-buttons/js/buttons.print.js"></script>
-<script src="${base}/components/datatables.net-buttons/js/buttons.colVis.js"></script>
-<script src="${base}/components/datatables.net-select/js/dataTables.select.js"></script>
-
-<!-- ace scripts -->
-<script src="${base}/assets/js/src/elements.scroller.js"></script>
-<script src="${base}/assets/js/src/elements.colorpicker.js"></script>
-<script src="${base}/assets/js/src/elements.fileinput.js"></script>
-<script src="${base}/assets/js/src/elements.typeahead.js"></script>
-<script src="${base}/assets/js/src/elements.wysiwyg.js"></script>
-<script src="${base}/assets/js/src/elements.spinner.js"></script>
-<script src="${base}/assets/js/src/elements.treeview.js"></script>
-<script src="${base}/assets/js/src/elements.wizard.js"></script>
-<script src="${base}/assets/js/src/elements.aside.js"></script>
-<script src="${base}/assets/js/src/ace.js"></script>
-<script src="${base}/assets/js/src/ace.basics.js"></script>
-<script src="${base}/assets/js/src/ace.scrolltop.js"></script>
-<script src="${base}/assets/js/src/ace.ajax-content.js"></script>
-<script src="${base}/assets/js/src/ace.touch-drag.js"></script>
-<script src="${base}/assets/js/src/ace.sidebar.js"></script>
-<script src="${base}/assets/js/src/ace.sidebar-scroll-1.js"></script>
-<script src="${base}/assets/js/src/ace.submenu-hover.js"></script>
-<script src="${base}/assets/js/src/ace.widget-box.js"></script>
-<script src="${base}/assets/js/src/ace.settings.js"></script>
-<script src="${base}/assets/js/src/ace.settings-rtl.js"></script>
-<script src="${base}/assets/js/src/ace.settings-skin.js"></script>
-<script src="${base}/assets/js/src/ace.widget-on-reload.js"></script>
-<script src="${base}/assets/js/src/ace.searchbox-autocomplete.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
@@ -993,100 +764,5 @@
 
     })
 
-
-    jQuery(function($) {
-
-
-
-
-        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
-        $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
-
-        ////
-
-        setTimeout(function() {
-            $($('.tableTools-container')).find('a.dt-button').each(function() {
-                var div = $(this).find(' > div').first();
-                if(div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
-                else $(this).tooltip({container: 'body', title: $(this).text()});
-            });
-        }, 500);
-
-
-        /////////////////////////////////
-        //table checkboxes
-        $('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
-
-
-        //And for the first simple table, which doesn't have TableTools or dataTables
-        //select/deselect all rows according to table header checkbox
-        var active_class = 'active';
-        $('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-            var th_checked = this.checked;//checkbox inside "TH" table header
-
-            $(this).closest('table').find('tbody > tr').each(function(){
-                var row = this;
-                if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-                else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-            });
-        });
-
-        //select/deselect a row when the checkbox is checked/unchecked
-        $('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-            var $row = $(this).closest('tr');
-            if($row.is('.detail-row ')) return;
-            if(this.checked) $row.addClass(active_class);
-            else $row.removeClass(active_class);
-        });
-
-
-
-        /********************************/
-        //add tooltip for small view action buttons in dropdown menu
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        //tooltip placement on right or left
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            //var w2 = $source.width();
-
-            if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
-            return 'left';
-        }
-
-
-
-
-        /***************/
-        $('.show-details-btn').on('click', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').next().toggleClass('open');
-            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-        });
-        /***************/
-
-
-
-
-
-        /**
-         //add horizontal scrollbars to a simple table
-         $('#simple-table').css({'width':'2000px', 'max-width': 'none'}).wrap('<div style="width: 1000px;" />').parent().ace_scroll(
-         {
-           horizontal: true,
-           styleClass: 'scroll-top scroll-dark scroll-visible',//show the scrollbars on top(default is bottom)
-           size: 2000,
-           mouseWheelLock: true
-         }
-         ).css('padding-top', '12px');
-         */
-
-    })
 </script>
 
