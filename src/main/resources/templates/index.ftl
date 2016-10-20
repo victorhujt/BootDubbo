@@ -327,7 +327,7 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list"></i>
-							<span class="menu-text"> 我的订单 </span>
+							<span class="menu-text"> 我的订单</span>
 
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
@@ -336,7 +336,7 @@
 
 						<ul class="submenu">
 							<li class="">
-								<a data-url="page/tables" href="#page/tables">
+								<a data-url="/ofc/orderPlace" href="#/ofc/orderPlace">
 									<i class="menu-icon fa fa-caret-right"></i>
 									我要下单
 								</a>
