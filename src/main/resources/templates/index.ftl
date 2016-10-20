@@ -272,7 +272,7 @@
                     <#--<img class="nav-user-photo" src="../../assets/avatars/user.jpg" alt="Jason's Photo" />-->
                         <span class="user-info">
 									<small>欢迎,</small>
-                        ${user.loginName}
+                        test
 								</span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
