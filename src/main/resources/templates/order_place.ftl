@@ -124,6 +124,11 @@
         <h4 class="modal-title">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form>
+                货品编码:<input id="goodsCodeCondition" name="goodsCode" type="text">
+                货品名称:<input id="goodsNameCondition" name="goodsName" type="text">
+                <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -140,34 +145,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="goodsSelectListTbody"></tbody>
                 </table>
 
 
@@ -182,6 +160,13 @@
         <h4 class="modal-title">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form>
+                名称:<input id="consignorName2" name="contactCompanyName" type="text">
+                联系人:<input id="consignorPerson2" name="contactName" type="text">
+                联系电话:<input id="consignorPhoneNumber2" name="phone" type="text">
+                <input id="purpose2" name="purpose" type="hidden" value="2">
+                <button type="button" class="btn btn-info" id="contactSelectFormBtn2" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -201,43 +186,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="contactSelectListTbody2"></tbody>
                 </table>
 
 
@@ -253,6 +202,13 @@
         <h4 class="modal-title">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form>
+                名称:<input id="consignorName1" name="contactCompanyName" type="text">
+                联系人:<input id="consignorPerson1" name="contactName" type="text">
+                联系电话:<input id="consignorPhoneNumber1" name="phone" type="text">
+                <input id="purpose1" name="purpose" type="hidden" value="1">
+                <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -271,43 +227,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="contactSelectListTbody1"></tbody>
                 </table>
 
 
@@ -324,6 +244,12 @@
         <h4 class="modal-title">供应商联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form>
+                名称:<input id="supplierName" name="supplierName" type="text">
+                联系人:<input id="contactName" name="contactName" type="text">
+                联系电话:<input id="contactPhone" name="contactPhone" type="text">
+                <button type="button" class="btn btn-info" id="supplierSelectFormBtn" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -343,34 +269,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="supplierSelectListTbody"></tbody>
                 </table>
 
 
@@ -949,8 +848,99 @@
 
     $(function(){
 
+        $("#goodsSelectFormBtn").click(function () {
+            var goodsCode = document.getElementById("goodsCodeCondition").value;
+            var goodsName = document.getElementById("goodsNameCondition").value;
+            $.post("/ofc/goodsSelect",{"goodsCode":goodsCode,"goodsName":goodsName},function (data) {
+                data=eval(data);
+                var goodsList = "";
+                $.each(data,function (index,cscGoods) {
+                    goodsList =goodsList + "<tr role='row' class='odd'>";
+                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    goodsList =goodsList + "<td>"+(index+1)+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.goodsCode+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.goodsName+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.specification+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.unit+"</td>";
+                });
+                $("#goodsSelectListTbody").html(goodsList);
+            },"json");
+        });
 
+        $("#contactSelectFormBtn2").click(function () {
+            var contactCompanyName = document.getElementById("consignorName2").value;
+            var contactName = document.getElementById("consignorPerson2").value;
+            var phone = document.getElementById("consignorPhoneNumber2").value;
+            var purpose = document.getElementById("purpose2").value;
+            $.post("/ofc/contactSelect",{"contactCompanyName":contactCompanyName,"contactName":contactName,
+            "phone":phone,"purpose":purpose},function (data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                });
+                $("#contactSelectListTbody2").html(contactList);
+            },"json");
+        });
 
+        $("#contactSelectFormBtn1").click(function () {
+            var contactCompanyName = document.getElementById("consignorName1").value;
+            var contactName = document.getElementById("consignorPerson1").value;
+            var phone = document.getElementById("consignorPhoneNumber1").value;
+            var purpose = document.getElementById("purpose1").value;
+            $.post("/ofc/contactSelect",{"contactCompanyName":contactCompanyName,"contactName":contactName,
+                "phone":phone,"purpose":purpose},function (data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    $("#contactSelectListTbody1").html(contactList);
+                });
+            },"json");
+        });
+
+        $("#supplierSelectFormBtn").click(function () {
+            alert("111111111111");
+            var supplierName = document.getElementById("supplierName").value;
+            var contactName = document.getElementById("contactName").value;
+            var contactPhone = document.getElementById("contactPhone").value;
+            $.post("/ofc/supplierSelect",{"supplierName":supplierName,"contactName":contactName,
+                "contactPhone":contactPhone},function (data) {
+                data=eval(data);
+                var supplierList = "";
+                $.each(data,function (index,CscSupplierInfoDto) {
+                    supplierList =supplierList + "<tr role='row' class='odd'>";
+                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    supplierList =supplierList + "<td>"+(index+1)+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    $("#supplierSelectListTbody").html(supplierList);
+                });
+            },"json");
+        });
 
         $("#goodsListDivBlock").click(function(){
 

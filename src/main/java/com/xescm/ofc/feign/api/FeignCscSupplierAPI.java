@@ -5,6 +5,8 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 
+import java.util.List;
+
 /**
  * Created by Dzy on 2016/10/18.
  */
@@ -12,7 +14,7 @@ public interface FeignCscSupplierAPI {
 
     @RequestLine("POST /api/csc/supplier/querySupplierByAttribute")
     @Headers("Content-Type: application/json")
-    public Wrapper<?> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto);
+    public Wrapper<List<CscSupplierInfoDto>> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto);
 
     @RequestLine("POST /api/csc/supplier/addSupplierBySupplierCode")
     @Headers("Content-Type: application/json")
