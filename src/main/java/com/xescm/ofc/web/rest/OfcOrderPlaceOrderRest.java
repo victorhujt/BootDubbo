@@ -100,7 +100,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     public void goodsSelectByCscApi(Model model, CscGoods cscGoods, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         cscGoods.setCustomerCode("customCode1476932806900");
-        com.xescm.uam.utils.wrap.Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+        Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         } catch (IOException e) {
