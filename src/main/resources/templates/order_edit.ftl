@@ -567,8 +567,9 @@
                                                     </span>
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input id="provideTransport" type="checkbox"  name = "provideTransport" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
+                                                        <input id="provideTransport" type="checkbox" name = "" <#if orderInfo.provideTransport?? ><#if ((orderInfo.provideTransport) == 1)> checked="checked"</#if></#if>/>
                                                     </span>
+                                                    <input id="provideTransport1" type="hidden" name="provideTransport" value="${(orderInfo.provideTransport)!""}"/>
                                                     店铺:
                                                     <select id="" name="storeCode" value="${(orderInfo.storeName)!""}">
 
@@ -714,8 +715,8 @@
                                                                 <input name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 期望送达时间:
                                                                 <input name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input type="checkbox" name="" <#if orderInfo.urgent?? ><#if ((orderInfo.urgent) == 1)> checked="checked"</#if></#if>  onclick="this.value=this.checked?1:0"/>
-
+                                                                是否加急:<input id="urgent" type="checkbox" name="" <#if orderInfo.urgent?? ><#if ((orderInfo.urgent) == 1)> checked="checked"</#if></#if>/>
+                                                                <input id="urgent1" type="hidden" name="urgent" value="${(orderInfo.urgent)!""}"/>
                                                             </label>
                                                         </div>
 
@@ -844,7 +845,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">保存修改</button>
+                        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="subOrder()">保存修改</button>
 
                     </form>
                 </div>
@@ -1056,12 +1057,25 @@
         $("#provideTransport").change(function () {
             if($(this).prop("checked")){
                 $('.tranfr').show();
+                $("#provideTransport1").val(1);
             }else{
                 $('.tranfr').hide();
+                $("#provideTransport1").val(0);
+            }
+        });
+        $("#urgent").change(function () {
+            if($(this).prop("checked")){
+                $("#urgent1").val(1);
+            }else{
+                $("#urgent1").val(0);
             }
         });
 
     })
+    function subOrder(orderCode) {
+        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/document.getElementById('orderPlaceConTable').submit();
+        $("#orderPlaceConTable").submit();
+    }
 
     function deleteGoods(ordercode,goodsCode) {
         var result  = confirm("您确定要删除此货品?");

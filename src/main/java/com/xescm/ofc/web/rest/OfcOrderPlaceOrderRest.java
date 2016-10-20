@@ -39,6 +39,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTO);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         System.out.println(ofcOrderDTO);
+        if (ofcOrderDTO.getProvideTransport()==null){
+            ofcOrderDTO.setProvideTransport(0);
+        }
+        if (ofcOrderDTO.getUrgent()==null){
+            ofcOrderDTO.setUrgent(0);
+        }
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
             if(tag.equals("manage")){
