@@ -1,122 +1,72 @@
-<!DOCTYPE html>
-<#assign base=request.contextPath />
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
-    <title>我要下单</title>
 
-    <meta name="description" content="Static &amp; Dynamic Tables">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<style type="text/css">
+    #goodsListDiv {
 
-    <script src="js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="${base}/js/My97DatePicker/WdatePicker.js"></script>
-    <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="${base}/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="${base}/components/font-awesome/css/font-awesome.css">
+        position:fixed;
 
-    <style type="text/css">
-        #goodsListDiv {
+        left:138px;
 
-            position:fixed;
+        top:91px;
 
-            left:138px;
+        width:946px;
 
-            top:91px;
+        height:294px;
 
-            width:946px;
+        z-index:3;
 
-            height:294px;
+        border:solid #7A7A7A 4px;
 
-            z-index:3;
+    }
 
-            border:solid #7A7A7A 4px;
+    #consignorListDiv {
+        position:fixed;
 
-        }
+        left:138px;
 
-        #consignorListDiv {
-            position:fixed;
+        top:91px;
 
-            left:138px;
+        width:946px;
 
-            top:91px;
+        height:294px;
 
-            width:946px;
+        z-index:3;
 
-            height:294px;
+        border:solid #7A7A7A 4px;
+    }
 
-            z-index:3;
+    #consigneeListDiv {
+        position:fixed;
 
-            border:solid #7A7A7A 4px;
-        }
+        left:138px;
 
-        #consigneeListDiv {
-            position:fixed;
+        top:91px;
 
-            left:138px;
+        width:946px;
 
-            top:91px;
+        height:294px;
 
-            width:946px;
+        z-index:3;
 
-            height:294px;
-
-            z-index:3;
-
-            border:solid #7A7A7A 4px;
-        }
+        border:solid #7A7A7A 4px;
+    }
 
 
-        #supportListDiv {
-            position:fixed;
+    #supportListDiv {
+        position:fixed;
 
-            left:138px;
+        left:138px;
 
-            top:91px;
+        top:91px;
 
-            width:946px;
+        width:946px;
 
-            height:294px;
+        height:294px;
 
-            z-index:3;
+        z-index:3;
 
-            border:solid #7A7A7A 4px;
-        }
-    </style>
-
-    <!-- page specific plugin styles -->
-
-    <!-- text fonts -->
-    <link rel="stylesheet" href="${base}/assets/css/ace-fonts.css">
-
-    <!-- ace styles -->
-    <link rel="stylesheet" href="${base}/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style">
-
-    <!--[if lte IE 9]>
-    <link rel="stylesheet" href="${base}/assets/css/ace-part2.css" class="ace-main-stylesheet" />
-    <![endif]-->
-    <link rel="stylesheet" href="${base}/assets/css/ace-skins.css">
-    <link rel="stylesheet" href="${base}/assets/css/ace-rtl.css">
-
-    <!--[if lte IE 9]>
-    <link rel="stylesheet" href="${base}/assets/css/ace-ie.css" />
-    <![endif]-->
-
-    <!-- inline styles related to this page -->
-
-    <!-- ace settings handler -->
-    <script src="${base}/assets/js/ace-extra.js"></script><style>@keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-moz-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-webkit-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-ms-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}@-o-keyframes nodeInserted{from{outline-color:#fff}to{outline-color:#000}}.ace-save-state{animation-duration:10ms;-o-animation-duration:10ms;-ms-animation-duration:10ms;-moz-animation-duration:10ms;-webkit-animation-duration:10ms;animation-delay:0s;-o-animation-delay:0s;-ms-animation-delay:0s;-moz-animation-delay:0s;-webkit-animation-delay:0s;animation-name:nodeInserted;-o-animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted}</style>
-
-    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-    <!--[if lte IE 8]>
-    <script src="${base}/components/html5shiv/dist/html5shiv.min.js"></script>
-    <script src="${base}/components/respond/dest/respond.min.js"></script>
-    <![endif]-->
-</head>
-
-<body class="no-skin">
+        border:solid #7A7A7A 4px;
+    }
+</style>
 <!-- #section:basics/navbar.layout -->
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
@@ -1140,17 +1090,3 @@
     })
 </script>
 
-<!-- the following scripts are used in demo only for onpage help and you don't need them -->
-<link rel="stylesheet" href="${base}/assets/css/ace.onpage-help.css">
-<link rel="stylesheet" href="${base}/docs/assets/js/themes/sunburst.css">
-
-<script type="text/javascript"> ace.vars['base'] = '..'; </script>
-<script src="${base}/assets/js/src/elements.onpage-help.js"></script>
-<script src="${base}/assets/js/src/ace.onpage-help.js"></script>
-<script src="${base}/docs/assets/js/rainbow.js"></script>
-<script src="${base}/docs/assets/js/language/generic.js"></script>
-<script src="${base}/docs/assets/js/language/html.js"></script>
-<script src="${base}/docs/assets/js/language/css.js"></script>
-<script src="${base}/docs/assets/js/language/javascript.js"></script>
-
-</body></html>
