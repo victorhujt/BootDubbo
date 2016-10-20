@@ -1,4 +1,5 @@
 /**
+/**
  <b>Load content via Ajax </b>. For more information please refer to documentation #basics/ajax
 */
 
@@ -46,7 +47,7 @@
 			if(!url) return;
 			var data = data || {}
 			var updateView = updateView || false;
-			debugger;
+			// debugger;
 			this.getUrl(url, null, false, 'POST', data, updateView, extraParams);
 		}
 		
@@ -257,7 +258,7 @@
 		
 		
 		function updateBreadcrumbs(link_element) {
-			debugger;
+			// debugger;
 			var link_text = '';
 		 
 			//update breadcrumbs
