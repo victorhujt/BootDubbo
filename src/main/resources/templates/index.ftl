@@ -560,6 +560,7 @@
 <script src="../../plugins/layui/laypage/laypage.js"></script>
 <script src="../../js/common/common-client.js"></script>
 <script src="../../js/common/jquery.blockUI.js"></script>
+<script src="../../js/My97DatePicker/WdatePicker.js"></script>
 <script src="../../js/common/utils.js"></script>
 <script src="../../js/common/index.js"></script>
 <script type="text/javascript">
