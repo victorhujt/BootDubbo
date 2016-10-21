@@ -5,12 +5,11 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
-    <title>订单查询</title>
+    <title>订单管理</title>
 
     <meta name="description" content="Static &amp; Dynamic Tables">
 
-    <script src="${base}js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+    <script language="javascript" type="text/javascript" src="${base}js/My97DatePicker/WdatePicker.js"></script>
 
 </head>
 
@@ -20,21 +19,16 @@
 
 <!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
-
-
     <!-- /section:basics/sidebar -->
     <div class="main-content">
         <div class="main-content-inner">
-
-
             <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
-
 
                 <!-- /section:settings.box -->
                 <div class="page-header">
                     <h1>
-                        订单查询
+                        订单管理
                     </h1>
                 </div><!-- /.page-header -->
 
@@ -45,7 +39,7 @@
                             <div class="pull-right tableTools-container"><div class="dt-buttons btn-overlap btn-group"><a class="dt-button buttons-collection buttons-colvis btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-search bigger-110 blue"></i> <span class="hidden">Show/hide columns</span></span></a><a class="dt-button buttons-copy buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-copy bigger-110 pink"></i> <span class="hidden">Copy to clipboard</span></span></a><a class="dt-button buttons-csv buttons-html5 btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-database bigger-110 orange"></i> <span class="hidden">Export to CSV</span></span></a><a class="dt-button buttons-excel buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-excel-o bigger-110 green"></i> <span class="hidden">Export to Excel</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_1" src="${base}/components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-pdf buttons-flash btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table"><span><i class="fa fa-file-pdf-o bigger-110 red"></i> <span class="hidden">Export to PDF</span></span><div style="position: absolute; left: 0px; top: 0px; width: 39px; height: 35px; z-index: 99;" data-original-title="" title=""><embed id="ZeroClipboard_TableToolsMovie_2" src="${base}/components/datatables.net-buttons-swf/index.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="39" height="35" name="ZeroClipboard_TableToolsMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=39&amp;height=35" wmode="transparent"></div></a><a class="dt-button buttons-print btn btn-white btn-primary btn-bold" tabindex="0" aria-controls="dynamic-table" data-original-title="" title=""><span><i class="fa fa-print bigger-110 grey"></i> <span class="hidden">Print</span></span></a></div></div>
                         </div>
                         <div class="table-header">
-                            订单列表
+                            筛选条件
                         </div>
 
                         <!-- div.table-responsive -->
@@ -53,18 +47,18 @@
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form action="/ofc/orderScreenByCondition" method="post" id="screenOrderForm">
-                                    <input type="hidden" name="tag" value="screen"/>
+                                <form id="screenOrderForm">
+                                <#--<input type="hidden" name="tag" value="manage"/>-->
                                     <div class="row">
 
                                         <div id="dynamic-table_filter" class="dataTables_length">
                                             <label>
-                                                &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                至<input name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                至<input id="orderTimeSuf" name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                订单编号:<input id="orderCode" name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 订单状态:
-                                                <select id="" name="orderStatus">
+                                                <select id="orderStatus" name="orderStatus">
                                                     <option value="">----</option>
                                                     <option value="10">待审核</option>
                                                     <option value="20">已审核</option>
@@ -80,13 +74,13 @@
 
                                                 &nbsp;&nbsp;&nbsp;
                                                 订单类型:
-                                                <select id="" name="orderType">
+                                                <select id="orderType" name="orderType">
                                                     <option value="">----</option>
                                                     <option value="60">运输订单</option>
                                                     <option value="61">仓配订单</option>
                                                 </select>
                                                 业务类型:
-                                                <select id="" name="businessType">
+                                                <select id="businessType" name="businessType">
                                                     <option value="">----</option>
                                                     <option value="600">城配</option>
                                                     <option value="601">干线</option>
@@ -102,11 +96,13 @@
                                                     <option value="623">加工入库</option>
                                                 </select>
 
-                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('screenOrderForm').submit();">搜索</span>
+                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="screenOrderFormBtn">搜索</span>
                                             </label>
                                         </div>
                                         <br/>
-
+                                        <div class="table-header">
+                                            订单列表
+                                        </div>
                                         <div class="col-xs-12">
                                             <div class="dataTables_length" id="dynamic-table_length">
                                                 <label>Display
@@ -131,6 +127,7 @@
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
+
                                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
                                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
                                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
@@ -157,12 +154,11 @@
                                             </label>
                                         </td>
 
-
                                         <td>
                                             <a href="/ofc/orderDetails?followTag=orderCode&code=${order.orderCode!'null'}">${order.orderCode!"null"}</a>
                                         </td>
                                         <td>${order.custOrderCode!"null"}</td>
-                                        <td class="hidden-480">${(order.orderTime?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+                                        <td class="hidden-480">${((order.orderTime)?string("yyyy-MM-dd HH:mm:ss"))!}</td>
                                         <td>
                                             <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
                                             <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>
@@ -195,10 +191,10 @@
                                         ${order.warehouseName!"null"}
                                         </td>
                                         <td class="hidden-480">
-                                        ${order.store!"null"}
+                                        ${order.notes!"null"}
                                         </td>
                                         <td class="hidden-480">
-                                        ${order.notes!"null"}
+                                        ${order.store!"null"}
                                         </td>
 
                                     </tr>
@@ -228,105 +224,123 @@
 <script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
-
-<!-- inline scripts related to this page -->
+<#include "common/include.ftl">
 <script type="text/javascript">
+    var scripts = [ null, "", null ]
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
+        $(document).ready(main);
+    });
 
-    jQuery(function($) {
-
-
-
-        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo ${base}/components will be replaced by correct ${base}/assets path
-        $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
-
-        ////
-
-        setTimeout(function() {
-            $($('.tableTools-container')).find('a.dt-button').each(function() {
-                var div = $(this).find(' > div').first();
-                if(div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
-                else $(this).tooltip({container: 'body', title: $(this).text()});
-            });
-        }, 500);
-
-
-
-
-
-        /////////////////////////////////
-        //table checkboxes
-        $('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
-
-
-        //And for the first simple table, which doesn't have TableTools or dataTables
-        //select/deselect all rows according to table header checkbox
-        var active_class = 'active';
-        $('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-            var th_checked = this.checked;//checkbox inside "TH" table header
-
-            $(this).closest('table').find('tbody > tr').each(function(){
-                var row = this;
-                if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-                else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-            });
+    function main(){
+        //初始化页面数据
+        initPageData();
+        // 查询
+        $("#screenOrderFormBtn").click(function () {
+            var jsonStr={};
+            jsonStr.orderTimePre=$("#orderTimePre").val();
+            jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+            jsonStr.orderCode=$("#orderCode").val();
+            jsonStr.custOrderCode=$("#custOrderCode").val();
+            jsonStr.orderStatus=$("#orderStatus").val();
+            jsonStr.orderType=$("#orderType").val();
+            jsonStr.businessType=$("#businessType").val();
+            var tag = "manage";
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag;
+            xescm.common.loadPage(url);
         });
 
-        //select/deselect a row when the checkbox is checked/unchecked
-        $('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-            var $row = $(this).closest('tr');
-            if($row.is('.detail-row ')) return;
+    }
+
+    //页面数据初始化
+    function initPageData(){
+        var active_class = "active";
+        $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
+            var th_checked = this.checked;//checkbox inside "TH" table header
+
+            $(this).closest("table").find("tbody > tr").each(function(){
+                var row = this;
+                if(th_checked) $(row).addClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", true);
+                else $(row).removeClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", false);
+            });
+        });
+        $("#simple-table").on("click", "td input[type=checkbox]" , function(){
+            var $row = $(this).closest("tr");
+            if($row.is(".detail-row ")) return;
             if(this.checked) $row.addClass(active_class);
             else $row.removeClass(active_class);
         });
+        //xxxx();
+    }
+</script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
 
 
+    function editOrder(orderCode) {
+        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
+        $("#screenOrderForm").attr("action","/ofc/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
+        $("#screenOrderForm").submit();
+    }
 
-        /********************************/
-        //add tooltip for small view action buttons in dropdown menu
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        //tooltip placement on right or left
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            //var w2 = $source.width();
-
-            if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
-            return 'left';
+    function deleteOrder(ordercode,orderStatus) {
+        var result  = confirm("您确定要删除此订单?");
+        if(result == true) {
+            $.get("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
+                $("#confirmBox").modal('hide');
+                if(data == 200){
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
+                } else {
+                    alert("删除订单失败,请联系管理员!");
+                }
+            });
         }
 
 
+    }
 
+    function reviewOrder(ordercode,orderStatus) {
 
-        /***************/
-        $('.show-details-btn').on('click', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').next().toggleClass('open');
-            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-        });
-        /***************/
+        var result  = confirm("您确定要审核订单?");
+        if(result == true) {
+            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
+                if(data == 200){
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
+                } else {
+                    alert("审核订单失败,请联系管理员!");
+                }
+            });
+        }
 
+    }
+    function reReviewOrder(ordercode,orderStatus) {
+        var result  = confirm("您确定要反审核此订单?");
+        if(result == true) {
+            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
+                if(data == 200){
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
+                } else {
+                    alert("反审核订单失败,请联系管理员!");
+                }
+            });
+        }
+    }
+    function cancelOrder(ordercode,orderStatus) {
 
+        var result  = confirm("您确定要取消此订单?");
+        if(result == true) {
+            $.get("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
 
+                if(data == 200){
+                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
+                } else {
+                    alert("取消订单失败,请联系管理员!");
+                }
+            });
+        }
 
+    }
 
-        /**
-         //add horizontal scrollbars to a simple table
-         $('#simple-table').css({'width':'2000px', 'max-width': 'none'}).wrap('<div style="width: 1000px;" />').parent().ace_scroll(
-         {
-           horizontal: true,
-           styleClass: 'scroll-top scroll-dark scroll-visible',//show the scrollbars on top(default is bottom)
-           size: 2000,
-           mouseWheelLock: true
-         }
-         ).css('padding-top', '12px');
-         */
-
-    })
 </script>
+
 </body></html>
