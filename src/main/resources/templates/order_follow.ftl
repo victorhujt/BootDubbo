@@ -3,10 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
     <title>订单跟踪</title>
-    <meta name="description" content="Static &amp; Dynamic Tables">
 
     <script src="${base}/js/jquery.js"></script>
 </head>
@@ -14,7 +11,9 @@
 
 <!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
-
+    <script type="text/javascript">
+        try{ace.settings.loadState('main-container')}catch(e){}
+    </script>
 
     <!-- /section:basics/sidebar -->
     <div class="main-content">
@@ -192,11 +191,43 @@
             </div><!-- /.page-content -->
         </div>
     </div><!-- /.main-content -->
+    <div class="footer">
+        <div class="footer-inner">
+            <!-- #section:basics/footer -->
+            <div class="footer-content">
+                            <span class="bigger-120">
+                                <span class="blue bolder">Xescm</span>
+                                Application © 2016
+                            </span>
 
+                &nbsp; &nbsp;
+                <span class="action-buttons">
+                                <a href="#">
+                                    <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+                                </a>
+
+                                <a href="#">
+                                    <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+                                </a>
+
+                                <a href="#">
+                                    <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+                                </a>
+                            </span>
+            </div>
+
+            <!-- /section:basics/footer -->
+        </div>
+    </div>
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
 </div><!-- /.main-container -->
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
+<script src="${base}/components/jquery/dist/jquery.js"></script>
 <script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
@@ -221,7 +252,10 @@
             alert("请先输入数据再进行查询");
             return false;
         }else{
-            $("#followOrderForm").submit();
+            CommonClient.post(sys.rootPath + "/ofc/orderFollowCon", $("#followOrderForm").serialize(), function(data) {
+                xescm.common.loadPage("");
+            }
+
         }
     }
 </script>

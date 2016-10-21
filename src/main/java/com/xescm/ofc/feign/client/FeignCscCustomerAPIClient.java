@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by lyh on 2016/10/19.
@@ -35,12 +36,12 @@ public class FeignCscCustomerAPIClient {
         return res;
     }
 
-    public Wrapper<?> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
+    public Wrapper<List<CscContantAndCompanyDto>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
         logger.debug("==>查询客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
         if(null == cscContantAndCompanyDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<?> wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
+        Wrapper<List<CscContantAndCompanyDto>> wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
         return wrapper;
     }
 
@@ -54,7 +55,7 @@ public class FeignCscCustomerAPIClient {
     }
 
     public Wrapper<?> modifyCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto){
-        logger.debug("==>添加客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
+        logger.debug("==>修改客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
         if(null == cscContantAndCompanyDto){
             throw new BusinessException("参数为空");
         }

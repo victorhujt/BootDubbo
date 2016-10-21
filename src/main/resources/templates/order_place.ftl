@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<#assign base=request.contextPath />
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
-    <title>我要下单</title>
-
-    <meta name="description" content="Static &amp; Dynamic Tables">
-
-    <script src="${base}/js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="${base}/js/My97DatePicker/WdatePicker.js"></script>
-
     <style type="text/css">
         #goodsListDiv {
 
@@ -91,11 +78,10 @@
         <h4 class="modal-title">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form>
+            <form id="goodsSelConditionForm">
                 货品编码:<input id="goodsCodeCondition" name="goodsCode" type="text">
                 货品名称:<input id="goodsNameCondition" name="goodsName" type="text">
-            <#--<button type="button" class="btn btn-info" id="goodsSelectFormBtn" onclick="document.getElementById('goodsSelectForm').submit();">搜索</button>-->
-                <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >搜索</button>
+                <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -113,34 +99,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="goodsSelectListTbody"></tbody>
                 </table>
 
 
@@ -155,6 +114,13 @@
         <h4 class="modal-title">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="consignorSelConditionForm">
+                名称:<input id="consignorName2" name="contactCompanyName" type="text">
+                联系人:<input id="consignorPerson2" name="contactName" type="text">
+                联系电话:<input id="consignorPhoneNumber2" name="phone" type="text">
+                <input id="purpose2" name="purpose" type="hidden" value="2">
+                <button type="button" class="btn btn-info" id="contactSelectFormBtn2" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -174,43 +140,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="contactSelectListTbody2"></tbody>
                 </table>
 
 
@@ -226,6 +156,13 @@
         <h4 class="modal-title">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="consigneeSelConditionForm">
+                名称:<input id="consignorName1" name="contactCompanyName" type="text">
+                联系人:<input id="consignorPerson1" name="contactName" type="text">
+                联系电话:<input id="consignorPhoneNumber1" name="phone" type="text">
+                <input id="purpose1" name="purpose" type="hidden" value="1">
+                <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -244,43 +181,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="contactSelectListTbody1"></tbody>
                 </table>
 
 
@@ -297,6 +198,12 @@
         <h4 class="modal-title">供应商联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="supplierSelConditionForm">
+                名称:<input id="supplierName" name="supplierName" type="text">
+                联系人:<input id="contactName" name="contactName" type="text">
+                联系电话:<input id="contactPhone" name="contactPhone" type="text">
+                <button type="button" class="btn btn-info" id="supplierSelectFormBtn" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -316,34 +223,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="supplierSelectListTbody"></tbody>
                 </table>
 
 
@@ -722,22 +602,15 @@
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
-<script src="${base}/components/bootbox.js/bootbox.js"></script>
+<script src="../../components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
     $(function(){
-
-
         $("#goodsSelectFormBtn").click(function () {
-            var goodsCode = document.getElementById("goodsCodeCondition").value;
-            var goodsName = document.getElementById("goodsNameCondition").value;
-            alert(goodsCode);
-            $.post("/ofc/goodsSelect",{"goodsCode":goodsCode,"goodsName":goodsName},function (data) {
-            //xescm.common.submit("/ofc/goodsSelect",{"goodsCode":goodsCode,"goodsName":goodsName},function (data) {
-            //CommonClient.post("/ofc/goodsSelect",{"goodsCode":goodsCode,"goodsName":goodsName},function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
                 var goodsList = "";
                 $.each(data,function (index,cscGoods) {
@@ -748,11 +621,72 @@
                     goodsList =goodsList + "<td>"+cscGoods.goodsName+"</td>";
                     goodsList =goodsList + "<td>"+cscGoods.specification+"</td>";
                     goodsList =goodsList + "<td>"+cscGoods.unit+"</td>";
-                    alert("===");
                 });
-                $("#goodsSelectListTbody").append(goodsList);
-            });
+                $("#goodsSelectListTbody").html(goodsList);
+            },"json");
+        });
 
+        $("#contactSelectFormBtn2").click(function () {
+            //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                });
+                $("#contactSelectListTbody2").html(contactList);
+            },"json");
+        });
+
+        $("#contactSelectFormBtn1").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    $("#contactSelectListTbody1").html(contactList);
+                });
+            },"json");
+        });
+
+        $("#supplierSelectFormBtn").click(function () {
+
+            //$.post("/ofc/supplierSelect",$("#supplierSelConditionForm").serialize(),function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/supplierSelect", $("#supplierSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var supplierList = "";
+                $.each(data,function (index,CscSupplierInfoDto) {
+                    supplierList =supplierList + "<tr role='row' class='odd'>";
+                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    supplierList =supplierList + "<td>"+(index+1)+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    $("#supplierSelectListTbody").html(supplierList);
+                });
+            },"json");
         });
 
         $("#goodsListDivBlock").click(function(){
@@ -855,103 +789,6 @@
         });
 
     })
-
-
-    jQuery(function($) {
-
-
-
-
-        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo components will be replaced by correct assets path
-        $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
-
-        ////
-
-        setTimeout(function() {
-            $($('.tableTools-container')).find('a.dt-button').each(function() {
-                var div = $(this).find(' > div').first();
-                if(div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
-                else $(this).tooltip({container: 'body', title: $(this).text()});
-            });
-        }, 500);
-
-
-        /////////////////////////////////
-        //table checkboxes
-        $('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
-
-
-        //And for the first simple table, which doesn't have TableTools or dataTables
-        //select/deselect all rows according to table header checkbox
-        var active_class = 'active';
-        $('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-            var th_checked = this.checked;//checkbox inside "TH" table header
-
-            $(this).closest('table').find('tbody > tr').each(function(){
-                var row = this;
-                if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-                else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-            });
-        });
-
-        //select/deselect a row when the checkbox is checked/unchecked
-        $('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-            var $row = $(this).closest('tr');
-            if($row.is('.detail-row ')) return;
-            if(this.checked) $row.addClass(active_class);
-            else $row.removeClass(active_class);
-        });
-
-
-
-        /********************************/
-        //add tooltip for small view action buttons in dropdown menu
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        //tooltip placement on right or left
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            //var w2 = $source.width();
-
-            if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
-            return 'left';
-        }
-
-
-
-
-        /***************/
-        $('.show-details-btn').on('click', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').next().toggleClass('open');
-            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-        });
-        /***************/
-
-
-
-
-
-        /**
-         //add horizontal scrollbars to a simple table
-         $('#simple-table').css({'width':'2000px', 'max-width': 'none'}).wrap('<div style="width: 1000px;" />').parent().ace_scroll(
-         {
-           horizontal: true,
-           styleClass: 'scroll-top scroll-dark scroll-visible',//show the scrollbars on top(default is bottom)
-           size: 2000,
-           mouseWheelLock: true
-         }
-         ).css('padding-top', '12px');
-         */
-
-    })
 </script>
 
-
-</body></html>
+</body>

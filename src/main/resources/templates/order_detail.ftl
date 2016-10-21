@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<#assign base=request.contextPath />
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
-    <title>订单详情</title>
-    <meta name="description" content="Static &amp; Dynamic Tables">
 
+<head>
+    <title>订单详情</title>
     <!-- bootstrap & fontawesome -->
-    <link rel="stylesheet" href="${base}/assets/css/bootstrap.css">
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -388,38 +380,6 @@
             </div><!-- /.page-content -->
         </div>
     </div><!-- /.main-content -->
-    <div class="footer">
-        <div class="footer-inner">
-            <!-- #section:basics/footer -->
-            <div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">Xescm</span>
-							Application © 2016
-						</span>
-
-                &nbsp; &nbsp;
-                <span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span>
-            </div>
-
-            <!-- /section:basics/footer -->
-        </div>
-    </div>
-
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-    </a>
 </div><!-- /.main-container -->
 </body>
 </html>

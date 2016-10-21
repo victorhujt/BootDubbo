@@ -1,7 +1,9 @@
 package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscGoods;
+import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
@@ -12,15 +14,22 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import com.xescm.ofc.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lyh on 2016/10/8.
@@ -84,6 +93,40 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 收货方发货方筛选(调用客户中心API)
+     */
+    @ApiOperation(value="下单收发货方筛选", notes="根据查询条件筛选收发货方")
+    @ApiImplicitParams({
+    })
+    @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
+    public void contactSelectByCscApi(Model model, CscContantAndCompanyDto cscContantAndCompanyDto, HttpServletResponse response){
+        //调用外部接口,最低传CustomerCode
+        Wrapper<List<CscContantAndCompanyDto>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+        try {
+            response.getWriter().print(JSONUtils.objectToJson(cscReceivingInfoList.getResult()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 供应商筛选(调用客户中心API)
+     */
+    @ApiOperation(value="下单供应商筛选", notes="根据查询条件筛选供应商")
+    @ApiImplicitParams({
+    })
+    @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
+    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response){
+        //调用外部接口,最低传CustomerCode
+        Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+        try {
+            response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
         } catch (IOException e) {
             e.printStackTrace();
         }

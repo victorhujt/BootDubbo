@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<#assign base=request.contextPath />
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
     <title>订单编辑</title>
-
-    <meta name="description" content="Static &amp; Dynamic Tables">
-    <script language="javascript" type="text/javascript" src="${base}js/My97DatePicker/WdatePicker.js"></script>
-    <script src="${base}/js/jquery.js"></script>
-
     <style type="text/css">
         #goodsListDiv {
 
@@ -350,21 +339,14 @@
 <div class="main-container ace-save-state" id="main-container">
 
 
-    <!-- /section:basics/sidebar -->
     <div class="main-content">
         <div class="main-content-inner">
-
-            <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
-
-
-                <!-- /section:settings.box -->
                 <div class="page-header">
                     <h1>
                         订单编辑
                     </h1>
-                </div><!-- /.page-header -->
-
+                </div>
                 <div class="row">
                     <form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
                         <div class="col-xs-12">
@@ -376,9 +358,6 @@
                                 基本信息
                             </div>
 
-                            <!-- div.table-responsive -->
-
-                            <!-- div.dataTables_borderWrap -->
                             <div>
                                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
                                     <form action="" method="post" id="">
@@ -699,8 +678,6 @@
 
                     </form>
                 </div>
-
-                <!-- PAGE CONTENT ENDS -->
             </div><!-- /.col -->
         </div><!-- /.row -->
     </div><!-- /.page-content -->
@@ -847,7 +824,7 @@
             }
         });
 
-    })
+    });
     function subOrder(orderCode) {
         /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/document.getElementById('orderPlaceConTable').submit();
         $("#orderPlaceConTable").submit();
@@ -869,111 +846,6 @@
 
     }
 
-    jQuery(function($) {
-        $("#bootbox-regular").on(ace.click_event, function() {
-            bootbox.prompt("What is your name?", function(result) {
-                if (result === null) {
-
-                } else {
-
-                }
-            });
-        });
-
-
-
-        $.fn.dataTable.Buttons.swfPath = "${base}/components/datatables.net-buttons-swf/index.swf"; //in Ace demo ${base}/components will be replaced by correct assets path
-        $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
-
-        ////
-
-        setTimeout(function() {
-            $($('.tableTools-container')).find('a.dt-button').each(function() {
-                var div = $(this).find(' > div').first();
-                if(div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
-                else $(this).tooltip({container: 'body', title: $(this).text()});
-            });
-        }, 500);
-
-
-
-
-
-        /////////////////////////////////
-        //table checkboxes
-        $('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
-
-
-        //And for the first simple table, which doesn't have TableTools or dataTables
-        //select/deselect all rows according to table header checkbox
-        var active_class = 'active';
-        $('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-            var th_checked = this.checked;//checkbox inside "TH" table header
-
-            $(this).closest('table').find('tbody > tr').each(function(){
-                var row = this;
-                if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-                else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-            });
-        });
-
-        //select/deselect a row when the checkbox is checked/unchecked
-        $('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-            var $row = $(this).closest('tr');
-            if($row.is('.detail-row ')) return;
-            if(this.checked) $row.addClass(active_class);
-            else $row.removeClass(active_class);
-        });
-
-
-
-        /********************************/
-        //add tooltip for small view action buttons in dropdown menu
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        //tooltip placement on right or left
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            //var w2 = $source.width();
-
-            if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
-            return 'left';
-        }
-
-
-
-
-        /***************/
-        $('.show-details-btn').on('click', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').next().toggleClass('open');
-            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-        });
-        /***************/
-
-
-
-
-
-        /**
-         //add horizontal scrollbars to a simple table
-         $('#simple-table').css({'width':'2000px', 'max-width': 'none'}).wrap('<div style="width: 1000px;" />').parent().ace_scroll(
-         {
-           horizontal: true,
-           styleClass: 'scroll-top scroll-dark scroll-visible',//show the scrollbars on top(default is bottom)
-           size: 2000,
-           mouseWheelLock: true
-         }
-         ).css('padding-top', '12px');
-         */
-
-    })
 </script>
 
-</body></html>
+</body>

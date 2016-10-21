@@ -321,7 +321,6 @@
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> Dashboard </span>
 						</a>
-
 						<b class="arrow"></b>
 					</li>
 					<li class="">
@@ -334,7 +333,7 @@
 
 						<b class="arrow"></b>
 
-						<ul class="submenu">
+                        <ul class="submenu">
 							<li class="">
 								<a data-url="/ofc/orderPlace" href="#/ofc/orderPlace">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -589,6 +588,8 @@
 <script src="../../js/common/jquery.blockUI.js"></script>
 <script src="../../js/common/utils.js"></script>
 <script src="../../js/common/index.js"></script>
+<script src="../../js/My97DatePicker/WdatePicker.js"></script>
+
 <script type="text/javascript">
 	var sys = sys || {};
 	sys.rootPath = "${request.getContextPath()}";

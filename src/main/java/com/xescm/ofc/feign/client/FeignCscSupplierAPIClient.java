@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by lyh on 2016/10/19.
@@ -32,12 +33,12 @@ public class FeignCscSupplierAPIClient {
                 .decoder(new JacksonDecoder()).target(FeignCscSupplierAPI.class, restConfig.getCscUrl());
         return res;
     }
-    public Wrapper<?> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto){
+    public Wrapper<List<CscSupplierInfoDto>> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto){
         logger.debug("==>查询货品 cscSupplierInfoDto={}", cscSupplierInfoDto);
         if(null == cscSupplierInfoDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<?> wrapper = getApi().querySupplierByAttribute(cscSupplierInfoDto);
+        Wrapper<List<CscSupplierInfoDto>> wrapper = getApi().querySupplierByAttribute(cscSupplierInfoDto);
         return wrapper;
     }
     public Wrapper<?> addSupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto){

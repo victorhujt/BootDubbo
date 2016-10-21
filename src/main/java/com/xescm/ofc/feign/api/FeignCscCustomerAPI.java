@@ -7,6 +7,8 @@ import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 
+import java.util.List;
+
 /**
  * Created by gsfeng on 2016/10/18.
  */
@@ -14,7 +16,7 @@ public interface FeignCscCustomerAPI {
 
     @RequestLine("POST /api/csc/customer/queryCscReceivingInfoList")
     @Headers("Content-Type: application/json")
-    public Wrapper<?> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto);
+    public Wrapper<List<CscContantAndCompanyDto>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto);
 
     @RequestLine("POST /api/csc/customer/addCscContantAndCompany")
     @Headers("Content-Type: application/json")
