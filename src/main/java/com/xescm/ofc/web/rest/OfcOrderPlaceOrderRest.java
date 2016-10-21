@@ -19,12 +19,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.support.InvocableHandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
+import javax.script.Invocable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -132,12 +135,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
-    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response){
+    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         //调用外部接口,最低传CustomerCode
         Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }
