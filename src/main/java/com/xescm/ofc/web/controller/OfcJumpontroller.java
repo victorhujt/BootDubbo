@@ -50,6 +50,7 @@ public class OfcJumpontroller extends BaseController{
 
     @RequestMapping(value = "/index")
     public String toIndex(Model model){
+
         return "index";
     }
 }

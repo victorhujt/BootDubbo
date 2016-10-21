@@ -3,13 +3,11 @@ package com.xescm.ofc.web.rest;
 import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.service.OfcOrderScreenService;
+import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,10 +41,12 @@ public class OfcOrderScreenRest extends BaseController {
 
 
 
-    @RequestMapping(value = "/orderScreenByCondition")
-    public String orderScreenByCondition(Model model, OrderScreenCondition orderScreenCondition, Map<String,Object> map, String tag) throws IOException {
-        logger.debug("==>订单中心订单查询条件 orderScreenCondition={}", orderScreenCondition);
+
+    @RequestMapping(value = "/orderScreenByCondition/{orderScreenConditionJSON}/{tag}")
+    public String orderScreenByCondition(Model model,@PathVariable String orderScreenConditionJSON, Map<String,Object> map,@PathVariable("tag") String tag) throws IOException {
+        logger.debug("==>订单中心订单查询条件 orderScreenCondition={}", orderScreenConditionJSON);
         logger.debug("==>订单中心订单查询标志位 tag={}", tag);
+        OrderScreenCondition orderScreenCondition = JSONUtils.jsonToPojo(orderScreenConditionJSON, OrderScreenCondition.class);
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
         map.put("orderList", orderScreenResults);
         if (tag.equals("screen")) {
@@ -56,7 +56,5 @@ public class OfcOrderScreenRest extends BaseController {
         } else {
             return "error";
         }
-
     }
-
 }

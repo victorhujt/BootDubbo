@@ -47,18 +47,18 @@
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form action="/ofc/orderScreenByCondition" method="post" id="screenOrderForm">
-                                    <input type="hidden" name="tag" value="manage"/>
+                                <form id="screenOrderForm">
+                                    <#--<input type="hidden" name="tag" value="manage"/>-->
                                     <div class="row">
 
                                         <div id="dynamic-table_filter" class="dataTables_length">
                                             <label>
-                                                &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                至<input name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                订单编号:<input name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                客户订单编号:<input name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                至<input id="orderTimeSuf" name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                订单编号:<input id="orderCode" name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 订单状态:
-                                                <select id="" name="orderStatus">
+                                                <select id="orderStatus" name="orderStatus">
                                                     <option value="">----</option>
                                                     <option value="10">待审核</option>
                                                     <option value="20">已审核</option>
@@ -74,13 +74,13 @@
 
                                                 &nbsp;&nbsp;&nbsp;
                                                 订单类型:
-                                                <select id="" name="orderType">
+                                                <select id="orderType" name="orderType">
                                                     <option value="">----</option>
                                                     <option value="60">运输订单</option>
                                                     <option value="61">仓配订单</option>
                                                 </select>
                                                 业务类型:
-                                                <select id="" name="businessType">
+                                                <select id="businessType" name="businessType">
                                                     <option value="">----</option>
                                                     <option value="600">城配</option>
                                                     <option value="601">干线</option>
@@ -96,7 +96,7 @@
                                                     <option value="623">加工入库</option>
                                                 </select>
 
-                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" onclick="document.getElementById('screenOrderForm').submit();">搜索</span>
+                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="screenOrderFormBtn">搜索</span>
                                             </label>
                                         </div>
                                         <br/>
@@ -244,9 +244,59 @@
 <script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
+<#include "common/include.ftl">
+<script type="text/javascript">
+    var scripts = [ null, "", null ]
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
+        $(document).ready(main);
+    });
 
+    function main(){
+        //初始化页面数据
+        initPageData();
+        // 查询
+        $("#screenOrderFormBtn").click(function () {
+            var jsonStr={};
+            jsonStr.orderTimePre=$("#orderTimePre").val();
+            jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+            jsonStr.orderCode=$("#orderCode").val();
+            jsonStr.custOrderCode=$("#custOrderCode").val();
+            jsonStr.orderStatus=$("#orderStatus").val();
+            jsonStr.orderType=$("#orderType").val();
+            jsonStr.businessType=$("#businessType").val();
+            var tag = "manage";
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag;
+            xescm.common.loadPage(url);
+        });
+
+    }
+
+    //页面数据初始化
+    function initPageData(){
+        var active_class = "active";
+        $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
+            var th_checked = this.checked;//checkbox inside "TH" table header
+
+            $(this).closest("table").find("tbody > tr").each(function(){
+                var row = this;
+                if(th_checked) $(row).addClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", true);
+                else $(row).removeClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", false);
+            });
+        });
+        $("#simple-table").on("click", "td input[type=checkbox]" , function(){
+            var $row = $(this).closest("tr");
+            if($row.is(".detail-row ")) return;
+            if(this.checked) $row.addClass(active_class);
+            else $row.removeClass(active_class);
+        });
+        //xxxx();
+    }
+</script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+
+
     function editOrder(orderCode) {
         /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
         $("#screenOrderForm").attr("action","/ofc/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
