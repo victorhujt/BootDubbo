@@ -1,37 +1,30 @@
 package com.xescm.ofc.web.rest;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscGoods;
 import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
+import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import com.xescm.ofc.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.support.InvocableHandlerMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ui.Model;
 
-import javax.script.Invocable;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lyh on 2016/10/8.

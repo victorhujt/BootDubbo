@@ -6,8 +6,8 @@ body {
   background-color: #E4E6E9;
   min-height: 100%;
   padding-bottom: 0;
-  font-family: 'Open Sans';
-  font-size: 13px;
+  font-family: '微软雅黑','Open Sans';
+  font-size: 12px;
   color: #393939;
   line-height: 1.5;
 }
@@ -62,17 +62,16 @@ body {
   padding: 8px 20px 24px;
 }
 .page-header {
-  margin: 0 0 12px;
-  border-bottom: 1px dotted #E2E2E2;
-  padding-bottom: 16px;
-  padding-top: 7px;
+  margin: 0 0 20px 0;
+  border-bottom: 1px dotted #eeeff0;
+  padding-bottom: 7px;
+  padding-top: 10px;
 }
-.page-header h1 {
+.page-header p {
   padding: 0;
-  margin: 0 8px;
-  font-size: 24px;
-  font-weight: lighter;
-  color: #2679B5;
+  margin: 0 10px;
+  font-size: 14px;
+  color: #383838;
 }
 .page-header h1 small {
   margin: 0 6px;
@@ -1233,12 +1232,12 @@ pre.prettyprint {
   background-color: #4b4b4b;
 }
 .ace-nav > li.purple > a {
-  background-color: #892E65;
+  background-color: #576a98;
 }
 .ace-nav > li.purple > a:hover,
 .ace-nav > li.purple > a:focus,
 .ace-nav > li.open.purple > a {
-  background-color: #762c59;
+  background-color: #3d6498;
 }
 .ace-nav > li.green > a {
   background-color: #2E8965;
@@ -4819,7 +4818,7 @@ body.mob-safari .sidebar.sidebar-fixed {
   background-color: transparent;
   display: inline-block;
   line-height: 20px;
-  margin: 6px 22px 0 12px;
+  margin: 6px 22px 0px 20px;
   padding: 0;
   font-size: 13px;
   color: #333;
@@ -4828,7 +4827,7 @@ body.mob-safari .sidebar.sidebar-fixed {
 .breadcrumb > li,
 .breadcrumb > li.active {
   color: #555;
-  padding: 0 3px 0 3px;
+  padding: 0 3px 0 0px;
 }
 .breadcrumb > li > a {
   display: inline-block;
@@ -4846,7 +4845,7 @@ body.mob-safari .sidebar.sidebar-fixed {
 }
 .breadcrumb .home-icon {
   font-size: 20px;
-  margin-left: 2px;
+  margin-left: 0px;
   margin-right: 2px;
   vertical-align: top;
 }
@@ -8843,11 +8842,12 @@ fieldset[disabled] .btn-white.btn-grey.active {
 }
 .form-actions {
   display: block;
-  background-color: #F5F5F5;
-  border-top: 1px solid #E5E5E5;
-  margin-bottom: 20px;
+  /*background-color: #F5F5F5;*/
+  /*border-top: 1px solid #E5E5E5;*/
   margin-top: 20px;
-  padding: 19px 20px 20px;
+}
+.offset-right{
+  margin-left: 97px;
 }
 .help-button {
   display: inline-block;
@@ -8874,7 +8874,7 @@ fieldset[disabled] .btn-white.btn-grey.active {
 }
 label {
   font-weight: normal;
-  font-size: 14px;
+  font-size: 12px;
 }
 .form-group > label[class*="col-"] {
   margin-bottom: 4px;
@@ -8905,10 +8905,10 @@ input[type="tel"],
 input[type="color"] {
   border-radius: 0 !important;
   color: #858585;
-  background-color: #FFF;
-  border: 1px solid #D5D5D5;
+  background-color: #fafafa;
+  border: 1px solid #cacaca;
   padding: 5px 4px 6px;
-  font-size: 14px;
+  font-size: 12px;
   font-family: inherit;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -8949,8 +8949,8 @@ input[type="tel"]:focus,
 input[type="color"]:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
-  color: #696969;
-  border-color: #F59942;
+  color: #fff;
+  border-color: #6e8ab8;
   background-color: #FFF;
   outline: none;
 }
@@ -8980,6 +8980,7 @@ select {
   color: #858585;
   background-color: #FFF;
   border: 1px solid #D5D5D5;
+  height: 26px;
 }
 .form-control:focus,
 select:focus {
@@ -10056,8 +10057,8 @@ input.ace + .lbl.padding-0::before {
 .form-group.has-success input,
 .form-group.has-success select,
 .form-group.has-success textarea {
-  border-color: #9cc573;
-  color: #8BAD4C;
+  border-color: #cacaca;
+  /*color: #8BAD4C;*/
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -10835,7 +10836,7 @@ td,
 }
 .table > thead > tr > th {
   border-color: #ddd;
-  font-weight: bold;
+  font-weight:normal;
 }
 .table > thead > tr > th .ace-icon:first-child {
   margin-right: 2px;
@@ -13349,27 +13350,29 @@ li.item-default {
 .profile-user-info {
   display: table;
   width: 98%;
-  width: calc(100% - 24px);
+  width: calc(100% - 50px);
   margin: 0 auto;
 }
 .profile-info-row {
   display: table-row;
 }
 .profile-info-name {
-  text-align: right;
-  padding: 6px 10px 6px 4px;
+  /*text-align: right;*/
+  padding: 6px 0px 6px 0px;
   font-weight: normal;
-  color: #667E99;
+  color: #666666;
   background-color: transparent;
-  border-top: 1px dotted #D5E4F1;
+  /*border-top: 1px dotted #D5E4F1;*/
   display: table-cell;
-  width: 110px;
+  width: 64px;
+  letter-spacing:.5px;
   vertical-align: middle;
 }
 .profile-info-value {
   display: table-cell;
   padding: 6px 4px 6px 6px;
-  border-top: 1px dotted #D5E4F1;
+  letter-spacing:.5px;
+  /*border-top: 1px dotted #D5E4F1;*/
 }
 .profile-info-value > span + span:before {
   /* for a list of values (such as location city & country) put a comma between them */

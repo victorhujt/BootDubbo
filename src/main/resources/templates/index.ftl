@@ -1,3 +1,12 @@
+<#--<#if menuListString?exists>-->
+<#--menuListString-->
+<#--</#if>-->
+
+<#--${Session.CURRENT_USER_ID}-->
+
+<#--<@shiro.hasRole name="admin">Hello admin!</@shiro.hasRole>-->
+
+<!-- #section:basics/navbar.layout -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,13 +34,13 @@
     <link rel="stylesheet" href="../../assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 
     <!--[if lte IE 9]>
-	<link rel="stylesheet" href="../../assets/css/ace-part2.css" class="ace-Main-stylesheet" />
+    <link rel="stylesheet" href="../../assets/css/ace-part2.css" class="ace-main-stylesheet" />
     <![endif]-->
     <link rel="stylesheet" href="../../assets/css/ace-skins.css" />
     <link rel="stylesheet" href="../../assets/css/ace-rtl.css" />
 
     <!--[if lte IE 9]>
-	<link rel="stylesheet" href="../../assets/css/ace-ie.css" />
+    <link rel="stylesheet" href="../../assets/css/ace-ie.css" />
     <![endif]-->
 
     <!-- ace settings handler -->
@@ -40,8 +49,8 @@
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
     <!--[if lte IE 8]>
-	<script src="../../components/html5shiv/dist/html5shiv.min.js"></script>
-	<script src="../../components/respond/dest/respond.min.js"></script>
+    <script src="../../components/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="../../components/respond/dest/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -260,10 +269,10 @@
                 <!-- #section:basics/navbar.user_menu -->
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <#--<img class="nav-user-photo" src="../../assets/avatars/user.jpg" alt="Jason's Photo" />-->
+                    <#--<img class="nav-user-photo" src="../../assets/avatars/user.jpg" alt="Jason's Photo" />-->
                         <span class="user-info">
 									<small>欢迎,</small>
-									test
+                        test
 								</span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -306,7 +315,7 @@
 <!-- /section:basics/navbar.layout -->
 <div class="main-container" id="main-container">
     <script type="text/javascript">
-        try{ace.settings.check('Main-container' , 'fixed')}catch(e){}
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
     </script>
 
     <!-- #section:basics/sidebar -->
@@ -314,68 +323,48 @@
         <script type="text/javascript">
             try{ace.settings.loadState('sidebar')}catch(e){}
         </script>
-
-		<ul class="nav nav-list">
-					<li class="">
-						<a data-url="page/index" href="#page/index">
-							<i class="menu-icon fa fa-tachometer"></i>
-							<span class="menu-text"> Dashboard </span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-list"></i>
-							<span class="menu-text"> 我的订单 </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a data-url="page/tables" href="#page/tables">
-									<i class="menu-icon fa fa-caret-right"></i>
-									我要下单
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a data-url="/ofc/orderManage" href="#/ofc/orderManage">
-									<i class="menu-icon fa fa-caret-right"></i>
-									订单管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-							
-							<li class="">
-								<a data-url="/ofc/orderScreen" href="#/ofc/orderScreen">
-									<i class="menu-icon fa fa-caret-right"></i>
-									订单查询
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-							
-							<li class="">
-								<a data-url="/ofc/orderFollow" href="#/ofc/orderFollow">
-									<i class="menu-icon fa fa-caret-right"></i>
-									订单跟踪
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-							
-						</ul>
-					</li>
+        <ul class="nav nav-list">
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text"> 订单管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a data-url="/ofc/orderPlace" href="#/ofc/orderPlace">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            我要下单
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a data-url="/ofc/orderManage" href="#/ofc/orderManage">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            订单管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a data-url="/ofc/orderScreen" href="#/ofc/orderScreen">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            订单查询
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a data-url="/ofc/orderFollow" href="#/ofc/orderFollow">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            订单跟踪
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
         </ul><!-- /.nav-list -->
-        
-		<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
             <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
         </div>
 
@@ -392,8 +381,7 @@
 
                 <ul class="breadcrumb">
                     <li>
-                        <i class="ace-icon fa fa-home home-icon"></i>
-                        <a href="#">Home</a>
+                        <a href="#">主页</a>
                     </li>
                 </ul><!-- /.breadcrumb -->
 
@@ -401,7 +389,7 @@
                 <div class="nav-search" id="nav-search">
                     <form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
                     </form>
@@ -413,13 +401,12 @@
             <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
                 <!-- #section:settings.box -->
-                <div class="ace-settings-container" id="ace-settings-container">
+                <div class="ace-settings-container" id="ace-settings-container" style="display:none">
                     <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
                         <i class="ace-icon fa fa-cog bigger-130"></i>
                     </div>
-
-                    <div class="ace-settings-box clearfix" id="ace-settings-box">
-                        <div class="pull-left width-50">
+                    <div class="ace-settings-box clearfix" id="ace-settings-box" style="display:none">
+                        <div class="pull-left width-50" style="display:none">
                             <!-- #section:settings.skins -->
                             <div class="ace-settings-item">
                                 <div class="pull-left">
@@ -432,20 +419,12 @@
                                 </div>
                                 <span>&nbsp; Choose Skin</span>
                             </div>
-
-                            <!-- /section:settings.skins -->
-
-                            <!-- #section:settings.navbar -->
                             <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-navbar" autocomplete="off" />
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-navbar" autocomplete="on" />
                                 <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
                             </div>
-
-                            <!-- /section:settings.navbar -->
-
-                            <!-- #section:settings.sidebar -->
                             <div class="ace-settings-item">
-                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar" autocomplete="off" />
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar" autocomplete="on" />
                                 <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
                             </div>
 
@@ -456,10 +435,6 @@
                                 <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-breadcrumbs" autocomplete="off" />
                                 <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
                             </div>
-
-                            <!-- /section:settings.breadcrumbs -->
-
-                            <!-- #section:settings.rtl -->
                             <div class="ace-settings-item">
                                 <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" autocomplete="off" />
                                 <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
@@ -475,8 +450,6 @@
                                     <b>.container</b>
                                 </label>
                             </div>
-
-                            <!-- /section:settings.container -->
                         </div><!-- /.pull-left -->
 
                         <div class="pull-left width-50">
@@ -507,15 +480,15 @@
                 </div><!-- /.page-content-area -->
             </div><!-- /.page-content -->
         </div>
-    </div><!-- /.Main-content -->
+    </div><!-- /.main-content -->
 
     <div class="footer">
         <div class="footer-inner">
             <!-- #section:basics/footer -->
             <div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application &copy; 2013-2014
+							<span class="blue bolder">鲜易</span>
+							鲜易供应链 &copy; 2013-2014
 						</span>
 
                 &nbsp; &nbsp;
@@ -541,7 +514,7 @@
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
         <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
     </a>
-</div><!-- /.Main-container -->
+</div><!-- /.main-container -->
 
 <!-- basic scripts -->
 
@@ -587,11 +560,13 @@
 <script src="../../plugins/layui/laypage/laypage.js"></script>
 <script src="../../js/common/common-client.js"></script>
 <script src="../../js/common/jquery.blockUI.js"></script>
+<script src="../../js/My97DatePicker/WdatePicker.js"></script>
 <script src="../../js/common/utils.js"></script>
 <script src="../../js/common/index.js"></script>
 <script type="text/javascript">
-	var sys = sys || {};
-	sys.rootPath = "${request.getContextPath()}";
-</script> 
+    var sys = sys || {};
+    sys.rootPath = "${request.getContextPath()}";
+    sys.pageNum = 2
+</script>
 </body>
 </html>
