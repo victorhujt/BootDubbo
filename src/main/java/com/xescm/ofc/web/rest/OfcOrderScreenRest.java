@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.service.OfcOrderScreenService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,9 @@ public class OfcOrderScreenRest extends BaseController {
     public String orderScreenByCondition(Model model,@PathVariable String orderScreenConditionJSON, Map<String,Object> map,@PathVariable("tag") String tag) throws IOException {
         logger.debug("==>订单中心订单查询条件 orderScreenCondition={}", orderScreenConditionJSON);
         logger.debug("==>订单中心订单查询标志位 tag={}", tag);
+        if(StringUtils.isBlank(orderScreenConditionJSON)){
+            orderScreenConditionJSON = JSONUtils.objectToJson(new OrderScreenCondition());
+        }
         OrderScreenCondition orderScreenCondition = JSONUtils.jsonToPojo(orderScreenConditionJSON, OrderScreenCondition.class);
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
         map.put("orderList", orderScreenResults);

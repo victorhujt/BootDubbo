@@ -304,7 +304,9 @@
     }
 
     function deleteOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要删除此订单?");
+
+        //xescm.common.submit("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus});
+        /*var result  = confirm("您确定要删除此订单?");
         if(result == true) {
             $.get("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
                 $("#confirmBox").modal('hide');
@@ -314,51 +316,48 @@
                     alert("删除订单失败,请联系管理员!");
                 }
             });
+        }*/
+       /* layer.confirm('您确定要删除此订单？', {
+            skin : 'layui-layer-molv',
+            icon : 3,
+            title : '确认操作'
+        }, function(){
+            alert("=====");
         }
-
+*/
+        xescm.common.submit("/ofc/orderDelete","您确定要删除此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
+            var jsonStr={};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+        });
 
     }
 
     function reviewOrder(ordercode,orderStatus) {
-
-        var result  = confirm("您确定要审核订单?");
-        if(result == true) {
-            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("审核订单失败,请联系管理员!");
-                }
-            });
-        }
+        xescm.common.submit("/ofc/orderOrNotAudit","您确定要审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function () {
+            var jsonStr={};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+        });
 
     }
     function reReviewOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要反审核此订单?");
-        if(result == true) {
-            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("反审核订单失败,请联系管理员!");
-                }
-            });
-        }
+        xescm.common.submit("/ofc/orderOrNotAudit","您确定要反审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function () {
+            var jsonStr = {};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+        });
     }
     function cancelOrder(ordercode,orderStatus) {
-
-        var result  = confirm("您确定要取消此订单?");
-        if(result == true) {
-            $.get("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("取消订单失败,请联系管理员!");
-                }
-            });
-        }
-
+        xescm.common.submit("/ofc/orderCancel","您确定要取消此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
+            var jsonStr = {};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+        });
     }
 
 </script>

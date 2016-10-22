@@ -67,8 +67,11 @@ var xescm = {
 
 			});
 		},
-		submit : function(submitUrl, param, successFunction) {
-			layer.confirm('您确认吗？', {
+		submit : function(submitUrl,message, param, successFunction) {
+			if(!message){
+				message='您确认吗?'
+			}
+			layer.confirm(message, {
 				skin : 'layui-layer-molv',
 				icon : 3,
 				title : '确认操作'
