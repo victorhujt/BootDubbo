@@ -13,6 +13,7 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,11 +49,15 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param response
      * @return
      */
-    @RequestMapping("/orderPlaceCon/tag/{ofcOrderDTO}")
-    public String orderPlace(Model model, OfcOrderDTO ofcOrderDTO, String tag, HttpServletResponse response){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTO);
+    @RequestMapping("/orderPlaceCon/{tag}/{ofcOrderDTOJson}")
+    public String orderPlace(Model model,@PathVariable String ofcOrderDTOJson,@PathVariable String tag, HttpServletResponse response){
+        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        System.out.println(ofcOrderDTO);
+        if(StringUtils.isBlank(ofcOrderDTOJson)){
+            System.out.println(ofcOrderDTOJson);
+            ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
+        }
+        OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
         if (ofcOrderDTO.getProvideTransport()==null){
             ofcOrderDTO.setProvideTransport(0);
         }
