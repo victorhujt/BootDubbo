@@ -71,7 +71,6 @@
 </head>
 
 <body class="no-skin">
-<!-- #section:basics/navbar.layout -->
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -119,7 +118,7 @@
                 联系人:<input id="consignorPerson2" name="contactName" type="text">
                 联系电话:<input id="consignorPhoneNumber2" name="phone" type="text">
                 <input id="purpose2" name="purpose" type="hidden" value="2">
-                <button type="button" class="btn btn-info" id="contactSelectFormBtn2" >筛选</button>
+                <button type="button" class="btn btn-info" id="consignorSelectFormBtn" >筛选</button>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -149,7 +148,6 @@
     </div>
     <div class="modal-footer"><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-
 <!--consigneeListDiv-->
 <div class="modal-content" id="consigneeListDiv" style="display: none;">
     <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -161,7 +159,7 @@
                 联系人:<input id="consignorPerson1" name="contactName" type="text">
                 联系电话:<input id="consignorPhoneNumber1" name="phone" type="text">
                 <input id="purpose1" name="purpose" type="hidden" value="1">
-                <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
+                <button type="button" class="btn btn-info" id="consigneeSelectFormBtn" >筛选</button>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -190,8 +188,6 @@
     </div>
     <div class="modal-footer"><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-
-
 <!--supportListDiv-->
 <div class="modal-content" id="supportListDiv" style="display: none;">
     <div class="modal-header"><span id="supportListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -233,13 +229,6 @@
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
 
-
-
-
-
-
-
-<!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
 
 
@@ -258,7 +247,7 @@
                 </div><!-- /.page-header -->
 
                 <div class="row">
-                    <form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
+                    <form id="orderPlaceConTable">
                         <div class="col-xs-12">
 
                             <div class="clearfix">
@@ -583,7 +572,8 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>
+                        <#--<button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>-->
+                        <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
 
                     </form>
                 </div>
@@ -603,12 +593,24 @@
 
 <!--[if !IE]> -->
 <script src="../../components/bootbox.js/bootbox.js"></script>
+<script src="../../js/serialize-to-json.js"></script>
+
 <!-- <![endif]-->
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
     $(function(){
+        $("#orderPlaceConTableBtn").click(function () {
+            //<form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
+            var serialize = $("#orderPlaceConTable").serialize();
+
+            alert("--2---"+DataDeal.formToJson(serialize));
+            //alert("-----"+JSON.stringify($("#orderPlaceConTable").serializeArray()));
+
+
+        });
+        
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
@@ -626,7 +628,7 @@
             },"json");
         });
 
-        $("#contactSelectFormBtn2").click(function () {
+        $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
             CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
                 data=eval(data);
@@ -647,7 +649,7 @@
             },"json");
         });
 
-        $("#contactSelectFormBtn1").click(function () {
+        $("#consigneeSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
                 data=eval(data);
                 var contactList = "";
@@ -769,8 +771,6 @@
                 $("#businessTypeDiv").show();
                 $('.storeLi').show();
                 $('.transLi').hide();
-
-
             }
             if($(this).children('option:selected').val() == '60'){
                 $('.transLi').show();

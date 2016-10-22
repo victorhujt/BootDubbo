@@ -6,12 +6,15 @@ import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.ofc.wrap.Wrapper;
+import com.xescm.ofc.wrap.WrapMapper;
+import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
@@ -41,35 +44,42 @@ public class OfcOrderManageRest extends BaseController{
      * @param
      * @return
      */
-    @RequestMapping("/orderOrNotAudit")
-    public void orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
-        logger.debug("==>订单中心订单管理订单code orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单状态code orderStatus={}", orderStatus);
+    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
         logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
+        String result = null;
         try {
-            String result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag);
-            System.out.println("============"+result);
-            response.getWriter().print(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+            result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag);
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
 
     /**
      * 订单删除
      * @param orderCode
-     * @return
+     * @return com.xescm.uam.utils.wrap.Wrapper;
      */
-    @RequestMapping("/orderDelete")
-    public void orderDelete(Model model, String orderCode,  String orderStatus,HttpServletResponse response){
-        logger.debug("==>订单中心订单管理订单code orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单状态code orderStatus={}", orderStatus);
+    @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> orderDelete(Model model, String orderCode, String orderStatus){
+        logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单删除订单状态code orderStatus={}", orderStatus);
+        String result = null;
         try {
-            String result = ofcOrderManageService.orderDelete(orderCode,orderStatus);
-            response.getWriter().print(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+            result = ofcOrderManageService.orderDelete(orderCode,orderStatus);
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单删除出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
 
     /**
@@ -77,16 +87,20 @@ public class OfcOrderManageRest extends BaseController{
      * @param orderCode
      * @return
      */
-    @RequestMapping("/orderCancel")
-    public void orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
-        logger.debug("==>订单中心订单管理订单code orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单状态code orderStatus={}", orderStatus);
+    @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
+        logger.debug("==>订单中心订单管理订单取消订单状态code orderStatus={}", orderStatus);
+        String result = null;
         try {
-            String result = ofcOrderManageService.orderCancel(orderCode,orderStatus);
-            response.getWriter().print(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+            result = ofcOrderManageService.orderCancel(orderCode,orderStatus);
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单取消出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
 
     /**
@@ -111,8 +125,9 @@ public class OfcOrderManageRest extends BaseController{
                 map.put("orderInfo", ofcOrderDTO);
                 return "order_edit";
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
         }
         return "order_manage";
     }
