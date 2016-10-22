@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
@@ -95,8 +96,8 @@ public class OfcOrderManageRest extends BaseController{
      * @param dtotag
      * @return
      */
-    @RequestMapping(value = "/getOrderDetailByCode")
-    public String getOrderDetailByCode(Model model, String orderCode, String dtotag, Map<String,Object> map){
+    @RequestMapping(value = "/getOrderDetailByCode/{orderCode}/{dtotag}")
+    public String getOrderDetailByCode(Model model, @PathVariable String orderCode, @PathVariable String dtotag, Map<String,Object> map){
         logger.debug("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
@@ -109,7 +110,7 @@ public class OfcOrderManageRest extends BaseController{
             if (ofcOrderDTO!=null){
                 map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
                 map.put("orderInfo", ofcOrderDTO);
-                return "order_edit";
+                return "/order_edit";
             }
         } catch (Exception e) {
             e.printStackTrace();
