@@ -4,6 +4,8 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscGoods;
 import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
+import com.xescm.ofc.enums.OrderConstEnum;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
@@ -11,15 +13,15 @@ import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.ofc.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import com.xescm.ofc.utils.JSONUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
@@ -52,19 +54,25 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     /**
      * 下单
-     * @param ofcOrderDTO
+     * @param ofcOrderDTOStr
      * @param response
      * @return
      */
-    @RequestMapping("/orderPlaceCon")
-    public String orderPlace(Model model, OfcOrderDTO ofcOrderDTO, String tag, HttpServletResponse response){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTO);
+    /*@RequestMapping("/orderPlaceCon/{ofcOrderDTO}/{tag}")
+    public String orderPlace(Model model, @PathVariable("ofcOrderDTO") String ofcOrderDTOStr,@PathVariable String tag, HttpServletResponse response){*/
+    /*@RequestMapping("/orderPlaceCon")
+    public String orderPlace(Model model, String ofcOrderDTOStr, String tag, HttpServletResponse response){
+        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        System.out.println(ofcOrderDTO);
-        if (ofcOrderDTO.getProvideTransport()==null){
+        if(StringUtils.isBlank(ofcOrderDTOStr)){
+            ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+        }
+        OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+
+        if (null == ofcOrderDTO.getProvideTransport()){
             ofcOrderDTO.setProvideTransport(0);
         }
-        if (ofcOrderDTO.getUrgent()==null){
+        if (null == ofcOrderDTO.getUrgent()){
             ofcOrderDTO.setUrgent(0);
         }
         try {
@@ -77,7 +85,41 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             e.printStackTrace();
             return "order_place";
         }
+    }*/
+    /*@RequestMapping("/orderPlaceCon/{ofcOrderDTO}/{tag}")
+    @ResponseBody
+    public Wrapper<?> orderPlace(Model model, @PathVariable("ofcOrderDTO") String ofcOrderDTOStr,@PathVariable String tag, HttpServletResponse response){
+*/
+    @RequestMapping("/orderPlaceCon")
+    @ResponseBody
+    public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr, String tag, HttpServletResponse response){
+        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        String resultMessage = null;
+        try {
+            if(StringUtils.isBlank(ofcOrderDTOStr)){
+                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+            }
+            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+
+            if (null == ofcOrderDTO.getProvideTransport()){
+                ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
+            }
+            if (null == ofcOrderDTO.getUrgent()){
+                ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
+            }
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
+       }catch (BusinessException ex){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+        catch (Exception ex) {
+            logger.error("订单中心下单或编辑出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
+
 
     /**
      * 货品筛选(调用客户中心API)

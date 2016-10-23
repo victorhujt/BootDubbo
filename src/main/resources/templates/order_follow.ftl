@@ -55,6 +55,7 @@
                                         </div>
                                     </div>
                                 </form>
+
                                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                     <thead>
                                     <tr role="row">
@@ -76,34 +77,34 @@
                                             -->
                                     <tr role="row" class="odd">
                                         <td>
-                                        ${(ofcOrderDTO.orderTime?string("MM-dd-yyyy"))!"null"}
+                                        ${(ofcOrderDTO.orderTime?string("MM-dd-yyyy"))!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.orderCode)!"null"}
+                                        ${(ofcOrderDTO.orderCode)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.custOrderCode)!"null"}
+                                        ${(ofcOrderDTO.custOrderCode)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.orderStatus)!"null"}
+                                        ${(ofcOrderDTO.orderStatus)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.orderType)!"null"}
+                                        ${(ofcOrderDTO.orderType)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.businessType)!"null"}
+                                        ${(ofcOrderDTO.businessType)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.notes)!"null"}
+                                        ${(ofcOrderDTO.notes)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.goodsType)!"null"}
+                                        ${(ofcOrderDTO.goodsType)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.departurePlace)!"null"}
+                                        ${(ofcOrderDTO.departurePlace)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.destination)!"null"}
+                                        ${(ofcOrderDTO.destination)!" "}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -128,35 +129,38 @@
                                             -->
                                     <tr role="row" class="odd">
                                         <td>
-                                        ${(ofcOrderDTO.quantity)!"null"}
+                                        ${(ofcOrderDTO.quantity)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.weight)!"null"}
+                                        ${(ofcOrderDTO.weight)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.cubage)!"null"}
+                                        ${(ofcOrderDTO.cubage)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.transRequire)!"null"}
+                                        ${(ofcOrderDTO.transRequire)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.transCode)!"null"}
+                                        ${(ofcOrderDTO.transCode)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.plateNumber)!"null"}
+                                        ${(ofcOrderDTO.plateNumber)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.driverName)!"null"}
+                                        ${(ofcOrderDTO.driverName)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.contactNumber)!"null"}
+                                        ${(ofcOrderDTO.contactNumber)!" "}
                                         </td>
                                         <td>
-                                        ${(ofcOrderDTO.odestination)!"null"}
+                                        ${(ofcOrderDTO.odestination)!" "}
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
+
+
+
                                 <hr />
                                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                     <thead>

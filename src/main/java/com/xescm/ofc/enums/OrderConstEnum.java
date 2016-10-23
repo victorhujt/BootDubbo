@@ -25,6 +25,15 @@ public final class OrderConstEnum {
     public static final String HASBEENCOMPLETED="40";       //已完成
     public static final String HASBEENCANCELED="50";       //已取消
 
+    public static final Integer WAREHOUSEORDERPROVIDETRANS=1;       //仓储订单提供运输
+    public static final Integer WAREHOUSEORDERNOTPROVIDETRANS=0;       //仓储订单不提供运输
+
+    public static final Integer DISTRIBUTIONORDERURGENT=1;       //运输订单加急
+    public static final Integer DISTRIBUTIONORDERNOTURGENT=0;       //运输订单不加急
+
+    public static final Integer ORDERWASABOLISHED=1;       //订单作废
+    public static final Integer ORDERWASNOTABOLISHED=0;       //订单未作废
+
     public OrderConstEnum() {
     }
 }

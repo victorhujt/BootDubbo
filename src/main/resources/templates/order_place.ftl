@@ -250,28 +250,22 @@
                     <form id="orderPlaceConTable">
                         <div class="col-xs-12">
 
-                            <div class="clearfix">
-
-                            </div>
                             <div class="table-header">
                                 基本信息
                             </div>
 
-                            <!-- div.table-responsive -->
-
-                            <!-- div.dataTables_borderWrap -->
-                            <div>
                                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                    <form action="" method="post" id="">
-                                        <input type="hidden" name="tag" value="place">
+
+                                    <form action="" method="post" id="dynamic-table_wrapper_orderFundamentalForm">
                                         <div class="row">
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
-                                                    &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+
+                                                    &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTime" name="orderTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
 
-                                                    客户订单编号:<input name="custOrderCode" type="text">
+                                                    客户订单编号:<input id="custOrderCode" name="custOrderCode" type="text">
 
                                                     &nbsp;&nbsp;&nbsp;
                                                     订单类型:
@@ -281,7 +275,7 @@
                                                     </select>
                                                     <span id="businessTypeDiv" style="display: none">
                                                     业务类型:
-                                                    <select id="" name="businessType">
+                                                    <select id="businessType" name="businessType">
                                                         <option value="610">销售出库</option>
                                                         <option value="611">调拨出库</option>
                                                         <option value="612">报损出库</option>
@@ -296,10 +290,11 @@
 
                                                     <span id="provideTransportDiv" style="display: none">
                                                         是否需要运输
-                                                        <input  id="provideTransport" type="checkbox" name = "provideTransport" onclick="this.value=this.checked?1:0"/>
+                                                        <input  id="provideTransport" type="checkbox" name = ""/>
+                                                        <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
                                                     </span>
                                                     店铺:
-                                                    <select id="" name="storeCode">
+                                                    <select id="storeCode" name="storeCode">
                                                         <option value="线下销售">线下销售</option>
                                                         <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
                                                         <option value="众品京东旗舰店">众品京东旗舰店</option>
@@ -307,6 +302,7 @@
 
 
                                                 </label>
+
                                             </div>
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
@@ -314,8 +310,6 @@
                                                     &nbsp;&nbsp;&nbsp;备注:<input  name="notes"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                 </label>
                                             </div>
-
-                                            <br/>
 
                                         </div>
                                     </form>
@@ -422,30 +416,31 @@
                                                     <div class="page-header">
                                                         <h4>运输基本信息</h4>
                                                     </div>
-
+                                                    <form action="" method="post" id="orderDistributionForm">
                                                     <div class="row">
 
                                                         <div id="dynamic-table_filter" class="dataTables_length">
                                                             <label>
                                                                 &nbsp;&nbsp;&nbsp;
 
-                                                                数量:<input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                数量:<input id="quantity" name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
 
-                                                                重量:<input name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                体积:<input name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
-                                                                合计标准箱:<input name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                                重量:<input id="weight" name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                体积:<input id="cubage" name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
+                                                                合计标准箱:<input id="totalStandardBox" name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
 
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 出发地:
-                                                                <input name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                <input id="departurePlace" name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                 目的地:
-                                                                <input name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                <input id="destination" name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                 取货时间:
-                                                                <input name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                <input id="pickupTime" name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 期望送达时间:
-                                                                <input name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input type="checkbox" name="urgent" value="0" onclick="this.value=this.checked?1:0"/>
+                                                                <input id="expectedArrivedTime" name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                是否加急:<input id="urgent" type="checkbox" name=""  />
+                                                                <input id="urgentHel" type="hidden" name="urgent"  value="0" />
 
                                                             </label>
                                                         </div>
@@ -459,12 +454,14 @@
                                                         <br/>
 
                                                     </div>
+                                                    </form>
 
                                                     <div class="page-header">
                                                         <h4>发货方信息</h4>
                                                     </div>
                                                     <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
                                                     <div class="">
+                                                        <input id="consignorCode" name="consignorCode"  type="hidden"/>
                                                         名称:
                                                         <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
@@ -492,6 +489,7 @@
                                                     </div>
                                                     <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
                                                     <div class="">
+                                                        <input id="consigneeCode" name="consigneeCode"  type="hidden"/>
                                                         名称:
                                                         <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
@@ -518,30 +516,33 @@
                                                     <div class="page-header">
                                                         <h4>仓配基本信息</h4>
                                                     </div>
+                                                    <form action="" method="post" id="orderWarehouseForm">
                                                     <div class="row">
                                                         <div id="dynamic-table_filter" class="dataTables_length">
                                                             <label>
                                                                 &nbsp;&nbsp;&nbsp;
-                                                                仓库名称:<select id="" name="wareHouseName">
+                                                                仓库名称:<select id="warehouseName" name="warehouseName">
                                                                 <option value="">----</option>
                                                                 <option value="仓库1">仓库1</option>
                                                                 <option value="仓库2">仓库2</option>
                                                             </select>
-                                                                入库预计到达时间:<input name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                车牌号:<input name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                司机姓名:<input name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                                入库预计到达时间:<input id="arriveTime" name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                车牌号:<input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                司机姓名:<input id="driverName" name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 联系电话:
-                                                                <input name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                <input id="contactNumber" name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                             </label>
                                                         </div>
                                                         <br/>
                                                     </div>
+                                                        </form>
                                                     <div class="page-header">
                                                         <h4>供应商信息</h4>
                                                     </div>
                                                     <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div class="">
+                                                        <input name="supportCode" id="supportCode" type="hidden"/>
                                                         名称:
                                                         <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
@@ -569,7 +570,6 @@
                                         <!-- /section:elements.tab.option -->
                                     </div>
                                 </div>
-                            </div>
                         </div>
 
                         <#--<button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>-->
@@ -596,21 +596,100 @@
 <script src="../../js/serialize-to-json.js"></script>
 
 <!-- <![endif]-->
+<script type="text/javascript">
+    var scripts = [ null, "", null ]
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
+        $(document).ready(main);
+    });
 
+    function main(){
+        $("#provideTransport").change(function () {
+            if($(this).prop("checked")){
+                $("#provideTransportHel").val("1");
+            } else {
+                $("#provideTransportHel").val("0");
+            }
+        });
+        $("#urgent").change(function(){
+            if($(this).prop("checked")){
+                $("#urgentHel").val("1");
+            }else{
+                $("#urgentHel").val("0");
+            }
+        });
+
+
+
+        $("#orderPlaceConTableBtn").click(function () {
+          /*  //<form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
+            var serialize = $("#orderPlaceConTable").serialize();
+            var ofcOrderDTO = DataDeal.formToJson(serialize);
+            var tag = "place";
+            ///orderPlaceCon/{ofcOrderDTO}/{tag}
+            var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
+            xescm.common.loadPage(url);*/
+
+          //debugger;
+
+            //alert("bbbb" + $("#dynamic-table_wrapper_orderFundamentalForm").serialize());
+            //orderFundamentalForm
+            //orderDistributionForm
+            //orderWarehouseForm
+           // var serialize = "";
+            //serialize = serialize
+            //+ $("#orderFundamentalForm").serialize() + "&";
+            /*+ $("#orderDistributionForm").serialize() + "&"
+            + $("#orderWarehouseForm").serialize();*/
+            //alert(serialize);
+            var jsonStr = {};
+            //订单基本信息
+            jsonStr.orderTime = $("#orderTime").val();
+            jsonStr.custOrderCode = $("#custOrderCode").val();
+            jsonStr.orderType = $("#orderTypeSel").val();
+            jsonStr.businessType = $("businessType").val();
+            jsonStr.provideTransport = $("#provideTransportHel").val();
+            jsonStr.storeCode = $("#storeCode").val();
+            jsonStr.notes = $("#notes").val();
+            //运输基本信息
+            jsonStr.quantity = $("#quantity").val();
+            jsonStr.weight = $("#weight").val();
+            jsonStr.cubage = $("#cubage").val();
+            jsonStr.totalStandardBox = $("#totalStandardBox").val();
+            jsonStr.departurePlace = $("#departurePlace").val();
+            jsonStr.destination = $("#destination").val();
+            jsonStr.pickupTime = $("#pickupTime").val();
+            jsonStr.expectedArrivedTime = $("#expectedArrivedTime").val();
+            jsonStr.urgent = $("#urgentHel").val();
+            jsonStr.consignorCode = $("#consignorCode").val();
+            jsonStr.consignorName = $("#consignorName").val();
+            jsonStr.consigneeCode = $("#consigneeCode").val();
+            jsonStr.consigneeName = $("#consigneeName").val();
+            //仓配基本信息
+            jsonStr.warehouseName = $("#warehouseName").val();
+            jsonStr.arriveTime = $("#arriveTime").val();
+            jsonStr.plateNumber = $("#plateNumber").val();
+            jsonStr.driverName = $("#driverName").val();
+            jsonStr.contactNumber = $("#contactNumber").val();
+            jsonStr.supportCode = $("#supportCode").val();
+            jsonStr.supportName = $("#supportName").val();
+
+            var tag = "place";
+            var ofcOrderDTO = JSON.stringify(jsonStr);
+            //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
+
+            //alert(url);
+           // xescm.common.loadPage(url);
+            xescm.common.submit("/ofc/orderPlaceCon","您即将提交订单,请再次确认!",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+                //xescm.common.goBack("/ofc/orderPlace");
+            })
+        });
+    }
+</script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
     $(function(){
-        $("#orderPlaceConTableBtn").click(function () {
-            //<form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
-            var serialize = $("#orderPlaceConTable").serialize();
 
-            alert("--2---"+DataDeal.formToJson(serialize));
-            //alert("-----"+JSON.stringify($("#orderPlaceConTable").serializeArray()));
-
-
-        });
-        
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
