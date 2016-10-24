@@ -426,7 +426,7 @@
 
                                                         <div id="dynamic-table_filter" class="dataTables_length">
                                                             <label>
-                                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                             </label>
                                                         </div>
 
@@ -603,10 +603,11 @@
 
             var jsonStr = {};
             //订单基本信息
-            jsonStr.orderTime = $("#orderTime").val();
+            //$dp.$('orderTimePre').value;
+            jsonStr.orderTime = $dp.$('orderTime').value;
             jsonStr.custOrderCode = $("#custOrderCode").val();
             jsonStr.orderType = $("#orderTypeSel").val();
-            jsonStr.businessType = $("businessType").val();
+            jsonStr.businessType = $("#businessType").val();
             jsonStr.provideTransport = $("#provideTransportHel").val();
             jsonStr.storeCode = $("#storeCode").val();
             jsonStr.notes = $("#notes").val();
@@ -617,8 +618,8 @@
             jsonStr.totalStandardBox = $("#totalStandardBox").val();
             jsonStr.departurePlace = $("#departurePlace").val();
             jsonStr.destination = $("#destination").val();
-            jsonStr.pickupTime = $("#pickupTime").val();
-            jsonStr.expectedArrivedTime = $("#expectedArrivedTime").val();
+            jsonStr.pickupTime = $dp.$('pickupTime').value;
+            jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
             jsonStr.urgent = $("#urgentHel").val();
             jsonStr.consignorCode = $("#consignorCode").val();
             jsonStr.consignorName = $("#consignorName").val();
@@ -626,7 +627,7 @@
             jsonStr.consigneeName = $("#consigneeName").val();
             //仓配基本信息
             jsonStr.warehouseName = $("#warehouseName").val();
-            jsonStr.arriveTime = $("#arriveTime").val();
+            jsonStr.arriveTime = $dp.$('arriveTime').value;
             jsonStr.plateNumber = $("#plateNumber").val();
             jsonStr.driverName = $("#driverName").val();
             jsonStr.contactNumber = $("#contactNumber").val();

@@ -251,8 +251,10 @@
         // 查询
         $("#screenOrderFormBtn").click(function () {
             var jsonStr={};
-            jsonStr.orderTimePre=$("#orderTimePre").val();
-            jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+            var orderTimePre = $dp.$('orderTimePre');
+            jsonStr.orderTimePre=orderTimePre;
+            var orderTimeSuf = $dp.$('orderTimeSuf');
+            jsonStr.orderTimeSuf=orderTimeSuf;
             jsonStr.orderCode=$("#orderCode").val();
             jsonStr.custOrderCode=$("#custOrderCode").val();
             jsonStr.orderStatus=$("#orderStatus").val();
@@ -268,7 +270,7 @@
 
         $('#pageLimit').bootstrapPaginator({
             currentPage: ${currPage!"1"},//当前页码
-            totalPages: ${totalPage!"2"}, //总页数
+            totalPages: ${totalPage!"1"}, //总页数
             size:"normal",
             bootstrapMajorVersion: 3,
             alignment:"right",
@@ -293,14 +295,16 @@
                     $('#staffListTable').html("<\@\p\a\g\e\r\.\g\r\e\e\t  staffList='"+msg+"'/>">;
                 });*/
                 var jsonStr={};
-                jsonStr.orderTimePre=$("#orderTimePre").val();
-                jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+                var orderTimePre = $dp.$('orderTimePre').value;
+                jsonStr.orderTimePre=orderTimePre;
+                var orderTimeSuf = $dp.$('orderTimeSuf').value;
+                jsonStr.orderTimeSuf=orderTimeSuf;
                 jsonStr.orderCode=$("#orderCode").val();
                 jsonStr.custOrderCode=$("#custOrderCode").val();
                 jsonStr.orderStatus=$("#orderStatus").val();
                 jsonStr.orderType=$("#orderType").val();
                 jsonStr.businessType=$("#businessType").val();
-                var tag = "manage";
+                var tag = "screen";
                 var orderScreenConditionJSON = JSON.stringify(jsonStr);
                 var currPage = page;
                 var pageNum = "10";
@@ -348,7 +352,7 @@
         xescm.common.submit("/ofc/orderDelete","您确定要删除此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
             var jsonStr={};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "manage";
+            var tag = "screen";
             var currPage = "1";
             var pageSize = "10"
             xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
@@ -364,7 +368,7 @@
         xescm.common.submit("/ofc/orderOrNotAudit","您确定要审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function () {
             var jsonStr={};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "manage";
+            var tag = "screen";
             var currPage = "1";
             var pageSize = "10"
             xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
@@ -375,7 +379,7 @@
         xescm.common.submit("/ofc/orderOrNotAudit","您确定要反审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function () {
             var jsonStr = {};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "manage";
+            var tag = "screen";
             var currPage = "1";
             var pageSize = "10"
             xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
@@ -385,7 +389,7 @@
         xescm.common.submit("/ofc/orderCancel","您确定要取消此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
             var jsonStr = {};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "manage";
+            var tag = "screen";
             var currPage = "1";
             var pageSize = "10"
             xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);

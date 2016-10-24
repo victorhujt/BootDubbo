@@ -456,7 +456,7 @@
 
                                                         <div id="dynamic-table_filter" class="dataTables_length">
                                                             <label>
-                                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" <#if orderInfo.transRequire?? >value="${orderInfo.transRequire}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker()">
+                                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" <#if orderInfo.transRequire?? >value="${orderInfo.transRequire}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                             </label>
                                                         </div>
 
@@ -469,7 +469,7 @@
                                                     </div>
                                                     <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div id="consignorin" class="">
-                                                        <input id="consignorCode" name="consignorCode" type="hidden">
+                                                        <input id="consignorCode" name="consignorCode" <#if orderInfo.consignorCode?? >value="${orderInfo.consignorCode}"</#if> type="hidden">
                                                         名称:
                                                         <input id="consignorName"  name="consignorName" <#if orderInfo.consignorName?? >value="${orderInfo.consignorName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
@@ -497,7 +497,7 @@
                                                     </div>
                                                     <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div id="consignorout" class="">
-                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden">
+                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if orderInfo.consigneeCode?? >value="${orderInfo.consigneeCode}"</#if> >
                                                         名称:
                                                         <input id="consigneeName" name="consigneeName" <#if orderInfo.consigneeName?? >value="${orderInfo.consigneeName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
@@ -551,7 +551,7 @@
                                                     </div>
                                                     <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                     <div id="support" class="">
-                                                        <input id="supportCode" name="supportCode">
+                                                        <input id="supportCode" name="supportCode" <#if orderInfo.supportName?? >value="${orderInfo.supportCode}"</#if>>
                                                         名称:
                                                         <input id="supportName" name="supportName" <#if orderInfo.supportName?? >value="${orderInfo.supportName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
@@ -966,10 +966,10 @@
         var jsonStr = {};
         //订单基本信息
         jsonStr.orderCode = $("#orderCode").val();
-        jsonStr.orderTime = $("#orderTime").val();
+        jsonStr.orderTime = $dp.$('orderTime').value;
         jsonStr.custOrderCode = $("#custOrderCode").val();
         jsonStr.orderType = $("#orderType").val();
-        jsonStr.businessType = $("businessType").val();
+        jsonStr.businessType = $("#businessType").val();
         jsonStr.provideTransport = $("#provideTransport1").val();
         jsonStr.storeCode = $("#storeCode").val();
         jsonStr.notes = $("#notes").val();
@@ -980,8 +980,8 @@
         jsonStr.totalStandardBox = $("#totalStandardBox").val();
         jsonStr.departurePlace = $("#departurePlace").val();
         jsonStr.destination = $("#destination").val();
-        jsonStr.pickupTime = $("#pickupTime").val();
-        jsonStr.expectedArrivedTime = $("#expectedArrivedTime").val();
+        jsonStr.pickupTime = $dp.$('pickupTime').value;
+        jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgent1").val();
         jsonStr.consignorCode = $("#consignorCode").val();
         jsonStr.consignorName = $("#consignorName").val();
@@ -989,7 +989,7 @@
         jsonStr.consigneeName = $("#consigneeName").val();
         //仓配基本信息
         jsonStr.warehouseName = $("#warehouseName").val();
-        jsonStr.arriveTime = $("#arriveTime").val();
+        jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();
         jsonStr.contactNumber = $("#contactNumber").val();

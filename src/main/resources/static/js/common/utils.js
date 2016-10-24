@@ -597,5 +597,12 @@ function disposeNumber(value,num){
 	var returnValue = (value != null && typeof (value) == "number") ? parseFloat(value).toFixed(num) : "";
 	return returnValue;
 }
-
-
+/**
+ * 替换RestFul中特殊字符为浏览器可识别的字符
+ * 解决URL参数中有+, 空格, =, %, &, #等特殊符号问题的解决
+ */
+function replaceSpecialChar(param) {
+	var replace = param.replace("%","%25").replace("+","%2B").replace(" ","%20")
+		.replace("&","%3D");
+	return replace;
+}

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -31,7 +32,7 @@ public class OfcOrderFollowRest extends BaseController{
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
-    @RequestMapping("/orderFollowCon/{code}/{followTag}")
+    @RequestMapping(value = "/orderFollowCon/{code}/{followTag}",method = RequestMethod.GET)
     public String orderFollowCon(Model model, @PathVariable String code, @PathVariable String followTag, Map<String,Object> map) throws InvocationTargetException {
         logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
         logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
@@ -43,7 +44,7 @@ public class OfcOrderFollowRest extends BaseController{
     }
 
 
-    @RequestMapping("/orderDetails/{orderCode}/{followTag}")
+    @RequestMapping(value = "/orderDetails/{orderCode}/{followTag}", method = RequestMethod.GET)
     public String orderDetails(Model model,@PathVariable("orderCode") String code,@PathVariable String followTag, Map<String,Object> map) throws InvocationTargetException{
         logger.debug("==>订单中心订单详情code code={}", code);
         logger.debug("==>订单中心订单详情标志位 followTag={}", followTag);

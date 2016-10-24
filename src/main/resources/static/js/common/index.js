@@ -6,6 +6,7 @@ var xescm = {
          */
         loadPage : function(nav) {
             //加载页面
+			nav = replaceSpecialChar(nav);
             $(".page-content-area").load(sys.rootPath + nav);
         },
         /**

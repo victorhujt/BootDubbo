@@ -6,6 +6,7 @@
     <meta name="description" content="Static &amp; Dynamic Tables">
 
     <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
+    <#--<script language="javascript" type="text/javascript" src="../js/dateutil.js"></script>-->
 
 </head>
 
@@ -46,7 +47,7 @@
 
                                         <div id="dynamic-table_filter" class="dataTables_length">
                                             <label>
-                                                &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="datetime" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 至<input id="orderTimeSuf" name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 订单编号:<input id="orderCode" name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 客户订单编号:<input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -272,8 +273,12 @@
         // 查询
         $("#screenOrderFormBtn").click(function () {
             var jsonStr={};
-            jsonStr.orderTimePre=$("#orderTimePre").val();
-            jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+            var orderTimePre = $dp.$('orderTimePre').value;
+//            var orderTimePre = $dp.$('orderTimePre').value;
+            jsonStr.orderTimePre=orderTimePre;
+            var orderTimeSuf = $dp.$('orderTimeSuf').value;
+//            var orderTimeSuf = $dp.$('orderTimeSuf').value;
+            jsonStr.orderTimeSuf=orderTimeSuf;
             jsonStr.orderCode=$("#orderCode").val();
             jsonStr.custOrderCode=$("#custOrderCode").val();
             jsonStr.orderStatus=$("#orderStatus").val();
@@ -289,7 +294,7 @@
 
         $('#pageLimit').bootstrapPaginator({
             currentPage: ${currPage!"1"},//当前页码
-            totalPages: ${totalPage!"2"}, //总页数
+            totalPages: ${totalPage!"1"}, //总页数
             size:"normal",
             bootstrapMajorVersion: 3,
             alignment:"right",
@@ -308,14 +313,11 @@
                         return page;
                 }
             },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
-                ///orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageNum}
-                /*$.post("/getAllStaffByPage",{"page":page},function (msg) {
-                    alert(msg);//拿到的数据是没问题的!
-                    $('#staffListTable').html("<\@\p\a\g\e\r\.\g\r\e\e\t  staffList='"+msg+"'/>">;
-                });*/
                 var jsonStr={};
-                jsonStr.orderTimePre=$("#orderTimePre").val();
-                jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+                var orderTimePre = $dp.$('orderTimePre').value;
+                jsonStr.orderTimePre=orderTimePre;
+                var orderTimeSuf = $dp.$('orderTimeSuf').value;
+                jsonStr.orderTimeSuf=orderTimeSuf;
                 jsonStr.orderCode=$("#orderCode").val();
                 jsonStr.custOrderCode=$("#custOrderCode").val();
                 jsonStr.orderStatus=$("#orderStatus").val();
@@ -330,6 +332,7 @@
 
             }
         });
+
 
 
     }
@@ -412,6 +415,7 @@
             xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
         });
     }
+
 
 </script>
 

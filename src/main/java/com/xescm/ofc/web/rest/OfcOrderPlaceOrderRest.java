@@ -52,7 +52,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Autowired
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     /**
-     * 下单
+     * 编辑
      * @param
      * @param response
      * @return
