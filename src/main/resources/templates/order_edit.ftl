@@ -3,7 +3,7 @@
     <style type="text/css">
         #goodsListDiv {
 
-            position:fixed;
+            position:absolute;
 
             left:138px;
 
@@ -14,13 +14,15 @@
             height:auto;
 
             z-index:3;
+
+            overflow: auto;
 
             border:solid #7A7A7A 4px;
 
         }
 
         #consignorListDiv {
-            position:fixed;
+            position:absolute;
 
             left:138px;
 
@@ -31,12 +33,14 @@
             height:auto;
 
             z-index:3;
+
+            overflow: auto;
 
             border:solid #7A7A7A 4px;
         }
 
         #consigneeListDiv {
-            position:fixed;
+            position:absolute;
 
             left:138px;
 
@@ -47,13 +51,15 @@
             height:auto;
 
             z-index:3;
+
+            overflow: auto;
 
             border:solid #7A7A7A 4px;
         }
 
 
         #supportListDiv {
-            position:fixed;
+            position:absolute;
 
             left:138px;
 
@@ -61,9 +67,11 @@
 
             width:946px;
 
-            height:auto;
+            height:500px;
 
             z-index:3;
+
+            overflow: auto;
 
             border:solid #7A7A7A 4px;
         }
@@ -675,6 +683,44 @@
             },"json");
         });
 
+        $("#contactoutEnter").click(function () {
+            var consignorout = "";
+            $("#contactSelectListTbody1").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var consignorName = tdArr.eq(2).text();//名称
+                    var contacts = tdArr.eq(3).text();//联系人
+                    var contactsNumber = tdArr.eq(4).text();//    联系电话
+                    var fax = tdArr.eq(5).text();//    传真
+                    var email = tdArr.eq(6).text();//    email
+                    var code = tdArr.eq(7).text();//    邮编
+                    var address = tdArr.eq(8).text();//    地址
+                    consignorout =consignorout + "名称: ";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorout =consignorout + "联系人: ";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorout =consignorout + "联系电话: ";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorout =consignorout + "传真: ";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorout =consignorout + "Email: ";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorout =consignorout + "<br/>邮编: ";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorout =consignorout + "地址: ";
+                    consignorout =consignorout + "<select><option value=''>--省--</option></select> ";
+                    consignorout =consignorout + "<select><option value=''>--市--</option></select> ";
+                    consignorout =consignorout + "<select><option value=''>--区/县--</option></select> ";
+                    consignorout =consignorout + "<select><option value=''>--乡镇/街道--</option></select> ";
+                    consignorout =consignorout + "<input name='' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
+                    $("#consignorout").html(consignorout);
+                }
+            });
+            if(consignorout==""){
+                alert("请至少选择一行");
+            }
+        });
+
         $("#goodsEnter").click(function () {
             var goodsInfoListDiv = "";
             $("#goodsSelectListTbody").find("tr").each(function(index){
@@ -698,10 +744,10 @@
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
-                if(goodsInfoListDiv==""){
-                    alert("请至少选择一行");
-                }
             });
+            if(goodsInfoListDiv==""){
+                alert("请至少选择一行");
+            }
         });
 
         $("#contactinEnter").click(function () {
@@ -717,68 +763,30 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    consignorin =consignorin + "名称:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "联系人:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "联系电话:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "传真:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "Email:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "邮编:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "地址:";
-                    consignorin =consignorin + "<select><option value=''>--省--</option></select>";
-                    consignorin =consignorin + "<select><option value=''>--市--</option></select>";
-                    consignorin =consignorin + "<select><option value=''>--区/县--</option></select>";
-                    consignorin =consignorin + "<select><option value=''>--乡镇/街道--</option></select>";
+                    consignorin =consignorin + "名称: ";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorin =consignorin + "联系人: ";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorin =consignorin + "联系电话: ";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorin =consignorin + "传真: ";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorin =consignorin + "Email: ";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorin =consignorin + "<br/>邮编: ";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    consignorin =consignorin + "地址: ";
+                    consignorin =consignorin + "<select><option value=''>--省--</option></select> ";
+                    consignorin =consignorin + "<select><option value=''>--市--</option></select> ";
+                    consignorin =consignorin + "<select><option value=''>--区/县--</option></select> ";
+                    consignorin =consignorin + "<select><option value=''>--乡镇/街道--</option></select> ";
                     consignorin =consignorin + "<input name='' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
                     $("#consignorin").html(consignorin);
                 }
-                if(consignorin==""){
-                    alert("请至少选择一行");
-                }
             });
-        });
-
-        $("#contactoutEnter").click(function () {
-            var consignorout = "";
-            $("#contactSelectListTbody1").find("tr").each(function(index){
-                var tdArr = $(this).children();
-                if(tdArr.eq(0).find("input").prop("checked")){
-                    var consignorName = tdArr.eq(2).text();//名称
-                    var contacts = tdArr.eq(3).text();//联系人
-                    var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var fax = tdArr.eq(5).text();//    传真
-                    var email = tdArr.eq(6).text();//    email
-                    var code = tdArr.eq(7).text();//    邮编
-                    var address = tdArr.eq(8).text();//    地址
-                    consignorout =consignorout + "名称:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "联系人:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "联系电话:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "传真:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "Email:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "邮编:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "地址:";
-                    consignorout =consignorout + "<select><option value=''>--省--</option></select>";
-                    consignorout =consignorout + "<select><option value=''>--市--</option></select>";
-                    consignorout =consignorout + "<select><option value=''>--区/县--</option></select>";
-                    consignorout =consignorout + "<select><option value=''>--乡镇/街道--</option></select>";
-                    consignorout =consignorout + "<input name='' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                    $("#consignorout").html(consignorout);
-                }
-                if(consignorout==""){
-                    alert("请至少选择一行");
-                }
-            });
+            if(consignorin==""){
+                alert("请至少选择一行");
+            }
         });
 
         $("#supplierEnter").click(function () {
@@ -793,30 +801,30 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    support =support + "名称:";
-                    support =support + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "联系人:";
-                    support =support + "<input name='consignorName' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "联系电话:";
-                    support =support + "<input name='consignorName' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "传真:";
-                    support =support + "<input name='consignorName' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "Email:";
-                    support =support + "<input name='consignorName' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "邮编:";
-                    support =support + "<input name='consignorName' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "地址:";
-                    support =support + "<select><option value=''>--省--</option></select>";
-                    support =support + "<select><option value=''>--市--</option></select>";
-                    support =support + "<select><option value=''>--区/县--</option></select>";
-                    support =support + "<select><option value=''>--乡镇/街道--</option></select>";
+                    support =support + "名称: ";
+                    support =support + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    support =support + "联系人: ";
+                    support =support + "<input name='consignorName' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    support =support + "联系电话: ";
+                    support =support + "<input name='consignorName' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    support =support + "传真: ";
+                    support =support + "<input name='consignorName' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    support =support + "Email: ";
+                    support =support + "<input name='consignorName' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    support =support + "<br/>邮编: ";
+                    support =support + "<input name='consignorName' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' > ";
+                    support =support + "地址: ";
+                    support =support + "<select><option value=''>--省--</option></select> ";
+                    support =support + "<select><option value=''>--市--</option></select> ";
+                    support =support + "<select><option value=''>--区/县--</option></select> ";
+                    support =support + "<select><option value=''>--乡镇/街道--</option></select> ";
                     support =support + "<input name='' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
                     $("#support").html(support);
                 }
-                if(support==""){
-                    alert("请至少选择一行");
-                }
             });
+            if(support==""){
+                alert("请至少选择一行");
+            }
         });
 
         $("#goodsListDivBlock").click(function(){
