@@ -1,6 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscSupplierAPI;
 import com.xescm.ofc.feign.api.FeignCscWarehouseAPI;
@@ -39,12 +40,12 @@ public class FeignCscWarehouseAPIClient {
         Wrapper<?> cscWarehouseByCustomerId = getApi().getCscWarehouseByCustomerId(customerId);
         return cscWarehouseByCustomerId;
     }
-    public Wrapper<?> getRmcWarehouseByid(@Param("id") String id){
+    public Wrapper<OfcWarehouseInformation> getRmcWarehouseByid(@Param("id") String id){
         logger.debug("==>通过客户编码取仓库 id={}", id);
         if(null == id){
             throw new BusinessException("参数为空");
         }
-        Wrapper<?> rmcWarehouseByid = getApi().getRmcWarehouseByid(id);
+        Wrapper<OfcWarehouseInformation> rmcWarehouseByid = getApi().getRmcWarehouseByid(id);
         return rmcWarehouseByid;
     }
 }

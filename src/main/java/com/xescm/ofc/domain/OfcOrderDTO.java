@@ -89,6 +89,12 @@ public class OfcOrderDTO {
     private String consigneeName;
     private String carrierCode;
     private String carrierName;
+
+    private String consignorContactCode;
+    private String consignorContactName;
+    private String consigneeContactCode;
+    private String consigneeContactName;
+
 //    private String orderCode;
 //    private Date creationTime;
 //    private String creator;
@@ -110,6 +116,8 @@ public class OfcOrderDTO {
     private String plateNumber;
     private String driverName;
     private String contactNumber;
+    private String supportContactCode;
+    private String supportContactName;
 //    private String orderCode;
 //    private Date creationTime;
 //    private String creator;
@@ -131,6 +139,8 @@ public class OfcOrderDTO {
 //    private String creator;
 //    private String operator;
 //    private Date operTime;
+
+
     public String getWarehouseCode() {
         return warehouseCode;
     }
@@ -635,5 +645,51 @@ public class OfcOrderDTO {
         this.countFlag = countFlag;
     }
 
+    public String getConsignorContactCode() {
+        return consignorContactCode;
+    }
 
+    public void setConsignorContactCode(String consignorContactCode) {
+        this.consignorContactCode = consignorContactCode;
+    }
+
+    public String getConsignorContactName() {
+        return consignorContactName;
+    }
+
+    public void setConsignorContactName(String consignorContactName) {
+        this.consignorContactName = consignorContactName;
+    }
+
+    public String getConsigneeContactCode() {
+        return consigneeContactCode;
+    }
+
+    public void setConsigneeContactCode(String consigneeContactCode) {
+        this.consigneeContactCode = consigneeContactCode;
+    }
+
+    public String getConsigneeContactName() {
+        return consigneeContactName;
+    }
+
+    public void setConsigneeContactName(String consigneeContactName) {
+        this.consigneeContactName = consigneeContactName;
+    }
+
+    public String getSupportContactCode() {
+        return supportContactCode;
+    }
+
+    public void setSupportContactCode(String supportContactCode) {
+        this.supportContactCode = supportContactCode;
+    }
+
+    public String getSupportContactName() {
+        return supportContactName;
+    }
+
+    public void setSupportContactName(String supportContactName) {
+        this.supportContactName = supportContactName;
+    }
 }

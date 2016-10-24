@@ -1,5 +1,6 @@
 package com.xescm.ofc.feign.api;
 
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Param;
 import feign.RequestLine;
@@ -12,5 +13,5 @@ public interface FeignCscWarehouseAPI {
     Wrapper<?> getCscWarehouseByCustomerId(@Param("customerId") String customerId);
     
     @RequestLine("GET /api/rmc/RmcWarehouseRest/getRmcWarehouseByid/{id}")
-    public Wrapper<?> getRmcWarehouseByid(@Param("id") String id);
+    public Wrapper<OfcWarehouseInformation> getRmcWarehouseByid(@Param("id") String id);
 }
