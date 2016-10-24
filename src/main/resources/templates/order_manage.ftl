@@ -299,8 +299,8 @@
 
     function editOrder(orderCode) {
         /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        $("#screenOrderForm").attr("action","/ofc/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
-        $("#screenOrderForm").submit();
+        var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
+        xescm.common.loadPage(url);
     }
 
     function deleteOrder(ordercode,orderStatus) {

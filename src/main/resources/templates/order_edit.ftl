@@ -68,7 +68,7 @@
             border:solid #7A7A7A 4px;
         }
     </style>
-
+    <script src="../../js/serialize-to-json.js"></script>
 </head>
 
 <body class="no-skin">
@@ -79,6 +79,11 @@
         <h4 class="modal-title">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="goodsSelConditionForm">
+                货品编码:<input id="goodsCodeCondition" name="goodsCode" type="text">
+                货品名称:<input id="goodsNameCondition" name="goodsName" type="text">
+                <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -95,41 +100,14 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="goodsSelectListTbody"></tbody>
                 </table>
 
 
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
@@ -137,6 +115,13 @@
         <h4 class="modal-title">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="consignorSelConditionForm">
+                名称:<input id="consignorName2" name="contactCompanyName" type="text">
+                联系人:<input id="consignorPerson2" name="contactName" type="text">
+                联系电话:<input id="consignorPhoneNumber2" name="phone" type="text">
+                <input id="purpose2" name="purpose" type="hidden" value="2">
+                <button type="button" class="btn btn-info" id="contactSelectFormBtn2" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -156,46 +141,8 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="contactSelectListTbody2"></tbody>
                 </table>
-
-
             </form>
         </div>
     </div>
@@ -208,6 +155,13 @@
         <h4 class="modal-title">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="consigneeSelConditionForm">
+                名称:<input id="consignorName1" name="contactCompanyName" type="text">
+                联系人:<input id="consignorPerson1" name="contactName" type="text">
+                联系电话:<input id="consignorPhoneNumber1" name="phone" type="text">
+                <input id="purpose1" name="purpose" type="hidden" value="1">
+                <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -226,43 +180,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="contactSelectListTbody1"></tbody>
                 </table>
 
 
@@ -279,6 +197,12 @@
         <h4 class="modal-title">供应商联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
+            <form id="supplierSelConditionForm">
+                名称:<input id="supplierName" name="supplierName" type="text">
+                联系人:<input id="contactName" name="contactName" type="text">
+                联系电话:<input id="contactPhone" name="contactPhone" type="text">
+                <button type="button" class="btn btn-info" id="supplierSelectFormBtn" >筛选</button>
+            </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -298,37 +222,8 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
                     </thead>
-                    <tbody>
-                    <#list orderList! as order>
-                    <tr role="row" class="odd">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="radio" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-
-                        <td>
-
-                        </td>
-                        <td>${order.custOrderCode!"null"}</td>
-                        <td class="hidden-480">
-
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="hidden-480">
-
-                        </td>
-
-                    </tr>
-                    </#list>
-                    </tbody>
+                    <tbody id="supplierSelectListTbody"></tbody>
                 </table>
-
-
             </form>
         </div>
     </div>
@@ -360,11 +255,10 @@
 
                             <div>
                                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                    <form action="" method="post" id="">
+                                    <form action="" method="post" name="orderInfoTable" id="orderInfoTable">
                                         <input type="hidden" name="tag" value="manage">
-                                            <input type="hidden" name="orderCode" <#if orderInfo.orderCode?? >value="${orderInfo.orderCode}"</#if>">
-                                        <div class="row">
-
+                                        <input type="hidden" name="orderCode" <#if orderInfo.orderCode?? >value="${orderInfo.orderCode}"</#if>">
+                                            <div class="row">
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
                                                     &nbsp;&nbsp;&nbsp;订单日期:<input name="orderTime" <#if orderInfo.orderTime?? >value="${((orderInfo.orderTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
@@ -452,7 +346,7 @@
                                                         <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                                                             操作
                                                         </th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>
+                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">选择</th>
                                                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
                                                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
                                                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
@@ -472,44 +366,42 @@
                                                         <tbody>
                                                         <#--货品明细-->
                                                         <#list ofcGoodsDetailsList! as goodsDetails>
-                                                        <tr role="row" class="odd">
+                                                        <tr role="row" class="odd" align="center">
                                                             <td class="center">
                                                                 <button type="button" id=""    class="btn btn-minier btn-danger" onclick="deleteGoods('${(goodsDetails.orderCode)!"null"}','${goodsDetails.goodsCode!"null"}')">删除</button>
                                                             </td>
                                                             <td>
-                                                                序号
-
-                                                            </td>
-
-                                                            <td>
-                                                                <input name="goodsCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.goodsCode)!""}">
+                                                                <input id="deleteOrNot" type="checkbox" />
                                                             </td>
                                                             <td>
-                                                                <input name="goodsName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.goodsName)!""}">
-                                                            </td>
-                                                            <td class="hidden-480">
-                                                                <input name="goodsSpec" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.goodsSpec)!""}">
+                                                                ${(goodsDetails.goodsCode)!""}
                                                             </td>
                                                             <td>
-                                                                <input name="unit" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.unit)!""}">
+                                                                ${(goodsDetails.goodsName)!""}
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.quantity)!""}">
+                                                                ${(goodsDetails.goodsSpec)!""}
+                                                            </td>
+                                                            <td>
+                                                                ${(goodsDetails.unit)!""}
                                                             </td>
                                                             <td class="hidden-480">
-
-                                                                <input name="productionBatch" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.productionBatch)!""}">
+                                                                ${(goodsDetails.quantity)!""}
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.productionTime)!""}">
+                                                                ${(goodsDetails.productionBatch)!""}
                                                             </td>
                                                             <td class="hidden-480">
-                                                                <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" size="6" value="${(goodsDetails.invalidTime)!""}">
+                                                                ${(goodsDetails.productionTime)!""}
+                                                            </td>
+                                                            <td class="hidden-480">
+                                                                ${(goodsDetails.invalidTime)!""}
                                                             </td>
 
                                                         </tr>
                                                         </#list>
                                                         </tbody>
+                                                        <tbody id="goodsInfoListDiv"></tbody>
                                                     </table>
                                                     <div class="row">
                                                         <div class="col-xs-6">
@@ -674,15 +566,13 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="subOrder()">保存修改</button>
+                        <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="subOrder('${orderInfo}')">保存修改</button>
 
                     </form>
                 </div>
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.page-content -->
-</div>
-</div><!-- /.main-content -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
 
 
 </div><!-- /.main-container -->
@@ -691,7 +581,6 @@
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
-<script src="${base}/components/bootbox.js/bootbox.js"></script>
 <!-- <![endif]-->
 
 
@@ -699,6 +588,118 @@
 <script type="text/javascript">
 
     $(function(){
+        $("#goodsSelectFormBtn").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var goodsList = "";
+                $.each(data,function (index,cscGoods) {
+                    goodsList =goodsList + "<tr role='row' class='odd' align='center'>";
+                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.goodsCode+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.goodsName+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.specification+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.unit+"</td>";
+                    goodsList =goodsList + "</tr>";
+
+                });
+                $("#goodsSelectListTbody").html(goodsList);
+            },"json");
+        });
+
+        $("#contactSelectFormBtn2").click(function () {
+            //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd' align='center'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "</tr>";
+                });
+                $("#contactSelectListTbody2").html(contactList);
+            },"json");
+        });
+
+        $("#contactSelectFormBtn1").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd' align='center'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "</tr>";
+                    $("#contactSelectListTbody1").html(contactList);
+                });
+            },"json");
+        });
+
+        $("#supplierSelectFormBtn").click(function () {
+
+            //$.post("/ofc/supplierSelect",$("#supplierSelConditionForm").serialize(),function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/supplierSelect", $("#supplierSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var supplierList = "";
+                $.each(data,function (index,CscSupplierInfoDto) {
+                    supplierList =supplierList + "<tr role='row' class='odd' align='center'>";
+                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    supplierList =supplierList + "<td>"+(index+1)+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    supplierList =supplierList + "</tr>";
+                    $("#supplierSelectListTbody").html(supplierList);
+                });
+            },"json");
+        });
+
+        $("#goodsEnter").click(function () {
+            var goodsInfoListDiv = "";
+            $("#goodsSelectListTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var goodsCode = tdArr.eq(2).text();//货品编码
+                    var goodsName = tdArr.eq(3).text();//货品名称
+                    var specification = tdArr.eq(4).text();//    货品规格
+                    var unit = tdArr.eq(5).text();//    单位
+                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+                    $("#goodsInfoListDiv").html(goodsInfoListDiv);
+                }
+                if(goodsInfoListDiv==""){
+                    alert("请至少选择一行");
+                }
+            });
+        });
 
         $("#goodsListDivBlock").click(function(){
 
@@ -825,9 +826,15 @@
         });
 
     });
-    function subOrder(orderCode) {
-        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/document.getElementById('orderPlaceConTable').submit();
-        $("#orderPlaceConTable").submit();
+    function subOrder(orderInfo) {
+        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
+        //alert(orderInfo);
+        //DataDeal.formToJson(this.serialise())
+        var ofcOrderDTOJson = DataDeal.formToJson($("form[name='orderInfoTable']").serialize());
+        alert(ofcOrderDTOJson);
+        var tag="orderCode";
+        xescm.common.loadPage("/ofc/orderPlaceCon/"+tag+"/"+ofcOrderDTOJson);
+        //$("#orderPlaceConTable").submit();
     }
 
     function deleteGoods(ordercode,goodsCode) {
@@ -844,6 +851,17 @@
         }
 
 
+    }
+    function deleteGood(obj) {
+        //alert(obj);
+        $(obj).parent().parent().remove();
+        /*var goodsInfoListDiv = "";
+        $("#goodsInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(1).find("input").prop("checked")){
+                tdArr.parent().remove();
+            }
+        });*/
     }
 
 </script>

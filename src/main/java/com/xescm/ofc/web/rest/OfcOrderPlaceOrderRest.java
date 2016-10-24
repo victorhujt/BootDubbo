@@ -18,18 +18,18 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import com.xescm.ofc.utils.JSONUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -54,22 +54,20 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     /**
      * 下单
-     * @param ofcOrderDTOStr
+     * @param ofcOrderDTO
      * @param response
      * @return
      */
-    /*@RequestMapping("/orderPlaceCon/{ofcOrderDTO}/{tag}")
-    public String orderPlace(Model model, @PathVariable("ofcOrderDTO") String ofcOrderDTOStr,@PathVariable String tag, HttpServletResponse response){*/
-    /*@RequestMapping("/orderPlaceCon")
-    public String orderPlace(Model model, String ofcOrderDTOStr, String tag, HttpServletResponse response){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
+    @RequestMapping("/orderPlaceCon/{tag}/{ofcOrderDTOJson}")
+    public String orderPlace(Model model,@PathVariable String ofcOrderDTOJson,@PathVariable String tag, HttpServletResponse response){
+        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        if(StringUtils.isBlank(ofcOrderDTOStr)){
-            ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+        if(StringUtils.isBlank(ofcOrderDTOJson)){
+            System.out.println(ofcOrderDTOJson);
+            ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
         }
-        OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
-
-        if (null == ofcOrderDTO.getProvideTransport()){
+        OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
+        if (ofcOrderDTO.getProvideTransport()==null){
             ofcOrderDTO.setProvideTransport(0);
         }
         if (null == ofcOrderDTO.getUrgent()){
@@ -122,6 +120,20 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
 
     /**
+     * 货品筛选
+     * @param ofcGoodsDetailsInfo
+     * @return
+     */
+    @RequestMapping("/goodsScans")
+    public String placeOrder(Model model,OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
+        logger.debug("==>订单中心下单货品筛选实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
+        ofcGoodsDetailsInfo.setGoodsCode("1");
+        ofcGoodsDetailsInfo.setGoodsCode("1");
+        ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+        return "order_place";
+    }
+
+    /**
      * 货品筛选(调用客户中心API)
      */
     @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
@@ -164,12 +176,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
-    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response){
+    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         //调用外部接口,最低传CustomerCode
         Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }
