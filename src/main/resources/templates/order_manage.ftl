@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<#assign base=request.contextPath />
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
@@ -9,7 +5,7 @@
 
     <meta name="description" content="Static &amp; Dynamic Tables">
 
-    <script language="javascript" type="text/javascript" src="${base}js/My97DatePicker/WdatePicker.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
 
 </head>
 
@@ -218,10 +214,35 @@
                                     </#list>
                                     </tbody>
                                 </table>
+                                查询结果共${(totalNum)!"0"}条记录,共${(totalPage)!"1"}页
                                 <div class="row">
-                                    共${}页,当前页
-                                    <div class="col-xs-6">
-                                        <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div></div><div class="col-xs-6"><div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="dynamic-table" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">3</a></li><li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next"><a href="#">Next</a></li></ul></div></div></div></div>
+                                    <#--<div class="col-xs-6">
+                                        <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div>
+                                    </div>-->
+                                    <div id="example" style="text-align: center"> <ul id="pageLimit" class="pagination"></ul> </div>
+                                   <#-- <div class="col-xs-6">
+                                        <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous">
+                                                    <a href="#">Previous</a>
+                                                </li>
+                                                <li class="paginate_button active" aria-controls="dynamic-table" tabindex="0">
+                                                    <a href="#">1</a>
+                                                </li>
+                                                <li class="paginate_button " aria-controls="dynamic-table" tabindex="0">
+                                                    <a href="#">2</a>
+                                                </li>
+                                                <li class="paginate_button " aria-controls="dynamic-table" tabindex="0">
+                                                    <a href="#">3</a>
+                                                </li>
+                                                <li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next">
+                                                    <a href="#">Next</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>-->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -236,11 +257,7 @@
 </div><!-- /.main-container -->
 
 
-<!-- basic scripts -->
 
-<!--[if !IE]> -->
-<script src="${base}/components/bootbox.js/bootbox.js"></script>
-<!-- <![endif]-->
 
 <#include "common/include.ftl">
 <script type="text/javascript">
@@ -264,9 +281,56 @@
             jsonStr.businessType=$("#businessType").val();
             var tag = "manage";
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag;
+            var currPage = "1";
+            var pageSize = "10";
+            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
             xescm.common.loadPage(url);
         });
+
+        $('#pageLimit').bootstrapPaginator({
+            currentPage: ${currPage!"1"},//当前页码
+            totalPages: ${totalPage!"2"}, //总页数
+            size:"normal",
+            bootstrapMajorVersion: 3,
+            alignment:"right",
+            numberOfPages:${pageSize!"10"},//每页显示多少
+            itemTexts: function (type, page, current) {
+                switch (type) {
+                    case "first":
+                        return "首页";
+                    case "prev":
+                        return "上一页";
+                    case "next":
+                        return "下一页";
+                    case "last":
+                        return "末页";
+                    case "page":
+                        return page;
+                }
+            },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
+                ///orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageNum}
+                /*$.post("/getAllStaffByPage",{"page":page},function (msg) {
+                    alert(msg);//拿到的数据是没问题的!
+                    $('#staffListTable').html("<\@\p\a\g\e\r\.\g\r\e\e\t  staffList='"+msg+"'/>">;
+                });*/
+                var jsonStr={};
+                jsonStr.orderTimePre=$("#orderTimePre").val();
+                jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+                jsonStr.orderCode=$("#orderCode").val();
+                jsonStr.custOrderCode=$("#custOrderCode").val();
+                jsonStr.orderStatus=$("#orderStatus").val();
+                jsonStr.orderType=$("#orderType").val();
+                jsonStr.businessType=$("#businessType").val();
+                var tag = "manage";
+                var orderScreenConditionJSON = JSON.stringify(jsonStr);
+                var currPage = page;
+                var pageNum = "10";
+                var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
+                xescm.common.loadPage(url);
+
+            }
+        });
+
 
     }
 
@@ -365,4 +429,4 @@
 
 </script>
 
-</body></html>
+</body>
