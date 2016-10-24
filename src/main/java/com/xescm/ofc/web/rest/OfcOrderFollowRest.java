@@ -43,8 +43,8 @@ public class OfcOrderFollowRest extends BaseController{
     }
 
 
-    @RequestMapping("/orderDetails")
-    public String orderDetails(Model model, String code, String followTag, Map<String,Object> map) throws InvocationTargetException{
+    @RequestMapping("/orderDetails/{orderCode}/{followTag}")
+    public String orderDetails(Model model,@PathVariable("orderCode") String code,@PathVariable String followTag, Map<String,Object> map) throws InvocationTargetException{
         logger.debug("==>订单中心订单详情code code={}", code);
         logger.debug("==>订单中心订单详情标志位 followTag={}", followTag);
         OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);

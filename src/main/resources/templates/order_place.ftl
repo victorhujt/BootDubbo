@@ -262,10 +262,10 @@
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
 
-                                                    &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTime" name="orderTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                    &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
 
-                                                    客户订单编号:<input id="custOrderCode" name="custOrderCode" type="text">
+                                                    客户订单编号:<input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
 
                                                     &nbsp;&nbsp;&nbsp;
                                                     订单类型:
@@ -307,7 +307,7 @@
 
                                             <div id="dynamic-table_filter" class="dataTables_length">
                                                 <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                 </label>
                                             </div>
 
@@ -621,26 +621,7 @@
 
 
         $("#orderPlaceConTableBtn").click(function () {
-          /*  //<form action="/ofc/orderPlaceCon" method="post" id="orderPlaceConTable">
-            var serialize = $("#orderPlaceConTable").serialize();
-            var ofcOrderDTO = DataDeal.formToJson(serialize);
-            var tag = "place";
-            ///orderPlaceCon/{ofcOrderDTO}/{tag}
-            var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
-            xescm.common.loadPage(url);*/
 
-          //debugger;
-
-            //alert("bbbb" + $("#dynamic-table_wrapper_orderFundamentalForm").serialize());
-            //orderFundamentalForm
-            //orderDistributionForm
-            //orderWarehouseForm
-           // var serialize = "";
-            //serialize = serialize
-            //+ $("#orderFundamentalForm").serialize() + "&";
-            /*+ $("#orderDistributionForm").serialize() + "&"
-            + $("#orderWarehouseForm").serialize();*/
-            //alert(serialize);
             var jsonStr = {};
             //订单基本信息
             jsonStr.orderTime = $("#orderTime").val();
