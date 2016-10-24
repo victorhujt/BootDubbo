@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<#assign base=request.contextPath />
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
@@ -9,7 +5,7 @@
 
     <meta name="description" content="Static &amp; Dynamic Tables">
 
-    <script language="javascript" type="text/javascript" src="${base}js/My97DatePicker/WdatePicker.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
 
 </head>
 
@@ -35,7 +31,6 @@
                 <div class="row">
                     <div class="col-xs-12">
 
-
                         <div class="table-header">
                             筛选条件
                         </div>
@@ -54,7 +49,7 @@
                                                 &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 至<input id="orderTimeSuf" name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 订单编号:<input id="orderCode" name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 订单状态:
                                                 <select id="orderStatus" name="orderStatus">
                                                     <option value="">----</option>
@@ -125,7 +120,6 @@
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
-
                                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
                                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
                                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
@@ -199,9 +193,35 @@
                                     </#list>
                                     </tbody>
                                 </table>
+                                查询结果共${(totalNum)!"0"}条记录,共${(totalPage)!"1"}页
                                 <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div></div><div class="col-xs-6"><div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="dynamic-table" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">3</a></li><li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next"><a href="#">Next</a></li></ul></div></div></div></div>
+                                <#--<div class="col-xs-6">
+                                    <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div>
+                                </div>-->
+                                    <div id="example" style="text-align: center"> <ul id="pageLimit" class="pagination"></ul> </div>
+                                <#-- <div class="col-xs-6">
+                                     <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+                                         <ul class="pagination">
+                                             <li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous">
+                                                 <a href="#">Previous</a>
+                                             </li>
+                                             <li class="paginate_button active" aria-controls="dynamic-table" tabindex="0">
+                                                 <a href="#">1</a>
+                                             </li>
+                                             <li class="paginate_button " aria-controls="dynamic-table" tabindex="0">
+                                                 <a href="#">2</a>
+                                             </li>
+                                             <li class="paginate_button " aria-controls="dynamic-table" tabindex="0">
+                                                 <a href="#">3</a>
+                                             </li>
+                                             <li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next">
+                                                 <a href="#">Next</a>
+                                             </li>
+                                         </ul>
+                                     </div>
+                                 </div>-->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -216,11 +236,7 @@
 </div><!-- /.main-container -->
 
 
-<!-- basic scripts -->
 
-<!--[if !IE]> -->
-<script src="${base}/components/bootbox.js/bootbox.js"></script>
-<!-- <![endif]-->
 
 <#include "common/include.ftl">
 <script type="text/javascript">
@@ -244,9 +260,56 @@
             jsonStr.businessType=$("#businessType").val();
             var tag = "screen";
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag;
+            var currPage = "1";
+            var pageSize = "10";
+            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
             xescm.common.loadPage(url);
         });
+
+        $('#pageLimit').bootstrapPaginator({
+            currentPage: ${currPage!"1"},//当前页码
+            totalPages: ${totalPage!"2"}, //总页数
+            size:"normal",
+            bootstrapMajorVersion: 3,
+            alignment:"right",
+            numberOfPages:10,//每页显示多少
+            itemTexts: function (type, page, current) {
+                switch (type) {
+                    case "first":
+                        return "首页";
+                    case "prev":
+                        return "上一页";
+                    case "next":
+                        return "下一页";
+                    case "last":
+                        return "末页";
+                    case "page":
+                        return page;
+                }
+            },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
+                ///orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageNum}
+                /*$.post("/getAllStaffByPage",{"page":page},function (msg) {
+                    alert(msg);//拿到的数据是没问题的!
+                    $('#staffListTable').html("<\@\p\a\g\e\r\.\g\r\e\e\t  staffList='"+msg+"'/>">;
+                });*/
+                var jsonStr={};
+                jsonStr.orderTimePre=$("#orderTimePre").val();
+                jsonStr.orderTimeSuf=$("#orderTimeSuf").val();
+                jsonStr.orderCode=$("#orderCode").val();
+                jsonStr.custOrderCode=$("#custOrderCode").val();
+                jsonStr.orderStatus=$("#orderStatus").val();
+                jsonStr.orderType=$("#orderType").val();
+                jsonStr.businessType=$("#businessType").val();
+                var tag = "manage";
+                var orderScreenConditionJSON = JSON.stringify(jsonStr);
+                var currPage = page;
+                var pageNum = "10";
+                var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
+                xescm.common.loadPage(url);
+
+            }
+        });
+
 
     }
 
@@ -274,76 +337,61 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
+
     function editOrder(orderCode) {
         /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
         var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
         xescm.common.loadPage(url);
     }
 
-    function editOrder(orderCode) {
-        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        $("#screenOrderForm").attr("action","/ofc/getOrderDetailByCode?dtotag=orderCode&orderCode="+orderCode);
-        $("#screenOrderForm").submit();
-    }
-
     function deleteOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要删除此订单?");
-        if(result == true) {
-            $.get("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-                $("#confirmBox").modal('hide');
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("删除订单失败,请联系管理员!");
-                }
-            });
-        }
-
-
+        xescm.common.submit("/ofc/orderDelete","您确定要删除此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
+            var jsonStr={};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
+        });
+    }
+    function orderDetail(orderCode) {
+        var followTag = "orderCode";
+        var url = "/ofc/orderDetails/" + orderCode + "/" + followTag;
+        xescm.common.loadPage(url);
     }
 
     function reviewOrder(ordercode,orderStatus) {
-
-        var result  = confirm("您确定要审核订单?");
-        if(result == true) {
-            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function (data) {
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("审核订单失败,请联系管理员!");
-                }
-            });
-        }
+        xescm.common.submit("/ofc/orderOrNotAudit","您确定要审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function () {
+            var jsonStr={};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
+        });
 
     }
     function reReviewOrder(ordercode,orderStatus) {
-        var result  = confirm("您确定要反审核此订单?");
-        if(result == true) {
-            $.get("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function (data) {
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("反审核订单失败,请联系管理员!");
-                }
-            });
-        }
+        xescm.common.submit("/ofc/orderOrNotAudit","您确定要反审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function () {
+            var jsonStr = {};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
+        });
     }
     function cancelOrder(ordercode,orderStatus) {
-
-        var result  = confirm("您确定要取消此订单?");
-        if(result == true) {
-            $.get("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("取消订单失败,请联系管理员!");
-                }
-            });
-        }
-
+        xescm.common.submit("/ofc/orderCancel","您确定要取消此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
+            var jsonStr = {};
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var tag = "manage";
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
+        });
     }
 
 </script>
 
-</body></html>
+</body>

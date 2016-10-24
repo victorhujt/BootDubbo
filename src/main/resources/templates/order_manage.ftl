@@ -49,7 +49,7 @@
                                                 &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 至<input id="orderTimeSuf" name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                 订单编号:<input id="orderCode" name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 订单状态:
                                                 <select id="orderStatus" name="orderStatus">
                                                     <option value="">----</option>
@@ -293,7 +293,7 @@
             size:"normal",
             bootstrapMajorVersion: 3,
             alignment:"right",
-            numberOfPages:${pageSize!"10"},//每页显示多少
+            numberOfPages:10,//每页显示多少
             itemTexts: function (type, page, current) {
                 switch (type) {
                     case "first":
@@ -366,34 +366,14 @@
     }
 
     function deleteOrder(ordercode,orderStatus) {
-
-        //xescm.common.submit("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus});
-        /*var result  = confirm("您确定要删除此订单?");
-        if(result == true) {
-            $.get("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},function (data) {
-                $("#confirmBox").modal('hide');
-                if(data == 200){
-                    window.location.href="/ofc/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("删除订单失败,请联系管理员!");
-                }
-            });
-        }*/
-       /* layer.confirm('您确定要删除此订单？', {
-            skin : 'layui-layer-molv',
-            icon : 3,
-            title : '确认操作'
-        }, function(){
-            alert("=====");
-        }
-*/
         xescm.common.submit("/ofc/orderDelete","您确定要删除此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
             var jsonStr={};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
             var tag = "manage";
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
         });
-
     }
     function orderDetail(orderCode) {
         var followTag = "orderCode";
@@ -406,7 +386,9 @@
             var jsonStr={};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
             var tag = "manage";
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
         });
 
     }
@@ -415,7 +397,9 @@
             var jsonStr = {};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
             var tag = "manage";
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
         });
     }
     function cancelOrder(ordercode,orderStatus) {
@@ -423,7 +407,9 @@
             var jsonStr = {};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);
             var tag = "manage";
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag);
+            var currPage = "1";
+            var pageSize = "10"
+            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
         });
     }
 

@@ -1,5 +1,6 @@
 package com.xescm.ofc.web.rest;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.OrderScreenCondition;
@@ -13,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,19 +30,23 @@ public class OfcOrderScreenRest extends BaseController {
     private OfcOrderScreenService ofcOrderScreenService;
 
     @RequestMapping(value = "/orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageSize}")
-    public String orderScreenByCondition(Model model,@PathVariable String orderScreenConditionJSON, Map<String,Object> map,@PathVariable("tag") String tag, @PathVariable String currPage, @PathVariable String pageSize) throws IOException {
+    public String orderScreenByCondition(Model model,@PathVariable String orderScreenConditionJSON, Map<String,Object> map,@PathVariable("tag") String tag, @PathVariable("currPage") String currPagePath, @PathVariable("pageSize") String pageSizePath) throws IOException {
         logger.debug("==>订单中心订单查询条件 orderScreenCondition={}", orderScreenConditionJSON);
         logger.debug("==>订单中心订单查询标志位 tag={}", tag);
         if(StringUtils.isBlank(orderScreenConditionJSON)){
             orderScreenConditionJSON = JSONUtils.objectToJson(new OrderScreenCondition());
         }
         OrderScreenCondition orderScreenCondition = JSONUtils.jsonToPojo(orderScreenConditionJSON, OrderScreenCondition.class);
+        int pageSize = Integer.parseInt(pageSizePath);
+        int currPage = Integer.parseInt(currPagePath);
+        PageHelper.startPage(currPage,pageSize);
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-        PageHelper.startPage(Integer.parseInt(currPage),Integer.parseInt(pageSize));
         PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(orderScreenResults);
+        pageInfo.setPageSize(pageSize);
         map.put("orderList", pageInfo.getList());
         map.put("totalPage", pageInfo.getPages());
         map.put("totalNum", pageInfo.getTotal());
+        map.put("currPage", currPage);
         map.put("pageSize",pageSize);
         if (tag.equals("screen")) {
             return "order_screen";
