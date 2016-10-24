@@ -10,7 +10,7 @@
 
             width:946px;
 
-            height:auto;
+            height:500px;
 
             z-index:3;
 
@@ -25,11 +25,11 @@
 
             left:138px;
 
-            top:91px;
+            top:391px;
 
             width:946px;
 
-            height:auto;
+            height:500px;
 
             z-index:3;
 
@@ -43,11 +43,11 @@
 
             left:138px;
 
-            top:91px;
+            top:391px;
 
             width:946px;
 
-            height:auto;
+            height:500px;
 
             z-index:3;
 
@@ -62,11 +62,11 @@
 
             left:138px;
 
-            top:91px;
+            top:211px;
 
             width:946px;
 
-            height:auto;
+            height:500px;
 
             z-index:3;
 
@@ -381,7 +381,12 @@
                                                     </table>
                                                     <div class="row">
                                                         <div class="col-xs-6">
-                                                            <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div></div><div class="col-xs-6"><div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="dynamic-table" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="dynamic-table" tabindex="0"><a href="#">3</a></li><li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next"><a href="#">Next</a></li></ul></div></div></div>
+                                                            <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            </div></div>
 
                                                 </div>
 
