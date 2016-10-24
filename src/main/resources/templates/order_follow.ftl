@@ -44,9 +44,8 @@
                                                     <option value="custOrderCode">客户订单编号</option>
                                                     <option value="transCode">运输单号</option>
                                                 </select>
-                                                <input id = "code" name="code" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                <input  id = "code" name="code" type="search" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 <span  class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="followOrderFormBtn">查询</span>
-
                                             </label>
                                         </div>
                                         <br/>
@@ -201,14 +200,26 @@
     });
 
     function main(){
+        /**
+         * var code=$("input[name='code']").val();
+         if(code==""||code==null){
+            alert("请先输入数据再进行查询");
+            return false;
+        }else{
+         */
         //初始化页面数据
         initPageData();
         // 查询
         $("#followOrderFormBtn").click(function () {
             var code=$("#code").val();
             var followTag = $("#followTag").val();
-            var url = "/ofc/orderFollowCon/" + code + "/" + followTag;
-            xescm.common.loadPage(url);
+            if(code==""||code==null){
+                alert("请先输入编号再进行查询");
+                return false;
+            }else {
+                var url = "/ofc/orderFollowCon/" + code + "/" + followTag;
+                xescm.common.loadPage(url);
+            }
         });
 
     }

@@ -18,11 +18,10 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import com.xescm.ofc.utils.JSONUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
@@ -54,12 +53,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     /**
      * 下单
-     * @param ofcOrderDTO
+     * @param
      * @param response
      * @return
      */
-    @RequestMapping("/orderPlaceCon/{tag}/{ofcOrderDTOJson}")
-    public String orderPlace(Model model,@PathVariable String ofcOrderDTOJson,@PathVariable String tag, HttpServletResponse response){
+    @RequestMapping("/orderEdit/{tag}/{ofcOrderDTOJson}")
+    public String orderEdit(Model model, @PathVariable String ofcOrderDTOJson, @PathVariable String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         if(StringUtils.isBlank(ofcOrderDTOJson)){
@@ -67,11 +66,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
         }
         OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
-        if (ofcOrderDTO.getProvideTransport()==null){
-            ofcOrderDTO.setProvideTransport(0);
+        if (null == ofcOrderDTO.getProvideTransport()){
+            ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
         }
         if (null == ofcOrderDTO.getUrgent()){
-            ofcOrderDTO.setUrgent(0);
+            ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
         }
         try {
             String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
@@ -83,11 +82,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             e.printStackTrace();
             return "order_place";
         }
-    }*/
-    /*@RequestMapping("/orderPlaceCon/{ofcOrderDTO}/{tag}")
-    @ResponseBody
-    public Wrapper<?> orderPlace(Model model, @PathVariable("ofcOrderDTO") String ofcOrderDTOStr,@PathVariable String tag, HttpServletResponse response){
-*/
+    }
+
     @RequestMapping("/orderPlaceCon")
     @ResponseBody
     public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr, String tag, HttpServletResponse response){
