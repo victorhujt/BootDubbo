@@ -31,88 +31,126 @@
 
                 <div class="row">
                     <div class="col-xs-12">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="widget-title">筛选条件</h4>
+                                <span class="widget-toolbar">
+                                    <a href="#" data-action="collapse">
+                                        <i class="ace-icon fa fa-chevron-up"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <form id="screenOrderForm" class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <input id="orderTimePre" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                    至
+                                                    <input id="orderTimeSuf" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <input id="orderCode" name="orderCode" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <select class="chosen-select form-control" data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus">
+                                                        <option value="">----</option>
+                                                        <option value="10">待审核</option>
+                                                        <option value="20">已审核</option>
+                                                        <option value="30">执行中</option>
+                                                        <option value="40">已完成</option>
+                                                        <option value="50">已取消</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <select class="chosen-select form-control" data-placeholder="请选择订单类型" id="orderType" name="orderType">
+                                                        <option value="">----</option>
+                                                        <option value="60">运输订单</option>
+                                                        <option value="61">仓配订单</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <select class="chosen-select form-control" data-placeholder="请选择业务类型" id="businessType" name="businessType">
+                                                        <option value="">----</option>
+                                                        <option value="600">城配</option>
+                                                        <option value="601">干线</option>
+                                                        <option value="----------">----------</option>
+                                                        <option value="610">销售出库</option>
+                                                        <option value="611">调拨出库</option>
+                                                        <option value="612">报损出库</option>
+                                                        <option value="613">其他出库</option>
+                                                        <option value="----------">----------</option>
+                                                        <option value="620">采购入库</option>
+                                                        <option value="621">调拨入库</option>
+                                                        <option value="622">退货入库</option>
+                                                        <option value="623">加工入库</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                        <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="screenOrderFormBtn">搜索</span>
+                                        </div>
+                                    <#--<input type="hidden" name="tag" value="manage"/>-->
 
-                        <div class="table-header">
-                            筛选条件
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-
                         <!-- div.table-responsive -->
 
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form id="screenOrderForm">
-                                    <#--<input type="hidden" name="tag" value="manage"/>-->
-                                    <div class="row">
 
-                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                            <label>
-                                                &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTimePre" name="orderTimePre" type="datetime" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                至<input id="orderTimeSuf" name="orderTimeSuf" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                订单编号:<input id="orderCode" name="orderCode" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                客户订单编号:<input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                订单状态:
-                                                <select id="orderStatus" name="orderStatus">
-                                                    <option value="">----</option>
-                                                    <option value="10">待审核</option>
-                                                    <option value="20">已审核</option>
-                                                    <option value="30">执行中</option>
-                                                    <option value="40">已完成</option>
-                                                    <option value="50">已取消</option>
-                                                </select>
-                                            </label>
-                                        </div>
 
-                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                            <label>
+                                <div class="table-header">
+                                    订单列表
+                                </div>
+                                <div class="col-xs-12">
 
-                                                &nbsp;&nbsp;&nbsp;
-                                                订单类型:
-                                                <select id="orderType" name="orderType">
-                                                    <option value="">----</option>
-                                                    <option value="60">运输订单</option>
-                                                    <option value="61">仓配订单</option>
-                                                </select>
-                                                业务类型:
-                                                <select id="businessType" name="businessType">
-                                                    <option value="">----</option>
-                                                    <option value="600">城配</option>
-                                                    <option value="601">干线</option>
-                                                    <option value="----------">----------</option>
-                                                    <option value="610">销售出库</option>
-                                                    <option value="611">调拨出库</option>
-                                                    <option value="612">报损出库</option>
-                                                    <option value="613">其他出库</option>
-                                                    <option value="----------">----------</option>
-                                                    <option value="620">采购入库</option>
-                                                    <option value="621">调拨入库</option>
-                                                    <option value="622">退货入库</option>
-                                                    <option value="623">加工入库</option>
-                                                </select>
-
-                                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="screenOrderFormBtn">搜索</span>
-                                            </label>
-                                        </div>
-                                        <br/>
-                                        <div class="table-header">
-                                            订单列表
-                                        </div>
-                                        <div class="col-xs-12">
-                                            <div class="dataTables_length" id="dynamic-table_length">
-                                                <label>Display
-                                                    <select aria-controls="dynamic-table" class="form-control input-sm">
-                                                        <option value="10">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                    records
-                                                </label>
-                                            </div>
-                                        </div>
-
+                                    <div class="dataTables_length" id="dynamic-table_length">
+                                        <label>显示
+                                            <select aria-controls="dynamic-table" class="form-control input-sm">
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                            条
+                                        </label>
                                     </div>
-                                </form>
+                                </div>
                                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                     <thead>
                                     <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">

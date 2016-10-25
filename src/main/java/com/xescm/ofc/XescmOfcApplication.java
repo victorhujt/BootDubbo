@@ -1,23 +1,30 @@
 package com.xescm.ofc;
 
-import com.xescm.uam.utils.jwt.JwtApiFilter;
-import com.xescm.uam.utils.jwt.JwtViewFilter;
-import com.xescm.uam.utils.jwt.SimpleCORSFilter;
-import com.xescm.uam.utils.jwt.TokenUtils;
+import com.xescm.uam.domain.feign.FeignUamAPIClient;
+import com.xescm.uam.utils.jwt.*;
+import com.xescm.uam.web.interceptor.AuthApiInterceptor;
+import com.xescm.uam.web.interceptor.AuthViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
+@EnableTransactionManagement // 开启注解事务管理，等同于xml配置文件中的 <tx:annotation-driven />
+@EnableAutoConfiguration
+@ComponentScan
 @SpringBootApplication
 public class XescmOfcApplication {
 
+
+
+	private TokenUtils tokenUtils;
+
 	@Value("${env}")
 	private String env;
-
-    private TokenUtils tokenUtils;
 
 	@Bean
 	public FilterRegistrationBean simpleCORSFilter() {
@@ -29,36 +36,32 @@ public class XescmOfcApplication {
 	}
 
 	@Bean
-	public FilterRegistrationBean jwtViewFilter() {
-		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-		JwtViewFilter filter=new JwtViewFilter();
-		filter.setEnv(env);
-		filter.setTokenUtils(getTokenUtils());
-		registrationBean.setFilter(filter);
-		registrationBean.addUrlPatterns("/ofc/*");
-		registrationBean.setOrder(Integer.MAX_VALUE - 1);
-		return registrationBean;
+	public AuthApiInterceptor authApiInterceptor(){
+		return new AuthApiInterceptor();
 	}
 
 	@Bean
-	public FilterRegistrationBean jwtApiFilter() {
-		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-		JwtApiFilter filter=new JwtApiFilter();
-		filter.setEnv(env);
-		filter.setTokenUtils(getTokenUtils());
-		registrationBean.setFilter(filter);
-		registrationBean.addUrlPatterns("/api/*");
-		registrationBean.setOrder(Integer.MAX_VALUE);
-		return registrationBean;
+	public AuthViewInterceptor authViewInterceptor(){
+		return new AuthViewInterceptor();
 	}
 
 	@Bean
-    public TokenUtils getTokenUtils(){
-        if(tokenUtils == null){
-            tokenUtils = new TokenUtils();
-        }
-        return tokenUtils;
-    }
+	public AppkeyLoader appkeyLoader(){
+		return new AppkeyLoader();
+	}
+
+	@Bean
+	public FeignUamAPIClient feignUamAPIClient(){
+		return new FeignUamAPIClient();
+	}
+
+	@Bean(name = "tokenUtils")
+	public TokenUtils getTokenUtils(){
+		if(tokenUtils == null){
+			tokenUtils = new TokenUtils();
+		}
+		return tokenUtils;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(XescmOfcApplication.class, args);

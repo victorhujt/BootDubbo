@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.xescm.uam</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>tk.mybatis</groupId>
