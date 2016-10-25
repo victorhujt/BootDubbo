@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by lyh on 2016/10/19.
@@ -26,26 +27,34 @@ public class FeignCscWarehouseAPIClient {
     @Resource
     RestConfig restConfig;
 
-    public FeignCscWarehouseAPI getApi() {
+    public FeignCscWarehouseAPI getCscApi() {
         FeignCscWarehouseAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscWarehouseAPI.class, restConfig.getCscUrl());
         return res;
     }
-    Wrapper<?> getCscWarehouseByCustomerId(@Param("customerId") String customerId){
+
+    public FeignCscWarehouseAPI getRmcApi() {
+        FeignCscWarehouseAPI res = Feign.builder()
+                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder()).target(FeignCscWarehouseAPI.class, restConfig.getRmcUrl());
+        return res;
+    }
+
+    public Wrapper<List<String>> getCscWarehouseByCustomerId(@Param("customerId") String customerId){
         logger.debug("==>通过客户编码取仓库 customerId={}", customerId);
         if(null == customerId){
             throw new BusinessException("参数为空");
         }
-        Wrapper<?> cscWarehouseByCustomerId = getApi().getCscWarehouseByCustomerId(customerId);
+        Wrapper<List<String>> cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(customerId);
         return cscWarehouseByCustomerId;
     }
     public Wrapper<OfcWarehouseInformation> getRmcWarehouseByid(@Param("id") String id){
-        logger.debug("==>通过客户编码取仓库 id={}", id);
+        logger.debug("==>根据仓库ID获取仓库信息 id={}", id);
         if(null == id){
             throw new BusinessException("参数为空");
         }
-        Wrapper<OfcWarehouseInformation> rmcWarehouseByid = getApi().getRmcWarehouseByid(id);
+        Wrapper<OfcWarehouseInformation> rmcWarehouseByid = getRmcApi().getRmcWarehouseByid(id);
         return rmcWarehouseByid;
     }
 }

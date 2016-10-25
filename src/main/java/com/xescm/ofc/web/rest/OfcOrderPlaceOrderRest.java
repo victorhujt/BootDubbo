@@ -49,8 +49,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Autowired
-    private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+
     /**
      * 编辑
      * @param
@@ -181,5 +180,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             e.printStackTrace();
         }
     }
+
 
 }

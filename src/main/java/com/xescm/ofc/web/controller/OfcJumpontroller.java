@@ -1,8 +1,15 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
+import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
+import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,9 +27,17 @@ import java.util.Map;
 @Controller
 public class OfcJumpontroller extends BaseController{
 
-    @RequestMapping(value="/ofc/orderPlace")
-    public ModelAndView index(Model model, HttpServletRequest request, HttpServletResponse response){
+    @Autowired
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
 
+
+
+
+    @RequestMapping(value="/ofc/orderPlace")
+    public ModelAndView index(Model model,Map<String,Object> map ,String custCode, HttpServletRequest request, HttpServletResponse response){
+        custCode = "2";
+        List<OfcWarehouseInformation> warehouseListByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custCode);
+        map.put("warehouseListByCustCode",warehouseListByCustCode);
         return new ModelAndView("order_place");
     }
 
