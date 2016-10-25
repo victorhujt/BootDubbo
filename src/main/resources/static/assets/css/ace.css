@@ -8949,7 +8949,7 @@ input[type="tel"]:focus,
 input[type="color"]:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
-  color: #fff;
+  color: #383838;
   border-color: #6e8ab8;
   background-color: #FFF;
   outline: none;
