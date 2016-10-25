@@ -4,14 +4,12 @@ import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import com.xescm.uam.domain.feign.FeignUamShiroAPI;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
