@@ -48,7 +48,12 @@ public class FeignCscWarehouseAPIClient {
         if(null == customerId){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(customerId);
+        Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = null;
+        try {
+            cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(customerId);
+        }catch (Exception ex){
+            throw new BusinessException(ex.getMessage());
+        }
         return cscWarehouseByCustomerId;
     }
     public Wrapper<RmcWarehouse> getRmcWarehouseByid(@Param("id") String id){
@@ -56,7 +61,12 @@ public class FeignCscWarehouseAPIClient {
         if(null == id){
             throw new BusinessException("参数为空");
         }
-        Wrapper<RmcWarehouse> rmcWarehouseByid = getRmcApi().getRmcWarehouseByid(id);
+        Wrapper<RmcWarehouse> rmcWarehouseByid = null;
+        try {
+            rmcWarehouseByid = getRmcApi().getRmcWarehouseByid(id);
+        }catch (Exception ex){
+            throw new BusinessException(ex.getMessage());
+        }
         return rmcWarehouseByid;
     }
 }

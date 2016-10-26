@@ -134,10 +134,10 @@ public class OfcOrderManageRest extends BaseController{
             System.out.println(ofcOrderDTO);
             ofcOrderDTO.setConsignorContactName("张三");
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            /*Map<String, Object> consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
+            Map<String, Object> consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
             Map<String, Object> consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNEE);
             Map<String, Object> supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName());
-            RmcWarehouse warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());*/
+            RmcWarehouse warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());
             if (ofcOrderDTO!=null){
                 map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
                 map.put("orderInfo", ofcOrderDTO);
