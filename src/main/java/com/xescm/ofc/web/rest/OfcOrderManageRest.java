@@ -59,7 +59,7 @@ public class OfcOrderManageRest extends BaseController{
      * @param
      * @return
      */
-    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST,  produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public Wrapper<?> orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
@@ -81,7 +81,7 @@ public class OfcOrderManageRest extends BaseController{
      * @param orderCode
      * @return com.xescm.uam.utils.wrap.Wrapper;
      */
-    @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderDelete", method = RequestMethod.POST,  produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public Wrapper<?> orderDelete(Model model, String orderCode, String orderStatus){
         logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
@@ -102,7 +102,7 @@ public class OfcOrderManageRest extends BaseController{
      * @param orderCode
      * @return
      */
-    @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderCancel", method = RequestMethod.POST,  produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public Wrapper<?> orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
         logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);

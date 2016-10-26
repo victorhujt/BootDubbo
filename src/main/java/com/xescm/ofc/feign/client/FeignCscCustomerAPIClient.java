@@ -60,10 +60,4 @@ public class FeignCscCustomerAPIClient {
         Wrapper<?> wrapper = getApi().modifyCscContantAndCompany(cscContantAndCompanyDto);
         return wrapper;
     }
-
-
-
-
-
-
 }

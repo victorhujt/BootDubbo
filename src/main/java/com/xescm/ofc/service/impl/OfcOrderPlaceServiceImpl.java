@@ -1,24 +1,31 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
 import com.xescm.ofc.enums.OrderConstEnum;
+import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
+import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
-import com.xescm.ofc.wrap.Wrapper;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import com.xescm.uam.utils.wrap.Wrapper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ydx on 2016/10/12.
  */
 @Service
+@Transactional//既能注解在方法上,也能注解在类上.当注解在类上的时候,意味着这个类的所有public方法都是开启事务的,如果类级别和方法级别同事使用了该注解,则方法覆盖类.
+//@Transactional(rollbackFor={xxx.class})
 public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
@@ -30,7 +37,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Autowired
+    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
+    @Autowired
+    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+
     ModelMapper modelMapper = new ModelMapper();
+
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO,String tag) {
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
@@ -180,4 +193,72 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         return ofcWarehouseInformation;
     }
 
+    /**
+     * 下单或编辑时保存货品信息
+     */
+    public String saveOrderGoodsList(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList){
+        if (ofcGoodsDetailsInfoList.size() < 1){
+            return "未添加货品信息";
+        }
+        for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo: ofcGoodsDetailsInfoList) {
+            int save = ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
+            if(save == 0){
+                throw new BusinessException("保存货品信息失败");
+            }
+        }
+        return Wrapper.SUCCESS_MESSAGE;
+
+
+    }
+    /**
+     * 下单或编辑时保存发货方收货方及其联系人
+     */
+    public String saveContactMessage(CscContantAndCompanyDto cscContantAndCompanyDto){
+        if(null == cscContantAndCompanyDto){
+            return "未添加联系人信息";
+        }
+        try {
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyDto);
+            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                throw new BusinessException(wrapper.getMessage());
+            }
+        }catch (Exception ex){
+            throw new BusinessException("添加联系人信息出错!");
+        }
+        return Wrapper.SUCCESS_MESSAGE;
+    }
+    /**
+     * 下单或编辑时保存供应商及供应商联系人
+     */
+    public String saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto){
+        if(null == cscSupplierInfoDto){
+            return "未添加供应商信息";
+        }
+        try {
+            Wrapper<?> wrapper = feignCscSupplierAPIClient.addSupplierBySupplierCode(cscSupplierInfoDto);
+            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                throw new BusinessException(wrapper.getMessage());
+            }
+        }catch (Exception ex){
+            throw new BusinessException("添加供应商信息出错!");
+        }
+        return Wrapper.SUCCESS_MESSAGE;
+    }
+    /**
+     * 下单或编辑时保存仓库信息
+     */
+    public String saveWarehouseMessage(OfcWarehouseInformation ofcWarehouseInformation){
+        if(null == ofcWarehouseInformation){
+            return "未添加仓库信息";
+        }
+        try {
+            int save = ofcWarehouseInformationService.save(ofcWarehouseInformation);
+            if(save == 0){
+                throw new BusinessException("保存仓库信息失败");
+            }
+        }catch (Exception ex){
+            throw new BusinessException("保存仓库信息失败!");
+        }
+        return Wrapper.SUCCESS_MESSAGE;
+    }
 }

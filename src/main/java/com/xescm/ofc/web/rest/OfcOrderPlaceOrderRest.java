@@ -138,7 +138,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(Model model, CscGoods cscGoods, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
-        cscGoods.setCustomerCode("customCode1476932806900");
+        cscGoods.setCustomerCode("customCode1477201537817");
         Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));

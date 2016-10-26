@@ -241,21 +241,4 @@
         //xxxx();
     }
 </script>
-<script type="text/javascript">
-
-   /* function orderFollow() {
-        /!*进行非空校验，然后进行查询*!/
-        var code=$("input[name='code']").val();
-        if(code==""||code==null){
-            alert("请先输入数据再进行查询");
-            return false;
-        }else{
-
-            CommonClient.post(sys.rootPath + "/ofc/orderFollowCon", $("#followOrderForm").serialize(), function(data) {
-                xescm.common.loadPage("");
-            }
-
-        }
-    }*/
-</script>
-</body></html>
+</body>

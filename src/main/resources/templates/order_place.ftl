@@ -375,9 +375,9 @@
 
                                                         </thead>
                                                         <#--货品明细-->
-
+                                                        <form id="goodsInfoListForm">
                                                         <tbody id="goodsInfoListDiv"></tbody>
-
+                                                        </form>
                                                     </table>
                                                     <div class="row">
                                                         <div class="col-xs-6">
@@ -500,12 +500,12 @@
                                                         <div id="dynamic-table_filter" class="dataTables_length">
                                                             <label>
                                                                 &nbsp;&nbsp;&nbsp;
-                                                                仓库名称:<select id="warehouseName" name="warehouseName">
+                                                                仓库名称:
+                                                            <select id="warehouseName" name="warehouseName">
                                                                 <option value="">----</option>
-                                                                <#list warehouseListByCustCode as warehouse>
+                                                                <#list warehouseListByCustCode! as warehouse>
                                                                     <option value="${(warehouseListByCustCode.warehouseCode)!}">${(warehouseListByCustCode.warehouseName)!}</option>
                                                                 </#list>
-
                                                             </select>
                                                                 入库预计到达时间:<input id="arriveTime" name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                 车牌号:<input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">

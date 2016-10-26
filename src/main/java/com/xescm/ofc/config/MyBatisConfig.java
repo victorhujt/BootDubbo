@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -19,6 +20,7 @@ import java.util.Properties;
  * Created by MT on 2016/9/18.
  */
 @Configuration
+@EnableTransactionManagement
 @MapperScan(basePackages = "com.xescm.ofc.mapper")
 public class MyBatisConfig {
 

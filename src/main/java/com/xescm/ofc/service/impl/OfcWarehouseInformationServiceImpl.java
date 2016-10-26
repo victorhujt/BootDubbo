@@ -1,6 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
@@ -46,23 +47,29 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
     @Override
     public List<OfcWarehouseInformation> getWarehouseListByCustCode(String custCode) {
-        Wrapper<List<String>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(custCode);
-        List<String> result = cscWarehouseByCustomerId.getResult();
-        if(result.size() < 1){
-            return new ArrayList<>();
-        }
-        List<OfcWarehouseInformation> warehouseList = new ArrayList<>();
-        for(String warehouseCode : result){
-            Wrapper<OfcWarehouseInformation> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
-            OfcWarehouseInformation ofcWarehouseInformation = rmcWarehouseByid.getResult();
-            if (null == ofcWarehouseInformation) {
-                continue;
+        try{
+            Wrapper<List<String>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(custCode);
+            List<String> result = cscWarehouseByCustomerId.getResult();
+            if(result.size() < 1){
+                return new ArrayList<>();
             }
-            warehouseList.add(ofcWarehouseInformation);
+            List<OfcWarehouseInformation> warehouseList = new ArrayList<>();
+            for(String warehouseCode : result){
+                Wrapper<OfcWarehouseInformation> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
+                OfcWarehouseInformation ofcWarehouseInformation = rmcWarehouseByid.getResult();
+                if (null == ofcWarehouseInformation) {
+                    continue;
+                }
+                warehouseList.add(ofcWarehouseInformation);
+            }
+            if(warehouseList.size() < 1){
+                return new ArrayList<>();
+            }
+            return warehouseList;
+
+        }catch (Exception ex){
+            throw new BusinessException("下单页面抓取仓库信息失败");
         }
-        if(warehouseList.size() < 1){
-            return new ArrayList<>();
-        }
-        return warehouseList;
+
     }
 }
