@@ -2,6 +2,8 @@ package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.domain.dto.CscWarehouse;
+import com.xescm.ofc.domain.dto.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscSupplierAPI;
 import com.xescm.ofc.feign.api.FeignCscWarehouseAPI;
@@ -41,20 +43,20 @@ public class FeignCscWarehouseAPIClient {
         return res;
     }
 
-    public Wrapper<List<String>> getCscWarehouseByCustomerId(@Param("customerId") String customerId){
+    public Wrapper<List<CscWarehouse>> getCscWarehouseByCustomerId(@Param("customerId") String customerId){
         logger.debug("==>通过客户编码取仓库 customerId={}", customerId);
         if(null == customerId){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<String>> cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(customerId);
+        Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(customerId);
         return cscWarehouseByCustomerId;
     }
-    public Wrapper<OfcWarehouseInformation> getRmcWarehouseByid(@Param("id") String id){
+    public Wrapper<RmcWarehouse> getRmcWarehouseByid(@Param("id") String id){
         logger.debug("==>根据仓库ID获取仓库信息 id={}", id);
         if(null == id){
             throw new BusinessException("参数为空");
         }
-        Wrapper<OfcWarehouseInformation> rmcWarehouseByid = getRmcApi().getRmcWarehouseByid(id);
+        Wrapper<RmcWarehouse> rmcWarehouseByid = getRmcApi().getRmcWarehouseByid(id);
         return rmcWarehouseByid;
     }
 }

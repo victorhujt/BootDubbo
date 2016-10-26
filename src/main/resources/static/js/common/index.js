@@ -69,8 +69,6 @@ var xescm = {
 			});
 		},
 		submit : function(submitUrl,message, param, successFunction) {
-			debugger;
-			console.log("1111");
 			if(!message){
 				message='您确认吗?'
 			}
@@ -80,17 +78,11 @@ var xescm = {
 				title : '确认操作'
 			}, function(){
 					CommonClient.post(sys.rootPath + submitUrl, param, function(result) {
-						debugger;
-						console.log("----------------"+submitUrl)
-						console.log("----------------"+JSON.stringify(result))
-						console.log("----------------"+result.code)
 						if (result == undefined || result == null) {
-							console.log("--------un--------")
 							layer.msg("HTTP请求无数据返回", {
 								icon : 1
 							});
 						} else if (result.code == "200") {
-							console.log("------200----------")
 							layer.msg(result.message, {
 								skin : 'layui-layer-molv',
 								icon : 1
@@ -100,7 +92,6 @@ var xescm = {
 							}
 						} else {
 
-							console.log("--------eeee--------")
 							layer.msg(result.message, {
 								skin : 'layui-layer-molv',
 								icon : 5

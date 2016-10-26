@@ -1,9 +1,7 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.domain.dto.RmcWarehouse;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,5 +13,5 @@ public interface OfcOrderManageService {
     String orderCancel(String orderCode,String orderStatus);
     Map<String,Object> getContactMessage(String contactCompanyName, String contactName, String purpose);
     Map<String,Object> getSupportMessage(String suppulierName, String suppulierContactName);
-    OfcWarehouseInformation getWarehouseMessage(String warehouseCode);
+    RmcWarehouse getWarehouseMessage(String warehouseCode);
 }

@@ -3,6 +3,9 @@ package com.xescm.ofc.web.rest;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.RmcWarehouse;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -131,17 +134,21 @@ public class OfcOrderManageRest extends BaseController{
             System.out.println(ofcOrderDTO);
             ofcOrderDTO.setConsignorContactName("张三");
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            Map<String, Object> consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
+            /*Map<String, Object> consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
             Map<String, Object> consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNEE);
             Map<String, Object> supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName());
-            OfcWarehouseInformation warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());
+            RmcWarehouse warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());*/
             if (ofcOrderDTO!=null){
                 map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
                 map.put("orderInfo", ofcOrderDTO);
-                map.put("consignorMessage",consignorMessage.get("consignorMessage"));
+                /*map.put("consignorMessage",consignorMessage.get("consignorMessage"));
                 map.put("consigneeMessage", consigneeMessage.get("consigneeMessage"));
                 map.put("supportMessage",supportMessage.get("supportMessage"));
-                map.put("warehouseList",warehouseMessage);
+                map.put("warehouseList",warehouseMessage);*/
+                map.put("consignorMessage",new CscContantAndCompanyDto());
+                map.put("consigneeMessage", new CscContantAndCompanyDto());
+                map.put("supportMessage",new CscSupplierInfoDto());
+                map.put("warehouseList",new RmcWarehouse());
                 return "/order_edit";
             }
 

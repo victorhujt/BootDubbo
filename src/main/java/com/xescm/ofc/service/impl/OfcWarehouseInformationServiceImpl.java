@@ -1,6 +1,8 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.domain.dto.CscWarehouse;
+import com.xescm.ofc.domain.dto.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
@@ -46,21 +48,21 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
 
     @Override
-    public List<OfcWarehouseInformation> getWarehouseListByCustCode(String custCode) {
+    public List<RmcWarehouse> getWarehouseListByCustCode(String custCode) {
         try{
-            Wrapper<List<String>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(custCode);
-            List<String> result = cscWarehouseByCustomerId.getResult();
+            Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(custCode);
+            List<CscWarehouse> result = cscWarehouseByCustomerId.getResult();
             if(result.size() < 1){
                 return new ArrayList<>();
             }
-            List<OfcWarehouseInformation> warehouseList = new ArrayList<>();
-            for(String warehouseCode : result){
-                Wrapper<OfcWarehouseInformation> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
-                OfcWarehouseInformation ofcWarehouseInformation = rmcWarehouseByid.getResult();
-                if (null == ofcWarehouseInformation) {
+            List<RmcWarehouse> warehouseList = new ArrayList<>();
+            for(CscWarehouse cscWarehouse : result){
+                Wrapper<RmcWarehouse> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(cscWarehouse.getWarehouseCode());
+                RmcWarehouse rmcWarehouse = rmcWarehouseByid.getResult();
+                if (null == rmcWarehouse) {
                     continue;
                 }
-                warehouseList.add(ofcWarehouseInformation);
+                warehouseList.add(rmcWarehouse);
             }
             if(warehouseList.size() < 1){
                 return new ArrayList<>();

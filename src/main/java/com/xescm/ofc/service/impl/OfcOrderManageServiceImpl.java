@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -159,10 +160,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public OfcWarehouseInformation getWarehouseMessage(String warehouseCode) {
-
-        Wrapper<OfcWarehouseInformation> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
-        OfcWarehouseInformation result = rmcWarehouseByid.getResult();
+    public RmcWarehouse getWarehouseMessage(String warehouseCode) {
+        Wrapper<RmcWarehouse> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
+        RmcWarehouse result = rmcWarehouseByid.getResult();
         if(result == null){
             throw new BusinessException("没有查到仓库的信息!");
         }

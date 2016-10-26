@@ -453,10 +453,8 @@
     }
     function reReviewOrder(ordercode,orderStatus) {
 
-        debugger;
         console.log("reReviewOrder----------")
         xescm.common.submit("/ofc/orderOrNotAudit","您确定要反审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function () {
-            debugger
             console.log("===/ofc/orderOrNotAudit")
             var jsonStr = {};
             var orderScreenConditionJSON = JSON.stringify(jsonStr);

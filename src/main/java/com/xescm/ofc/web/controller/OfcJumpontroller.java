@@ -1,6 +1,7 @@
 package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.domain.dto.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -35,16 +36,16 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map ,String custCode, HttpServletRequest request, HttpServletResponse response){
         logger.debug("==>订单中心我要下单客户编码custCode custCode={}", custCode);
-        List<OfcWarehouseInformation> warehouseListByCustCode = null;
+        List<RmcWarehouse> rmcWarehouseByCustCode = null;
         try{
             custCode = "2";
-            warehouseListByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custCode);
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custCode);
         }catch (BusinessException ex){
             logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
-            warehouseListByCustCode = new ArrayList<>();
+            rmcWarehouseByCustCode = new ArrayList<>();
         }
-        map.put("warehouseListByCustCode",warehouseListByCustCode);
+        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
         return new ModelAndView("order_place");
 
     }
