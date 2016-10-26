@@ -79,7 +79,7 @@
             color: black;
         }
     </style>
-
+    <script src="../../js/My97DatePicker/WdatePicker.js"></script>
 </head>
 
 <body class="no-skin">
@@ -354,7 +354,7 @@
 
                                                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                                         <thead>
-                                                        <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                                        <tr role="row" class="center sorting_disabled"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                                                             操作
                                                         </th>
                                                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>
@@ -749,10 +749,10 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
@@ -972,6 +972,14 @@
                 $('.transLi').hide();
             }
         });
+
+        function deleteGood(obj) {
+            $(obj).parent().parent().remove();
+        }
+
+        function deleteGood(obj) {
+            $(obj).parent().parent().remove();
+        }
 
     })
 </script>

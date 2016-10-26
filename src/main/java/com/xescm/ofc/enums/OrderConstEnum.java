@@ -34,8 +34,8 @@ public final class OrderConstEnum {
     public static final Integer ORDERWASABOLISHED=1;       //订单作废
     public static final Integer ORDERWASNOTABOLISHED=0;       //订单未作废
 
-    public static final String CONTACTPURPOSECONSIGNOR = "1"; //联系人用途,发货人
-    public static final String CONTACTPURPOSECONSIGNEE = "2"; //联系人用途,收货人
+    public static final String CONTACTPURPOSECONSIGNOR = "2"; //联系人用途,发货人
+    public static final String CONTACTPURPOSECONSIGNEE = "1"; //联系人用途,收货人
 
     public OrderConstEnum() {
     }

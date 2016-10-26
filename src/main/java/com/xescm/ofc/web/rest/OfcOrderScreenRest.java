@@ -36,6 +36,7 @@ public class OfcOrderScreenRest extends BaseController {
         if(StringUtils.isBlank(orderScreenConditionJSON)){
             orderScreenConditionJSON = JSONUtils.objectToJson(new OrderScreenCondition());
         }
+        orderScreenConditionJSON=orderScreenConditionJSON.replace("◎"," ");
         OrderScreenCondition orderScreenCondition = JSONUtils.jsonToPojo(orderScreenConditionJSON, OrderScreenCondition.class);
         int pageSize = Integer.parseInt(pageSizePath);
         int currPage = Integer.parseInt(currPagePath);

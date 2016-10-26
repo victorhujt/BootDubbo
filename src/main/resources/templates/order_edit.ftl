@@ -471,23 +471,23 @@
                                                     <div id="consignorin" class="">
                                                         <input id="consignorCode" name="consignorCode" <#if orderInfo.consignorCode?? >value="${orderInfo.consignorCode}"</#if> type="hidden">
                                                         名称:
-                                                        <input id="consignorName"  name="consignorName" <#if orderInfo.consignorName?? >value="${orderInfo.consignorName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input id="contactCompanyName"  name="contactCompanyName" <#if orderInfo.consignorName?? >value="${orderInfo.consignorName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consignorMessage.contactName?? >value="${consignorMessage.contactName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consignorMessage.phone?? >value="${consignorMessage.phone}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consignorMessage.fax?? >value="${consignorMessage.fax}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consignorMessage.email?? >value="${consignorMessage.email}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consignorMessage.postCode?? >value="${consignorMessage.postCode}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         地址:
                                                         <select><option value="">--省--</option></select>
                                                         <select><option value="">--市--</option></select>
                                                         <select><option value="">--区/县--</option></select>
                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consignorMessage.address?? >value="${consignorMessage.address}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                     </div>
 
@@ -499,23 +499,23 @@
                                                     <div id="consignorout" class="">
                                                         <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if orderInfo.consigneeCode?? >value="${orderInfo.consigneeCode}"</#if> >
                                                         名称:
-                                                        <input id="consigneeName" name="consigneeName" <#if orderInfo.consigneeName?? >value="${orderInfo.consigneeName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input id="contactCompanyName" name="contactCompanyName" <#if orderInfo.consigneeName?? >value="${orderInfo.consigneeName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consigneeMessage.contactName?? >value="${consigneeMessage.contactName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consigneeMessage.phone?? >value="${consigneeMessage.phone}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consigneeMessage.fax?? >value="${consigneeMessage.fax}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consigneeMessage.email?? >value="${consigneeMessage.email}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consigneeMessage.postCode?? >value="${consigneeMessage.postCode}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         地址:
                                                         <select><option value="">--省--</option></select>
                                                         <select><option value="">--市--</option></select>
                                                         <select><option value="">--区/县--</option></select>
                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if consigneeMessage.address?? >value="${consigneeMessage.address}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                     </div>
 
@@ -555,21 +555,21 @@
                                                         名称:
                                                         <input id="supportName" name="supportName" <#if orderInfo.supportName?? >value="${orderInfo.supportName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if supportMessage.contactName?? >value="${supportMessage.contactName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if supportMessage.contactPhone?? >value="${supportMessage.contactPhone}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if supportMessage.fax?? >value="${supportMessage.fax}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if supportMessage.email?? >value="${supportMessage.email}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if supportMessage.postCode?? >value="${supportMessage.postCode}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         地址:
                                                         <select><option value="">--省--</option></select>
                                                         <select><option value="">--市--</option></select>
                                                         <select><option value="">--区/县--</option></select>
                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <input name="" <#if supportMessage.address?? >value="${supportMessage.address}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                     </div>
                                                 </div>

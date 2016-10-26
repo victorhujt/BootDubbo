@@ -300,9 +300,28 @@
 
 <#include "common/include.ftl">
 <script type="text/javascript">
-    var scripts = [ null, "", null ]
+    var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
         $(document).ready(main);
+        $('.chosen-select').chosen({allow_single_deselect:true});
+        //resize the chosen on window resize
+
+        $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+            if(event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function() {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
     });
 
     function main(){
@@ -460,5 +479,7 @@
 
 
 </script>
+<link rel="stylesheet" href="../components/chosen/chosen.css" />
+<script src="../components/chosen/chosen.jquery.js"></script>
 
 </body>
