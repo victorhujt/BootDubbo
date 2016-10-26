@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by lyh on 2016/10/12.
  * 订单追踪
  */
-@RequestMapping(value = "/ofc")
+@RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderFollowRest extends BaseController{
     @Autowired

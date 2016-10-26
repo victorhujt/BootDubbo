@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by lyh on 2016/10/10.
  */
-@RequestMapping(value = "/ofc")
+@RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderScreenRest extends BaseController {
 

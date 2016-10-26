@@ -9,6 +9,11 @@
   
 package com.xescm.ofc.web.controller;
 
+import com.xescm.uam.constant.UamConstant;
+import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.exception.BusinessException;
+import com.xescm.uam.utils.PublicUtil;
+import com.xescm.uam.utils.ThreadLocalMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +27,15 @@ import org.slf4j.LoggerFactory;
 
 public class BaseController {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected AuthResDto getAuthResDtoByToken(){
+		AuthResDto authResDto = (AuthResDto) ThreadLocalMap.get(UamConstant.TOKEN_AUTH_DTO);
 
+		if(PublicUtil.isEmpty(authResDto)){
+			throw new BusinessException("验证token失败");
+		}
+
+		return authResDto;
+
+	}
 }
   

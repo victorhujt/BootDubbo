@@ -259,73 +259,115 @@
                 </div><!-- /.page-header -->
 
                 <div class="row">
-                    <form id="orderPlaceConTable">
+
                         <div class="col-xs-12">
 
                             <div class="table-header">
                                 基本信息
                             </div>
 
-                                <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+                            <div class="widget-box">
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <form id="dynamic-table_wrapper_orderFundamentalForm" method="post" class="form-horizontal" role="form" >
+                                        <#-- <div class="row">-->
+                                        <#--<div id="dynamic-table_filter" class="dataTables_length">-->
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
+                                                    <div class="col-sm-6">
+                                                        <div class="clearfix">
+                                                            <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
-                                    <form action="" method="post" id="dynamic-table_wrapper_orderFundamentalForm">
-                                        <div class="row">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
+                                                    <div class="col-sm-6">
+                                                        <div class="clearfix">
+                                                            <input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
+                                                    <div class="col-sm-6">
+                                                        <div class="clearfix">
+                                                            <select id="orderTypeSel" name="orderType">
+                                                                <option value="60">运输订单</option>
+                                                                <option value="61">仓配订单</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                         <div class="form-group" id="businessTypeDiv" style="display: none">
+                                             <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                                             <div class="col-sm-6">
+                                                 <div class="clearfix">
+                                                   <#--<span id="businessTypeDiv" style="display: none">-->
+                                                         <select id="businessType" name="businessType">
+                                                             <option value="610">销售出库</option>
+                                                             <option value="611">调拨出库</option>
+                                                             <option value="612">报损出库</option>
+                                                             <option value="613">其他出库</option>
+                                                             <option value="----------">----------</option>
+                                                             <option value="620">采购入库</option>
+                                                             <option value="621">调拨入库</option>
+                                                             <option value="622">退货入库</option>
+                                                             <option value="623">加工入库</option>
+                                                         </select>
+                                                   <#--  </span>-->
+                                                 </div>
+                                             </div>
+                                         </div>
 
-                                            <div id="dynamic-table_filter" class="dataTables_length">
-                                                <label>
+                                         <div class="form-group" id="provideTransportDiv" style="display: none">
+                                             <label class="control-label col-sm-1 no-padding-right" for="name">是否需要运输</label>
+                                             <div class="col-sm-6">
+                                                 <div class="clearfix">
+                                                    <#-- <span id="provideTransportDiv" style="display: none">-->
+                                                         <input  id="provideTransport" type="checkbox" name = ""/>
+                                                         <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
+                                                    <#-- </span>-->
+                                                 </div>
+                                             </div>
+                                         </div>
 
-                                                    &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                         <div class="form-group">
+                                             <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
+                                             <div class="col-sm-6">
+                                                 <div class="clearfix">
+                                                     <select id="storeCode" name="storeCode">
+                                                         <option value="线下销售">线下销售</option>
+                                                         <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
+                                                         <option value="众品京东旗舰店">众品京东旗舰店</option>
+                                                     </select>
+                                                 </div>
+                                             </div>
+                                         </div>
+
+                                         <div class="form-group">
+                                             <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
+                                             <div class="col-sm-6">
+                                                 <div class="clearfix">
+                                                     <input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                 </div>
+                                             </div>
+                                         </div>
+                                        <#--</label>-->
+
+                                        <#--  </div>-->
+
+                                        <#--</div>-->
+                                        </form>
 
 
-                                                    客户订单编号:<input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
-
-                                                    &nbsp;&nbsp;&nbsp;
-                                                    订单类型:
-                                                    <select id="orderTypeSel" name="orderType">
-                                                        <option value="60">运输订单</option>
-                                                        <option value="61">仓配订单</option>
-                                                    </select>
-                                                    <span id="businessTypeDiv" style="display: none">
-                                                    业务类型:
-                                                    <select id="businessType" name="businessType">
-                                                        <option value="610">销售出库</option>
-                                                        <option value="611">调拨出库</option>
-                                                        <option value="612">报损出库</option>
-                                                        <option value="613">其他出库</option>
-                                                        <option value="----------">----------</option>
-                                                        <option value="620">采购入库</option>
-                                                        <option value="621">调拨入库</option>
-                                                        <option value="622">退货入库</option>
-                                                        <option value="623">加工入库</option>
-                                                    </select>
-                                                        </span>
-
-                                                    <span id="provideTransportDiv" style="display: none">
-                                                        是否需要运输
-                                                        <input  id="provideTransport" type="checkbox" name = ""/>
-                                                        <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
-                                                    </span>
-                                                    店铺:
-                                                    <select id="storeCode" name="storeCode">
-                                                        <option value="线下销售">线下销售</option>
-                                                        <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
-                                                        <option value="众品京东旗舰店">众品京东旗舰店</option>
-                                                    </select>
 
 
-                                                </label>
 
-                                            </div>
-
-                                            <div id="dynamic-table_filter" class="dataTables_length">
-                                                <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                </label>
-                                            </div>
-
-                                        </div>
-                                    </form>
-
+                                    </div>
+                                </div>
+                            </div>
 
                                     <div class="col-sm-6">
                                         <!-- #section:elements.tab.option -->
@@ -550,13 +592,12 @@
 
                                         <!-- /section:elements.tab.option -->
                                     </div>
-                                </div>
+
                         </div>
 
                         <#--<button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>-->
                         <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
 
-                    </form>
                 </div>
 
                 <!-- PAGE CONTENT ENDS -->
