@@ -13,9 +13,9 @@ import java.util.List;
  * Created by 韦能 on 2016/10/18.
  */
 public interface FeignCscWarehouseAPI {
-    @RequestLine("GET /api/csc/CscWarehouseRest/getCscWarehouseByCustomerId/{customerId}")
+    @RequestLine("POST /api/csc/CscWarehouseRest/getCscWarehouseByCustomerId/{customerId}")
     Wrapper<List<CscWarehouse>> getCscWarehouseByCustomerId(@Param("customerId") String customerId);
     
-    @RequestLine("GET /api/rmc/RmcWarehouseRest/getRmcWarehouseByid/{id}")
+    @RequestLine("POST /api/rmc/RmcWarehouseRest/getRmcWarehouseByid/{id}")
     public Wrapper<RmcWarehouse> getRmcWarehouseByid(@Param("id") String id);
 }

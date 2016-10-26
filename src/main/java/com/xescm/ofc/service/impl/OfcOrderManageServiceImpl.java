@@ -126,11 +126,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try {
             listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
         }catch (Exception ex){
-            new BusinessException(ex.getMessage());
-        }
-
-        if(String.valueOf(Wrapper.ERROR_CODE).equals(listWrapper.getCode())){
-            throw new BusinessException("查询收发货方信息错误!");
+            throw new BusinessException(ex.getMessage());
         }
         if(listWrapper.getResult().size() < 1 ){
             if(OrderConstEnum.CONTACTPURPOSECONSIGNOR.equals(purpose)){

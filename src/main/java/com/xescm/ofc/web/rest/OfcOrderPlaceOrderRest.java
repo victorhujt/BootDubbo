@@ -102,6 +102,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
             }
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
+
        }catch (BusinessException ex){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }

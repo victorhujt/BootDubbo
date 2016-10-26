@@ -1,6 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -45,17 +46,14 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
             }
             if(StringUtils.isBlank(orderCode)){//如果找不到对应的code,就提示直接提示错误.
-                return null;//再做处理
+                throw new BusinessException("找不到该订单编号");
             }else{
-                OfcFundamentalInformation ofcFundamentalInformation =  ofcFundamentalInformationService.selectByKey(orderCode);
-                if(ofcFundamentalInformation == null){
-                    return new OfcOrderDTO();//再做处理
-                }
-                OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
-                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
-                OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
                 OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
                 try {
+                    OfcFundamentalInformation ofcFundamentalInformation =  ofcFundamentalInformationService.selectByKey(orderCode);
+                    OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
+                    OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                    OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
@@ -64,11 +62,15 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
+                } catch (BusinessException ex){
+                    throw new BusinessException(ex.getMessage());
+                }catch (Exception ex){
+                    throw new BusinessException(ex.getMessage());
                 }
                 return ofcOrderDTO;
             }
         }else{
-            return null;//再做处理
+            throw new BusinessException("订单编号为空");
         }
     }
 }
