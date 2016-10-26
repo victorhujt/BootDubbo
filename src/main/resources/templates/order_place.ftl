@@ -89,10 +89,26 @@
         <h4 class="modal-title">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="goodsSelConditionForm">
-                货品编码:<input id="goodsCodeCondition" name="goodsCode" type="text">
-                货品名称:<input id="goodsNameCondition" name="goodsName" type="text">
-                <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
+            <form id="goodsSelConditionForm" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -119,18 +135,42 @@
     </div>
     <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
+
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
     <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="consignorSelConditionForm">
-                名称:<input id="consignorName2" name="contactCompanyName" type="text">
-                联系人:<input id="consignorPerson2" name="contactName" type="text">
-                联系电话:<input id="consignorPhoneNumber2" name="phone" type="text">
+            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
                 <input id="purpose2" name="purpose" type="hidden" value="2">
-                <button type="button" class="btn btn-info" id="consignorSelectFormBtn" >筛选</button>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "consignorName2" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "consignorPerson2" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "consignorPhoneNumber2" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -166,12 +206,35 @@
         <h4 class="modal-title">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="consigneeSelConditionForm">
-                名称:<input id="consignorName1" name="contactCompanyName" type="text">
-                联系人:<input id="consignorPerson1" name="contactName" type="text">
-                联系电话:<input id="consignorPhoneNumber1" name="phone" type="text">
-                <input id="purpose1" name="purpose" type="hidden" value="1">
-                <button type="button" class="btn btn-info" id="consigneeSelectFormBtn" >筛选</button>
+            <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
+                <input id="purpose2" name="purpose" type="hidden" value="1">
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -206,11 +269,34 @@
         <h4 class="modal-title">供应商联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="supplierSelConditionForm">
-                名称:<input id="supplierName" name="supplierName" type="text">
-                联系人:<input id="contactName" name="contactName" type="text">
-                联系电话:<input id="contactPhone" name="contactPhone" type="text">
-                <button type="button" class="btn btn-info" id="supplierSelectFormBtn" >筛选</button>
+            <form id="supplierSelConditionForm" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "supplierName" name="supplierName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "contactName" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-sm-2">
+                        <div class="clearfix">
+                            <input  id = "contactPhone" name="contactPhone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span id="supplierSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -259,34 +345,52 @@
                 </div><!-- /.page-header -->
 
                 <div class="row">
-                    <form id="orderPlaceConTable">
-                        <div class="col-xs-12">
 
-                            <div class="table-header">
-                                基本信息
-                            </div>
+                    <div class="col-xs-12">
 
-                                <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+                        <div class="table-header">
+                            基本信息
+                        </div>
 
-                                    <form action="" method="post" id="dynamic-table_wrapper_orderFundamentalForm">
-                                        <div class="row">
+                        <div class="widget-box">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <form id="dynamic-table_wrapper_orderFundamentalForm" method="post" class="form-horizontal" role="form" >
+                                    <#-- <div class="row">-->
+                                    <#--<div id="dynamic-table_filter" class="dataTables_length">-->
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
-                                            <div id="dynamic-table_filter" class="dataTables_length">
-                                                <label>
-
-                                                    &nbsp;&nbsp;&nbsp;订单日期:<input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-
-
-                                                    客户订单编号:<input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
-
-                                                    &nbsp;&nbsp;&nbsp;
-                                                    订单类型:
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
                                                     <select id="orderTypeSel" name="orderType">
                                                         <option value="60">运输订单</option>
                                                         <option value="61">仓配订单</option>
                                                     </select>
-                                                    <span id="businessTypeDiv" style="display: none">
-                                                    业务类型:
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="businessTypeDiv" style="display: none">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                <#--<span id="businessTypeDiv" style="display: none">-->
                                                     <select id="businessType" name="businessType">
                                                         <option value="610">销售出库</option>
                                                         <option value="611">调拨出库</option>
@@ -298,265 +402,283 @@
                                                         <option value="622">退货入库</option>
                                                         <option value="623">加工入库</option>
                                                     </select>
-                                                        </span>
+                                                <#--  </span>-->
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                                    <span id="provideTransportDiv" style="display: none">
-                                                        是否需要运输
-                                                        <input  id="provideTransport" type="checkbox" name = ""/>
-                                                        <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
-                                                    </span>
-                                                    店铺:
+                                        <div class="form-group" id="provideTransportDiv" style="display: none">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">是否需要运输</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                <#-- <span id="provideTransportDiv" style="display: none">-->
+                                                    <input  id="provideTransport" type="checkbox" name = ""/>
+                                                    <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
+                                                <#-- </span>-->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
                                                     <select id="storeCode" name="storeCode">
                                                         <option value="线下销售">线下销售</option>
                                                         <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
                                                         <option value="众品京东旗舰店">众品京东旗舰店</option>
                                                     </select>
-
-
-                                                </label>
-
+                                                </div>
                                             </div>
-
-                                            <div id="dynamic-table_filter" class="dataTables_length">
-                                                <label>
-                                                    &nbsp;&nbsp;&nbsp;备注:<input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                </label>
-                                            </div>
-
                                         </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
+                                            <div class="col-sm-6">
+                                                <div class="clearfix">
+                                                    <input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <#--</label>-->
+
+                                    <#--  </div>-->
+
+                                    <#--</div>-->
                                     </form>
-
-
-                                    <div class="col-sm-6">
-                                        <!-- #section:elements.tab.option -->
-                                        <div class="tabbable" style="float: left; text-align: left; margin: 0 auto; width: 1300px;" >
-                                            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
-                                                <li class="active">
-                                                    <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
-                                                </li>
-
-                                                <li class="transLi">
-                                                    <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
-                                                </li>
-
-                                                <li class="storeLi" style="display:none">
-                                                    <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
-                                                </li>
-
-                                            </ul>
-
-                                            <div class="tab-content">
-                                                <div id="home4" class="tab-pane active">
-
-                                                    <!--货品明细-->
-
-                                                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
-
-                                                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                                        <thead>
-                                                        <tr role="row" class="center sorting_disabled"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                                                            操作
-                                                        </th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
-                                                            </th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
-                                                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
-                                                                生产日期</th>
-                                                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
-                                                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
-                                                                失效日期</th>
-
-
-                                                        </thead>
-                                                        <#--货品明细-->
-                                                        <form id="goodsInfoListForm">
-                                                        <tbody id="goodsInfoListDiv"></tbody>
-                                                        </form>
-                                                    </table>
-                                                    <div class="row">
-                                                        <div class="col-xs-6">
-                                                            <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-6">
-                                                            </div></div>
-
-                                                </div>
-
-                                                <div id="profile4" class="tab-pane">
-
-                                                    <div class="page-header">
-                                                        <h4>运输基本信息</h4>
-                                                    </div>
-                                                    <form action="" method="post" id="orderDistributionForm">
-                                                    <div class="row">
-
-                                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                                            <label>
-                                                                &nbsp;&nbsp;&nbsp;
-
-                                                                数量:<input id="quantity" name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-
-                                                                重量:<input id="weight" name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                体积:<input id="cubage" name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
-                                                                合计标准箱:<input id="totalStandardBox" name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
-
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                出发地:
-                                                                <input id="departurePlace" name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
-                                                                目的地:
-                                                                <input id="destination" name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
-                                                                取货时间:
-                                                                <input id="pickupTime" name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                期望送达时间:
-                                                                <input id="expectedArrivedTime" name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                是否加急:<input id="urgent" type="checkbox" name=""  />
-                                                                <input id="urgentHel" type="hidden" name="urgent"  value="0" />
-
-                                                            </label>
-                                                        </div>
-
-                                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                                            <label>
-                                                                &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                            </label>
-                                                        </div>
-
-                                                        <br/>
-
-                                                    </div>
-                                                    </form>
-
-                                                    <div class="page-header">
-                                                        <h4>发货方信息</h4>
-                                                    </div>
-                                                    <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
-                                                    <div id="consignorin">
-                                                        <input id="consignorCode" name="consignorCode"  type="hidden"/>
-                                                        名称:
-                                                        <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        地址:
-                                                        <select><option value="">--省--</option></select>
-                                                        <select><option value="">--市--</option></select>
-                                                        <select><option value="">--区/县--</option></select>
-                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                                    </div>
-
-
-                                                    <div class="page-header">
-                                                        <h4>收货方信息</h4>
-                                                    </div>
-                                                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
-                                                    <div id="consignorout">
-                                                        <input id="consigneeCode" name="consigneeCode"  type="hidden"/>
-                                                        名称:
-                                                        <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        地址:
-                                                        <select><option value="">--省--</option></select>
-                                                        <select><option value="">--市--</option></select>
-                                                        <select><option value="">--区/县--</option></select>
-                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                    </div>
-                                                </div>
-
-                                                <div id="dropdown14" class="tab-pane">
-
-                                                    <div class="page-header">
-                                                        <h4>仓配基本信息</h4>
-                                                    </div>
-                                                    <form action="" method="post" id="orderWarehouseForm">
-                                                    <div class="row">
-                                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                                            <label>
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                仓库名称:
-                                                            <select id="warehouseName" name="warehouseName">
-                                                                <option value="">----</option>
-                                                                <#list warehouseListByCustCode! as warehouse>
-                                                                    <option value="${(warehouseListByCustCode.warehouseCode)!}">${(warehouseListByCustCode.warehouseName)!}</option>
-                                                                </#list>
-                                                            </select>
-                                                                入库预计到达时间:<input id="arriveTime" name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                车牌号:<input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                司机姓名:<input id="driverName" name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                联系电话:
-                                                                <input id="contactNumber" name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                            </label>
-                                                        </div>
-                                                        <br/>
-                                                    </div>
-                                                        </form>
-                                                    <div class="page-header">
-                                                        <h4>供应商信息</h4>
-                                                    </div>
-                                                    <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
-                                                    <div id="support" class="">
-                                                        <input name="supportCode" id="supportCode" type="hidden"/>
-                                                        名称:
-                                                        <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系人:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        联系电话:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        传真:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        Email:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        <br/>邮编:
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                        地址:
-                                                        <select><option value="">--省--</option></select>
-                                                        <select><option value="">--市--</option></select>
-                                                        <select><option value="">--区/县--</option></select>
-                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- /section:elements.tab.option -->
-                                    </div>
                                 </div>
+                            </div>
                         </div>
 
-                        <#--<button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>-->
-                        <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
+                        <div class="col-sm-6">
+                            <!-- #section:elements.tab.option -->
+                            <div class="tabbable" style="float: left; text-align: left; margin: 0 auto; width: 1300px;" >
+                                <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
+                                    </li>
 
-                    </form>
+                                    <li class="transLi">
+                                        <a data-toggle="tab" href="#profile4" aria-expanded="true">运输信息</a>
+                                    </li>
+
+                                    <li class="storeLi" style="display:none">
+                                        <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
+                                    </li>
+
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="home4" class="tab-pane active">
+
+                                        <!--货品明细-->
+
+                                        <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
+
+                                        <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                            <thead>
+                                            <tr role="row" class="center sorting_disabled"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                                操作
+                                            </th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
+                                                </th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
+                                                    <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+                                                    生产日期</th>
+                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
+                                                    <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+                                                    失效日期</th>
+
+
+                                            </thead>
+                                        <#--货品明细-->
+                                            <form id="goodsInfoListForm">
+                                                <tbody id="goodsInfoListDiv"></tbody>
+                                            </form>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                            </div></div>
+
+                                    </div>
+
+                                    <div id="profile4" class="tab-pane">
+
+                                        <div class="page-header">
+                                            <h4>运输基本信息</h4>
+                                        </div>
+                                        <form action="" method="post" id="orderDistributionForm">
+                                            <div class="row">
+
+                                                <div id="dynamic-table_filter" class="dataTables_length">
+                                                    <label>
+                                                        &nbsp;&nbsp;&nbsp;
+
+                                                        数量:<input id="quantity" name="quantity" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+
+                                                        重量:<input id="weight" name="weight" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        体积:<input id="cubage" name="cubage" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)<br/>
+                                                        合计标准箱:<input id="totalStandardBox" name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        出发地:
+                                                        <input id="departurePlace" name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                        目的地:
+                                                        <input id="destination" name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                        取货时间:
+                                                        <input id="pickupTime" name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                        期望送达时间:
+                                                        <input id="expectedArrivedTime" name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                        是否加急:<input id="urgent" type="checkbox" name=""  />
+                                                        <input id="urgentHel" type="hidden" name="urgent"  value="0" />
+
+                                                    </label>
+                                                </div>
+
+                                                <div id="dynamic-table_filter" class="dataTables_length">
+                                                    <label>
+                                                        &nbsp;&nbsp;&nbsp;运输要求:<input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    </label>
+                                                </div>
+
+                                                <br/>
+
+                                            </div>
+                                        </form>
+
+                                        <div class="page-header">
+                                            <h4>发货方信息</h4>
+                                        </div>
+                                        <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
+                                        <div id="consignorin">
+                                            <input id="consignorCode" name="consignorCode"  type="hidden"/>
+                                            名称:
+                                            <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            联系人:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            联系电话:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            传真:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            Email:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            <br/>邮编:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            地址:
+                                            <select><option value="">--省--</option></select>
+                                            <select><option value="">--市--</option></select>
+                                            <select><option value="">--区/县--</option></select>
+                                            <select><option value="">--乡镇/街道--</option></select>
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                        </div>
+
+
+                                        <div class="page-header">
+                                            <h4>收货方信息</h4>
+                                        </div>
+                                        <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
+                                        <div id="consignorout">
+                                            <input id="consigneeCode" name="consigneeCode"  type="hidden"/>
+                                            名称:
+                                            <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            联系人:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            联系电话:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            传真:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            Email:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            <br/>邮编:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            地址:
+                                            <select><option value="">--省--</option></select>
+                                            <select><option value="">--市--</option></select>
+                                            <select><option value="">--区/县--</option></select>
+                                            <select><option value="">--乡镇/街道--</option></select>
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        </div>
+                                    </div>
+
+                                    <div id="dropdown14" class="tab-pane">
+
+                                        <div class="page-header">
+                                            <h4>仓配基本信息</h4>
+                                        </div>
+                                        <form action="" method="post" id="orderWarehouseForm">
+                                            <div class="row">
+                                                <div id="dynamic-table_filter" class="dataTables_length">
+                                                    <label>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        仓库名称:
+                                                        <select id="warehouseName" name="warehouseName">
+                                                            <option value="">----</option>
+                                                        <#list warehouseListByCustCode! as warehouse>
+                                                            <option value="${(warehouseListByCustCode.warehouseCode)!}">${(warehouseListByCustCode.warehouseName)!}</option>
+                                                        </#list>
+                                                        </select>
+                                                        入库预计到达时间:<input id="arriveTime" name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                        车牌号:<input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        司机姓名:<input id="driverName" name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        联系电话:
+                                                        <input id="contactNumber" name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    </label>
+                                                </div>
+                                                <br/>
+                                            </div>
+                                        </form>
+                                        <div class="page-header">
+                                            <h4>供应商信息</h4>
+                                        </div>
+                                        <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                        <div id="support" class="">
+                                            <input name="supportCode" id="supportCode" type="hidden"/>
+                                            名称:
+                                            <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            联系人:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            联系电话:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            传真:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            Email:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            <br/>邮编:
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                            地址:
+                                            <select><option value="">--省--</option></select>
+                                            <select><option value="">--市--</option></select>
+                                            <select><option value="">--区/县--</option></select>
+                                            <select><option value="">--乡镇/街道--</option></select>
+                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- /section:elements.tab.option -->
+                        </div>
+
+                    </div>
+
+                <#--<button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>-->
+                    <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
+
                 </div>
 
                 <!-- PAGE CONTENT ENDS -->
@@ -641,7 +763,7 @@
             //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
 
             //alert(url);
-           // xescm.common.loadPage(url);
+            // xescm.common.loadPage(url);
             xescm.common.submit("/ofc/orderPlaceCon","您即将提交订单,请再次确认!",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
                 //xescm.common.goBack("/ofc/orderPlace");
             })

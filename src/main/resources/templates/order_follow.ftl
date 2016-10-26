@@ -24,32 +24,64 @@
                 </div><!-- /.page-header -->
                 <div class="row">
                     <div class="col-xs-12">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="widget-title">筛选条件</h4>
+                                <span class="widget-toolbar">
+                                    <a href="#" data-action="collapse">
+                                        <i class="ace-icon fa fa-chevron-up"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <form id="screenOrderForm" class="form-horizontal" role="form">
 
+                                        <div class="form-group">
+                                            <label>
+                                                <div class="col-sm-6">
+                                                    <div class="clearfix">
+
+                                                        <select class="chosen-select form-control" id="followTag" name="followTag">
+                                                            <option value="orderCode">订单编号</option>
+                                                            <option value="custOrderCode">客户订单编号</option>
+                                                            <option value="transCode">运输单号</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-sm-6">
+                                                    <div class="clearfix">
+                                                        <input  id = "code" name="code" type="search" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    </div>
+                                                </div>
+
+                                            </label>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <span  class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="followOrderFormBtn">查询</span>
+                                        </div>
+
+
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <!-- div.table-responsive -->
 
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <form>
-                                    <div class="row">
-                                        <div id="dynamic-table_filter" class="dataTables_length">
-                                            <label>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <select id="followTag" data-label="lsl_条件类型" name="followTag">
-                                                    <option value="orderCode">订单编号</option>
-                                                    <option value="custOrderCode">客户订单编号</option>
-                                                    <option value="transCode">运输单号</option>
-                                                </select>
-                                                <input  id = "code" name="code" type="search" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                <span  class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="followOrderFormBtn">查询</span>
-                                            </label>
-                                        </div>
-                                        <br/>
-                                        <div class="table-header">
-                                            订单跟踪记录
-                                        </div>
-                                    </div>
-                                </form>
+
+                                <div class="table-header">
+                                    订单跟踪记录
+                                </div>
+
+
 
                                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                     <thead>
@@ -190,9 +222,28 @@
 
 <#include "common/include.ftl">
 <script type="text/javascript">
-    var scripts = [ null, "", null ]
+    var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
         $(document).ready(main);
+        $('.chosen-select').chosen({allow_single_deselect:true});
+        //resize the chosen on window resize
+
+        $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+            if(event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function() {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
     });
 
     function main(){
@@ -241,4 +292,6 @@
         //xxxx();
     }
 </script>
+<link rel="stylesheet" href="../components/chosen/chosen.css" />
+<script src="../components/chosen/chosen.jquery.js"></script>
 </body>
