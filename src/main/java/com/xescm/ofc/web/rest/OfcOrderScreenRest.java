@@ -25,7 +25,6 @@ import java.util.Map;
 @Controller
 public class OfcOrderScreenRest extends BaseController {
 
-
     @Autowired
     private OfcOrderScreenService ofcOrderScreenService;
 

@@ -625,6 +625,17 @@
     });
 
     function main(){
+
+    }
+</script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+
+    $(function(){
+
+
+
+
         $("#provideTransport").change(function () {
             if($(this).prop("checked")){
                 $("#provideTransportHel").val("1");
@@ -682,17 +693,16 @@
             //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
 
             //alert(url);
-           // xescm.common.loadPage(url);
+            // xescm.common.loadPage(url);
             xescm.common.submit("/ofc/orderPlaceCon","您即将提交订单,请再次确认!",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
                 //xescm.common.goBack("/ofc/orderPlace");
             })
         });
-    }
-</script>
-<!-- inline scripts related to this page -->
-<script type="text/javascript">
 
-    $(function(){
+
+
+
+
 
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {

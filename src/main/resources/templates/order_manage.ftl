@@ -132,8 +132,8 @@
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
 
 
-                                <div class="table-header">
-                                    订单列表
+                                <div class="widget-header">
+                                    <h4 class="widget-title">订单列表</h4>
                                 </div>
                                 <div class="col-xs-12">
 
@@ -252,32 +252,8 @@
                                     </tbody>
                                 </table>
                                 查询结果共${(totalNum)!"0"}条记录,共${(totalPage)!"1"}页
-                                <div class="row">
-                                    <#--<div class="col-xs-6">
-                                        <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite"></div>
-                                    </div>-->
+                                <div class="row"  id="pageDiv">
                                     <div id="example" style="text-align: center"> <ul id="pageLimit" class="pagination"></ul> </div>
-                                   <#-- <div class="col-xs-6">
-                                        <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_previous">
-                                                    <a href="#">Previous</a>
-                                                </li>
-                                                <li class="paginate_button active" aria-controls="dynamic-table" tabindex="0">
-                                                    <a href="#">1</a>
-                                                </li>
-                                                <li class="paginate_button " aria-controls="dynamic-table" tabindex="0">
-                                                    <a href="#">2</a>
-                                                </li>
-                                                <li class="paginate_button " aria-controls="dynamic-table" tabindex="0">
-                                                    <a href="#">3</a>
-                                                </li>
-                                                <li class="paginate_button next" aria-controls="dynamic-table" tabindex="0" id="dynamic-table_next">
-                                                    <a href="#">Next</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>-->
                                 </div>
                             </div>
                     </div>
@@ -297,6 +273,7 @@
 
 <#include "common/include.ftl">
 <script type="text/javascript">
+
     var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
         $(document).ready(main);
@@ -324,37 +301,18 @@
     function main(){
         //初始化页面数据
         /*initPageData();*/
-        // 查询
-
-
-
-
     }
 
-    //页面数据初始化
-    /*function initPageData(){
-        var active_class = "active";
-        $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
-            var th_checked = this.checked;//checkbox inside "TH" table header
-
-            $(this).closest("table").find("tbody > tr").each(function(){
-                var row = this;
-                if(th_checked) $(row).addClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", true);
-                else $(row).removeClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", false);
-            });
-        });
-        $("#simple-table").on("click", "td input[type=checkbox]" , function(){
-            var $row = $(this).closest("tr");
-            if($row.is(".detail-row ")) return;
-            if(this.checked) $row.addClass(active_class);
-            else $row.removeClass(active_class);
-        });
-        //xxxx();
-    }*/
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-
+    $(function () {
+    <#if totalPage ?? >
+        $("#pageDiv").show();
+    <#else>
+        $("#pageDiv").hide();
+    </#if>
+    });
 
     $("#screenOrderFormBtn").click(function () {
         var jsonStr={};
@@ -474,7 +432,7 @@
 
 
 </script>
-<link rel="stylesheet" href="../components/chosen/chosen.css" />
-<script src="../components/chosen/chosen.jquery.js"></script>
+<link rel="stylesheet" href="../../components/chosen/chosen.css" />
+<script src="../../components/chosen/chosen.jquery.js"></script>
 
 </body>
