@@ -87,11 +87,28 @@
         <h4 class="modal-title">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="goodsSelConditionForm">
-                货品编码:<input id="goodsCodeCondition" name="goodsCode" type="text">
-                货品名称:<input id="goodsNameCondition" name="goodsName" type="text">
-                <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
-            </form>
+                    <div class="widget-main">
+                        <form id="goodsSelConditionForm"  class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
+                                <div class="col-sm-2">
+                                    <div class="clearfix">
+                                        <#--<input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">-->
+                                        <input id="goodsCodeCondition" name="goodsCode" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
+                                <div class="col-sm-2">
+                                    <div class="clearfix">
+                                        <input id="goodsNameCondition" name="goodsName" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
+                        </form>
+                    </div>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -123,13 +140,38 @@
         <h4 class="modal-title">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="consignorSelConditionForm">
-                名称:<input id="consignorName2" name="contactCompanyName" type="text">
-                联系人:<input id="consignorPerson2" name="contactName" type="text">
-                联系电话:<input id="consignorPhoneNumber2" name="phone" type="text">
-                <input id="purpose2" name="purpose" type="hidden" value="2">
+            <div class="widget-main">
+                <form id="consignorSelConditionForm"  class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                        <div class="col-sm-2">
+                            <div class="clearfix">
+                                <input id="consignorName2" name="contactCompanyName" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                        <div class="col-sm-2">
+                            <div class="clearfix">
+                                <input id="consignorPerson2" name="contactName" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                        <div class="col-sm-2">
+                            <div class="clearfix">
+                                <input id="consignorPhoneNumber2" name="phone" type="text">
+                                <input id="purpose2" name="purpose" type="hidden" value="2">
+                            </div>
+                        </div>
+                    </div>
                 <button type="button" class="btn btn-info" id="contactSelectFormBtn2" >筛选</button>
-            </form>
+                </form>
+            </div>
+     <#--   </div>
+    </div>-->
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -162,13 +204,35 @@
         <h4 class="modal-title">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="consigneeSelConditionForm">
-                名称:<input id="consignorName1" name="contactCompanyName" type="text">
-                联系人:<input id="consignorPerson1" name="contactName" type="text">
-                联系电话:<input id="consignorPhoneNumber1" name="phone" type="text">
-                <input id="purpose1" name="purpose" type="hidden" value="1">
-                <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
-            </form>
+            <div class="widget-main">
+                <form id="consigneeSelConditionForm"  class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                        <div class="col-sm-2">
+                            <div class="clearfix">
+                                <input id="consignorName1" name="contactCompanyName" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                        <div class="col-sm-2">
+                            <div class="clearfix">
+                                <input id="consignorPerson1" name="contactName" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                        <div class="col-sm-2">
+                            <div class="clearfix">
+                                <input id="consignorPhoneNumber1" name="phone" type="text">
+                                <input id="purpose1" name="purpose" type="hidden" value="1">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
+                </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -196,6 +260,8 @@
     </div>
     <div class="modal-footer"><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
+</div>
+
 <!--supportListDiv-->
 <div class="modal-content" id="supportListDiv" style="display: none;">
     <div class="modal-header"><span id="supportListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>

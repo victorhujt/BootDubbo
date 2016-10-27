@@ -24,7 +24,7 @@
 
                 <!-- /section:settings.box -->
                 <div class="page-header">
-                    <p>
+                    <p style="font-size: 18px">
                         订单管理
                     </p>
                 </div>
