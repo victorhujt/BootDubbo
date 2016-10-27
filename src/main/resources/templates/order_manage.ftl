@@ -23,11 +23,11 @@
             <div class="page-content">
 
                 <!-- /section:settings.box -->
-                <#--<div class="page-header">-->
-                    <#--<p>-->
-                        <#--订单管理-->
-                    <#--</p>-->
-                <#--</div>-->
+                <div class="page-header">
+                    <p>
+                        订单管理
+                    </p>
+                </div>
                 <!-- /.page-header -->
 
                 <div class="row">
@@ -129,9 +129,6 @@
                             </div>
                         </div>
                         <!-- div.table-responsive -->
-
-                        <!-- div.dataTables_borderWrap -->
-                        <div>
                             <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
 
 
@@ -283,7 +280,6 @@
                                     </div>-->
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
 

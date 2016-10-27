@@ -451,7 +451,7 @@
                                                         <div class="row">
 
                                                             <div id="dynamic-table_filter" class="dataTables_length">
-                                                                <label>
+
                                                                     <div class="form-group" >
                                                                         <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
                                                                         <div class="col-sm-6">
@@ -534,7 +534,6 @@
                                                                         </div>
                                                                     </div>
 
-                                                                </label>
                                                             </div>
 
 
@@ -697,7 +696,6 @@
                                                         </div>
                                                         <div class="row">
                                                             <div id="dynamic-table_filter" class="dataTables_length">
-                                                                <label>
                                                                     <div class="form-group" >
                                                                         <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                         <div class="col-sm-6">
@@ -745,9 +743,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-
-                                                                </label>
                                                             </div>
                                                             <br/>
                                                         </div>
