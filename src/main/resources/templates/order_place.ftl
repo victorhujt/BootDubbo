@@ -1032,7 +1032,7 @@
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
@@ -1052,7 +1052,7 @@
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
@@ -1074,7 +1074,7 @@
                 var supplierList = "";
                 $.each(data,function (index,CscSupplierInfoDto) {
                     supplierList =supplierList + "<tr role='row' class='odd'>";
-                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='suppliersele' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     supplierList =supplierList + "<td>"+(index+1)+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
