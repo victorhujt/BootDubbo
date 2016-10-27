@@ -18,201 +18,160 @@
 
                 <!-- /section:settings.box -->
                 <div class="page-header">
-                    <h1>
-                        订单跟踪
-                    </h1>
+                    <p>
+                        筛选条件
+                    </p>
                 </div><!-- /.page-header -->
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="widget-box">
-                            <div class="widget-header">
-                                <h4 class="widget-title">筛选条件</h4>
-                                <span class="widget-toolbar">
-                                    <a href="#" data-action="collapse">
-                                        <i class="ace-icon fa fa-chevron-up"></i>
-                                    </a>
-                                </span>
-                            </div>
-                            <div class="widget-body">
-                                <div class="widget-main">
-                                    <form id="screenOrderForm" class="form-horizontal" role="form">
-
-                                        <div class="form-group">
-                                            <label>
-                                                <div class="col-sm-6">
-                                                    <div class="clearfix">
-
-                                                        <select class="chosen-select form-control" id="followTag" name="followTag">
-                                                            <option value="orderCode">订单编号</option>
-                                                            <option value="custOrderCode">客户订单编号</option>
-                                                            <option value="transCode">运输单号</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-
-
-                                                <div class="col-sm-6">
-                                                    <div class="clearfix">
-                                                        <input  id = "code" name="code" type="search" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                    </div>
-                                                </div>
-
-                                            </label>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <span  class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="followOrderFormBtn">查询</span>
-                                        </div>
-
-
-
-                                    </form>
-                                </div>
-                            </div>
+                <div class=" form-group">
+                    <div class="col-sm-3 ">
+                        <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
+                            <option value="orderCode">订单编号</option>
+                            <option value="custOrderCode">客户订单编号</option>
+                            <option value="transCode">运输单号</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <div class="clearfix">
+                            <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
                         </div>
-                        <!-- div.table-responsive -->
-
-                        <!-- div.dataTables_borderWrap -->
-                        <div>
-                            <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-
-                                <div class="table-header">
-                                    订单跟踪记录
-                                </div>
-
-
-
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单编号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">客户订单编号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品类型</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">出发地</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">目的地</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(ofcOrderDTO.orderTime?string("MM-dd-yyyy"))!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderCode)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.custOrderCode)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderStatus)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderType)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.businessType)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.notes)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.goodsType)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.departurePlace)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.destination)!" "}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">运输要求</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">运输单号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">车牌号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">司机姓名</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货地址</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(ofcOrderDTO.quantity)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.weight)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.cubage)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.transRequire)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.transCode)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.plateNumber)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.driverName)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.contactNumber)!" "}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.odestination)!" "}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-
+                    </div>
+                </div>
+                <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
+                    筛选
+                </button>
+                <div class="page-header">
+                    <p>
+                        订单跟踪记录
+                    </p>
+                </div>
+                <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单日期</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单编号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">客户订单编号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品类型</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">出发地</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">目的地</th>
+                        </thead>
+                        <tbody>
+                        <#--
+                                vo  value object  拼出来的结果集
+                                dto  参数,给后端当参数,或者返回的dot.
+                                -->
+                        <tr role="row" class="odd">
+                            <td>
+                            ${(ofcOrderDTO.orderTime?string("MM-dd-yyyy"))!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.orderCode)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.custOrderCode)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.orderStatus)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.orderType)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.businessType)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.notes)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.goodsType)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.departurePlace)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.destination)!" "}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">运输要求</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">运输单号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">车牌号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">司机姓名</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货地址</th>
+                        </thead>
+                        <tbody>
+                        <#--
+                                vo  value object  拼出来的结果集
+                                dto  参数,给后端当参数,或者返回的dot.
+                                -->
+                        <tr role="row" class="odd">
+                            <td>
+                            ${(ofcOrderDTO.quantity)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.weight)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.cubage)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.transRequire)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.transCode)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.plateNumber)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.driverName)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.contactNumber)!" "}
+                            </td>
+                            <td>
+                            ${(ofcOrderDTO.odestination)!" "}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
 
 
-                                <hr />
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <#list orderStatusList! as orderStatus>
-                                    <tr role="row" class="odd">
-                                        <td>
-                                            . ${(orderStatus.notes)!"null"}
-                                        </td>
-                                    </tr>
-                                    </#list>
-                                    </tbody>
-                                </table>
-                            </div><!-- /.dynamic-table_wrapper -->
-                        </div>
-                        <!-- PAGE CONTENT ENDS -->
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
+
+                    <hr />
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
+                        </thead>
+                        <tbody>
+                        <#--
+                                vo  value object  拼出来的结果集
+                                dto  参数,给后端当参数,或者返回的dot.
+                                -->
+                        <#list orderStatusList! as orderStatus>
+                        <tr role="row" class="odd">
+                            <td>
+                                . ${(orderStatus.notes)!"null"}
+                            </td>
+                        </tr>
+                        </#list>
+                        </tbody>
+                    </table>
+                </div><!-- /.dynamic-table_wrapper -->
+
             </div><!-- /.page-content -->
         </div>
     </div><!-- /.main-content -->

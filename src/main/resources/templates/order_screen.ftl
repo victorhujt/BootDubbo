@@ -120,9 +120,6 @@
                     </p>
                 </div>
                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                        <div class="table-header">
-                            订单列表
-                        </div>
                         <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                             <thead>
                             <tr role="row">
