@@ -121,8 +121,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setContactName(contactName);
         cscContantAndCompanyDto.setPurpose(purpose);
-        cscContantAndCompanyDto.setContactCompanyId("");
-        Wrapper<List<CscContantAndCompanyDto>> listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+        //cscContantAndCompanyDto.setContactCompanyId("");
+        Wrapper<List<CscContantAndCompanyDto>> listWrapper = null;
+        try {
+            listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            if(null == listWrapper.getResult()){
+                throw new BusinessException("接口返回结果为null");
+            }
+        }catch (Exception ex){
+            throw new BusinessException(ex.getMessage());
+        }
         if(listWrapper.getResult().size() < 1 ){
             if(OrderConstEnum.CONTACTPURPOSECONSIGNOR.equals(purpose)){
                 throw new BusinessException("没有查到该发货人的信息!");
@@ -130,9 +138,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException("没有查到该收货人的信息!");
             }
         }
-        if(String.valueOf(Wrapper.ERROR_CODE).equals(listWrapper.getCode())){
-            throw new BusinessException("查询收发货方信息错误!");
-        }
+
         CscContantAndCompanyDto cscContantAndCompanyDtoDetail = listWrapper.getResult().get(0);
         if(OrderConstEnum.CONTACTPURPOSECONSIGNOR.equals(purpose)){
             map.put("consignorMessage",cscContantAndCompanyDtoDetail);
@@ -148,7 +154,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
         cscSupplierInfoDto.setSupplierName(supportName);
         cscSupplierInfoDto.setContactName(supportContactName);
-        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+        Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
+        try {
+            listWrapper =  feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            if(null == listWrapper.getResult()){
+                throw new BusinessException("接口返回结果为null");
+            }
+        }catch (Exception ex){
+            throw new BusinessException(ex.getMessage());
+        }
         if(listWrapper.getResult().size() < 1){
                 throw new BusinessException("没有查到该供应商的信息!");
         }
@@ -163,7 +177,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public RmcWarehouse getWarehouseMessage(String warehouseCode) {
         Wrapper<RmcWarehouse> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
         RmcWarehouse result = rmcWarehouseByid.getResult();
-        if(result == null){
+        if(null == result){
             throw new BusinessException("没有查到仓库的信息!");
         }
         if(String.valueOf(Wrapper.ERROR_CODE).equals(rmcWarehouseByid.getCode())){
@@ -171,6 +185,5 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         return result;
     }
-
 
 }

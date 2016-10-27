@@ -27,13 +27,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by ydx on 2016/10/11.
  */
-@RequestMapping(value = "/ofc")
+@RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderManageRest extends BaseController{
     @Autowired
@@ -57,7 +59,7 @@ public class OfcOrderManageRest extends BaseController{
      * @param
      * @return
      */
-    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST,  produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
@@ -79,7 +81,7 @@ public class OfcOrderManageRest extends BaseController{
      * @param orderCode
      * @return com.xescm.uam.utils.wrap.Wrapper;
      */
-    @RequestMapping(value = "/orderDelete", method = RequestMethod.POST,  produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderDelete(Model model, String orderCode, String orderStatus){
         logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
@@ -100,7 +102,7 @@ public class OfcOrderManageRest extends BaseController{
      * @param orderCode
      * @return
      */
-    @RequestMapping(value = "/orderCancel", method = RequestMethod.POST,  produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
         logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
@@ -128,36 +130,45 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
 
-        try {
-            orderCode=orderCode.replace(",","");
-            ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
-            System.out.println(ofcOrderDTO);
-            ofcOrderDTO.setConsignorContactName("张三");
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            /*Map<String, Object> consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
-            Map<String, Object> consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNEE);
-            Map<String, Object> supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName());
-            RmcWarehouse warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());*/
-            if (ofcOrderDTO!=null){
-                map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
-                map.put("orderInfo", ofcOrderDTO);
-                /*map.put("consignorMessage",consignorMessage.get("consignorMessage"));
-                map.put("consigneeMessage", consigneeMessage.get("consigneeMessage"));
-                map.put("supportMessage",supportMessage.get("supportMessage"));
-                map.put("warehouseList",warehouseMessage);*/
-                map.put("consignorMessage",new CscContantAndCompanyDto());
-                map.put("consigneeMessage", new CscContantAndCompanyDto());
-                map.put("supportMessage",new CscSupplierInfoDto());
-                map.put("warehouseList",new RmcWarehouse());
-                return "/order_edit";
-            }
+        orderCode=orderCode.replace(",","");
 
-        }
-        catch (BusinessException ex) {
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
+        Map<String, Object> consignorMessage = null;
+        Map<String, Object> consigneeMessage = null;
+        Map<String, Object> supportMessage = null;
+        RmcWarehouse warehouseMessage = null;
+        try{
+            ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
+            ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
+            /*consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
+            consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNEE);
+            supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName());
+            warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());*/
+        }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
+            /*consignorMessage = new HashMap<>();
+            consigneeMessage.put("consignorMessage",new CscContantAndCompanyDto());
+            consigneeMessage = new HashMap<>();
+            consigneeMessage.put("consignorMessage",new CscContantAndCompanyDto());
+            supportMessage = new HashMap<>();
+            supportMessage.put("supportMessage",new CscSupplierInfoDto());
+            warehouseMessage = new RmcWarehouse();*/
         }catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
+        }
+        if (ofcOrderDTO!=null){
+            map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
+            map.put("orderInfo", ofcOrderDTO);
+            /*map.put("consignorMessage",consignorMessage.get("consignorMessage"));
+            map.put("consigneeMessage", consigneeMessage.get("consigneeMessage"));
+            map.put("supportMessage",supportMessage.get("supportMessage"));
+            map.put("warehouseList",warehouseMessage);*/
+            map.put("consignorMessage",new CscContantAndCompanyDto());
+            map.put("consigneeMessage", new CscContantAndCompanyDto());
+            map.put("supportMessage",new CscSupplierInfoDto());
+            map.put("warehouseList",new RmcWarehouse());
+            return "/order_edit";
         }
         return "order_manage";
     }

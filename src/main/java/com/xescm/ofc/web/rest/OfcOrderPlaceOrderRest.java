@@ -14,6 +14,7 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.ofc.wrap.WrapMapper;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +36,7 @@ import java.util.Map;
 /**
  * Created by lyh on 2016/10/8.
  */
-@RequestMapping(value = "/ofc")
+@RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderPlaceOrderRest extends BaseController{
 
@@ -102,6 +103,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
             }
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
+
        }catch (BusinessException ex){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -137,8 +139,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(Model model, CscGoods cscGoods, HttpServletResponse response){
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         //调用外部接口,最低传CustomerCode
-        cscGoods.setCustomerCode("customCode1477201537817");
+        cscGoods.setCustomerCode(authResDtoByToken.getGroupId());
         Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
@@ -155,7 +158,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
     public void contactSelectByCscApi(Model model, CscContantAndCompanyDto cscContantAndCompanyDto, HttpServletResponse response){
-        //调用外部接口,最低传CustomerCode
+        //调用外部接口,最低传CustomerCode和purpose
         Wrapper<List<CscContantAndCompanyDto>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscReceivingInfoList.getResult()));

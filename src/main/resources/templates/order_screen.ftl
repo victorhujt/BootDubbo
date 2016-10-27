@@ -328,8 +328,8 @@
         });
 
         $('#pageLimit').bootstrapPaginator({
-            currentPage: ${currPage!"1"},//当前页码
-            totalPages: ${totalPage!"1"}, //总页数
+            currentPage: ${currPage!"0"},//当前页码
+            totalPages: ${totalPage!"0"}, //总页数
             size:"normal",
             bootstrapMajorVersion: 3,
             alignment:"right",

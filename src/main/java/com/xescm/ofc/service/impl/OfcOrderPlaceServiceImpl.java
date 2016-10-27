@@ -207,8 +207,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
         }
         return Wrapper.SUCCESS_MESSAGE;
-
-
     }
     /**
      * 下单或编辑时保存发货方收货方及其联系人
