@@ -355,9 +355,7 @@
                         <div class="widget-box">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <form id="dynamic-table_wrapper_orderFundamentalForm" method="post" class="form-horizontal" role="form" >
-                                    <#-- <div class="row">-->
-                                    <#--<div id="dynamic-table_filter" class="dataTables_length">-->
+                                    <form id="" method="post" class="form-horizontal" role="form" >
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                             <div class="col-sm-6">
@@ -440,11 +438,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <#--</label>-->
 
-                                    <#--  </div>-->
-
-                                    <#--</div>-->
                                     </form>
                                 </div>
                             </div>
@@ -499,9 +493,9 @@
 
                                                             </thead>
                                                         <#--货品明细-->
-                                                            <form id="goodsInfoListForm">
-                                                                <tbody id="goodsInfoListDiv"></tbody>
-                                                            </form>
+
+                                                            <tbody id="goodsInfoListDiv"></tbody>
+
                                                         </table>
                                                         <div class="row">
                                                             <div class="col-xs-6">
@@ -617,25 +611,71 @@
                                                         </div>
                                                         <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
                                                         <div id="consignorin">
-                                                            <input id="consignorCode" name="consignorCode"  type="hidden"/>
-                                                            名称:
-                                                            <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            联系人:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            联系电话:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            传真:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            Email:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            <br/>邮编:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            地址:
-                                                            <select><option value="">--省--</option></select>
-                                                            <select><option value="">--市--</option></select>
-                                                            <select><option value="">--区/县--</option></select>
-                                                            <select><option value="">--乡镇/街道--</option></select>
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input id="consignorCode" name="consignorCode" type="hidden">
+                                                                        <input id="contactCompanyName"  name="contactCompanyName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <select><option value="">--省--</option></select>
+                                                                        <select><option value="">--市--</option></select>
+                                                                        <select><option value="">--区/县--</option></select>
+                                                                        <select><option value="">--乡镇/街道--</option></select>
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
 
@@ -645,25 +685,72 @@
                                                         </div>
                                                         <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
                                                         <div id="consignorout">
-                                                            <input id="consigneeCode" name="consigneeCode"  type="hidden"/>
-                                                            名称:
-                                                            <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            联系人:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            联系电话:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            传真:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            Email:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            <br/>邮编:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            地址:
-                                                            <select><option value="">--省--</option></select>
-                                                            <select><option value="">--市--</option></select>
-                                                            <select><option value="">--区/县--</option></select>
-                                                            <select><option value="">--乡镇/街道--</option></select>
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input id="consigneeCode" name="consigneeCode" type="hidden">
+                                                                        <input id="contactCompanyName"  name="contactCompanyName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <select><option value="">--省--</option></select>
+                                                                        <select><option value="">--市--</option></select>
+                                                                        <select><option value="">--区/县--</option></select>
+                                                                        <select><option value="">--乡镇/街道--</option></select>
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
 
@@ -672,53 +759,133 @@
                                                         <div class="page-header">
                                                             <h4>仓配基本信息</h4>
                                                         </div>
-                                                        <form action="" method="post" id="orderWarehouseForm">
-                                                            <div class="row">
-                                                                <div id="dynamic-table_filter" class="dataTables_length">
-                                                                    <label>
-                                                                        &nbsp;&nbsp;&nbsp;
-                                                                        仓库名称:
-                                                                        <select id="warehouseName" name="warehouseName">
-                                                                            <option value="">----</option>
-                                                                        <#list warehouseListByCustCode! as warehouse>
-                                                                            <option value="${(warehouseListByCustCode.warehouseCode)!}">${(warehouseListByCustCode.warehouseName)!}</option>
-                                                                        </#list>
-                                                                        </select>
-                                                                        入库预计到达时间:<input id="arriveTime" name="arriveTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                                                        车牌号:<input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                        司机姓名:<input id="driverName" name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
-                                                                        &nbsp;&nbsp;&nbsp;
-                                                                        联系电话:
-                                                                        <input id="contactNumber" name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                                    </label>
+
+                                                        <div class="row">
+                                                            <div id="dynamic-table_filter" class="dataTables_length">
+
+
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <select id="warehouseName" name="warehouseName"  value="${(orderInfo.wareHouseName)!""}">
+                                                                            <#list warehouseListByCustCode! as warehouse>
+                                                                                <option value="${(warehouseListByCustCode.warehouseCode)!}">${(warehouseListByCustCode.warehouseName)!}</option>
+                                                                            </#list>
+                                                                            </select>
+
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <br/>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="arriveTime" name="arriveTime"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="driverName" name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="contactNumber" name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </form>
+                                                            <br/>
+                                                        </div>
+
                                                         <div class="page-header">
                                                             <h4>供应商信息</h4>
                                                         </div>
                                                         <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
                                                         <div id="support" class="">
-                                                            <input name="supportCode" id="supportCode" type="hidden"/>
-                                                            名称:
-                                                            <input name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            联系人:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            联系电话:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            传真:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            Email:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            <br/>邮编:
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                            地址:
-                                                            <select><option value="">--省--</option></select>
-                                                            <select><option value="">--市--</option></select>
-                                                            <select><option value="">--区/县--</option></select>
-                                                            <select><option value="">--乡镇/街道--</option></select>
-                                                            <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input id="supportCode" name="supportCode" type="hidden">
+                                                                        <input id="supportName"  name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="contactName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <select><option value="">--省--</option></select>
+                                                                        <select><option value="">--市--</option></select>
+                                                                        <select><option value="">--区/县--</option></select>
+                                                                        <select><option value="">--乡镇/街道--</option></select>
+                                                                        <input name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
                                                     </div>
@@ -727,437 +894,439 @@
 
                                             <!-- /section:elements.tab.option -->
                                         </div>
+                                    </form>
 
                                 </div>
 
-                            <#--<button type="button" class="btn btn-info" id="bootbox-confirm" onclick="document.getElementById('orderPlaceConTable').submit();">确认下单</button>-->
-                                <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
-
                             </div>
 
-                            <!-- PAGE CONTENT ENDS -->
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.page-content -->
-            </div>
-        </div><!-- /.main-content -->
+
+                        </div>
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                    <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
 
 
-    </div><!-- /.main-container -->
+</div><!-- /.main-container -->
 
 
-    <!-- basic scripts -->
+<!-- basic scripts -->
 
-    <!--[if !IE]> -->
-    <script src="../../components/bootbox.js/bootbox.js"></script>
+<!--[if !IE]> -->
+<script src="../../components/bootbox.js/bootbox.js"></script>
 
 
-    <!-- <![endif]-->
-    <script type="text/javascript">
-        var scripts = [ null, "", null ]
-        $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
-            $(document).ready(main);
+<!-- <![endif]-->
+<script type="text/javascript">
+    var scripts = [ null, "", null ]
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
+        $(document).ready(main);
+    });
+
+    function main(){
+        $("#provideTransport").change(function () {
+            if($(this).prop("checked")){
+                $("#provideTransportHel").val("1");
+            } else {
+                $("#provideTransportHel").val("0");
+            }
+        });
+        $("#urgent").change(function(){
+            if($(this).prop("checked")){
+                $("#urgentHel").val("1");
+            }else{
+                $("#urgentHel").val("0");
+            }
         });
 
-        function main(){
-            $("#provideTransport").change(function () {
-                if($(this).prop("checked")){
-                    $("#provideTransportHel").val("1");
-                } else {
-                    $("#provideTransportHel").val("0");
+
+
+        $("#orderPlaceConTableBtn").click(function () {
+
+            var jsonStr = {};
+            //订单基本信息
+            //$dp.$('orderTimePre').value;
+            jsonStr.orderTime = $dp.$('orderTime').value;
+            jsonStr.custOrderCode = $("#custOrderCode").val();
+            jsonStr.orderType = $("#orderTypeSel").val();
+            jsonStr.businessType = $("#businessType").val();
+            jsonStr.provideTransport = $("#provideTransportHel").val();
+            jsonStr.storeCode = $("#storeCode").val();
+            jsonStr.notes = $("#notes").val();
+            //运输基本信息
+            jsonStr.quantity = $("#quantity").val();
+            jsonStr.weight = $("#weight").val();
+            jsonStr.cubage = $("#cubage").val();
+            jsonStr.totalStandardBox = $("#totalStandardBox").val();
+            jsonStr.departurePlace = $("#departurePlace").val();
+            jsonStr.destination = $("#destination").val();
+            jsonStr.pickupTime = $dp.$('pickupTime').value;
+            jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+            jsonStr.urgent = $("#urgentHel").val();
+            jsonStr.consignorCode = $("#consignorCode").val();
+            jsonStr.consignorName = $("#consignorName").val();
+            jsonStr.consigneeCode = $("#consigneeCode").val();
+            jsonStr.consigneeName = $("#consigneeName").val();
+            //仓配基本信息
+            jsonStr.warehouseName = $("#warehouseName").val();
+            jsonStr.arriveTime = $dp.$('arriveTime').value;
+            jsonStr.plateNumber = $("#plateNumber").val();
+            jsonStr.driverName = $("#driverName").val();
+            jsonStr.contactNumber = $("#contactNumber").val();
+            jsonStr.supportCode = $("#supportCode").val();
+            jsonStr.supportName = $("#supportName").val();
+
+            var tag = "place";
+            var ofcOrderDTO = JSON.stringify(jsonStr);
+            //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
+
+            //alert(url);
+            // xescm.common.loadPage(url);
+            xescm.common.submit("/ofc/orderPlaceCon","您即将提交订单,请再次确认!",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+                //xescm.common.goBack("/ofc/orderPlace");
+            })
+        });
+    }
+</script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+
+    $(function(){
+
+        $("#goodsSelectFormBtn").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var goodsList = "";
+                $.each(data,function (index,cscGoods) {
+                    goodsList =goodsList + "<tr role='row' class='odd'>";
+                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    goodsList =goodsList + "<td>"+(index+1)+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.goodsCode+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.goodsName+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.specification+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoods.unit+"</td>";
+                });
+                $("#goodsSelectListTbody").html(goodsList);
+            },"json");
+        });
+
+        $("#consignorSelectFormBtn").click(function () {
+            //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                });
+                $("#contactSelectListTbody2").html(contactList);
+            },"json");
+        });
+
+        $("#consigneeSelectFormBtn").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var contactList = "";
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    contactList =contactList + "<tr role='row' class='odd'>";
+                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    contactList =contactList + "<td>"+(index+1)+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    $("#contactSelectListTbody1").html(contactList);
+                });
+            },"json");
+        });
+
+        $("#supplierSelectFormBtn").click(function () {
+
+            //$.post("/ofc/supplierSelect",$("#supplierSelConditionForm").serialize(),function (data) {
+            CommonClient.post(sys.rootPath + "/ofc/supplierSelect", $("#supplierSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+                var supplierList = "";
+                $.each(data,function (index,CscSupplierInfoDto) {
+                    supplierList =supplierList + "<tr role='row' class='odd'>";
+                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    supplierList =supplierList + "<td>"+(index+1)+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    $("#supplierSelectListTbody").html(supplierList);
+                });
+            },"json");
+        });
+
+        $("#goodsEnter").click(function () {
+            var goodsInfoListDiv = "";
+            $("#goodsSelectListTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var goodsCode = tdArr.eq(2).text();//货品编码
+                    var goodsName = tdArr.eq(3).text();//货品名称
+                    var specification = tdArr.eq(4).text();//    货品规格
+                    var unit = tdArr.eq(5).text();//    单位
+                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+                    $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
             });
-            $("#urgent").change(function(){
-                if($(this).prop("checked")){
-                    $("#urgentHel").val("1");
-                }else{
-                    $("#urgentHel").val("0");
+            if(goodsInfoListDiv==""){
+                alert("请至少选择一行");
+            }
+        });
+
+        $("#contactinEnter").click(function () {
+            var consignorin = "";
+            $("#contactSelectListTbody2").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var consignorName = tdArr.eq(2).text();//名称
+                    var contacts = tdArr.eq(3).text();//联系人
+                    var contactsNumber = tdArr.eq(4).text();//    联系电话
+                    var fax = tdArr.eq(5).text();//    传真
+                    var email = tdArr.eq(6).text();//    email
+                    var code = tdArr.eq(7).text();//    邮编
+                    var address = tdArr.eq(8).text();//    地址
+                    consignorin =consignorin + "名称:";
+                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorin =consignorin + "联系人:";
+                    consignorin =consignorin + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorin =consignorin + "联系电话:";
+                    consignorin =consignorin + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorin =consignorin + "传真:";
+                    consignorin =consignorin + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorin =consignorin + "Email:";
+                    consignorin =consignorin + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorin =consignorin + "邮编:";
+                    consignorin =consignorin + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorin =consignorin + "地址:";
+                    consignorin =consignorin + "<select><option value=''>--省--</option></select>";
+                    consignorin =consignorin + "<select><option value=''>--市--</option></select>";
+                    consignorin =consignorin + "<select><option value=''>--区/县--</option></select>";
+                    consignorin =consignorin + "<select><option value=''>--乡镇/街道--</option></select>";
+                    consignorin =consignorin + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
+                    $("#consignorin").html(consignorin);
                 }
             });
+            if(consignorin==""){
+                alert("请至少选择一行");
+            }
+        });
 
-
-
-            $("#orderPlaceConTableBtn").click(function () {
-
-                var jsonStr = {};
-                //订单基本信息
-                //$dp.$('orderTimePre').value;
-                jsonStr.orderTime = $dp.$('orderTime').value;
-                jsonStr.custOrderCode = $("#custOrderCode").val();
-                jsonStr.orderType = $("#orderTypeSel").val();
-                jsonStr.businessType = $("#businessType").val();
-                jsonStr.provideTransport = $("#provideTransportHel").val();
-                jsonStr.storeCode = $("#storeCode").val();
-                jsonStr.notes = $("#notes").val();
-                //运输基本信息
-                jsonStr.quantity = $("#quantity").val();
-                jsonStr.weight = $("#weight").val();
-                jsonStr.cubage = $("#cubage").val();
-                jsonStr.totalStandardBox = $("#totalStandardBox").val();
-                jsonStr.departurePlace = $("#departurePlace").val();
-                jsonStr.destination = $("#destination").val();
-                jsonStr.pickupTime = $dp.$('pickupTime').value;
-                jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
-                jsonStr.urgent = $("#urgentHel").val();
-                jsonStr.consignorCode = $("#consignorCode").val();
-                jsonStr.consignorName = $("#consignorName").val();
-                jsonStr.consigneeCode = $("#consigneeCode").val();
-                jsonStr.consigneeName = $("#consigneeName").val();
-                //仓配基本信息
-                jsonStr.warehouseName = $("#warehouseName").val();
-                jsonStr.arriveTime = $dp.$('arriveTime').value;
-                jsonStr.plateNumber = $("#plateNumber").val();
-                jsonStr.driverName = $("#driverName").val();
-                jsonStr.contactNumber = $("#contactNumber").val();
-                jsonStr.supportCode = $("#supportCode").val();
-                jsonStr.supportName = $("#supportName").val();
-
-                var tag = "place";
-                var ofcOrderDTO = JSON.stringify(jsonStr);
-                //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
-
-                //alert(url);
-                // xescm.common.loadPage(url);
-                xescm.common.submit("/ofc/orderPlaceCon","您即将提交订单,请再次确认!",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
-                    //xescm.common.goBack("/ofc/orderPlace");
-                })
+        $("#contactoutEnter").click(function () {
+            var consignorout = "";
+            $("#contactSelectListTbody1").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var consignorName = tdArr.eq(2).text();//名称
+                    var contacts = tdArr.eq(3).text();//联系人
+                    var contactsNumber = tdArr.eq(4).text();//    联系电话
+                    var fax = tdArr.eq(5).text();//    传真
+                    var email = tdArr.eq(6).text();//    email
+                    var code = tdArr.eq(7).text();//    邮编
+                    var address = tdArr.eq(8).text();//    地址
+                    consignorout =consignorout + "名称:";
+                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorout =consignorout + "联系人:";
+                    consignorout =consignorout + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorout =consignorout + "联系电话:";
+                    consignorout =consignorout + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorout =consignorout + "传真:";
+                    consignorout =consignorout + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorout =consignorout + "Email:";
+                    consignorout =consignorout + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorout =consignorout + "邮编:";
+                    consignorout =consignorout + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    consignorout =consignorout + "地址:";
+                    consignorout =consignorout + "<select><option value=''>--省--</option></select>";
+                    consignorout =consignorout + "<select><option value=''>--市--</option></select>";
+                    consignorout =consignorout + "<select><option value=''>--区/县--</option></select>";
+                    consignorout =consignorout + "<select><option value=''>--乡镇/街道--</option></select>";
+                    consignorout =consignorout + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
+                    $("#consignorout").html(consignorout);
+                }
             });
+            if(consignorout==""){
+                alert("请至少选择一行");
+            }
+        });
+
+        $("#supplierEnter").click(function () {
+            var support = "";
+            $("#supplierSelectListTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var consignorName = tdArr.eq(2).text();//名称
+                    var contacts = tdArr.eq(3).text();//联系人
+                    var contactsNumber = tdArr.eq(4).text();//    联系电话
+                    var fax = tdArr.eq(5).text();//    传真
+                    var email = tdArr.eq(6).text();//    email
+                    var code = tdArr.eq(7).text();//    邮编
+                    var address = tdArr.eq(8).text();//    地址
+                    support =support + "名称:";
+                    support =support + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    support =support + "联系人:";
+                    support =support + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    support =support + "联系电话:";
+                    support =support + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    support =support + "传真:";
+                    support =support + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    support =support + "Email:";
+                    support =support + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    support =support + "邮编:";
+                    support =support + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
+                    support =support + "地址:";
+                    support =support + "<select><option value=''>--省--</option></select>";
+                    support =support + "<select><option value=''>--市--</option></select>";
+                    support =support + "<select><option value=''>--区/县--</option></select>";
+                    support =support + "<select><option value=''>--乡镇/街道--</option></select>";
+                    support =support + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
+                    $("#support").html(support);
+                }
+            });
+            if(support==""){
+                alert("请至少选择一行");
+            }
+        });
+
+        $("#goodsListDivBlock").click(function(){
+
+            $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#goodsListDivNoneTop").click(function(){
+
+            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#goodsListDivNoneBottom").click(function(){
+
+            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+
+        $("#consignorListDivBlock").click(function(){
+
+            $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#consignorListDivNoneTop").click(function(){
+
+            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#consignorListDivNoneBottom").click(function(){
+
+            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#consigneeListDivBlock").click(function(){
+
+            $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#consigneeListDivNoneTop").click(function(){
+
+            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#consigneeListDivNoneBottom").click(function(){
+
+            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#supportListDivBlock").click(function(){
+
+            $("#supportListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#supportListDivNoneTop").click(function(){
+
+            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+        $("#supportListDivNoneBottom").click(function(){
+
+            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+
+
+        $("#orderTypeSel").change(function () {
+            if($(this).children('option:selected').val() == '61'){
+                $("#provideTransportDiv").show();
+                $("#businessTypeDiv").show();
+                $('.storeLi').show();
+                $('.transLi').hide();
+            }
+            if($(this).children('option:selected').val() == '60'){
+                $('.transLi').show();
+                $('.storeLi').hide();
+                $("#provideTransportDiv").hide();
+                $("#businessTypeDiv").hide();
+
+            }
+        });
+        $("#provideTransport").change(function () {
+            if($(this).prop("checked")){
+                $('.transLi').show();
+            }else{
+                $('.transLi').hide();
+            }
+        });
+
+        function deleteGood(obj) {
+            $(obj).parent().parent().remove();
         }
-    </script>
-    <!-- inline scripts related to this page -->
-    <script type="text/javascript">
 
-        $(function(){
+        function deleteGood(obj) {
+            $(obj).parent().parent().remove();
+        }
 
-            $("#goodsSelectFormBtn").click(function () {
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
-                    data=eval(data);
-                    var goodsList = "";
-                    $.each(data,function (index,cscGoods) {
-                        goodsList =goodsList + "<tr role='row' class='odd'>";
-                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                        goodsList =goodsList + "<td>"+(index+1)+"</td>";
-                        goodsList =goodsList + "<td>"+cscGoods.goodsCode+"</td>";
-                        goodsList =goodsList + "<td>"+cscGoods.goodsName+"</td>";
-                        goodsList =goodsList + "<td>"+cscGoods.specification+"</td>";
-                        goodsList =goodsList + "<td>"+cscGoods.unit+"</td>";
-                    });
-                    $("#goodsSelectListTbody").html(goodsList);
-                },"json");
-            });
-
-            $("#consignorSelectFormBtn").click(function () {
-                //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
-                CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
-                    data=eval(data);
-                    var contactList = "";
-                    $.each(data,function (index,CscContantAndCompanyDto) {
-                        contactList =contactList + "<tr role='row' class='odd'>";
-                        contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                        contactList =contactList + "<td>"+(index+1)+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
-                    });
-                    $("#contactSelectListTbody2").html(contactList);
-                },"json");
-            });
-
-            $("#consigneeSelectFormBtn").click(function () {
-                CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
-                    data=eval(data);
-                    var contactList = "";
-                    $.each(data,function (index,CscContantAndCompanyDto) {
-                        contactList =contactList + "<tr role='row' class='odd'>";
-                        contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                        contactList =contactList + "<td>"+(index+1)+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                        contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
-                        $("#contactSelectListTbody1").html(contactList);
-                    });
-                },"json");
-            });
-
-            $("#supplierSelectFormBtn").click(function () {
-
-                //$.post("/ofc/supplierSelect",$("#supplierSelConditionForm").serialize(),function (data) {
-                CommonClient.post(sys.rootPath + "/ofc/supplierSelect", $("#supplierSelConditionForm").serialize(), function(data) {
-                    data=eval(data);
-                    var supplierList = "";
-                    $.each(data,function (index,CscSupplierInfoDto) {
-                        supplierList =supplierList + "<tr role='row' class='odd'>";
-                        supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                        supplierList =supplierList + "<td>"+(index+1)+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                        supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
-                        $("#supplierSelectListTbody").html(supplierList);
-                    });
-                },"json");
-            });
-
-            $("#goodsEnter").click(function () {
-                var goodsInfoListDiv = "";
-                $("#goodsSelectListTbody").find("tr").each(function(index){
-                    var tdArr = $(this).children();
-                    if(tdArr.eq(0).find("input").prop("checked")){
-                        var goodsCode = tdArr.eq(2).text();//货品编码
-                        var goodsName = tdArr.eq(3).text();//货品名称
-                        var specification = tdArr.eq(4).text();//    货品规格
-                        var unit = tdArr.eq(5).text();//    单位
-                        goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
-                        goodsInfoListDiv =goodsInfoListDiv + "</tr>";
-                        $("#goodsInfoListDiv").html(goodsInfoListDiv);
-                    }
-                });
-                if(goodsInfoListDiv==""){
-                    alert("请至少选择一行");
-                }
-            });
-
-            $("#contactinEnter").click(function () {
-                var consignorin = "";
-                $("#contactSelectListTbody2").find("tr").each(function(index){
-                    var tdArr = $(this).children();
-                    if(tdArr.eq(0).find("input").prop("checked")){
-                        var consignorName = tdArr.eq(2).text();//名称
-                        var contacts = tdArr.eq(3).text();//联系人
-                        var contactsNumber = tdArr.eq(4).text();//    联系电话
-                        var fax = tdArr.eq(5).text();//    传真
-                        var email = tdArr.eq(6).text();//    email
-                        var code = tdArr.eq(7).text();//    邮编
-                        var address = tdArr.eq(8).text();//    地址
-                        consignorin =consignorin + "名称:";
-                        consignorin =consignorin + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorin =consignorin + "联系人:";
-                        consignorin =consignorin + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorin =consignorin + "联系电话:";
-                        consignorin =consignorin + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorin =consignorin + "传真:";
-                        consignorin =consignorin + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorin =consignorin + "Email:";
-                        consignorin =consignorin + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorin =consignorin + "邮编:";
-                        consignorin =consignorin + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorin =consignorin + "地址:";
-                        consignorin =consignorin + "<select><option value=''>--省--</option></select>";
-                        consignorin =consignorin + "<select><option value=''>--市--</option></select>";
-                        consignorin =consignorin + "<select><option value=''>--区/县--</option></select>";
-                        consignorin =consignorin + "<select><option value=''>--乡镇/街道--</option></select>";
-                        consignorin =consignorin + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                        $("#consignorin").html(consignorin);
-                    }
-                });
-                if(consignorin==""){
-                    alert("请至少选择一行");
-                }
-            });
-
-            $("#contactoutEnter").click(function () {
-                var consignorout = "";
-                $("#contactSelectListTbody1").find("tr").each(function(index){
-                    var tdArr = $(this).children();
-                    if(tdArr.eq(0).find("input").prop("checked")){
-                        var consignorName = tdArr.eq(2).text();//名称
-                        var contacts = tdArr.eq(3).text();//联系人
-                        var contactsNumber = tdArr.eq(4).text();//    联系电话
-                        var fax = tdArr.eq(5).text();//    传真
-                        var email = tdArr.eq(6).text();//    email
-                        var code = tdArr.eq(7).text();//    邮编
-                        var address = tdArr.eq(8).text();//    地址
-                        consignorout =consignorout + "名称:";
-                        consignorout =consignorout + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorout =consignorout + "联系人:";
-                        consignorout =consignorout + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorout =consignorout + "联系电话:";
-                        consignorout =consignorout + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorout =consignorout + "传真:";
-                        consignorout =consignorout + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorout =consignorout + "Email:";
-                        consignorout =consignorout + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorout =consignorout + "邮编:";
-                        consignorout =consignorout + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        consignorout =consignorout + "地址:";
-                        consignorout =consignorout + "<select><option value=''>--省--</option></select>";
-                        consignorout =consignorout + "<select><option value=''>--市--</option></select>";
-                        consignorout =consignorout + "<select><option value=''>--区/县--</option></select>";
-                        consignorout =consignorout + "<select><option value=''>--乡镇/街道--</option></select>";
-                        consignorout =consignorout + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                        $("#consignorout").html(consignorout);
-                    }
-                });
-                if(consignorout==""){
-                    alert("请至少选择一行");
-                }
-            });
-
-            $("#supplierEnter").click(function () {
-                var support = "";
-                $("#supplierSelectListTbody").find("tr").each(function(index){
-                    var tdArr = $(this).children();
-                    if(tdArr.eq(0).find("input").prop("checked")){
-                        var consignorName = tdArr.eq(2).text();//名称
-                        var contacts = tdArr.eq(3).text();//联系人
-                        var contactsNumber = tdArr.eq(4).text();//    联系电话
-                        var fax = tdArr.eq(5).text();//    传真
-                        var email = tdArr.eq(6).text();//    email
-                        var code = tdArr.eq(7).text();//    邮编
-                        var address = tdArr.eq(8).text();//    地址
-                        support =support + "名称:";
-                        support =support + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        support =support + "联系人:";
-                        support =support + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        support =support + "联系电话:";
-                        support =support + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        support =support + "传真:";
-                        support =support + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        support =support + "Email:";
-                        support =support + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        support =support + "邮编:";
-                        support =support + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                        support =support + "地址:";
-                        support =support + "<select><option value=''>--省--</option></select>";
-                        support =support + "<select><option value=''>--市--</option></select>";
-                        support =support + "<select><option value=''>--区/县--</option></select>";
-                        support =support + "<select><option value=''>--乡镇/街道--</option></select>";
-                        support =support + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                        $("#support").html(support);
-                    }
-                });
-                if(support==""){
-                    alert("请至少选择一行");
-                }
-            });
-
-            $("#goodsListDivBlock").click(function(){
-
-                $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
-
-            });
-
-            $("#goodsListDivNoneTop").click(function(){
-
-                $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-            $("#goodsListDivNoneBottom").click(function(){
-
-                $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-
-            $("#consignorListDivBlock").click(function(){
-
-                $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
-
-            });
-
-            $("#consignorListDivNoneTop").click(function(){
-
-                $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-            $("#consignorListDivNoneBottom").click(function(){
-
-                $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-            $("#consigneeListDivBlock").click(function(){
-
-                $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
-
-            });
-
-            $("#consigneeListDivNoneTop").click(function(){
-
-                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-            $("#consigneeListDivNoneBottom").click(function(){
-
-                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-            $("#supportListDivBlock").click(function(){
-
-                $("#supportListDiv").fadeIn("slow");//淡入淡出效果 显示div
-
-            });
-
-            $("#supportListDivNoneTop").click(function(){
-
-                $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-            $("#supportListDivNoneBottom").click(function(){
-
-                $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-            });
-
-
-            $("#orderTypeSel").change(function () {
-                if($(this).children('option:selected').val() == '61'){
-                    $("#provideTransportDiv").show();
-                    $("#businessTypeDiv").show();
-                    $('.storeLi').show();
-                    $('.transLi').hide();
-                }
-                if($(this).children('option:selected').val() == '60'){
-                    $('.transLi').show();
-                    $('.storeLi').hide();
-                    $("#provideTransportDiv").hide();
-                    $("#businessTypeDiv").hide();
-
-                }
-            });
-            $("#provideTransport").change(function () {
-                if($(this).prop("checked")){
-                    $('.transLi').show();
-                }else{
-                    $('.transLi').hide();
-                }
-            });
-
-            function deleteGood(obj) {
-                $(obj).parent().parent().remove();
-            }
-
-            function deleteGood(obj) {
-                $(obj).parent().parent().remove();
-            }
-
-        })
-    </script>
+    })
+</script>
 
 </body>
