@@ -130,8 +130,8 @@
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">订单操作</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
-                            <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
-                                <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
+                                <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
                                 订单日期
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
@@ -145,11 +145,9 @@
                         </thead>
                         <tbody id="dataTbody"></tbody>
                     </table>
-                </div>
-                <td>
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
-                </td>
-
+                    <div class="row">
+                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;"></div>
+                    </div>
                 </div>
                 <!-- PAGE CONTENT ENDS -->
             </div><!-- /.col -->
