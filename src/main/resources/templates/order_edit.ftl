@@ -76,7 +76,7 @@
             border:solid #7A7A7A 4px;
         }
     </style>
-    <script src="../../js/serialize-to-json.js"></script>
+
 </head>
 
 <body class="no-skin">
@@ -236,7 +236,6 @@
 </div>
 <!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
-
     <div class="main-content">
         <div class="main-content-inner">
             <div class="page-content">
@@ -836,8 +835,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="subOrder('${orderInfo}')">保存修改</button>
                 </div>

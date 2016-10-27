@@ -28,6 +28,7 @@ import java.util.Map;
  * Created by lyh on 2016/10/18.
  */
 @Controller
+@RequestMapping(produces = {"application/json;charset=UTF-8"})
 public class OfcJumpontroller extends BaseController{
 
     @Autowired

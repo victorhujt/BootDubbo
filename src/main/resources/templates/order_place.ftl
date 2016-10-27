@@ -615,7 +615,7 @@
 
 <!--[if !IE]> -->
 <script src="../../components/bootbox.js/bootbox.js"></script>
-<script src="../../js/serialize-to-json.js"></script>
+
 
 <!-- <![endif]-->
 <script type="text/javascript">
