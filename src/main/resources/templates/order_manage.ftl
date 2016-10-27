@@ -23,11 +23,12 @@
             <div class="page-content">
 
                 <!-- /section:settings.box -->
-                <div class="page-header">
-                    <h1>
-                        订单管理
-                    </h1>
-                </div><!-- /.page-header -->
+                <#--<div class="page-header">-->
+                    <#--<p>-->
+                        <#--订单管理-->
+                    <#--</p>-->
+                <#--</div>-->
+                <!-- /.page-header -->
 
                 <div class="row">
                     <div class="col-xs-12">
@@ -119,7 +120,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                        <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info" id="screenOrderFormBtn">搜索</span>
+                                            <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="" data-original-title="Some Info" id="screenOrderFormBtn">搜索</span>
                                         </div>
                                     <#--<input type="hidden" name="tag" value="manage"/>-->
 
