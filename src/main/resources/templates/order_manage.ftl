@@ -323,76 +323,16 @@
 
     function main(){
         //初始化页面数据
-        initPageData();
+        /*initPageData();*/
         // 查询
-        $("#screenOrderFormBtn").click(function () {
-            var jsonStr={};
-            var orderTimePre = $dp.$('orderTimePre').value;
-//            var orderTimePre = $dp.$('orderTimePre').value;
-            jsonStr.orderTimePre=orderTimePre;
-            var orderTimeSuf = $dp.$('orderTimeSuf').value;
-//            var orderTimeSuf = $dp.$('orderTimeSuf').value;
-            jsonStr.orderTimeSuf=orderTimeSuf;
-            jsonStr.orderCode=$("#orderCode").val();
-            jsonStr.custOrderCode=$("#custOrderCode").val();
-            jsonStr.orderStatus=$("#orderStatus").val();
-            jsonStr.orderType=$("#orderType").val();
-            jsonStr.businessType=$("#businessType").val();
-            var tag = "manage";
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var currPage = "1";
-            var pageSize = "10";
-            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
-            xescm.common.loadPage(url);
-        });
 
-        $('#pageLimit').bootstrapPaginator({
-            currentPage: ${currPage!"0"},//当前页码
-            totalPages: ${totalPage!"0"}, //总页数
-            size:"normal",
-            bootstrapMajorVersion: 3,
-            alignment:"right",
-            numberOfPages:10,//每页显示多少
-            itemTexts: function (type, page, current) {
-                switch (type) {
-                    case "first":
-                        return "首页";
-                    case "prev":
-                        return "上一页";
-                    case "next":
-                        return "下一页";
-                    case "last":
-                        return "末页";
-                    case "page":
-                        return page;
-                }
-            },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
-                var jsonStr={};
-                var orderTimePre = $dp.$('orderTimePre').value;
-                jsonStr.orderTimePre=orderTimePre;
-                var orderTimeSuf = $dp.$('orderTimeSuf').value;
-                jsonStr.orderTimeSuf=orderTimeSuf;
-                jsonStr.orderCode=$("#orderCode").val();
-                jsonStr.custOrderCode=$("#custOrderCode").val();
-                jsonStr.orderStatus=$("#orderStatus").val();
-                jsonStr.orderType=$("#orderType").val();
-                jsonStr.businessType=$("#businessType").val();
-                var tag = "manage";
-                var orderScreenConditionJSON = JSON.stringify(jsonStr);
-                var currPage = page;
-                var pageNum = "10";
-                var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
-                xescm.common.loadPage(url);
-
-            }
-        });
 
 
 
     }
 
     //页面数据初始化
-    function initPageData(){
+    /*function initPageData(){
         var active_class = "active";
         $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
             var th_checked = this.checked;//checkbox inside "TH" table header
@@ -410,11 +350,71 @@
             else $row.removeClass(active_class);
         });
         //xxxx();
-    }
+    }*/
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
+
+    $("#screenOrderFormBtn").click(function () {
+        var jsonStr={};
+        var orderTimePre = $dp.$('orderTimePre').value;
+        jsonStr.orderTimePre=orderTimePre;
+        var orderTimeSuf = $dp.$('orderTimeSuf').value;
+        jsonStr.orderTimeSuf=orderTimeSuf;
+        jsonStr.orderCode=$("#orderCode").val();
+        jsonStr.custOrderCode=$("#custOrderCode").val();
+        jsonStr.orderStatus=$("#orderStatus").val();
+        jsonStr.orderType=$("#orderType").val();
+        jsonStr.businessType=$("#businessType").val();
+        var tag = "manage";
+        var orderScreenConditionJSON = JSON.stringify(jsonStr);
+        var currPage = "1";
+        var pageSize = "10";
+        var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
+        xescm.common.loadPage(url);
+    });
+
+    $('#pageLimit').bootstrapPaginator({
+        currentPage: ${currPage!"1"},//当前页码
+        totalPages: ${totalPage!"1"}, //总页数
+        size:"normal",
+        bootstrapMajorVersion: 3,
+        alignment:"right",
+        numberOfPages:10,//每页显示多少
+        itemTexts: function (type, page, current) {
+            switch (type) {
+                case "first":
+                    return "首页";
+                case "prev":
+                    return "上一页";
+                case "next":
+                    return "下一页";
+                case "last":
+                    return "末页";
+                case "page":
+                    return page;
+            }
+        },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
+            var jsonStr={};
+            var orderTimePre = $dp.$('orderTimePre').value;
+            jsonStr.orderTimePre=orderTimePre;
+            var orderTimeSuf = $dp.$('orderTimeSuf').value;
+            jsonStr.orderTimeSuf=orderTimeSuf;
+            jsonStr.orderCode=$("#orderCode").val();
+            jsonStr.custOrderCode=$("#custOrderCode").val();
+            jsonStr.orderStatus=$("#orderStatus").val();
+            jsonStr.orderType=$("#orderType").val();
+            jsonStr.businessType=$("#businessType").val();
+            var tag = "manage";
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var currPage = page;
+            var pageNum = "10";
+            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
+            xescm.common.loadPage(url);
+
+        }
+    });
 
     function editOrder(orderCode) {
         /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
