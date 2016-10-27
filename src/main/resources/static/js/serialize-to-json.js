@@ -8,4 +8,3 @@ var DataDeal = {
         return data;
     }
 }
-

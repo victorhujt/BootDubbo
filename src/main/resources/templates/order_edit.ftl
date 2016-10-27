@@ -76,7 +76,7 @@
             border:solid #7A7A7A 4px;
         }
     </style>
-    <script src="../../js/serialize-to-json.js"></script>
+
 </head>
 
 <body class="no-skin">
@@ -236,7 +236,6 @@
 </div>
 <!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
-
     <div class="main-content">
         <div class="main-content-inner">
             <div class="page-content">
@@ -452,7 +451,7 @@
                                                         <div class="row">
 
                                                             <div id="dynamic-table_filter" class="dataTables_length">
-                                                                <label>
+
                                                                     <div class="form-group" >
                                                                         <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
                                                                         <div class="col-sm-6">
@@ -535,7 +534,6 @@
                                                                         </div>
                                                                     </div>
 
-                                                                </label>
                                                             </div>
 
 
@@ -698,7 +696,6 @@
                                                         </div>
                                                         <div class="row">
                                                             <div id="dynamic-table_filter" class="dataTables_length">
-                                                                <label>
                                                                     <div class="form-group" >
                                                                         <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                         <div class="col-sm-6">
@@ -746,9 +743,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-
-                                                                </label>
                                                             </div>
                                                             <br/>
                                                         </div>
@@ -836,8 +830,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="subOrder('${orderInfo}')">保存修改</button>
                 </div>

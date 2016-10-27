@@ -28,6 +28,7 @@ import java.util.Map;
  * Created by lyh on 2016/10/18.
  */
 @Controller
+@RequestMapping(produces = {"application/json;charset=UTF-8"})
 public class OfcJumpontroller extends BaseController{
 
     @Autowired
@@ -36,16 +37,20 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map ,String custCode, HttpServletRequest request, HttpServletResponse response){
         logger.debug("==>订单中心我要下单客户编码custCode custCode={}", custCode);
-        List<RmcWarehouse> rmcWarehouseByCustCode = null;
+        /*List<RmcWarehouse> rmcWarehouseByCustCode = null;
         try{
             custCode = "2";
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custCode);
         }catch (BusinessException ex){
+            logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            rmcWarehouseByCustCode = new ArrayList<>();
+        }catch (Exception ex){
             logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
-        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
+        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);*/
         return new ModelAndView("order_place");
 
     }
