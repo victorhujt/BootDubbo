@@ -28,7 +28,7 @@
                                     </li>
 
                                     <li>
-                                        <a data-toggle="tab" href="#messages">
+                                        <a data-toggle="tab" href="#tramessages">
                                             配送信息
                                         </a>
                                     </li>
@@ -36,6 +36,18 @@
                                     <li class="dropdown">
                                         <a data-toggle="tab" href="#dropdown">
                                             收发货方信息
+                                        </a>
+                                    </li>
+
+                                    <li class="dropdown">
+                                        <a data-toggle="tab" href="#warmessages">
+                                            仓储信息
+                                        </a>
+                                    </li>
+
+                                    <li class="dropdown">
+                                        <a data-toggle="tab" href="#supdropdown">
+                                            供应商信息
                                         </a>
                                     </li>
                                 </ul>
@@ -175,7 +187,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="messages" class="tab-pane fade">
+                                    <div id="tramessages" class="tab-pane fade">
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">货品类型</label>
                                             <div class="col-sm-3">
@@ -424,6 +436,124 @@
                                         </div>
                                     </div>
 
+                                    <div id="tramessages" class="tab-pane fade">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="warehouseName" value="${(orderInfo.wareHouseName)!""}" readonly="readonly" style="color: #000" name="warehouseName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="arriveTime" value = "${(ofcOrderDTO.arriveTime)!""}" readonly="readonly" style="color: #000" name="arriveTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.departurePlace)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.destination)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.quantity)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.weight)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.cubage)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.transRequire)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.pickupTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">运输单号</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.transCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.plateNumber)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.destiexpectedArrivedTimenation?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.driverName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.contactNumber)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
