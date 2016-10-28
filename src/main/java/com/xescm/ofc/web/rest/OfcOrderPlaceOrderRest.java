@@ -62,7 +62,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         if(StringUtils.isBlank(ofcOrderDTOJson)){
-            System.out.println(ofcOrderDTOJson);
+            logger.debug(ofcOrderDTOJson);
             ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
         }
         OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
@@ -79,7 +79,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             }
             return "order_place";
         } catch (Exception e) {
-            e.printStackTrace();
             return "order_place";
         }
     }
@@ -147,7 +146,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
         }
     }
 
@@ -164,7 +163,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscReceivingInfoList.getResult()));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
         }
     }
 
@@ -181,7 +180,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
         }catch (IOException e) {
-            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
         }
     }
 

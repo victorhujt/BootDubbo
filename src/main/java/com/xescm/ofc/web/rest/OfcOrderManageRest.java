@@ -2,11 +2,9 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
-import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.RmcWarehouse;
-import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -27,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -185,7 +181,7 @@ public class OfcOrderManageRest extends BaseController{
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
             response.getWriter().print(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
         }
     }
 }
