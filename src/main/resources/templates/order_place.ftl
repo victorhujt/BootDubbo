@@ -360,7 +360,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
 
                                                 </div>
                                             </div>
@@ -610,6 +610,7 @@
                                                             <h4>发货方信息</h4>
                                                         </div>
                                                         <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
+                                                        <input id="testtest"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         <div id="consignorin">
                                                             <div class="form-group" >
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
@@ -625,7 +626,8 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorName"   name="consignorName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
 
                                                                     </div>
                                                                 </div>
@@ -1129,6 +1131,7 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
+                    $("#testtest").text(consignorName);
                     consignorin =consignorin + "名称:";
                     consignorin =consignorin + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
                     consignorin =consignorin + "联系人:";
