@@ -1,17 +1,21 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.RmcWarehouse;
+import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +25,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.sun.webpane.platform.ConfigManager.log;
+
 /**
  * Created by ydx on 2016/10/12.
  */
 @Service
 public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
+    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
 
@@ -51,7 +58,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
-        System.out.println(ofcOrderStatus);
+        logger.debug(ofcOrderStatus.toString());
         if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){

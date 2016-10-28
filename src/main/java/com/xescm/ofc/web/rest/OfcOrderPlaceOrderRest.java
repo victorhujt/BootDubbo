@@ -62,7 +62,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         if(StringUtils.isBlank(ofcOrderDTOJson)){
-            System.out.println(ofcOrderDTOJson);
+            logger.debug(ofcOrderDTOJson);
             ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
         }
         OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);

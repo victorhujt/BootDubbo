@@ -3,9 +3,12 @@ package com.xescm.ofc.service.impl;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.utils.PubUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,6 +22,7 @@ import java.util.Map;
  */
 @Service
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
+    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
     @Autowired
     private OfcOrderStatusMapper ofcOrderStatusMapper;
     @Override
@@ -64,9 +68,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }else if(followTag.equals("transCode")){
                 transCode = code;
             }
-            System.out.println("`````````````"+orderCode);
-            System.out.println("`````````````"+custOrderCode);
-            System.out.println("`````````````"+transCode);
+            logger.debug("`````````````"+orderCode);
+            logger.debug("`````````````"+custOrderCode);
+            logger.debug("`````````````"+transCode);
             Map<String,String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode",orderCode);
             mapperMap.put("custOrderCode",custOrderCode);
