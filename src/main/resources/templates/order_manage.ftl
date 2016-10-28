@@ -127,8 +127,8 @@
                         <thead>
                         <tr role="row">
                             <th>序号</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">订单操作</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
+                            <th>订单操作</th>
+                            <th>订单编号</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
                                 <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->

@@ -26,7 +26,7 @@
 
             left:138px;
 
-            top:91px;
+            top:700px;
 
             width:946px;
 
@@ -44,7 +44,7 @@
 
             left:138px;
 
-            top:91px;
+            top:1100px;
 
             width:946px;
 
@@ -63,7 +63,7 @@
 
             left:138px;
 
-            top:91px;
+            top:600px;
 
             width:946px;
 
@@ -306,16 +306,13 @@
         <div class="main-content-inner">
             <div class="page-content">
                 <div class="page-header">
-                    <h1>
-                        订单编辑
-                    </h1>
+                    <p>
+                        基本信息
+                    </p>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="table-header">
-                            基本信息
-                        </div>
-                        <div class="widget-box">
+                        <div class="widget-box"  style="border: none">
                             <div class="widget-body">
                                 <div class="widget-main">
                                     <form name="orderInfoTable" id="orderInfoTable"  class="form-horizontal" role="form" >
@@ -413,8 +410,8 @@
                                     <form name="orderInfoTable" id="orderInfoTable"  class="form-horizontal" role="form" >
                                         <div class="col-sm-6">
                                             <!-- #section:elements.tab.option -->
-                                            <div class="tabbable" style="float: left; text-align: left; margin: 0 auto; width: 1300px;" >
-                                                <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+                                            <div class="tabbable" style="width: 1300px;" >
+                                                <ul class="nav nav-tabs id="myTab4">
                                                     <li class="active">
                                                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                     </li>

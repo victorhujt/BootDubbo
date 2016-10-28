@@ -1,23 +1,14 @@
 <head>
     <style type="text/css">
         #goodsListDiv {
-
             position:absolute;
-
             left:138px;
-
             top:91px;
-
             width:946px;
-
             height:500px;
-
             z-index:3;
-
             overflow: auto;
-
             border:solid #7A7A7A 4px;
-
         }
 
         #consignorListDiv {
@@ -25,7 +16,7 @@
 
             left:138px;
 
-            top:391px;
+            top:700px;
 
             width:946px;
 
@@ -43,7 +34,7 @@
 
             left:138px;
 
-            top:391px;
+            top:1100px;
 
             width:946px;
 
@@ -62,7 +53,7 @@
 
             left:138px;
 
-            top:211px;
+            top:600px;
 
             width:946px;
 
@@ -336,16 +327,15 @@
 
             <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
+                <div class="page-header">
+                    <p>
+                        基本信息
+                    </p>
+                </div>
 
                 <div class="row">
-
                     <div class="col-xs-12">
-
-                        <div class="table-header">
-                            基本信息
-                        </div>
-
-                        <div class="widget-box">
+                        <div class="widget-box" style="border: none">
                             <div class="widget-body">
                                 <div class="widget-main">
                                     <form id="" method="post" class="form-horizontal" role="form" >
@@ -370,7 +360,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <select id="orderTypeSel" name="orderType">
+                                                    <select  id="orderTypeSel" name="orderType">
                                                         <option value="60">运输订单</option>
                                                         <option value="61">仓配订单</option>
                                                     </select>
@@ -382,7 +372,7 @@
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
                                                 <#--<span id="businessTypeDiv" style="display: none">-->
-                                                    <select id="businessType" name="businessType">
+                                                    <select  id="businessType" name="businessType">
                                                         <option value="610">销售出库</option>
                                                         <option value="611">调拨出库</option>
                                                         <option value="612">报损出库</option>
@@ -438,10 +428,10 @@
                             <div class="widget-body">
                                 <div class="widget-main">
                                     <form name="orderInfoTable" id="orderInfoTable"  class="form-horizontal" role="form" >
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <!-- #section:elements.tab.option -->
-                                            <div class="tabbable" style="float: left; text-align: left; margin: 0 auto; width: 1300px;" >
-                                                <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+                                            <div class="tabbable" <#--style="float: left; text-align: left; margin: 0 auto; -->style="width:900px;" >
+                                                <ul class="nav nav-tabs <#--padding-12 tab-color-blue background-blue-->" id="myTab4">
                                                     <li class="active">
                                                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                     </li>
@@ -890,17 +880,14 @@
                                             <!-- /section:elements.tab.option -->
                                         </div>
                                     </form>
-
                                 </div>
-
                             </div>
-
-
                         </div>
-
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
-                    <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
+                    <div style="float: inherit">
+                        <button type="button" class="btn btn-info" id="orderPlaceConTableBtn">确认下单</button>
+                    </div>
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div>
@@ -910,17 +897,34 @@
 </div><!-- /.main-container -->
 
 
-<!-- basic scripts -->
-
-<!--[if !IE]> -->
-<script src="../../components/bootbox.js/bootbox.js"></script>
+<link rel="stylesheet" href="../components/chosen/chosen.css" />
+<script src="../components/chosen/chosen.jquery.js"></script>
 
 
-<!-- <![endif]-->
+<#include "common/include.ftl">
 <script type="text/javascript">
     var scripts = [ null, "", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
         $(document).ready(main);
+        $('.chosen-select').chosen({allow_single_deselect:true});
+        //resize the chosen on window resize
+
+        $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+            if(event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function() {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
     });
 
     function main(){
@@ -1302,6 +1306,7 @@
 
 
         $("#orderTypeSel").change(function () {
+            $("#businessType").addClass("chosen-select form-control");
             if($(this).children('option:selected').val() == '61'){
                 $("#provideTransportDiv").show();
                 $("#businessTypeDiv").show();
@@ -1312,7 +1317,8 @@
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();
-                $("#businessTypeDiv").hide();
+                $("#businessTypeDiv").hide();//class="chosen-select form-control"
+                /*$("#businessType").css("chosen-select form-control");//*/
 
             }
         });

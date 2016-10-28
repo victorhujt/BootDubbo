@@ -139,9 +139,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(Model model, CscGoods cscGoods, HttpServletResponse response){
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+/*        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         //调用外部接口,最低传CustomerCode
-        cscGoods.setCustomerCode(authResDtoByToken.getGroupId());
+        cscGoods.setCustomerCode(authResDtoByToken.getGroupId());*/
+
         Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
         try {
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
