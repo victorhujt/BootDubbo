@@ -1,6 +1,8 @@
 
 <head>
     <title>订单跟踪</title>
+    <!-- ace styles -->
+
 
 </head>
 <body class="no-skin">
@@ -22,57 +24,6 @@
                         筛选条件
                     </p>
                 </div><!-- /.page-header -->
-
-
-
-
-                <div class="profile-user-info">
-                    <div class="profile-info-row">
-                        <div class="profile-info-name"> Username </div>
-
-                        <div class="profile-info-value">
-                            <span>alexdoe</span>
-                        </div>
-                    </div>
-
-                    <div class="profile-info-row">
-                        <div class="profile-info-name"> Location </div>
-
-                        <div class="profile-info-value">
-                            <i class="fa fa-map-marker light-orange bigger-110"></i>
-                            <span>Netherlands</span>
-                            <span>Amsterdam</span>
-                        </div>
-                    </div>
-
-                    <div class="profile-info-row">
-                        <div class="profile-info-name"> Age </div>
-
-                        <div class="profile-info-value">
-                            <span>38</span>
-                        </div>
-                    </div>
-
-                    <div class="profile-info-row">
-                        <div class="profile-info-name"> Joined </div>
-
-                        <div class="profile-info-value">
-                            <span>2010/06/20</span>
-                        </div>
-                    </div>
-
-                    <div class="profile-info-row">
-                        <div class="profile-info-name"> Last Online </div>
-
-                        <div class="profile-info-value">
-                            <span>3 hours ago</span>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
 
 
 
@@ -233,7 +184,7 @@
 
 </div><!-- /.main-container -->
 
-
+<link rel="stylesheet" href="../../assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 <#include "common/include.ftl">
 <script type="text/javascript">
     var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]

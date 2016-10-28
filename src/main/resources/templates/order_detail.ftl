@@ -6,373 +6,517 @@
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
-
     <div class="main-content">
         <div class="main-content-inner">
-
             <div class="page-content">
-                <div class="page-header">
-                    <h1>
-                        订单详情
-                    </h1>
-                </div><!-- /.page-header -->
                 <div class="row">
                     <div class="col-xs-12">
 
+                        <form id="" method="post" class="form-horizontal" role="form" >
 
-                        <!-- div.table-responsive -->
+                            <div class="page-header">
+                                <p>
+                                    订单详情
+                                </p>
+                            </div>
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs" id="myTab">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#home">
+                                            基本信息
+                                        </a>
+                                    </li>
 
-                        <!-- div.dataTables_borderWrap -->
-                        <div>
-                            <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                                <div class="table-header">
-                                    订单信息
-                                </div>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单编号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">客户订单编号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">平台类型</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(ofcOrderDTO.orderTime?string("yyyy-MM-dd HH:mm:ss"))!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderCode)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.custOrderCode)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderStatus)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderType)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.businessType)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.storeName)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.platformType)!"null"}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务产品</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单来源</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">创建日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">创建人员</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">完成日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">取消日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">取消人</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(ofcOrderDTO.productName)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.orderSource)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.notes)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.creationTime?string("yyyy-MM-dd HH:mm:ss"))!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.creator)!"null"}
-                                        </td>
-                                        <td>
-                                        ${("null")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("null")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("null")!"null"}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="page-header">
-                                    <h4>配送信息</h4>
+                                    <li>
+                                        <a data-toggle="tab" href="#messages">
+                                            配送信息
+                                        </a>
+                                    </li>
+
+                                    <li class="dropdown">
+                                        <a data-toggle="tab" href="#dropdown">
+                                            收发货方信息
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="home" class="tab-pane fade in active">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.custOrderCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderStatus)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.businessType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.storeName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">平台类型</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.platformType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">服务产品</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.productName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">订单来源</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderSource)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.notes)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">创建日期</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.creationTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">创建人员</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.creator)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">完成日期</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">取消日期</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">取消人</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="messages" class="tab-pane fade">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">货品类型</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.goodsType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.urgent)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.departurePlace)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.destination)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.quantity)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.weight)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.cubage)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.transRequire)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.pickupTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">运输单号</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.transCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.plateNumber)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.destiexpectedArrivedTimenation?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.driverName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.contactNumber)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="dropdown" class="tab-pane fade">
+
+
+                                        <div class="page-header">
+                                            <p>
+                                                发货方信息
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("众品有限公司")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("王经理")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("mayanlong@hnxianyi.com")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("15668159000")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("0355-56379811")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("河南省郑州市经济开发区田江路110号")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("100100")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="page-header">
+                                            <p>
+                                                收货方信息
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("众品有限公司")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("王经理")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("mayanlong@hnxianyi.com")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("15668159000")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("0355-56379811")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("河南省郑州市经济开发区田江路110号")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${("100100")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品类型</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">是否加急</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">出发地</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">目的地</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">运输要求</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(ofcOrderDTO.goodsType)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.urgent)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.departurePlace)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.destination)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.quantity)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.weight)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.cubage)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.transRequire)!"null"}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">取货时间</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">运输单号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">车牌号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">期望送达时间</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">司机姓名</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(ofcOrderDTO.pickupTime?string("yyyy-MM-dd HH:mm:ss"))!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.transCode)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.plateNumber)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.destiexpectedArrivedTimenation?string("yyyy-MM-dd HH:mm:ss"))!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.driverName)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(ofcOrderDTO.contactNumber)!"null"}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="page-header">
-                                    <h4>发货方信息</h4>
+                            </div>
 
-                                </div>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">名称</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">Email</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">传真</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${("众品有限公司")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("王经理")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("mayanlong@hnxianyi.com")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("15668159000")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("0355-56379811")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("河南省郑州市经济开发区田江路110号")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("100100")!"null"}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="page-header">
-                                    <h4>收货方信息</h4>
-                                </div>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">名称</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">Email</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">传真</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">邮编</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${("众品有限公司")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("王经理")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("mayanlong@hnxianyi.com")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("15668159000")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("0355-56379811")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("河南省郑州市经济开发区田江路110号")!"null"}
-                                        </td>
-                                        <td>
-                                        ${("100100")!"null"}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="page-header">
-                                    <h4>货品信息</h4>
-                                </div>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">序号</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品编码</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">失效日期</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                    -->
-                                    <#list goodsDetailsList! as goodsDetails>
-                                    <tr role="row" class="odd">
-                                        <td>
-                                        ${(goodsDetails_index+1)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.goodsCode)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.goodsName)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.goodsSpec)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.unit)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.productionBatch)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.productionTime)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.invalidTime)!"null"}
-                                        </td>
-                                        <td>
-                                        ${(goodsDetails.quantity)!"null"}
-                                        </td>
-                                    </tr>
-                                    </#list>
-                                    </tbody>
-                                </table>
-                                <div class="page-header">
-                                    <h4>订单跟踪信息</h4>
-                                </div>
-                                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                                    </thead>
-                                    <tbody>
-                                    <#--
-                                            vo  value object  拼出来的结果集
-                                            dto  参数,给后端当参数,或者返回的dot.
-                                            -->
-                                    <#list orderStatusList! as orderStatus>
-                                    <tr role="row" class="odd">
-                                        <td>
-                                            . ${(orderStatus.notes)!"null"}
-                                        </td>
-                                    </tr>
-                                    </#list>
-                                    </tbody>
-                                </table>
-                            </div><!-- /.dynamic-table_wrapper -->
-                        </div>
-                        <!-- PAGE CONTENT ENDS -->
+
+
+
+
+
+
+
+                            <div class="page-header">
+                                <p>
+                                    货品信息
+                                </p>
+                            </div>
+                            <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                <thead>
+                                <tr role="row">
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">序号</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品编码</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产日期</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">失效日期</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                </thead>
+                                <tbody>
+                                <#--
+                                        vo  value object  拼出来的结果集
+                                        dto  参数,给后端当参数,或者返回的dot.
+                                -->
+                                <#list goodsDetailsList! as goodsDetails>
+                                <tr role="row" class="odd">
+                                    <td>
+                                    ${(goodsDetails_index+1)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.goodsCode)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.goodsName)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.goodsSpec)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.unit)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.productionBatch)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.productionTime)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.invalidTime)!""}
+                                    </td>
+                                    <td>
+                                    ${(goodsDetails.quantity)!""}
+                                    </td>
+                                </tr>
+                                </#list>
+                                </tbody>
+                            </table>
+                            <div class="page-header">
+                                <p>
+                                    订单跟踪信息
+                                </p>
+                            </div>
+                            <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                <thead>
+                                <tr role="row">
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
+                                </thead>
+                                <tbody>
+                                <#--
+                                        vo  value object  拼出来的结果集
+                                        dto  参数,给后端当参数,或者返回的dot.
+                                        -->
+                                <#list orderStatusList! as orderStatus>
+                                <tr role="row" class="odd">
+                                    <td>
+                                        . ${(orderStatus.notes)!""}
+                                    </td>
+                                </tr>
+                                </#list>
+                                </tbody>
+                            </table>
+                        </form>
                     </div><!-- /.col -->
+
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div>
