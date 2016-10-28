@@ -5,6 +5,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.IllegalClassException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,9 +60,9 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    throw new BusinessException(e.getMessage());
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    throw new BusinessException(e.getMessage());
                 } catch (BusinessException ex){
                     throw new BusinessException(ex.getMessage());
                 }catch (Exception ex){

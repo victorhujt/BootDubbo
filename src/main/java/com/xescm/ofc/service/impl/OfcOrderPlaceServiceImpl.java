@@ -135,10 +135,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("未知操作!系统无法识别!");
             }
         } catch (BusinessException e) {
-            e.printStackTrace();
             throw new BusinessException(e.getMessage());
         } catch (Exception e){
-            e.printStackTrace();
             throw new BusinessException("未知异常!请联系管理员!");
         }
         return "您已成功下单!";
