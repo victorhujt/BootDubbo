@@ -994,10 +994,12 @@
             var tag = "place";
             var ofcOrderDTO = JSON.stringify(jsonStr);
             //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
-
+            console.log("111111111221111111--"+tag);
             //alert(url);
             // xescm.common.loadPage(url);
-            xescm.common.submit("/ofc/orderPlaceCon","您即将提交订单,请再次确认!",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+            xescm.common.submit("/ofc/orderPlaceCon",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+                console.log("1111111111111111--"+tag);
+                debugger
                 //xescm.common.goBack("/ofc/orderPlace");
             })
         });

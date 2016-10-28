@@ -192,7 +192,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     }
 
     /**
-     * 下单或编辑时保存货品信息
+     * 下单或编辑时在订单中心保存客户订单中的货品信息
      */
     public String saveOrderGoodsList(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList){
         if (ofcGoodsDetailsInfoList.size() < 1){
@@ -214,6 +214,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return "未添加联系人信息";
         }
         try {
+            cscContantAndCompanyDto.setContactCompanyId("001");
+            cscContantAndCompanyDto.setContactCompanyId("001");
+            Wrapper<List<CscContantAndCompanyDto>> listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            if(listWrapper.getResult().size() > 0){
+                return "该联系人信息已在资源中心中存在,无需再次添加!";
+            }
             Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
@@ -231,6 +237,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return "未添加供应商信息";
         }
         try {
+            cscSupplierInfoDto.setGroupId("");
+            cscSupplierInfoDto.setCustomerCode("");
+            Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            if(listWrapper.getResult().size() > 0){
+                return "该供应商信息已在资源中心中存在,无需再次添加!";
+            }
             Wrapper<?> wrapper = feignCscSupplierAPIClient.addSupplierBySupplierCode(cscSupplierInfoDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
@@ -241,7 +253,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         return Wrapper.SUCCESS_MESSAGE;
     }
     /**
-     * 下单或编辑时保存仓库信息
+     * 下单或编辑时在订单中心为用户保存订单中的仓库信息
      */
     public String saveWarehouseMessage(OfcWarehouseInformation ofcWarehouseInformation){
         if(null == ofcWarehouseInformation){

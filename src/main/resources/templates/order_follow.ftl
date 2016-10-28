@@ -22,6 +22,61 @@
                         筛选条件
                     </p>
                 </div><!-- /.page-header -->
+
+
+
+
+                <div class="profile-user-info">
+                    <div class="profile-info-row">
+                        <div class="profile-info-name"> Username </div>
+
+                        <div class="profile-info-value">
+                            <span>alexdoe</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-name"> Location </div>
+
+                        <div class="profile-info-value">
+                            <i class="fa fa-map-marker light-orange bigger-110"></i>
+                            <span>Netherlands</span>
+                            <span>Amsterdam</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-name"> Age </div>
+
+                        <div class="profile-info-value">
+                            <span>38</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-name"> Joined </div>
+
+                        <div class="profile-info-value">
+                            <span>2010/06/20</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-name"> Last Online </div>
+
+                        <div class="profile-info-value">
+                            <span>3 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
                 <div class=" form-group">
                     <div class="col-sm-3 ">
                         <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
