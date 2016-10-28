@@ -593,7 +593,7 @@
                                                             <h4>发货方信息</h4>
                                                         </div>
                                                         <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
-                                                        <input id="testtest"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
                                                         <div id="consignorin">
                                                             <div class="form-group" >
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
