@@ -1,5 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
@@ -24,6 +27,8 @@ public class OrderScreenResult {
 
     private String orderCode;
     private String custOrderCode;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderTime;
     /*
     订单类型: 0为运输订单 1为仓配订单

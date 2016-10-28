@@ -337,13 +337,6 @@
             <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
 
-                <!-- /section:settings.box -->
-                <div class="page-header">
-                    <h1>
-                        我要下单
-                    </h1>
-                </div><!-- /.page-header -->
-
                 <div class="row">
 
                     <div class="col-xs-12">

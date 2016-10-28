@@ -8,12 +8,15 @@ import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.service.OfcOrderScreenService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.utils.wrap.WrapMapper;
+import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -54,5 +57,23 @@ public class OfcOrderScreenRest extends BaseController {
         } else {
             return "error";
         }
+    }
+
+    @RequestMapping(value = "/queryOrderPageByCondition", method=RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page, HttpServletRequest request, OrderScreenCondition orderScreenCondition) {
+        logger.debug("==>订单中心订单查询条件 queryOrderPageByCondition={}", orderScreenCondition);
+//        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
+        PageInfo<OrderScreenResult> pageInfo = null;
+        try {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
+            pageInfo = new PageInfo<>(orderScreenResults);
+            logger.info("pageInfo={}", pageInfo);
+        }catch (Exception ex){
+            logger.error("分页查询供应商集合出现异常:{},{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
     }
 }
