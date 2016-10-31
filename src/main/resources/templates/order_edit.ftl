@@ -2,78 +2,47 @@
     <title>订单编辑</title>
     <style type="text/css">
         #goodsListDiv {
-
-            position:absolute;
-
-            left:138px;
-
-            top:91px;
-
+            position:fixed;
+            left:285px;
+            top:85px;
             width:946px;
-
-            height:auto;
-
-            z-index:3;
-
-            overflow: auto;
-
-            border:solid #7A7A7A 4px;
-
-        }
-
-        #consignorListDiv {
-            position:absolute;
-
-            left:138px;
-
-            top:700px;
-
-            width:946px;
-
-            height:auto;
-
-            z-index:3;
-
-            overflow: auto;
-
-            border:solid #7A7A7A 4px;
-        }
-
-        #consigneeListDiv {
-            position:absolute;
-
-            left:138px;
-
-            top:1100px;
-
-            width:946px;
-
-            height:auto;
-
-            z-index:3;
-
-            overflow: auto;
-
-            border:solid #7A7A7A 4px;
-        }
-
-
-        #supportListDiv {
-            position:absolute;
-
-            left:138px;
-
-            top:600px;
-
-            width:946px;
-
             height:500px;
-
             z-index:3;
-
             overflow: auto;
-
-            border:solid #7A7A7A 4px;
+            border:solid #7A7A7A 2px;
+        }
+        #consignorListDiv {
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        #consigneeListDiv {
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        #supportListDiv {
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        input{
+            color: black;
         }
     </style>
 
@@ -91,7 +60,7 @@
                         <form id="goodsSelConditionForm"  class="form-horizontal" role="form">
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class="clearfix">
                                         <#--<input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">-->
                                         <input id="goodsCodeCondition" name="goodsCode" type="text">
@@ -100,13 +69,20 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class="clearfix">
                                         <input id="goodsNameCondition" name="goodsName" type="text">
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-info" id="goodsSelectFormBtn" >筛选</button>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                                <div class="col-sm-3">
+                                    <div class="clearfix">
+                                        <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
             <form class="bootbox-form">
@@ -144,7 +120,7 @@
                 <form id="consignorSelConditionForm"  class="form-horizontal" role="form">
                     <div class="form-group">
                         <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorName2" name="contactCompanyName" type="text">
                             </div>
@@ -152,7 +128,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorPerson2" name="contactName" type="text">
                             </div>
@@ -160,14 +136,21 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorPhoneNumber2" name="phone" type="text">
                                 <input id="purpose2" name="purpose" type="hidden" value="2">
                             </div>
                         </div>
                     </div>
-                <button type="button" class="btn btn-info" id="contactSelectFormBtn2" >筛选</button>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                        <div class="col-sm-3">
+                            <div class="clearfix">
+                                <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
      <#--   </div>
@@ -208,7 +191,7 @@
                 <form id="consigneeSelConditionForm"  class="form-horizontal" role="form">
                     <div class="form-group">
                         <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorName1" name="contactCompanyName" type="text">
                             </div>
@@ -216,7 +199,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorPerson1" name="contactName" type="text">
                             </div>
@@ -224,14 +207,21 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorPhoneNumber1" name="phone" type="text">
                                 <input id="purpose1" name="purpose" type="hidden" value="1">
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-info" id="contactSelectFormBtn1" >筛选</button>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                        <div class="col-sm-3">
+                            <div class="clearfix">
+                                <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -269,10 +259,38 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="supplierSelConditionForm">
-                名称:<input id="supplierName" name="supplierName" type="text">
-                联系人:<input id="contactName" name="contactName" type="text">
-                联系电话:<input id="contactPhone" name="contactPhone" type="text">
-                <button type="button" class="btn btn-info" id="supplierSelectFormBtn" >筛选</button>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input id="supplierName" name="supplierName" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input id="contactName" name="contactName" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input id="contactPhone" name="contactPhone" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <button type="button" class="btn btn-info" id="supplierSelectFormBtn" >筛选</button>
+                        </div>
+                    </div>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -410,7 +428,7 @@
                                     <form name="orderInfoTable" id="orderInfoTable"  class="form-horizontal" role="form" >
                                         <div class="col-sm-6">
                                             <!-- #section:elements.tab.option -->
-                                            <div class="tabbable" style="width: 1300px;" >
+                                            <div class="tabbable" style="width: 1000px;" >
                                                 <ul class="nav nav-tabs id="myTab4">
                                                     <li class="active">
                                                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
