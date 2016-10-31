@@ -1307,47 +1307,46 @@
                 $("#businessTypeDiv").show();
                 $('.storeLi').show();
                 $('.transLi').hide();
-                /*if($('#myTab4').children('li').first().class != 'active'){
-                    $('#myTab4').children('li').first().addClass("active");
-                }*/
-                //$('#myTab4').children('li').first().addClass("active");//$(".mod_focus_list").children("li").first().addClass("current");
-                /*
-                *
-                * $('div ul').each(function(){
-alert($(this).find('li').eq(1))
-})
-                * */
-               /* $('#myTab4').each(function () {
-                    if($(this).find('li').eq(1)){
+                //$('#myTab4').children('li').first().addClass("active");
+                $('#myTab4').find('li').each(function () {
+                    console.log($(this).index());
+                    if($(this).index()=='0'){
+
                         $(this).addClass("active");
                     }
-                    if($(this).find('li').eq(2)){
-                        $(this).addClass("transLi");
+                    if($(this).index()=='1'){
+                        $(this).removeClass("active");
                     }
-                    if($(this).find('li').eq(1)){
-                        $(this).addClass("storeLi");
+                    if($(this).index()=='2'){
+                        $(this).removeClass("active");
                     }
-                })*/
+                })
+                $("#home4").addClass("active");
+                $("#profile4").removeClass("active");
+                $("#dropdown14").removeClass("active");
 
             }
             if($(this).children('option:selected').val() == '60'){
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();
-                $("#businessTypeDiv").hide();//class="chosen-select form-control"
-                //$('#myTab4').children('li').first().addClass("active");
-                /*$("#businessType").css("chosen-select form-control");//*/
-                /*$('#myTab4').each(function () {
-                    if($(this).find('li').eq(1)){
+                $("#businessTypeDiv").hide();
+                $('#myTab4').find('li').each(function () {
+                    console.log($(this).index());
+                    if($(this).index()=='0'){
                         $(this).addClass("active");
                     }
-                    if($(this).find('li').eq(2)){
-                        $(this).addClass("transLi");
+                    if($(this).index()=='1'){
+                        $(this).removeClass("active");
                     }
-                    if($(this).find('li').eq(1)){
-                        $(this).addClass("storeLi");
+                    if($(this).index()=='2'){
+                        $(this).removeClass("active");
                     }
-                })*/
+                })
+                $("#home4").addClass("active");
+                $("#profile4").removeClass("active");
+                $("#dropdown14").removeClass("active");
+
 
             }
         });
