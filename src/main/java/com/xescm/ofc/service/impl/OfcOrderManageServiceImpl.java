@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sun.webpane.platform.ConfigManager.log;
-
 /**
  * Created by ydx on 2016/10/12.
  */

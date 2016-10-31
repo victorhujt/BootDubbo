@@ -1247,6 +1247,21 @@
                 $("#businessTypeDiv").show();
                 $('.storeLi').show();
                 $('.tranfr').hide();
+                $('#myTab4').find('li').each(function () {
+                    if($(this).index()=='0'){
+
+                        $(this).addClass("active");
+                    }
+                    if($(this).index()=='1'){
+                        $(this).removeClass("active");
+                    }
+                    if($(this).index()=='2'){
+                        $(this).removeClass("active");
+                    }
+                })
+                $("#home4").addClass("active");
+                $("#profile4").removeClass("active");
+                $("#dropdown14").removeClass("active");
 
             }
             if($(this).children('option:selected').val() == '60'){
@@ -1255,6 +1270,20 @@
                 $("#businessTypeDiv").hide();
                 $('.tranfr').show();
                 $('.storeLi').hide();
+                $('#myTab4').find('li').each(function () {
+                    if($(this).index()=='0'){
+                        $(this).addClass("active");
+                    }
+                    if($(this).index()=='1'){
+                        $(this).removeClass("active");
+                    }
+                    if($(this).index()=='2'){
+                        $(this).removeClass("active");
+                    }
+                })
+                $("#home4").addClass("active");
+                $("#profile4").removeClass("active");
+                $("#dropdown14").removeClass("active");
             }
         });
         $("#provideTransport").change(function () {

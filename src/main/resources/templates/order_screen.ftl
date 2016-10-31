@@ -434,59 +434,6 @@
     }
 
 
-    function editOrder(orderCode) {
-        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
-        xescm.common.loadPage(url);
-    }
-
-    function deleteOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderDelete","您确定要删除此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
-            var jsonStr={};
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "screen";
-            var currPage = "1";
-            var pageSize = "10"
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
-        });
-    }
-    function orderDetail(orderCode) {
-        var followTag = "orderCode";
-        var url = "/ofc/orderDetails/" + orderCode + "/" + followTag;
-        xescm.common.loadPage(url);
-    }
-
-    function reviewOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderOrNotAudit","您确定要审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function () {
-            var jsonStr={};
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "screen";
-            var currPage = "1";
-            var pageSize = "10"
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
-        });
-
-    }
-    function reReviewOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderOrNotAudit","您确定要反审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function () {
-            var jsonStr = {};
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "screen";
-            var currPage = "1";
-            var pageSize = "10"
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
-        });
-    }
-    function cancelOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderCancel","您确定要取消此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
-            var jsonStr = {};
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var tag = "screen";
-            var currPage = "1";
-            var pageSize = "10"
-            xescm.common.loadPage("/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize);
-        });
-    }
 
 </script>
 <script type="text/javascript">

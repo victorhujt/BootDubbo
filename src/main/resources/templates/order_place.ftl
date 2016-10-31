@@ -480,7 +480,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-6">
-                                                            </div></div>
+                                                            </div>
+                                                        </div>
 
                                                     </div>
 
@@ -990,7 +991,7 @@
             console.log("111111111221111111--"+tag);
             //alert(url);
             // xescm.common.loadPage(url);
-            xescm.common.submit("/ofc/orderPlaceCon",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+            xescm.common.ofcSubmit("/ofc/orderPlaceCon","您确认提交订单吗?",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
                 console.log("1111111111111111--"+tag);
                 debugger
                 //xescm.common.goBack("/ofc/orderPlace");
@@ -1309,7 +1310,6 @@
                 $('.transLi').hide();
                 //$('#myTab4').children('li').first().addClass("active");
                 $('#myTab4').find('li').each(function () {
-                    console.log($(this).index());
                     if($(this).index()=='0'){
 
                         $(this).addClass("active");
@@ -1332,7 +1332,6 @@
                 $("#provideTransportDiv").hide();
                 $("#businessTypeDiv").hide();
                 $('#myTab4').find('li').each(function () {
-                    console.log($(this).index());
                     if($(this).index()=='0'){
                         $(this).addClass("active");
                     }
