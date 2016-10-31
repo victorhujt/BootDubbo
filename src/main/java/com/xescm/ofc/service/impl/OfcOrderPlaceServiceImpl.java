@@ -10,7 +10,6 @@ import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
-import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,11 +55,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
-                if(StringUtils.isBlank(ofcFundamentalInformation.getCustOrderCode())){
+                if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
                     throw new BusinessException("您的客户订单编号填写有误!");
                 }
                 String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
-                if (StringUtils.isBlank(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
+                if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
                     ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
                             .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
                     ofcFundamentalInformation.setCustCode("001");
@@ -92,7 +91,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
-                if(StringUtils.isBlank(ofcFundamentalInformation.getCustOrderCode())){
+                if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
                     throw new BusinessException("您的客户订单编号填写有误!");
                 }
                 if (("").equals(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode()))){

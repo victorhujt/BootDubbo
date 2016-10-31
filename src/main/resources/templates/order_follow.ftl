@@ -81,28 +81,30 @@
                             ${(ofcOrderDTO.custOrderCode)!" "}
                             </td>
 
+
+
                             <td>
-                            <#if order.orderStatus ??><#if order.orderStatus == '10'>待审核</#if></#if>
-                            <#if order.orderStatus ??><#if order.orderStatus == '20'>已审核</#if></#if>
-                            <#if order.orderStatus ??><#if order.orderStatus == '30'>执行中</#if></#if>
-                            <#if order.orderStatus ??><#if order.orderStatus == '40'>已完成</#if></#if>
-                            <#if order.orderStatus ??><#if order.orderStatus == '50'>已取消</#if></#if>
+                            <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '10'>待审核</#if></#if>
+                            <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '20'>已审核</#if></#if>
+                            <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '30'>执行中</#if></#if>
+                            <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '40'>已完成</#if></#if>
+                            <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '50'>已取消</#if></#if>
                             </td>
                             <td>
-                            <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
-                            <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>
+                            <#if (ofcOrderDTO.orderType)! ??><#if (ofcOrderDTO.orderType)! == '60'>运输订单</#if></#if>
+                            <#if (ofcOrderDTO.orderType)! ??><#if (ofcOrderDTO.orderType)! == '61'>仓配订单</#if></#if>
                             </td>
                             <td>
-                            <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '601'>干线</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '610'>销售出库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '611'>调拨出库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '612'>报损出库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '613'>其他出库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '620'>采购入库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '621'>调拨入库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '622'>退货入库</#if></#if>
-                            <#if order.businessType ??><#if order.businessType == '623'>加工入库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '600'>城配</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '601'>干线</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '610'>销售出库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '611'>调拨出库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '612'>报损出库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '613'>其他出库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '620'>采购入库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '621'>调拨入库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '622'>退货入库</#if></#if>
+                            <#if (ofcOrderDTO.businessType)! ??><#if (ofcOrderDTO.businessType)! == '623'>加工入库</#if></#if>
                             </td>
                             <td>
                             ${(ofcOrderDTO.notes)!" "}

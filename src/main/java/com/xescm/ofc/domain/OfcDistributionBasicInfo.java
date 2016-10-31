@@ -131,6 +131,8 @@ public class OfcDistributionBasicInfo {
     /**
      * 创建时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "creation_time")
     private Date creationTime;
 
@@ -147,6 +149,8 @@ public class OfcDistributionBasicInfo {
     /**
      * 操作时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
 

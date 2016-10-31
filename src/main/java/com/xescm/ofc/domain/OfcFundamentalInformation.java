@@ -112,6 +112,8 @@ public class OfcFundamentalInformation {
     /**
      * 完成日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "finished_time")
     private Date finishedTime;
 
@@ -137,6 +139,8 @@ public class OfcFundamentalInformation {
     /**
      * 创建日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "creation_time")
     private Date creationTime;
 
@@ -153,6 +157,8 @@ public class OfcFundamentalInformation {
     /**
      * 操作时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
 

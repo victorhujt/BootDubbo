@@ -15,11 +15,11 @@ import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.ofc.wrap.WrapMapper;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import com.xescm.ofc.utils.JSONUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     public String orderEdit(Model model, @PathVariable String ofcOrderDTOJson, @PathVariable String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        if(StringUtils.isBlank(ofcOrderDTOJson)){
+        if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
             logger.debug(ofcOrderDTOJson);
             ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
         }
@@ -90,10 +91,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         String resultMessage = null;
         try {
-            if(StringUtils.isBlank(ofcOrderDTOStr)){
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
                 ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
             }
             OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            if(null == ofcOrderDTO.getOrderTime()){
+                ofcOrderDTO.setOrderTime(new Date());
+            }
 
             if (null == ofcOrderDTO.getProvideTransport()){
                 ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);

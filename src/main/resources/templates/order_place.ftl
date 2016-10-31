@@ -44,6 +44,7 @@
             color: black;
         }
     </style>
+    <#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
 </head>
 
 <body class="no-skin">
@@ -336,7 +337,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1 onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
                                                 </div>
                                             </div>
@@ -991,7 +992,7 @@
             console.log("111111111221111111--"+tag);
             //alert(url);
             // xescm.common.loadPage(url);
-            xescm.common.ofcSubmit("/ofc/orderPlaceCon","您确认提交订单吗?",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+            xescm.common.submit("/ofc/orderPlaceCon",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},"您确认提交订单吗?",function () {
                 console.log("1111111111111111--"+tag);
                 debugger
                 //xescm.common.goBack("/ofc/orderPlace");
