@@ -226,9 +226,7 @@
 <script type="text/javascript">
 
     function queryData(pageNum) {
-
         var param = {};
-
         param.pageNum = pageNum;
         param.pageSize = 10;
         var orderTimePre = $dp.$('orderTimePre').value;
@@ -240,7 +238,6 @@
         param.orderStatus = $("#orderStatus").val();
         param.orderType = $("#orderType").val();
         param.businessType = $("#businessType").val();
-        debugger;
         CommonClient.post(sys.rootPath + "/ofc/queryOrderPageByCondition", param, function(result) {
 
             if (result == undefined || result == null) {
