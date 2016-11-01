@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcSiloprogramInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcSiloprogramInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="planCode" property="plancode" jdbcType="VARCHAR" />
+    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
+    <result column="orderBatchNumber" property="orderbatchnumber" jdbcType="VARCHAR" />
+    <result column="programSerialNumber" property="programserialnumber" jdbcType="VARCHAR" />
+    <result column="serviceType" property="servicetype" jdbcType="VARCHAR" />
+    <result column="documentType" property="documenttype" jdbcType="VARCHAR" />
+    <result column="dates" property="dates" jdbcType="TIMESTAMP" />
+    <result column="custCode" property="custcode" jdbcType="VARCHAR" />
+    <result column="warehouseCode" property="warehousecode" jdbcType="VARCHAR" />
+    <result column="warehouseName" property="warehousename" jdbcType="VARCHAR" />
+    <result column="estimatedTimeOfDelivery" property="estimatedtimeofdelivery" jdbcType="TIMESTAMP" />
+    <result column="estimatedTimeOfArrival" property="estimatedtimeofarrival" jdbcType="TIMESTAMP" />
+    <result column="loadingPlace" property="loadingplace" jdbcType="VARCHAR" />
+    <result column="unloadingPlace" property="unloadingplace" jdbcType="VARCHAR" />
+    <result column="deliveryPlace" property="deliveryplace" jdbcType="VARCHAR" />
+    <result column="eceivingPlatform" property="eceivingplatform" jdbcType="VARCHAR" />
+    <result column="theTotalValueOf" property="thetotalvalueof" jdbcType="VARCHAR" />
+    <result column="supplierCode" property="suppliercode" jdbcType="VARCHAR" />
+    <result column="supplierName" property="suppliername" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="consigneeCode" property="consigneecode" jdbcType="VARCHAR" />
+    <result column="consigneeName" property="consigneename" jdbcType="VARCHAR" />
+    <result column="consigneeContact" property="consigneecontact" jdbcType="VARCHAR" />
+    <result column="consigneeContactPhone" property="consigneecontactphone" jdbcType="VARCHAR" />
+    <result column="consigneeFax" property="consigneefax" jdbcType="VARCHAR" />
+    <result column="consigneeEmail" property="consigneeemail" jdbcType="VARCHAR" />
+    <result column="consigneePostCode" property="consigneepostcode" jdbcType="VARCHAR" />
+    <result column="consigneeProvince" property="consigneeprovince" jdbcType="VARCHAR" />
+    <result column="consigneeCity" property="consigneecity" jdbcType="VARCHAR" />
+    <result column="consigneeDistrictAndCounty" property="consigneedistrictandcounty" jdbcType="VARCHAR" />
+    <result column="consigneeTownshipStreets" property="consigneetownshipstreets" jdbcType="VARCHAR" />
+    <result column="consigneeAddress" property="consigneeaddress" jdbcType="VARCHAR" />
+    <result column="printInvoices" property="printinvoices" jdbcType="VARCHAR" />
+    <result column="aymentMethod" property="aymentmethod" jdbcType="VARCHAR" />
+    <result column="orderAmount" property="orderamount" jdbcType="VARCHAR" />
+    <result column="cashOnDelivery" property="cashondelivery" jdbcType="VARCHAR" />
+    <result column="insured" property="insured" jdbcType="VARCHAR" />
+    <result column="insuredValue" property="insuredvalue" jdbcType="VARCHAR" />
+    <result column="warehouseNumber" property="warehousenumber" jdbcType="VARCHAR" />
+    <result column="serviceCharge" property="servicecharge" jdbcType="VARCHAR" />
+    <result column="creationTime" property="creationtime" jdbcType="TIMESTAMP" />
+    <result column="createPersonnel" property="createpersonnel" jdbcType="VARCHAR" />
+    <result column="voidPersonnel" property="voidpersonnel" jdbcType="VARCHAR" />
+    <result column="voidTime" property="voidtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

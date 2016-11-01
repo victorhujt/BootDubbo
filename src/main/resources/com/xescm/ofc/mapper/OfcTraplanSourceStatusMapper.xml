@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcTraplanSourceStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcTraplanSourceStatus" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="planCode" property="plancode" jdbcType="VARCHAR" />
+    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
+    <result column="resourceAllocationStatus" property="resourceallocationstatus" jdbcType="VARCHAR" />
+    <result column="serviceProviderCode" property="serviceprovidercode" jdbcType="VARCHAR" />
+    <result column="serviceProviderName" property="serviceprovidername" jdbcType="VARCHAR" />
+    <result column="serviceProviderContact" property="serviceprovidercontact" jdbcType="VARCHAR" />
+    <result column="serviceProviderContactPhone" property="serviceprovidercontactphone" jdbcType="VARCHAR" />
+    <result column="resourceConfirmation" property="resourceconfirmation" jdbcType="VARCHAR" />
+    <result column="resourceConfirmationTime" property="resourceconfirmationtime" jdbcType="TIMESTAMP" />
+    <result column="licensePlateNumber" property="licenseplatenumber" jdbcType="VARCHAR" />
+    <result column="driverName" property="drivername" jdbcType="VARCHAR" />
+    <result column="driverContactPhone" property="drivercontactphone" jdbcType="VARCHAR" />
+    <result column="transportNumber" property="transportnumber" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

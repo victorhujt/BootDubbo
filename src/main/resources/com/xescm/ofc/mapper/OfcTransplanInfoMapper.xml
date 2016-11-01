@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcTransplanInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcTransplanInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="planCode" property="plancode" jdbcType="VARCHAR" />
+    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
+    <result column="orderBatchNumber" property="orderbatchnumber" jdbcType="VARCHAR" />
+    <result column="programSerialNumber" property="programserialnumber" jdbcType="VARCHAR" />
+    <result column="serviceType" property="servicetype" jdbcType="VARCHAR" />
+    <result column="dates" property="dates" jdbcType="TIMESTAMP" />
+    <result column="custCode" property="custcode" jdbcType="VARCHAR" />
+    <result column="estimatedTimeOfDelivery" property="estimatedtimeofdelivery" jdbcType="TIMESTAMP" />
+    <result column="estimatedTimeOfArrival" property="estimatedtimeofarrival" jdbcType="TIMESTAMP" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="number" property="number" jdbcType="DECIMAL" />
+    <result column="volume" property="volume" jdbcType="DECIMAL" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="shippinCustomerCode" property="shippincustomercode" jdbcType="VARCHAR" />
+    <result column="shippingAddress" property="shippingaddress" jdbcType="VARCHAR" />
+    <result column="shippingCustomerContact" property="shippingcustomercontact" jdbcType="VARCHAR" />
+    <result column="customerContactPhone" property="customercontactphone" jdbcType="VARCHAR" />
+    <result column="departureProvince" property="departureprovince" jdbcType="VARCHAR" />
+    <result column="departureCity" property="departurecity" jdbcType="VARCHAR" />
+    <result column="departureDistrict" property="departuredistrict" jdbcType="VARCHAR" />
+    <result column="departureTowns" property="departuretowns" jdbcType="VARCHAR" />
+    <result column="receivingCustomerCode" property="receivingcustomercode" jdbcType="VARCHAR" />
+    <result column="receivingCustomerAddress" property="receivingcustomeraddress" jdbcType="VARCHAR" />
+    <result column="receivingCustomerContact" property="receivingcustomercontact" jdbcType="VARCHAR" />
+    <result column="receivingCustomerContactPhone" property="receivingcustomercontactphone" jdbcType="VARCHAR" />
+    <result column="destinationProvince" property="destinationprovince" jdbcType="VARCHAR" />
+    <result column="destinationCity" property="destinationcity" jdbcType="VARCHAR" />
+    <result column="destinationDistrict" property="destinationdistrict" jdbcType="VARCHAR" />
+    <result column="destinationTown" property="destinationtown" jdbcType="VARCHAR" />
+    <result column="receivingAddressLongitude" property="receivingaddresslongitude" jdbcType="VARCHAR" />
+    <result column="receivingAddressLatitude" property="receivingaddresslatitude" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="salesOrganization" property="salesorganization" jdbcType="VARCHAR" />
+    <result column="productGroup" property="productgroup" jdbcType="VARCHAR" />
+    <result column="salesDepartment" property="salesdepartment" jdbcType="VARCHAR" />
+    <result column="salesGroup" property="salesgroup" jdbcType="VARCHAR" />
+    <result column="salesTeamDescription" property="salesteamdescription" jdbcType="VARCHAR" />
+    <result column="salesDepartmentDescription" property="salesdepartmentdescription" jdbcType="VARCHAR" />
+    <result column="singleSourceOfTransport" property="singlesourceoftransport" jdbcType="VARCHAR" />
+    <result column="serviceCharge" property="servicecharge" jdbcType="DECIMAL" />
+    <result column="creationTime" property="creationtime" jdbcType="TIMESTAMP" />
+    <result column="createPersonnel" property="createpersonnel" jdbcType="VARCHAR" />
+    <result column="voidPersonnel" property="voidpersonnel" jdbcType="VARCHAR" />
+    <result column="voidTime" property="voidtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>
