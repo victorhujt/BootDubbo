@@ -1,7 +1,6 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.RmcWarehouse;
@@ -13,6 +12,8 @@ import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.PubUtils;
+import com.xescm.uam.domain.constants.SystemHeader;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,29 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
+                OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
+                List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
+                OfcDistributionBasicInfo ofcDistributionBasicInfo=ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.TRANSPORTORDER)){
+                    //运输订单
+                    transPlanCreate(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
+                }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
+                    //仓储订单
+                    OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                    if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                        //需要提供运输
+                        transPlanCreate(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
+                        siloProCreate(ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation);
+                    }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
+                        //不需要提供运输
+                        transPlanCreate(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
+                    }else {
+                        return String.valueOf(Wrapper.ERROR_CODE);
+                    }
+                }else {
+                    return String.valueOf(Wrapper.ERROR_CODE);
+                }
+                System.out.println("1111111111");
             }else {
                 return String.valueOf(Wrapper.ERROR_CODE);
             }
@@ -80,6 +104,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }else {
             return String.valueOf(Wrapper.ERROR_CODE);
         }
+    }
+
+    public void transPlanCreate(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo){
+        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+        ofcTransplanInfo.setPlancode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
+    }
+
+    public void siloProCreate(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation){
+
     }
 
     @Override
