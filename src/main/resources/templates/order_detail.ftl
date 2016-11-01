@@ -11,9 +11,12 @@
             <div class="page-content">
                 <div class="row">
                     <div class="col-xs-12">
-
+                        <div class="col-sm-6" style="float: right">
+                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" onclick="javascript:history.go(-1)">
+                                返回
+                            </button>
+                        </div>
                         <form id="" method="post" class="form-horizontal" role="form" >
-
                             <div class="page-header">
                                 <p>
                                     订单详情
@@ -27,7 +30,7 @@
                                         </a>
                                     </li>
 
-                                    <li>
+                                    <li class="tramessages">
                                         <a data-toggle="tab" href="#tramessages">
                                             配送信息
                                         </a>
@@ -39,14 +42,14 @@
                                         </a>
                                     </li>
 
-                                    <li class="dropdown">
+                                    <li class="warmessages">
                                         <a data-toggle="tab" href="#warmessages">
                                             仓储信息
                                         </a>
                                     </li>
 
-                                    <li class="dropdown">
-                                        <a data-toggle="tab" href="#goodsmessages">
+                                    <li class="supportMessages">
+                                        <a data-toggle="tab" href="#supportMessages">
                                             供应商信息
                                         </a>
                                     </li>
@@ -82,7 +85,11 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderStatus)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                    <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '10'><input id="" value = "待审核" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '20'><input id="" value = "已审核" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '30'><input id="" value = "执行中" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '40'><input id="" value = "已完成" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '50'><input id="" value = "已取消" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -91,7 +98,8 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                    <#if ofcOrderDTO.orderType ??><#if ofcOrderDTO.orderType == '60'><input id="" value = "运输订单" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.orderType ??><#if ofcOrderDTO.orderType == '61'><input id="" value = "仓配订单" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -99,7 +107,16 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(ofcOrderDTO.businessType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '600'><input id="" value = "城配" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '601'><input id="" value = "干线" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '610'><input id="" value = "销售出库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '611'><input id="" value = "调拨出库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '612'><input id="" value = "报损出库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '613'><input id="" value = "其他出库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '620'><input id="" value = "采购入库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '621'><input id="" value = "调拨入库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '622'><input id="" value = "退货入库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
+                                                    <#if ofcOrderDTO.businessType ??><#if ofcOrderDTO.businessType == '623'><input id="" value = "加工入库" readonly="readonly" style="color: #000"  type="text" ></#if></#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -480,7 +497,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="goodsmessages" class="tab-pane fade">
+                                    <div id="supportMessages" class="tab-pane fade">
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
@@ -541,12 +558,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
 
 
                             <div class="page-header">
@@ -637,5 +648,36 @@
         </div>
     </div><!-- /.main-content -->
 </div><!-- /.main-container -->
+<script type="text/javascript">
+    $(function(){
+
+        console.log(${(ofcOrderDTO.orderType)!});
+        console.log(${(ofcOrderDTO.businessType)!});
+        <#if ofcOrderDTO.orderType == '60' >
+            $('.warmessages').hide();
+            $('.supportMessages').hide();
+        <#elseif ofcOrderDTO.orderType == '61'>
+            debugger;
+            var businessType = ${ofcOrderDTO.businessType};
+            var businessTypeStr = businessType.toString().substring(0,2);
+            var provideTrans = ${(ofcOrderDTO.provideTransport)!"0"};
+            var provideTransStr = provideTrans.toString();
+            if(businessTypeStr == '62'){
+                debugger;
+                if(provideTransStr == '0'){
+                    $('.tramessages').hide();
+                    $('.dropdown').hide();
+                }
+            }else if(businessTypeStr == '61'){
+                debugger;
+                $('.supportMessages').hide();
+                if(provideTransStr == '0'){
+                    $('.tramessages').hide();
+                    $('.dropdown').hide();
+                }
+
+            }
+        </#if>
+    });
+</script>
 </body>
-</html>

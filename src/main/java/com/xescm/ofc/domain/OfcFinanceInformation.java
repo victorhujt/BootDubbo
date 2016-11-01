@@ -1,5 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -63,6 +66,8 @@ public class OfcFinanceInformation {
     /**
      * 创建日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "creation_time")
     private Date creationTime;
 
@@ -79,6 +84,8 @@ public class OfcFinanceInformation {
     /**
      * 操作时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
 

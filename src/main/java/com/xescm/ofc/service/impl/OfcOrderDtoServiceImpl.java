@@ -5,8 +5,6 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.IllegalClassException;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +44,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 //然后拿着这个transCode数据库关联基本列表, 找到对应的OrderCode,
                 orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
             }
-            if(StringUtils.isBlank(orderCode)){//如果找不到对应的code,就提示直接提示错误.
+            if(com.xescm.uam.utils.PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
                 throw new BusinessException("找不到该订单编号");
             }else{
                 OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();

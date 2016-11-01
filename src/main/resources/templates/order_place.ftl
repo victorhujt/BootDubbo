@@ -1,76 +1,50 @@
 <head>
     <style type="text/css">
         #goodsListDiv {
-            position:absolute;
-            left:138px;
-            top:91px;
+            position:fixed;
+            left:285px;
+            top:85px;
             width:946px;
             height:500px;
             z-index:3;
             overflow: auto;
-            border:solid #7A7A7A 4px;
+            border:solid #7A7A7A 2px;
         }
-
         #consignorListDiv {
-            position:absolute;
-
-            left:138px;
-
-            top:700px;
-
+            position:fixed;
+            left:285px;
+            top:77px;
             width:946px;
-
             height:500px;
-
             z-index:3;
-
             overflow: auto;
-
-            border:solid #7A7A7A 4px;
+            border:solid #7A7A7A 2px;
         }
-
         #consigneeListDiv {
-            position:absolute;
-
-            left:138px;
-
-            top:1100px;
-
+            position:fixed;
+            left:285px;
+            top:77px;
             width:946px;
-
             height:500px;
-
             z-index:3;
-
             overflow: auto;
-
-            border:solid #7A7A7A 4px;
+            border:solid #7A7A7A 2px;
         }
-
-
         #supportListDiv {
-            position:absolute;
-
-            left:138px;
-
-            top:600px;
-
+            position:fixed;
+            left:285px;
+            top:77px;
             width:946px;
-
             height:500px;
-
             z-index:3;
-
             overflow: auto;
-
-            border:solid #7A7A7A 4px;
+            border:solid #7A7A7A 2px;
         }
-
         input{
             color: black;
         }
     </style>
-    <script src="../../js/My97DatePicker/WdatePicker.js"></script>
+    <#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
 </head>
 
 <body class="no-skin">
@@ -83,7 +57,7 @@
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -91,14 +65,19 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
                 </div>
             </form>
             <form class="bootbox-form">
@@ -137,7 +116,7 @@
                 <input id="purpose2" name="purpose" type="hidden" value="2">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorName2" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -145,7 +124,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson2" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -153,14 +132,19 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber2" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
                 </div>
             </form>
             <form class="bootbox-form">
@@ -201,7 +185,7 @@
                 <input id="purpose2" name="purpose" type="hidden" value="1">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -209,7 +193,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -217,14 +201,19 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
                 </div>
             </form>
             <form class="bootbox-form">
@@ -263,7 +252,7 @@
             <form id="supplierSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "supplierName" name="supplierName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -271,7 +260,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "contactName" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -279,14 +268,19 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "contactPhone" name="contactPhone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <span id="supplierSelectFormBtn" class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="bottom" title="" data-content="Heads up! This alert needs your attention, but it's not super important." data-original-title="Some Info">筛选</span>
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="supplierSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
                 </div>
             </form>
             <form class="bootbox-form">
@@ -343,7 +337,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1>
+                                                    <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1 onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
                                                 </div>
                                             </div>
@@ -430,9 +424,9 @@
                                     <form name="orderInfoTable" id="orderInfoTable"  class="form-horizontal" role="form" >
                                         <div class="col-sm-12">
                                             <!-- #section:elements.tab.option -->
-                                            <div class="tabbable" <#--style="float: left; text-align: left; margin: 0 auto; -->style="width:900px;" >
-                                                <ul class="nav nav-tabs <#--padding-12 tab-color-blue background-blue-->" id="myTab4">
-                                                    <li class="active">
+                                            <div class="tabbable" style="width:1000px;" >
+                                                <ul class="nav nav-tabs" id="myTab4">
+                                                   <li class="active">
                                                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                     </li>
 
@@ -487,7 +481,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-6">
-                                                            </div></div>
+                                                            </div>
+                                                        </div>
 
                                                     </div>
 
@@ -997,7 +992,7 @@
             console.log("111111111221111111--"+tag);
             //alert(url);
             // xescm.common.loadPage(url);
-            xescm.common.submit("/ofc/orderPlaceCon",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},function () {
+            xescm.common.submit("/ofc/orderPlaceCon",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},"您确认提交订单吗?",function () {
                 console.log("1111111111111111--"+tag);
                 debugger
                 //xescm.common.goBack("/ofc/orderPlace");
@@ -1314,13 +1309,44 @@
                 $("#businessTypeDiv").show();
                 $('.storeLi').show();
                 $('.transLi').hide();
+                //$('#myTab4').children('li').first().addClass("active");
+                $('#myTab4').find('li').each(function () {
+                    if($(this).index()=='0'){
+
+                        $(this).addClass("active");
+                    }
+                    if($(this).index()=='1'){
+                        $(this).removeClass("active");
+                    }
+                    if($(this).index()=='2'){
+                        $(this).removeClass("active");
+                    }
+                })
+                $("#home4").addClass("active");
+                $("#profile4").removeClass("active");
+                $("#dropdown14").removeClass("active");
+
             }
             if($(this).children('option:selected').val() == '60'){
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();
-                $("#businessTypeDiv").hide();//class="chosen-select form-control"
-                /*$("#businessType").css("chosen-select form-control");//*/
+                $("#businessTypeDiv").hide();
+                $('#myTab4').find('li').each(function () {
+                    if($(this).index()=='0'){
+                        $(this).addClass("active");
+                    }
+                    if($(this).index()=='1'){
+                        $(this).removeClass("active");
+                    }
+                    if($(this).index()=='2'){
+                        $(this).removeClass("active");
+                    }
+                })
+                $("#home4").addClass("active");
+                $("#profile4").removeClass("active");
+                $("#dropdown14").removeClass("active");
+
 
             }
         });

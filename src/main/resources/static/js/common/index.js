@@ -68,11 +68,8 @@ var xescm = {
 
 			});
 		},
-		submit : function(submitUrl,message, param, successFunction) {
-			if(!message){
-				message='您确认吗?'
-			}
-			layer.confirm(message, {
+		submit : function(submitUrl,param, successFunction) {
+			layer.confirm('您确认吗?', {
 				skin : 'layui-layer-molv',
 				icon : 3,
 				title : '确认操作'
@@ -101,6 +98,44 @@ var xescm = {
 				}, function(index){
 					layer.close(index);
 				});
+			return;
+		},
+		/**
+		 * 订单中心submit
+		 */
+		ofcSubmit : function(submitUrl,message, param, successFunction) {
+			if(!message){
+				message='您确认吗?'
+			}
+			layer.confirm(message, {
+				skin : 'layui-layer-molv',
+				icon : 3,
+				title : '确认操作'
+			}, function(){
+				CommonClient.post(sys.rootPath + submitUrl, param, function(result) {
+					if (result == undefined || result == null) {
+						layer.msg("HTTP请求无数据返回", {
+							icon : 1
+						});
+					} else if (result.code == "200") {
+						layer.msg(result.message, {
+							skin : 'layui-layer-molv',
+							icon : 1
+						});
+						if(successFunction){
+							successFunction();
+						}
+					} else {
+
+						layer.msg(result.message, {
+							skin : 'layui-layer-molv',
+							icon : 5
+						});
+					}
+				});
+			}, function(index){
+				layer.close(index);
+			});
 			return;
 		},
         /**

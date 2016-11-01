@@ -382,7 +382,7 @@
     }
 
     function deleteOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderDelete","您确定要删除此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
+        xescm.common.submit("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要删除此订单?",function () {
             xescm.common.loadPage("/ofc/orderManage");
         });
     }
@@ -393,19 +393,18 @@
     }
 
     function reviewOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderOrNotAudit","您确定要审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},function () {
+        xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},"您确定要审核此订单?",function () {
+            debugger;
             xescm.common.loadPage("/ofc/orderManage");
         });
     }
     function reReviewOrder(ordercode,orderStatus) {
-
-        console.log("reReviewOrder----------")
-        xescm.common.submit("/ofc/orderOrNotAudit","您确定要反审核此订单?",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},function () {
+        xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},"您确定要反审核此订单?",function () {
             xescm.common.loadPage("/ofc/orderManage");
         });
     }
     function cancelOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderCancel","您确定要取消此订单?",{"orderCode":ordercode,"orderStatus":orderStatus},function () {
+        xescm.common.submit("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要取消此订单?",function () {
             xescm.common.loadPage("/ofc/orderManage");
         });
     }
