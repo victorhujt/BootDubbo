@@ -124,14 +124,14 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param ofcGoodsDetailsInfo
      * @return
      */
-    @RequestMapping("/goodsScans")
+    /*@RequestMapping("/goodsScans")
     public String placeOrder(Model model,OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
         logger.debug("==>订单中心下单货品筛选实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
         return "order_place";
-    }
+    }*/
 
     /**
      * 货品筛选(调用客户中心API)
@@ -142,15 +142,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(Model model, CscGoods cscGoods, HttpServletResponse response){
-/*        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         //调用外部接口,最低传CustomerCode
-        cscGoods.setCustomerCode(authResDtoByToken.getGroupId());*/
-
-        Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
-        try {
+        try{
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(authResDtoByToken.getGroupId());
+            String custId = (String) wrapper.getResult();
+            cscGoods.setCustomerId(custId);
+            Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
-        } catch (IOException e) {
-            throw new BusinessException(e.getMessage());
+        }catch (Exception ex){
+            logger.error("订单中心筛选货品出现异常:{},{}", ex.getMessage(), ex);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.xescm.ofc.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -85,7 +86,8 @@ public class CscGoods implements Serializable{
      * 创建时间
      */
     @Column(name = "created_time")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createdTime;
 
     /**
@@ -104,7 +106,8 @@ public class CscGoods implements Serializable{
      * 更新时间
      */
     @Column(name = "update_time")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
     /**
@@ -117,6 +120,44 @@ public class CscGoods implements Serializable{
      */
     @Column(name = "customer_id")
     private String customerId;
+    /**
+     * 条形码
+     * */
+    @Column(name = "bar_code")
+    private String barCode;
+    /**
+     * 状态
+     * */
+    private String state;
+    /**
+     * 保质期限
+     * */
+    @Column(name = "expiry_date")
+    private String expiryDate;
+    /**
+     * 长
+     * */
+    private String length;
+    /**
+     * 宽
+     * */
+    private String width;
+    /**
+     * 高
+     * */
+    private String height;
+    /**
+     * 体积
+     * */
+    private String volume;
+    /**
+     * 重量
+     * */
+    private String weight;
+    /**
+     * 货品描述
+     * */
+    private String description;
 
     /**
      * 获取主键
@@ -432,6 +473,82 @@ public class CscGoods implements Serializable{
         this.version = version;
     }
 
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public String getLength() {
+        return length;
+    }
+
+    public void setLength(String length) {
+        this.length = length;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public void setVolume(String volume) {
+        this.volume = volume;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "CscGoods{" +
@@ -453,6 +570,15 @@ public class CscGoods implements Serializable{
                 ", updateTime=" + updateTime +
                 ", yn=" + yn +
                 ", customerId='" + customerId + '\'' +
+                ", barCode='" + barCode + '\'' +
+                ", state='" + state + '\'' +
+                ", expiryDate='" + expiryDate + '\'' +
+                ", length='" + length + '\'' +
+                ", width='" + width + '\'' +
+                ", height='" + height + '\'' +
+                ", volume='" + volume + '\'' +
+                ", weight='" + weight + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

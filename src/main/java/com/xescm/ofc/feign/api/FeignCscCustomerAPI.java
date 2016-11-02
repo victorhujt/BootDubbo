@@ -22,7 +22,7 @@ public interface FeignCscCustomerAPI {
     @Headers("Content-Type: application/json")
     public Wrapper<?> addCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto);
 
-    @RequestLine("POST /api/csc/customer/modifyCscContantAndCompany")
+    @RequestLine("POST /api/csc/customer/queryCustomerIdByGroupId")
     @Headers("Content-Type: application/json")
-    public Wrapper<?> modifyCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto);
+    public Wrapper<?> queryCustomerIdByGroupId(String groupId);
 }

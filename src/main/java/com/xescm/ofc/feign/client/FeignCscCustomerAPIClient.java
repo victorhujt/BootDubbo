@@ -30,7 +30,8 @@ public class FeignCscCustomerAPIClient {
     public FeignCscCustomerAPI getApi() {
         FeignCscCustomerAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder()).target(FeignCscCustomerAPI.class, restConfig.getCscUrl());
+                .decoder(new JacksonDecoder())
+                .target(FeignCscCustomerAPI.class, restConfig.getCscUrl());
         return res;
     }
 
@@ -52,12 +53,20 @@ public class FeignCscCustomerAPIClient {
         return wrapper;
     }
 
-    public Wrapper<?> modifyCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto){
+    /*public Wrapper<?> modifyCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto){
         logger.debug("==>修改客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
         if(null == cscContantAndCompanyDto){
             throw new BusinessException("参数为空");
         }
         Wrapper<?> wrapper = getApi().modifyCscContantAndCompany(cscContantAndCompanyDto);
+        return wrapper;
+    }*/
+    public Wrapper<?> queryCustomerIdByGroupId(String groupId){
+        logger.debug("==>通过groupId取客户id groupId={}", groupId);
+        if(null == groupId){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(groupId);
         return wrapper;
     }
 }
