@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
@@ -275,7 +276,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.setContactName(contactName);
         cscContantAndCompanyDto.setPurpose(purpose);*/
         //cscContantAndCompanyDto.setContactCompanyId("");
-        Wrapper<List<CscContantAndCompanyDto>> listWrapper = null;
+        Wrapper<List<CscContantAndCompanyVo>> listWrapper = null;
         try {
             listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
@@ -292,11 +293,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
         }
 
-        CscContantAndCompanyDto cscContantAndCompanyDtoDetail = listWrapper.getResult().get(0);
+        CscContantAndCompanyVo cscContantAndCompanyVo = listWrapper.getResult().get(0);
         if(OrderConstEnum.CONTACTPURPOSECONSIGNOR.equals(purpose)){
-            map.put("consignorMessage",cscContantAndCompanyDtoDetail);
+            map.put("consignorMessage",cscContantAndCompanyVo);
         }else if (OrderConstEnum.CONTACTPURPOSECONSIGNEE.equals(purpose)){
-            map.put("consigneeMessage",cscContantAndCompanyDtoDetail);
+            map.put("consigneeMessage",cscContantAndCompanyVo);
         }
         return map;
     }

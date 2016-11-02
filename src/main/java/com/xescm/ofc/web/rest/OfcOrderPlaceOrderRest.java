@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -160,17 +161,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
-    public void contactSelectByCscApi(Model model, CscContantAndCompanyDto cscContantAndCompanyDto, HttpServletResponse response){
+    public void contactSelectByCscApi(Model model,  String cscContantAndCompanyDto, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode和purpose
         try {
+            CscContantAndCompanyDto csc = JSONUtils.jsonToPojo(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
-            cscContantAndCompanyDto.setCustomerId(custId);
-            cscContantAndCompanyDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<List<CscContantAndCompanyDto>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            csc.setCustomerId(custId);
+            csc.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
             response.getWriter().print(JSONUtils.objectToJson(cscReceivingInfoList.getResult()));
         } catch (Exception ex) {
             logger.error("订单中心筛选收货方出现异常:{},{}", ex.getMessage(), ex);

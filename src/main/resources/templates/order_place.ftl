@@ -113,12 +113,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-                <input id="purpose2" name="purpose" type="hidden" value="2">
+                <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorName2" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContact.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,7 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
-                <input id="purpose2" name="purpose" type="hidden" value="1">
+                <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
@@ -989,7 +989,6 @@
             var tag = "place";
             var ofcOrderDTO = JSON.stringify(jsonStr);
             //var url = "/ofc/orderPlaceCon/" + ofcOrderDTO + "/" + tag;
-            console.log("111111111221111111--"+tag);
             //alert(url);
             // xescm.common.loadPage(url);
             xescm.common.submit("/ofc/orderPlaceCon",{"ofcOrderDTOStr":ofcOrderDTO,"tag":tag},"您确认提交订单吗?",function () {
@@ -1023,7 +1022,18 @@
 
         $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
+            //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
+            var cscContantAndCompanyDto = {};
+            var cscContact = {};
+            var cscContactCompany = {};
+            cscContactCompany.contactCompanyName = $("#consignorName2").value;
+            cscContact.purpose = "2";
+            cscContact.contactName = $("#consignorPerson2").value;
+            cscContact.phone = $("#consignorPhoneNumber2").value;
+            cscContantAndCompanyDto.cscContact = cscContact;
+            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var param = JSON.stringify(cscContantAndCompanyDto);
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1043,7 +1053,17 @@
         });
 
         $("#consigneeSelectFormBtn").click(function () {
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
+            var cscContantAndCompanyDto = {};
+            var cscContact = {};
+            var cscContactCompany = {};
+            cscContactCompany.contactCompanyName = $("#consignorName1").value;
+            cscContact.purpose = "1";
+            cscContact.contactName = $("#consignorPerson1").value;
+            cscContact.phone = $("#consignorPhoneNumber1").value;
+            cscContantAndCompanyDto.cscContact = cscContact;
+            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var param = JSON.stringify(cscContantAndCompanyDto);
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {

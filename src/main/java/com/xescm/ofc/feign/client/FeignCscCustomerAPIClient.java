@@ -2,6 +2,7 @@ package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -37,12 +38,12 @@ public class FeignCscCustomerAPIClient {
         return res;
     }
 
-    public Wrapper<List<CscContantAndCompanyDto>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
+    public Wrapper<List<CscContantAndCompanyVo>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
         logger.debug("==>查询客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
         if(null == cscContantAndCompanyDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscContantAndCompanyDto>> wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
+        Wrapper<List<CscContantAndCompanyVo>> wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
         return wrapper;
     }
 

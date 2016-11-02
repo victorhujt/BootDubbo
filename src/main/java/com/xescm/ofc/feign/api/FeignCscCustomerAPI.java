@@ -2,6 +2,7 @@ package com.xescm.ofc.feign.api;
 
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 
@@ -17,7 +18,7 @@ public interface FeignCscCustomerAPI {
 
     @RequestLine("POST /api/csc/customer/queryCscReceivingInfoList")
     @Headers("Content-Type: application/json")
-    public Wrapper<List<CscContantAndCompanyDto>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto);
+    public Wrapper<List<CscContantAndCompanyVo>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto);
 
     @RequestLine("POST /api/csc/customer/addCscContantAndCompany")
     @Headers("Content-Type: application/json")

@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -221,7 +222,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         try {
             /*cscContantAndCompanyDto.setContactCompanyId("001");
             cscContantAndCompanyDto.setContactCompanyId("001");*/
-            Wrapper<List<CscContantAndCompanyDto>> listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            Wrapper<List<CscContantAndCompanyVo>> listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(listWrapper.getResult().size() > 0){
                 return "该联系人信息已在资源中心中存在,无需再次添加!";
             }
