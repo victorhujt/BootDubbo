@@ -8,6 +8,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.xescm.uam.utils.wrap.Wrapper;
+
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +43,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+    @Resource
+    private CodeGenUtils codeGenUtils;
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -60,8 +65,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
                 String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
                 if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
-                    ofcFundamentalInformation.setOrderCode("SO"+ PrimaryGenerater.getInstance()
-                            .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber()));
+                    ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+                    //"SO"+ PrimaryGenerater.getInstance()
+                    //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
                     ofcFundamentalInformation.setCustCode("001");
                     ofcFundamentalInformation.setCustName("众品");
                     ofcFundamentalInformation.setAbolishMark(OrderConstEnum.ORDERWASNOTABOLISHED);//未作废

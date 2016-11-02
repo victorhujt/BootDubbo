@@ -12,6 +12,7 @@ import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.constants.SystemHeader;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -68,6 +70,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcSiloproSourceStatusService ofcSiloproSourceStatusService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
+    @Resource
+    private CodeGenUtils codeGenUtils;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag) {
@@ -84,12 +88,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 while(iter.hasNext())
                 {
                     //筛选非作废计划单
-                    ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+                    /*ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                     OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
                     BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
                     BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
                     ofcPlannedDetailService.save(ofcPlannedDetail);
-                    logger.debug("计划单明细保存成功");
+                    logger.debug("计划单明细保存成功");*/
                 }
                 //ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
                 //ofcOrderStatus.setStatusDesc("反审核");
@@ -103,7 +107,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         +" "+"订单审核完成");
                 ofcOrderStatus.setOperator("001");
                 ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatusService.save(ofcOrderStatus);
+
                 OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
                 List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
                 OfcDistributionBasicInfo ofcDistributionBasicInfo=ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
@@ -146,6 +150,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else {
                         return String.valueOf(Wrapper.ERROR_CODE);
                     }
+                    ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstEnum.IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
@@ -181,7 +186,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
-            ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
+            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
             ofcTransplanInfo.setShippinCustomerCode(ofcFundamentalInformation.getCustCode());
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel("001");
@@ -233,7 +238,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
-            ofcSiloprogramInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","WP"));
+            ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
             ofcSiloprogramInfo.setCreationTime(new Date());
             ofcSiloprogramInfo.setCreatePersonnel("001");
             BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcWarehouseInformation);

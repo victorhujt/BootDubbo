@@ -18,7 +18,9 @@ public class CodeGenUtils {
 	@Autowired
 	private StringRedisTemplate rt;
 
-
+	public String getNewWaterCode(String prefix,int prefisLen){
+		return getNewCode(OFC_ENV,prefix,prefisLen);
+	}
 	/**
 	 * 从Redis上获取最新的编码
 	 * @param envLock 环境前缀(如中视购物=ZSGW)
