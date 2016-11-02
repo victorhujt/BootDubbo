@@ -1,20 +1,16 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
-import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.RmcWarehouse;
+import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
+import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
-import com.xescm.uam.domain.constants.SystemHeader;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -52,6 +48,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
     @Autowired
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    @Autowired
+    private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
     @Autowired
     private OfcPlannedDetailService ofcPlannedDetailService;
     @Autowired
@@ -316,9 +314,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public Map<String, Object> getContactMessage(String contactCompanyName, String contactName, String purpose) {
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-        cscContantAndCompanyDto.setContactCompanyName(contactCompanyName);
+        /*cscContantAndCompanyDto.setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setContactName(contactName);
-        cscContantAndCompanyDto.setPurpose(purpose);
+        cscContantAndCompanyDto.setPurpose(purpose);*/
         //cscContantAndCompanyDto.setContactCompanyId("");
         Wrapper<List<CscContantAndCompanyDto>> listWrapper = null;
         try {
@@ -373,7 +371,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public RmcWarehouse getWarehouseMessage(String warehouseCode) {
-        Wrapper<RmcWarehouse> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(warehouseCode);
+        Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(warehouseCode);
         RmcWarehouse result = rmcWarehouseByid.getResult();
         if(null == result){
             throw new BusinessException("没有查到仓库的信息!");

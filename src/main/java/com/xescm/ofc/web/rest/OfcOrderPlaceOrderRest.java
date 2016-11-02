@@ -1,15 +1,15 @@
 package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
-import com.xescm.ofc.domain.dto.CscGoods;
-import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.CscGoods;
+import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
@@ -19,20 +19,16 @@ import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import com.xescm.ofc.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lyh on 2016/10/8.
@@ -124,14 +120,14 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param ofcGoodsDetailsInfo
      * @return
      */
-    @RequestMapping("/goodsScans")
+    /*@RequestMapping("/goodsScans")
     public String placeOrder(Model model,OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
         logger.debug("==>订单中心下单货品筛选实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfo.setGoodsCode("1");
         ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
         return "order_place";
-    }
+    }*/
 
     /**
      * 货品筛选(调用客户中心API)
@@ -142,15 +138,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(Model model, CscGoods cscGoods, HttpServletResponse response){
-/*        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         //调用外部接口,最低传CustomerCode
-        cscGoods.setCustomerCode(authResDtoByToken.getGroupId());*/
-
-        Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
-        try {
+        try{
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            cscGoods.setCustomerId(custId);
+            Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
-        } catch (IOException e) {
-            throw new BusinessException(e.getMessage());
+        }catch (Exception ex){
+            logger.error("订单中心筛选货品出现异常:{},{}", ex.getMessage(), ex);
         }
     }
 
@@ -163,11 +162,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
     public void contactSelectByCscApi(Model model, CscContantAndCompanyDto cscContantAndCompanyDto, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode和purpose
-        Wrapper<List<CscContantAndCompanyDto>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
         try {
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            cscContantAndCompanyDto.setCustomerId(custId);
+            cscContantAndCompanyDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<List<CscContantAndCompanyDto>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
             response.getWriter().print(JSONUtils.objectToJson(cscReceivingInfoList.getResult()));
-        } catch (IOException e) {
-            throw new BusinessException(e.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心筛选收货方出现异常:{},{}", ex.getMessage(), ex);
         }
     }
 
@@ -180,11 +186,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
     public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         //调用外部接口,最低传CustomerCode
-        Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
         try {
+            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
-        }catch (IOException e) {
-            throw new BusinessException(e.getMessage());
+        }catch (IOException ex) {
+            logger.error("订单中心筛选供应商出现异常:{},{}", ex.getMessage(), ex);
         }
     }
 

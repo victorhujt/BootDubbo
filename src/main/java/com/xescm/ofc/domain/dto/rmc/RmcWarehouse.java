@@ -1,4 +1,4 @@
-package com.xescm.ofc.domain.dto;
+package com.xescm.ofc.domain.dto.rmc;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

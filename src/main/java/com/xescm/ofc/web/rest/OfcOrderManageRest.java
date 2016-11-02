@@ -2,9 +2,9 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
-import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
-import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.RmcWarehouse;
+import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
