@@ -1,6 +1,6 @@
 package com.xescm.ofc.feign.api;
 
-import com.xescm.ofc.domain.dto.CscGoods;
+import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;

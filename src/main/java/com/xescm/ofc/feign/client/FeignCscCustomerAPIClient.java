@@ -1,8 +1,10 @@
 package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
@@ -61,12 +63,12 @@ public class FeignCscCustomerAPIClient {
         Wrapper<?> wrapper = getApi().modifyCscContantAndCompany(cscContantAndCompanyDto);
         return wrapper;
     }*/
-    public Wrapper<?> queryCustomerIdByGroupId(String groupId){
-        logger.debug("==>通过groupId取客户id groupId={}", groupId);
-        if(null == groupId){
+    public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto){
+        logger.debug("==>通过groupId取客户id queryCustomerIdDto={}", queryCustomerIdDto);
+        if(null == queryCustomerIdDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(groupId);
+        Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(queryCustomerIdDto);
         return wrapper;
     }
 }

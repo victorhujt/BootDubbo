@@ -1,6 +1,6 @@
 package com.xescm.ofc.feign.api;
 
-import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
@@ -19,9 +19,4 @@ public interface FeignCscSupplierAPI {
     @RequestLine("POST /api/csc/supplier/addSupplierBySupplierCode")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addSupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto);
-
-    @Headers("Content-Type: application/json")
-    @RequestLine("POST /api/csc/supplier/modifySupplierBySupplierCode")
-    public Wrapper<?> modifySupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto);
-
 }

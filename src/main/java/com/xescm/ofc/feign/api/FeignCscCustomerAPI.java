@@ -1,10 +1,11 @@
 package com.xescm.ofc.feign.api;
 
-import com.xescm.ofc.domain.dto.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 
 import feign.Headers;
-import feign.Param;
 import feign.RequestLine;
 
 import java.util.List;
@@ -22,7 +23,10 @@ public interface FeignCscCustomerAPI {
     @Headers("Content-Type: application/json")
     public Wrapper<?> addCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto);
 
+    /*@RequestLine("POST /api/csc/customer/queryCustomerIdByGroupId")
+    @Headers("Content-Type: application/json")AuthResDto
+    public Wrapper<?> queryCustomerIdByGroupId(String groupId);*/
     @RequestLine("POST /api/csc/customer/queryCustomerIdByGroupId")
     @Headers("Content-Type: application/json")
-    public Wrapper<?> queryCustomerIdByGroupId(String groupId);
+    public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto);
 }

@@ -1,12 +1,15 @@
-package com.xescm.ofc.domain.dto;
+package com.xescm.ofc.domain.dto.csc;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Table(name = "tbl_csc_warehouse")
-public class CscWarehouse {
+public class CscWarehouse implements Serializable {
+    private static final long serialVersionUID = 7679880138815709773L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "UUID")
@@ -26,13 +29,13 @@ public class CscWarehouse {
     /**
      * 客户id
      */
-    @Column(name="customer_id")
+    @Column(name = "customer_id")
     private String customerId;
     /**
      * 客户编码
      */
-    @Column(name="customer_code")
-    private  String customerCode;
+    @Column(name = "customer_code")
+    private String customerCode;
 
     public String getId() {
         return id;
@@ -84,5 +87,4 @@ public class CscWarehouse {
                 ", customerCode='" + customerCode + '\'' +
                 '}';
     }
-
 }

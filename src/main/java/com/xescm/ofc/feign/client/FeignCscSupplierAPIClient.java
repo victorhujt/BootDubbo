@@ -1,9 +1,8 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.FeignCscGoodsAPI;
 import com.xescm.ofc.feign.api.FeignCscSupplierAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -50,13 +49,6 @@ public class FeignCscSupplierAPIClient {
         return wrapper;
 
     }
-    public Wrapper<?> modifySupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto){
-        logger.debug("==>查询货品 cscSupplierInfoDto={}", cscSupplierInfoDto);
-        if(null == cscSupplierInfoDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<?> wrapper = getApi().modifySupplierBySupplierCode(cscSupplierInfoDto);
-        return wrapper;
-    }
+
 
 }

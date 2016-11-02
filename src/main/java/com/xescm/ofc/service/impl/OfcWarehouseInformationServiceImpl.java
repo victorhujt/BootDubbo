@@ -1,12 +1,12 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
-import com.xescm.ofc.domain.dto.CscWarehouse;
-import com.xescm.ofc.domain.dto.RmcWarehouse;
+import com.xescm.ofc.domain.dto.csc.CscWarehouse;
+import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
+import com.xescm.ofc.feign.client.FeignRmcWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
-import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,8 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
     @Autowired
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    @Autowired
+    private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -50,14 +52,16 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Override
     public List<RmcWarehouse> getWarehouseListByCustCode(String custCode) {
         try{
-            Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(custCode);
+            CscWarehouse cscWarehouse = new CscWarehouse();
+            cscWarehouse.setCustomerId(custCode);
+            Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
             List<CscWarehouse> result = cscWarehouseByCustomerId.getResult();
             if(result.size() < 1){
                 return new ArrayList<>();
             }
             List<RmcWarehouse> warehouseList = new ArrayList<>();
-            for(CscWarehouse cscWarehouse : result){
-                Wrapper<RmcWarehouse> rmcWarehouseByid = feignCscWarehouseAPIClient.getRmcWarehouseByid(cscWarehouse.getWarehouseCode());
+            for(CscWarehouse cscWH : result){
+                Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(cscWH.getWarehouseId());
                 RmcWarehouse rmcWarehouse = rmcWarehouseByid.getResult();
                 if (null == rmcWarehouse) {
                     continue;
