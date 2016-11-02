@@ -119,6 +119,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
                     //更新运输信息
                     ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                    if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
+                            .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                    }else{
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                    }
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
 
                 }else{

@@ -5,9 +5,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="planCode" property="plancode" jdbcType="VARCHAR" />
-    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
-    <result column="transportSingleLatestStatus" property="transportsinglelateststatus" jdbcType="VARCHAR" />
-    <result column="transportSingleUpdateTime" property="transportsingleupdatetime" jdbcType="TIMESTAMP" />
+    <result column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="transport_single_latest_status" property="transportSingleLatestStatus" jdbcType="VARCHAR" />
+    <result column="transport_single_update_time" property="transportSingleUpdateTime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>

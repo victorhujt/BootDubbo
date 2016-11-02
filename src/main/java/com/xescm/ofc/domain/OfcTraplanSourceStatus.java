@@ -9,312 +9,312 @@ public class OfcTraplanSourceStatus {
     /**
      * 计划单编号
      */
-    @Column(name = "planCode")
-    private String plancode;
+    @Column(name = "plan_code")
+    private String planCode;
 
     /**
      * 订单编号
      */
-    @Column(name = "orderCode")
-    private String ordercode;
+    @Column(name = "order_code")
+    private String orderCode;
 
     /**
      * 资源分配状态
      */
-    @Column(name = "resourceAllocationStatus")
-    private String resourceallocationstatus;
+    @Column(name = "resource_allocation_status")
+    private String resourceAllocationStatus;
 
     /**
      * 服务商编码
      */
-    @Column(name = "serviceProviderCode")
-    private String serviceprovidercode;
+    @Column(name = "service_provider_code")
+    private String serviceProviderCode;
 
     /**
      * 服务商名称
      */
-    @Column(name = "serviceProviderName")
-    private String serviceprovidername;
+    @Column(name = "service_provider_name")
+    private String serviceProviderName;
 
     /**
      * 服务商联系人
      */
-    @Column(name = "serviceProviderContact")
-    private String serviceprovidercontact;
+    @Column(name = "service_provider_contact")
+    private String serviceProviderContact;
 
     /**
      * 服务商联系电话
      */
-    @Column(name = "serviceProviderContactPhone")
-    private String serviceprovidercontactphone;
+    @Column(name = "service_provider_contact_phone")
+    private String serviceProviderContactPhone;
 
     /**
      * 资源确认人员
      */
-    @Column(name = "resourceConfirmation")
-    private String resourceconfirmation;
+    @Column(name = "resource_confirmation")
+    private String resourceConfirmation;
 
     /**
      * 资源确认时间
      */
-    @Column(name = "resourceConfirmationTime")
-    private Date resourceconfirmationtime;
+    @Column(name = "resource_confirmation_time")
+    private Date resourceConfirmationTime;
 
     /**
      * 车牌号
      */
-    @Column(name = "licensePlateNumber")
-    private String licenseplatenumber;
+    @Column(name = "plate_number")
+    private String plateNumber;
 
     /**
      * 司机姓名
      */
-    @Column(name = "driverName")
-    private String drivername;
+    @Column(name = "driver_name")
+    private String driverName;
 
     /**
      * 司机联系电话
      */
-    @Column(name = "driverContactPhone")
-    private String drivercontactphone;
+    @Column(name = "contact_number")
+    private String contactNumber;
 
     /**
      * 运输单号
      */
-    @Column(name = "transportNumber")
-    private String transportnumber;
+    @Column(name = "trans_code")
+    private String transCode;
 
     /**
      * 获取计划单编号
      *
-     * @return planCode - 计划单编号
+     * @return plan_code - 计划单编号
      */
-    public String getPlancode() {
-        return plancode;
+    public String getPlanCode() {
+        return planCode;
     }
 
     /**
      * 设置计划单编号
      *
-     * @param plancode 计划单编号
+     * @param planCode 计划单编号
      */
-    public void setPlancode(String plancode) {
-        this.plancode = plancode;
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
     }
 
     /**
      * 获取订单编号
      *
-     * @return orderCode - 订单编号
+     * @return order_code - 订单编号
      */
-    public String getOrdercode() {
-        return ordercode;
+    public String getOrderCode() {
+        return orderCode;
     }
 
     /**
      * 设置订单编号
      *
-     * @param ordercode 订单编号
+     * @param orderCode 订单编号
      */
-    public void setOrdercode(String ordercode) {
-        this.ordercode = ordercode;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     /**
      * 获取资源分配状态
      *
-     * @return resourceAllocationStatus - 资源分配状态
+     * @return resource_allocation_status - 资源分配状态
      */
-    public String getResourceallocationstatus() {
-        return resourceallocationstatus;
+    public String getResourceAllocationStatus() {
+        return resourceAllocationStatus;
     }
 
     /**
      * 设置资源分配状态
      *
-     * @param resourceallocationstatus 资源分配状态
+     * @param resourceAllocationStatus 资源分配状态
      */
-    public void setResourceallocationstatus(String resourceallocationstatus) {
-        this.resourceallocationstatus = resourceallocationstatus;
+    public void setResourceAllocationStatus(String resourceAllocationStatus) {
+        this.resourceAllocationStatus = resourceAllocationStatus;
     }
 
     /**
      * 获取服务商编码
      *
-     * @return serviceProviderCode - 服务商编码
+     * @return service_provider_code - 服务商编码
      */
-    public String getServiceprovidercode() {
-        return serviceprovidercode;
+    public String getServiceProviderCode() {
+        return serviceProviderCode;
     }
 
     /**
      * 设置服务商编码
      *
-     * @param serviceprovidercode 服务商编码
+     * @param serviceProviderCode 服务商编码
      */
-    public void setServiceprovidercode(String serviceprovidercode) {
-        this.serviceprovidercode = serviceprovidercode;
+    public void setServiceProviderCode(String serviceProviderCode) {
+        this.serviceProviderCode = serviceProviderCode;
     }
 
     /**
      * 获取服务商名称
      *
-     * @return serviceProviderName - 服务商名称
+     * @return service_provider_name - 服务商名称
      */
-    public String getServiceprovidername() {
-        return serviceprovidername;
+    public String getServiceProviderName() {
+        return serviceProviderName;
     }
 
     /**
      * 设置服务商名称
      *
-     * @param serviceprovidername 服务商名称
+     * @param serviceProviderName 服务商名称
      */
-    public void setServiceprovidername(String serviceprovidername) {
-        this.serviceprovidername = serviceprovidername;
+    public void setServiceProviderName(String serviceProviderName) {
+        this.serviceProviderName = serviceProviderName;
     }
 
     /**
      * 获取服务商联系人
      *
-     * @return serviceProviderContact - 服务商联系人
+     * @return service_provider_contact - 服务商联系人
      */
-    public String getServiceprovidercontact() {
-        return serviceprovidercontact;
+    public String getServiceProviderContact() {
+        return serviceProviderContact;
     }
 
     /**
      * 设置服务商联系人
      *
-     * @param serviceprovidercontact 服务商联系人
+     * @param serviceProviderContact 服务商联系人
      */
-    public void setServiceprovidercontact(String serviceprovidercontact) {
-        this.serviceprovidercontact = serviceprovidercontact;
+    public void setServiceProviderContact(String serviceProviderContact) {
+        this.serviceProviderContact = serviceProviderContact;
     }
 
     /**
      * 获取服务商联系电话
      *
-     * @return serviceProviderContactPhone - 服务商联系电话
+     * @return service_provider_contact_phone - 服务商联系电话
      */
-    public String getServiceprovidercontactphone() {
-        return serviceprovidercontactphone;
+    public String getServiceProviderContactPhone() {
+        return serviceProviderContactPhone;
     }
 
     /**
      * 设置服务商联系电话
      *
-     * @param serviceprovidercontactphone 服务商联系电话
+     * @param serviceProviderContactPhone 服务商联系电话
      */
-    public void setServiceprovidercontactphone(String serviceprovidercontactphone) {
-        this.serviceprovidercontactphone = serviceprovidercontactphone;
+    public void setServiceProviderContactPhone(String serviceProviderContactPhone) {
+        this.serviceProviderContactPhone = serviceProviderContactPhone;
     }
 
     /**
      * 获取资源确认人员
      *
-     * @return resourceConfirmation - 资源确认人员
+     * @return resource_confirmation - 资源确认人员
      */
-    public String getResourceconfirmation() {
-        return resourceconfirmation;
+    public String getResourceConfirmation() {
+        return resourceConfirmation;
     }
 
     /**
      * 设置资源确认人员
      *
-     * @param resourceconfirmation 资源确认人员
+     * @param resourceConfirmation 资源确认人员
      */
-    public void setResourceconfirmation(String resourceconfirmation) {
-        this.resourceconfirmation = resourceconfirmation;
+    public void setResourceConfirmation(String resourceConfirmation) {
+        this.resourceConfirmation = resourceConfirmation;
     }
 
     /**
      * 获取资源确认时间
      *
-     * @return resourceConfirmationTime - 资源确认时间
+     * @return resource_confirmation_time - 资源确认时间
      */
-    public Date getResourceconfirmationtime() {
-        return resourceconfirmationtime;
+    public Date getResourceConfirmationTime() {
+        return resourceConfirmationTime;
     }
 
     /**
      * 设置资源确认时间
      *
-     * @param resourceconfirmationtime 资源确认时间
+     * @param resourceConfirmationTime 资源确认时间
      */
-    public void setResourceconfirmationtime(Date resourceconfirmationtime) {
-        this.resourceconfirmationtime = resourceconfirmationtime;
+    public void setResourceConfirmationTime(Date resourceConfirmationTime) {
+        this.resourceConfirmationTime = resourceConfirmationTime;
     }
 
     /**
      * 获取车牌号
      *
-     * @return licensePlateNumber - 车牌号
+     * @return plate_number - 车牌号
      */
-    public String getLicenseplatenumber() {
-        return licenseplatenumber;
+    public String getPlateNumber() {
+        return plateNumber;
     }
 
     /**
      * 设置车牌号
      *
-     * @param licenseplatenumber 车牌号
+     * @param plateNumber 车牌号
      */
-    public void setLicenseplatenumber(String licenseplatenumber) {
-        this.licenseplatenumber = licenseplatenumber;
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
     }
 
     /**
      * 获取司机姓名
      *
-     * @return driverName - 司机姓名
+     * @return driver_name - 司机姓名
      */
-    public String getDrivername() {
-        return drivername;
+    public String getDriverName() {
+        return driverName;
     }
 
     /**
      * 设置司机姓名
      *
-     * @param drivername 司机姓名
+     * @param driverName 司机姓名
      */
-    public void setDrivername(String drivername) {
-        this.drivername = drivername;
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
     }
 
     /**
      * 获取司机联系电话
      *
-     * @return driverContactPhone - 司机联系电话
+     * @return contact_number - 司机联系电话
      */
-    public String getDrivercontactphone() {
-        return drivercontactphone;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
     /**
      * 设置司机联系电话
      *
-     * @param drivercontactphone 司机联系电话
+     * @param contactNumber 司机联系电话
      */
-    public void setDrivercontactphone(String drivercontactphone) {
-        this.drivercontactphone = drivercontactphone;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     /**
      * 获取运输单号
      *
-     * @return transportNumber - 运输单号
+     * @return trans_code - 运输单号
      */
-    public String getTransportnumber() {
-        return transportnumber;
+    public String getTransCode() {
+        return transCode;
     }
 
     /**
      * 设置运输单号
      *
-     * @param transportnumber 运输单号
+     * @param transCode 运输单号
      */
-    public void setTransportnumber(String transportnumber) {
-        this.transportnumber = transportnumber;
+    public void setTransCode(String transCode) {
+        this.transCode = transCode;
     }
 }

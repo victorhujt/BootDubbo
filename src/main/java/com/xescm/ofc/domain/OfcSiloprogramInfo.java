@@ -9,1054 +9,1055 @@ public class OfcSiloprogramInfo {
      * 计划单编号
      */
     @Id
-    @Column(name = "planCode")
+    @Column(name = "plan_code")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String plancode;
+    private String planCode;
 
     /**
      * 订单编号
      */
-    @Column(name = "orderCode")
-    private String ordercode;
+    @Column(name = "order_code")
+    private String orderCode;
 
     /**
      * 订单批次号
      */
-    @Column(name = "orderBatchNumber")
-    private String orderbatchnumber;
+    @Column(name = "order_batch_number")
+    private String orderBatchNumber;
 
     /**
      * 计划序号
      */
-    @Column(name = "programSerialNumber")
-    private String programserialnumber;
+    @Column(name = "program_serial_number")
+    private String programSerialNumber;
 
     /**
      * 类型
      */
-    @Column(name = "serviceType")
-    private String servicetype;
+    @Column(name = "business_type")
+    private String businessType;
 
     /**
      * 单据类型
      */
-    @Column(name = "documentType")
-    private String documenttype;
+    @Column(name = "document_type")
+    private String documentType;
 
     /**
      * 日期
      */
-    private Date dates;
+    @Column(name = "order_time")
+    private Date orderTime;
 
     /**
      * 货主编码
      */
-    @Column(name = "custCode")
-    private String custcode;
+    @Column(name = "cust_code")
+    private String custCode;
 
     /**
      * 仓库编码
      */
-    @Column(name = "warehouseCode")
-    private String warehousecode;
+    @Column(name = "warehouse_code")
+    private String warehouseCode;
 
     /**
      * 仓库名称
      */
-    @Column(name = "warehouseName")
-    private String warehousename;
+    @Column(name = "warehouse_name")
+    private String warehouseName;
 
     /**
      * 出库发货时间
      */
-    @Column(name = "estimatedTimeOfDelivery")
-    private Date estimatedtimeofdelivery;
+    @Column(name = "estimated_time_of_delivery")
+    private Date estimatedTimeOfDelivery;
 
     /**
      * 预计到达时间
      */
-    @Column(name = "estimatedTimeOfArrival")
-    private Date estimatedtimeofarrival;
+    @Column(name = "arrive_time")
+    private Date arriveTime;
 
     /**
      * 装货地
      */
-    @Column(name = "loadingPlace")
-    private String loadingplace;
+    @Column(name = "loading_place")
+    private String loadingPlace;
 
     /**
      * 卸货地
      */
-    @Column(name = "unloadingPlace")
-    private String unloadingplace;
+    @Column(name = "unloading_place")
+    private String unloadingPlace;
 
     /**
      * 交货地
      */
-    @Column(name = "deliveryPlace")
-    private String deliveryplace;
+    @Column(name = "delivery_place")
+    private String deliveryPlace;
 
     /**
      * 收货月台
      */
-    @Column(name = "eceivingPlatform")
-    private String eceivingplatform;
+    @Column(name = "eceiving_platform")
+    private String eceivingPlatform;
 
     /**
      * 总货值
      */
-    @Column(name = "theTotalValueOf")
-    private String thetotalvalueof;
+    @Column(name = "the_total_value_of")
+    private String theTotalValueOf;
 
     /**
      * 供应商编码
      */
-    @Column(name = "supplierCode")
-    private String suppliercode;
+    @Column(name = "support_code")
+    private String supportCode;
 
     /**
      * 供应商名称
      */
-    @Column(name = "supplierName")
-    private String suppliername;
+    @Column(name = "support_name")
+    private String supportName;
 
     /**
      * 备注
      */
-    private String remarks;
+    private String notes;
 
     /**
      * 收货方编码
      */
-    @Column(name = "consigneeCode")
-    private String consigneecode;
+    @Column(name = "consignee_code")
+    private String consigneeCode;
 
     /**
      * 收货方名称
      */
-    @Column(name = "consigneeName")
-    private String consigneename;
+    @Column(name = "consignee_name")
+    private String consigneeName;
 
     /**
      * 收货方联系人
      */
-    @Column(name = "consigneeContact")
-    private String consigneecontact;
+    @Column(name = "consignee_contact")
+    private String consigneeContact;
 
     /**
      * 收货方联系电话
      */
-    @Column(name = "consigneeContactPhone")
-    private String consigneecontactphone;
+    @Column(name = "consignee_contact_phone")
+    private String consigneeContactPhone;
 
     /**
      * 收货方传真
      */
-    @Column(name = "consigneeFax")
-    private String consigneefax;
+    @Column(name = "consignee_fax")
+    private String consigneeFax;
 
     /**
      * 收货方Email
      */
-    @Column(name = "consigneeEmail")
-    private String consigneeemail;
+    @Column(name = "consignee_email")
+    private String consigneeEmail;
 
     /**
      * 收货方邮编
      */
-    @Column(name = "consigneePostCode")
-    private String consigneepostcode;
+    @Column(name = "consignee_post_code")
+    private String consigneePostCode;
 
     /**
      * 收货方省
      */
-    @Column(name = "consigneeProvince")
-    private String consigneeprovince;
+    @Column(name = "consignee_province")
+    private String consigneeProvince;
 
     /**
      * 收货方市
      */
-    @Column(name = "consigneeCity")
-    private String consigneecity;
+    @Column(name = "consignee_city")
+    private String consigneeCity;
 
     /**
      * 收货方区县
      */
-    @Column(name = "consigneeDistrictAndCounty")
-    private String consigneedistrictandcounty;
+    @Column(name = "consignee_district_and_county")
+    private String consigneeDistrictAndCounty;
 
     /**
      * 收货方乡镇街道
      */
-    @Column(name = "consigneeTownshipStreets")
-    private String consigneetownshipstreets;
+    @Column(name = "consignee_township_streets")
+    private String consigneeTownshipStreets;
 
     /**
      * 收货方地址
      */
-    @Column(name = "consigneeAddress")
-    private String consigneeaddress;
+    @Column(name = "consignee_address")
+    private String consigneeAddress;
 
     /**
      * 是否打印发票
      */
-    @Column(name = "printInvoices")
-    private String printinvoices;
+    @Column(name = "print_invoice")
+    private String printInvoice;
 
     /**
      * 支付方式
      */
-    @Column(name = "aymentMethod")
-    private String aymentmethod;
+    @Column(name = "buyer_payment_method")
+    private String buyerPaymentMethod;
 
     /**
      * 订单金额
      */
-    @Column(name = "orderAmount")
-    private String orderamount;
+    @Column(name = "order_amount")
+    private String orderAmount;
 
     /**
      * 是否货到付款
      */
-    @Column(name = "cashOnDelivery")
-    private String cashondelivery;
+    @Column(name = "collect_flag")
+    private String collectFlag;
 
     /**
      * 是否保价
      */
-    private String insured;
+    private String insure;
 
     /**
      * 保价金额
      */
-    @Column(name = "insuredValue")
-    private String insuredvalue;
+    @Column(name = "insure_value")
+    private String insureValue;
 
     /**
      * 仓储作业单号
      */
-    @Column(name = "warehouseNumber")
-    private String warehousenumber;
+    @Column(name = "warehouse_number")
+    private String warehouseNumber;
 
     /**
      * 服务费用
      */
-    @Column(name = "serviceCharge")
-    private String servicecharge;
+    @Column(name = "service_charge")
+    private String serviceCharge;
 
     /**
      * 创建时间
      */
-    @Column(name = "creationTime")
-    private Date creationtime;
+    @Column(name = "creation_time")
+    private Date creationTime;
 
     /**
      * 创建人员
      */
-    @Column(name = "createPersonnel")
-    private String createpersonnel;
+    @Column(name = "create_personnel")
+    private String createPersonnel;
 
     /**
      * 作废人员
      */
-    @Column(name = "voidPersonnel")
-    private String voidpersonnel;
+    @Column(name = "void_personnel")
+    private String voidPersonnel;
 
     /**
      * 作废时间
      */
-    @Column(name = "voidTime")
-    private Date voidtime;
+    @Column(name = "void_time")
+    private Date voidTime;
 
     /**
      * 获取计划单编号
      *
-     * @return planCode - 计划单编号
+     * @return plan_code - 计划单编号
      */
-    public String getPlancode() {
-        return plancode;
+    public String getPlanCode() {
+        return planCode;
     }
 
     /**
      * 设置计划单编号
      *
-     * @param plancode 计划单编号
+     * @param planCode 计划单编号
      */
-    public void setPlancode(String plancode) {
-        this.plancode = plancode;
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
     }
 
     /**
      * 获取订单编号
      *
-     * @return orderCode - 订单编号
+     * @return order_code - 订单编号
      */
-    public String getOrdercode() {
-        return ordercode;
+    public String getOrderCode() {
+        return orderCode;
     }
 
     /**
      * 设置订单编号
      *
-     * @param ordercode 订单编号
+     * @param orderCode 订单编号
      */
-    public void setOrdercode(String ordercode) {
-        this.ordercode = ordercode;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     /**
      * 获取订单批次号
      *
-     * @return orderBatchNumber - 订单批次号
+     * @return order_batch_number - 订单批次号
      */
-    public String getOrderbatchnumber() {
-        return orderbatchnumber;
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
     }
 
     /**
      * 设置订单批次号
      *
-     * @param orderbatchnumber 订单批次号
+     * @param orderBatchNumber 订单批次号
      */
-    public void setOrderbatchnumber(String orderbatchnumber) {
-        this.orderbatchnumber = orderbatchnumber;
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
     }
 
     /**
      * 获取计划序号
      *
-     * @return programSerialNumber - 计划序号
+     * @return program_serial_number - 计划序号
      */
-    public String getProgramserialnumber() {
-        return programserialnumber;
+    public String getProgramSerialNumber() {
+        return programSerialNumber;
     }
 
     /**
      * 设置计划序号
      *
-     * @param programserialnumber 计划序号
+     * @param programSerialNumber 计划序号
      */
-    public void setProgramserialnumber(String programserialnumber) {
-        this.programserialnumber = programserialnumber;
+    public void setProgramSerialNumber(String programSerialNumber) {
+        this.programSerialNumber = programSerialNumber;
     }
 
     /**
      * 获取类型
      *
-     * @return serviceType - 类型
+     * @return business_type - 类型
      */
-    public String getServicetype() {
-        return servicetype;
+    public String getBusinessType() {
+        return businessType;
     }
 
     /**
      * 设置类型
      *
-     * @param servicetype 类型
+     * @param businessType 类型
      */
-    public void setServicetype(String servicetype) {
-        this.servicetype = servicetype;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     /**
      * 获取单据类型
      *
-     * @return documentType - 单据类型
+     * @return document_type - 单据类型
      */
-    public String getDocumenttype() {
-        return documenttype;
+    public String getDocumentType() {
+        return documentType;
     }
 
     /**
      * 设置单据类型
      *
-     * @param documenttype 单据类型
+     * @param documentType 单据类型
      */
-    public void setDocumenttype(String documenttype) {
-        this.documenttype = documenttype;
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
     /**
      * 获取日期
      *
-     * @return dates - 日期
+     * @return order_time - 日期
      */
-    public Date getDates() {
-        return dates;
+    public Date getOrderTime() {
+        return orderTime;
     }
 
     /**
      * 设置日期
      *
-     * @param dates 日期
+     * @param orderTime 日期
      */
-    public void setDates(Date dates) {
-        this.dates = dates;
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
     }
 
     /**
      * 获取货主编码
      *
-     * @return custCode - 货主编码
+     * @return cust_code - 货主编码
      */
-    public String getCustcode() {
-        return custcode;
+    public String getCustCode() {
+        return custCode;
     }
 
     /**
      * 设置货主编码
      *
-     * @param custcode 货主编码
+     * @param custCode 货主编码
      */
-    public void setCustcode(String custcode) {
-        this.custcode = custcode;
+    public void setCustCode(String custCode) {
+        this.custCode = custCode;
     }
 
     /**
      * 获取仓库编码
      *
-     * @return warehouseCode - 仓库编码
+     * @return warehouse_code - 仓库编码
      */
-    public String getWarehousecode() {
-        return warehousecode;
+    public String getWarehouseCode() {
+        return warehouseCode;
     }
 
     /**
      * 设置仓库编码
      *
-     * @param warehousecode 仓库编码
+     * @param warehouseCode 仓库编码
      */
-    public void setWarehousecode(String warehousecode) {
-        this.warehousecode = warehousecode;
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
     }
 
     /**
      * 获取仓库名称
      *
-     * @return warehouseName - 仓库名称
+     * @return warehouse_name - 仓库名称
      */
-    public String getWarehousename() {
-        return warehousename;
+    public String getWarehouseName() {
+        return warehouseName;
     }
 
     /**
      * 设置仓库名称
      *
-     * @param warehousename 仓库名称
+     * @param warehouseName 仓库名称
      */
-    public void setWarehousename(String warehousename) {
-        this.warehousename = warehousename;
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
     }
 
     /**
      * 获取出库发货时间
      *
-     * @return estimatedTimeOfDelivery - 出库发货时间
+     * @return estimated_time_of_delivery - 出库发货时间
      */
-    public Date getEstimatedtimeofdelivery() {
-        return estimatedtimeofdelivery;
+    public Date getEstimatedTimeOfDelivery() {
+        return estimatedTimeOfDelivery;
     }
 
     /**
      * 设置出库发货时间
      *
-     * @param estimatedtimeofdelivery 出库发货时间
+     * @param estimatedTimeOfDelivery 出库发货时间
      */
-    public void setEstimatedtimeofdelivery(Date estimatedtimeofdelivery) {
-        this.estimatedtimeofdelivery = estimatedtimeofdelivery;
+    public void setEstimatedTimeOfDelivery(Date estimatedTimeOfDelivery) {
+        this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
     }
 
     /**
      * 获取预计到达时间
      *
-     * @return estimatedTimeOfArrival - 预计到达时间
+     * @return arrive_time - 预计到达时间
      */
-    public Date getEstimatedtimeofarrival() {
-        return estimatedtimeofarrival;
+    public Date getArriveTime() {
+        return arriveTime;
     }
 
     /**
      * 设置预计到达时间
      *
-     * @param estimatedtimeofarrival 预计到达时间
+     * @param arriveTime 预计到达时间
      */
-    public void setEstimatedtimeofarrival(Date estimatedtimeofarrival) {
-        this.estimatedtimeofarrival = estimatedtimeofarrival;
+    public void setArriveTime(Date arriveTime) {
+        this.arriveTime = arriveTime;
     }
 
     /**
      * 获取装货地
      *
-     * @return loadingPlace - 装货地
+     * @return loading_place - 装货地
      */
-    public String getLoadingplace() {
-        return loadingplace;
+    public String getLoadingPlace() {
+        return loadingPlace;
     }
 
     /**
      * 设置装货地
      *
-     * @param loadingplace 装货地
+     * @param loadingPlace 装货地
      */
-    public void setLoadingplace(String loadingplace) {
-        this.loadingplace = loadingplace;
+    public void setLoadingPlace(String loadingPlace) {
+        this.loadingPlace = loadingPlace;
     }
 
     /**
      * 获取卸货地
      *
-     * @return unloadingPlace - 卸货地
+     * @return unloading_place - 卸货地
      */
-    public String getUnloadingplace() {
-        return unloadingplace;
+    public String getUnloadingPlace() {
+        return unloadingPlace;
     }
 
     /**
      * 设置卸货地
      *
-     * @param unloadingplace 卸货地
+     * @param unloadingPlace 卸货地
      */
-    public void setUnloadingplace(String unloadingplace) {
-        this.unloadingplace = unloadingplace;
+    public void setUnloadingPlace(String unloadingPlace) {
+        this.unloadingPlace = unloadingPlace;
     }
 
     /**
      * 获取交货地
      *
-     * @return deliveryPlace - 交货地
+     * @return delivery_place - 交货地
      */
-    public String getDeliveryplace() {
-        return deliveryplace;
+    public String getDeliveryPlace() {
+        return deliveryPlace;
     }
 
     /**
      * 设置交货地
      *
-     * @param deliveryplace 交货地
+     * @param deliveryPlace 交货地
      */
-    public void setDeliveryplace(String deliveryplace) {
-        this.deliveryplace = deliveryplace;
+    public void setDeliveryPlace(String deliveryPlace) {
+        this.deliveryPlace = deliveryPlace;
     }
 
     /**
      * 获取收货月台
      *
-     * @return eceivingPlatform - 收货月台
+     * @return eceiving_platform - 收货月台
      */
-    public String getEceivingplatform() {
-        return eceivingplatform;
+    public String getEceivingPlatform() {
+        return eceivingPlatform;
     }
 
     /**
      * 设置收货月台
      *
-     * @param eceivingplatform 收货月台
+     * @param eceivingPlatform 收货月台
      */
-    public void setEceivingplatform(String eceivingplatform) {
-        this.eceivingplatform = eceivingplatform;
+    public void setEceivingPlatform(String eceivingPlatform) {
+        this.eceivingPlatform = eceivingPlatform;
     }
 
     /**
      * 获取总货值
      *
-     * @return theTotalValueOf - 总货值
+     * @return the_total_value_of - 总货值
      */
-    public String getThetotalvalueof() {
-        return thetotalvalueof;
+    public String getTheTotalValueOf() {
+        return theTotalValueOf;
     }
 
     /**
      * 设置总货值
      *
-     * @param thetotalvalueof 总货值
+     * @param theTotalValueOf 总货值
      */
-    public void setThetotalvalueof(String thetotalvalueof) {
-        this.thetotalvalueof = thetotalvalueof;
+    public void setTheTotalValueOf(String theTotalValueOf) {
+        this.theTotalValueOf = theTotalValueOf;
     }
 
     /**
      * 获取供应商编码
      *
-     * @return supplierCode - 供应商编码
+     * @return support_code - 供应商编码
      */
-    public String getSuppliercode() {
-        return suppliercode;
+    public String getSupportCode() {
+        return supportCode;
     }
 
     /**
      * 设置供应商编码
      *
-     * @param suppliercode 供应商编码
+     * @param supportCode 供应商编码
      */
-    public void setSuppliercode(String suppliercode) {
-        this.suppliercode = suppliercode;
+    public void setSupportCode(String supportCode) {
+        this.supportCode = supportCode;
     }
 
     /**
      * 获取供应商名称
      *
-     * @return supplierName - 供应商名称
+     * @return support_name - 供应商名称
      */
-    public String getSuppliername() {
-        return suppliername;
+    public String getSupportName() {
+        return supportName;
     }
 
     /**
      * 设置供应商名称
      *
-     * @param suppliername 供应商名称
+     * @param supportName 供应商名称
      */
-    public void setSuppliername(String suppliername) {
-        this.suppliername = suppliername;
+    public void setSupportName(String supportName) {
+        this.supportName = supportName;
     }
 
     /**
      * 获取备注
      *
-     * @return remarks - 备注
+     * @return notes - 备注
      */
-    public String getRemarks() {
-        return remarks;
+    public String getNotes() {
+        return notes;
     }
 
     /**
      * 设置备注
      *
-     * @param remarks 备注
+     * @param notes 备注
      */
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     /**
      * 获取收货方编码
      *
-     * @return consigneeCode - 收货方编码
+     * @return consignee_code - 收货方编码
      */
-    public String getConsigneecode() {
-        return consigneecode;
+    public String getConsigneeCode() {
+        return consigneeCode;
     }
 
     /**
      * 设置收货方编码
      *
-     * @param consigneecode 收货方编码
+     * @param consigneeCode 收货方编码
      */
-    public void setConsigneecode(String consigneecode) {
-        this.consigneecode = consigneecode;
+    public void setConsigneeCode(String consigneeCode) {
+        this.consigneeCode = consigneeCode;
     }
 
     /**
      * 获取收货方名称
      *
-     * @return consigneeName - 收货方名称
+     * @return consignee_name - 收货方名称
      */
-    public String getConsigneename() {
-        return consigneename;
+    public String getConsigneeName() {
+        return consigneeName;
     }
 
     /**
      * 设置收货方名称
      *
-     * @param consigneename 收货方名称
+     * @param consigneeName 收货方名称
      */
-    public void setConsigneename(String consigneename) {
-        this.consigneename = consigneename;
+    public void setConsigneeName(String consigneeName) {
+        this.consigneeName = consigneeName;
     }
 
     /**
      * 获取收货方联系人
      *
-     * @return consigneeContact - 收货方联系人
+     * @return consignee_contact - 收货方联系人
      */
-    public String getConsigneecontact() {
-        return consigneecontact;
+    public String getConsigneeContact() {
+        return consigneeContact;
     }
 
     /**
      * 设置收货方联系人
      *
-     * @param consigneecontact 收货方联系人
+     * @param consigneeContact 收货方联系人
      */
-    public void setConsigneecontact(String consigneecontact) {
-        this.consigneecontact = consigneecontact;
+    public void setConsigneeContact(String consigneeContact) {
+        this.consigneeContact = consigneeContact;
     }
 
     /**
      * 获取收货方联系电话
      *
-     * @return consigneeContactPhone - 收货方联系电话
+     * @return consignee_contact_phone - 收货方联系电话
      */
-    public String getConsigneecontactphone() {
-        return consigneecontactphone;
+    public String getConsigneeContactPhone() {
+        return consigneeContactPhone;
     }
 
     /**
      * 设置收货方联系电话
      *
-     * @param consigneecontactphone 收货方联系电话
+     * @param consigneeContactPhone 收货方联系电话
      */
-    public void setConsigneecontactphone(String consigneecontactphone) {
-        this.consigneecontactphone = consigneecontactphone;
+    public void setConsigneeContactPhone(String consigneeContactPhone) {
+        this.consigneeContactPhone = consigneeContactPhone;
     }
 
     /**
      * 获取收货方传真
      *
-     * @return consigneeFax - 收货方传真
+     * @return consignee_fax - 收货方传真
      */
-    public String getConsigneefax() {
-        return consigneefax;
+    public String getConsigneeFax() {
+        return consigneeFax;
     }
 
     /**
      * 设置收货方传真
      *
-     * @param consigneefax 收货方传真
+     * @param consigneeFax 收货方传真
      */
-    public void setConsigneefax(String consigneefax) {
-        this.consigneefax = consigneefax;
+    public void setConsigneeFax(String consigneeFax) {
+        this.consigneeFax = consigneeFax;
     }
 
     /**
      * 获取收货方Email
      *
-     * @return consigneeEmail - 收货方Email
+     * @return consignee_email - 收货方Email
      */
-    public String getConsigneeemail() {
-        return consigneeemail;
+    public String getConsigneeEmail() {
+        return consigneeEmail;
     }
 
     /**
      * 设置收货方Email
      *
-     * @param consigneeemail 收货方Email
+     * @param consigneeEmail 收货方Email
      */
-    public void setConsigneeemail(String consigneeemail) {
-        this.consigneeemail = consigneeemail;
+    public void setConsigneeEmail(String consigneeEmail) {
+        this.consigneeEmail = consigneeEmail;
     }
 
     /**
      * 获取收货方邮编
      *
-     * @return consigneePostCode - 收货方邮编
+     * @return consignee_post_code - 收货方邮编
      */
-    public String getConsigneepostcode() {
-        return consigneepostcode;
+    public String getConsigneePostCode() {
+        return consigneePostCode;
     }
 
     /**
      * 设置收货方邮编
      *
-     * @param consigneepostcode 收货方邮编
+     * @param consigneePostCode 收货方邮编
      */
-    public void setConsigneepostcode(String consigneepostcode) {
-        this.consigneepostcode = consigneepostcode;
+    public void setConsigneePostCode(String consigneePostCode) {
+        this.consigneePostCode = consigneePostCode;
     }
 
     /**
      * 获取收货方省
      *
-     * @return consigneeProvince - 收货方省
+     * @return consignee_province - 收货方省
      */
-    public String getConsigneeprovince() {
-        return consigneeprovince;
+    public String getConsigneeProvince() {
+        return consigneeProvince;
     }
 
     /**
      * 设置收货方省
      *
-     * @param consigneeprovince 收货方省
+     * @param consigneeProvince 收货方省
      */
-    public void setConsigneeprovince(String consigneeprovince) {
-        this.consigneeprovince = consigneeprovince;
+    public void setConsigneeProvince(String consigneeProvince) {
+        this.consigneeProvince = consigneeProvince;
     }
 
     /**
      * 获取收货方市
      *
-     * @return consigneeCity - 收货方市
+     * @return consignee_city - 收货方市
      */
-    public String getConsigneecity() {
-        return consigneecity;
+    public String getConsigneeCity() {
+        return consigneeCity;
     }
 
     /**
      * 设置收货方市
      *
-     * @param consigneecity 收货方市
+     * @param consigneeCity 收货方市
      */
-    public void setConsigneecity(String consigneecity) {
-        this.consigneecity = consigneecity;
+    public void setConsigneeCity(String consigneeCity) {
+        this.consigneeCity = consigneeCity;
     }
 
     /**
      * 获取收货方区县
      *
-     * @return consigneeDistrictAndCounty - 收货方区县
+     * @return consignee_district_and_county - 收货方区县
      */
-    public String getConsigneedistrictandcounty() {
-        return consigneedistrictandcounty;
+    public String getConsigneeDistrictAndCounty() {
+        return consigneeDistrictAndCounty;
     }
 
     /**
      * 设置收货方区县
      *
-     * @param consigneedistrictandcounty 收货方区县
+     * @param consigneeDistrictAndCounty 收货方区县
      */
-    public void setConsigneedistrictandcounty(String consigneedistrictandcounty) {
-        this.consigneedistrictandcounty = consigneedistrictandcounty;
+    public void setConsigneeDistrictAndCounty(String consigneeDistrictAndCounty) {
+        this.consigneeDistrictAndCounty = consigneeDistrictAndCounty;
     }
 
     /**
      * 获取收货方乡镇街道
      *
-     * @return consigneeTownshipStreets - 收货方乡镇街道
+     * @return consignee_township_streets - 收货方乡镇街道
      */
-    public String getConsigneetownshipstreets() {
-        return consigneetownshipstreets;
+    public String getConsigneeTownshipStreets() {
+        return consigneeTownshipStreets;
     }
 
     /**
      * 设置收货方乡镇街道
      *
-     * @param consigneetownshipstreets 收货方乡镇街道
+     * @param consigneeTownshipStreets 收货方乡镇街道
      */
-    public void setConsigneetownshipstreets(String consigneetownshipstreets) {
-        this.consigneetownshipstreets = consigneetownshipstreets;
+    public void setConsigneeTownshipStreets(String consigneeTownshipStreets) {
+        this.consigneeTownshipStreets = consigneeTownshipStreets;
     }
 
     /**
      * 获取收货方地址
      *
-     * @return consigneeAddress - 收货方地址
+     * @return consignee_address - 收货方地址
      */
-    public String getConsigneeaddress() {
-        return consigneeaddress;
+    public String getConsigneeAddress() {
+        return consigneeAddress;
     }
 
     /**
      * 设置收货方地址
      *
-     * @param consigneeaddress 收货方地址
+     * @param consigneeAddress 收货方地址
      */
-    public void setConsigneeaddress(String consigneeaddress) {
-        this.consigneeaddress = consigneeaddress;
+    public void setConsigneeAddress(String consigneeAddress) {
+        this.consigneeAddress = consigneeAddress;
     }
 
     /**
      * 获取是否打印发票
      *
-     * @return printInvoices - 是否打印发票
+     * @return print_invoice - 是否打印发票
      */
-    public String getPrintinvoices() {
-        return printinvoices;
+    public String getPrintInvoice() {
+        return printInvoice;
     }
 
     /**
      * 设置是否打印发票
      *
-     * @param printinvoices 是否打印发票
+     * @param printInvoice 是否打印发票
      */
-    public void setPrintinvoices(String printinvoices) {
-        this.printinvoices = printinvoices;
+    public void setPrintInvoice(String printInvoice) {
+        this.printInvoice = printInvoice;
     }
 
     /**
      * 获取支付方式
      *
-     * @return aymentMethod - 支付方式
+     * @return buyer_payment_method - 支付方式
      */
-    public String getAymentmethod() {
-        return aymentmethod;
+    public String getBuyerPaymentMethod() {
+        return buyerPaymentMethod;
     }
 
     /**
      * 设置支付方式
      *
-     * @param aymentmethod 支付方式
+     * @param buyerPaymentMethod 支付方式
      */
-    public void setAymentmethod(String aymentmethod) {
-        this.aymentmethod = aymentmethod;
+    public void setBuyerPaymentMethod(String buyerPaymentMethod) {
+        this.buyerPaymentMethod = buyerPaymentMethod;
     }
 
     /**
      * 获取订单金额
      *
-     * @return orderAmount - 订单金额
+     * @return order_amount - 订单金额
      */
-    public String getOrderamount() {
-        return orderamount;
+    public String getOrderAmount() {
+        return orderAmount;
     }
 
     /**
      * 设置订单金额
      *
-     * @param orderamount 订单金额
+     * @param orderAmount 订单金额
      */
-    public void setOrderamount(String orderamount) {
-        this.orderamount = orderamount;
+    public void setOrderAmount(String orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
     /**
      * 获取是否货到付款
      *
-     * @return cashOnDelivery - 是否货到付款
+     * @return collect_flag - 是否货到付款
      */
-    public String getCashondelivery() {
-        return cashondelivery;
+    public String getCollectFlag() {
+        return collectFlag;
     }
 
     /**
      * 设置是否货到付款
      *
-     * @param cashondelivery 是否货到付款
+     * @param collectFlag 是否货到付款
      */
-    public void setCashondelivery(String cashondelivery) {
-        this.cashondelivery = cashondelivery;
+    public void setCollectFlag(String collectFlag) {
+        this.collectFlag = collectFlag;
     }
 
     /**
      * 获取是否保价
      *
-     * @return insured - 是否保价
+     * @return insure - 是否保价
      */
-    public String getInsured() {
-        return insured;
+    public String getInsure() {
+        return insure;
     }
 
     /**
      * 设置是否保价
      *
-     * @param insured 是否保价
+     * @param insure 是否保价
      */
-    public void setInsured(String insured) {
-        this.insured = insured;
+    public void setInsure(String insure) {
+        this.insure = insure;
     }
 
     /**
      * 获取保价金额
      *
-     * @return insuredValue - 保价金额
+     * @return insure_value - 保价金额
      */
-    public String getInsuredvalue() {
-        return insuredvalue;
+    public String getInsureValue() {
+        return insureValue;
     }
 
     /**
      * 设置保价金额
      *
-     * @param insuredvalue 保价金额
+     * @param insureValue 保价金额
      */
-    public void setInsuredvalue(String insuredvalue) {
-        this.insuredvalue = insuredvalue;
+    public void setInsureValue(String insureValue) {
+        this.insureValue = insureValue;
     }
 
     /**
      * 获取仓储作业单号
      *
-     * @return warehouseNumber - 仓储作业单号
+     * @return warehouse_number - 仓储作业单号
      */
-    public String getWarehousenumber() {
-        return warehousenumber;
+    public String getWarehouseNumber() {
+        return warehouseNumber;
     }
 
     /**
      * 设置仓储作业单号
      *
-     * @param warehousenumber 仓储作业单号
+     * @param warehouseNumber 仓储作业单号
      */
-    public void setWarehousenumber(String warehousenumber) {
-        this.warehousenumber = warehousenumber;
+    public void setWarehouseNumber(String warehouseNumber) {
+        this.warehouseNumber = warehouseNumber;
     }
 
     /**
      * 获取服务费用
      *
-     * @return serviceCharge - 服务费用
+     * @return service_charge - 服务费用
      */
-    public String getServicecharge() {
-        return servicecharge;
+    public String getServiceCharge() {
+        return serviceCharge;
     }
 
     /**
      * 设置服务费用
      *
-     * @param servicecharge 服务费用
+     * @param serviceCharge 服务费用
      */
-    public void setServicecharge(String servicecharge) {
-        this.servicecharge = servicecharge;
+    public void setServiceCharge(String serviceCharge) {
+        this.serviceCharge = serviceCharge;
     }
 
     /**
      * 获取创建时间
      *
-     * @return creationTime - 创建时间
+     * @return creation_time - 创建时间
      */
-    public Date getCreationtime() {
-        return creationtime;
+    public Date getCreationTime() {
+        return creationTime;
     }
 
     /**
      * 设置创建时间
      *
-     * @param creationtime 创建时间
+     * @param creationTime 创建时间
      */
-    public void setCreationtime(Date creationtime) {
-        this.creationtime = creationtime;
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
     }
 
     /**
      * 获取创建人员
      *
-     * @return createPersonnel - 创建人员
+     * @return create_personnel - 创建人员
      */
-    public String getCreatepersonnel() {
-        return createpersonnel;
+    public String getCreatePersonnel() {
+        return createPersonnel;
     }
 
     /**
      * 设置创建人员
      *
-     * @param createpersonnel 创建人员
+     * @param createPersonnel 创建人员
      */
-    public void setCreatepersonnel(String createpersonnel) {
-        this.createpersonnel = createpersonnel;
+    public void setCreatePersonnel(String createPersonnel) {
+        this.createPersonnel = createPersonnel;
     }
 
     /**
      * 获取作废人员
      *
-     * @return voidPersonnel - 作废人员
+     * @return void_personnel - 作废人员
      */
-    public String getVoidpersonnel() {
-        return voidpersonnel;
+    public String getVoidPersonnel() {
+        return voidPersonnel;
     }
 
     /**
      * 设置作废人员
      *
-     * @param voidpersonnel 作废人员
+     * @param voidPersonnel 作废人员
      */
-    public void setVoidpersonnel(String voidpersonnel) {
-        this.voidpersonnel = voidpersonnel;
+    public void setVoidPersonnel(String voidPersonnel) {
+        this.voidPersonnel = voidPersonnel;
     }
 
     /**
      * 获取作废时间
      *
-     * @return voidTime - 作废时间
+     * @return void_time - 作废时间
      */
-    public Date getVoidtime() {
-        return voidtime;
+    public Date getVoidTime() {
+        return voidTime;
     }
 
     /**
      * 设置作废时间
      *
-     * @param voidtime 作废时间
+     * @param voidTime 作废时间
      */
-    public void setVoidtime(Date voidtime) {
-        this.voidtime = voidtime;
+    public void setVoidTime(Date voidTime) {
+        this.voidTime = voidTime;
     }
 }

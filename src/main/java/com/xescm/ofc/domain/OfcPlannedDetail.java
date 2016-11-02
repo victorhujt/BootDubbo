@@ -10,26 +10,26 @@ public class OfcPlannedDetail {
     /**
      * 计划单编号
      */
-    @Column(name = "planCode")
-    private String plancode;
+    @Column(name = "plan_code")
+    private String planCode;
 
     /**
      * 货品代码
      */
-    @Column(name = "goodsCode")
-    private String goodscode;
+    @Column(name = "goods_code")
+    private String goodsCode;
 
     /**
      * 货品名称
      */
-    @Column(name = "goodsName")
-    private String goodsname;
+    @Column(name = "goods_name")
+    private String goodsName;
 
     /**
      * 货品规格
      */
-    @Column(name = "goodsSpec")
-    private String goodsspec;
+    @Column(name = "goods_spec")
+    private String goodsSpec;
 
     /**
      * 单位
@@ -44,103 +44,103 @@ public class OfcPlannedDetail {
     /**
      * 实发数量
      */
-    @Column(name = "realQuantity")
-    private BigDecimal realquantity;
+    @Column(name = "real_quantity")
+    private BigDecimal realQuantity;
 
     /**
      * 单价
      */
-    @Column(name = "unitPrice")
-    private BigDecimal unitprice;
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice;
 
     /**
      * 生产批次
      */
-    @Column(name = "productionBatch")
-    private String productionbatch;
+    @Column(name = "production_batch")
+    private String productionBatch;
 
     /**
      * 生产日期
      */
-    @Column(name = "manufactureDate")
-    private Date manufacturedate;
+    @Column(name = "production_time")
+    private Date productionTime;
 
     /**
      * 失效日期
      */
-    @Column(name = "expirationDate")
-    private Date expirationdate;
+    @Column(name = "invalid_time")
+    private Date invalidTime;
 
     /**
      * 获取计划单编号
      *
-     * @return planCode - 计划单编号
+     * @return plan_code - 计划单编号
      */
-    public String getPlancode() {
-        return plancode;
+    public String getPlanCode() {
+        return planCode;
     }
 
     /**
      * 设置计划单编号
      *
-     * @param plancode 计划单编号
+     * @param planCode 计划单编号
      */
-    public void setPlancode(String plancode) {
-        this.plancode = plancode;
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
     }
 
     /**
      * 获取货品代码
      *
-     * @return goodsCode - 货品代码
+     * @return goods_code - 货品代码
      */
-    public String getGoodscode() {
-        return goodscode;
+    public String getGoodsCode() {
+        return goodsCode;
     }
 
     /**
      * 设置货品代码
      *
-     * @param goodscode 货品代码
+     * @param goodsCode 货品代码
      */
-    public void setGoodscode(String goodscode) {
-        this.goodscode = goodscode;
+    public void setGoodsCode(String goodsCode) {
+        this.goodsCode = goodsCode;
     }
 
     /**
      * 获取货品名称
      *
-     * @return goodsName - 货品名称
+     * @return goods_name - 货品名称
      */
-    public String getGoodsname() {
-        return goodsname;
+    public String getGoodsName() {
+        return goodsName;
     }
 
     /**
      * 设置货品名称
      *
-     * @param goodsname 货品名称
+     * @param goodsName 货品名称
      */
-    public void setGoodsname(String goodsname) {
-        this.goodsname = goodsname;
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
     }
 
     /**
      * 获取货品规格
      *
-     * @return goodsSpec - 货品规格
+     * @return goods_spec - 货品规格
      */
-    public String getGoodsspec() {
-        return goodsspec;
+    public String getGoodsSpec() {
+        return goodsSpec;
     }
 
     /**
      * 设置货品规格
      *
-     * @param goodsspec 货品规格
+     * @param goodsSpec 货品规格
      */
-    public void setGoodsspec(String goodsspec) {
-        this.goodsspec = goodsspec;
+    public void setGoodsSpec(String goodsSpec) {
+        this.goodsSpec = goodsSpec;
     }
 
     /**
@@ -182,90 +182,90 @@ public class OfcPlannedDetail {
     /**
      * 获取实发数量
      *
-     * @return realQuantity - 实发数量
+     * @return real_quantity - 实发数量
      */
-    public BigDecimal getRealquantity() {
-        return realquantity;
+    public BigDecimal getRealQuantity() {
+        return realQuantity;
     }
 
     /**
      * 设置实发数量
      *
-     * @param realquantity 实发数量
+     * @param realQuantity 实发数量
      */
-    public void setRealquantity(BigDecimal realquantity) {
-        this.realquantity = realquantity;
+    public void setRealQuantity(BigDecimal realQuantity) {
+        this.realQuantity = realQuantity;
     }
 
     /**
      * 获取单价
      *
-     * @return unitPrice - 单价
+     * @return unit_price - 单价
      */
-    public BigDecimal getUnitprice() {
-        return unitprice;
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
     /**
      * 设置单价
      *
-     * @param unitprice 单价
+     * @param unitPrice 单价
      */
-    public void setUnitprice(BigDecimal unitprice) {
-        this.unitprice = unitprice;
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     /**
      * 获取生产批次
      *
-     * @return productionBatch - 生产批次
+     * @return production_batch - 生产批次
      */
-    public String getProductionbatch() {
-        return productionbatch;
+    public String getProductionBatch() {
+        return productionBatch;
     }
 
     /**
      * 设置生产批次
      *
-     * @param productionbatch 生产批次
+     * @param productionBatch 生产批次
      */
-    public void setProductionbatch(String productionbatch) {
-        this.productionbatch = productionbatch;
+    public void setProductionBatch(String productionBatch) {
+        this.productionBatch = productionBatch;
     }
 
     /**
      * 获取生产日期
      *
-     * @return manufactureDate - 生产日期
+     * @return production_time - 生产日期
      */
-    public Date getManufacturedate() {
-        return manufacturedate;
+    public Date getProductionTime() {
+        return productionTime;
     }
 
     /**
      * 设置生产日期
      *
-     * @param manufacturedate 生产日期
+     * @param productionTime 生产日期
      */
-    public void setManufacturedate(Date manufacturedate) {
-        this.manufacturedate = manufacturedate;
+    public void setProductionTime(Date productionTime) {
+        this.productionTime = productionTime;
     }
 
     /**
      * 获取失效日期
      *
-     * @return expirationDate - 失效日期
+     * @return invalid_time - 失效日期
      */
-    public Date getExpirationdate() {
-        return expirationdate;
+    public Date getInvalidTime() {
+        return invalidTime;
     }
 
     /**
      * 设置失效日期
      *
-     * @param expirationdate 失效日期
+     * @param invalidTime 失效日期
      */
-    public void setExpirationdate(Date expirationdate) {
-        this.expirationdate = expirationdate;
+    public void setInvalidTime(Date invalidTime) {
+        this.invalidTime = invalidTime;
     }
 }

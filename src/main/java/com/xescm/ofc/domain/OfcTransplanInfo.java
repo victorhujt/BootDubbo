@@ -10,56 +10,57 @@ public class OfcTransplanInfo {
      * 计划单编号
      */
     @Id
-    @Column(name = "planCode")
+    @Column(name = "plan_code")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String plancode;
+    private String planCode;
 
     /**
      * 订单编号
      */
-    @Column(name = "orderCode")
-    private String ordercode;
+    @Column(name = "order_code")
+    private String orderCode;
 
     /**
      * 订单批次号
      */
-    @Column(name = "orderBatchNumber")
-    private String orderbatchnumber;
+    @Column(name = "order_batch_number")
+    private String orderBatchNumber;
 
     /**
      * 计划序号
      */
-    @Column(name = "programSerialNumber")
-    private String programserialnumber;
+    @Column(name = "program_serial_number")
+    private String programSerialNumber;
 
     /**
      * 类型
      */
-    @Column(name = "serviceType")
-    private String servicetype;
+    @Column(name = "business_type")
+    private String businessType;
 
     /**
      * 日期
      */
-    private Date dates;
+    @Column(name = "order_time")
+    private Date orderTime;
 
     /**
      * 货主编码
      */
-    @Column(name = "custCode")
-    private String custcode;
+    @Column(name = "cust_code")
+    private String custCode;
 
     /**
      * 预计发货时间
      */
-    @Column(name = "estimatedTimeOfDelivery")
-    private Date estimatedtimeofdelivery;
+    @Column(name = "pickup_time")
+    private Date pickupTime;
 
     /**
      * 预计到达时间
      */
-    @Column(name = "estimatedTimeOfArrival")
-    private Date estimatedtimeofarrival;
+    @Column(name = "expected_arrived_time")
+    private Date expectedArrivedTime;
 
     /**
      * 重量
@@ -69,7 +70,7 @@ public class OfcTransplanInfo {
     /**
      * 数量
      */
-    private BigDecimal number;
+    private BigDecimal quantity;
 
     /**
      * 体积
@@ -84,348 +85,348 @@ public class OfcTransplanInfo {
     /**
      * 发货客户代码
      */
-    @Column(name = "shippinCustomerCode")
-    private String shippincustomercode;
+    @Column(name = "shippin_customer_code")
+    private String shippinCustomerCode;
 
     /**
      * 发货客户地址
      */
-    @Column(name = "shippingAddress")
-    private String shippingaddress;
+    @Column(name = "shipping_address")
+    private String shippingAddress;
 
     /**
      * 发货客户联系人
      */
-    @Column(name = "shippingCustomerContact")
-    private String shippingcustomercontact;
+    @Column(name = "shipping_customer_contact")
+    private String shippingCustomerContact;
 
     /**
      * 发货客户联系电话
      */
-    @Column(name = "customerContactPhone")
-    private String customercontactphone;
+    @Column(name = "customer_contact_phone")
+    private String customerContactPhone;
 
     /**
      * 出发省份
      */
-    @Column(name = "departureProvince")
-    private String departureprovince;
+    @Column(name = "departure_province")
+    private String departureProvince;
 
     /**
      * 出发城市
      */
-    @Column(name = "departureCity")
-    private String departurecity;
+    @Column(name = "departure_city")
+    private String departureCity;
 
     /**
      * 出发区县
      */
-    @Column(name = "departureDistrict")
-    private String departuredistrict;
+    @Column(name = "departure_district")
+    private String departureDistrict;
 
     /**
      * 出发乡镇
      */
-    @Column(name = "departureTowns")
-    private String departuretowns;
+    @Column(name = "departure_towns")
+    private String departureTowns;
 
     /**
      * 收货客户代码
      */
-    @Column(name = "receivingCustomerCode")
-    private String receivingcustomercode;
+    @Column(name = "receiving_customer_code")
+    private String receivingCustomerCode;
 
     /**
      * 收货客户地址
      */
-    @Column(name = "receivingCustomerAddress")
-    private String receivingcustomeraddress;
+    @Column(name = "receiving_customer_address")
+    private String receivingCustomerAddress;
 
     /**
      * 收货客户联系人
      */
-    @Column(name = "receivingCustomerContact")
-    private String receivingcustomercontact;
+    @Column(name = "receiving_customer_contact")
+    private String receivingCustomerContact;
 
     /**
      * 收货客户联系电话
      */
-    @Column(name = "receivingCustomerContactPhone")
-    private String receivingcustomercontactphone;
+    @Column(name = "receiving_customer_contact_phone")
+    private String receivingCustomerContactPhone;
 
     /**
      * 目的省份
      */
-    @Column(name = "destinationProvince")
-    private String destinationprovince;
+    @Column(name = "destination_province")
+    private String destinationProvince;
 
     /**
      * 目的城市
      */
-    @Column(name = "destinationCity")
-    private String destinationcity;
+    @Column(name = "destination_city")
+    private String destinationCity;
 
     /**
      * 目的区县
      */
-    @Column(name = "destinationDistrict")
-    private String destinationdistrict;
+    @Column(name = "destination_district")
+    private String destinationDistrict;
 
     /**
      * 目的乡镇
      */
-    @Column(name = "destinationTown")
-    private String destinationtown;
+    @Column(name = "destination_town")
+    private String destinationTown;
 
     /**
      * 收货地址经度
      */
-    @Column(name = "receivingAddressLongitude")
-    private String receivingaddresslongitude;
+    @Column(name = "receiving_address_longitude")
+    private String receivingAddressLongitude;
 
     /**
      * 收货地址纬度
      */
-    @Column(name = "receivingAddressLatitude")
-    private String receivingaddresslatitude;
+    @Column(name = "receiving_address_latitude")
+    private String receivingAddressLatitude;
 
     /**
      * 备注
      */
-    private String remarks;
+    private String notes;
 
     /**
      * 销售组织
      */
-    @Column(name = "salesOrganization")
-    private String salesorganization;
+    @Column(name = "sale_organization")
+    private String saleOrganization;
 
     /**
      * 产品组
      */
-    @Column(name = "productGroup")
-    private String productgroup;
+    @Column(name = "product_group")
+    private String productGroup;
 
     /**
      * 销售部门
      */
-    @Column(name = "salesDepartment")
-    private String salesdepartment;
+    @Column(name = "sale_department")
+    private String saleDepartment;
 
     /**
      * 销售组
      */
-    @Column(name = "salesGroup")
-    private String salesgroup;
+    @Column(name = "sale_group")
+    private String saleGroup;
 
     /**
      * 销售部门描述
      */
-    @Column(name = "salesTeamDescription")
-    private String salesteamdescription;
+    @Column(name = "sale_department_desc")
+    private String saleDepartmentDesc;
 
     /**
      * 销售组描述
      */
-    @Column(name = "salesDepartmentDescription")
-    private String salesdepartmentdescription;
+    @Column(name = "sale_group_desc")
+    private String saleGroupDesc;
 
     /**
      * 运输单来源
      */
-    @Column(name = "singleSourceOfTransport")
-    private String singlesourceoftransport;
+    @Column(name = "single_source_of_transport")
+    private String singleSourceOfTransport;
 
     /**
      * 服务费用
      */
-    @Column(name = "serviceCharge")
-    private BigDecimal servicecharge;
+    @Column(name = "service_charge")
+    private BigDecimal serviceCharge;
 
     /**
      * 创建时间
      */
-    @Column(name = "creationTime")
-    private Date creationtime;
+    @Column(name = "creation_time")
+    private Date creationTime;
 
     /**
      * 创建人员
      */
-    @Column(name = "createPersonnel")
-    private String createpersonnel;
+    @Column(name = "create_personnel")
+    private String createPersonnel;
 
     /**
      * 作废人员
      */
-    @Column(name = "voidPersonnel")
-    private String voidpersonnel;
+    @Column(name = "void_personnel")
+    private String voidPersonnel;
 
     /**
      * 作废时间
      */
-    @Column(name = "voidTime")
-    private Date voidtime;
+    @Column(name = "void_time")
+    private Date voidTime;
 
     /**
      * 获取计划单编号
      *
-     * @return planCode - 计划单编号
+     * @return plan_code - 计划单编号
      */
-    public String getPlancode() {
-        return plancode;
+    public String getPlanCode() {
+        return planCode;
     }
 
     /**
      * 设置计划单编号
      *
-     * @param plancode 计划单编号
+     * @param planCode 计划单编号
      */
-    public void setPlancode(String plancode) {
-        this.plancode = plancode;
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
     }
 
     /**
      * 获取订单编号
      *
-     * @return orderCode - 订单编号
+     * @return order_code - 订单编号
      */
-    public String getOrdercode() {
-        return ordercode;
+    public String getOrderCode() {
+        return orderCode;
     }
 
     /**
      * 设置订单编号
      *
-     * @param ordercode 订单编号
+     * @param orderCode 订单编号
      */
-    public void setOrdercode(String ordercode) {
-        this.ordercode = ordercode;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     /**
      * 获取订单批次号
      *
-     * @return orderBatchNumber - 订单批次号
+     * @return order_batch_number - 订单批次号
      */
-    public String getOrderbatchnumber() {
-        return orderbatchnumber;
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
     }
 
     /**
      * 设置订单批次号
      *
-     * @param orderbatchnumber 订单批次号
+     * @param orderBatchNumber 订单批次号
      */
-    public void setOrderbatchnumber(String orderbatchnumber) {
-        this.orderbatchnumber = orderbatchnumber;
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
     }
 
     /**
      * 获取计划序号
      *
-     * @return programSerialNumber - 计划序号
+     * @return program_serial_number - 计划序号
      */
-    public String getProgramserialnumber() {
-        return programserialnumber;
+    public String getProgramSerialNumber() {
+        return programSerialNumber;
     }
 
     /**
      * 设置计划序号
      *
-     * @param programserialnumber 计划序号
+     * @param programSerialNumber 计划序号
      */
-    public void setProgramserialnumber(String programserialnumber) {
-        this.programserialnumber = programserialnumber;
+    public void setProgramSerialNumber(String programSerialNumber) {
+        this.programSerialNumber = programSerialNumber;
     }
 
     /**
      * 获取类型
      *
-     * @return serviceType - 类型
+     * @return business_type - 类型
      */
-    public String getServicetype() {
-        return servicetype;
+    public String getBusinessType() {
+        return businessType;
     }
 
     /**
      * 设置类型
      *
-     * @param servicetype 类型
+     * @param businessType 类型
      */
-    public void setServicetype(String servicetype) {
-        this.servicetype = servicetype;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     /**
      * 获取日期
      *
-     * @return dates - 日期
+     * @return order_time - 日期
      */
-    public Date getDates() {
-        return dates;
+    public Date getOrderTime() {
+        return orderTime;
     }
 
     /**
      * 设置日期
      *
-     * @param dates 日期
+     * @param orderTime 日期
      */
-    public void setDates(Date dates) {
-        this.dates = dates;
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
     }
 
     /**
      * 获取货主编码
      *
-     * @return custCode - 货主编码
+     * @return cust_code - 货主编码
      */
-    public String getCustcode() {
-        return custcode;
+    public String getCustCode() {
+        return custCode;
     }
 
     /**
      * 设置货主编码
      *
-     * @param custcode 货主编码
+     * @param custCode 货主编码
      */
-    public void setCustcode(String custcode) {
-        this.custcode = custcode;
+    public void setCustCode(String custCode) {
+        this.custCode = custCode;
     }
 
     /**
      * 获取预计发货时间
      *
-     * @return estimatedTimeOfDelivery - 预计发货时间
+     * @return pickup_time - 预计发货时间
      */
-    public Date getEstimatedtimeofdelivery() {
-        return estimatedtimeofdelivery;
+    public Date getPickupTime() {
+        return pickupTime;
     }
 
     /**
      * 设置预计发货时间
      *
-     * @param estimatedtimeofdelivery 预计发货时间
+     * @param pickupTime 预计发货时间
      */
-    public void setEstimatedtimeofdelivery(Date estimatedtimeofdelivery) {
-        this.estimatedtimeofdelivery = estimatedtimeofdelivery;
+    public void setPickupTime(Date pickupTime) {
+        this.pickupTime = pickupTime;
     }
 
     /**
      * 获取预计到达时间
      *
-     * @return estimatedTimeOfArrival - 预计到达时间
+     * @return expected_arrived_time - 预计到达时间
      */
-    public Date getEstimatedtimeofarrival() {
-        return estimatedtimeofarrival;
+    public Date getExpectedArrivedTime() {
+        return expectedArrivedTime;
     }
 
     /**
      * 设置预计到达时间
      *
-     * @param estimatedtimeofarrival 预计到达时间
+     * @param expectedArrivedTime 预计到达时间
      */
-    public void setEstimatedtimeofarrival(Date estimatedtimeofarrival) {
-        this.estimatedtimeofarrival = estimatedtimeofarrival;
+    public void setExpectedArrivedTime(Date expectedArrivedTime) {
+        this.expectedArrivedTime = expectedArrivedTime;
     }
 
     /**
@@ -449,25 +450,25 @@ public class OfcTransplanInfo {
     /**
      * 获取数量
      *
-     * @return number - 数量
+     * @return quantity - 数量
      */
-    public BigDecimal getNumber() {
-        return number;
+    public BigDecimal getQuantity() {
+        return quantity;
     }
 
     /**
      * 设置数量
      *
-     * @param number 数量
+     * @param quantity 数量
      */
-    public void setNumber(BigDecimal number) {
-        this.number = number;
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
     /**
      * 获取体积
      *
-     * @return volume - 体积
+     * @return cubage - 体积
      */
     public BigDecimal getVolume() {
         return volume;
@@ -503,558 +504,558 @@ public class OfcTransplanInfo {
     /**
      * 获取发货客户代码
      *
-     * @return shippinCustomerCode - 发货客户代码
+     * @return shippin_customer_code - 发货客户代码
      */
-    public String getShippincustomercode() {
-        return shippincustomercode;
+    public String getShippinCustomerCode() {
+        return shippinCustomerCode;
     }
 
     /**
      * 设置发货客户代码
      *
-     * @param shippincustomercode 发货客户代码
+     * @param shippinCustomerCode 发货客户代码
      */
-    public void setShippincustomercode(String shippincustomercode) {
-        this.shippincustomercode = shippincustomercode;
+    public void setShippinCustomerCode(String shippinCustomerCode) {
+        this.shippinCustomerCode = shippinCustomerCode;
     }
 
     /**
      * 获取发货客户地址
      *
-     * @return shippingAddress - 发货客户地址
+     * @return shipping_address - 发货客户地址
      */
-    public String getShippingaddress() {
-        return shippingaddress;
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
     /**
      * 设置发货客户地址
      *
-     * @param shippingaddress 发货客户地址
+     * @param shippingAddress 发货客户地址
      */
-    public void setShippingaddress(String shippingaddress) {
-        this.shippingaddress = shippingaddress;
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
     /**
      * 获取发货客户联系人
      *
-     * @return shippingCustomerContact - 发货客户联系人
+     * @return shipping_customer_contact - 发货客户联系人
      */
-    public String getShippingcustomercontact() {
-        return shippingcustomercontact;
+    public String getShippingCustomerContact() {
+        return shippingCustomerContact;
     }
 
     /**
      * 设置发货客户联系人
      *
-     * @param shippingcustomercontact 发货客户联系人
+     * @param shippingCustomerContact 发货客户联系人
      */
-    public void setShippingcustomercontact(String shippingcustomercontact) {
-        this.shippingcustomercontact = shippingcustomercontact;
+    public void setShippingCustomerContact(String shippingCustomerContact) {
+        this.shippingCustomerContact = shippingCustomerContact;
     }
 
     /**
      * 获取发货客户联系电话
      *
-     * @return customerContactPhone - 发货客户联系电话
+     * @return customer_contact_phone - 发货客户联系电话
      */
-    public String getCustomercontactphone() {
-        return customercontactphone;
+    public String getCustomerContactPhone() {
+        return customerContactPhone;
     }
 
     /**
      * 设置发货客户联系电话
      *
-     * @param customercontactphone 发货客户联系电话
+     * @param customerContactPhone 发货客户联系电话
      */
-    public void setCustomercontactphone(String customercontactphone) {
-        this.customercontactphone = customercontactphone;
+    public void setCustomerContactPhone(String customerContactPhone) {
+        this.customerContactPhone = customerContactPhone;
     }
 
     /**
      * 获取出发省份
      *
-     * @return departureProvince - 出发省份
+     * @return departure_province - 出发省份
      */
-    public String getDepartureprovince() {
-        return departureprovince;
+    public String getDepartureProvince() {
+        return departureProvince;
     }
 
     /**
      * 设置出发省份
      *
-     * @param departureprovince 出发省份
+     * @param departureProvince 出发省份
      */
-    public void setDepartureprovince(String departureprovince) {
-        this.departureprovince = departureprovince;
+    public void setDepartureProvince(String departureProvince) {
+        this.departureProvince = departureProvince;
     }
 
     /**
      * 获取出发城市
      *
-     * @return departureCity - 出发城市
+     * @return departure_city - 出发城市
      */
-    public String getDeparturecity() {
-        return departurecity;
+    public String getDepartureCity() {
+        return departureCity;
     }
 
     /**
      * 设置出发城市
      *
-     * @param departurecity 出发城市
+     * @param departureCity 出发城市
      */
-    public void setDeparturecity(String departurecity) {
-        this.departurecity = departurecity;
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
     }
 
     /**
      * 获取出发区县
      *
-     * @return departureDistrict - 出发区县
+     * @return departure_district - 出发区县
      */
-    public String getDeparturedistrict() {
-        return departuredistrict;
+    public String getDepartureDistrict() {
+        return departureDistrict;
     }
 
     /**
      * 设置出发区县
      *
-     * @param departuredistrict 出发区县
+     * @param departureDistrict 出发区县
      */
-    public void setDeparturedistrict(String departuredistrict) {
-        this.departuredistrict = departuredistrict;
+    public void setDepartureDistrict(String departureDistrict) {
+        this.departureDistrict = departureDistrict;
     }
 
     /**
      * 获取出发乡镇
      *
-     * @return departureTowns - 出发乡镇
+     * @return departure_towns - 出发乡镇
      */
-    public String getDeparturetowns() {
-        return departuretowns;
+    public String getDepartureTowns() {
+        return departureTowns;
     }
 
     /**
      * 设置出发乡镇
      *
-     * @param departuretowns 出发乡镇
+     * @param departureTowns 出发乡镇
      */
-    public void setDeparturetowns(String departuretowns) {
-        this.departuretowns = departuretowns;
+    public void setDepartureTowns(String departureTowns) {
+        this.departureTowns = departureTowns;
     }
 
     /**
      * 获取收货客户代码
      *
-     * @return receivingCustomerCode - 收货客户代码
+     * @return receiving_customer_code - 收货客户代码
      */
-    public String getReceivingcustomercode() {
-        return receivingcustomercode;
+    public String getReceivingCustomerCode() {
+        return receivingCustomerCode;
     }
 
     /**
      * 设置收货客户代码
      *
-     * @param receivingcustomercode 收货客户代码
+     * @param receivingCustomerCode 收货客户代码
      */
-    public void setReceivingcustomercode(String receivingcustomercode) {
-        this.receivingcustomercode = receivingcustomercode;
+    public void setReceivingCustomerCode(String receivingCustomerCode) {
+        this.receivingCustomerCode = receivingCustomerCode;
     }
 
     /**
      * 获取收货客户地址
      *
-     * @return receivingCustomerAddress - 收货客户地址
+     * @return receiving_customer_address - 收货客户地址
      */
-    public String getReceivingcustomeraddress() {
-        return receivingcustomeraddress;
+    public String getReceivingCustomerAddress() {
+        return receivingCustomerAddress;
     }
 
     /**
      * 设置收货客户地址
      *
-     * @param receivingcustomeraddress 收货客户地址
+     * @param receivingCustomerAddress 收货客户地址
      */
-    public void setReceivingcustomeraddress(String receivingcustomeraddress) {
-        this.receivingcustomeraddress = receivingcustomeraddress;
+    public void setReceivingCustomerAddress(String receivingCustomerAddress) {
+        this.receivingCustomerAddress = receivingCustomerAddress;
     }
 
     /**
      * 获取收货客户联系人
      *
-     * @return receivingCustomerContact - 收货客户联系人
+     * @return receiving_customer_contact - 收货客户联系人
      */
-    public String getReceivingcustomercontact() {
-        return receivingcustomercontact;
+    public String getReceivingCustomerContact() {
+        return receivingCustomerContact;
     }
 
     /**
      * 设置收货客户联系人
      *
-     * @param receivingcustomercontact 收货客户联系人
+     * @param receivingCustomerContact 收货客户联系人
      */
-    public void setReceivingcustomercontact(String receivingcustomercontact) {
-        this.receivingcustomercontact = receivingcustomercontact;
+    public void setReceivingCustomerContact(String receivingCustomerContact) {
+        this.receivingCustomerContact = receivingCustomerContact;
     }
 
     /**
      * 获取收货客户联系电话
      *
-     * @return receivingCustomerContactPhone - 收货客户联系电话
+     * @return receiving_customer_contact_phone - 收货客户联系电话
      */
-    public String getReceivingcustomercontactphone() {
-        return receivingcustomercontactphone;
+    public String getReceivingCustomerContactPhone() {
+        return receivingCustomerContactPhone;
     }
 
     /**
      * 设置收货客户联系电话
      *
-     * @param receivingcustomercontactphone 收货客户联系电话
+     * @param receivingCustomerContactPhone 收货客户联系电话
      */
-    public void setReceivingcustomercontactphone(String receivingcustomercontactphone) {
-        this.receivingcustomercontactphone = receivingcustomercontactphone;
+    public void setReceivingCustomerContactPhone(String receivingCustomerContactPhone) {
+        this.receivingCustomerContactPhone = receivingCustomerContactPhone;
     }
 
     /**
      * 获取目的省份
      *
-     * @return destinationProvince - 目的省份
+     * @return destination_province - 目的省份
      */
-    public String getDestinationprovince() {
-        return destinationprovince;
+    public String getDestinationProvince() {
+        return destinationProvince;
     }
 
     /**
      * 设置目的省份
      *
-     * @param destinationprovince 目的省份
+     * @param destinationProvince 目的省份
      */
-    public void setDestinationprovince(String destinationprovince) {
-        this.destinationprovince = destinationprovince;
+    public void setDestinationProvince(String destinationProvince) {
+        this.destinationProvince = destinationProvince;
     }
 
     /**
      * 获取目的城市
      *
-     * @return destinationCity - 目的城市
+     * @return destination_city - 目的城市
      */
-    public String getDestinationcity() {
-        return destinationcity;
+    public String getDestinationCity() {
+        return destinationCity;
     }
 
     /**
      * 设置目的城市
      *
-     * @param destinationcity 目的城市
+     * @param destinationCity 目的城市
      */
-    public void setDestinationcity(String destinationcity) {
-        this.destinationcity = destinationcity;
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
     }
 
     /**
      * 获取目的区县
      *
-     * @return destinationDistrict - 目的区县
+     * @return destination_district - 目的区县
      */
-    public String getDestinationdistrict() {
-        return destinationdistrict;
+    public String getDestinationDistrict() {
+        return destinationDistrict;
     }
 
     /**
      * 设置目的区县
      *
-     * @param destinationdistrict 目的区县
+     * @param destinationDistrict 目的区县
      */
-    public void setDestinationdistrict(String destinationdistrict) {
-        this.destinationdistrict = destinationdistrict;
+    public void setDestinationDistrict(String destinationDistrict) {
+        this.destinationDistrict = destinationDistrict;
     }
 
     /**
      * 获取目的乡镇
      *
-     * @return destinationTown - 目的乡镇
+     * @return destination_town - 目的乡镇
      */
-    public String getDestinationtown() {
-        return destinationtown;
+    public String getDestinationTown() {
+        return destinationTown;
     }
 
     /**
      * 设置目的乡镇
      *
-     * @param destinationtown 目的乡镇
+     * @param destinationTown 目的乡镇
      */
-    public void setDestinationtown(String destinationtown) {
-        this.destinationtown = destinationtown;
+    public void setDestinationTown(String destinationTown) {
+        this.destinationTown = destinationTown;
     }
 
     /**
      * 获取收货地址经度
      *
-     * @return receivingAddressLongitude - 收货地址经度
+     * @return receiving_address_longitude - 收货地址经度
      */
-    public String getReceivingaddresslongitude() {
-        return receivingaddresslongitude;
+    public String getReceivingAddressLongitude() {
+        return receivingAddressLongitude;
     }
 
     /**
      * 设置收货地址经度
      *
-     * @param receivingaddresslongitude 收货地址经度
+     * @param receivingAddressLongitude 收货地址经度
      */
-    public void setReceivingaddresslongitude(String receivingaddresslongitude) {
-        this.receivingaddresslongitude = receivingaddresslongitude;
+    public void setReceivingAddressLongitude(String receivingAddressLongitude) {
+        this.receivingAddressLongitude = receivingAddressLongitude;
     }
 
     /**
      * 获取收货地址纬度
      *
-     * @return receivingAddressLatitude - 收货地址纬度
+     * @return receiving_address_latitude - 收货地址纬度
      */
-    public String getReceivingaddresslatitude() {
-        return receivingaddresslatitude;
+    public String getReceivingAddressLatitude() {
+        return receivingAddressLatitude;
     }
 
     /**
      * 设置收货地址纬度
      *
-     * @param receivingaddresslatitude 收货地址纬度
+     * @param receivingAddressLatitude 收货地址纬度
      */
-    public void setReceivingaddresslatitude(String receivingaddresslatitude) {
-        this.receivingaddresslatitude = receivingaddresslatitude;
+    public void setReceivingAddressLatitude(String receivingAddressLatitude) {
+        this.receivingAddressLatitude = receivingAddressLatitude;
     }
 
     /**
      * 获取备注
      *
-     * @return remarks - 备注
+     * @return notes - 备注
      */
-    public String getRemarks() {
-        return remarks;
+    public String getNotes() {
+        return notes;
     }
 
     /**
      * 设置备注
      *
-     * @param remarks 备注
+     * @param notes 备注
      */
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     /**
      * 获取销售组织
      *
-     * @return salesOrganization - 销售组织
+     * @return sale_organization - 销售组织
      */
-    public String getSalesorganization() {
-        return salesorganization;
+    public String getSaleOrganization() {
+        return saleOrganization;
     }
 
     /**
      * 设置销售组织
      *
-     * @param salesorganization 销售组织
+     * @param saleOrganization 销售组织
      */
-    public void setSalesorganization(String salesorganization) {
-        this.salesorganization = salesorganization;
+    public void setSaleOrganization(String saleOrganization) {
+        this.saleOrganization = saleOrganization;
     }
 
     /**
      * 获取产品组
      *
-     * @return productGroup - 产品组
+     * @return product_group - 产品组
      */
-    public String getProductgroup() {
-        return productgroup;
+    public String getProductGroup() {
+        return productGroup;
     }
 
     /**
      * 设置产品组
      *
-     * @param productgroup 产品组
+     * @param productGroup 产品组
      */
-    public void setProductgroup(String productgroup) {
-        this.productgroup = productgroup;
+    public void setProductGroup(String productGroup) {
+        this.productGroup = productGroup;
     }
 
     /**
      * 获取销售部门
      *
-     * @return salesDepartment - 销售部门
+     * @return sale_department - 销售部门
      */
-    public String getSalesdepartment() {
-        return salesdepartment;
+    public String getSaleDepartment() {
+        return saleDepartment;
     }
 
     /**
      * 设置销售部门
      *
-     * @param salesdepartment 销售部门
+     * @param saleDepartment 销售部门
      */
-    public void setSalesdepartment(String salesdepartment) {
-        this.salesdepartment = salesdepartment;
+    public void setSaleDepartment(String saleDepartment) {
+        this.saleDepartment = saleDepartment;
     }
 
     /**
      * 获取销售组
      *
-     * @return salesGroup - 销售组
+     * @return sale_group - 销售组
      */
-    public String getSalesgroup() {
-        return salesgroup;
+    public String getSaleGroup() {
+        return saleGroup;
     }
 
     /**
      * 设置销售组
      *
-     * @param salesgroup 销售组
+     * @param saleGroup 销售组
      */
-    public void setSalesgroup(String salesgroup) {
-        this.salesgroup = salesgroup;
+    public void setSaleGroup(String saleGroup) {
+        this.saleGroup = saleGroup;
     }
 
     /**
      * 获取销售部门描述
      *
-     * @return salesTeamDescription - 销售部门描述
+     * @return sale_department_desc - 销售部门描述
      */
-    public String getSalesteamdescription() {
-        return salesteamdescription;
+    public String getSaleDepartmentDesc() {
+        return saleDepartmentDesc;
     }
 
     /**
      * 设置销售部门描述
      *
-     * @param salesteamdescription 销售部门描述
+     * @param saleDepartmentDesc 销售部门描述
      */
-    public void setSalesteamdescription(String salesteamdescription) {
-        this.salesteamdescription = salesteamdescription;
+    public void setSaleDepartmentDesc(String saleDepartmentDesc) {
+        this.saleDepartmentDesc = saleDepartmentDesc;
     }
 
     /**
      * 获取销售组描述
      *
-     * @return salesDepartmentDescription - 销售组描述
+     * @return sale_group_desc - 销售组描述
      */
-    public String getSalesdepartmentdescription() {
-        return salesdepartmentdescription;
+    public String getSaleGroupDesc() {
+        return saleGroupDesc;
     }
 
     /**
      * 设置销售组描述
      *
-     * @param salesdepartmentdescription 销售组描述
+     * @param saleGroupDesc 销售组描述
      */
-    public void setSalesdepartmentdescription(String salesdepartmentdescription) {
-        this.salesdepartmentdescription = salesdepartmentdescription;
+    public void setSaleGroupDesc(String saleGroupDesc) {
+        this.saleGroupDesc = saleGroupDesc;
     }
 
     /**
      * 获取运输单来源
      *
-     * @return singleSourceOfTransport - 运输单来源
+     * @return single_source_of_transport - 运输单来源
      */
-    public String getSinglesourceoftransport() {
-        return singlesourceoftransport;
+    public String getSingleSourceOfTransport() {
+        return singleSourceOfTransport;
     }
 
     /**
      * 设置运输单来源
      *
-     * @param singlesourceoftransport 运输单来源
+     * @param singleSourceOfTransport 运输单来源
      */
-    public void setSinglesourceoftransport(String singlesourceoftransport) {
-        this.singlesourceoftransport = singlesourceoftransport;
+    public void setSingleSourceOfTransport(String singleSourceOfTransport) {
+        this.singleSourceOfTransport = singleSourceOfTransport;
     }
 
     /**
      * 获取服务费用
      *
-     * @return serviceCharge - 服务费用
+     * @return service_charge - 服务费用
      */
-    public BigDecimal getServicecharge() {
-        return servicecharge;
+    public BigDecimal getServiceCharge() {
+        return serviceCharge;
     }
 
     /**
      * 设置服务费用
      *
-     * @param servicecharge 服务费用
+     * @param serviceCharge 服务费用
      */
-    public void setServicecharge(BigDecimal servicecharge) {
-        this.servicecharge = servicecharge;
+    public void setServiceCharge(BigDecimal serviceCharge) {
+        this.serviceCharge = serviceCharge;
     }
 
     /**
      * 获取创建时间
      *
-     * @return creationTime - 创建时间
+     * @return creation_time - 创建时间
      */
-    public Date getCreationtime() {
-        return creationtime;
+    public Date getCreationTime() {
+        return creationTime;
     }
 
     /**
      * 设置创建时间
      *
-     * @param creationtime 创建时间
+     * @param creationTime 创建时间
      */
-    public void setCreationtime(Date creationtime) {
-        this.creationtime = creationtime;
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
     }
 
     /**
      * 获取创建人员
      *
-     * @return createPersonnel - 创建人员
+     * @return create_personnel - 创建人员
      */
-    public String getCreatepersonnel() {
-        return createpersonnel;
+    public String getCreatePersonnel() {
+        return createPersonnel;
     }
 
     /**
      * 设置创建人员
      *
-     * @param createpersonnel 创建人员
+     * @param createPersonnel 创建人员
      */
-    public void setCreatepersonnel(String createpersonnel) {
-        this.createpersonnel = createpersonnel;
+    public void setCreatePersonnel(String createPersonnel) {
+        this.createPersonnel = createPersonnel;
     }
 
     /**
      * 获取作废人员
      *
-     * @return voidPersonnel - 作废人员
+     * @return void_personnel - 作废人员
      */
-    public String getVoidpersonnel() {
-        return voidpersonnel;
+    public String getVoidPersonnel() {
+        return voidPersonnel;
     }
 
     /**
      * 设置作废人员
      *
-     * @param voidpersonnel 作废人员
+     * @param voidPersonnel 作废人员
      */
-    public void setVoidpersonnel(String voidpersonnel) {
-        this.voidpersonnel = voidpersonnel;
+    public void setVoidPersonnel(String voidPersonnel) {
+        this.voidPersonnel = voidPersonnel;
     }
 
     /**
      * 获取作废时间
      *
-     * @return voidTime - 作废时间
+     * @return void_time - 作废时间
      */
-    public Date getVoidtime() {
-        return voidtime;
+    public Date getVoidTime() {
+        return voidTime;
     }
 
     /**
      * 设置作废时间
      *
-     * @param voidtime 作废时间
+     * @param voidTime 作废时间
      */
-    public void setVoidtime(Date voidtime) {
-        this.voidtime = voidtime;
+    public void setVoidTime(Date voidTime) {
+        this.voidTime = voidTime;
     }
 }

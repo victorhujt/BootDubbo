@@ -5,9 +5,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="planCode" property="plancode" jdbcType="VARCHAR" />
-    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
-    <result column="jobNewStatus" property="jobnewstatus" jdbcType="VARCHAR" />
-    <result column="jobStatusUpdateTime" property="jobstatusupdatetime" jdbcType="TIMESTAMP" />
+    <result column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="job_new_status" property="jobNewStatus" jdbcType="VARCHAR" />
+    <result column="job_status_update_time" property="jobStatusUpdateTime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>
