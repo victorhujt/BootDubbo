@@ -173,7 +173,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.setCustomerId(custId);
             csc.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
-            response.getWriter().print(JSONUtils.objectToJson(cscReceivingInfoList.getResult()));
+            List<CscContantAndCompanyVo> result = cscReceivingInfoList.getResult();
+            csc.getCscContact().setPurpose("3");
+            Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
+            List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
+            result.addAll(resultOfBoth);
+            response.getWriter().print(JSONUtils.objectToJson(result));
         } catch (Exception ex) {
             logger.error("订单中心筛选收货方出现异常:{},{}", ex.getMessage(), ex);
         }
@@ -189,6 +194,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         //调用外部接口,最低传CustomerCode
         try {
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            cscSupplierInfoDto.setCustomerId(custId);//
             Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
         }catch (IOException ex) {
