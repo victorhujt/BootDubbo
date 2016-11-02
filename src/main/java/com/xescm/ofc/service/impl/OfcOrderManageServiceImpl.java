@@ -15,16 +15,15 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.constants.SystemHeader;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ydx on 2016/10/12.
@@ -51,6 +50,24 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
     @Autowired
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    @Autowired
+    private OfcPlannedDetailService ofcPlannedDetailService;
+    @Autowired
+    private OfcTransplanInfoService ofcTransplanInfoService;
+    @Autowired
+    private OfcTransplanStatusService ofcTransplanStatusService;
+    @Autowired
+    private OfcTransplanNewstatusService ofcTransplanNewstatusService;
+    @Autowired
+    private OfcTraplanSourceStatusService ofcTraplanSourceStatusService;
+    @Autowired
+    private OfcSiloprogramInfoService ofcSiloprogramInfoService;
+    @Autowired
+    private OfcSiloproNewstatusService ofcSiloproNewstatusService;
+    @Autowired
+    private OfcSiloproSourceStatusService ofcSiloproSourceStatusService;
+    @Autowired
+    private OfcSiloproStatusService ofcSiloproStatusService;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag) {
@@ -74,26 +91,49 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
                 List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
                 OfcDistributionBasicInfo ofcDistributionBasicInfo=ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
+                OfcFinanceInformation ofcFinanceInformation=new OfcFinanceInformation();
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.TRANSPORTORDER)){
                     //运输订单
-                    transPlanCreate(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
+                    OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                    ofcTransplanInfo.setProgramSerialNumber("1");
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                    OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
                     if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
                         //需要提供运输
-                        transPlanCreate(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
-                        siloProCreate(ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation);
+                        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                        if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
+                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.TRANSFEROUTOFTHELIBRARY)
+                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.LOSSOFREPORTING)
+                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.OTHEROUTOFTHELIBRARY)
+                        ){
+                            //出库
+                            ofcTransplanInfo.setProgramSerialNumber("2");
+                            ofcSiloprogramInfo.setProgramSerialNumber("1");
+
+                        }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.PURCHASINGANDSTORAGE)
+                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.ALLOCATESTORAGE)
+                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.RETURNWAREHOUSING)
+                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.PROCESSINGSTORAGE)){
+                            //入库
+                            ofcTransplanInfo.setProgramSerialNumber("1");
+                            ofcSiloprogramInfo.setProgramSerialNumber("2");
+                        }
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
+                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation);
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
-                        transPlanCreate(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo);
+                        ofcSiloprogramInfo.setProgramSerialNumber("1");
+                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation);
                     }else {
                         return String.valueOf(Wrapper.ERROR_CODE);
                     }
                 }else {
                     return String.valueOf(Wrapper.ERROR_CODE);
                 }
-                System.out.println("1111111111");
+                logger.debug("计划单创建成功");
             }else {
                 return String.valueOf(Wrapper.ERROR_CODE);
             }
@@ -106,13 +146,90 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
-    public void transPlanCreate(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo){
-        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-        ofcTransplanInfo.setPlancode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
+    public void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo){
+        OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
+        OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+        OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+        OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
+        try {
+            BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
+            BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
+            ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
+            ofcTransplanInfo.setShippinCustomerCode(ofcFundamentalInformation.getCustCode());
+            ofcTransplanInfo.setCreationTime(new Date());
+            ofcTransplanInfo.setCreatePersonnel("001");
+            BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);
+            BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
+            BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
+            BeanUtils.copyProperties(ofcTransplanNewstatus,ofcTransplanInfo);
+            Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
+            while(iter.hasNext())
+            {
+                //保存计划单明细
+                ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
+                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
+                ofcPlannedDetailService.save(ofcPlannedDetail);
+                logger.debug("计划单明细保存成功");
+            }
+            ofcTransplanInfoService.save(ofcTransplanInfo);
+            logger.debug("计划单信息保存成功");
+            ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
+            logger.debug("计划单最新状态保存成功");
+            ofcTransplanStatusService.save(ofcTransplanStatus);
+            logger.debug("计划单状态保存成功");
+            ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
+            logger.debug("计划单资源状态保存成功");
+        } catch (IllegalAccessException e) {
+            throw new BusinessException(e.getMessage());
+        } catch (InvocationTargetException e) {
+            throw new BusinessException(e.getMessage());
+        }
+        //ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
     }
 
-    public void siloProCreate(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation){
+    public void siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation){
+        OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
+        OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
+        OfcSiloproSourceStatus ofcSiloproSourceStatus=new OfcSiloproSourceStatus();
+        OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
+        try {
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
+            ofcSiloprogramInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","WP"));
+            ofcSiloprogramInfo.setCreationTime(new Date());
+            ofcSiloprogramInfo.setCreatePersonnel("001");
+            BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcWarehouseInformation);
+            BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcSiloprogramInfo);
+            BeanUtils.copyProperties(ofcSiloproStatus,ofcSiloprogramInfo);
+            BeanUtils.copyProperties(ofcSiloproNewstatus,ofcSiloprogramInfo);
 
+            Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
+            while(iter.hasNext())
+            {
+                //保存计划单明细
+                ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
+                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
+                ofcPlannedDetailService.save(ofcPlannedDetail);
+                logger.debug("计划单明细保存成功");
+            }
+            ofcSiloprogramInfoService.save(ofcSiloprogramInfo);
+            logger.debug("计划单信息保存成功");
+            ofcSiloproNewstatusService.save(ofcSiloproNewstatus);
+            logger.debug("计划单最新状态保存成功");
+            ofcSiloproStatusService.save(ofcSiloproStatus);
+            logger.debug("计划单状态保存成功");
+            ofcSiloproSourceStatusService.save(ofcSiloproSourceStatus);
+            logger.debug("计划单资源状态保存成功");
+        } catch (IllegalAccessException e) {
+            throw new BusinessException(e.getMessage());
+        } catch (InvocationTargetException e) {
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @Override

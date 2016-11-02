@@ -9,96 +9,96 @@ public class OfcSiloproNewstatus {
     /**
      * 计划单编号
      */
-    @Column(name = "planCode")
-    private String plancode;
+    @Column(name = "plan_code")
+    private String planCode;
 
     /**
      * 订单编号
      */
-    @Column(name = "orderCode")
-    private String ordercode;
+    @Column(name = "order_code")
+    private String orderCode;
 
     /**
      * 作业最新状态
      */
-    @Column(name = "jobNewStatus")
-    private String jobnewstatus;
+    @Column(name = "job_new_status")
+    private String jobNewStatus;
 
     /**
      * 作业状态更新时间
      */
-    @Column(name = "jobStatusUpdateTime")
-    private Date jobstatusupdatetime;
+    @Column(name = "job_status_update_time")
+    private Date jobStatusUpdateTime;
 
     /**
      * 获取计划单编号
      *
-     * @return planCode - 计划单编号
+     * @return plan_code - 计划单编号
      */
-    public String getPlancode() {
-        return plancode;
+    public String getPlanCode() {
+        return planCode;
     }
 
     /**
      * 设置计划单编号
      *
-     * @param plancode 计划单编号
+     * @param planCode 计划单编号
      */
-    public void setPlancode(String plancode) {
-        this.plancode = plancode;
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
     }
 
     /**
      * 获取订单编号
      *
-     * @return orderCode - 订单编号
+     * @return order_code - 订单编号
      */
-    public String getOrdercode() {
-        return ordercode;
+    public String getOrderCode() {
+        return orderCode;
     }
 
     /**
      * 设置订单编号
      *
-     * @param ordercode 订单编号
+     * @param orderCode 订单编号
      */
-    public void setOrdercode(String ordercode) {
-        this.ordercode = ordercode;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     /**
      * 获取作业最新状态
      *
-     * @return jobNewStatus - 作业最新状态
+     * @return job_new_status - 作业最新状态
      */
-    public String getJobnewstatus() {
-        return jobnewstatus;
+    public String getJobNewStatus() {
+        return jobNewStatus;
     }
 
     /**
      * 设置作业最新状态
      *
-     * @param jobnewstatus 作业最新状态
+     * @param jobNewStatus 作业最新状态
      */
-    public void setJobnewstatus(String jobnewstatus) {
-        this.jobnewstatus = jobnewstatus;
+    public void setJobNewStatus(String jobNewStatus) {
+        this.jobNewStatus = jobNewStatus;
     }
 
     /**
      * 获取作业状态更新时间
      *
-     * @return jobStatusUpdateTime - 作业状态更新时间
+     * @return job_status_update_time - 作业状态更新时间
      */
-    public Date getJobstatusupdatetime() {
-        return jobstatusupdatetime;
+    public Date getJobStatusUpdateTime() {
+        return jobStatusUpdateTime;
     }
 
     /**
      * 设置作业状态更新时间
      *
-     * @param jobstatusupdatetime 作业状态更新时间
+     * @param jobStatusUpdateTime 作业状态更新时间
      */
-    public void setJobstatusupdatetime(Date jobstatusupdatetime) {
-        this.jobstatusupdatetime = jobstatusupdatetime;
+    public void setJobStatusUpdateTime(Date jobStatusUpdateTime) {
+        this.jobStatusUpdateTime = jobStatusUpdateTime;
     }
 }

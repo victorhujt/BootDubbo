@@ -5,12 +5,12 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="planCode" property="plancode" jdbcType="VARCHAR" />
-    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
-    <result column="plannedSingleState" property="plannedsinglestate" jdbcType="VARCHAR" />
-    <result column="plannedStartTime" property="plannedstarttime" jdbcType="TIMESTAMP" />
-    <result column="plannedCompletionTime" property="plannedcompletiontime" jdbcType="TIMESTAMP" />
-    <result column="taskStartTime" property="taskstarttime" jdbcType="TIMESTAMP" />
-    <result column="taskCompletionTime" property="taskcompletiontime" jdbcType="TIMESTAMP" />
+    <result column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="planned_single_state" property="plannedSingleState" jdbcType="VARCHAR" />
+    <result column="planned_start_time" property="plannedStartTime" jdbcType="TIMESTAMP" />
+    <result column="planned_completion_time" property="plannedCompletionTime" jdbcType="TIMESTAMP" />
+    <result column="task_start_time" property="taskStartTime" jdbcType="TIMESTAMP" />
+    <result column="task_completion_time" property="taskCompletionTime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>

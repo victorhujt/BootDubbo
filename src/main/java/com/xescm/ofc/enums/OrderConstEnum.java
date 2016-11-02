@@ -37,6 +37,11 @@ public final class OrderConstEnum {
     public static final String CONTACTPURPOSECONSIGNOR = "2"; //联系人用途,发货人
     public static final String CONTACTPURPOSECONSIGNEE = "1"; //联系人用途,收货人
 
+    public static final String DAIFENPEI="10";  //待分配
+    public static final String WEIFENPEI="20";  //未分配
+    public static final String YIFENPEI="30";   //已分配
+    public static final String YIQUEDING="40";  //已确定
+
     public OrderConstEnum() {
     }
 }
