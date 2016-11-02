@@ -50,4 +50,19 @@
     <result column="void_personnel" property="voidPersonnel" jdbcType="VARCHAR" />
     <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <!--非作废运输计划单列表查询-->
+  <select id="ofcTransplanInfoScreenList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    otp.*
+    FROM
+    ofc_transplan_info otp
+    LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        oos.order_code =#{orderCode}
+      </if>
+    </where>
+  </select>
+
 </mapper>
