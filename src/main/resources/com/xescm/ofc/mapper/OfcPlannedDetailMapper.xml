@@ -5,16 +5,16 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="planCode" property="plancode" jdbcType="VARCHAR" />
-    <result column="goodsCode" property="goodscode" jdbcType="VARCHAR" />
-    <result column="goodsName" property="goodsname" jdbcType="VARCHAR" />
-    <result column="goodsSpec" property="goodsspec" jdbcType="VARCHAR" />
+    <result column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
     <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="quantity" property="quantity" jdbcType="DECIMAL" />
-    <result column="realQuantity" property="realquantity" jdbcType="DECIMAL" />
-    <result column="unitPrice" property="unitprice" jdbcType="DECIMAL" />
-    <result column="productionBatch" property="productionbatch" jdbcType="VARCHAR" />
-    <result column="manufactureDate" property="manufacturedate" jdbcType="TIMESTAMP" />
-    <result column="expirationDate" property="expirationdate" jdbcType="TIMESTAMP" />
+    <result column="real_quantity" property="realQuantity" jdbcType="DECIMAL" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="production_batch" property="productionBatch" jdbcType="VARCHAR" />
+    <result column="production_time" property="productionTime" jdbcType="TIMESTAMP" />
+    <result column="invalid_time" property="invalidTime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>

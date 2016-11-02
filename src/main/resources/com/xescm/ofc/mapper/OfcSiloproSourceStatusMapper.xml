@@ -5,18 +5,18 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="planCode" property="plancode" jdbcType="VARCHAR" />
-    <result column="orderCode" property="ordercode" jdbcType="VARCHAR" />
-    <result column="resourceAllocationStatus" property="resourceallocationstatus" jdbcType="VARCHAR" />
-    <result column="serviceProviderCode" property="serviceprovidercode" jdbcType="VARCHAR" />
-    <result column="serviceProviderName" property="serviceprovidername" jdbcType="VARCHAR" />
-    <result column="serviceProviderContact" property="serviceprovidercontact" jdbcType="VARCHAR" />
-    <result column="serviceProviderContactPhone" property="serviceprovidercontactphone" jdbcType="VARCHAR" />
-    <result column="resourceConfirmation" property="resourceconfirmation" jdbcType="VARCHAR" />
-    <result column="resourceConfirmationTime" property="resourceconfirmationtime" jdbcType="TIMESTAMP" />
-    <result column="licensePlateNumber" property="licenseplatenumber" jdbcType="VARCHAR" />
-    <result column="driverName" property="drivername" jdbcType="VARCHAR" />
-    <result column="driverContactPhone" property="drivercontactphone" jdbcType="VARCHAR" />
-    <result column="transportNumber" property="transportnumber" jdbcType="VARCHAR" />
+    <result column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="resource_allocation_status" property="resourceAllocationStatus" jdbcType="VARCHAR" />
+    <result column="service_provider_code" property="serviceProviderCode" jdbcType="VARCHAR" />
+    <result column="service_provider_name" property="serviceProviderName" jdbcType="VARCHAR" />
+    <result column="service_provider_contact" property="serviceProviderContact" jdbcType="VARCHAR" />
+    <result column="service_provider_contact_phone" property="serviceProviderContactPhone" jdbcType="VARCHAR" />
+    <result column="resource_confirmation" property="resourceConfirmation" jdbcType="VARCHAR" />
+    <result column="resource_confirmation_time" property="resourceConfirmationTime" jdbcType="TIMESTAMP" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

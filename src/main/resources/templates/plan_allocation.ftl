@@ -1,9 +1,11 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
-    <title>订单管理</title>
+    <title>运输计划单分配</title>
 
     <meta name="description" content="Static &amp; Dynamic Tables">
+
+    <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
 
 </head>
 
@@ -18,8 +20,6 @@
         <div class="main-content-inner">
             <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
-
-                <!-- /section:settings.box -->
                 <div class="page-header">
                     <p>
                         筛选条件
@@ -28,6 +28,20 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-1 no-padding-right" for="name">资源分配状态</label>
+                                <div class="col-sm-6">
+                                    <div class="clearfix">
+                                        <select class="chosen-select form-control" data-placeholder="请选择资源分配状态" id="orderStatus" name="orderStatus">
+                                            <option value="">----</option>
+                                            <option value="10">待分配</option>
+                                            <option value="20">未分配</option>
+                                            <option value="30">已分配</option>
+                                            <option value="40">已确定</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                 <div class="col-sm-6">
@@ -54,21 +68,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <select class="chosen-select form-control" data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus">
-                                            <option value="">----</option>
-                                            <option value="10">待审核</option>
-                                            <option value="20">已审核</option>
-                                            <option value="30">执行中</option>
-                                            <option value="40">已完成</option>
-                                            <option value="50">已取消</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
                                 <div class="col-sm-6">
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right"></label>
+                                <label class="control-label col-sm-1 no-padding-right" for="name"></label>
                                 <div class="col-sm-6">
                                     <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
                                         筛选
@@ -114,41 +114,102 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="page-header">
                     <p>
                         订单列表
                     </p>
                 </div>
-
-                <!-- div.table-responsive -->
                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                        <thead>
-                        <tr role="row">
-                            <th>序号</th>
-                            <th>订单操作</th>
-                            <th>订单编号</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
-                                <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
-                                订单日期
-                            </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方姓名</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">仓库名称</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
+                        <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                            <thead>
+                            <tr role="row">
+                                <th>序号</th>
+                                <#--<th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">-->
+                                    <#--<label class="pos-rel">-->
+                                        <#--<input type="checkbox" class="ace">-->
+                                        <#--<span class="lbl"></span>-->
+                                    <#--</label>-->
+                                <#--</th>-->
 
-                        </thead>
-                        <tbody id="dataTbody"></tbody>
-                    </table>
-                    <div class="row">
-                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;"></div>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
+                                    <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
+                                    订单日期
+                                </th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方姓名</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">仓库名称</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
+
+                            </thead>
+                            <tbody id="dataTbody">
+                            <#--订单列表数据-->
+                            <#list orderList! as order>
+                            <tr role="row" class="odd">
+                                <td class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace">
+                                        <span class="lbl"></span>
+                                    </label>
+
+                                </td>
+
+                                <td>
+                                    <a href="javascript:orderDetail('${(order.orderCode)!""}')">${(order.orderCode)!""}</a>
+                                </td>
+                                <td>${order.custOrderCode!"null"}</td>
+                                <td class="hidden-480">${((order.orderTime)?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+                                <td>
+                                    <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
+                                    <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>
+                                </td>
+                                <td class="hidden-480">
+                                    <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '601'>干线</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '610'>销售出库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '611'>调拨出库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '612'>报损出库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '613'>其他出库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '620'>采购入库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '621'>调拨入库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '622'>退货入库</#if></#if>
+                                    <#if order.businessType ??><#if order.businessType == '623'>加工入库</#if></#if>
+                                </td>
+                                <td class="hidden-480">
+
+                                    <#if order.orderStatus ??><#if order.orderStatus == '10'><span class="label label-sm label-yellow">待审核</span></#if></#if>
+                                    <#if order.orderStatus ??><#if order.orderStatus == '20'><span class="label label-sm label-warning">已审核</span></#if></#if>
+                                    <#if order.orderStatus ??><#if order.orderStatus == '30'><span class="label label-sm label-info">执行中</span></#if></#if>
+                                    <#if order.orderStatus ??><#if order.orderStatus == '40'><span class="label label-sm label-success">已完成</span></#if></#if>
+                                    <#if order.orderStatus ??><#if order.orderStatus == '50'><span class="label label-sm label-default">已取消</span></#if></#if>
+
+                                </td>
+                                <td class="hidden-480">
+                                ${order.consigneeName!"null"}
+                                </td>
+                                <td class="hidden-480">
+                                ${order.warehouseName!"null"}
+                                </td>
+                                <td class="hidden-480">
+                                ${order.notes!"null"}
+                                </td>
+                                <td class="hidden-480">
+                                ${order.store!"null"}
+                                </td>
+
+                            </tr>
+                            </#list>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                        </div>
                     </div>
-                </div>
+
                 <!-- PAGE CONTENT ENDS -->
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -158,13 +219,14 @@
 
 </div><!-- /.main-container -->
 
-<link rel="stylesheet" href="../components/chosen/chosen.css" />
-<script src="../components/chosen/chosen.jquery.js"></script>
 
 
 
 <#include "common/include.ftl">
 <script type="text/javascript">
+    $(function () {
+
+    });
     var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
         $(document).ready(main);
@@ -198,9 +260,8 @@
         $("#doSearch").click(function () {
             queryData(1);
         });
+
     }
-
-
 
     //页面数据初始化
     function initPageData(){
@@ -224,9 +285,10 @@
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-
     function queryData(pageNum) {
+
         var param = {};
+
         param.pageNum = pageNum;
         param.pageSize = 10;
         var orderTimePre = $dp.$('orderTimePre').value;
@@ -238,6 +300,7 @@
         param.orderStatus = $("#orderStatus").val();
         param.orderType = $("#orderType").val();
         param.businessType = $("#businessType").val();
+        debugger;
         CommonClient.post(sys.rootPath + "/ofc/queryOrderPageByCondition", param, function(result) {
 
             if (result == undefined || result == null) {
@@ -280,7 +343,6 @@
 
             htmlText +="<tr role=\"row\" class=\"odd\">"
                     +"<td>"+[i+1]+"</td>"
-                    + "<td class=\"center\">" + getOperatorByStatus(order,i) + "</td>"
                     +"<td>"
                     +"<a onclick=\"orderDetail('" + order.orderCode+ "')\">"+StringUtil.nullToEmpty(order.orderCode)+"</a>"
                     +"</td>"
@@ -351,7 +413,7 @@
         return value;
 
     }
-    
+
     function getOperatorByStatus(order,index) {
         var value = "";
 
@@ -372,41 +434,82 @@
     }
 
 
-    function editOrder(orderCode) {
-        /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
-        xescm.common.loadPage(url);
-    }
-
-    function deleteOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderDelete",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要删除此订单?",function () {
-            xescm.common.loadPage("/ofc/orderManage");
-        });
-    }
-    function orderDetail(orderCode) {
-        var followTag = "orderCode";
-        var url = "/ofc/orderDetails/" + orderCode + "/" + followTag;
-        xescm.common.loadPage(url);
-    }
-
-    function reviewOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},"您确定要审核此订单?",function () {
-            debugger;
-            xescm.common.loadPage("/ofc/orderManage");
-        });
-    }
-    function reReviewOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},"您确定要反审核此订单?",function () {
-            xescm.common.loadPage("/ofc/orderManage");
-        });
-    }
-    function cancelOrder(ordercode,orderStatus) {
-        xescm.common.submit("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要取消此订单?",function () {
-            xescm.common.loadPage("/ofc/orderManage");
-        });
-    }
-
 
 </script>
+<script type="text/javascript">
+    // 查询
+    $("#screenOrderFormBtn").click(function () {
+        debugger;
+        var jsonStr={};
+        var orderTimePre = $dp.$('orderTimePre').value;
+        console.log(orderTimePre);
+        jsonStr.orderTimePre=orderTimePre;
+        var orderTimeSuf = $dp.$('orderTimeSuf').value;
+        console.log(orderTimeSuf);
+        jsonStr.orderTimeSuf=orderTimeSuf;
+        jsonStr.orderCode=$("#orderCode").val();
+        jsonStr.custOrderCode=$("#custOrderCode").val();
+        jsonStr.orderStatus=$("#orderStatus").val();
+        jsonStr.orderType=$("#orderType").val();
+        jsonStr.businessType=$("#businessType").val();
+        var tag = "screen";
+        var orderScreenConditionJSON = JSON.stringify(jsonStr);
+        var currPage = "1";
+        var pageSize = "10";
+        var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
+        xescm.common.loadPage(url);
+    });
+    var time = 1;
+    $('#pageLimit').bootstrapPaginator({
+        currentPage: ${currPage!"1"},//当前页码
+        totalPages: ${totalPage!"1"}, //总页数
+        size:"normal",
+        bootstrapMajorVersion: 3,
+        alignment:"right",
+        numberOfPages:10,//每页显示多少
+        itemTexts: function (type, page, current) {
+            switch (type) {
+                case "first":
+                    return "首页";
+                case "prev":
+                    return "上一页";
+                case "next":
+                    return "下一页";
+                case "last":
+                    return "末页";
+                case "page":
+                    return page;
+            }
+        },shouldShowPage:function(type,page,current){
+            if(page == 1 && time == 1){
+                return false;
+            }else if(current == 1){
+                return true;
+            }else{
+                return true;
+            }
+        },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
+            var jsonStr={};
+            var orderTimePre = $dp.$('orderTimePre').value;
+            jsonStr.orderTimePre=orderTimePre;
+            var orderTimeSuf = $dp.$('orderTimeSuf').value;
+            jsonStr.orderTimeSuf=orderTimeSuf;
+            jsonStr.orderCode=$("#orderCode").val();
+            jsonStr.custOrderCode=$("#custOrderCode").val();
+            jsonStr.orderStatus=$("#orderStatus").val();
+            jsonStr.orderType=$("#orderType").val();
+            jsonStr.businessType=$("#businessType").val();
+            var tag = "screen";
+            var orderScreenConditionJSON = JSON.stringify(jsonStr);
+            var currPage = page;
+            var pageNum = "10";
+            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
+            xescm.common.loadPage(url);
+
+        }
+    });
+</script>
+<link rel="stylesheet" href="../components/chosen/chosen.css" />
+<script src="../components/chosen/chosen.jquery.js"></script>
 
 </body>

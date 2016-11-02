@@ -1,11 +1,9 @@
 package com.xescm.ofc.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "ofc_distribution_basic_info")
 public class OfcDistributionBasicInfo {
@@ -73,16 +71,12 @@ public class OfcDistributionBasicInfo {
     /**
      * 取货时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "pickup_time")
     private Date pickupTime;
 
     /**
      * 期望送货时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "expected_arrived_time")
     private Date expectedArrivedTime;
 
@@ -129,10 +123,26 @@ public class OfcDistributionBasicInfo {
     private String orderCode;
 
     /**
+     * 车牌号
+     */
+    @Column(name = "plate_number")
+    private String plateNumber;
+
+    /**
+     * 司机姓名
+     */
+    @Column(name = "driver_name")
+    private String driverName;
+
+    /**
+     * 联系电话
+     */
+    @Column(name = "contact_number")
+    private String contactNumber;
+
+    /**
      * 创建时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "creation_time")
     private Date creationTime;
 
@@ -149,8 +159,6 @@ public class OfcDistributionBasicInfo {
     /**
      * 操作时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
 
@@ -512,6 +520,60 @@ public class OfcDistributionBasicInfo {
      */
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
+    }
+
+    /**
+     * 获取车牌号
+     *
+     * @return plate_number - 车牌号
+     */
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    /**
+     * 设置车牌号
+     *
+     * @param plateNumber 车牌号
+     */
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
+    /**
+     * 获取司机姓名
+     *
+     * @return driver_name - 司机姓名
+     */
+    public String getDriverName() {
+        return driverName;
+    }
+
+    /**
+     * 设置司机姓名
+     *
+     * @param driverName 司机姓名
+     */
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
+    /**
+     * 获取联系电话
+     *
+     * @return contact_number - 联系电话
+     */
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    /**
+     * 设置联系电话
+     *
+     * @param contactNumber 联系电话
+     */
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     /**
