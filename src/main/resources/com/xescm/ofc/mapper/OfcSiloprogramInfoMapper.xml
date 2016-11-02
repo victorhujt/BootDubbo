@@ -50,4 +50,20 @@
     <result column="void_personnel" property="voidPersonnel" jdbcType="VARCHAR" />
     <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <!--非作废仓储计划单列表查询-->
+  <select id="ofcSiloprogramInfoScreenList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    osp.*
+    FROM
+    ofc_siloprogram_info osp
+    LEFT JOIN ofc_silopro_status oss ON osp.plan_code = oss.plan_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        osp.order_code =#{orderCode}
+      </if>
+      AND oss.planned_single_state !='50'
+    </where>
+  </select>
+
 </mapper>

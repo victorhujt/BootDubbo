@@ -42,6 +42,12 @@ public final class OrderConstEnum {
     public static final String YIFENPEI="30";   //已分配
     public static final String YIQUEDING="40";  //已确定
 
+    public static final String ZIYUANFENPEIZ="10";  //资源分配中
+    public static final String YITUISONG="20";  //已推送
+    public static final String RENWUZHONG="30";   //任务中
+    public static final String RENWUWANCH="40";  //任务完成
+    public static final String YIZUOFEI="50";  //已作废
+
     public OrderConstEnum() {
     }
 }

@@ -33,9 +33,10 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         if(!PubUtils.trimAndNullAsEmpty(orderCode).equals("")){
             //List<OfcTransplanInfo> ofcTransplanInfoList=new ArrayList<OfcTransplanInfo>();
             Map<String,String> mapperMap = new HashMap<>();
-            OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-            ofcTransplanInfo.setOrderCode(orderCode);
-            return ofcTransplanInfoMapper.select(ofcTransplanInfo);
+            mapperMap.put("orderCode",orderCode);
+            /*OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+            ofcTransplanInfo.setOrderCode(orderCode);*/
+            return ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
         }else {
             throw new BusinessException();
         }

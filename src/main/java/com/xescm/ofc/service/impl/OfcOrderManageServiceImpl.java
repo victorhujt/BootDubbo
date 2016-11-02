@@ -82,21 +82,40 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.ALREADYEXAMINE)&&reviewTag.equals("rereview")){
                 List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
-                Iterator<OfcTransplanInfo> iter = ofcTransplanInfoList.iterator();
-                while(iter.hasNext())
-                {
-                    //筛选非作废计划单
-                    /*ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
-                    OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                    BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
-                    BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
-                    ofcPlannedDetailService.save(ofcPlannedDetail);
-                    logger.debug("计划单明细保存成功");*/
+                for(int i=0;i<ofcTransplanInfoList.size();i++){
+                    OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoList.get(i);
+                    ofcTransplanInfo.setVoidPersonnel("001");
+                    ofcTransplanInfo.setVoidTime(new Date());
+                    OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+                    ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                    /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                    ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
+                    ofcTransplanStatus.setPlannedSingleState("50");
+                    //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                    //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                    ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+                    ofcTransplanInfoService.update(ofcTransplanInfo);
                 }
-                //ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
-                //ofcOrderStatus.setStatusDesc("反审核");
-               // ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                       // +" "+"订单反审核完成");
+                List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
+                for(int i=0;i<ofcSiloprogramInfoList.size();i++){
+                    OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
+                    ofcSiloprogramInfo.setVoidPersonnel("001");
+                    ofcSiloprogramInfo.setVoidTime(new Date());
+                    OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
+                    ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+                    //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                    //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                    ofcSiloproStatus.setPlannedSingleState("50");
+                    //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                    //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                    ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+                    ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+                }
+                logger.debug("作废计划单完成");
+                ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
+                ofcOrderStatus.setStatusDesc("反审核");
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单反审核完成");
                 logger.debug("作废计划单");
             }else if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
                 ofcOrderStatus.setOrderStatus(OrderConstEnum.ALREADYEXAMINE);
@@ -192,6 +211,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanNewstatus,ofcTransplanInfo);
+            ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.ZIYUANFENPEIZ);
+            //ofcTransplanNewstatus.setTransportSingleLatestStatus(ofcTransplanStatus.getPlannedSingleState());
+            //ofcTransplanNewstatus.setTransportSingleUpdateTime(ofcTransplanInfo.getCreationTime());
+            ofcTraplanSourceStatus.setResourceAllocationStatus(OrderConstEnum.DAIFENPEI);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             while(iter.hasNext())
             {
@@ -243,7 +266,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcSiloprogramInfo);
             BeanUtils.copyProperties(ofcSiloproStatus,ofcSiloprogramInfo);
             BeanUtils.copyProperties(ofcSiloproNewstatus,ofcSiloprogramInfo);
-
+            ofcSiloproStatus.setPlannedSingleState(OrderConstEnum.ZIYUANFENPEIZ);
+            //ofcSiloproNewstatus.setJobNewStatus(ofcSiloproStatus.getPlannedSingleState());
+            //ofcSiloproNewstatus.setJobStatusUpdateTime(ofcSiloprogramInfo.getCreationTime());
+            ofcSiloproSourceStatus.setResourceAllocationStatus(OrderConstEnum.YIQUEDING);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             while(iter.hasNext())
             {

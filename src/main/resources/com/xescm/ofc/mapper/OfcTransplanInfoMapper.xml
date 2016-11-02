@@ -57,11 +57,12 @@
     otp.*
     FROM
     ofc_transplan_info otp
-    LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
+    LEFT JOIN ofc_transplan_status ots ON otp.plan_code = ots.plan_code
     <where>
       <if test="orderCode!=null and orderCode!=''">
-        oos.order_code =#{orderCode}
+        otp.order_code =#{orderCode}
       </if>
+      AND ots.planned_single_state !='50'
     </where>
   </select>
 

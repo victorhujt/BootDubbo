@@ -368,6 +368,9 @@
         if (order.orderStatus == "20" || order.orderStatus == "30") {
             value = unApproveStatus + cancelStatus;
         }
+        if (order.orderStatus == "30") {
+            value = cancelStatus;
+        }
         return value;
     }
 
