@@ -328,8 +328,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public RmcWarehouse getWarehouseMessage(String warehouseCode) {
-        Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(warehouseCode);
+    public RmcWarehouse getWarehouseMessage(String warehouseId) {
+        RmcWarehouse rmcWarehouse = new RmcWarehouse();
+        rmcWarehouse.setId(warehouseId);
+        Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
         RmcWarehouse result = rmcWarehouseByid.getResult();
         if(null == result){
             throw new BusinessException("没有查到仓库的信息!");

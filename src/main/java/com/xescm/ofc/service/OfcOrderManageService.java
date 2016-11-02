@@ -13,5 +13,5 @@ public interface OfcOrderManageService {
     String orderCancel(String orderCode,String orderStatus);
     Map<String,Object> getContactMessage(String contactCompanyName, String contactName, String purpose);
     Map<String,Object> getSupportMessage(String suppulierName, String suppulierContactName);
-    RmcWarehouse getWarehouseMessage(String warehouseCode);
+    RmcWarehouse getWarehouseMessage(String warehouseId);
 }

@@ -748,8 +748,8 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
                                                                             <select id="warehouseName" name="warehouseName"  value="${(orderInfo.wareHouseName)!""}">
-                                                                            <#list warehouseListByCustCode! as warehouse>
-                                                                                <option value="${(warehouseListByCustCode.warehouseCode)!}">${(warehouseListByCustCode.warehouseName)!}</option>
+                                                                            <#list rmcWarehouseByCustCode! as warehouse>
+                                                                                <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!}</option>
                                                                             </#list>
                                                                             </select>
 

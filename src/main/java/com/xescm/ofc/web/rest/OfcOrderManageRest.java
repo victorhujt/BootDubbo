@@ -125,9 +125,7 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
-
         orderCode=orderCode.replace(",","");
-
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
         Map<String, Object> consignorMessage = null;
         Map<String, Object> consigneeMessage = null;

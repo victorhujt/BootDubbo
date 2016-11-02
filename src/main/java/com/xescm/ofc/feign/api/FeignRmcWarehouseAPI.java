@@ -12,7 +12,7 @@ public interface FeignRmcWarehouseAPI {
 
     @RequestLine("POST /api/rmc/warehouse/queryRmcWarehouseById")
     @Headers("Content-Type: application/json")
-    public Wrapper<RmcWarehouse> queryRmcWarehouseById(String id);
+    public Wrapper<RmcWarehouse> queryRmcWarehouseById(RmcWarehouse warehouse);
 
 
 }

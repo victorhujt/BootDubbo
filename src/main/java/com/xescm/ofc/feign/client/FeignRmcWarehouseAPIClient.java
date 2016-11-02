@@ -49,14 +49,14 @@ public class FeignRmcWarehouseAPIClient {
         }
         return rmcWarehouseByid;
     }*/
-    public Wrapper<RmcWarehouse> queryByWarehouseCode(String id){
-        logger.debug("==>根据仓库ID获取仓库信息 id={}", id);
-        if(null == id){
+    public Wrapper<RmcWarehouse> queryByWarehouseCode(RmcWarehouse warehouse){
+        logger.debug("==>根据仓库ID获取仓库信息 warehouse={}", warehouse);
+        if(null == warehouse){
             throw new BusinessException("参数为空");
         }
         Wrapper<RmcWarehouse> rmcWarehouseByid = null;
         try {
-            rmcWarehouseByid = getRmcApi().queryRmcWarehouseById(id);
+            rmcWarehouseByid = getRmcApi().queryRmcWarehouseById(warehouse);
         }catch (Exception ex){
             throw new BusinessException(ex.getMessage());
         }

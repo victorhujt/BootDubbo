@@ -1,6 +1,12 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,14 +32,19 @@ public class OfcJumpontroller extends BaseController{
 
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Autowired
+    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
 
     @RequestMapping(value="/ofc/orderPlace")
-    public ModelAndView index(Model model,Map<String,Object> map ,String custCode, HttpServletRequest request, HttpServletResponse response){
-        logger.debug("==>订单中心我要下单客户编码custCode custCode={}", custCode);
-        /*List<RmcWarehouse> rmcWarehouseByCustCode = null;
+    public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
+        List<RmcWarehouse> rmcWarehouseByCustCode = null;
         try{
-            custCode = "2";
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custCode);
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -41,7 +54,7 @@ public class OfcJumpontroller extends BaseController{
             ex.printStackTrace();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
-        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);*/
+        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
         return new ModelAndView("order_place");
 
     }
