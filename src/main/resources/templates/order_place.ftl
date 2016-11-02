@@ -426,7 +426,7 @@
                                             <!-- #section:elements.tab.option -->
                                             <div class="tabbable" style="width:1000px;" >
                                                 <ul class="nav nav-tabs" id="myTab4">
-                                                   <li class="active">
+                                                    <li class="active">
                                                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                     </li>
 
@@ -437,7 +437,6 @@
                                                     <li class="storeLi" style="display:none">
                                                         <a data-toggle="tab" href="#dropdown14" aria-expanded="false">仓配信息</a>
                                                     </li>
-
                                                 </ul>
 
                                                 <div class="tab-content">

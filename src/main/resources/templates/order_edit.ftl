@@ -139,7 +139,7 @@
                         <div class="col-sm-3">
                             <div class="clearfix">
                                 <input id="consignorPhoneNumber2" name="phone" type="text">
-                                <input id="purpose2" name="purpose" type="hidden" value="2">
+                                <#--<input id="purpose2" name="purpose" type="hidden" value="2">-->
                             </div>
                         </div>
                     </div>
@@ -429,7 +429,7 @@
                                         <div class="col-sm-6">
                                             <!-- #section:elements.tab.option -->
                                             <div class="tabbable" style="width: 1000px;" >
-                                                <ul class="nav nav-tabs id="myTab4">
+                                                <ul class="nav nav-tabs" id="myTab4">
                                                     <li class="active">
                                                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
                                                     </li>
@@ -940,9 +940,19 @@
             },"json");
         });
 
-        $("#contactSelectFormBtn2").click(function () {
+        $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consignorSelConditionForm").serialize(), function(data) {
+            var cscContantAndCompanyDto = {};
+            var cscContact = {};
+            var cscContactCompany = {};
+            cscContactCompany.contactCompanyName = $("#consignorName2").value;
+            cscContact.purpose = "2";
+            cscContact.contactName = $("#consignorPerson2").value;
+            cscContact.phone = $("#consignorPhoneNumber2").value;
+            cscContantAndCompanyDto.cscContact = cscContact;
+            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var param = JSON.stringify(cscContantAndCompanyDto);
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -962,8 +972,18 @@
             },"json");
         });
 
-        $("#contactSelectFormBtn1").click(function () {
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", $("#consigneeSelConditionForm").serialize(), function(data) {
+        $("#consigneeSelectFormBtn").click(function () {
+            var cscContantAndCompanyDto = {};
+            var cscContact = {};
+            var cscContactCompany = {};
+            cscContactCompany.contactCompanyName = $("#consignorName2").value;
+            cscContact.purpose = "1";
+            cscContact.contactName = $("#consignorPerson2").value;
+            cscContact.phone = $("#consignorPhoneNumber2").value;
+            cscContantAndCompanyDto.cscContact = cscContact;
+            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var param = JSON.stringify(cscContantAndCompanyDto);
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1228,6 +1248,20 @@
             $("#businessTypeDiv").hide();
             $('.tranfr').show();
             $('.storeLi').hide();
+            $('#myTab4').find('li').each(function () {
+                if($(this).index()=='0'){
+                    $(this).addClass("active");
+                }
+                if($(this).index()=='1'){
+                    $(this).removeClass("active");
+                }
+                if($(this).index()=='2'){
+                    $(this).removeClass("active");
+                }
+            })
+            $("#home4").addClass("active");
+            $("#profile4").removeClass("active");
+            $("#dropdown14").removeClass("active");
         }
         if($("#orderType").val()== '61'){
             $("#provideTransportDiv").show();
@@ -1239,6 +1273,21 @@
             }else{
                 $('.tranfr').hide();
             }
+            $('#myTab4').find('li').each(function () {
+                if($(this).index()=='0'){
+
+                    $(this).addClass("active");
+                }
+                if($(this).index()=='1'){
+                    $(this).removeClass("active");
+                }
+                if($(this).index()=='2'){
+                    $(this).removeClass("active");
+                }
+            })
+            $("#home4").addClass("active");
+            $("#profile4").removeClass("active");
+            $("#dropdown14").removeClass("active");
         }
 
         $("#orderType").change(function () {
