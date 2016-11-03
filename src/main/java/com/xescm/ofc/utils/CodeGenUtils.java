@@ -1,4 +1,3 @@
-/*
 package com.xescm.ofc.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +9,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-*/
 /**
  * Created by Ptrk on 2015/11/25.
- *//*
-
+ */
 @Component
 public class CodeGenUtils {
 	public static final String OFC_ENV = "OFC";
 	@Autowired
 	private StringRedisTemplate rt;
 
-
-	*/
-/**
+	public String getNewWaterCode(String prefix,int prefisLen){
+		return getNewCode(OFC_ENV,prefix,prefisLen);
+	}
+	/**
 	 * 从Redis上获取最新的编码
 	 * @param envLock 环境前缀(如中视购物=ZSGW)
 	 * @param prefix 单号前缀（订单=OD）
 	 * @param prefixLen 流水号长度
 	 * @return
-	 *//*
-
+	 */
 	public String getNewCode(String envLock, String prefix, int prefixLen){
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		String dateStr = df.format(new Date());
@@ -56,4 +53,3 @@ public class CodeGenUtils {
 	}
 
 }
-*/

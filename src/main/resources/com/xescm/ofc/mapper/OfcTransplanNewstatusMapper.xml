@@ -10,4 +10,26 @@
     <result column="transport_single_latest_status" property="transportSingleLatestStatus" jdbcType="VARCHAR" />
     <result column="transport_single_update_time" property="transportSingleUpdateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcTransplanNewstatus" >
+    <!--
+      根据计划单号进行修改
+    -->
+    update ofc_transplan_newstatus
+    <set >
+      <if test="planCode != null" >
+        plan_code = #{planCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        order_code = #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="transportSingleLatestStatus != null" >
+        transport_single_latest_status = #{transportSingleLatestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="transportSingleUpdateTime != null" >
+        transport_single_update_time = #{transportSingleUpdateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where plan_code = #{planCode,jdbcType=VARCHAR}
+  </update>
 </mapper>

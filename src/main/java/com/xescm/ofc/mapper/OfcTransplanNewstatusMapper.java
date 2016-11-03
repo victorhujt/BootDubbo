@@ -4,4 +4,5 @@ import com.xescm.ofc.domain.OfcTransplanNewstatus;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface OfcTransplanNewstatusMapper extends Mapper<OfcTransplanNewstatus> {
+    int updateByPlanCode(Object key);
 }

@@ -20,7 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.xescm.ofc.utils.CodeGenUtils;
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -70,6 +71,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcSiloproSourceStatusService ofcSiloproSourceStatusService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
+    @Resource
+    private CodeGenUtils codeGenUtils;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag) {
@@ -81,15 +84,50 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.ALREADYEXAMINE)&&reviewTag.equals("rereview")){
+                List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
+                for(int i=0;i<ofcTransplanInfoList.size();i++){
+                    OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoList.get(i);
+                    ofcTransplanInfo.setVoidPersonnel("001");
+                    ofcTransplanInfo.setVoidTime(new Date());
+                    OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+                    ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                    /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                    ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
+                    ofcTransplanStatus.setPlannedSingleState("50");
+                    //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                    //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                    ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+                    ofcTransplanInfoService.update(ofcTransplanInfo);
+                }
+                List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
+                for(int i=0;i<ofcSiloprogramInfoList.size();i++){
+                    OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
+                    ofcSiloprogramInfo.setVoidPersonnel("001");
+                    ofcSiloprogramInfo.setVoidTime(new Date());
+                    OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
+                    ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+                    //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                    //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                    ofcSiloproStatus.setPlannedSingleState("50");
+                    //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                    //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                    ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+                    ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+                }
+                logger.debug("作废计划单完成");
                 ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
                 ofcOrderStatus.setStatusDesc("反审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单反审核完成");
+                logger.debug("作废计划单");
             }else if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
                 ofcOrderStatus.setOrderStatus(OrderConstEnum.ALREADYEXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
+                ofcOrderStatus.setOperator("001");
+                ofcOrderStatus.setLastedOperTime(new Date());
+
                 OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
                 List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
                 OfcDistributionBasicInfo ofcDistributionBasicInfo=ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
@@ -132,6 +170,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else {
                         return String.valueOf(Wrapper.ERROR_CODE);
                     }
+                    ofcOrderStatusService.save(ofcOrderStatus);
+                    ofcOrderStatus.setOrderStatus(OrderConstEnum.IMPLEMENTATIONIN);
+                    ofcOrderStatus.setStatusDesc("执行中");
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            +" "+"订单审核完成");
                 }else {
                     return String.valueOf(Wrapper.ERROR_CODE);
                 }
@@ -148,6 +191,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    /**
+     * 创建运输计划单
+     * @param ofcTransplanInfo
+     * @param ofcFundamentalInformation
+     * @param goodsDetailsList
+     * @param ofcDistributionBasicInfo
+     */
     public void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo){
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
@@ -156,7 +206,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
-            ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
+            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
             ofcTransplanInfo.setShippinCustomerCode(ofcFundamentalInformation.getCustCode());
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel("001");
@@ -164,6 +214,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanNewstatus,ofcTransplanInfo);
+            ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.ZIYUANFENPEIZ);
+            //ofcTransplanNewstatus.setTransportSingleLatestStatus(ofcTransplanStatus.getPlannedSingleState());
+            //ofcTransplanNewstatus.setTransportSingleUpdateTime(ofcTransplanInfo.getCreationTime());
+            ofcTraplanSourceStatus.setResourceAllocationStatus(OrderConstEnum.DAIFENPEI);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             while(iter.hasNext())
             {
@@ -191,6 +245,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
     }
 
+    /**
+     * 创建仓储计划单
+     * @param ofcSiloprogramInfo
+     * @param ofcFundamentalInformation
+     * @param goodsDetailsList
+     * @param ofcWarehouseInformation
+     * @param ofcFinanceInformation
+     */
     public void siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation){
         OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
         OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
@@ -200,14 +262,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
-            ofcSiloprogramInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","WP"));
+            ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
             ofcSiloprogramInfo.setCreationTime(new Date());
             ofcSiloprogramInfo.setCreatePersonnel("001");
             BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcWarehouseInformation);
             BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcSiloprogramInfo);
             BeanUtils.copyProperties(ofcSiloproStatus,ofcSiloprogramInfo);
             BeanUtils.copyProperties(ofcSiloproNewstatus,ofcSiloprogramInfo);
-
+            ofcSiloproStatus.setPlannedSingleState(OrderConstEnum.ZIYUANFENPEIZ);
+            //ofcSiloproNewstatus.setJobNewStatus(ofcSiloproStatus.getPlannedSingleState());
+            //ofcSiloproNewstatus.setJobStatusUpdateTime(ofcSiloprogramInfo.getCreationTime());
+            ofcSiloproSourceStatus.setResourceAllocationStatus(OrderConstEnum.YIQUEDING);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             while(iter.hasNext())
             {
@@ -234,6 +299,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    public void siloProCreate(String orderCode){
+
+    }
     @Override
     public String orderDelete(String orderCode,String orderStatus) {
         if(orderStatus.equals(OrderConstEnum.PENDINGAUDIT)){
@@ -356,6 +424,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("查询仓库信息错误!");
         }
         return result;
-    }*/
+    }
 
 }

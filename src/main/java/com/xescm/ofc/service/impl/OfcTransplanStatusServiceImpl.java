@@ -1,9 +1,9 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcTransplanNewstatus;
 import com.xescm.ofc.domain.OfcTransplanStatus;
-import com.xescm.ofc.service.OfcTransplanNewstatusService;
+import com.xescm.ofc.mapper.OfcTransplanStatusMapper;
 import com.xescm.ofc.service.OfcTransplanStatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,4 +11,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OfcTransplanStatusServiceImpl extends BaseService<OfcTransplanStatus> implements OfcTransplanStatusService {
+    @Autowired
+    private OfcTransplanStatusMapper ofcTransplanStatusMapper;
+
+    public int updateByPlanCode(Object key){
+        ofcTransplanStatusMapper.updateByPlanCode(key);
+        return 0;
+    }
 }

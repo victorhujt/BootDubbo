@@ -13,4 +13,35 @@
     <result column="task_start_time" property="taskStartTime" jdbcType="TIMESTAMP" />
     <result column="task_completion_time" property="taskCompletionTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcSiloproStatus" >
+    <!--
+      根据计划单号进行修改
+    -->
+    update ofc_silopro_status
+    <set >
+      <if test="planCode != null" >
+        plan_code = #{planCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        order_code = #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="plannedSingleState != null" >
+        planned_single_state = #{plannedSingleState,jdbcType=INTEGER},
+      </if>
+      <if test="plannedStartTime != null" >
+        planned_start_time = #{plannedStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="plannedCompletionTime != null" >
+        planned_completion_time = #{plannedCompletionTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStartTime != null" >
+        task_start_time = #{taskStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskCompletionTime != null" >
+        task_completion_time = #{taskCompletionTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where plan_code = #{planCode,jdbcType=VARCHAR}
+  </update>
 </mapper>
