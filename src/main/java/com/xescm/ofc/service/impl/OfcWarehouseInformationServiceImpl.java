@@ -50,31 +50,23 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
 
     @Override
-    public List<RmcWarehouse> getWarehouseListByCustCode(String custId) {
+    public List<RmcWarehouse> getWarehouseListByCustCode(String custCode) {
         try{
             CscWarehouse cscWarehouse = new CscWarehouse();
-            cscWarehouse.setCustomerId(custId);
+            cscWarehouse.setCustomerId(custCode);
             Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
-            if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
-                throw new BusinessException(cscWarehouseByCustomerId.getMessage());
-            }
             List<CscWarehouse> result = cscWarehouseByCustomerId.getResult();
             if(result.size() < 1){
                 return new ArrayList<>();
             }
             List<RmcWarehouse> warehouseList = new ArrayList<>();
             for(CscWarehouse cscWH : result){
-                RmcWarehouse rmcWarehouse = new RmcWarehouse();
-                rmcWarehouse.setId(cscWH.getWarehouseId());
-                Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
-                if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
-                    throw new BusinessException(rmcWarehouseByid.getMessage());
-                }
-                RmcWarehouse rmcWarehouseResult = rmcWarehouseByid.getResult();
-                if (null == rmcWarehouseResult) {
+                Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(cscWH.getWarehouseId());
+                RmcWarehouse rmcWarehouse = rmcWarehouseByid.getResult();
+                if (null == rmcWarehouse) {
                     continue;
                 }
-                warehouseList.add(rmcWarehouseResult);
+                warehouseList.add(rmcWarehouse);
             }
             if(warehouseList.size() < 1){
                 return new ArrayList<>();
