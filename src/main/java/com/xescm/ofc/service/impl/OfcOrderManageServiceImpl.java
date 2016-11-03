@@ -12,8 +12,9 @@ import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.client.*;
+import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -27,6 +28,8 @@ import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.xescm.ofc.enums.OrderConstEnum.*;
 
 /**
  * Created by ydx on 2016/10/12.
@@ -82,40 +85,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
         logger.debug(ofcOrderStatus.toString());
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.IMPLEMENTATIONIN))
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
-            if (ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.ALREADYEXAMINE)&&reviewTag.equals("rereview")){
-                List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
-                for(int i=0;i<ofcTransplanInfoList.size();i++){
-                    OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoList.get(i);
-                    ofcTransplanInfo.setVoidPersonnel("001");
-                    ofcTransplanInfo.setVoidTime(new Date());
-                    OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
-                    ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-                    /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-                    ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
-                    ofcTransplanStatus.setPlannedSingleState("50");
-                    //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
-                    //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
-                    ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-                    ofcTransplanInfoService.update(ofcTransplanInfo);
-                }
-                List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
-                for(int i=0;i<ofcSiloprogramInfoList.size();i++){
-                    OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
-                    ofcSiloprogramInfo.setVoidPersonnel("001");
-                    ofcSiloprogramInfo.setVoidTime(new Date());
-                    OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
-                    ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
-                    //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-                    //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-                    ofcSiloproStatus.setPlannedSingleState("50");
-                    //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
-                    //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
-                    ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
-                    ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
-                }
+            if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE)&&reviewTag.equals("rereview")){
+                planCancle(orderCode);
                 logger.debug("作废计划单完成");
                 ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
                 ofcOrderStatus.setStatusDesc("反审核");
@@ -123,7 +97,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         +" "+"订单反审核完成");
                 logger.debug("作废计划单");
             }else if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
-                ofcOrderStatus.setOrderStatus(OrderConstEnum.ALREADYEXAMINE);
+                ofcOrderStatus.setOrderStatus(ALREADYEXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
@@ -170,26 +144,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation);
                     }else {
-                        return String.valueOf(Wrapper.ERROR_CODE);
+                        throw new BusinessException("无法确定是否需要运输");
                     }
                     ofcOrderStatusService.save(ofcOrderStatus);
-                    ofcOrderStatus.setOrderStatus(OrderConstEnum.IMPLEMENTATIONIN);
+                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单审核完成");
                 }else {
-                    return String.valueOf(Wrapper.ERROR_CODE);
+                    throw new BusinessException("订单类型有误");
                 }
                 logger.debug("计划单创建成功");
             }else {
-                return String.valueOf(Wrapper.ERROR_CODE);
+                throw new BusinessException("缺少标志位");
             }
             ofcOrderStatus.setOperator("001");
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            return String.valueOf(Wrapper.ERROR_CODE);
+            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
         }
     }
 
@@ -301,8 +275,58 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
-    public void siloProCreate(String orderCode){
-
+    public void planCancle(String orderCode){
+        List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
+        for(int i=0;i<ofcTransplanInfoList.size();i++){
+            OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoList.get(i);
+            OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+            ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+            ofcTransplanStatus=ofcTransplanStatusService.selectOne(ofcTransplanStatus);
+            if(PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YIZUOFEI)){
+                throw new BusinessException("状态错误，该计划单已作废");
+            }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUZHONG)
+                    || PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUWANCH)){
+                throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
+            }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YITUISONG)){
+                throw new BusinessException("其是运输计划单，需调用【配送中心】运单取消接口");
+            }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")){
+                throw new BusinessException("状态有误");
+            }
+            ofcTransplanInfo.setVoidPersonnel("001");
+            ofcTransplanInfo.setVoidTime(new Date());
+                    /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                    ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
+            ofcTransplanStatus.setPlannedSingleState("50");
+            //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+            //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+            ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+            ofcTransplanInfoService.update(ofcTransplanInfo);
+        }
+        List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
+        for(int i=0;i<ofcSiloprogramInfoList.size();i++){
+            OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
+            OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
+            ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+            if(PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YIZUOFEI)){
+                throw new BusinessException("状态错误，该计划单已作废");
+            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUWANCH)){
+                throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
+            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
+                throw new BusinessException("为仓储计划单，则调用【仓储中心】运单取消接口");
+            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
+                throw new BusinessException("状态有误");
+            }
+            ofcSiloprogramInfo.setVoidPersonnel("001");
+            ofcSiloprogramInfo.setVoidTime(new Date());
+            //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+            //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+            ofcSiloproStatus.setPlannedSingleState("50");
+            //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+            //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+            ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+            ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+        }
     }
     @Override
     public String orderDelete(String orderCode,String orderStatus) {
@@ -313,18 +337,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcWarehouseInformationService.deleteByOrderCode(orderCode);
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            return String.valueOf(Wrapper.ERROR_CODE);
+            throw new BusinessException("计划单状态不在可删除范围内");
        }
     }
 
     @Override
     public String orderCancel(String orderCode,String orderStatus) {
-        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        ofcOrderStatus.setOrderCode(orderCode);
-        ofcOrderStatus.setOrderStatus(orderStatus);
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT))
-                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
-                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
+        if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.PENDINGAUDIT))
+                && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.HASBEENCOMPLETED))
+                && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.HASBEENCANCELED))){
+            planCancle(orderCode);
+            OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+            ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setOrderStatus(OrderConstEnum.HASBEENCANCELED);
             ofcOrderStatus.setStatusDesc("已取消");
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
@@ -337,7 +361,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            return String.valueOf(Wrapper.ERROR_CODE);
+            throw new BusinessException("计划单状态不在可取消范围内");
         }
     }
 

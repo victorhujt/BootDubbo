@@ -6,12 +6,92 @@
     <meta name="description" content="Static &amp; Dynamic Tables">
 
     <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
-
+    <style type="text/css">
+        #serviceProviderListDiv {
+            position:fixed;
+            left:185px;
+            top:85px;
+            width:1146px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+    </style>
 </head>
 
 <body class="no-skin">
 <!-- #section:basics/navbar.layout -->
+<div class="modal-content" id="serviceProviderListDiv" style="display: none;">
+    <div class="modal-header"><span id="serviceProviderDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">服务商列表</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form id="goodsSelConditionForm" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            <input type="checkbox" class="ace">
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">服务商名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">线路名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">发站</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">到站</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">发车频次</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">经停</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">容量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">温度带</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
 
+                    </thead>
+                    <tbody id="goodsSelectListTbody"></tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+</div>
 
 <!-- /section:basics/navbar.layout -->
 <div class="main-container ace-save-state" id="main-container">
@@ -32,7 +112,7 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">资源分配状态</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
-                                        <select class="chosen-select form-control" data-placeholder="请选择资源分配状态" id="orderStatus" name="orderStatus">
+                                        <select class="chosen-select form-control" data-placeholder="请选择资源分配状态" id="resourceAllocationStatus" name="resourceAllocationStatus">
                                             <option value="">----</option>
                                             <option value="10">待分配</option>
                                             <option value="20">未分配</option>
@@ -46,7 +126,7 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">客户名称</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
-                                        <input id="orderCode" name="orderCode" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
+                                        <input id="custName" name="custName" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +134,7 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单批次号</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
-                                        <input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
                             </div>
@@ -84,7 +164,10 @@
                         订单列表
                     </p>
                 </div>
+                <span style="cursor:pointer" id="serviceProviderDivBlock"><button class="btn btn-info btn-sm popover-info" id="doSearch" value="">分配资源</button></span>
+                <button class="btn btn-info btn-sm popover-info" id="doSearch" >资源确认</button>
                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+
                         <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                             <thead>
                             <tr role="row">
@@ -97,77 +180,24 @@
                                 <#--</th>-->
 
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">订单编号</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
-                                    <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
-                                    订单日期
-                                </th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方姓名</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">仓库名称</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">计划单编号</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单批次号</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">类型</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">资源分配状态</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商名称</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单日期</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">出发地</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">目的地</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">资源确认人员</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">资源确认时间</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商联系人</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商联系电话</th>
 
                             </thead>
                             <tbody id="dataTbody">
                             <#--订单列表数据-->
-                            <#list orderList! as order>
-                            <tr role="row" class="odd">
-                                <td class="center">
-                                    <label class="pos-rel">
-                                        <input type="checkbox" class="ace">
-                                        <span class="lbl"></span>
-                                    </label>
-
-                                </td>
-
-                                <td>
-                                    <a href="javascript:orderDetail('${(order.orderCode)!""}')">${(order.orderCode)!""}</a>
-                                </td>
-                                <td>${order.custOrderCode!"null"}</td>
-                                <td class="hidden-480">${((order.orderTime)?string("yyyy-MM-dd HH:mm:ss"))!}</td>
-                                <td>
-                                    <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
-                                    <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>
-                                </td>
-                                <td class="hidden-480">
-                                    <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '601'>干线</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '610'>销售出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '611'>调拨出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '612'>报损出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '613'>其他出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '620'>采购入库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '621'>调拨入库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '622'>退货入库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '623'>加工入库</#if></#if>
-                                </td>
-                                <td class="hidden-480">
-
-                                    <#if order.orderStatus ??><#if order.orderStatus == '10'><span class="label label-sm label-yellow">待审核</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '20'><span class="label label-sm label-warning">已审核</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '30'><span class="label label-sm label-info">执行中</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '40'><span class="label label-sm label-success">已完成</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '50'><span class="label label-sm label-default">已取消</span></#if></#if>
-
-                                </td>
-                                <td class="hidden-480">
-                                ${order.consigneeName!"null"}
-                                </td>
-                                <td class="hidden-480">
-                                ${order.warehouseName!"null"}
-                                </td>
-                                <td class="hidden-480">
-                                ${order.notes!"null"}
-                                </td>
-                                <td class="hidden-480">
-                                ${order.store!"null"}
-                                </td>
-
-                            </tr>
-                            </#list>
                             </tbody>
                         </table>
                         <div class="row">
@@ -246,6 +276,17 @@
             if(this.checked) $row.addClass(active_class);
             else $row.removeClass(active_class);
         });
+        $("#serviceProviderDivBlock").click(function(){
+
+            $("#serviceProviderListDiv").fadeIn("slow");//淡入淡出效果 显示div
+
+        });
+
+        $("#serviceProviderDivNoneTop").click(function(){
+
+            $("#serviceProviderListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
     }
 </script>
 <!-- inline scripts related to this page -->
@@ -260,13 +301,11 @@
         var orderTimeSuf = $dp.$('orderTimeSuf').value;
         param.orderTimePre = orderTimePre;
         param.orderTimeSuf = orderTimeSuf;
-        param.orderCode = $("#orderCode").val();
-        param.custOrderCode = $("#custOrderCode").val();
-        param.orderStatus = $("#orderStatus").val();
-        param.orderType = $("#orderType").val();
-        param.businessType = $("#businessType").val();
+        param.custName = $("#custName").val();
+        param.orderBatchNumber = $("#orderBatchNumber").val();
+        param.resourceAllocationStatus = $("#resourceAllocationStatus").val();
         debugger;
-        CommonClient.post(sys.rootPath + "/ofc/queryOrderPageByCondition", param, function(result) {
+        CommonClient.post(sys.rootPath + "/ofc/queryPlanPageByCondition", param, function(result) {
 
             if (result == undefined || result == null) {
                 alert("HTTP请求无数据返回！");
@@ -308,18 +347,21 @@
 
             htmlText +="<tr role=\"row\" class=\"odd\">"
                     +"<td>"+[i+1]+"</td>"
-                    +"<td>"
-                    +"<a onclick=\"orderDetail('" + order.orderCode+ "')\">"+StringUtil.nullToEmpty(order.orderCode)+"</a>"
-                    +"</td>"
-                    +"<td>"+StringUtil.nullToEmpty(order.custOrderCode)+"</td>"
+                    +"<td>"+StringUtil.nullToEmpty(order.orderCode)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.planCode)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.businessType)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.resourceAllocationStatus)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderTime)+"</td>"
-                    +"<td class=\"hidden-480\">"+getOrderType(order)+"</td>"
-                    +"<td class=\"hidden-480\">"+getBusiType(order)+"</td>"
-                    +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.consigneeName)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.warehouseName)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.notes)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.store)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.departureProvince)+StringUtil.nullToEmpty(order.departureCity)+StringUtil.nullToEmpty(order.departureDistrict)+StringUtil.nullToEmpty(order.departureTowns)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.destinationProvince)+StringUtil.nullToEmpty(order.destinationCity)+StringUtil.nullToEmpty(order.destinationDistrict)+StringUtil.nullToEmpty(order.destinationTown)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.quantity)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.weight)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.resourceConfirmation)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.resourceConfirmationTime)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderContact)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderContactPhone)+"</td>"
                     + "</tr>";
         }
         $("#dataTbody").html(htmlText);

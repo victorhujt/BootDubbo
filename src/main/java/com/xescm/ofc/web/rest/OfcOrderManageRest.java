@@ -115,8 +115,8 @@ public class OfcOrderManageRest extends BaseController{
         try {
             result = ofcOrderManageService.orderCancel(orderCode,orderStatus);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常:{},{}", ex.getMessage(), ex);
-            ex.printStackTrace();
+            logger.error("订单中心订单管理订单取消出现异常:{},{}", "", null);
+            //ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);

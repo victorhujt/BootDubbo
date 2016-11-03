@@ -87,4 +87,9 @@ public class OfcJumpontroller extends BaseController{
 
         return "index";
     }
+
+    @RequestMapping(value = "/ofc/planAllocation")
+    public String planAllocation(Model model){
+        return "plan_allocation";
+    }
 }

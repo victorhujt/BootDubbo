@@ -148,61 +148,7 @@
                             </thead>
                             <tbody id="dataTbody">
                             <#--订单列表数据-->
-                            <#list orderList! as order>
-                            <tr role="row" class="odd">
-                                <td class="center">
-                                    <label class="pos-rel">
-                                        <input type="checkbox" class="ace">
-                                        <span class="lbl"></span>
-                                    </label>
 
-                                </td>
-
-                                <td>
-                                    <a href="javascript:orderDetail('${(order.orderCode)!""}')">${(order.orderCode)!""}</a>
-                                </td>
-                                <td>${order.custOrderCode!"null"}</td>
-                                <td class="hidden-480">${((order.orderTime)?string("yyyy-MM-dd HH:mm:ss"))!}</td>
-                                <td>
-                                    <#if order.orderType ??><#if order.orderType == '60'>运输订单</#if></#if>
-                                    <#if order.orderType ??><#if order.orderType == '61'>仓配订单</#if></#if>
-                                </td>
-                                <td class="hidden-480">
-                                    <#if order.businessType ??><#if order.businessType == '600'>城配</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '601'>干线</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '610'>销售出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '611'>调拨出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '612'>报损出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '613'>其他出库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '620'>采购入库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '621'>调拨入库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '622'>退货入库</#if></#if>
-                                    <#if order.businessType ??><#if order.businessType == '623'>加工入库</#if></#if>
-                                </td>
-                                <td class="hidden-480">
-
-                                    <#if order.orderStatus ??><#if order.orderStatus == '10'><span class="label label-sm label-yellow">待审核</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '20'><span class="label label-sm label-warning">已审核</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '30'><span class="label label-sm label-info">执行中</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '40'><span class="label label-sm label-success">已完成</span></#if></#if>
-                                    <#if order.orderStatus ??><#if order.orderStatus == '50'><span class="label label-sm label-default">已取消</span></#if></#if>
-
-                                </td>
-                                <td class="hidden-480">
-                                ${order.consigneeName!"null"}
-                                </td>
-                                <td class="hidden-480">
-                                ${order.warehouseName!"null"}
-                                </td>
-                                <td class="hidden-480">
-                                ${order.notes!"null"}
-                                </td>
-                                <td class="hidden-480">
-                                ${order.store!"null"}
-                                </td>
-
-                            </tr>
-                            </#list>
                             </tbody>
                         </table>
                         <div class="row">
