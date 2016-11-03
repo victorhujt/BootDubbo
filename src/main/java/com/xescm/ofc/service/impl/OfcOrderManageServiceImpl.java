@@ -16,6 +16,7 @@ import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -446,6 +447,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("查询仓库信息错误!");
         }
         return result;
-    }
+    }*/
 
 }
