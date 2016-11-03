@@ -59,6 +59,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     public String orderEdit(Model model, @PathVariable String ofcOrderDTOJson, @PathVariable String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
         if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
             logger.debug(ofcOrderDTOJson);
             ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
@@ -71,27 +76,47 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
         }
         try {
-            String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
+            /*String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag,custId);*/
             if(tag.equals("manage")){
                 return "order_manage";
             }
             return "order_place";
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            logger.error("订单中心编辑出现异常:{},{}", ex.getMessage(), ex);
             return "order_place";
         }
     }
 
     @RequestMapping("/orderPlaceCon")
     @ResponseBody
-    public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr, String tag, HttpServletResponse response){
+    public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr,String cscContantAndCompanyDtoConsignorStr
+            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
+
         String resultMessage = null;
         try {
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
                 ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
             }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
+                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
+                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
+                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+            }
             OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             if(null == ofcOrderDTO.getOrderTime()){
                 ofcOrderDTO.setOrderTime(new Date());
             }
@@ -102,8 +127,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if (null == ofcOrderDTO.getUrgent()){
                 ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
             }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag);
-
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag,authResDtoByToken,custId
+                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
        }catch (BusinessException ex){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }

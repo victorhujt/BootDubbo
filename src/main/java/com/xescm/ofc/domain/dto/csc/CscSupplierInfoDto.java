@@ -142,6 +142,11 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
     private String selfCode;
 
     /**
+     * 自身供应商名称
+     */
+    private String selfName;
+
+    /**
      * 自身联系人电话
      */
     private String selfPhone;
@@ -375,6 +380,14 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
         this.contactId = contactId;
     }
 
+    public String getSelfName() {
+        return selfName;
+    }
+
+    public void setSelfName(String selfName) {
+        this.selfName = selfName;
+    }
+
     @Override
     public String toString() {
         return "CscSupplierInfoDto{" +
@@ -405,6 +418,7 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
                 ", address='" + address + '\'' +
                 ", completeAddress='" + completeAddress + '\'' +
                 ", selfCode='" + selfCode + '\'' +
+                ", selfName='" + selfName + '\'' +
                 ", selfPhone='" + selfPhone + '\'' +
                 '}';
     }

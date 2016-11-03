@@ -616,10 +616,7 @@
                                                                     </div>
 
                                                             </div>
-
-
                                                         </div>
-
                                                         <div class="page-header">
                                                             <h4>发货方信息</h4>
                                                         </div>
@@ -782,7 +779,6 @@
                                                                         <div class="col-sm-6">
                                                                             <div class="clearfix">
                                                                                 <select id="wareHouseName" name="wareHouseName"  value="${(orderInfo.wareHouseName)!""}">
-                                                                                    <option value="">----</option>
                                                                                     <option value="仓库1" <#if orderInfo.wareHouseName?? ><#if ((orderInfo.wareHouseName)== '0')>selected="selected"</#if></#if>>仓库1</option>
                                                                                     <option value="仓库2" <#if orderInfo.wareHouseName?? ><#if ((orderInfo.wareHouseName)== '1')>selected="selected"</#if></#if>>仓库2</option>
                                                                                 </select>

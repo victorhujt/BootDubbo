@@ -33,7 +33,7 @@ public class FeignCscSupplierAPIClient {
         return res;
     }
     public Wrapper<List<CscSupplierInfoDto>> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto){
-        logger.debug("==>查询货品 cscSupplierInfoDto={}", cscSupplierInfoDto);
+        logger.debug("==>查询供应商 cscSupplierInfoDto={}", cscSupplierInfoDto);
         if(null == cscSupplierInfoDto){
             throw new BusinessException("参数为空");
         }
@@ -41,14 +41,12 @@ public class FeignCscSupplierAPIClient {
         return wrapper;
     }
     public Wrapper<?> addSupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto){
-        logger.debug("==>查询货品 cscSupplierInfoDto={}", cscSupplierInfoDto);
+        logger.debug("==>添加供应商 cscSupplierInfoDto={}", cscSupplierInfoDto);
         if(null == cscSupplierInfoDto){
             throw new BusinessException("参数为空");
         }
         Wrapper<?> wrapper = getApi().addSupplierBySupplierCode(cscSupplierInfoDto);
         return wrapper;
-
     }
-
 
 }

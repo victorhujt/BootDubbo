@@ -16,7 +16,8 @@ public interface FeignCscSupplierAPI {
     @Headers("Content-Type: application/json")
     public Wrapper<List<CscSupplierInfoDto>> querySupplierByAttribute(CscSupplierInfoDto cscSupplierInfoDto);
 
-    @RequestLine("POST /api/csc/supplier/addSupplierBySupplierCode")
+    @RequestLine("POST /api/csc/supplier/addSupplierByCustomerId")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addSupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto);
+
 }
