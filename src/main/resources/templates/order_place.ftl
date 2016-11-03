@@ -89,7 +89,7 @@
                             <span class="lbl"></span>
                         </label>
                     </th>
-                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
@@ -1039,14 +1039,14 @@
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
                 var goodsList = "";
-                $.each(data,function (index,cscGoods) {
+                $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     goodsList =goodsList + "<td>"+(index+1)+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoods.goodsCode+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoods.goodsName+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoods.specification+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoods.unit+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
             },"json");

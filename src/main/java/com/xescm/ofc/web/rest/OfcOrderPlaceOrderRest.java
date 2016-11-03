@@ -6,6 +6,7 @@ import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -172,7 +173,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
             cscGoods.setCustomerId(custId);
-            Wrapper<List<CscGoods>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+            Wrapper<List<CscGoodsVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{},{}", ex.getMessage(), ex);
