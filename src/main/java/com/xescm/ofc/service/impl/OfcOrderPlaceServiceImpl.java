@@ -54,10 +54,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     public String placeOrder(OfcOrderDTO ofcOrderDTO,String tag,AuthResDto authResDtoByToken, String custId
                             ,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,CscSupplierInfoDto cscSupplierInfoDto) {
+
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
+        ofcFundamentalInformation.setCreationTime(new Date());
+        ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -72,8 +77,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
                     //"SO"+ PrimaryGenerater.getInstance()
                     //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
-                    ofcFundamentalInformation.setCustCode("001");
-                    ofcFundamentalInformation.setCustName("众品");
+                    ofcFundamentalInformation.setCustCode(custId);
+                    ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
                     ofcFundamentalInformation.setAbolishMark(OrderConstEnum.ORDERWASNOTABOLISHED);//未作废
                     if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                         if(null == ofcWarehouseInformation.getProvideTransport()){
@@ -91,7 +96,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ofcWarehouseInformation.setSupportCode("");
                             ofcWarehouseInformation.setSupportName("");
                         }
-                        ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+//                        ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+                        ofcWarehouseInformationService.save(ofcWarehouseInformation);
                         if("61".equals(businessTypeHead)){//如果是入库才有供应商信息
                             // saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId){
                             saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
@@ -110,13 +116,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }else{
                         throw new BusinessException("您选择的订单类型系统无法识别!");
                     }
-                    ofcFundamentalInformation.setCreationTime(new Date());
-                    ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
-                    ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
-                    ofcFundamentalInformation.setOperTime(new Date());
+
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单已创建");
-                    upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
+                    upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                 }else{
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");
@@ -169,11 +172,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }else{
                     throw new BusinessException("您的订单类型系统无法识别!");
                 }
-                ofcFundamentalInformation.setOperator("001");
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单已更新");
-                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation);
+                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 ofcFundamentalInformationService.update(ofcFundamentalInformation);
             }else {
                 throw new BusinessException("未知操作!系统无法识别!");
@@ -186,12 +189,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         return "您已成功下单!";
     }
 
-    public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation){
+    public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
-        ofcOrderStatus.setOperator("001");
+        ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 

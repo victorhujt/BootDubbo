@@ -17,6 +17,7 @@ import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -53,6 +54,8 @@ public class OfcOrderManageRest extends BaseController{
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
     @Autowired
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    @Autowired
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
 
 
     /**
@@ -137,21 +140,17 @@ public class OfcOrderManageRest extends BaseController{
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
         orderCode=orderCode.replace(",","");
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
-        /*Map<String, Object> consignorMessage = null;
-        Map<String, Object> consigneeMessage = null;
-        Map<String, Object> supportMessage = null;
-        RmcWarehouse warehouseMessage = null;*/
         CscContantAndCompanyVo consignorMessage = null;
         CscContantAndCompanyVo consigneeMessage = null;
         CscSupplierInfoDto supportMessage = null;
-        /*OfcWarehouseInformation warehouseMessage = null;*/
+        List<RmcWarehouse> rmcWarehouseByCustCode = null;
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),custId,OrderConstEnum.CONTACTPURPOSECONSIGNOR);
-            consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),custId, OrderConstEnum.CONTACTPURPOSECONSIGNEE);
-            supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),custId);
-            /*warehouseMessage = ofcOrderManageService.getWarehouseMessage(orderCode);*/
+            consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
+            consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+            supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),custId,authResDtoByToken);
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
         }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
         }catch (Exception ex) {
@@ -161,14 +160,10 @@ public class OfcOrderManageRest extends BaseController{
         if (ofcOrderDTO!=null){
             map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
             map.put("orderInfo", ofcOrderDTO);
-            /*map.put("consignorMessage",consignorMessage.get("consignorMessage"));
-            map.put("consigneeMessage", consigneeMessage.get("consigneeMessage"));
-            map.put("supportMessage",supportMessage.get("supportMessage"));
-            map.put("warehouseList",warehouseMessage);*/
             map.put("consignorMessage",consignorMessage);
             map.put("consigneeMessage", consigneeMessage);
             map.put("supportMessage",supportMessage);
-            /*map.put("orderWarehouseMessage",warehouseMessage);*/
+            map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
             return "/order_edit";
         }
         return "order_manage";
