@@ -2,9 +2,13 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -13,7 +17,9 @@ import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +54,8 @@ public class OfcOrderManageRest extends BaseController{
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
     @Autowired
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    @Autowired
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
 
 
     /**
@@ -124,31 +132,27 @@ public class OfcOrderManageRest extends BaseController{
     public String getOrderDetailByCode(Model model, @PathVariable String orderCode, @PathVariable String dtotag, Map<String,Object> map){
         logger.debug("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
-
         orderCode=orderCode.replace(",","");
-
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
-        Map<String, Object> consignorMessage = null;
-        Map<String, Object> consigneeMessage = null;
-        Map<String, Object> supportMessage = null;
-        RmcWarehouse warehouseMessage = null;
+        CscContantAndCompanyVo consignorMessage = null;
+        CscContantAndCompanyVo consigneeMessage = null;
+        CscSupplierInfoDto supportMessage = null;
+        List<RmcWarehouse> rmcWarehouseByCustCode = null;
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            /*consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNOR);
-            consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstEnum.CONTACTPURPOSECONSIGNEE);
-            supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName());
-            warehouseMessage = ofcOrderManageService.getWarehouseMessage(ofcOrderDTO.getWarehouseCode());*/
+            consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
+            consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+            supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),custId,authResDtoByToken);
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
         }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
-            /*consignorMessage = new HashMap<>();
-            consigneeMessage.put("consignorMessage",new CscContantAndCompanyDto());
-            consigneeMessage = new HashMap<>();
-            consigneeMessage.put("consignorMessage",new CscContantAndCompanyDto());
-            supportMessage = new HashMap<>();
-            supportMessage.put("supportMessage",new CscSupplierInfoDto());
-            warehouseMessage = new RmcWarehouse();*/
         }catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -156,14 +160,10 @@ public class OfcOrderManageRest extends BaseController{
         if (ofcOrderDTO!=null){
             map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
             map.put("orderInfo", ofcOrderDTO);
-            /*map.put("consignorMessage",consignorMessage.get("consignorMessage"));
-            map.put("consigneeMessage", consigneeMessage.get("consigneeMessage"));
-            map.put("supportMessage",supportMessage.get("supportMessage"));
-            map.put("warehouseList",warehouseMessage);*/
-            map.put("consignorMessage",new CscContantAndCompanyDto());
-            map.put("consigneeMessage", new CscContantAndCompanyDto());
-            map.put("supportMessage",new CscSupplierInfoDto());
-            map.put("warehouseList",new RmcWarehouse());
+            map.put("consignorMessage",consignorMessage);
+            map.put("consigneeMessage", consigneeMessage);
+            map.put("supportMessage",supportMessage);
+            map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
             return "/order_edit";
         }
         return "order_manage";
