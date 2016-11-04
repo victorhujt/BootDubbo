@@ -150,7 +150,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                            +" "+"订单审核完成");
+                            +" "+"订单开始执行");
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
@@ -204,6 +204,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
+                    && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
+                    if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
+                            .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+                        ofcTransplanInfo.setBusinessType("600");
+                    }else {
+                        ofcTransplanInfo.setBusinessType("601");
+                    }
             }
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
