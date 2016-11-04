@@ -58,8 +58,7 @@ public class OfcJumpontroller extends BaseController{
         return new ModelAndView("order_place");
 
     }
-
-    @RequestMapping(value = "/ofc/orderManage")
+     @RequestMapping(value = "/ofc/orderManage")
     public String orderManage(Model model){
         return "order_manage";
     }

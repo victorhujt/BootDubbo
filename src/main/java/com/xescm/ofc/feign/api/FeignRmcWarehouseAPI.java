@@ -8,7 +8,8 @@ import feign.RequestLine;
 /**
  * Created by 韦能 on 2016/10/18.
  */
-public interface FeignRmcWarehouseAPI {
+public interface FeignRmcWarehouseAPI {// /api/rmc/warehouse/queryRmcWarehouseById
+
 
     @RequestLine("POST /api/rmc/warehouse/queryRmcWarehouseById")
     @Headers("Content-Type: application/json")

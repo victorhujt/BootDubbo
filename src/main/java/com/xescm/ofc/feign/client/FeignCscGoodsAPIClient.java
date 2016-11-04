@@ -2,6 +2,7 @@ package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.csc.CscGoods;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscGoodsAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -33,12 +34,12 @@ public class FeignCscGoodsAPIClient {
     }
 
 
-    public Wrapper<List<CscGoods>> queryCscGoodsList(CscGoods cscGoods){
+    public Wrapper<List<CscGoodsVo>> queryCscGoodsList(CscGoods cscGoods){
         logger.debug("==>查询货品 cscGoods={}", cscGoods);
         if(null == cscGoods){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscGoods>> listWrapper = getApi().queryCscGoodsList(cscGoods);
+        Wrapper<List<CscGoodsVo>> listWrapper = getApi().queryCscGoodsList(cscGoods);
         return listWrapper;
     }
 }

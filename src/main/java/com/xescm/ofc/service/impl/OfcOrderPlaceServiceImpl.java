@@ -51,7 +51,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public String placeOrder(OfcOrderDTO ofcOrderDTO,String tag,AuthResDto authResDtoByToken, String custId
+    public String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,String tag,AuthResDto authResDtoByToken, String custId
                             ,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,CscSupplierInfoDto cscSupplierInfoDto) {
 
@@ -92,15 +92,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         // 更新仓配信息
                         ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                         String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
-                        if("62".equals(businessTypeHead)){//如果是入库才有供应商信息
-                            ofcWarehouseInformation.setSupportCode("");
-                            ofcWarehouseInformation.setSupportName("");
+                        if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
+                            saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+
                         }
 //                        ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
                         ofcWarehouseInformationService.save(ofcWarehouseInformation);
-                        if("61".equals(businessTypeHead)){//如果是入库才有供应商信息
+                        if("61".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿是出库
                             // saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId){
-                            saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                            ofcWarehouseInformation.setSupportCode("");
+                            ofcWarehouseInformation.setSupportName("");
                         }
 //                        saveSupportMessage(cscSupplierInfoDto,custId);//0000
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
@@ -120,6 +121,17 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单已创建");
                     upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
+                    //添加该订单的货品信息
+                    for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+                        String orderCode = ofcFundamentalInformation.getOrderCode();
+                        ofcGoodsDetails.setOrderCode(orderCode);
+                        ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                        ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+                        ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+                        ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+                        ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+                    }
+                    //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                 }else{
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");
