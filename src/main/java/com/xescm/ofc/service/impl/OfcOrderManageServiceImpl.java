@@ -153,7 +153,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                            +" "+"订单审核完成");
+                            +" "+"订单开始执行");
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
@@ -208,6 +208,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
             }
+            if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
+                    && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
+                    if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
+                            .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+                        ofcTransplanInfo.setBusinessType("600");
+                    }else {
+                        ofcTransplanInfo.setBusinessType("601");
+                    }
+            }
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
             ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -242,6 +251,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
+            ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.TRANSFEROUTOFTHELIBRARY)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.LOSSOFREPORTING)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.OTHEROUTOFTHELIBRARY)
+                    ){
+                //出库
+                ofcSiloprogramInfo.setBusinessType("出库");
+
+            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.PURCHASINGANDSTORAGE)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.ALLOCATESTORAGE)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.RETURNWAREHOUSING)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.PROCESSINGSTORAGE)){
+                //入库
+                ofcSiloprogramInfo.setBusinessType("入库");
+            }
             ofcSiloprogramInfo.setCreationTime(new Date());
             ofcSiloprogramInfo.setCreatePersonnel("001");
             BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcWarehouseInformation);
@@ -310,6 +335,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
             OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
             ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+            ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
             if(PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YIZUOFEI)){
                 throw new BusinessException("状态错误，该计划单已作废");
             }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)

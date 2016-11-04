@@ -14,6 +14,7 @@
     <meta charset="utf-8" />
     <title>鲜易供应链协同平台</title>
 
+    <meta name="description" content="Common form elements and layouts" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
     <!--[if !IE]> -->
@@ -26,6 +27,15 @@
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="../../assets/css/bootstrap.css" />
     <link rel="stylesheet" href="../../components/font-awesome/css/font-awesome.css" />
+
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="components/_mod/jquery-ui.custom/jquery-ui.custom.css" />
+    <link rel="stylesheet" href="components/chosen/chosen.css" />
+    <link rel="stylesheet" href="components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+    <link rel="stylesheet" href="components/bootstrap-timepicker/css/bootstrap-timepicker.css" />
+    <link rel="stylesheet" href="components/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" />
 
     <!-- text fonts -->
     <link rel="stylesheet" href="../../assets/css/ace-fonts.css" />
@@ -532,6 +542,26 @@
 </script>
 <script src="../../components/bootstrap/dist/js/bootstrap.js"></script>
 
+<!-- page specific plugin scripts -->
+
+<!--[if lte IE 8]>
+<script src="../../components/ExplorerCanvas/excanvas.js"></script>
+<![endif]-->
+<script src="../../components/_mod/jquery-ui.custom/jquery-ui.custom.js"></script>
+<script src="../../components/jqueryui-touch-punch/jquery.ui.touch-punch.js"></script>
+<script src="../../components/chosen/chosen.jquery.js"></script>
+<script src="../../components/fuelux/js/spinbox.js"></script>
+<script src="../../components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<script src="../../components/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+<script src="../../components/moment/moment.js"></script>
+<script src="../../components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script src="../../components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+<script src="../../components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
+<script src="../../components/jquery-knob/js/jquery.knob.js"></script>
+<script src="../../components/autosize/dist/autosize.js"></script>
+<script src="../../components/jquery-inputlimiter/jquery.inputlimiter.js"></script>
+<script src="../../components/jquery.maskedinput/dist/jquery.maskedinput.js"></script>
+<script src="../../components/_mod/bootstrap-tag/bootstrap-tag.js"></script>
 <!-- ace scripts -->
 <script src="../../assets/js/src/elements.scroller.js"></script>
 <script src="../../assets/js/src/elements.colorpicker.js"></script>
@@ -568,5 +598,16 @@
     sys.rootPath = "${request.getContextPath()}";
     sys.pageNum = 2
 </script>
+<link rel="stylesheet" href="assets/css/ace.onpage-help.css" />
+<link rel="stylesheet" href="docs/assets/js/themes/sunburst.css" />
+
+<script type="text/javascript"> ace.vars['base'] = '..'; </script>
+<script src="../../assets/js/src/elements.onpage-help.js"></script>
+<script src="../../assets/js/src/ace.onpage-help.js"></script>
+<script src="../../docs/assets/js/rainbow.js"></script>
+<script src="../../docs/assets/js/language/generic.js"></script>
+<script src="../../docs/assets/js/language/html.js"></script>
+<script src="../../docs/assets/js/language/css.js"></script>
+<script src="../../docs/assets/js/language/javascript.js"></script>
 </body>
 </html>
