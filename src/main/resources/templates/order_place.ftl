@@ -787,11 +787,14 @@
                                                             <br/>
                                                         </div>
 
+                                                    <div id="supportMessageShowDiv" class="" style="display: none">
                                                         <div class="page-header">
                                                             <h4>供应商信息</h4>
                                                         </div>
                                                         <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
-                                                        <div id="support" class="">
+
+
+
 
                                                             <div class="form-group" >
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
@@ -860,6 +863,11 @@
                                                             </div>
 
                                                         </div>
+
+
+
+
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1088,7 +1096,7 @@
                 console.log(cscContantAndCompanyDtoConsignorStr);
                 console.log(cscContantAndCompanyDtoConsigneeStr);
             }
-            if(orderType == '61' && businessType == '62'){ //仓储入库订单
+            if(orderType == '61' && businessType == '62'){ //仓储入库订单,才需要供应商信息
                 jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
                 console.log(JSON.stringify(jsonStr));
                 //仓配供应商基本信息
@@ -1444,7 +1452,7 @@
 
         $("#orderTypeSel").change(function () {
             $("#businessType").addClass("chosen-select form-control");
-            if($(this).children('option:selected').val() == '61'){
+            if($(this).children('option:selected').val() == '61'){//仓配订单
                 $("#provideTransportDiv").show();
                 $("#businessTypeDiv").show();
                 $('.storeLi').show();
@@ -1466,8 +1474,9 @@
                 $("#profile4").removeClass("active");
                 $("#dropdown14").removeClass("active");
 
+
             }
-            if($(this).children('option:selected').val() == '60'){
+            if($(this).children('option:selected').val() == '60'){//运输订单
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();
@@ -1490,6 +1499,17 @@
 
             }
         });
+
+        $("#businessType").change(function () {
+            var businessType = $("#businessType").val().substring(0,2);
+            if('62' == businessType){
+                $("#supportMessageShowDiv").show();
+            }
+            if('61' == businessType){
+                $("#supportMessageShowDiv").hide();
+            }
+        });
+
         $("#provideTransport").change(function () {
             if($(this).prop("checked")){
                 $('.transLi').show();
