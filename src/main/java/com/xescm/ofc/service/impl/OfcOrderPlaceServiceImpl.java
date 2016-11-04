@@ -55,7 +55,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,CscSupplierInfoDto cscSupplierInfoDto) {
 
-        OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
@@ -111,6 +110,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }else{
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                         }
+                        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
@@ -137,50 +137,78 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
+                //现在订单编辑没有对客户订单编号进行校验
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
                     throw new BusinessException("您的客户订单编号填写有误!");
                 }
-                if (("").equals(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode()))){
+                if (("").equals(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode())) || null == PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode())){
                     ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
                 }
                 //仓配订单
-                if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
+                if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){//编辑时仓配订单
                     if(null == ofcWarehouseInformation.getProvideTransport()){
                         ofcWarehouseInformation.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
                     }
                     //仓配单需要运输
-                    if(ofcWarehouseInformation.getProvideTransport().toString().equals(OrderConstEnum.WAREHOUSEORDERPROVIDETRANS)){
+                    if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
                         //如果编辑订单后, 还是需要提供运输, 就要更新运输信息
                         ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
-                        ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                        saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
+                        saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
+                        OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
+                        ofcDist.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                        List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
+                        if(select.size() > 0){//有运输信息
+                            ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                        }else if (select.size() < 0){
+                            addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
+                        }
+                    //仓配单不需要运输,需要将属于该订单的仓配信息删除
                     }else if (ofcWarehouseInformation.getProvideTransport().toString().equals(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS)){
-                        //仓配单不需要运输,需要将属于该订单的仓配信息删除
                         ofcFundamentalInformation.setSecCustCode("");
                         ofcFundamentalInformation.setSecCustName("");
                         ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
                     }
                     // 更新仓配信息
                     ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                    //入库
                     if("62".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
+                        saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                    }
+                    //出库
+                    if("61".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
                         ofcWarehouseInformation.setSupportCode("");
                         ofcWarehouseInformation.setSupportName("");
+                        //去数据库清掉相应的供应商信息
                     }
-                    ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
-                    if("61".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
-                        // saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId){
-                        saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                    //先去数据库查, 如果有就是改, 如果没有就是增
+                    OfcWarehouseInformation ofcWare = new OfcWarehouseInformation();
+                    ofcWare.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    List<OfcWarehouseInformation> select = ofcWarehouseInformationService.select(ofcWare);
+                    if(select.size() > 0){//有
+                        ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+                    }else if(select.size() == 0){
+                        ofcWarehouseInformationService.save(ofcWarehouseInformation);
                     }
                 }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
                     //更新运输信息
-                    ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                     if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                             .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
                         ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
                     }else{
                         ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                     }
-                    ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
-
+                    ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                    saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
+                    saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
+                    OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
+                    ofcDist.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
+                    if(select.size() > 0){//有运输信息
+                        ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                    }else if (select.size() < 0){
+                        addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
+                    }
                 }else{
                     throw new BusinessException("您的订单类型系统无法识别!");
                 }
@@ -228,7 +256,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
         ofcDistributionBasicInfo.setDeparturePlaceCode("001");
         ofcDistributionBasicInfo.setDestinationCode("001");
-        if(ofcFundamentalInformation.getCreationTime()== null){
+        if(null == ofcFundamentalInformation.getCreationTime()){
             ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
             ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
         }

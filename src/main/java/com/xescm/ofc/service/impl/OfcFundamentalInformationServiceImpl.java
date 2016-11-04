@@ -7,11 +7,13 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by lyh on 2016/10/10.
  */
 @Service
+@Transactional
 public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundamentalInformation> implements OfcFundamentalInformationService{
 
     @Autowired

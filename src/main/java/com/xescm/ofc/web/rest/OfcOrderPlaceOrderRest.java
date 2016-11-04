@@ -58,36 +58,60 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param response
      * @return
      */
-    @RequestMapping("/orderEdit/{tag}/{ofcOrderDTOJson}")
-    public String orderEdit(Model model, @PathVariable String ofcOrderDTOJson, @PathVariable String tag, HttpServletResponse response){
+    @RequestMapping("/orderEdit")
+    @ResponseBody
+    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOJson,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
+            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
-        if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
-            logger.debug(ofcOrderDTOJson);
-            ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
-        }
-        OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
-        if (null == ofcOrderDTO.getProvideTransport()){
-            ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
-        }
-        if (null == ofcOrderDTO.getUrgent()){
-            ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
-        }
+        String result = null;
         try {
-            /*String result = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag,custId);*/
-            if(tag.equals("manage")){
-                return "order_manage";
+            orderGoodsListStr = orderGoodsListStr.replace("~`","");
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
+                logger.debug(ofcOrderDTOJson);
+                ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
             }
-            return "order_place";
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
+                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
+                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
+                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+            }
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
+            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
+            }
+            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            if (null == ofcOrderDTO.getOrderTime()){
+                ofcOrderDTO.setOrderTime(new Date());
+            }
+            if (null == ofcOrderDTO.getProvideTransport()){
+                ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
+            }
+            if (null == ofcOrderDTO.getUrgent()){
+                ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
+            }
+
+            result =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,custId
+                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
         } catch (Exception ex) {
             logger.error("订单中心编辑出现异常:{},{}", ex.getMessage(), ex);
-            return "order_place";
+            ex.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,result);
     }
 
     @RequestMapping("/orderPlaceCon")
@@ -96,14 +120,14 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        orderGoodsListStr.replace("~`","");
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
         String resultMessage = null;
         try {
+            orderGoodsListStr = orderGoodsListStr.replace("~`","");
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
                 ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
             }
@@ -147,21 +171,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
-
-
-    /**
-     * 货品筛选
-     * @param ofcGoodsDetailsInfo
-     * @return
-     */
-    /*@RequestMapping("/goodsScans")
-    public String placeOrder(Model model,OfcGoodsDetailsInfo ofcGoodsDetailsInfo){
-        logger.debug("==>订单中心下单货品筛选实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
-        ofcGoodsDetailsInfo.setGoodsCode("1");
-        ofcGoodsDetailsInfo.setGoodsCode("1");
-        ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
-        return "order_place";
-    }*/
 
     /**
      * 货品筛选(调用客户中心API)

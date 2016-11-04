@@ -572,7 +572,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <input id="transRequire" name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -928,12 +928,6 @@
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-    /*function orderGoodsFun() {
-        $("#goodsSelectListTbody").find("tr").each(function(index) {
-            var orderGoodsList = [];
-            return orderGoodsList;
-        }
-    }*/
     function orderPlaceAddTranInfo(jsonStr) {
         //运输基本信息
         jsonStr.quantity = $("#quantity").val();
@@ -945,6 +939,7 @@
         jsonStr.pickupTime = $dp.$('pickupTime').value;
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgentHel").val();
+        jsonStr.transRequire = $("#transRequire").val();
         jsonStr.consignorCode = $("#consignorCode").val();
         jsonStr.consignorName = $("#consignorName").val();
         jsonStr.consigneeCode = $("#consigneeCode").val();
@@ -1129,7 +1124,6 @@
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+(index+1)+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";
@@ -1239,10 +1233,10 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='fax' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }

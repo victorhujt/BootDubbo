@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xescm.ofc.utils.CodeGenUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
@@ -35,6 +37,7 @@ import static com.xescm.ofc.enums.OrderConstEnum.*;
  * Created by ydx on 2016/10/12.
  */
 @Service
+@Transactional
 public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
     @Autowired
