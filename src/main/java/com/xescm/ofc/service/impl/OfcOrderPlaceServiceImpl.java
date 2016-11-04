@@ -164,7 +164,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         }
                     //仓配单不需要运输,需要将属于该订单的仓配信息删除
-                    }else if (ofcWarehouseInformation.getProvideTransport().toString().equals(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS)){
+                    }else if (ofcWarehouseInformation.getProvideTransport() == OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         ofcFundamentalInformation.setSecCustCode("");
                         ofcFundamentalInformation.setSecCustName("");
                         ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -226,7 +226,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } catch (Exception e){
             throw new BusinessException("未知异常!请联系管理员!");
         }
-        return "您已成功下单!";
+        return "您的订单修改成功!";
     }
 
     public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){

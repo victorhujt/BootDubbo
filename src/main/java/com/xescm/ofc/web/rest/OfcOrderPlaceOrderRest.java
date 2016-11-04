@@ -60,11 +60,15 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      */
     @RequestMapping("/orderEdit")
     @ResponseBody
-    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOJson,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
+    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
             ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTO={}", ofcOrderDTOJson);
+        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         String result = null;
+        if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
+            logger.debug("订单中心编辑入参实体出现异常ofcOrderDTOJson={}", ofcOrderDTOStr);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心编辑入参实体出现异常ofcOrderDTOJson");
+        }
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -72,10 +76,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
-            if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
+           /* if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
                 logger.debug(ofcOrderDTOJson);
                 ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
-            }
+            }*/
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
                 cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
             }
@@ -90,7 +94,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOJson, OfcOrderDTO.class);
+            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
