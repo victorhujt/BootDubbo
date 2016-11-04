@@ -55,7 +55,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,CscSupplierInfoDto cscSupplierInfoDto) {
 
-        OfcGoodsDetailsInfo ofcGoodsDetailsInfo = modelMapper.map(ofcOrderDTO, OfcGoodsDetailsInfo.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
