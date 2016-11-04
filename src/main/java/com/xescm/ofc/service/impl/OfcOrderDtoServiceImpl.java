@@ -7,6 +7,7 @@ import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
  * 从4张表中根据code查出订单的4张数据,然后映射到OrderDto中
  */
 @Service
+@Transactional
 public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;

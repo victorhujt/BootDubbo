@@ -7,6 +7,7 @@ import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
  * Created by lyh on 2016/10/10.
  */
 @Service
+@Transactional
 public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistributionBasicInfo> implements OfcDistributionBasicInfoService{
     @Autowired
     private OfcDistributionBasicInfoMapper ofcDistributionBasicInfoMapper;

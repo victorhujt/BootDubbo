@@ -11,6 +11,7 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
  * Created by lyh on 2016/10/10.
  */
 @Service
+@Transactional
 public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouseInformation> implements OfcWarehouseInformationService{
     @Autowired
     private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
