@@ -1223,10 +1223,10 @@
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
-                    var goodsCode = tdArr.eq(2).text();//货品编码
-                    var goodsName = tdArr.eq(3).text();//货品名称
-                    var specification = tdArr.eq(4).text();//    货品规格
-                    var unit = tdArr.eq(5).text();//    单位
+                    var goodsCode = tdArr.eq(1).text();//货品编码
+                    var goodsName = tdArr.eq(2).text();//货品名称
+                    var specification = tdArr.eq(3).text();//    货品规格
+                    var unit = tdArr.eq(4).text();//    单位
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                    /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/

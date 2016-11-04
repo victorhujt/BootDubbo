@@ -94,7 +94,7 @@
                             <span class="lbl"></span>
                         </label>
                     </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
@@ -256,9 +256,18 @@
 <div class="modal-content" id="supportListDiv" style="display: none;">
     <div class="modal-header"><span id="supportListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title">供应商联系人</h4></div>
+
+
+    <#--
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="supplierSelConditionForm">
+            <div class="widget-main">
+                <form id="consigneeSelConditionForm"  class="form-horizontal" role="form">
+    -->
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <div class="widget-main">
+            <form id="supplierSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
@@ -314,6 +323,7 @@
                     <tbody id="supplierSelectListTbody"></tbody>
                 </table>
             </form>
+            </div>
         </div>
     </div>
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="supplierEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
@@ -607,8 +617,8 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.consignorCode)!?? >value="${(consignorMessage.consignorCode)!}"</#if> type="hidden">
-                                                                        <input id="consignorName"  name="consignorName" <#if (consignorMessage.consignorName)!?? >value="${(consignorMessage.consignorName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.contactCompanyId)!?? >value="${(consignorMessage.contactCompanyId)!}"</#if> type="hidden">
+                                                                        <input id="consignorName"  name="consignorName" <#if (consignorMessage.contactCompanyName)!?? >value="${(consignorMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -680,8 +690,8 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.consigneeCode)!?? >value="${(consigneeMessage.consigneeCode)!}"</#if> >
-                                                                        <input id="consigneeName" name="contactCompanyName" <#if (consigneeMessage.consigneeName)!?? >value="${(consigneeMessage.consigneeName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.contactCompanyId)!?? >value="${(consigneeMessage.contactCompanyId)!}"</#if> >
+                                                                        <input id="consigneeName" name="contactCompanyName" <#if (consigneeMessage.contactCompanyName)!?? >value="${(consigneeMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -807,13 +817,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
-
-
-
-
-
 
                                                         <div id="supportMessageShowDiv" class="" style="display: none">
                                                             <div class="page-header">
@@ -1087,7 +1090,7 @@
                 var supplierList = "";
                 $.each(data,function (index,CscSupplierInfoDto) {
                     supplierList =supplierList + "<tr role='row' class='odd' align='center'>";
-                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='radio' name = 'selGoods' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     supplierList =supplierList + "<td>"+(index+1)+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
@@ -1137,10 +1140,10 @@
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
 
-                    var goodsCode = tdArr.eq(2).text();//货品编码
-                    var goodsName = tdArr.eq(3).text();//货品名称
-                    var specification = tdArr.eq(4).text();//    货品规格
-                    var unit = tdArr.eq(5).text();//    单位
+                    var goodsCode = tdArr.eq(1).text();//货品编码
+                    var goodsName = tdArr.eq(2).text();//货品名称
+                    var specification = tdArr.eq(3).text();//    货品规格
+                    var unit = tdArr.eq(4).text();//    单位
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                     /*goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
