@@ -42,7 +42,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsCodeCondition1" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameCondition1" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameCondition1" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsCodeCondition2" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameCondition2" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameCondition2" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -152,12 +152,10 @@
                     </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">服务商名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">线路名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">发站</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">到站</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">发车频次</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">经停</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">容量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">城市</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">覆盖范围</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">车辆资源</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">配送频次</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">温度带</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
@@ -358,30 +356,53 @@
         $("#serviceProviderDivBlock").click(function(){
             var serive = "";
             var i=1;
+            var diff=null;
             $("#dataTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 debugger;
                 if(tdArr.eq(1).find("input").prop("checked")){
                     var businessType = tdArr.eq(5).text();//计划单类型
+                    var resourceAllocationStatus = tdArr.eq(6).text();//资源分配状态
                     var departure = tdArr.eq(9).text();//出发地
                     var destination = tdArr.eq(10).text();//    目的地
+                    if(resourceAllocationStatus=="40"){
+                        alert("您选择的记录中存在【已确认】的记录，请重新选择！");
+                        serive="determined"
+                        return;
+                    }
+                    if(businessType!="601" || businessType!="600"){
+                        alert("您选择的记录中存在非城配和干线的订单，请重新选择！");
+                        serive="determined"
+                        return;
+                    }
                     if(i==1){
                         serive=businessType;
-                        $("#goodsCodeCondition").val(departure);
-                        $("#goodsNameCondition").val(destination);
+                        diff=businessType;
+                        $("#goodsCodeCondition1").val(departure);
+                        $("#goodsNameCondition1").val(destination);
+                        $("#goodsCodeCondition2").val(departure);
+                        $("#goodsNameCondition2").val(destination);
+                    }else{
+                        if(diff!=businessType){
+                            alert("不允许同时选择干线与城配类型的计划单，请重新选择！");
+                            serive="different"
+                            return;
+                        }
                     }
                     i=i+1;
                 }
             });
             if(serive==""){
-                alert("请至少选择一行");
+                alert("请至少选择一条记录");
             }else {
                 if(serive=="600"){
                     $("#serviceProviderListDiv1").fadeIn("slow");//淡入淡出效果 显示div
                 }else if(serive=="601"){
                     $("#serviceProviderListDiv2").fadeIn("slow");//淡入淡出效果 显示div
-                }else {
-                    alert("缺少类型");
+                }else if(serive=="determined") {
+                    return;
+                }else if(serive=="different") {
+                    return;
                 }
 
             }

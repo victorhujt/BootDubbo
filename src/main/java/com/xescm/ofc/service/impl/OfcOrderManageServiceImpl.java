@@ -248,6 +248,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
+            ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.TRANSFEROUTOFTHELIBRARY)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.LOSSOFREPORTING)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.OTHEROUTOFTHELIBRARY)
+                    ){
+                //出库
+                ofcSiloprogramInfo.setBusinessType("出库");
+
+            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.PURCHASINGANDSTORAGE)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.ALLOCATESTORAGE)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.RETURNWAREHOUSING)
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.PROCESSINGSTORAGE)){
+                //入库
+                ofcSiloprogramInfo.setBusinessType("入库");
+            }
             ofcSiloprogramInfo.setCreationTime(new Date());
             ofcSiloprogramInfo.setCreatePersonnel("001");
             BeanUtils.copyProperties(ofcSiloproSourceStatus,ofcWarehouseInformation);
@@ -316,6 +332,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
             OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
             ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+            ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
             if(PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YIZUOFEI)){
                 throw new BusinessException("状态错误，该计划单已作废");
             }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)
