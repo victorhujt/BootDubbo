@@ -1045,6 +1045,7 @@
             jsonStr.notes = $("#notes").val();
 
             //货品添加
+            debugger;
             var orderGoodsList = [];
             var goodsTable = document.getElementById("orderGoodsListTable");
             for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
@@ -1062,6 +1063,7 @@
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
+            console.log("==orderGoodsList=="+orderGoodsList);
             debugger;
 
             //订单类型
@@ -1078,48 +1080,37 @@
             var cscSupplierInfoDtoStr;
             if(orderType == '60'){//运输订单
                 jsonStr = orderPlaceAddTranInfo(jsonStr);
-                console.log(JSON.stringify(jsonStr));
                 cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
                 cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
-                console.log(cscContantAndCompanyDtoConsignorStr);
-                console.log(cscContantAndCompanyDtoConsigneeStr);
             }
             debugger;
             if(orderType == '61' && businessType == '61'){//仓储出库订单
                 jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
-                console.log(JSON.stringify(jsonStr));
                 if('1' == provideTrans){
                     cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
                     cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
                     jsonStr = orderPlaceAddTranInfo(jsonStr);
                 }
-                console.log(cscContantAndCompanyDtoConsignorStr);
-                console.log(cscContantAndCompanyDtoConsigneeStr);
             }
             if(orderType == '61' && businessType == '62'){ //仓储入库订单,才需要供应商信息
                 jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
-                console.log(JSON.stringify(jsonStr));
                 //仓配供应商基本信息
                 jsonStr.supportCode = $("#supportCode").val();
                 jsonStr.supportName = $("#supportName").val();
                 cscSupplierInfoDtoStr = getCscSupplierInfoDtoStr();
-                console.log(JSON.stringify(cscSupplierInfoDtoStr));
                 if('1' == provideTrans){
                     cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
                     cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
                     jsonStr = orderPlaceAddTranInfo(jsonStr);
                 }
-                console.log(cscContantAndCompanyDtoConsignorStr);
-                console.log(cscContantAndCompanyDtoConsigneeStr);
-                console.log(cscSupplierInfoDtoStr);
             }
-            console.log(cscContantAndCompanyDtoConsignorStr);
-            console.log(cscContantAndCompanyDtoConsigneeStr);
-            console.log(cscSupplierInfoDtoStr);
             var tag = "place";
             var ofcOrderDTO = JSON.stringify(jsonStr);
+            var orderGoodsListStr = JSON.stringify(orderGoodsList);
+            console.log("======orderGoodsListStr======"+orderGoodsListStr)
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
+                        ,"orderGoodsListStr":orderGoodsListStr+"~`"
                         ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":cscSupplierInfoDtoStr

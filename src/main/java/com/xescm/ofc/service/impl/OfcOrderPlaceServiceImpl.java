@@ -51,7 +51,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public String placeOrder(OfcOrderDTO ofcOrderDTO,String tag,AuthResDto authResDtoByToken, String custId
+    public String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,String tag,AuthResDto authResDtoByToken, String custId
                             ,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,CscSupplierInfoDto cscSupplierInfoDto) {
 
@@ -121,6 +121,17 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单已创建");
                     upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
+                    //添加该订单的货品信息
+                    for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+                        String orderCode = ofcFundamentalInformation.getOrderCode();
+                        ofcGoodsDetails.setOrderCode(orderCode);
+                        ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                        ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+                        ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+                        ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+                        ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+                    }
+                    //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                 }else{
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");

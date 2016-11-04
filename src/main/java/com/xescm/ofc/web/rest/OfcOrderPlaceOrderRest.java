@@ -1,5 +1,6 @@
 package com.xescm.ofc.web.rest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscGoods;
@@ -29,6 +30,7 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -90,16 +92,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     @RequestMapping("/orderPlaceCon")
     @ResponseBody
-    public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr,String cscContantAndCompanyDtoConsignorStr
+    public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
             ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        orderGoodsListStr.replace("~`","");
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
         queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
         Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
         String custId = (String) wrapper.getResult();
-
         String resultMessage = null;
         try {
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
@@ -113,6 +115,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             }
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
                 cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+            }
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
+            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
             OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
@@ -128,7 +135,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if (null == ofcOrderDTO.getUrgent()){
                 ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
             }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,tag,authResDtoByToken,custId
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,custId
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
        }catch (BusinessException ex){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
