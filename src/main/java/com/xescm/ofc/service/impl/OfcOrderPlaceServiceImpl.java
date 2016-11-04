@@ -92,15 +92,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         // 更新仓配信息
                         ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                         String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
-                        if("62".equals(businessTypeHead)){//如果是入库才有供应商信息
-                            ofcWarehouseInformation.setSupportCode("");
-                            ofcWarehouseInformation.setSupportName("");
+                        if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
+                            saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+
                         }
 //                        ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
                         ofcWarehouseInformationService.save(ofcWarehouseInformation);
-                        if("61".equals(businessTypeHead)){//如果是入库才有供应商信息
+                        if("61".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿是出库
                             // saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId){
-                            saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                            ofcWarehouseInformation.setSupportCode("");
+                            ofcWarehouseInformation.setSupportName("");
                         }
 //                        saveSupportMessage(cscSupplierInfoDto,custId);//0000
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){

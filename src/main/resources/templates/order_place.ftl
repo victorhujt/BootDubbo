@@ -89,7 +89,7 @@
                             <span class="lbl"></span>
                         </label>
                     </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
@@ -445,8 +445,8 @@
                                                         <!--货品明细-->
 
                                                         <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
-
-                                                        <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+<#--dynamic-table-->
+                                                        <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                                             <thead>
                                                             <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                                                                 操作
@@ -920,11 +920,93 @@
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+    /*function orderGoodsFun() {
+        $("#goodsSelectListTbody").find("tr").each(function(index) {
+            var orderGoodsList = [];
+            return orderGoodsList;
+        }
+    }*/
+    function orderPlaceAddTranInfo(jsonStr) {
+        //运输基本信息
+        jsonStr.quantity = $("#quantity").val();
+        jsonStr.weight = $("#weight").val();
+        jsonStr.cubage = $("#cubage").val();
+        jsonStr.totalStandardBox = $("#totalStandardBox").val();
+        jsonStr.departurePlace = $("#departurePlace").val();
+        jsonStr.destination = $("#destination").val();
+        jsonStr.pickupTime = $dp.$('pickupTime').value;
+        jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+        jsonStr.urgent = $("#urgentHel").val();
+        jsonStr.consignorCode = $("#consignorCode").val();
+        jsonStr.consignorName = $("#consignorName").val();
+        jsonStr.consigneeCode = $("#consigneeCode").val();
+        jsonStr.consigneeName = $("#consigneeName").val();
+        return jsonStr;
+    }
+    function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
+        //仓配基本信息
+        jsonStr.warehouseName = $("#warehouseName").val();
+        jsonStr.arriveTime = $dp.$('arriveTime').value;
+        jsonStr.plateNumber = $("#plateNumber").val();
+        jsonStr.driverName = $("#driverName").val();
+        jsonStr.contactNumber = $("#contactNumber").val();
+        return jsonStr;
+    }
+    function getCscContantAndCompanyDtoConsignorStr() {
+        var paramConsignor = {};
+        var paramConsignee = {};
+        var cscContact = {};
+        var cscContactCompany = {};
+        cscContactCompany.contactCompanyName = $("#consignorName").val();
+        cscContact.contactName = $("#consignorContactName").val();
+        cscContact.phone = $("#consignorPhone").val();
+        cscContact.fax = $("#consignorFax").val();
+        cscContact.email = $("#consignorEmail").val();
+        cscContact.postCode = $("#consignorPostCode").val();
+        cscContact.address = $("#consignorAddress").val();
+        cscContact.purpose = "2";
+        paramConsignor.cscContact = cscContact;
+        paramConsignor.cscContactCompany = cscContactCompany;
+        var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
+        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
+        return cscContantAndCompanyDtoConsignorStr;
+
+    }
+    function getCscContantAndCompanyDtoConsigneeStr() {
+        var paramConsignor = {};
+        var paramConsignee = {};
+        var cscContact = {};
+        var cscContactCompany = {};
+        cscContactCompany.contactCompanyName = $("#consigneeName").val();
+        cscContact.contactName = $("#consigneeContactName").val();
+        cscContact.phone = $("#consigneePhone").val();
+        cscContact.fax = $("#consigneeFax").val();
+        cscContact.email = $("#consigneeEmail").val();
+        cscContact.postCode = $("#consigneePostCode").val();
+        cscContact.address = $("#consigeeAddress").val();
+        cscContact.purpose = "1";
+        paramConsignee.cscContact = cscContact;
+        paramConsignee.cscContactCompany = cscContactCompany;
+        var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
+        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
+        return cscContantAndCompanyDtoConsigneeStr;
+    }
+    function getCscSupplierInfoDtoStr(){
+        var paramSupport = {};
+        debugger
+        paramSupport.supplierName = $("#supportName").val();
+        paramSupport.contactName = $("#supportContactName").val();
+        paramSupport.contactPhone = $("#supportPhone").val();
+        paramSupport.fax = $("#supportFax").val();
+        paramSupport.email = $("#supportEmail").val();
+        paramSupport.postCode = $("#supportPostCode").val();
+        paramSupport.address = $("#supportAddress").val();
+        var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
+        console.log("function  support " + cscSupplierInfoDtoStr);
+        return cscSupplierInfoDtoStr;
+    }
 
     $(function(){
-
-
-
 
         $("#provideTransport").change(function () {
             if($(this).prop("checked")){
@@ -941,8 +1023,6 @@
             }
         });
 
-
-
         $("#orderPlaceConTableBtn").click(function () {
 
             var jsonStr = {};
@@ -955,67 +1035,81 @@
             jsonStr.provideTransport = $("#provideTransportHel").val();
             jsonStr.storeCode = $("#storeCode").val();
             jsonStr.notes = $("#notes").val();
-            //运输基本信息
-            jsonStr.quantity = $("#quantity").val();
-            jsonStr.weight = $("#weight").val();
-            jsonStr.cubage = $("#cubage").val();
-            jsonStr.totalStandardBox = $("#totalStandardBox").val();
-            jsonStr.departurePlace = $("#departurePlace").val();
-            jsonStr.destination = $("#destination").val();
-            jsonStr.pickupTime = $dp.$('pickupTime').value;
-            jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
-            jsonStr.urgent = $("#urgentHel").val();
-            jsonStr.consignorCode = $("#consignorCode").val();
-            jsonStr.consignorName = $("#consignorName").val();
-            jsonStr.consigneeCode = $("#consigneeCode").val();
-            jsonStr.consigneeName = $("#consigneeName").val();
-            //仓配基本信息
-            jsonStr.warehouseName = $("#warehouseName").val();
-            jsonStr.arriveTime = $dp.$('arriveTime').value;
-            jsonStr.plateNumber = $("#plateNumber").val();
-            jsonStr.driverName = $("#driverName").val();
-            jsonStr.contactNumber = $("#contactNumber").val();
-            jsonStr.supportCode = $("#supportCode").val();
-            jsonStr.supportName = $("#supportName").val();
 
+            //货品添加
+            var orderGoodsList = [];
+            var goodsTable = document.getElementById("orderGoodsListTable");
+            for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
+                var orderGoods = {};
+                for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
+                    var param = goodsTable.rows[tableRows].cells[tableCells].innerText;
+                    switch (tableCells){
+                        case 1 :orderGoods.goodsCode = param;break;
+                        case 2 :orderGoods.goodsName = param;break;
+                        case 3 :orderGoods.goodsSpec = param;break;
+                        case 4 :orderGoods.unit = param;break;
+                        case 5 :orderGoods.quantity = param;break;
+                        case 6 :orderGoods.productionBatch = param;break;
+                    }
+                }
+                orderGoodsList[tableRows - 1] = orderGoods;
+            }
+            debugger;
+
+            //订单类型
+            var orderType = $("#orderTypeSel").val();
+            //业务类型前两位
+            var businessType = $("#businessType").val().substring(0,2);
+            ///仓配订单是否需要运输
+            var provideTrans = $("#provideTransportHel").val();
+            //如果订单类型是运输订单,才拼装运单信息
+            //如果订单类型是仓配订单而且是入库单,才拼装仓储信息和供应商信息,如果需要运输才需要拼装运输信息
+            //别忘了在后台卡一下~!~~
+            var cscContantAndCompanyDtoConsignorStr;
+            var cscContantAndCompanyDtoConsigneeStr;
+            var cscSupplierInfoDtoStr;
+            if(orderType == '60'){//运输订单
+                jsonStr = orderPlaceAddTranInfo(jsonStr);
+                console.log(JSON.stringify(jsonStr));
+                cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
+                cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
+                console.log(cscContantAndCompanyDtoConsignorStr);
+                console.log(cscContantAndCompanyDtoConsigneeStr);
+            }
+            debugger;
+            if(orderType == '61' && businessType == '61'){//仓储出库订单
+                jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
+                console.log(JSON.stringify(jsonStr));
+                if('1' == provideTrans){
+                    cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
+                    cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
+                    jsonStr = orderPlaceAddTranInfo(jsonStr);
+                }
+                console.log(cscContantAndCompanyDtoConsignorStr);
+                console.log(cscContantAndCompanyDtoConsigneeStr);
+            }
+            if(orderType == '61' && businessType == '62'){ //仓储入库订单
+                jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
+                console.log(JSON.stringify(jsonStr));
+                //仓配供应商基本信息
+                jsonStr.supportCode = $("#supportCode").val();
+                jsonStr.supportName = $("#supportName").val();
+                cscSupplierInfoDtoStr = getCscSupplierInfoDtoStr();
+                console.log(JSON.stringify(cscSupplierInfoDtoStr));
+                if('1' == provideTrans){
+                    cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
+                    cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
+                    jsonStr = orderPlaceAddTranInfo(jsonStr);
+                }
+                console.log(cscContantAndCompanyDtoConsignorStr);
+                console.log(cscContantAndCompanyDtoConsigneeStr);
+                console.log(cscSupplierInfoDtoStr);
+            }
+            console.log(cscContantAndCompanyDtoConsignorStr);
+            console.log(cscContantAndCompanyDtoConsigneeStr);
+            console.log(cscSupplierInfoDtoStr);
             var tag = "place";
             var ofcOrderDTO = JSON.stringify(jsonStr);
-            var paramConsignor = {};
-            var paramConsignee = {};
-            var paramSupport = {};
-            var cscContact = {};
-            var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = $("#consignorName").val();
-            cscContact.contactName = $("#consignorContactName").val();
-            cscContact.phone = $("#consignorPhone").val();
-            cscContact.fax = $("#consignorFax").val();
-            cscContact.email = $("#consignorEmail").val();
-            cscContact.postCode = $("#consignorPostCode").val();
-            cscContact.address = $("#consignorAddress").val();
-            cscContact.purpose = "2";
-            paramConsignor.cscContact = cscContact;
-            paramConsignor.cscContactCompany = cscContactCompany;
-            var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-            cscContactCompany.contactCompanyName = $("#consigneeName").val();
-            cscContact.contactName = $("#consigneeContactName").val();
-            cscContact.phone = $("#consigneePhone").val();
-            cscContact.fax = $("#consigneeFax").val();
-            cscContact.email = $("#consigneeEmail").val();
-            cscContact.postCode = $("#consigneePostCode").val();
-            cscContact.address = $("#consigeeAddress").val();
-            cscContact.purpose = "1";
-            paramConsignee.cscContact = cscContact;
-            paramConsignee.cscContactCompany = cscContactCompany;
-            var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-            debugger
-            paramSupport.supplierName = $("#supportName").val();
-            paramSupport.contactName = $("#supportContactName").val();
-            paramSupport.contactPhone = $("#supportPhone").val();
-            paramSupport.fax = $("#supportFax").val();
-            paramSupport.email = $("#supportEmail").val();
-            paramSupport.postCode = $("#supportPostCode").val();
-            paramSupport.address = $("#supportAddress").val();
-            var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
@@ -1029,12 +1123,6 @@
                 //xescm.common.goBack("/ofc/orderPlace");
             })
         });
-
-
-
-
-
-
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
