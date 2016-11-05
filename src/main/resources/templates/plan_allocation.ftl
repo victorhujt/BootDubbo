@@ -1,4 +1,4 @@
-<head>
+<head xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
     <title>运输计划单分配</title>
@@ -37,12 +37,12 @@
         <h4 class="modal-title">服务商列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="goodsSelConditionForm" class="form-horizontal" role="form">
+            <form id="goodsSelConditionForm1" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsCodeCondition1" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsCodeCondition1" name="beginProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition1" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameCondition1" name="arriveProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition1" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameCondition1" name="companyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
         <h4 class="modal-title">服务商列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="goodsSelConditionForm" class="form-horizontal" role="form">
+            <form id="goodsSelConditionForm2" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                     <div class="col-sm-3">
@@ -353,6 +353,160 @@
             if(this.checked) $row.addClass(active_class);
             else $row.removeClass(active_class);
         });
+
+        $("#goodsSelectFormBtn1").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm1").serialize()+"&lineType=1", function(data) {
+                data=eval(data);
+                var goodsList = "";
+                $.each(data,function (index,RmcCompanyLineVo) {
+                    goodsList =goodsList + "<tr role='row' class='odd'>";
+                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.lineName+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+RmcCompanyLineVo.beginCityName+RmcCompanyLineVo.beginAreaName+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.arriveProvinceName+RmcCompanyLineVo.arriveCityName+RmcCompanyLineVo.arriveArea+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
+                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                });
+                $("#goodsSelectListTbody1").html(goodsList);
+            },"json");
+        });
+
+        $("#goodsSelectFormBtn2").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm2").serialize()+"&lineType=2", function(data) {
+
+                data=eval(data);
+                if(data.length>1){
+                    data=eval(data);
+                    var goodsList = "";
+                    $.each(data,function (index,RmcCompanyLineVo) {
+                        goodsList =goodsList + "<tr role='row' class='odd'>";
+                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                    });
+                    $("#goodsSelectListTbody2").html(goodsList);
+                }else if(data.length==1){
+                    var htmlText="";
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var var0 = tdArr.eq(0).text();
+                        var var2 = tdArr.eq(2).text();
+                        var var3 = tdArr.eq(3).text();
+                        var var4 = tdArr.eq(4).text();
+                        var var5 = tdArr.eq(5).text();
+                        var var6 = tdArr.eq(6).text();
+                        var var7 = tdArr.eq(7).text();
+                        var var8 = tdArr.eq(8).text();
+                        var var9 = tdArr.eq(9).text();
+                        var var10 = tdArr.eq(10).text();
+                        var var11 = tdArr.eq(11).text();
+                        var var12 = tdArr.eq(12).text();
+                        var var13 = tdArr.eq(13).text();
+                        var var14 = tdArr.eq(14).text();
+                        var var15 = tdArr.eq(15).text();
+                        var var16 = tdArr.eq(16).text();
+                        htmlText +="<tr role=\"row\" class=\"odd\">"
+                        htmlText +="<td>"+var0+"</td>"
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus('30'))+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>"
+
+                        }else{
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
+                        }
+                        htmlText+="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
+                                + "</tr>";
+                    });
+                    $("#dataTbody").html(htmlText);
+                }else if(data.length==0){
+                    var htmlText="";
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var var0 = tdArr.eq(0).text();
+                        var var2 = tdArr.eq(2).text();
+                        var var3 = tdArr.eq(3).text();
+                        var var4 = tdArr.eq(4).text();
+                        var var5 = tdArr.eq(5).text();
+                        var var6 = tdArr.eq(6).text();
+                        var var7 = tdArr.eq(7).text();
+                        var var8 = tdArr.eq(8).text();
+                        var var9 = tdArr.eq(9).text();
+                        var var10 = tdArr.eq(10).text();
+                        var var11 = tdArr.eq(11).text();
+                        var var12 = tdArr.eq(12).text();
+                        var var13 = tdArr.eq(13).text();
+                        var var14 = tdArr.eq(14).text();
+                        var var15 = tdArr.eq(15).text();
+                        var var16 = tdArr.eq(16).text();
+
+
+                        htmlText +="<tr role=\"row\" class=\"odd\">"
+                        htmlText +="<td>"+var0+"</td>"
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus("20"))+"</td>"
+
+                        }else{
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
+                        }
+                        htmlText +="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
+                        + "</tr>";
+                    });
+                    $("#dataTbody").html(htmlText);
+                }
+
+            },"json");
+        });
+
+
         $("#serviceProviderDivBlock").click(function(){
             var serive = "";
             var i=1;
@@ -365,12 +519,12 @@
                     var resourceAllocationStatus = tdArr.eq(6).text();//资源分配状态
                     var departure = tdArr.eq(9).text();//出发地
                     var destination = tdArr.eq(10).text();//    目的地
-                    if(resourceAllocationStatus=="40"){
+                    if(resourceAllocationStatus=="已确定"){
                         alert("您选择的记录中存在【已确认】的记录，请重新选择！");
                         serive="determined"
                         return;
                     }
-                    if(businessType!="601" || businessType!="600"){
+                    if(businessType!="干线" && businessType!="城配"){
                         alert("您选择的记录中存在非城配和干线的订单，请重新选择！");
                         serive="determined"
                         return;
@@ -395,9 +549,9 @@
             if(serive==""){
                 alert("请至少选择一条记录");
             }else {
-                if(serive=="600"){
+                if(serive=="干线"){
                     $("#serviceProviderListDiv1").fadeIn("slow");//淡入淡出效果 显示div
-                }else if(serive=="601"){
+                }else if(serive=="城配"){
                     $("#serviceProviderListDiv2").fadeIn("slow");//淡入淡出效果 显示div
                 }else if(serive=="determined") {
                     return;
@@ -497,8 +651,8 @@
                     +"<td>"+StringUtil.nullToEmpty(order.orderCode)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.planCode)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.businessType)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.resourceAllocationStatus)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getPlanType(order.businessType))+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus(order.resourceAllocationStatus))+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderTime)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.departureProvince)+StringUtil.nullToEmpty(order.departureCity)+StringUtil.nullToEmpty(order.departureDistrict)+StringUtil.nullToEmpty(order.departureTowns)+"</td>"
@@ -515,44 +669,28 @@
 
     }
 
-    function getOrderStatus(status) {
+    function getPlanType(status) {
         var value ="";
-        if(status == '10'){
-            value = "<span class=\"label label-sm label-yellow\">待审核</span>"
-        }else if(status == '20'){
-            value = "<span class=\"label label-sm label-warning\">已审核</span>"
-        }else if(status == '30'){
-            value = "<span class=\"label label-sm label-info\">执行中</span>"
-        }else if(status == '40'){
-            value = "<span class=\"label label-sm label-success\">已完成</span>"
-        }else if(status == '50'){
-            value = "<span class=\"label label-sm label-default\">已取消</span>"
+        if(status == '600'){
+            value = "城配"
+        }else if(status == '601'){
+            value = "干线"
+        }else{
+            value = "类型有误"
         }
         return value;
     }
 
-    function getBusiType(order) {
+    function getSourceStatus(status) {
         var value = "";
-        if(order.businessType == '600'){
-            value = "城配"
-        }else if(order.businessType == "601"){
-            value = "干线";
-        }else if(order.businessType == "610"){
-            value = "销售出库";
-        }else if(order.businessType == "611"){
-            value = "调拨出库";
-        }else if(order.businessType == "612"){
-            value = "报损出库";
-        }else if(order.businessType == "613"){
-            value = "其他出库";
-        }else if(order.businessType == "620"){
-            value = "采购入库";
-        }else if(order.businessType == "621"){
-            value = "调拨入库";
-        }else if(order.businessType == "622"){
-            value = "退货入库";
-        }else if(order.businessType == "623"){
-            value = "加工入库";
+        if(status == '10'){
+            value = "待分配"
+        }else if(status == "20"){
+            value = "未分配";
+        }else if(status == "30"){
+            value = "已分配";
+        }else if(status == "40"){
+            value = "已确定";
         }
         return value;
     }

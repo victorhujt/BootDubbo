@@ -4,24 +4,28 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
+import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
+import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
+import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +51,7 @@ public class OfcOrderManageRest extends BaseController{
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    private FeignRmcCompanyAPIClient feignRmcCompanyAPIClient;
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
@@ -182,6 +186,31 @@ public class OfcOrderManageRest extends BaseController{
             response.getWriter().print(result);
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
+        }
+    }
+
+    /**
+     * 服务商筛选(调用客户中心API)
+     */
+    @ApiOperation(value="服务商筛选", notes="根据查询条件筛选服务商")
+    @ApiImplicitParams({
+            //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
+    })
+    @RequestMapping(value = "/companySelect",method = RequestMethod.POST)
+    public void goodsSelectByCscApi(Model model, RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
+        //调用外部接口,最低传CustomerCode
+        try{
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            /*QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            cscGoods.setCustomerId(custId);*/
+            rmcCompanyLineQO.setLineType("333");
+            Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+            response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
+        }catch (Exception ex){
+            logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
         }
     }
 }
