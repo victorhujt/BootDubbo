@@ -221,7 +221,7 @@ public class OfcOrderManageRest extends BaseController{
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
             cscGoods.setCustomerId(custId);*/
-            rmcCompanyLineQO.setLineType("333");
+            //rmcCompanyLineQO.setLineType("333");
             Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
