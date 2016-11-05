@@ -44,10 +44,13 @@
             color: black;
         }
     </style>
-    <#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
+<#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
 </head>
 
 <body class="no-skin">
+
+<#--<form id="orderPlaceForm">-->
+
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -89,7 +92,7 @@
                             <span class="lbl"></span>
                         </label>
                     </th>
-                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
+                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
@@ -105,7 +108,6 @@
     </div>
     <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
     <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -113,7 +115,7 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-                <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
@@ -182,7 +184,7 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
-                <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
+            <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
@@ -332,7 +334,7 @@
                         <div class="widget-box" style="border: none">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <form id="" method="post" class="form-horizontal" role="form" >
+                                    <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                             <div class="col-sm-6">
@@ -411,7 +413,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                    <input id="orderNotes" name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                 </div>
                                             </div>
                                         </div>
@@ -421,7 +423,7 @@
                             </div>
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <form name="orderInfoTable" id="orderInfoTable"  class="form-horizontal" role="form" >
+                                    <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
                                         <div class="col-sm-12">
                                             <!-- #section:elements.tab.option -->
                                             <div class="tabbable" style="width:1000px;" >
@@ -445,13 +447,13 @@
                                                         <!--货品明细-->
 
                                                         <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
-<#--dynamic-table-->
+                                                    <#--dynamic-table-->
                                                         <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                                             <thead>
                                                             <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                                                                 操作
                                                             </th>
-                                                                <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                                                            <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
@@ -523,7 +525,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">合计标准箱</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="totalStandardBox" name="totalStandardBox" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <input id="totalStandardBox" name="totalStandardBox" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -531,7 +533,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="departurePlace" name="departurePlace" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                            <input id="departurePlace" name="departurePlace" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -539,7 +541,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="destination" name="destination" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                            <input id="destination" name="destination" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -547,7 +549,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -555,7 +557,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -572,7 +574,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="transRequire" name="transRequire" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <input id="transRequire" name="transRequire" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -589,8 +591,8 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorCode" name="" type="hidden">
-                                                                        <input id="consignorName"  name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorCode" name="consignorCode" type="hidden">
+                                                                        <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -598,7 +600,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorContactName"   name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -606,7 +608,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorPhone" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -615,7 +617,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorFax" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorFax" name="consignorFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -624,7 +626,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorEmail" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorEmail" name="consignorEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -632,7 +634,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorPostCode" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorPostCode" name="consignorPostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -644,7 +646,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consignorAddress" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorAddress" name="consignorAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -662,7 +664,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="consigneeCode" name="consigneeCode" type="hidden">
-                                                                        <input id="consigneeName"  name="contactCompanyName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -671,7 +673,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneeContactName" name="consigneeName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeContactName" name="consigneeContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -680,7 +682,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneePhone" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -689,7 +691,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneeFax" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeFax" name="consigneeFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -698,7 +700,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneeEmail" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeEmail" name="consigneeEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -706,7 +708,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneePostCode" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneePostCode" name="consigneePostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -718,7 +720,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consigeeAddress" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigeeAddress" name="consigeeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -740,7 +742,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <select id="warehouseName" name="warehouseName"  value="${(orderInfo.wareHouseName)!""}">
+                                                                            <select id="warehouseName" name="warehouseName">
                                                                             <#list rmcWarehouseByCustCode! as warehouse>
                                                                                 <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!}</option>
                                                                             </#list>
@@ -753,7 +755,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="arriveTime" name="arriveTime"  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 
                                                                         </div>
                                                                     </div>
@@ -762,7 +764,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="plateNumber" name="plateNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <input id="plateNumber" name="plateNumber" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
 
                                                                         </div>
                                                                     </div>
@@ -771,7 +773,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="driverName" name="driverName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                                            <input id="driverName" name="driverName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -779,7 +781,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="contactNumber" name="contactNumber" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <input id="contactNumber" name="contactNumber" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -787,11 +789,11 @@
                                                             <br/>
                                                         </div>
 
-                                                    <div id="supportMessageShowDiv" class="" style="display: none">
-                                                        <div class="page-header">
-                                                            <h4>供应商信息</h4>
-                                                        </div>
-                                                        <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                                        <div id="supportMessageShowDiv" class="" style="display: none">
+                                                            <div class="page-header">
+                                                                <h4>供应商信息</h4>
+                                                            </div>
+                                                            <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
 
 
 
@@ -801,7 +803,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="supportCode" name="supportCode" type="hidden">
-                                                                        <input id="supportName"  name="supportName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportName"  name="supportName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -810,7 +812,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportContactName" name="contactName" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportContactName" name="supportContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -819,7 +821,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportPhone" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportPhone" name="supportPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -828,7 +830,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportFax" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportFax" name="supportFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -837,7 +839,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportEmail" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportEmail" name="supportEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -845,7 +847,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportPostCode" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportPostCode" name="supportPostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -857,16 +859,12 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="supportAddress" name="" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportAddress" name="supportAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                         </div>
-
-
-
-
 
                                                     </div>
                                                 </div>
@@ -890,16 +888,25 @@
 
 
 </div><!-- /.main-container -->
+<#--</form>-->
+
 
 
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
 
 
-<#include "common/include.ftl">
+<#--<#include "common/include.ftl">-->
 <script type="text/javascript">
-    var scripts = [ null, "", null ]
+    var scripts = [ null,
+        "/components/jquery-validation/dist/jquery.validate.min.js",
+        "/components/jquery-validation/src/localization/messages_zh.js",
+        "/components/jquery-validation/dist/additional-methods.js", null ];
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
+        /*jQuery(function($) {
+            validateForm();//校验表单信息
+            /!*validateFormPageBody();*!/
+        })*/
         $(document).ready(main);
         $('.chosen-select').chosen({allow_single_deselect:true});
         //resize the chosen on window resize
@@ -923,8 +930,309 @@
     });
 
     function main(){
-
+        validateForm();
     }
+    /**
+     *表单验证
+     */
+
+    function validateForm() {
+        var csc_url = $("#csc_url").html();
+        $('#orderFundamentalFormValidate').validate({//
+            errorElement : 'div',
+            errorClass : 'help-block',
+            focusInvalid : false,
+            ignore : "",
+            rules : {
+                orderTime:{
+                    required:true
+                },
+                custOrderCode:{
+                    required:true,
+                    maxlength: 30
+                },
+                notes:{
+                    maxlength:300
+                }
+            },
+            messages : {
+                orderTime:{
+                    required:true
+                },
+                custOrderCode:{
+                    required: "请输入客户订单编号",
+                    maxlength: "超过最大长度"
+                },
+                notes:{
+                    maxlength:"超过最大长度"
+                }
+            },
+            highlight : function(e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+            success : function(e) {
+                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(e).remove();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
+            },
+            invalidHandler : function(form) {
+            }
+        });
+        $('#orderInfoTableValidate').validate({//
+            errorElement : 'div',
+            errorClass : 'help-block',
+            focusInvalid : false,
+            ignore : "",
+            rules : {
+                quantity:{
+                    maxlength: 5,
+                    integer:true
+                },
+                weight:{
+                    maxlength: 5
+                },
+                cubage:{
+                    maxlength:5
+                },
+                totalStandardBox:{
+                    integer:true
+                },
+                consignorName:{
+                    required:true,
+                    maxlength:100
+                },
+                consignorContactName:{
+                    required:true,
+                    maxlength:50
+                },
+                consignorPhone:{
+                    isPhone:true,
+                    required:true,
+                    maxlength:50
+                },
+                consignorFax:{
+                    isFax:true,
+                    maxlength:50
+                },
+                consignorEmail:{
+                    isEmail:true,
+                    maxlength:50
+                },
+                consignorPostCode:{
+                    isPostCode:true,
+                    maxlength:6
+                },
+                consignorAddress:{
+                    maxlength:200
+                },
+                consigneeName:{
+                    required:true,
+                    maxlength:100
+                },
+                consigneeContactName:{
+                    required:true,
+                    maxlength:50
+                },
+                consigneePhone:{
+                    isPhone:true,
+                    required:true,
+                    maxlength:50
+                },
+                consigneeFax:{
+                    isFax:true,
+                    maxlength:50
+                },
+                consigneeEmail:{
+                    isEmail:true,
+                    maxlength:50
+                },
+                consigneePostCode:{
+                    isPostCode:true,
+                    maxlength:6
+                },
+                consigneeAddress:{
+                    maxlength:200
+                },
+                warehouseName:{
+                    required:true
+                },
+                arriveTime:{
+                    required:true
+                },
+                plateNumber:{
+                    maxlength:20
+                },
+                driverName:{
+                    maxlength:20
+                },
+                contactNumber:{
+                    isPhone:true,
+                    maxlength:50
+                },
+                supportName:{
+                    required:true,
+                    maxlength:100
+                },
+                supportContactName:{
+                    required:true,
+                    maxlength:50
+                },
+                supportPhone:{
+                    required:true,
+                    isPhone:true
+                },
+                supportFax:{
+                    isFax:true,
+                    maxlength:50
+                },
+                supportEmail:{
+                    isEmail:true,
+                    maxlength:50
+                },
+                supportPostCode:{
+                    isPostCode:true,
+                    maxlength:6
+                },
+                supportAddress:{
+                    maxlength:200
+                }
+            },
+            messages : {
+                quantity:{
+                    maxlength: "超过最大长度",
+                    integer:"必须输入整数"
+                },
+                weight:{
+                    maxlength: "超过最大长度"
+                },
+                cubage:{
+                    maxlength:"超过最大长度"
+                },
+                totalStandardBox:{
+                    integer:"必须输入整数"
+                },
+                consignorName:{
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                consignorContactName:{
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                consignorPhone:{
+                    isPhone:"请输入正确的手机号",
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                consignorFax:{
+                    isFax:"请输入正确的传真",
+                    maxlength:"超过最大长度"
+                },
+                consignorEmail:{
+                    isEmail:"请输入正确格式的邮箱",
+                    maxlength:"超过最大长度"
+                },
+                consignorPostCode:{
+                    isPostCode:"请输入正确格式的邮编",
+                    maxlength:"超过最大长度"
+                },
+                consignorAddress:{
+                    maxlength:"超过最大长度"
+                },
+                consigneeName:{
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                consigneeContactName:{
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                consigneePhone:{
+                    isPhone:"请输入正确格式的手机号",
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                consigneeFax:{
+                    isFax:"请输入正确格式的传真",
+                    maxlength:"超过最大长度"
+                },
+                consigneeEmail:{
+                    isEmail:"请输入正确格式的邮箱",
+                    maxlength:"超过最大长度"
+                },
+                consigneePostCode:{
+                    isPostCode:"请输入正确格式的邮编",
+                    maxlength:"超过最大长度"
+                },
+                consigneeAddress:{
+                    maxlength:"超过最大长度"
+                },
+                warehouseName:{
+                    required:"必须输入"
+                },
+                arriveTime:{
+                    required:"必须输入"
+                },
+                plateNumber:{
+                    maxlength:"超过最大长度"
+                },
+                driverName:{
+                    maxlength:"超过最大长度"
+                },
+                contactNumber:{
+                    isPhone:"请输入正确格式的手机号",
+                    maxlength:"超过最大长度"
+                },
+                supportName:{
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                supportContactName:{
+                    required:"必须输入",
+                    maxlength:"超过最大长度"
+                },
+                supportPhone:{
+                    required:"必须输入",
+                    isPhone:"请输入正确的手机号"
+                },
+                supportFax:{
+                    isFax:"请输入正确格式的传真",
+                    maxlength:"超过最大长度"
+                },
+                supportEmail:{
+                    isEmail:"请输入正确格式的邮箱",
+                    maxlength:"超过最大长度"
+                },
+                supportPostCode:{
+                    isPostCode:"请输入正确格式的邮编",
+                    maxlength:"超过最大长度"
+                },
+                supportAddress:{
+                    maxlength:"超过最大长度"
+                }
+
+
+
+            },
+            highlight : function(e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+            success : function(e) {
+                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(e).remove();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
+            },
+            invalidHandler : function(form) {
+            }
+        });
+    }
+
+
+
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
@@ -1038,10 +1346,10 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.provideTransport = $("#provideTransportHel").val();
             jsonStr.storeCode = $("#storeCode").val();
-            jsonStr.notes = $("#notes").val();
+            jsonStr.notes = $("#orderNotes").val();
 
             //货品添加
-            debugger;
+
             var orderGoodsList = [];
             var goodsTable = document.getElementById("orderGoodsListTable");
             for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
@@ -1053,15 +1361,12 @@
                         case 2 :orderGoods.goodsName = param;break;
                         case 3 :orderGoods.goodsSpec = param;break;
                         case 4 :orderGoods.unit = param;break;
-                        case 5 :orderGoods.quantity = param;break;
-                        case 6 :orderGoods.productionBatch = param;break;
+                        case 5 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 6 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                     }
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
-            console.log("==orderGoodsList=="+orderGoodsList);
-            debugger;
-
             //订单类型
             var orderType = $("#orderTypeSel").val();
             //业务类型前两位
@@ -1113,10 +1418,10 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
-                console.log("1111111111111111--"+tag);
-                debugger
-                //xescm.common.goBack("/ofc/orderPlace");
-            })
+                        console.log("1111111111111111--"+tag);
+                        debugger
+                        //xescm.common.goBack("/ofc/orderPlace");
+                    })
         });
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
@@ -1223,21 +1528,21 @@
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
-                    var goodsCode = tdArr.eq(2).text();//货品编码
-                    var goodsName = tdArr.eq(3).text();//货品名称
-                    var specification = tdArr.eq(4).text();//    货品规格
-                    var unit = tdArr.eq(5).text();//    单位
+                    var goodsCode = tdArr.eq(1).text();//货品编码
+                    var goodsName = tdArr.eq(2).text();//货品名称
+                    var specification = tdArr.eq(3).text();//    货品规格
+                    var unit = tdArr.eq(4).text();//    单位
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
-                   /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
+                    /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
@@ -1252,6 +1557,7 @@
             $("#contactSelectListTbody2").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
+                    consignorin = "1";
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
@@ -1260,25 +1566,14 @@
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
                     $("#testtest").text(consignorName);
-                    consignorin =consignorin + "名称:";
-                    consignorin =consignorin + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "联系人:";
-                    consignorin =consignorin + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "联系电话:";
-                    consignorin =consignorin + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "传真:";
-                    consignorin =consignorin + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "Email:";
-                    consignorin =consignorin + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "邮编:";
-                    consignorin =consignorin + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorin =consignorin + "地址:";
-                    consignorin =consignorin + "<select><option value=''>--省--</option></select>";
-                    consignorin =consignorin + "<select><option value=''>--市--</option></select>";
-                    consignorin =consignorin + "<select><option value=''>--区/县--</option></select>";
-                    consignorin =consignorin + "<select><option value=''>--乡镇/街道--</option></select>";
-                    consignorin =consignorin + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                    $("#consignorin").html(consignorin);
+                    $("#consignorName").val(consignorName);
+                    $("#consignorContactName").val(contacts);
+                    $("#consignorPhone").val(contactsNumber);
+                    $("#consignorFax").val(fax);
+                    $("#consignorEmail").val(email);
+                    $("#consignorPostCode").val(code);
+                    $("#consignorAddress").val(address);
+
                 }
             });
             if(consignorin==""){
@@ -1291,6 +1586,7 @@
             $("#contactSelectListTbody1").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
+                    consignorout = "1";
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
@@ -1298,25 +1594,13 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    consignorout =consignorout + "名称:";
-                    consignorout =consignorout + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "联系人:";
-                    consignorout =consignorout + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "联系电话:";
-                    consignorout =consignorout + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "传真:";
-                    consignorout =consignorout + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "Email:";
-                    consignorout =consignorout + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "邮编:";
-                    consignorout =consignorout + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    consignorout =consignorout + "地址:";
-                    consignorout =consignorout + "<select><option value=''>--省--</option></select>";
-                    consignorout =consignorout + "<select><option value=''>--市--</option></select>";
-                    consignorout =consignorout + "<select><option value=''>--区/县--</option></select>";
-                    consignorout =consignorout + "<select><option value=''>--乡镇/街道--</option></select>";
-                    consignorout =consignorout + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                    $("#consignorout").html(consignorout);
+                    $("#consigneeName").val(consignorName);
+                    $("#consigneeContactName").val(contacts);
+                    $("#consigneePhone").val(contactsNumber);
+                    $("#consigneeFax").val(fax);
+                    $("#consigneeEmail").val(email);
+                    $("#consigneePostCode").val(code);
+                    $("#consigneeAddress").val(address);
                 }
             });
             if(consignorout==""){
@@ -1329,6 +1613,7 @@
             $("#supplierSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
+                    support = "1";
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
@@ -1336,25 +1621,14 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    support =support + "名称:";
-                    support =support + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "联系人:";
-                    support =support + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "联系电话:";
-                    support =support + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "传真:";
-                    support =support + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "Email:";
-                    support =support + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "邮编:";
-                    support =support + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "地址:";
-                    support =support + "<select><option value=''>--省--</option></select>";
-                    support =support + "<select><option value=''>--市--</option></select>";
-                    support =support + "<select><option value=''>--区/县--</option></select>";
-                    support =support + "<select><option value=''>--乡镇/街道--</option></select>";
-                    support =support + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                    $("#support").html(support);
+                    $("#supportName").val(consignorName);
+                    $("#supportContactName").val(contacts);
+                    $("#supportPhone").val(contactsNumber);
+                    $("#supportFax").val(fax);
+                    $("#supportEmail").val(email);
+                    $("#supportPostCode").val(code);
+                    $("#supportAddress").val(address);
+
                 }
             });
             if(support==""){

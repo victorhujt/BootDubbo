@@ -188,7 +188,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(select.size() > 0){//有
                         ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
                     }else if(select.size() == 0){
-                        ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                        saveWarehouseMessage(ofcWarehouseInformation);
                     }
                 }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
                     //更新运输信息
@@ -226,7 +226,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } catch (Exception e){
             throw new BusinessException("未知异常!请联系管理员!");
         }
-        return "您的订单修改成功!";
+        if("place".equals(tag)){
+            return "您已成功下单!";
+        }else if("manage".equals(tag)){
+            return "您的订单修改成功!";
+        }else {
+            return "异常";
+        }
     }
 
     public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){

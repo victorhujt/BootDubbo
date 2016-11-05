@@ -52,7 +52,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
 
     @Override
-    public List<RmcWarehouse> getWarehouseListByCustCode(String custId) {
+    public List<RmcWarehouse> getWarehouseListByCustCode(String custId) {///1
         try{
             CscWarehouse cscWarehouse = new CscWarehouse();
             cscWarehouse.setCustomerId(custId);
