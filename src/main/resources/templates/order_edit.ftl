@@ -365,8 +365,8 @@
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
                                                     <select id="orderType" name="orderType" value="${(orderInfo.orderType)!"60"}">
-                                                        <option value="60" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)== '60')>selected="selected"</#if></#if>>运输订单</option>
-                                                        <option value="61" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)== '61')>selected="selected"</#if></#if>>仓配订单</option>
+                                                        <option value="60" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)! == '60')>selected="selected"</#if></#if>>运输订单</option>
+                                                        <option value="61" <#if orderInfo.orderType?? ><#if ((orderInfo.orderType)! == '61')>selected="selected"</#if></#if>>仓配订单</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -377,15 +377,15 @@
                                                 <div class="clearfix">
                                                     <select id="businessType" name="businessType">
 
-                                                        <option value="610" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '610')>selected="selected"</#if></#if>>销售出库</option>
-                                                        <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '611')>selected="selected"</#if></#if>>调拨出库</option>
-                                                        <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '612')>selected="selected"</#if></#if>>报损出库</option>
-                                                        <option value="613" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '613')>selected="selected"</#if></#if>>其他出库</option>
+                                                        <option value="610" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '610')>selected="selected"</#if></#if>>销售出库</option>
+                                                        <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '611')>selected="selected"</#if></#if>>调拨出库</option>
+                                                        <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '612')>selected="selected"</#if></#if>>报损出库</option>
+                                                        <option value="613" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '613')>selected="selected"</#if></#if>>其他出库</option>
                                                         <option value="----------">----------</option>
-                                                        <option value="620" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '620')>selected="selected"</#if></#if>>采购入库</option>
-                                                        <option value="621" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '621')>selected="selected"</#if></#if>>调拨入库</option>
-                                                        <option value="622" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '622')>selected="selected"</#if></#if>>退货入库</option>
-                                                        <option value="623" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)== '623')>selected="selected"</#if></#if>>加工入库</option>
+                                                        <option value="620" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '620')>selected="selected"</#if></#if>>采购入库</option>
+                                                        <option value="621" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '621')>selected="selected"</#if></#if>>调拨入库</option>
+                                                        <option value="622" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '622')>selected="selected"</#if></#if>>退货入库</option>
+                                                        <option value="623" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '623')>selected="selected"</#if></#if>>加工入库</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -479,34 +479,14 @@
                                                                 <td class="center">
                                                                     <button type="button" id=""    class="btn btn-minier btn-danger" onclick="deleteGoods('${(goodsDetails.orderCode)!"null"}','${goodsDetails.goodsCode!"null"}')">删除</button>
                                                                 </td>
-                                                                <#--<td>
-                                                                    <input id="deleteOrNot" type="checkbox" />
-                                                                </td>-->
-                                                                <td>
-                                                                ${(goodsDetails.goodsCode)!""}
-                                                                </td>
-                                                                <td>
-                                                                ${(goodsDetails.goodsName)!""}
-                                                                </td>
-                                                                <td class="hidden-480">
-                                                                ${(goodsDetails.goodsSpec)!""}
-                                                                </td>
-                                                                <td>
-                                                                ${(goodsDetails.unit)!""}
-                                                                </td>
-                                                                <td class="hidden-480">
-                                                                    <input name='' type='search' value='${(goodsDetails.quantity)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >
-                                                                </td>
-                                                                <td class="hidden-480">
-                                                                    <input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >
-                                                                </td>
-                                                                <td class="hidden-480">
-                                                                    <input name='' type='search' value='${(goodsDetails.productionTime)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:"yyyy-MM-dd HH:mm:ss"})">
-                                                                </td>
-                                                                <td class="hidden-480">
-                                                                    <input name='' type='search' value='${(goodsDetails.invalidTime)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:"yyyy-MM-dd HH:mm:ss"})">
-                                                                </td>
-
+                                                                <td>${(goodsDetails.goodsCode)!""}</td>
+                                                                <td>${(goodsDetails.goodsName)!""}</td>
+                                                                <td class="hidden-480">${(goodsDetails.goodsSpec)!""}</td>
+                                                                <td>${(goodsDetails.unit)!""}</td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.quantity)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionTime)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.invalidTime)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                             </tr>
                                                             </#list>
                                                             </tbody>
@@ -627,8 +607,8 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorCode" name="consignorCode" <#if orderInfo.consignorCode?? >value="${orderInfo.consignorCode}"</#if> type="hidden">
-                                                                        <input id="consignorName"  name="contactCompanyName" <#if (orderInfo.consignorName)!?? >value="${(orderInfo.consignorName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.consignorCode)!?? >value="${(consignorMessage.consignorCode)!}"</#if> type="hidden">
+                                                                        <input id="consignorName"  name="consignorName" <#if (consignorMessage.consignorName)!?? >value="${(consignorMessage.consignorName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -700,8 +680,8 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if orderInfo.consigneeCode?? >value="${orderInfo.consigneeCode}"</#if> >
-                                                                        <input id="consigneeName" name="contactCompanyName" <#if orderInfo.consigneeName?? >value="${(orderInfo.consigneeName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.consigneeCode)!?? >value="${(consigneeMessage.consigneeCode)!}"</#if> >
+                                                                        <input id="consigneeName" name="contactCompanyName" <#if (consigneeMessage.consigneeName)!?? >value="${(consigneeMessage.consigneeName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -766,14 +746,18 @@
                                                         </div>
 
                                                     </div>
-
                                                     <div id="dropdown14" class="tab-pane">
 
                                                         <div class="page-header">
                                                             <h4>仓配基本信息</h4>
                                                         </div>
+
                                                         <div class="row">
                                                             <div id="dynamic-table_filter" class="dataTables_length">
+
+
+
+
                                                                 <div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                     <div class="col-sm-6">
@@ -822,25 +806,30 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <br/>
                                                         </div>
-                                                    <div id="supportMessageShowDiv" class="" style="display: none">
-                                                        <div class="page-header">
-                                                            <h4>供应商信息</h4>
-                                                        </div>
-                                                        <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
+
+
+
+
+
+
+
+
+                                                        <div id="supportMessageShowDiv" class="" style="display: none">
+                                                            <div class="page-header">
+                                                                <h4>供应商信息</h4>
+                                                            </div>
+                                                            <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
 
                                                             <div class="form-group" >
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportCode" name="supportCode" type="hidden" <#if orderInfo.supportName?? >value="${orderInfo.supportCode}"</#if>>
-                                                                        <input id="supportName" name="supportName" <#if orderInfo.supportName?? >value="${orderInfo.supportName}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportCode" name="supportCode" type="hidden" <#if (supportMessage.supplierCode)!?? >value="${(supportMessage.supplierCode)!}"</#if>>
+                                                                        <input id="supportName" name="supportName" <#if (supportMessage.supplierName)!?? >value="${(supportMessage.supplierName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-
                                                             <div class="form-group" >
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
@@ -859,49 +848,53 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
-                                                                <div class="col-sm-6">
-                                                                    <div class="clearfix">
-                                                                        <input id="supportFax" name="" <#if (supportMessage.fax)!?? >value="${(supportMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        <div class="form-group" >
+                                                            <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                                            <div class="col-sm-6">
+                                                                <div class="clearfix">
+                                                                    <input id="supportFax" name="" <#if (supportMessage.fax)!?? >value="${(supportMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
-                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
-                                                                <div class="col-sm-6">
-                                                                    <div class="clearfix">
-                                                                        <input id="supportEmail" name="" <#if (supportMessage.email)!?? >value="${(supportMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                        </div>
+                                                        <div class="form-group" >
+                                                            <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                                            <div class="col-sm-6">
+                                                                <div class="clearfix">
+                                                                    <input id="supportEmail" name="" <#if (supportMessage.email)!?? >value="${(supportMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
-                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
-                                                                <div class="col-sm-6">
-                                                                    <div class="clearfix">
-                                                                        <input id="supportPostCode" name="" <#if (supportMessage.postCode)!?? >value="${(supportMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                                    </div>
+                                                        </div>
+                                                        <div class="form-group" >
+                                                            <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                                            <div class="col-sm-6">
+                                                                <div class="clearfix">
+                                                                    <input id="supportPostCode" name="" <#if (supportMessage.postCode)!?? >value="${(supportMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
-                                                                <div class="col-sm-6">
-                                                                    <div class="clearfix">
-                                                                        <select><option value="">--省--</option></select>
-                                                                        <select><option value="">--市--</option></select>
-                                                                        <select><option value="">--区/县--</option></select>
-                                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="supportAddress" name="" <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                                    </div>
+                                                        </div>
+                                                        <div class="form-group" >
+                                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                            <div class="col-sm-6">
+                                                                <div class="clearfix">
+                                                                    <select><option value="">--省--</option></select>
+                                                                    <select><option value="">--市--</option></select>
+                                                                    <select><option value="">--区/县--</option></select>
+                                                                    <select><option value="">--乡镇/街道--</option></select>
+                                                                    <input id="supportAddress" name="" <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                 </div>
                                                             </div>
+                                                        </div>
 
                                                         </div>
 
 
+
                                                     </div>
+
+
+
                                                 </div>
                                             </div>
 
@@ -1005,6 +998,7 @@
 
 
     $(function(){
+        alert('1233333333333333333333333333333');
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
@@ -1374,6 +1368,8 @@
         }
         var orderTypeForSupportDiv = $("#orderType").val();
         var businessTypeForSupportDiv = $("#businessType").val().substring(0,2);
+        console.log("===========orderTypeForSupportDiv============="+orderTypeForSupportDiv);
+        console.log("===========businessTypeForSupportDiv============="+businessTypeForSupportDiv);
         if(orderTypeForSupportDiv == '61' && businessTypeForSupportDiv == '62'){
             $("#supportMessageShowDiv").show();
         }
@@ -1531,7 +1527,8 @@
                 + "/" + cscContantAndCompanyDtoConsignorStr
                 + "/" + cscContantAndCompanyDtoConsigneeStr
                 + "/" + cscSupplierInfoDtoStr);*/
-        xescm.common.submit("/ofc/orderPlaceCon"
+        debugger;
+        xescm.common.submit("/ofc/orderEdit"
                 ,{"ofcOrderDTOStr":ofcOrderDTOJson
                     ,"orderGoodsListStr":orderGoodsListStr+"~`"
                     ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
@@ -1559,17 +1556,6 @@
         }
 
 
-    }
-    function deleteGood(obj) {
-        //alert(obj);
-        $(obj).parent().parent().remove();
-        /*var goodsInfoListDiv = "";
-        $("#goodsInfoListDiv").find("tr").each(function(index){
-            var tdArr = $(this).children();
-            if(tdArr.eq(1).find("input").prop("checked")){
-                tdArr.parent().remove();
-            }
-        });*/
     }
 
 </script>
