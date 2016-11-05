@@ -357,22 +357,131 @@
         $("#goodsSelectFormBtn1").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm1").serialize()+"&lineType=1", function(data) {
                 data=eval(data);
-                var goodsList = "";
-                $.each(data,function (index,RmcCompanyLineVo) {
-                    goodsList =goodsList + "<tr role='row' class='odd'>";
-                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.lineName+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+RmcCompanyLineVo.beginCityName+RmcCompanyLineVo.beginAreaName+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.arriveProvinceName+RmcCompanyLineVo.arriveCityName+RmcCompanyLineVo.arriveArea+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
-                    goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
-                });
-                $("#goodsSelectListTbody1").html(goodsList);
+                data=eval(data);
+                if(data.length>1){
+                    var goodsList = "";
+                    $.each(data,function (index,RmcCompanyLineVo) {
+                        goodsList =goodsList + "<tr role='row' class='odd'>";
+                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.lineName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+RmcCompanyLineVo.beginCityName+RmcCompanyLineVo.beginAreaName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.arriveProvinceName+RmcCompanyLineVo.arriveCityName+RmcCompanyLineVo.arriveArea+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
+                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                    });
+                    $("#goodsSelectListTbody1").html(goodsList);
+                }else if(data.length==1){
+                    var htmlText="";
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var var0 = tdArr.eq(0).text();
+                        var var2 = tdArr.eq(2).text();
+                        var var3 = tdArr.eq(3).text();
+                        var var4 = tdArr.eq(4).text();
+                        var var5 = tdArr.eq(5).text();
+                        var var6 = tdArr.eq(6).text();
+                        var var7 = tdArr.eq(7).text();
+                        var var8 = tdArr.eq(8).text();
+                        var var9 = tdArr.eq(9).text();
+                        var var10 = tdArr.eq(10).text();
+                        var var11 = tdArr.eq(11).text();
+                        var var12 = tdArr.eq(12).text();
+                        var var13 = tdArr.eq(13).text();
+                        var var14 = tdArr.eq(14).text();
+                        var var15 = tdArr.eq(15).text();
+                        var var16 = tdArr.eq(16).text();
+                        htmlText +="<tr role=\"row\" class=\"odd\">"
+                        htmlText +="<td>"+var0+"</td>"
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus('30'))+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>"
+
+                        }else{
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
+                        }
+                        htmlText+="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
+                                + "</tr>";
+                    });
+                    $("#dataTbody").html(htmlText);
+                }else if(data.length==0){
+                    var htmlText="";
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var var0 = tdArr.eq(0).text();
+                        var var2 = tdArr.eq(2).text();
+                        var var3 = tdArr.eq(3).text();
+                        var var4 = tdArr.eq(4).text();
+                        var var5 = tdArr.eq(5).text();
+                        var var6 = tdArr.eq(6).text();
+                        var var7 = tdArr.eq(7).text();
+                        var var8 = tdArr.eq(8).text();
+                        var var9 = tdArr.eq(9).text();
+                        var var10 = tdArr.eq(10).text();
+                        var var11 = tdArr.eq(11).text();
+                        var var12 = tdArr.eq(12).text();
+                        var var13 = tdArr.eq(13).text();
+                        var var14 = tdArr.eq(14).text();
+                        var var15 = tdArr.eq(15).text();
+                        var var16 = tdArr.eq(16).text();
+
+
+                        htmlText +="<tr role=\"row\" class=\"odd\">"
+                        htmlText +="<td>"+var0+"</td>"
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus("20"))+"</td>"
+
+                        }else{
+                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
+                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
+                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
+                        }
+                        htmlText +="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
+                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
+                                + "</tr>";
+                    });
+                    $("#dataTbody").html(htmlText);
+                }
+
             },"json");
         });
 
@@ -381,7 +490,6 @@
 
                 data=eval(data);
                 if(data.length>1){
-                    data=eval(data);
                     var goodsList = "";
                     $.each(data,function (index,RmcCompanyLineVo) {
                         goodsList =goodsList + "<tr role='row' class='odd'>";
