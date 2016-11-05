@@ -740,7 +740,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <select id="warehouseName" name="warehouseName"  value="${(orderInfo.wareHouseName)!""}">
+                                                                            <select id="warehouseName" name="warehouseName">
                                                                             <#list rmcWarehouseByCustCode! as warehouse>
                                                                                 <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!}</option>
                                                                             </#list>
