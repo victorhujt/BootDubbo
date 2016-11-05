@@ -411,7 +411,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <input  name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                    <input id="orderNotes" name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                 </div>
                                             </div>
                                         </div>
@@ -1038,10 +1038,10 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.provideTransport = $("#provideTransportHel").val();
             jsonStr.storeCode = $("#storeCode").val();
-            jsonStr.notes = $("#notes").val();
+            jsonStr.notes = $("#orderNotes").val();
 
             //货品添加
-            debugger;
+
             var orderGoodsList = [];
             var goodsTable = document.getElementById("orderGoodsListTable");
             for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
@@ -1053,15 +1053,12 @@
                         case 2 :orderGoods.goodsName = param;break;
                         case 3 :orderGoods.goodsSpec = param;break;
                         case 4 :orderGoods.unit = param;break;
-                        case 5 :orderGoods.quantity = param;break;
-                        case 6 :orderGoods.productionBatch = param;break;
+                        case 5 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 6 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                     }
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
-            console.log("==orderGoodsList=="+orderGoodsList);
-            debugger;
-
             //订单类型
             var orderType = $("#orderTypeSel").val();
             //业务类型前两位
@@ -1234,10 +1231,10 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
@@ -1323,25 +1320,7 @@
                     $("#supportEmail").val(email);
                     $("#supportPostCode").val(code);
                     $("#supportAddress").val(address);
-                    /*support =support + "名称:";
-                    support =support + "<input name='consignorName' type='search' value='"+consignorName+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "联系人:";
-                    support =support + "<input name='contacts' type='search' value='"+contacts+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "联系电话:";
-                    support =support + "<input name='contactsNumber' type='search' value='"+contactsNumber+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "传真:";
-                    support =support + "<input name='fax' type='search' value='"+fax+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "Email:";
-                    support =support + "<input name='email' type='search' value='"+email+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "邮编:";
-                    support =support + "<input name='code' type='search' value='"+code+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' >";
-                    support =support + "地址:";
-                    support =support + "<select><option value=''>--省--</option></select>";
-                    support =support + "<select><option value=''>--市--</option></select>";
-                    support =support + "<select><option value=''>--区/县--</option></select>";
-                    support =support + "<select><option value=''>--乡镇/街道--</option></select>";
-                    support =support + "<input name='address' type='search' value='"+address+"' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'>";
-                    $("#support").html(support);*/
+
                 }
             });
             if(support==""){

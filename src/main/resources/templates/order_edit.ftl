@@ -1445,8 +1445,8 @@
                     case 2 :orderGoods.goodsName = param;break;
                     case 3 :orderGoods.goodsSpec = param;break;
                     case 4 :orderGoods.unit = param;break;
-                    case 5 :orderGoods.quantity = param;break;
-                    case 6 :orderGoods.productionBatch = param;break;
+                    case 5 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                    case 6 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                 }
             }
             orderGoodsList[tableRows - 1] = orderGoods;
