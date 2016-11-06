@@ -226,10 +226,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyVo> result = cscReceivingInfoList.getResult();
+            /*
             csc.getCscContact().setPurpose("3");
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
-            result.addAll(resultOfBoth);
+            result.addAll(resultOfBoth);*/
             response.getWriter().print(JSONUtils.objectToJson(result));
         } catch (Exception ex) {
             logger.error("订单中心筛选收货方出现异常:{},{}", ex.getMessage(), ex);

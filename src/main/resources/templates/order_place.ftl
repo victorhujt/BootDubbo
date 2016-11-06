@@ -1000,7 +1000,11 @@
                     maxlength:14
                 },
                 totalStandardBox:{
+                    maxlength: 8,
                     integer:true
+                },
+                transRequire:{
+                    maxlength:300
                 },
                 consignorName:{
                     required:true,
@@ -1114,7 +1118,11 @@
                     maxlength:"超过最大长度"
                 },
                 totalStandardBox:{
+                    maxlength: "超过最大长度",
                     integer:"必须输入整数"
+                },
+                transRequire:{
+                    maxlength:"超过最大长度"
                 },
                 consignorName:{
                     required:"必须输入",
@@ -1343,6 +1351,7 @@
 
         $("#orderPlaceConTableBtn").click(function () {
 
+
             var jsonStr = {};
             //订单基本信息
             //$dp.$('orderTimePre').value;
@@ -1352,6 +1361,7 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.provideTransport = $("#provideTransportHel").val();
             jsonStr.storeCode = $("#storeCode").val();
+            jsonStr.storeName = $("#storeCode option:selected").text();
             jsonStr.notes = $("#orderNotes").val();
 
             //货品添加
@@ -1369,6 +1379,8 @@
                         case 4 :orderGoods.unit = param;break;
                         case 5 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                         case 6 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 7 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 8 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                     }
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
@@ -1546,9 +1558,9 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})\"></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }

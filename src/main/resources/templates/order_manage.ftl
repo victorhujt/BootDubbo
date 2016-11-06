@@ -291,8 +291,8 @@
                     +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.consigneeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.warehouseName)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.storeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.notes)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.store)+"</td>"
                     + "</tr>";
         }
         $("#dataTbody").html(htmlText);
