@@ -204,14 +204,14 @@
                                     </div>
 
                                     <div id="tramessages" class="tab-pane fade">
-                                        <div class="form-group">
+                                        <#--<div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">货品类型</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
                                                     <input id="goodsType" value = "${(ofcOrderDTO.goodsType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
                                             <div class="col-sm-3">
@@ -334,7 +334,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("众品有限公司")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -342,7 +342,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("王经理")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.contactName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -350,7 +350,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("mayanlong@hnxianyi.com")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.email)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -358,7 +358,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("15668159000")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.phone)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -367,7 +367,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("0355-56379811")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.fax)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -375,7 +375,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("河南省郑州市经济开发区田江路110号")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.address)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -383,7 +383,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("100100")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.postCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -397,7 +397,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("众品有限公司")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -405,7 +405,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("王经理")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.contactName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -413,7 +413,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("mayanlong@hnxianyi.com")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.email)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -421,7 +421,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("15668159000")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.phone)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -430,7 +430,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("0355-56379811")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.fax)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -438,7 +438,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("河南省郑州市经济开发区田江路110号")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.address)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -446,7 +446,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("100100")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.postCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -501,7 +501,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("众品有限公司")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.supplierName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -509,7 +509,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("王经理")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.contactName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -517,7 +517,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("mayanlong@hnxianyi.com")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.email)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -525,7 +525,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("15668159000")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.contactPhone)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -534,7 +534,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("0355-56379811")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.fax)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -542,7 +542,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("河南省郑州市经济开发区田江路110号")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.address)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -550,7 +550,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${("100100")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.postCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>

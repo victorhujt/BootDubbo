@@ -3,12 +3,10 @@ package com.xescm.ofc.web.rest;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
-import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.domain.dto.csc.CscGoods;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
+import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
@@ -60,6 +58,8 @@ public class OfcOrderManageRest extends BaseController{
     private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Autowired
+    private FeignCscStoreAPIClient feignCscStoreAPIClient;
 
 
     /**
@@ -148,6 +148,8 @@ public class OfcOrderManageRest extends BaseController{
         CscContantAndCompanyVo consigneeMessage = null;
         CscSupplierInfoDto supportMessage = null;
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
+        List<CscStorevo> cscStoreListResult = null;
+        Wrapper<List<CscStorevo>> storeByCustomerId = null;
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
@@ -170,6 +172,10 @@ public class OfcOrderManageRest extends BaseController{
                     supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),custId,authResDtoByToken);
                 }
             }
+            QueryStoreDto queryStoreDto = new QueryStoreDto();
+            queryStoreDto.setCustomerId(custId);
+            storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
+            cscStoreListResult = storeByCustomerId.getResult();
         }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
         }catch (Exception ex) {
@@ -183,6 +189,7 @@ public class OfcOrderManageRest extends BaseController{
             map.put("consigneeMessage", consigneeMessage);
             map.put("supportMessage",supportMessage);
             map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
+            map.put("cscStoreByCustId",cscStoreListResult);
             return "/order_edit";
         }
         return "order_manage";

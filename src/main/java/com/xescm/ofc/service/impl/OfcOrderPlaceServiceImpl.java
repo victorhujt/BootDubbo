@@ -69,7 +69,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
-                    throw new BusinessException("您的客户订单编号填写有误!");
+                    throw new BusinessException("您的客户订单编号没有填写!");
                 }
                 String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
                 if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
@@ -224,7 +224,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } catch (BusinessException e) {
             throw new BusinessException(e.getMessage());
         } catch (Exception e){
-            throw new BusinessException("未知异常!请联系管理员!");
+            throw new BusinessException(e.getMessage());
         }
         if("place".equals(tag)){
             return "您已成功下单!";
