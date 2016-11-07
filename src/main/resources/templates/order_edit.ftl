@@ -489,13 +489,14 @@
                                                             <#list ofcGoodsDetailsList! as goodsDetails>
                                                             <tr role="row" class="odd" align="center">
                                                                 <td class="center">
-                                                                    <button type="button" id=""    class="btn btn-minier btn-danger" onclick="deleteGoods('${(goodsDetails.orderCode)!"null"}','${goodsDetails.goodsCode!"null"}')">删除</button>
+                                                                    <button type="button" id=""    class="btn btn-minier btn-danger" onclick='deleteGood(this)' <#--onclick="deleteGoods('${(goodsDetails.orderCode)!"null"}','${goodsDetails.goodsCode!"null"}')"-->>删除</button>
                                                                 </td>
                                                                 <td>${(goodsDetails.goodsCode)!""}</td>
                                                                 <td>${(goodsDetails.goodsName)!""}</td>
                                                                 <td class="hidden-480">${(goodsDetails.goodsSpec)!""}</td>
                                                                 <td>${(goodsDetails.unit)!""}</td>
-                                                                <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.quantity)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td>${(goodsDetails.unitPrice)!""}</td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.quantity)?substring(',',''))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd HH:mm:ss'))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime))?string('yyyy-MM-dd HH:mm:ss')!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
@@ -676,7 +677,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consignorAddress" name="consignorAddress" <#if (consignorMessage.address)!?? >value="${(consignorMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorAddress" name="consignorAddress" <#if (consignorMessage.detailAddress)!?? >value="${(consignorMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -747,7 +748,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (consigneeMessage.address)!?? >value="${(consigneeMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (consigneeMessage.detailAddress)!?? >value="${(consigneeMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
