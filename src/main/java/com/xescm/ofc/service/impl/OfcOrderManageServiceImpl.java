@@ -481,11 +481,20 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Override
     public String planUpdate(String planCode, String planStatus, String serviceProviderName) {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
-        ofcTraplanSourceStatus.setPlanCode(planCode);
-        ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
-        ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
-            ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
+            String[] planCodeList=planCode.split("@");
+            try {
+                for(int i=0;i<planCodeList.length;i++){
+                    ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
+                    ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
+                    if(!PubUtils.trimAndNullAsEmpty(serviceProviderName).equals("")){
+                        ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
+                    }
+                    ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
+                }
+            } catch (Exception ex) {
+                throw new BusinessException("计划单状态更新异常！");
+            }
         }else {
             throw new BusinessException("缺少计划单编号");
         }

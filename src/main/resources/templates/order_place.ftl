@@ -1390,7 +1390,7 @@
                 cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
                 cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
             }
-            debugger;
+
             if(orderType == '61' && businessType == '61'){//仓储出库订单
                 jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
                 if('1' == provideTrans){

@@ -246,7 +246,7 @@
         param.orderStatus = $("#orderStatus").val();
         param.orderType = $("#orderType").val();
         param.businessType = $("#businessType").val();
-        debugger;
+
         CommonClient.post(sys.rootPath + "/ofc/queryOrderPageByCondition", param, function(result) {
 
             if (result == undefined || result == null) {
@@ -385,7 +385,7 @@
 <script type="text/javascript">
     // 查询
     $("#screenOrderFormBtn").click(function () {
-        debugger;
+
         var jsonStr={};
         var orderTimePre = $dp.$('orderTimePre').value;
         console.log(orderTimePre);

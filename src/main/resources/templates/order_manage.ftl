@@ -394,7 +394,7 @@
 
     function reviewOrder(ordercode,orderStatus) {
         xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},"您确定要审核此订单?",function () {
-            debugger;
+
             xescm.common.loadPage("/ofc/orderManage");
         });
     }

@@ -357,9 +357,10 @@
         $("#goodsSelectFormBtn1").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm1").serialize()+"&lineType=1", function(data) {
                 data=eval(data);
-                debugger;
+
                 if(data.length>1){
                     var goodsList = "";
+                    var fre=null;
                     $.each(data,function (index,RmcCompanyLineVo) {
                         goodsList =goodsList + "<tr role='row' class='odd'>";
                         goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -373,6 +374,9 @@
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                        if(RmcCompanyLineVo.frequency!=null){
+
+                        }
                     });
                     $("#goodsSelectListTbody1").html(goodsList);
                     var intx=1;
@@ -383,14 +387,43 @@
                             if(intx==1){
                                 var3 = tdArr.eq(3).text();
                             }
-                            i=i+1;
+                            intx=intx+1;
                         }
                     });
-                    xescm.common.submit("/ofc/planSeleForTime",{"planCode":var3,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
-                        debugger;
-                        $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
-                        queryData(1);
+                    layer.confirm("查询结果为多条记录，将根据预计发货时间或者订单时间进行二次筛选，是否确定?", {
+                        skin : 'layui-layer-molv',
+                        icon : 3,
+                        title : '确认操作'
+                    }, function(){
+                        CommonClient.post(sys.rootPath + "/ofc/planSeleForTime", $("#goodsSelConditionForm1").serialize()+"&planCode="+var3+"&lineType=1", function(data){
+                            //xescm.common.submit("/ofc/planSeleForTime",{"planCode":var3},"查询结果为多条记录，将根据预计发货时间或者订单时间进行二次筛选，是否确定?",function (data) {
+                            alert(data);
+
+                            data=eval(data);
+                            if(data.length>=1){
+                                var str="";
+                                var var3=null;
+                                $("#dataTbody").find("tr").each(function(index){
+                                    var tdArr = $(this).children();
+                                    var3 = tdArr.eq(3).text();
+                                    if(tdArr.eq(1).find("input").prop("checked")){
+                                        str=str+var3+"@";
+                                    }
+                                });
+
+                                if(str.length>0){
+                                    xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"已找到相关服务商，自动匹配最近时间服务商，是否确定?",function () {
+
+                                        $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
+                                        queryData(1);
+                                    });
+                                }
+                            }
+                        });
+                    }, function(index){
+                        layer.close(index);
                     });
+
                 }else if(data.length==1){
                     var str="";
                     var var3=null;
@@ -401,10 +434,10 @@
                             str=str+var3+"@";
                         }
                     });
-                    debugger;
+
                     if(str.length>0){
                         xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
-                            debugger;
+
                             $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });
@@ -419,10 +452,10 @@
                             str=str+var3+"@";
                         }
                     });
-                    debugger;
+
                     if(str.length>0){
                         xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
-                            debugger;
+
                             $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });
@@ -518,10 +551,10 @@
                             str=str+var3+"@";
                         }
                     });
-                    debugger;
+
                     if(str.length>0){
                         xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":txt},"城配计划单，记录有多条时将自动选择第一条记录，是否确定?",function () {
-                            debugger;
+
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });
@@ -536,10 +569,10 @@
                             str=str+var3+"@";
                         }
                     });
-                    debugger;
+
                     if(str.length>0){
                         xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
-                            debugger;
+
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });
@@ -554,10 +587,10 @@
                             str=str+var3+"@";
                         }
                     });
-                    debugger;
+
                     if(str.length>0){
                         xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
-                            debugger;
+
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });
@@ -567,6 +600,44 @@
             },"json");
         });
 
+        $("#doEnter").click(function(){
+            var serive = "";
+            var str="";
+            var var3="";
+            $("#dataTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(1).find("input").prop("checked")){
+                    var resourceAllocationStatus = tdArr.eq(6).text();//资源分配状态
+                    var tdArr = $(this).children();
+                    var3 = tdArr.eq(3).text();
+
+                    if(resourceAllocationStatus=="已确定"){
+                        alert("您选择的记录中存在【已确认】的记录，请重新选择！");
+                        serive="determined"
+                        return;
+                    }else if(resourceAllocationStatus=="待分配" || resourceAllocationStatus=="未分配"){
+                        alert("您选择的记录中存在待分配或者未分配的记录，请重新选择！");
+                        serive="determined"
+                        return;
+                    }else{
+                        str=str+var3+"@";
+                    }
+                }
+            });
+
+            if(var3==""){
+                alert("请至少选择一条记录");
+            }else if(serive=="determined"){
+                return;
+            }else {
+                if(str.length>0){
+                    xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"40","serviceProviderName":null},"即将对已分配资源进行确认，是否确定?",function () {
+                        queryData(1);
+                    });
+                }
+
+            }
+        });
 
         $("#serviceProviderDivBlock").click(function(){
             var serive = "";
@@ -574,7 +645,7 @@
             var diff=null;
             $("#dataTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
-                debugger;
+
                 if(tdArr.eq(1).find("input").prop("checked")){
                     var businessType = tdArr.eq(5).text();//计划单类型
                     var resourceAllocationStatus = tdArr.eq(6).text();//资源分配状态
@@ -652,7 +723,7 @@
         var rsa = $("#resourceAllocationStatues").val();
         //alert($("#resourceAllocationStatus").val());
 
-        debugger;
+
         var list = [];
         if(rsa!=null && rsa!=""){
             for(var i=0;i<rsa.length;i++){
@@ -665,7 +736,7 @@
             param.resourceAllocationStatues=rsa;
         }
 
-        debugger;
+
         CommonClient.post(sys.rootPath + "/ofc/queryPlanPageByCondition", param, function(result) {
 
             if (result == undefined || result == null) {
@@ -756,111 +827,6 @@
         return value;
     }
 
-    function getOrderType(order) {
-        var value = "";
-        if(order.orderType == "60"){
-            value = "运输订单";
-        }else if(order.orderType == "61"){
-            value = "仓配订单";
-        }
-        return value;
-
-    }
-
-    function getOperatorByStatus(order,index) {
-        var value = "";
-
-        var newStatus = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"btn btn-minier btn-yellow\">审核</button>"
-                +"<button type=\"button\" id=\"edit\" "+index+" onclick=\"editOrder('"+order.orderCode+"')\" class=\"btn btn-minier btn-success\">编辑</button>"
-                +"<button type=\"button\" id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-danger\">删除</button>";
-
-        var unApproveStatus = "<button type=\"button\" id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
-        var cancelStatus = "<button type=\"button\" id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-default\">取消</button>";
-
-        if (order.orderStatus == "10") {
-            value = newStatus;
-        }
-        if (order.orderStatus == "20" || order.orderStatus == "30") {
-            value = unApproveStatus + cancelStatus;
-        }
-        return value;
-    }
-
-
-
-</script>
-<script type="text/javascript">
-    // 查询
-    $("#screenOrderFormBtn").click(function () {
-        debugger;
-        var jsonStr={};
-        var orderTimePre = $dp.$('orderTimePre').value;
-        console.log(orderTimePre);
-        jsonStr.orderTimePre=orderTimePre;
-        var orderTimeSuf = $dp.$('orderTimeSuf').value;
-        console.log(orderTimeSuf);
-        jsonStr.orderTimeSuf=orderTimeSuf;
-        jsonStr.orderCode=$("#orderCode").val();
-        jsonStr.custOrderCode=$("#custOrderCode").val();
-        jsonStr.orderStatus=$("#orderStatus").val();
-        jsonStr.orderType=$("#orderType").val();
-        jsonStr.businessType=$("#businessType").val();
-        var tag = "screen";
-        var orderScreenConditionJSON = JSON.stringify(jsonStr);
-        var currPage = "1";
-        var pageSize = "10";
-        var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
-        xescm.common.loadPage(url);
-    });
-    var time = 1;
-    $('#pageLimit').bootstrapPaginator({
-        currentPage: ${currPage!"1"},//当前页码
-        totalPages: ${totalPage!"1"}, //总页数
-        size:"normal",
-        bootstrapMajorVersion: 3,
-        alignment:"right",
-        numberOfPages:10,//每页显示多少
-        itemTexts: function (type, page, current) {
-            switch (type) {
-                case "first":
-                    return "首页";
-                case "prev":
-                    return "上一页";
-                case "next":
-                    return "下一页";
-                case "last":
-                    return "末页";
-                case "page":
-                    return page;
-            }
-        },shouldShowPage:function(type,page,current){
-            if(page == 1 && time == 1){
-                return false;
-            }else if(current == 1){
-                return true;
-            }else{
-                return true;
-            }
-        },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
-            var jsonStr={};
-            var orderTimePre = $dp.$('orderTimePre').value;
-            jsonStr.orderTimePre=orderTimePre;
-            var orderTimeSuf = $dp.$('orderTimeSuf').value;
-            jsonStr.orderTimeSuf=orderTimeSuf;
-            jsonStr.orderCode=$("#orderCode").val();
-            jsonStr.custOrderCode=$("#custOrderCode").val();
-            jsonStr.orderStatus=$("#orderStatus").val();
-            jsonStr.orderType=$("#orderType").val();
-            jsonStr.businessType=$("#businessType").val();
-            var tag = "screen";
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var currPage = page;
-            var pageNum = "10";
-            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
-            xescm.common.loadPage(url);
-
-        }
-    });
 </script>
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>

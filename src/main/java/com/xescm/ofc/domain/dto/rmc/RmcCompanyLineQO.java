@@ -1,5 +1,10 @@
 package com.xescm.ofc.domain.dto.rmc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 /**
  * Created by wanghw on 2016/11/4.
  */
@@ -14,6 +19,13 @@ public class RmcCompanyLineQO {
     private  String arriveArea;
 
     private String companyName;
+
+    /**
+     * 发车时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date departureTime;
 
     /**
      * 城市配送、干线
@@ -84,6 +96,14 @@ public class RmcCompanyLineQO {
         this.lineType = lineType;
     }
 
+    public Date getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(Date departureTime) {
+        this.departureTime = departureTime;
+    }
+
     @Override
     public String toString() {
         return "RmcCompanyLineQO{" +
@@ -94,8 +114,8 @@ public class RmcCompanyLineQO {
                 ", arriveCityName='" + arriveCityName + '\'' +
                 ", arriveArea='" + arriveArea + '\'' +
                 ", companyName='" + companyName + '\'' +
+                ", departureTime=" + departureTime +
                 ", lineType='" + lineType + '\'' +
                 '}';
     }
-
 }

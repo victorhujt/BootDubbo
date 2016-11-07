@@ -1773,7 +1773,7 @@
         jsonStr.storeCode = $("#storeCode").val();
         jsonStr.notes = $("#notes").val();
         //货品添加
-        debugger;
+
         var orderGoodsList = [];
         var goodsTable = document.getElementById("orderGoodsListTable");
         for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
@@ -1792,7 +1792,7 @@
             orderGoodsList[tableRows - 1] = orderGoods;
         }
         console.log("==orderGoodsList=="+orderGoodsList);
-        debugger;
+
 
         //订单类型
         var orderType = $("#orderType").val();
@@ -1811,7 +1811,7 @@
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
         }
-        debugger;
+
         if(orderType == '61' && businessType == '61'){//仓储出库订单
             jsonStr = orderPlaceAddWareInfoWithoutSupport(jsonStr);
             if('1' == provideTrans){
@@ -1840,7 +1840,7 @@
                 + "/" + cscContantAndCompanyDtoConsignorStr
                 + "/" + cscContantAndCompanyDtoConsigneeStr
                 + "/" + cscSupplierInfoDtoStr);*/
-        debugger;
+
         xescm.common.submit("/ofc/orderEdit"
                 ,{"ofcOrderDTOStr":ofcOrderDTOJson
                     ,"orderGoodsListStr":orderGoodsListStr+"~`"
