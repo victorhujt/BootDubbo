@@ -137,7 +137,7 @@
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方姓名</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方名称</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">仓库名称</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
@@ -278,6 +278,16 @@
         for ( var i = 0; i < data.result.list.length; i++) {
             var order = data.result.list[i];
 
+            debugger;
+            var consigneeName = "";
+            if("2"==StringUtil.nullToEmpty(order.consigneeType)){
+                debugger;
+                consigneeName = "个人-"+order.consigneeContactName;
+            }else{
+                debugger;
+                consigneeName = order.consigneeName;
+            }
+
             htmlText +="<tr role=\"row\" class=\"odd\">"
                     +"<td>"+[i+1]+"</td>"
                     + "<td class=\"center\">" + getOperatorByStatus(order,i) + "</td>"
@@ -289,7 +299,7 @@
                     +"<td class=\"hidden-480\">"+getOrderType(order)+"</td>"
                     +"<td class=\"hidden-480\">"+getBusiType(order)+"</td>"
                     +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.consigneeName)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(consigneeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.warehouseName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.storeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.notes)+"</td>"

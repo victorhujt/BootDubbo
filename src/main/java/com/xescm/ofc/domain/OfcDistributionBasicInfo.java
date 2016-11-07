@@ -104,6 +104,49 @@ public class OfcDistributionBasicInfo {
     @Column(name = "consignee_name")
     private String consigneeName;
 
+
+
+
+    /**
+     * 发货方联系人编码
+     */
+    @Column(name = "consignor_contact_code")
+    private String consignorContactCode;
+
+    /**
+     * 发货方联系人名称
+     */
+    @Column(name = "consignor_contact_name")
+    private String consignorContactName;
+
+    /**
+     * 收货方联系人编码
+     */
+    @Column(name = "consignee_contact_code")
+    private String consigneeContactCode;
+
+    /**
+     * 收货方联系人名称
+     */
+    @Column(name = "consignee_contact_name")
+    private String consigneeContactName;
+
+    /**
+     * 收货方联系人类型
+     * 1、企业公司；2、个人',
+     */
+    @Column(name = "consignor_type")
+    private String consignorType;
+
+    /**
+     * 收货方联系人类型
+     * 1、企业公司；2、个人',
+     */
+    @Column(name = "consignee_type")
+    private String consigneeType;
+
+
+
     /**
      * 承运商编码
      */
@@ -161,6 +204,54 @@ public class OfcDistributionBasicInfo {
      */
     @Column(name = "oper_time")
     private Date operTime;
+
+    public String getConsignorType() {
+        return consignorType;
+    }
+
+    public void setConsignorType(String consignorType) {
+        this.consignorType = consignorType;
+    }
+
+    public String getConsigneeType() {
+        return consigneeType;
+    }
+
+    public void setConsigneeType(String consigneeType) {
+        this.consigneeType = consigneeType;
+    }
+
+    public String getConsignorContactCode() {
+        return consignorContactCode;
+    }
+
+    public void setConsignorContactCode(String consignorContactCode) {
+        this.consignorContactCode = consignorContactCode;
+    }
+
+    public String getConsignorContactName() {
+        return consignorContactName;
+    }
+
+    public void setConsignorContactName(String consignorContactName) {
+        this.consignorContactName = consignorContactName;
+    }
+
+    public String getConsigneeContactCode() {
+        return consigneeContactCode;
+    }
+
+    public void setConsigneeContactCode(String consigneeContactCode) {
+        this.consigneeContactCode = consigneeContactCode;
+    }
+
+    public String getConsigneeContactName() {
+        return consigneeContactName;
+    }
+
+    public void setConsigneeContactName(String consigneeContactName) {
+        this.consigneeContactName = consigneeContactName;
+    }
 
     /**
      * 获取运输单号

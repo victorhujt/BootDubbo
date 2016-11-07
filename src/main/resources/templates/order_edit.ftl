@@ -501,8 +501,8 @@
                                                                 <td>${(goodsDetails.unitPrice)!""}</td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.quantity)?replace(',',''))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
-                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd HH:mm:ss'))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
-                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime))?string('yyyy-MM-dd HH:mm:ss')!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd HH:mm:ss'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime))?string('yyyy-MM-dd HH:mm:ss')!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                             </tr>
                                                             </#list>
                                                             </tbody>
@@ -778,7 +778,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <select id="wareHouseName" name="wareHouseName"  <#-- value="${(orderInfo.wareHouseName)!""}"-->>
+                                                                            <select id="wareHouseName" name="wareHouseName"   value="${(orderInfo.wareHouseCode)!""}">
                                                                             <#list rmcWarehouseByCustCode! as warehouse>
                                                                                 <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!}</option>
                                                                             </#list>

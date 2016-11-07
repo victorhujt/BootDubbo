@@ -94,6 +94,9 @@ public class OfcOrderDTO {
     private String consignorContactName;
     private String consigneeContactCode;
     private String consigneeContactName;
+    private String consignorType;
+    private String consigneeType;
+
 
 //    private String orderCode;
 //    private Date creationTime;
@@ -140,6 +143,22 @@ public class OfcOrderDTO {
 //    private String operator;
 //    private Date operTime;
 
+
+    public String getConsignorType() {
+        return consignorType;
+    }
+
+    public void setConsignorType(String consignorType) {
+        this.consignorType = consignorType;
+    }
+
+    public String getConsigneeType() {
+        return consigneeType;
+    }
+
+    public void setConsigneeType(String consigneeType) {
+        this.consigneeType = consigneeType;
+    }
 
     public String getWarehouseCode() {
         return warehouseCode;

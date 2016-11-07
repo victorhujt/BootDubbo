@@ -9,22 +9,6 @@ import java.util.Date;
  * Created by lyh on 2016/10/10.
  */
 public class OrderScreenResult {
-    @Override
-    public String toString() {
-        return "OrderScreenResult{" +
-                "orderCode='" + orderCode + '\'' +
-                ", custOrderCode='" + custOrderCode + '\'' +
-                ", orderTime=" + orderTime +
-                ", orderType='" + orderType + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", consigneeName='" + consigneeName + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", notes='" + notes + '\'' +
-                ", storeName='" + storeName + '\'' +
-                '}';
-    }
-
     private String orderCode;
     private String custOrderCode;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -37,9 +21,27 @@ public class OrderScreenResult {
 
     private String orderStatus;
     private String consigneeName;
+    private String consigneeType;
+    private String consigneeContactName;
     private String warehouseName;
     private String notes;
     private String storeName;//店铺
+
+    public String getConsigneeType() {
+        return consigneeType;
+    }
+
+    public void setConsigneeType(String consigneeType) {
+        this.consigneeType = consigneeType;
+    }
+
+    public String getConsigneeContactName() {
+        return consigneeContactName;
+    }
+
+    public void setConsigneeContactName(String consigneeContactName) {
+        this.consigneeContactName = consigneeContactName;
+    }
 
     public String getOrderCode() {
         return orderCode;

@@ -403,7 +403,7 @@
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
                                                     <select id="storeCode" name="storeCode">
-                                                        <#list cscStoreByCustId! as cscStore>
+                                                        <#list cscStoreByCustId as cscStore>
                                                             <option value="${(cscStore.storeCode)!""}">${(cscStore.storeName)!""}</option>
                                                         </#list>
                                                         <#--<option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
@@ -597,6 +597,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="consignorCode" name="consignorCode" type="hidden">
+                                                                        <input id="consignorType" name="consignorType" type="hidden">
                                                                         <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
@@ -605,6 +606,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
+                                                                        <input id="consignorContactCode"   name="consignorContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                         <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
@@ -669,6 +671,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="consigneeCode" name="consigneeCode" type="hidden">
+                                                                        <input id="consigneeType" name="consigneeType" type="hidden">
                                                                         <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
@@ -678,6 +681,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
+                                                                        <input id="consigneeContactCode" name="consigneeContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                         <input id="consigneeContactName" name="consigneeContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
@@ -943,7 +947,7 @@
 
     function validateForm() {
         var csc_url = $("#csc_url").html();
-        $('#orderFundamentalFormValidate').validate({//
+        $('#orderFundamentalFormValidate').validate({
             errorElement : 'div',
             errorClass : 'help-block',
             focusInvalid : false,
@@ -1281,9 +1285,15 @@
         jsonStr.urgent = $("#urgentHel").val();
         jsonStr.transRequire = $("#transRequire").val();
         jsonStr.consignorCode = $("#consignorCode").val();
+        jsonStr.consignorType = $("#consignorType").val();
         jsonStr.consignorName = $("#consignorName").val();
         jsonStr.consigneeCode = $("#consigneeCode").val();
+        jsonStr.consigneeType = $("#consigneeType").val();
         jsonStr.consigneeName = $("#consigneeName").val();
+        jsonStr.consignorContactCode = $("#consignorContactCode").val();
+        jsonStr.consignorContactName = $("#consignorContactName").val();
+        jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
+        jsonStr.consigneeContactName = $("#consigneeContactName").val();
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
@@ -1473,10 +1483,18 @@
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.unitPrice+"</td>";
+                    goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
             },"json");
         });
+
+        var consignorCodeHide = "";
+        var consignorContactCodeHide = "";
+        var consignorTypeHide = "";
+        var consigneeCodeHide = "";
+        var consigneeContactCodeHide = "";
+        var consigneeTypeHide = "";
 
         $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
@@ -1495,6 +1513,9 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
+                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consignorTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1505,6 +1526,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "</tr>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
             },"json");
@@ -1525,6 +1547,9 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
+                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consigneeTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1535,6 +1560,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
             },"json");
@@ -1557,6 +1583,7 @@
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
+                    supplierList =supplierList + "</tr>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
             },"json");
@@ -1582,8 +1609,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
@@ -1607,8 +1634,10 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    $("#testtest").text(consignorName);
+                    $("#consignorCode").val(consignorCodeHide);
                     $("#consignorName").val(consignorName);
+                    $("#consignorType").val(consignorTypeHide);
+                    $("#consignorContactCode").val(consignorContactCodeHide);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
                     $("#consignorFax").val(fax);
@@ -1636,7 +1665,10 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
+                    $("#consigneeCode").val(consigneeCodeHide);
                     $("#consigneeName").val(consignorName);
+                    $("#consigneeType").val(consigneeTypeHide);
+                    $("#consigneeContactCode").val(consigneeContactCodeHide);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
                     $("#consigneeFax").val(fax);

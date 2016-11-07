@@ -603,10 +603,10 @@
                                     ${(goodsDetails.productionBatch)!""}
                                     </td>
                                     <td>
-                                    ${(goodsDetails.productionTime)!""}
+                                    ${((goodsDetails.productionTime)?string('yyyy-MM-dd'))!""}
                                     </td>
                                     <td>
-                                    ${(goodsDetails.invalidTime)!""}
+                                    ${((goodsDetails.invalidTime)?string('yyyy-MM-dd'))!""}
                                     </td>
                                     <td>
                                     ${(goodsDetails.quantity)!""}
