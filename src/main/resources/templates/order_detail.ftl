@@ -656,19 +656,19 @@
         $('.warmessages').hide();
         $('.supportMessages').hide();
     <#elseif ofcOrderDTO.orderType == '61'>
-        debugger;
+
         var businessType = ${ofcOrderDTO.businessType};
         var businessTypeStr = businessType.toString().substring(0,2);
         var provideTrans = ${(ofcOrderDTO.provideTransport)!"0"};
         var provideTransStr = provideTrans.toString();
         if(businessTypeStr == '62'){
-            debugger;
+
             if(provideTransStr == '0'){
                 $('.tramessages').hide();
                 $('.dropdown').hide();
             }
         }else if(businessTypeStr == '61'){
-            debugger;
+
             $('.supportMessages').hide();
             if(provideTransStr == '0'){
                 $('.tramessages').hide();

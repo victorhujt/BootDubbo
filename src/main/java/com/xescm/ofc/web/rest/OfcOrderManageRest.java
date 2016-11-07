@@ -2,6 +2,7 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
@@ -13,11 +14,9 @@ import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
-import com.xescm.ofc.service.OfcOrderDtoService;
-import com.xescm.ofc.service.OfcOrderManageService;
-import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,8 @@ public class OfcOrderManageRest extends BaseController{
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
-
+    @Autowired
+    private OfcTransplanInfoService ofcTransplanInfoService;
 
     /**
      * 订单审核/反审核
@@ -228,11 +229,63 @@ public class OfcOrderManageRest extends BaseController{
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
             cscGoods.setCustomerId(custId);*/
-            //rmcCompanyLineQO.setLineType("333");
+            //rmcCompanyLineQO.setLineType("2");
             Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
         }
+    }
+
+    /**
+     * 计划单修改
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> planUpdate(Model model, String planCode, String planStatus, String serviceProviderName,HttpServletResponse response){
+        logger.debug("==>计划单编号", planCode);
+        logger.debug("==>计划单资源分配状态", planStatus);
+        logger.debug("==>服务商名称", serviceProviderName);
+        String result = null;
+        try {
+            result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName);
+        } catch (Exception ex) {
+            logger.error("计划单状态更新出错:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
+    }
+
+    @ApiOperation(value="服务商筛选", notes="根据查询条件筛选服务商")
+    @ApiImplicitParams({
+            //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
+    })
+    @RequestMapping(value = "/planSeleForTime", method = RequestMethod.POST)
+    @ResponseBody
+    public void planSeleForTime(Model model, String planCode,ServletResponse response){
+        logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
+        String result = null;
+        OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
+        RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
+        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getExpectedArrivedTime().toString()).equals("")){
+            rmcCompanyLineQO.setDepartureTime(ofcTransplanInfo.getExpectedArrivedTime());
+        }else if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getOrderTime().toString()).equals("")){
+            rmcCompanyLineQO.setDepartureTime(ofcTransplanInfo.getOrderTime());
+        }else {
+            logger.error("订单中心筛选服务商出现异常:{},{}");
+            return;
+        }
+
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+        try{
+            response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
+        }catch (Exception ex){
+            logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
+        }
+
     }
 }

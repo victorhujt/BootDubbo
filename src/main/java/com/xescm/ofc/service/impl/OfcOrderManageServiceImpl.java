@@ -3,16 +3,13 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
@@ -23,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xescm.ofc.utils.CodeGenUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -79,6 +75,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcSiloproSourceStatusService ofcSiloproSourceStatusService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
+    @Autowired
+    private OfcOrderScreenService ofcOrderScreenService;
     @Resource
     private CodeGenUtils codeGenUtils;
 
@@ -481,4 +479,50 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return result;
     }*/
 
+    @Override
+    public String planUpdate(String planCode, String planStatus, String serviceProviderName) {
+        OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
+        if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
+            String[] planCodeList=planCode.split("@");
+            try {
+                for(int i=0;i<planCodeList.length;i++){
+                    ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
+                    ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
+                    if(planStatus.equals("40")){
+                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(planCodeList[i]);
+                        String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
+                        if(businessType.equals("600") || businessType.equals("601")){
+                            OrderScreenCondition condition=new OrderScreenCondition();
+                            condition.setOrderCode(ofcTransplanInfo.getOrderCode());
+                            String status=ofcOrderScreenService.orderScreen(condition).get(0).getOrderStatus();
+                            if(PubUtils.trimAndNullAsEmpty(status).equals("")){
+                                throw new BusinessException("订单状态更新异常！");
+                            }else if(!status.equals(ALREADYEXAMINE)){
+                                throw new BusinessException("订单状态异常，无法变更为执行中");
+                            }else {
+                                OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+                                ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
+                                ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
+                                ofcOrderStatus.setStatusDesc("执行中");
+                                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                        +" "+"订单开始执行");
+                                ofcOrderStatus.setOperator("001");
+                                ofcOrderStatus.setLastedOperTime(new Date());
+                                ofcOrderStatusService.save(ofcOrderStatus);
+                            }
+                        }
+                    }
+                    if(!PubUtils.trimAndNullAsEmpty(serviceProviderName).equals("")){
+                        ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
+                    }
+                    ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
+                }
+            } catch (Exception ex) {
+                throw new BusinessException("计划单状态更新异常！");
+            }
+        }else {
+            throw new BusinessException("缺少计划单编号");
+        }
+        return null;
+    }
 }
