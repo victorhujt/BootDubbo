@@ -98,6 +98,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单价</th>
 
                     </thead>
                     <tbody id="goodsSelectListTbody"></tbody>
@@ -462,6 +463,7 @@
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">货品规格
                                                                 </th>
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单价</th>
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">生产批次</th>
                                                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">
@@ -956,7 +958,15 @@
                 },
                 notes:{
                     maxlength:300
-                }
+                },
+                goodsListQuantity:{
+                    numberFormat:true,
+                    maxlength:19
+
+                }/*,
+                goodsListProductionBatch:{
+                    maxlength:100
+                }*/
             },
             messages : {
                 orderTime:{
@@ -968,7 +978,15 @@
                 },
                 notes:{
                     maxlength:"超过最大长度"
-                }
+                },
+                goodsListQuantity:{
+                    numberFormat:"请输入正确格式的货品数量",
+                    maxlength:"超过最大长度"
+
+                }/*,
+                goodsListProductionBatch:{
+                    maxlength:"超过最大长度"
+                }*/
             },
             highlight : function(e) {
                 $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
@@ -1270,7 +1288,8 @@
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
         //仓配基本信息
-        jsonStr.warehouseName = $("#warehouseName").val();
+        jsonStr.warehouseCode = $("#warehouseName").val();
+        jsonStr.warehouseName = $("#wareHouseName option:selected").text();
         jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();
@@ -1377,10 +1396,11 @@
                         case 2 :orderGoods.goodsName = param;break;
                         case 3 :orderGoods.goodsSpec = param;break;
                         case 4 :orderGoods.unit = param;break;
-                        case 5 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                        case 6 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                        case 7 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                        case 8 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 5 :orderGoods.unitPrice = param;break;
+                        case 6 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 7 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 8 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 9 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                     }
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
@@ -1452,6 +1472,7 @@
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoodsVo.unitPrice+"</td>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
             },"json");
@@ -1535,7 +1556,7 @@
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.detailAddress+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
             },"json");
@@ -1550,6 +1571,7 @@
                     var goodsName = tdArr.eq(2).text();//货品名称
                     var specification = tdArr.eq(3).text();//    货品规格
                     var unit = tdArr.eq(4).text();//    单位
+                    var unitPrice = tdArr.eq(5).text();//    单价
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
@@ -1557,8 +1579,9 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1568,6 +1591,7 @@
             if(goodsInfoListDiv==""){
                 alert("请至少选择一行");
             }
+            validateForm();
         });
 
         $("#contactinEnter").click(function () {
