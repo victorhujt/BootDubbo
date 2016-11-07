@@ -414,10 +414,13 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <select id="storeCode" name="storeCode" value="${(orderInfo.storeName)!""}">
-                                                        <option value="线下销售" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '线下销售')>selected="selected"</#if></#if>>线下销售</option>
+                                                    <select id="storeCode" name="storeCode" value="${(orderInfo.storeCode)!""}">
+                                                        <#list cscStoreByCustId! as cscStore>
+                                                            <option value="${(cscStore.storeCode)!""}">${(cscStore.storeName)!""}</option>
+                                                        </#list>
+                                                        <#--<option value="线下销售" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '线下销售')>selected="selected"</#if></#if>>线下销售</option>
                                                         <option value="众品天猫生鲜旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品天猫生鲜旗舰店')>selected="selected"</#if></#if>>众品天猫生鲜旗舰店</option>
-                                                        <option value="众品京东旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品京东旗舰店')>selected="selected"</#if></#if>>众品京东旗舰店</option>
+                                                        <option value="众品京东旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品京东旗舰店')>selected="selected"</#if></#if>>众品京东旗舰店</option>-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -496,7 +499,7 @@
                                                                 <td class="hidden-480">${(goodsDetails.goodsSpec)!""}</td>
                                                                 <td>${(goodsDetails.unit)!""}</td>
                                                                 <td>${(goodsDetails.unitPrice)!""}</td>
-                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.quantity)?substring(',',''))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.quantity)?replace(',',''))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd HH:mm:ss'))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime))?string('yyyy-MM-dd HH:mm:ss')!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
