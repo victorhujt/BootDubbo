@@ -1,4 +1,5 @@
 <head>
+    <title>我要下单</title>
     <style type="text/css">
         #goodsListDiv {
             position:fixed;
@@ -401,9 +402,11 @@
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
                                                     <select id="storeCode" name="storeCode">
-                                                        <option value="线下销售">线下销售</option>
-                                                        <option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
-                                                        <option value="众品京东旗舰店">众品京东旗舰店</option>
+                                                        <#list cscStoreByCustId as cscStore>
+                                                            <option value="${(cscStore.storeCode)!""}">${(cscStore.storeName)!""}</option>
+                                                        </#list>
+                                                        <#--<option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
+                                                        <option value="众品京东旗舰店">众品京东旗舰店</option>-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -720,7 +723,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consigeeAddress" name="consigeeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -994,7 +997,7 @@
                     maxlength: 5
                 },
                 cubage:{
-                    maxlength:5
+                    maxlength:14
                 },
                 totalStandardBox:{
                     integer:true
@@ -1236,6 +1239,9 @@
 </script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+    function deleteGood(obj) {
+        $(obj).parent().parent().remove();
+    }
     function orderPlaceAddTranInfo(jsonStr) {
         //运输基本信息
         jsonStr.quantity = $("#quantity").val();
@@ -1294,7 +1300,7 @@
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
-        cscContact.address = $("#consigeeAddress").val();
+        cscContact.address = $("#consigneeAddress").val();
         cscContact.purpose = "1";
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
@@ -1465,7 +1471,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
             },"json");
@@ -1495,7 +1501,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
             },"json");
@@ -1517,7 +1523,7 @@
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.detailAddress+"</td>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
             },"json");
@@ -1778,13 +1784,11 @@
             }
         });
 
-        function deleteGood(obj) {
+       /* function deleteGood(obj) {
             $(obj).parent().parent().remove();
-        }
+        }*/
 
-        function deleteGood(obj) {
-            $(obj).parent().parent().remove();
-        }
+
 
     })
 </script>

@@ -55,15 +55,6 @@ public class FeignCscCustomerAPIClient {
         Wrapper<?> wrapper = getApi().addCscContantAndCompany(cscContantAndCompanyDto);
         return wrapper;
     }
-
-    /*public Wrapper<?> modifyCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto){
-        logger.debug("==>修改客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
-        if(null == cscContantAndCompanyDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<?> wrapper = getApi().modifyCscContantAndCompany(cscContantAndCompanyDto);
-        return wrapper;
-    }*/
     public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto){
         logger.debug("==>通过groupId取客户id queryCustomerIdDto={}", queryCustomerIdDto);
         if(null == queryCustomerIdDto){

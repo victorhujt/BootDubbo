@@ -1,9 +1,12 @@
 package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -34,10 +37,13 @@ public class OfcJumpontroller extends BaseController{
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
+    @Autowired
+    private FeignCscStoreAPIClient feignCscStoreAPIClient;
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
+        List<CscStorevo> cscStoreListResult = null;
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
@@ -45,6 +51,10 @@ public class OfcJumpontroller extends BaseController{
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            QueryStoreDto queryStoreDto = new QueryStoreDto();
+            queryStoreDto.setCustomerId(custId);
+            Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
+            cscStoreListResult = storeByCustomerId.getResult();
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -55,6 +65,7 @@ public class OfcJumpontroller extends BaseController{
             rmcWarehouseByCustCode = new ArrayList<>();
         }
         map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
+        map.put("cscStoreByCustId",cscStoreListResult);
         return new ModelAndView("order_place");
 
     }
