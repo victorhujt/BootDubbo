@@ -228,4 +228,41 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
         }
     }
+
+    /**
+     * 计划单修改
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> planUpdate(Model model, String planCode, String planStatus, String serviceProviderName,HttpServletResponse response){
+        logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
+        logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", planStatus);
+        logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", serviceProviderName);
+        String result = null;
+        if(planCode.length()==17){
+            planCode=planCode.replace("@","");
+            try {
+
+            } catch (Exception ex) {
+                logger.error("订单中心资源分配出现异常:{},{}", ex.getMessage(), ex);
+                ex.printStackTrace();
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            }
+        }else {
+            String[] planCodeList=planCode.split("@");
+            try {
+                for(int i=0;i<planCodeList.length;i++){
+                    result = ofcOrderManageService.planUpdate(planCodeList[i],planStatus,serviceProviderName);
+                }
+            } catch (Exception ex) {
+                logger.error("订单中心资源分配出现异常:{},{}", ex.getMessage(), ex);
+                ex.printStackTrace();
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            }
+
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
+    }
 }

@@ -357,7 +357,7 @@
         $("#goodsSelectFormBtn1").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm1").serialize()+"&lineType=1", function(data) {
                 data=eval(data);
-                data=eval(data);
+                debugger;
                 if(data.length>1){
                     var goodsList = "";
                     $.each(data,function (index,RmcCompanyLineVo) {
@@ -375,60 +375,59 @@
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
                     });
                     $("#goodsSelectListTbody1").html(goodsList);
-                }else if(data.length==1){
-                    var htmlText="";
+                    var intx=1;
+                    var var3=null;
                     $("#dataTbody").find("tr").each(function(index){
                         var tdArr = $(this).children();
-                        var var0 = tdArr.eq(0).text();
-                        var var2 = tdArr.eq(2).text();
-                        var var3 = tdArr.eq(3).text();
-                        var var4 = tdArr.eq(4).text();
-                        var var5 = tdArr.eq(5).text();
-                        var var6 = tdArr.eq(6).text();
-                        var var7 = tdArr.eq(7).text();
-                        var var8 = tdArr.eq(8).text();
-                        var var9 = tdArr.eq(9).text();
-                        var var10 = tdArr.eq(10).text();
-                        var var11 = tdArr.eq(11).text();
-                        var var12 = tdArr.eq(12).text();
-                        var var13 = tdArr.eq(13).text();
-                        var var14 = tdArr.eq(14).text();
-                        var var15 = tdArr.eq(15).text();
-                        var var16 = tdArr.eq(16).text();
-                        htmlText +="<tr role=\"row\" class=\"odd\">"
-                        htmlText +="<td>"+var0+"</td>"
                         if(tdArr.eq(1).find("input").prop("checked")){
-                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
-                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus('30'))+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>"
-
-                        }else{
-                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
-                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
+                            if(intx==1){
+                                var3 = tdArr.eq(3).text();
+                            }
+                            i=i+1;
                         }
-                        htmlText+="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
-                                + "</tr>";
                     });
-                    $("#dataTbody").html(htmlText);
+                    xescm.common.submit("/ofc/planSeleForTime",{"planCode":var3,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
+                        debugger;
+                        $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
+                        queryData(1);
+                    });
+                }else if(data.length==1){
+                    var str="";
+                    var var3=null;
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var3 = tdArr.eq(3).text();
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            str=str+var3+"@";
+                        }
+                    });
+                    debugger;
+                    if(str.length>0){
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
+                            debugger;
+                            $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
+                            queryData(1);
+                        });
+                    }
                 }else if(data.length==0){
-                    var htmlText="";
+                    var str="";
+                    var var3=null;
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var3 = tdArr.eq(3).text();
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            str=str+var3+"@";
+                        }
+                    });
+                    debugger;
+                    if(str.length>0){
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
+                            debugger;
+                            $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
+                            queryData(1);
+                        });
+                    }
+                    /*var htmlText="";
                     $("#dataTbody").find("tr").each(function(index){
                         var tdArr = $(this).children();
                         var var0 = tdArr.eq(0).text();
@@ -479,7 +478,7 @@
                                 +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
                                 + "</tr>";
                     });
-                    $("#dataTbody").html(htmlText);
+                    $("#dataTbody").html(htmlText);*/
                 }
 
             },"json");
@@ -490,8 +489,13 @@
 
                 data=eval(data);
                 if(data.length>1){
+                    var i=1;
+                    var txt="";
                     var goodsList = "";
                     $.each(data,function (index,RmcCompanyLineVo) {
+                        if(i==1){
+                            txt=RmcCompanyLineVo.companyName;
+                        }
                         goodsList =goodsList + "<tr role='row' class='odd'>";
                         goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
@@ -502,113 +506,62 @@
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
                         goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                        i=i+1;
                     });
                     $("#goodsSelectListTbody2").html(goodsList);
+                    var str="";
+                    var var3=null;
+                    $("#dataTbody").find("tr").each(function(index){
+                        var tdArr = $(this).children();
+                        var3 = tdArr.eq(3).text();
+                        if(tdArr.eq(1).find("input").prop("checked")){
+                            str=str+var3+"@";
+                        }
+                    });
+                    debugger;
+                    if(str.length>0){
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":txt},"城配计划单，记录有多条时将自动选择第一条记录，是否确定?",function () {
+                            debugger;
+                            $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
+                            queryData(1);
+                        });
+                    }
                 }else if(data.length==1){
-                    var htmlText="";
+                    var str="";
+                    var var3=null;
                     $("#dataTbody").find("tr").each(function(index){
                         var tdArr = $(this).children();
-                        var var0 = tdArr.eq(0).text();
-                        var var2 = tdArr.eq(2).text();
-                        var var3 = tdArr.eq(3).text();
-                        var var4 = tdArr.eq(4).text();
-                        var var5 = tdArr.eq(5).text();
-                        var var6 = tdArr.eq(6).text();
-                        var var7 = tdArr.eq(7).text();
-                        var var8 = tdArr.eq(8).text();
-                        var var9 = tdArr.eq(9).text();
-                        var var10 = tdArr.eq(10).text();
-                        var var11 = tdArr.eq(11).text();
-                        var var12 = tdArr.eq(12).text();
-                        var var13 = tdArr.eq(13).text();
-                        var var14 = tdArr.eq(14).text();
-                        var var15 = tdArr.eq(15).text();
-                        var var16 = tdArr.eq(16).text();
-                        htmlText +="<tr role=\"row\" class=\"odd\">"
-                        htmlText +="<td>"+var0+"</td>"
+                        var3 = tdArr.eq(3).text();
                         if(tdArr.eq(1).find("input").prop("checked")){
-                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
-                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus('30'))+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>"
-
-                        }else{
-                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
-                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
+                            str=str+var3+"@";
                         }
-                        htmlText+="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
-                                +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
-                                + "</tr>";
                     });
-                    $("#dataTbody").html(htmlText);
+                    debugger;
+                    if(str.length>0){
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
+                            debugger;
+                            $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
+                            queryData(1);
+                        });
+                    }
                 }else if(data.length==0){
-                    var htmlText="";
+                    var str="";
+                    var var3=null;
                     $("#dataTbody").find("tr").each(function(index){
                         var tdArr = $(this).children();
-                        var var0 = tdArr.eq(0).text();
-                        var var2 = tdArr.eq(2).text();
-                        var var3 = tdArr.eq(3).text();
-                        var var4 = tdArr.eq(4).text();
-                        var var5 = tdArr.eq(5).text();
-                        var var6 = tdArr.eq(6).text();
-                        var var7 = tdArr.eq(7).text();
-                        var var8 = tdArr.eq(8).text();
-                        var var9 = tdArr.eq(9).text();
-                        var var10 = tdArr.eq(10).text();
-                        var var11 = tdArr.eq(11).text();
-                        var var12 = tdArr.eq(12).text();
-                        var var13 = tdArr.eq(13).text();
-                        var var14 = tdArr.eq(14).text();
-                        var var15 = tdArr.eq(15).text();
-                        var var16 = tdArr.eq(16).text();
-
-
-                        htmlText +="<tr role=\"row\" class=\"odd\">"
-                        htmlText +="<td>"+var0+"</td>"
+                        var3 = tdArr.eq(3).text();
                         if(tdArr.eq(1).find("input").prop("checked")){
-                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' checked='checked' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
-                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus("20"))+"</td>"
-
-                        }else{
-                            htmlText +="<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>"
-                                    +"<td>"+StringUtil.nullToEmpty(var2)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var3)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var4)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var5)+"</td>"
-                                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var6)+"</td>"
+                            str=str+var3+"@";
                         }
-                        htmlText +="<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var7)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var8)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var9)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var10)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var11)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var12)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var13)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var14)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var15)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(var16)+"</td>"
-                        + "</tr>";
                     });
-                    $("#dataTbody").html(htmlText);
+                    debugger;
+                    if(str.length>0){
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
+                            debugger;
+                            $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
+                            queryData(1);
+                        });
+                    }
                 }
 
             },"json");
