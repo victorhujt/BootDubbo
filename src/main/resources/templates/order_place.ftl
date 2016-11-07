@@ -89,7 +89,7 @@
                     <thead>
                     <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                         <label class="pos-rel">
-                            <input type="checkbox" class="ace">
+                            <input id="goodcheck" type="checkbox" class="ace">
                             <span class="lbl"></span>
                         </label>
                     </th>
@@ -1589,6 +1589,18 @@
             },"json");
         });
 
+        $("#goodcheck").change(function () {
+            if($("#goodcheck").prop("checked")){
+                $("#goodsSelectListTbody").find("tr").each(function(index){
+                    $(this).children().eq(0).find("input").prop('checked',true);
+                });
+            }else{
+                $("#goodsSelectListTbody").find("tr").each(function(index){
+                    $(this).children().eq(0).find("input").prop('checked',false);
+                });
+            }
+        });
+
         $("#goodsEnter").click(function () {
             var goodsInfoListDiv = "";
             $("#goodsInfoListDiv").find("tr").each(function(index){
@@ -1597,10 +1609,11 @@
                 var goodsName = tdArr.eq(2).text();//货品名称
                 var specification = tdArr.eq(3).text();//    货品规格
                 var unit = tdArr.eq(4).text();//    单位
-                var quantity = tdArr.eq(5).children().val();//    数量
-                var production_batch = tdArr.eq(6).children().val();//    批次
-                var production_time = tdArr.eq(7).children().val();//    生产日期
-                var invalid_time = tdArr.eq(8).children().val();//    失效日期
+                var unitPrice = tdArr.eq(5).text();//    单价
+                var quantity = tdArr.eq(6).children().val();//    数量
+                var production_batch = tdArr.eq(7).children().val();//    批次
+                var production_time = tdArr.eq(8).children().val();//    生产日期
+                var invalid_time = tdArr.eq(9).children().val();//    失效日期
                 debugger;
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
@@ -1609,6 +1622,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+quantity+"></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_batch+"></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_time+" onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})'></td>";
@@ -1637,10 +1651,6 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss\'})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick=\"WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss\'})\"></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
