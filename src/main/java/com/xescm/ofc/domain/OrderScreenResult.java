@@ -9,60 +9,39 @@ import java.util.Date;
  * Created by lyh on 2016/10/10.
  */
 public class OrderScreenResult {
-    @Override
-    public String toString() {
-        return "OrderScreenResult{" +
-                "orderCode='" + orderCode + '\'' +
-                ", custOrderCode='" + custOrderCode + '\'' +
-                ", orderTime=" + orderTime +
-                ", orderType='" + orderType + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", consigneeName='" + consigneeName + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", notes='" + notes + '\'' +
-                ", store='" + store + '\'' +
-                '}';
-    }
-
     private String orderCode;
     private String custOrderCode;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderTime;
-    /*
-    订单类型: 0为运输订单 1为仓配订单
-     */
+
     private String orderType;
-    /*
-    业务类型
-    00 城配
-    01 干线
 
-    10 销售出库
-    11 调拨出库
-    12 报损出库
-    13 其他出库
-
-    14 采购入库
-    15 调拨入库
-    16 退货入库
-    17 加工入库
-     */
     private String businessType;
-    /*
-     订单状态:
-     待审核:0
-     已审核:1
-     执行中:2
-     已完成:3
-     已取消:4
-     */
+
     private String orderStatus;
     private String consigneeName;
+    private String consigneeType;
+    private String consigneeContactName;
     private String warehouseName;
     private String notes;
-    private String store;//店铺
+    private String storeName;//店铺
+
+    public String getConsigneeType() {
+        return consigneeType;
+    }
+
+    public void setConsigneeType(String consigneeType) {
+        this.consigneeType = consigneeType;
+    }
+
+    public String getConsigneeContactName() {
+        return consigneeContactName;
+    }
+
+    public void setConsigneeContactName(String consigneeContactName) {
+        this.consigneeContactName = consigneeContactName;
+    }
 
     public String getOrderCode() {
         return orderCode;
@@ -136,11 +115,11 @@ public class OrderScreenResult {
         this.notes = notes;
     }
 
-    public String getStore() {
-        return store;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setStore(String store) {
-        this.store = store;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }

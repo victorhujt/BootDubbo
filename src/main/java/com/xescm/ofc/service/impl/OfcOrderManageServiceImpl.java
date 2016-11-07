@@ -362,6 +362,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
             ofcOrderStatusService.deleteByOrderCode(orderCode);
             ofcWarehouseInformationService.deleteByOrderCode(orderCode);
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+            ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
             throw new BusinessException("计划单状态不在可删除范围内");

@@ -43,6 +43,7 @@
         ofi.business_type businessType,
         oos.order_status orderStatus,
         odbi.consignee_name consigneeName,
+        odbi.consignee_contact_name consigneeContactName,
         owi.warehouse_name warehouseName,
         ofi.notes notes,
         ofi.store_name storeName

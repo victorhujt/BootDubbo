@@ -197,7 +197,7 @@ public class OfcOrderManageRest extends BaseController{
     }
 
     /**
-     * 订单删除
+     * 订单删除货品
      * @param ofcGoodsDetailsInfo
      * @return
      */

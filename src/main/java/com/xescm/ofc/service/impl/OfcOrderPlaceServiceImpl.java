@@ -212,6 +212,22 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }else{
                     throw new BusinessException("您的订单类型系统无法识别!");
                 }
+                //删除之前订单的货品信息
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
+                ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
+                //添加该订单的货品信息
+                for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+                    String orderCode = ofcFundamentalInformation.getOrderCode();
+                    ofcGoodsDetails.setOrderCode(orderCode);
+                    ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                    ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+                    ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+                    ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+                    ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+                }
+
+
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())

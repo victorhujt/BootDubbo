@@ -14,6 +14,7 @@ import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +66,11 @@ public class OfcOrderFollowRest extends BaseController{
         logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
         Map<String, Object> map = new HashMap<>();
         try{
+            code = PubUtils.trimAndNullAsEmpty(code);
+            followTag = PubUtils.trimAndNullAsEmpty(followTag);
             OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);
-            List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);
+            List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);//PubUtils.trimAndNullAsEmpty
+
             map.put("ofcOrderDTO",ofcOrderDTO);
             map.put("ofcOrderStatus",ofcOrderStatuses);
         }catch (Exception ex){

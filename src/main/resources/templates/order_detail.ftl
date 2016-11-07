@@ -465,7 +465,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="arriveTime" value = "${(ofcOrderDTO.arriveTime)!""}" readonly="readonly" style="color: #000" name="arriveTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="arriveTime" value = "${(ofcOrderDTO.arriveTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="arriveTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -603,10 +603,10 @@
                                     ${(goodsDetails.productionBatch)!""}
                                     </td>
                                     <td>
-                                    ${(goodsDetails.productionTime)!""}
+                                    ${((goodsDetails.productionTime)?string('yyyy-MM-dd'))!""}
                                     </td>
                                     <td>
-                                    ${(goodsDetails.invalidTime)!""}
+                                    ${((goodsDetails.invalidTime)?string('yyyy-MM-dd'))!""}
                                     </td>
                                     <td>
                                     ${(goodsDetails.quantity)!""}

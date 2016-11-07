@@ -22,6 +22,12 @@
     <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
     <result column="consignee_code" property="consigneeCode" jdbcType="VARCHAR" />
     <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_code" property="consignorContactCode" jdbcType="VARCHAR" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_code" property="consigneeContactCode" jdbcType="VARCHAR" />
+    <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR" />
+    <result column="consignor_type" property="consignorType" jdbcType="VARCHAR" />
+    <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR" />
     <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
     <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
@@ -93,6 +99,24 @@
       </if>
       <if test="consigneeName != null" >
         consignee_name = #{consigneeName,jdbcType=INTEGER},
+      </if>
+      <if test="consignorContactCode != null" >
+        consignor_contact_code = #{consignorContactCode,jdbcType=INTEGER},
+      </if>
+      <if test="consignorContactName != null" >
+        consignor_contact_name = #{consignorContactName,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeContactCode != null" >
+        consignee_contact_code = #{consigneeContactCode,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeContactName != null" >
+        consignee_contact_name = #{consigneeContactName,jdbcType=INTEGER},
+      </if>
+      <if test="consignorType != null" >
+        consignor_type = #{consignorType,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeType != null" >
+        consignee_type = #{consigneeType,jdbcType=INTEGER},
       </if>
       <if test="carrierCode != null" >
         carrier_code = #{carrierCode,jdbcType=INTEGER},

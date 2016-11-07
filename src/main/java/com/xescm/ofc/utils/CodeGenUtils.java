@@ -31,7 +31,7 @@ public class CodeGenUtils {
 	public String getNewCode(String envLock, String prefix, int prefixLen){
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		String dateStr = df.format(new Date());
-		dateStr = dateStr.substring(2);
+//		dateStr = dateStr.substring(2);
 		String key = envLock+ prefix +dateStr;
 		String valuePrefix = prefix +dateStr;
 		ValueOperations<String,String> ops  = rt.opsForValue();
