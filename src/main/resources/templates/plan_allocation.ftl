@@ -604,6 +604,7 @@
             var serive = "";
             var str="";
             var var3="";
+            var i=0;
             $("#dataTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(1).find("input").prop("checked")){
@@ -616,12 +617,13 @@
                         serive="determined"
                         return;
                     }else if(resourceAllocationStatus=="待分配" || resourceAllocationStatus=="未分配"){
-                        alert("您选择的记录中存在待分配或者未分配的记录，请重新选择！");
+                        alert("您选择的记录中存在未分配资源的记录，请重新选择！");
                         serive="determined"
                         return;
                     }else{
                         str=str+var3+"@";
                     }
+                    i=i+1;
                 }
             });
 
@@ -631,7 +633,7 @@
                 return;
             }else {
                 if(str.length>0){
-                    xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"40","serviceProviderName":null},"即将对已分配资源进行确认，是否确定?",function () {
+                    xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"40","serviceProviderName":null},"您选择了"+i+"条记录进行资源确认，是否继续操作?",function () {
                         queryData(1);
                     });
                 }
