@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="col-sm-6" style="float: right">
-                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" onclick="detailBackToHistory(${(historyUrl)!})">
+                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" value="${(historyUrl)!}" onclick="detailBackToHistory()">
                                 返回
                             </button>
                         </div>
@@ -691,16 +691,16 @@
         }
     </#if>
     });
-    function detailBackToHistory(historyUrl) {
+    function detailBackToHistory() {
         debugger;
-        console.log(historyUrl)
-        /*var tag = historyUrl;
+        console.log($("#goBack").val())
+        var tag = $("#goBack").val();
         if("orderManage" == tag){
             xescm.common.loadPage("/ofc/orderManage");
         }
         else if("orderScreen" == tag){
             xescm.common.loadPage("/ofc/orderScreen");
-        }*/
+        }
     }
 </script>
 </body>
