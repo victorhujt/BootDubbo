@@ -501,8 +501,8 @@
                                                                 <td>${(goodsDetails.unitPrice)!""}</td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.quantity)?replace(',',''))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
-                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd HH:mm:ss'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
-                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime))?string('yyyy-MM-dd HH:mm:ss')!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
+                                                                <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime)?string('yyyy-MM-dd'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                             </tr>
                                                             </#list>
                                                             </tbody>
@@ -581,7 +581,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="pickupTime" name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -589,7 +589,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -624,6 +624,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="consignorCode" name="consignorCode" <#if (consignorMessage.contactCompanyId)!?? >value="${(consignorMessage.contactCompanyId)!}"</#if> type="hidden">
+                                                                        <input id="consignorType" name="consignorType" <#if (consignorMessage.type)!?? >value="${(consignorMessage.type)!}"</#if> type="hidden">
                                                                         <input id="consignorName"  name="consignorName" <#if (consignorMessage.contactCompanyName)!?? >value="${(consignorMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
@@ -633,6 +634,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
+                                                                        <input id="consignorContactCode"   name="consignorContactCode" <#if (consignorMessage.contactCode)!?? >value="${(consignorMessage.contactCode)!}"</#if>  type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                         <input id="consignorContactName" name="consignorContactName" <#if (consignorMessage.contactName)!?? >value="${(consignorMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
@@ -680,7 +682,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consignorAddress" name="consignorAddress" <#if (consignorMessage.detailAddress)!?? >value="${(consignorMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorAddress" name="consignorAddress" <#if (consignorMessage.detailAddress)!?? >value="${(consignorMessage.detailAddress)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -697,6 +699,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.contactCompanyId)!?? >value="${(consigneeMessage.contactCompanyId)!}"</#if> >
+                                                                        <input id="consigneeType" name="consigneeType" <#if (consigneeMessage.type)!?? >value="${(consigneeMessage.type)!}"</#if> type="hidden">
                                                                         <input id="consigneeName" name="consigneeName" <#if (consigneeMessage.contactCompanyName)!?? >value="${(consigneeMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
@@ -707,6 +710,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
+                                                                        <input id="consigneeContactCode" name="consigneeContactCode" <#if (consigneeMessage.contactCode)!?? >value="${(consigneeMessage.contactCode)!}"</#if> type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                         <input id="consigneeContactName" name="consigneeContactName" <#if (consigneeMessage.contactName)!?? >value="${(consigneeMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
@@ -751,7 +755,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (consigneeMessage.detailAddress)!?? >value="${(consigneeMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (consigneeMessage.detailAddress)!?? >value="${(consigneeMessage.detailAddress)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -791,7 +795,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="arriveTime" name="arriveTime" <#if orderInfo.arriveTime?? >value="${((orderInfo.arriveTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if>  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="arriveTime" name="arriveTime" <#if orderInfo.arriveTime?? >value="${((orderInfo.arriveTime)?string('yyyy-MM-dd HH:mm'))!}"</#if>  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
 
                                                                         </div>
                                                                     </div>
@@ -1021,6 +1025,7 @@
                     maxlength:14
                 },
                 totalStandardBox:{
+                    maxlength:8,
                     integer:true
                 },
                 consignorName:{
@@ -1135,6 +1140,7 @@
                     maxlength:"超过最大长度"
                 },
                 totalStandardBox:{
+                    maxlength:"超过最大长度",
                     integer:"必须输入整数"
                 },
                 consignorName:{
@@ -1273,9 +1279,15 @@
         jsonStr.urgent = $("#urgent1").val();
         jsonStr.transRequire = $("#transRequire").val();
         jsonStr.consignorCode = $("#consignorCode").val();
+        jsonStr.consignorType = $("#consignorType").val();
         jsonStr.consignorName = $("#consignorName").val();
         jsonStr.consigneeCode = $("#consigneeCode").val();
+        jsonStr.consigneeType = $("#consigneeType").val();
         jsonStr.consigneeName = $("#consigneeName").val();
+        jsonStr.consignorContactCode = $("#consignorContactCode").val();
+        jsonStr.consignorContactName = $("#consignorContactName").val();
+        jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
+        jsonStr.consigneeContactName = $("#consigneeContactName").val();
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
@@ -1363,6 +1375,12 @@
             },"json");
         });
 
+        var consignorCodeHide = "";
+        var consignorContactCodeHide = "";
+        var consignorTypeHide = "";
+        var consigneeCodeHide = "";
+        var consigneeContactCodeHide = "";
+        var consigneeTypeHide = "";
         $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
             var cscContantAndCompanyDto = {};
@@ -1379,6 +1397,9 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
+                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consignorTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1410,6 +1431,9 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
+                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consigneeTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='suppliersele' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1499,8 +1523,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='search' value='' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 }
@@ -1844,6 +1868,7 @@
         var tag = "manage";
         var ofcOrderDTOJson = JSON.stringify(jsonStr);
         var orderGoodsListStr = JSON.stringify(orderGoodsList);
+        console.log("-=-=-=-"+orderGoodsListStr);
         /*xescm.common.loadPage("/ofc/orderEdit/" + tag + "/" + ofcOrderDTOJson
                 + "/" + orderGoodsListStr+"~`"
                 + "/" + cscContantAndCompanyDtoConsignorStr

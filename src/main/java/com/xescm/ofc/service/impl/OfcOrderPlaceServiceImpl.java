@@ -290,8 +290,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     public OfcWarehouseInformation upOfcWarehouseInformation(OfcWarehouseInformation ofcWarehouseInformation
             ,OfcFundamentalInformation ofcFundamentalInformation){
-        ofcWarehouseInformation.setSupportCode("001");
-        ofcWarehouseInformation.setSupportName("众品");
+        /*ofcWarehouseInformation.setSupportCode("001");
+        ofcWarehouseInformation.setSupportName("众品");*/
         ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcWarehouseInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
         ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
