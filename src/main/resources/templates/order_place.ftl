@@ -403,7 +403,7 @@
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
                                                     <select id="storeCode" name="storeCode">
-                                                        <#list cscStoreByCustId as cscStore>
+                                                        <#list cscStoreByCustId! as cscStore>
                                                             <option value="${(cscStore.storeCode)!""}">${(cscStore.storeName)!""}</option>
                                                         </#list>
                                                         <#--<option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
@@ -1474,6 +1474,7 @@
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
+                debugger;
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
