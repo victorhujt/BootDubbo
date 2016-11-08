@@ -169,6 +169,14 @@ public class OfcFundamentalInformation {
      */
     private String operatorName;
 
+   /* private String saleOrganization;
+    private String productGroup;
+    private String saleDepartment;
+    private String saleGroup;
+    private String saleDepartment_desc;
+    private String saleGroupDesc;
+*/
+
     /**
      * 操作时间
      */

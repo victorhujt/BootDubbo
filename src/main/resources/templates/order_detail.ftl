@@ -692,12 +692,15 @@
     </#if>
     });
     function detailBackToHistory(historyUrl) {
-        if("orderManage" == historyUrl){
+        debugger;
+        console.log(historyUrl)
+        /*var tag = historyUrl;
+        if("orderManage" == tag){
             xescm.common.loadPage("/ofc/orderManage");
         }
-        else if("orderScreen" == historyUrl){
+        else if("orderScreen" == tag){
             xescm.common.loadPage("/ofc/orderScreen");
-        }
+        }*/
     }
 </script>
 </body>

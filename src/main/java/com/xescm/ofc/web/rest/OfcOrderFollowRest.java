@@ -130,9 +130,9 @@ public class OfcOrderFollowRest extends BaseController{
         map.put("consigneeMessage",consigneeMessage);
         map.put("supportMessage",supportMessage);
         if("orderManage".equals(historyUrlTag)){
-            map.put("historyUrl","orderManage");
+            map.put("historyUrl",historyUrlTag);
         }else if("orderScreen".equals(historyUrlTag)){
-            map.put("historyUrl","orderScreen");
+            map.put("historyUrl",historyUrlTag);
         }
 
         return "order_detail";
