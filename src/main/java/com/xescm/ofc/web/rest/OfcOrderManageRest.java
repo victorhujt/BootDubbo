@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -277,9 +279,15 @@ public class OfcOrderManageRest extends BaseController{
         OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
         RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getExpectedArrivedTime().toString()).equals("")){
-            rmcCompanyLineQO.setDepartureTime(ofcTransplanInfo.getExpectedArrivedTime());
+            Calendar ca=Calendar.getInstance();
+            ca.setTime(ofcTransplanInfo.getExpectedArrivedTime());
+            ca.add(Calendar.HOUR_OF_DAY, 3);
+            rmcCompanyLineQO.setDepartureTime(ca.getTime());
         }else if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getOrderTime().toString()).equals("")){
-            rmcCompanyLineQO.setDepartureTime(ofcTransplanInfo.getOrderTime());
+            Calendar ca=Calendar.getInstance();
+            ca.setTime(ofcTransplanInfo.getOrderTime());
+            ca.add(Calendar.HOUR_OF_DAY, 3);
+            rmcCompanyLineQO.setDepartureTime(ca.getTime());
         }else {
             logger.error("订单中心筛选服务商出现异常:{},{}");
             return;
