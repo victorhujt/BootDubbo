@@ -36,6 +36,7 @@ import static com.xescm.ofc.enums.OrderConstEnum.*;
 @Transactional
 public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
 
@@ -480,7 +481,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }*/
 
     @Override
-    public String planUpdate(String planCode, String planStatus, String serviceProviderName) {
+    public String planUpdate(String planCode, String planStatus, String serviceProviderName,String userId) {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
             String[] planCodeList=planCode.split("@");
@@ -511,6 +512,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 ofcOrderStatusService.save(ofcOrderStatus);
                             }
                         }
+                        ofcTraplanSourceStatus.setResourceConfirmation(userId);
+                        ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
                     }
                     if(!PubUtils.trimAndNullAsEmpty(serviceProviderName).equals("")){
                         ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
