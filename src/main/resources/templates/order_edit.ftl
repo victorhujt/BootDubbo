@@ -1307,12 +1307,35 @@
         var cscContactCompany = {};
         cscContactCompany.contactCompanyName = $("#consignorName").val();
         cscContact.contactName = $("#consignorContactName").val();
+        cscContact.purpose = "2";
         cscContact.phone = $("#consignorPhone").val();
+        var cscContantAndCompanyDto = {};
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+            data = eval(data);
+            $.each(data,function (index,CscContantAndCompanyDto) {
+                /*debugger;
+                resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
+                resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+                resultConsignorType = CscContantAndCompanyDto.type;*/
+                $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+                $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                $("#consignorType").val(CscContantAndCompanyDto.type);
+                console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
+            });
+        });
+
+        cscContactCompany.contactCompanyId = $("#consignorCode").val();
+        cscContact.contactCode = $("#consignorContactCode").val();
+        cscContactCompany.type = $("#consignorType").val();
+
         cscContact.fax = $("#consignorFax").val();
         cscContact.email = $("#consignorEmail").val();
         cscContact.postCode = $("#consignorPostCode").val();
         cscContact.address = $("#consignorAddress").val();
-        cscContact.purpose = "2";
+
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
@@ -1328,11 +1351,30 @@
         cscContactCompany.contactCompanyName = $("#consigneeName").val();
         cscContact.contactName = $("#consigneeContactName").val();
         cscContact.phone = $("#consigneePhone").val();
+        cscContact.purpose = "1";
+        var cscContantAndCompanyDto = {};
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+            data = eval(data);
+            console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
+            $.each(data,function (index,CscContantAndCompanyDto) {
+                $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                $("#consigneeType").val(CscContantAndCompanyDto.type);
+
+            });
+        });
+        cscContactCompany.contactCompanyId = $("#consigneeCode").val();
+        cscContact.contactCode = $("#consigneeContactCode").val();
+        cscContactCompany.type = $("#consigneeType").val();
+
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
         cscContact.address = $("#consigeeAddress").val();
-        cscContact.purpose = "1";
+
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
