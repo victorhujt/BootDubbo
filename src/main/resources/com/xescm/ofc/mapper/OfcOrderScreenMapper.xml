@@ -42,6 +42,7 @@
         ofi.order_type orderType,
         ofi.business_type businessType,
         oos.order_status orderStatus,
+        odbi.consignee_type consigneeType,
         odbi.consignee_name consigneeName,
         odbi.consignee_contact_name consigneeContactName,
         owi.warehouse_name warehouseName,

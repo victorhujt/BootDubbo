@@ -1284,6 +1284,10 @@
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgentHel").val();
         jsonStr.transRequire = $("#transRequire").val();
+
+
+
+
         jsonStr.consignorCode = $("#consignorCode").val();
         jsonStr.consignorType = $("#consignorType").val();
         jsonStr.consignorName = $("#consignorName").val();
@@ -1297,7 +1301,7 @@
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
-        debugger;
+        ;
         //仓配基本信息
         jsonStr.warehouseCode = $("#warehouseName").val();
         jsonStr.warehouseName = $("#wareHouseName option:selected").text();
@@ -1310,6 +1314,9 @@
         jsonStr.contactNumber = $("#contactNumber").val();
         return jsonStr;
     }
+    var resultConsignorCode = "";
+    var resultConsignorContactCode = "";
+    var resultConsignorType = "";
     function getCscContantAndCompanyDtoConsignorStr() {
         var paramConsignor = {};
         var paramConsignee = {};
@@ -1317,12 +1324,37 @@
         var cscContactCompany = {};
         cscContactCompany.contactCompanyName = $("#consignorName").val();
         cscContact.contactName = $("#consignorContactName").val();
+        cscContact.purpose = "2";
         cscContact.phone = $("#consignorPhone").val();
+        var cscContantAndCompanyDto = {};
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+
+//        CommonClient.syncpost()
+
+       CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+           data = eval(data);
+           $.each(data,function (index,CscContantAndCompanyDto) {
+               debugger;
+               resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
+               resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+               resultConsignorType = CscContantAndCompanyDto.type;
+               $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+               $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+               $("#consignorType").val(CscContantAndCompanyDto.type);
+               console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
+           });
+       });
+
+        cscContactCompany.contactCompanyId = resultConsignorCode;
+        cscContact.contactCode = resultConsignorContactCode;
+        cscContactCompany.type = resultConsignorType;
+
         cscContact.fax = $("#consignorFax").val();
         cscContact.email = $("#consignorEmail").val();
         cscContact.postCode = $("#consignorPostCode").val();
         cscContact.address = $("#consignorAddress").val();
-        cscContact.purpose = "2";
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
@@ -1337,12 +1369,29 @@
         var cscContactCompany = {};
         cscContactCompany.contactCompanyName = $("#consigneeName").val();
         cscContact.contactName = $("#consigneeContactName").val();
+        cscContact.purpose = "1";
         cscContact.phone = $("#consigneePhone").val();
+        var cscContantAndCompanyDto = {};
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+            data = eval(data);
+            console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
+            $.each(data,function (index,CscContantAndCompanyDto) {
+                $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                $("#consigneeType").val(CscContantAndCompanyDto.type);
+
+            });
+        });
+        cscContactCompany.contactCompanyId = $("#consigneeCode").val();
+        cscContact.contactCode = $("#consigneeContactCode").val();
+        cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
         cscContact.address = $("#consigneeAddress").val();
-        cscContact.purpose = "1";
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
@@ -1351,7 +1400,7 @@
     }
     function getCscSupplierInfoDtoStr(){
         var paramSupport = {};
-        debugger
+        
         paramSupport.supplierName = $("#supportName").val();
         paramSupport.contactName = $("#supportContactName").val();
         paramSupport.contactPhone = $("#supportPhone").val();
@@ -1431,9 +1480,9 @@
             var cscContantAndCompanyDtoConsigneeStr;
             var cscSupplierInfoDtoStr;
             if(orderType == '60'){//运输订单
-                jsonStr = orderPlaceAddTranInfo(jsonStr);
                 cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
                 cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
+                jsonStr = orderPlaceAddTranInfo(jsonStr);
             }
 
             if(orderType == '61' && businessType == '61'){//仓储出库订单
@@ -1460,6 +1509,9 @@
             var ofcOrderDTO = JSON.stringify(jsonStr);
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             console.log("======orderGoodsListStr======"+orderGoodsListStr)
+            console.log("======cscContantAndCompanyDtoConsignorStr======"+cscContantAndCompanyDtoConsignorStr)
+            console.log("======cscContantAndCompanyDtoConsigneeStr======"+cscContantAndCompanyDtoConsigneeStr)
+            console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
@@ -1470,7 +1522,7 @@
                     ,"您确认提交订单吗?"
                     ,function () {
                         console.log("1111111111111111--"+tag);
-                        debugger
+                        
                         //xescm.common.goBack("/ofc/orderPlace");
                     })
         });
@@ -1492,12 +1544,12 @@
             },"json");
         });
 
-        var consignorCodeHide = "";
+       /* var consignorCodeHide = "";
         var consignorContactCodeHide = "";
         var consignorTypeHide = "";
         var consigneeCodeHide = "";
         var consigneeContactCodeHide = "";
-        var consigneeTypeHide = "";
+        var consigneeTypeHide = "";*/
 
         $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
@@ -1505,7 +1557,7 @@
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
-            debugger
+            
             cscContactCompany.contactCompanyName = $("#consignorName2").val();
             cscContact.purpose = "2";
             cscContact.contactName = $("#consignorPerson2").val();
@@ -1516,22 +1568,23 @@
             CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
                 var contactList = "";
+                console.log("-=-=-=----------------111-11"+JSON.stringify(data));
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
-                    consignorTypeHide = CscContantAndCompanyDto.type;
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "</tr>";
-                });
+                /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                consignorTypeHide = CscContantAndCompanyDto.type;*/
+                contactList =contactList + "<tr role='row' class='odd'>";
+                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                contactList =contactList + "<td>"+(index+1)+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                contactList =contactList + "</tr>";
+            });
                 $("#contactSelectListTbody2").html(contactList);
             },"json");
         });
@@ -1551,9 +1604,9 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
                     consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
-                    consigneeTypeHide = CscContantAndCompanyDto.type;
+                    consigneeTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1618,7 +1671,7 @@
                 var production_batch = tdArr.eq(7).children().val();//    批次
                 var production_time = tdArr.eq(8).children().val();//    生产日期
                 var invalid_time = tdArr.eq(9).children().val();//    失效日期
-                debugger;
+                ;
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
@@ -1667,6 +1720,7 @@
             validateForm();
         });
 
+
         $("#contactinEnter").click(function () {
             var consignorin = "";
             $("#contactSelectListTbody2").find("tr").each(function(index){
@@ -1678,12 +1732,10 @@
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
                     var fax = tdArr.eq(5).text();//    传真
                     var email = tdArr.eq(6).text();//    email
-                    var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    $("#consignorCode").val(consignorCodeHide);
+                    var code = tdArr.eq(7).text();//    邮编
+
                     $("#consignorName").val(consignorName);
-                    $("#consignorType").val(consignorTypeHide);
-                    $("#consignorContactCode").val(consignorContactCodeHide);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
                     $("#consignorFax").val(fax);
@@ -1711,10 +1763,10 @@
                     var email = tdArr.eq(6).text();//    email
                     var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    $("#consigneeCode").val(consigneeCodeHide);
-                    $("#consigneeName").val(consignorName);
+                    /*$("#consigneeCode").val(consigneeCodeHide);
                     $("#consigneeType").val(consigneeTypeHide);
-                    $("#consigneeContactCode").val(consigneeContactCodeHide);
+                    $("#consigneeContactCode").val(consigneeContactCodeHide);*/
+                    $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
                     $("#consigneeFax").val(fax);
