@@ -249,8 +249,10 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>计划单资源分配状态", planStatus);
         logger.debug("==>服务商名称", serviceProviderName);
         String result = null;
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        String userId=authResDtoByToken.getUserId();
         try {
-            result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName);
+            result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,userId);
         } catch (Exception ex) {
             logger.error("计划单状态更新出错:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();

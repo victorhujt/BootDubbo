@@ -168,7 +168,7 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom2" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
 
 <!-- /section:basics/navbar.layout -->
@@ -364,16 +364,16 @@
                     $.each(data,function (index,RmcCompanyLineVo) {
                         goodsList =goodsList + "<tr role='row' class='odd'>";
                         goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.lineName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+RmcCompanyLineVo.beginCityName+RmcCompanyLineVo.beginAreaName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.arriveProvinceName+RmcCompanyLineVo.arriveCityName+RmcCompanyLineVo.arriveArea+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.lineName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+StringUtil.nullToEmpty(RmcCompanyLineVo.beginCityName)+StringUtil.nullToEmpty(RmcCompanyLineVo.beginAreaName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.arriveProvinceName)+StringUtil.nullToEmpty(RmcCompanyLineVo.arriveCityName)+StringUtil.nullToEmpty(RmcCompanyLineVo.arriveArea)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.contactName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
                         if(RmcCompanyLineVo.frequency!=null){
 
                         }
@@ -531,14 +531,14 @@
                         }
                         goodsList =goodsList + "<tr role='row' class='odd'>";
                         goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.beginProvinceName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.frequency+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.contactName+"</td>";
-                        goodsList =goodsList + "<td>"+RmcCompanyLineVo.companyPhone+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.contactName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
                         i=i+1;
                     });
                     $("#goodsSelectListTbody2").html(goodsList);
@@ -702,6 +702,16 @@
 
         });
         $("#serviceProviderDivNoneTop2").click(function(){
+
+            $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+        $("#goodsListDivNoneBottom1").click(function(){
+
+            $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+        $("#goodsListDivNoneBottom2").click(function(){
 
             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
 
