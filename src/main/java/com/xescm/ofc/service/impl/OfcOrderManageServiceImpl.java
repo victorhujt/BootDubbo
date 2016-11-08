@@ -82,7 +82,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private CodeGenUtils codeGenUtils;
 
     @Override
-    public String orderAudit(String orderCode,String orderStatus, String reviewTag) {
+    public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
@@ -103,7 +103,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
-                ofcOrderStatus.setOperator("001");
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
                 ofcOrderStatus.setLastedOperTime(new Date());
 
                 OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
@@ -160,7 +160,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else {
                 throw new BusinessException("缺少标志位");
             }
-            ofcOrderStatus.setOperator("001");
+            ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             return String.valueOf(Wrapper.SUCCESS_CODE);
@@ -357,7 +357,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
     @Override
-    public String orderDelete(String orderCode,String orderStatus) {
+    public String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if(orderStatus.equals(OrderConstEnum.PENDINGAUDIT)){
             ofcFundamentalInformationService.deleteByKey(orderCode);
             ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
@@ -373,7 +373,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public String orderCancel(String orderCode,String orderStatus) {
+    public String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.PENDINGAUDIT))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.HASBEENCANCELED))){
@@ -384,12 +384,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setStatusDesc("已取消");
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                     +" "+"订单已取消");
-            ofcOrderStatus.setOperator("001");
+            ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-            ofcFundamentalInformation.setAbolisher("001");
+            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUserId());
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
+            ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
+            ofcFundamentalInformationService.update(ofcFundamentalInformation);
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
             throw new BusinessException("计划单状态不在可取消范围内");
