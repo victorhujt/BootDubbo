@@ -90,7 +90,7 @@
                     <thead>
                     <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                         <label class="pos-rel">
-                            <input type="checkbox" class="ace">
+                            <input id="goodcheck" type="checkbox" class="ace">
                             <span class="lbl"></span>
                         </label>
                     </th>
@@ -1363,11 +1363,11 @@
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd' align='center'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unitPrice+"</td>";
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsCode)+"</td>";
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsName)+"</td>";
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unitPrice)+"</td>";
                     goodsList =goodsList + "</tr>";
 
                 });
@@ -1526,8 +1526,8 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+quantity+"></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_batch+"></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_time+" onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})'></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+invalid_time+" onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd HH:mm:ss'})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
             });
             $("#goodsInfoListDiv").html("");
@@ -1617,6 +1617,18 @@
             });
             if(support==""){
                 alert("请至少选择一行");
+            }
+        });
+
+        $("#goodcheck").change(function () {
+            if($("#goodcheck").prop("checked")){
+                $("#goodsSelectListTbody").find("tr").each(function(index){
+                    $(this).children().eq(0).find("input").prop('checked',true);
+                });
+            }else{
+                $("#goodsSelectListTbody").find("tr").each(function(index){
+                    $(this).children().eq(0).find("input").prop('checked',false);
+                });
             }
         });
 

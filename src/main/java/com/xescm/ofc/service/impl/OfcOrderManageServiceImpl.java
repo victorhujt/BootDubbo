@@ -184,7 +184,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
-            ofcTransplanInfo.setShippinCustomerCode(ofcFundamentalInformation.getCustCode());
+            ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel("001");
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);
