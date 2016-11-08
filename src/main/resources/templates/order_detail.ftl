@@ -457,7 +457,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="warehouseName" value="${(ofcOrderDTO.wareHouseName)!""}" readonly="readonly" style="color: #000" name="warehouseName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="warehouseName" value="${(ofcOrderDTO.warehouseName)!""}" readonly="readonly" style="color: #000" name="warehouseName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>

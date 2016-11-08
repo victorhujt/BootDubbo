@@ -286,6 +286,14 @@
 
         for ( var i = 0; i < data.result.list.length; i++) {
             var order = data.result.list[i];
+            var consigneeName = "";
+            if("2"==StringUtil.nullToEmpty(order.consigneeType)){
+                debugger;
+                consigneeName = "个人-"+order.consigneeContactName;
+            }else{
+                debugger;
+                consigneeName = order.consigneeName;
+            }
 
             htmlText +="<tr role=\"row\" class=\"odd\">"
                     +"<td>"+[i+1]+"</td>"
@@ -297,7 +305,7 @@
                     +"<td class=\"hidden-480\">"+getOrderType(order)+"</td>"
                     +"<td class=\"hidden-480\">"+getBusiType(order)+"</td>"
                     +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.consigneeName)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(consigneeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.warehouseName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.storeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.notes)+"</td>"

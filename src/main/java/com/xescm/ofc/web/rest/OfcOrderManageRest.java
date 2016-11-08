@@ -75,8 +75,9 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
         logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
         String result = null;
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
-            result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag);
+            result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单审核反审核出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -96,8 +97,9 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单删除订单状态code orderStatus={}", orderStatus);
         String result = null;
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
-            result = ofcOrderManageService.orderDelete(orderCode,orderStatus);
+            result = ofcOrderManageService.orderDelete(orderCode,orderStatus,authResDtoByToken);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单删除出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -117,8 +119,9 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单取消订单状态code orderStatus={}", orderStatus);
         String result = null;
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
-            result = ofcOrderManageService.orderCancel(orderCode,orderStatus);
+            result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常:{},{}", "", null);
             //ex.printStackTrace();
