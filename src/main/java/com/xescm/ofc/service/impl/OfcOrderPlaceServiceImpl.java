@@ -86,6 +86,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ofcWarehouseInformation.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
                         }
                         if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                            /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                             saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                             saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
@@ -112,7 +113,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }else{
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                         }
-                        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                        /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);

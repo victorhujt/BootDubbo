@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="col-sm-6" style="float: right">
-                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" onclick="javascript:history.go(-1)">
+                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" onclick="detailBackToHistory(${(historyUrl)!})">
                                 返回
                             </button>
                         </div>
@@ -131,13 +131,13 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">平台类型</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <#if (ofcOrderDTO.platformType)!"" == '1'>
+                                                    <#if (ofcOrderDTO.platformType)! == '1'>
                                                         <input id="platformType" value = "线下" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                        <#elseif (ofcOrderDTO.platformType)!"" == '2'>
+                                                        <#elseif (ofcOrderDTO.platformType)! == '2'>
                                                         <input id="platformType" value = "天猫" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                        <#elseif (ofcOrderDTO.platformType)!"" == '3'>
+                                                        <#elseif (ofcOrderDTO.platformType)! == '3'>
                                                         <input id="platformType" value = "京东" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                        <#elseif (ofcOrderDTO.platformType)!"" == '4'>
+                                                        <#elseif (ofcOrderDTO.platformType)! == '4'>
                                                         <input id="platformType" value = "鲜易网" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                     </#if>
                                                     
@@ -555,7 +555,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.address)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.completeAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -691,5 +691,13 @@
         }
     </#if>
     });
+    function detailBackToHistory(historyUrl) {
+        if("orderManage" == historyUrl){
+            xescm.common.loadPage("/ofc/orderManage");
+        }
+        else if("orderScreen" == historyUrl){
+            xescm.common.loadPage("/ofc/orderScreen");
+        }
+    }
 </script>
 </body>
