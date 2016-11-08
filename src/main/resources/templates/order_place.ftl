@@ -554,7 +554,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -562,7 +562,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -764,7 +764,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                                            <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
 
                                                                         </div>
                                                                     </div>
@@ -1297,9 +1297,13 @@
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
+        debugger;
         //仓配基本信息
         jsonStr.warehouseCode = $("#warehouseName").val();
         jsonStr.warehouseName = $("#wareHouseName option:selected").text();
+        console.log("======================="+$("#wareHouseName option:selected").text());
+        console.log("======================="+$("#warehouseName").val());
+
         jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();
@@ -1379,7 +1383,6 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-
 
             var jsonStr = {};
             //订单基本信息
@@ -1503,10 +1506,11 @@
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = $("#consignorName2").value;
+            debugger
+            cscContactCompany.contactCompanyName = $("#consignorName2").val();
             cscContact.purpose = "2";
-            cscContact.contactName = $("#consignorPerson2").value;
-            cscContact.phone = $("#consignorPhoneNumber2").value;
+            cscContact.contactName = $("#consignorPerson2").val();
+            cscContact.phone = $("#consignorPhoneNumber2").val();
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
             var param = JSON.stringify(cscContantAndCompanyDto);
@@ -1537,10 +1541,10 @@
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = $("#consignorName1").value;
+            cscContactCompany.contactCompanyName = $("#consignorName1").val();
             cscContact.purpose = "1";
-            cscContact.contactName = $("#consignorPerson1").value;
-            cscContact.phone = $("#consignorPhoneNumber1").value;
+            cscContact.contactName = $("#consignorPerson1").val();
+            cscContact.phone = $("#consignorPhoneNumber1").val();
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
             var param = JSON.stringify(cscContantAndCompanyDto);
