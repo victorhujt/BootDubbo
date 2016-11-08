@@ -753,8 +753,15 @@
                                                                         <div class="clearfix">
                                                                             <select id="warehouseName" name="warehouseName">
                                                                             <#list rmcWarehouseByCustCode! as warehouse>
-                                                                                <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!}</option>
+                                                                                <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
                                                                             </#list>
+                                                                                <#--
+                                                                                        <select id="storeCode" name="storeCode">
+                                                                                            <#list cscStoreByCustId! as cscStore>
+                                                                                                <option value="${(cscStore.storeCode)!""}">${(cscStore.storeName)!""}</option>
+                                                                                            </#list>
+                                                                                        </select>
+                                                                                -->
                                                                             </select>
 
                                                                         </div>
@@ -1301,13 +1308,12 @@
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
-        ;
+
         //仓配基本信息
         jsonStr.warehouseCode = $("#warehouseName").val();
-        jsonStr.warehouseName = $("#wareHouseName option:selected").text();
-        console.log("======================="+$("#wareHouseName option:selected").text());
-        console.log("======================="+$("#warehouseName").val());
-
+        jsonStr.warehouseName = $("#warehouseName option:selected").text();//$("#storeCode option:selected").text();
+        console.log("===========warehouseCode============"+$("#warehouseName").val());
+        console.log("===========warehouseName============"+$("#warehouseName option:selected").text());
         jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();

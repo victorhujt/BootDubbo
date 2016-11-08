@@ -1292,7 +1292,8 @@
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
         //仓配基本信息
-        jsonStr.warehouseName = $("#warehouseName").val();
+        jsonStr.warehouseCode = $("#warehouseName").val();
+        jsonStr.warehouseName = $("#warehouseName option:selected").text();
         jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();
@@ -1885,6 +1886,7 @@
         jsonStr.businessType = $("#businessType").val();
         jsonStr.provideTransport = $("#provideTransport1").val();
         jsonStr.storeCode = $("#storeCode").val();
+        jsonStr.storeName = $("#storeCode option:selected").text();
         jsonStr.notes = $("#notes").val();
         //货品添加
 
