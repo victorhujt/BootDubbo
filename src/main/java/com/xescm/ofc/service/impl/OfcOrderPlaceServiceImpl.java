@@ -60,7 +60,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         ofcFundamentalInformation.setCreationTime(new Date());
         ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表

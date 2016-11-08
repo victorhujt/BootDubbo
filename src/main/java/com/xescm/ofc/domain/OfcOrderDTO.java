@@ -49,6 +49,12 @@ public class OfcOrderDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date operTime;
 
+    private String abolisherName;
+
+    private String creatorName;
+
+    private String operatorName;
+
     /*订单状态表*/
 
 //    private String orderCode;
@@ -143,6 +149,30 @@ public class OfcOrderDTO {
 //    private String operator;
 //    private Date operTime;
 
+
+    public String getAbolisherName() {
+        return abolisherName;
+    }
+
+    public void setAbolisherName(String abolisherName) {
+        this.abolisherName = abolisherName;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
 
     public String getConsignorType() {
         return consignorType;

@@ -154,6 +154,21 @@ public class OfcFundamentalInformation {
      */
     private String operator;
 
+
+    /**
+     * 作废人员名称
+     */
+    private String abolisherName;
+    /**
+     * 创建人员名称
+     */
+    private String creatorName;
+
+    /**
+     * 操作人员名称
+     */
+    private String operatorName;
+
     /**
      * 操作时间
      */
@@ -161,6 +176,30 @@ public class OfcFundamentalInformation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
+
+    public String getAbolisherName() {
+        return abolisherName;
+    }
+
+    public void setAbolisherName(String abolisherName) {
+        this.abolisherName = abolisherName;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
 
     /**
      * 获取订单编号

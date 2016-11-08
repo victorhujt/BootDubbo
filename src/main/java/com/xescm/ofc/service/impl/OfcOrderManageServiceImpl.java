@@ -107,6 +107,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setLastedOperTime(new Date());
 
                 OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperTime(new Date());
                 List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
                 OfcDistributionBasicInfo ofcDistributionBasicInfo=ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcFinanceInformation ofcFinanceInformation=new OfcFinanceInformation();
@@ -388,7 +391,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
+            ofcFundamentalInformation.setOperTime(new Date());
             ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getUamUser().getUserName());
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);

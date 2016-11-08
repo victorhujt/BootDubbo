@@ -498,7 +498,7 @@
                                                                 <td>${(goodsDetails.goodsName)!""}</td>
                                                                 <td class="hidden-480">${(goodsDetails.goodsSpec)!""}</td>
                                                                 <td>${(goodsDetails.unit)!""}</td>
-                                                                <td>${(goodsDetails.unitPrice)!""}</td>
+                                                                <td>${((goodsDetails.unitPrice)?replace(',',''))!""}</td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.quantity)?replace(',',''))!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
@@ -557,7 +557,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">合计标准箱</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="totalStandardBox" name="totalStandardBox" <#if orderInfo.totalStandardBox?? >value="${orderInfo.totalStandardBox}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <input id="totalStandardBox" name="totalStandardBox" <#if orderInfo.totalStandardBox?? >value="${((orderInfo.totalStandardBox)?replace(',',''))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
                                                                 </div>

@@ -29,6 +29,9 @@
     <result column="creator" property="creator" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
