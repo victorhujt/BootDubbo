@@ -17,6 +17,6 @@ public interface OfcOrderManageService {
     String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
     CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId, AuthResDto authResDtoByToken);
     CscSupplierInfoDto getSupportMessage(String suppulierName, String suppulierContactName,String custId, AuthResDto authResDtoByToken);
-    String planUpdate(String planCode, String planStatus,String serviceProviderName,String userId);
+    String planUpdate(String planCode, String planStatus,String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userId);
     /*OfcWarehouseInformation getWarehouseMessage(String orderCode);*/
 }

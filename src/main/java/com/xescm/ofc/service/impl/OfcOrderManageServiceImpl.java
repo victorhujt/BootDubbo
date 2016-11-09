@@ -91,7 +91,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE)&&reviewTag.equals("rereview")){
-                planCancle(orderCode,authResDtoByToken.getUserId());
+                planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
                 logger.debug("作废计划单完成");
                 ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
                 ofcOrderStatus.setStatusDesc("反审核");
@@ -103,11 +103,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
 
                 OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
-                ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 List<OfcGoodsDetailsInfo> goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
@@ -117,7 +117,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUserId());
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
@@ -142,12 +142,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             ofcTransplanInfo.setProgramSerialNumber("1");
                             ofcSiloprogramInfo.setProgramSerialNumber("2");
                         }
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUserId());
-                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUserId());
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
-                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUserId());
+                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
                     }else {
                         throw new BusinessException("无法确定是否需要运输");
                     }
@@ -163,7 +163,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else {
                 throw new BusinessException("缺少标志位");
             }
-            ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
+            ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             return String.valueOf(Wrapper.SUCCESS_CODE);
@@ -380,21 +380,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.PENDINGAUDIT))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstEnum.HASBEENCANCELED))){
-            planCancle(orderCode,authResDtoByToken.getUserId());
+            planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setOrderStatus(OrderConstEnum.HASBEENCANCELED);
             ofcOrderStatus.setStatusDesc("已取消");
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                     +" "+"订单已取消");
-            ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
+            ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
             ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
             ofcFundamentalInformation.setOperTime(new Date());
-            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUamUser().getUserName());
             ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getUamUser().getUserName());
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
@@ -490,7 +490,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }*/
 
     @Override
-    public String planUpdate(String planCode, String planStatus, String serviceProviderName,String userId) {
+    public String planUpdate(String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userName) {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
             String[] planCodeList=planCode.split("@");
@@ -516,16 +516,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 ofcOrderStatus.setStatusDesc("执行中");
                                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                                         +" "+"订单开始执行");
-                                ofcOrderStatus.setOperator(userId);
+                                ofcOrderStatus.setOperator(userName);
                                 ofcOrderStatus.setLastedOperTime(new Date());
                                 ofcOrderStatusService.save(ofcOrderStatus);
                             }
                         }
-                        ofcTraplanSourceStatus.setResourceConfirmation(userId);
+                        ofcTraplanSourceStatus.setResourceConfirmation(userName);
                         ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
                     }
                     if(!PubUtils.trimAndNullAsEmpty(serviceProviderName).equals("")){
                         ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
+                    }
+                    if(!PubUtils.trimAndNullAsEmpty(serviceProviderContact).equals("")){
+                        ofcTraplanSourceStatus.setServiceProviderContact(serviceProviderContact);
+                    }
+                    if(!PubUtils.trimAndNullAsEmpty(serviceProviderContactPhone).equals("")){
+                        ofcTraplanSourceStatus.setServiceProviderContactPhone(serviceProviderContactPhone);
                     }
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
                 }

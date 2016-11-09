@@ -249,15 +249,15 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> planUpdate(Model model, String planCode, String planStatus, String serviceProviderName,HttpServletResponse response){
+    public Wrapper<?> planUpdate(Model model, String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,HttpServletResponse response){
         logger.debug("==>计划单编号", planCode);
         logger.debug("==>计划单资源分配状态", planStatus);
         logger.debug("==>服务商名称", serviceProviderName);
         String result = null;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        String userId=authResDtoByToken.getUserId();
+        String userName=authResDtoByToken.getUamUser().getUserName();
         try {
-            result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,userId);
+            result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,serviceProviderContact,serviceProviderContactPhone,userName);
         } catch (Exception ex) {
             logger.error("计划单状态更新出错:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
