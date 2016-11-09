@@ -231,8 +231,13 @@ public class OfcOrderManageRest extends BaseController{
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
             cscGoods.setCustomerId(custId);*/
-            //rmcCompanyLineQO.setLineType("2");
+            rmcCompanyLineQO.setLineType("1");
             Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = ofcOrderManageService.companySelByApi(rmcCompanyLineQO);
+            List<RmcCompanyLineVo> lineVos1=rmcCompanyLists.getResult();
+            List<RmcCompanyLineVo> lineVos2=rmcCompanyLists.getResult();
+            lineVos1.addAll(lineVos2);
+            lineVos1.get(0).setCompanyName("孙悟空");
+            rmcCompanyLists.setResult(lineVos1);
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
@@ -275,12 +280,12 @@ public class OfcOrderManageRest extends BaseController{
         String result = null;
         OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
         RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getExpectedArrivedTime().toString()).equals("")){
+        if(ofcTransplanInfo.getExpectedArrivedTime()!=null){
             Calendar ca=Calendar.getInstance();
             ca.setTime(ofcTransplanInfo.getExpectedArrivedTime());
             ca.add(Calendar.HOUR_OF_DAY, 3);
             rmcCompanyLineQO.setDepartureTime(ca.getTime());
-        }else if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getOrderTime().toString()).equals("")){
+        }else if(ofcTransplanInfo.getOrderTime()!=null){
             Calendar ca=Calendar.getInstance();
             ca.setTime(ofcTransplanInfo.getOrderTime());
             ca.add(Calendar.HOUR_OF_DAY, 3);

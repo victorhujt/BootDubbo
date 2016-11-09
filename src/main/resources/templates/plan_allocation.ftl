@@ -100,7 +100,7 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="goodsListDivNoneBottom1" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom1" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter1" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
 <div class="modal-content" id="serviceProviderListDiv2" style="display: none;">
     <div class="modal-header"><span id="serviceProviderDivNoneTop2" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -168,7 +168,7 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="goodsListDivNoneBottom2" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom2" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter2" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
 
 <!-- /section:basics/navbar.layout -->
@@ -363,7 +363,7 @@
                     var fre=null;
                     $.each(data,function (index,RmcCompanyLineVo) {
                         goodsList =goodsList + "<tr role='row' class='odd'>";
-                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='compListQuantity' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.lineName)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+StringUtil.nullToEmpty(RmcCompanyLineVo.beginCityName)+StringUtil.nullToEmpty(RmcCompanyLineVo.beginAreaName)+"</td>";
@@ -374,6 +374,7 @@
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.contactName)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
+                        goodsList =goodsList + "</tr>";
                         if(RmcCompanyLineVo.frequency!=null){
 
                         }
@@ -410,9 +411,9 @@
                                         str=str+var3+"@";
                                     }
                                 });
-
+                                debugger;
                                 if(str.length>0){
-                                    xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"已找到相关服务商，自动匹配最近时间服务商，是否确定?",function () {
+                                    xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName,"serviceProviderContact":data[0].contactName,"serviceProviderContactPhone":data[0].companyPhone},"已找到相关服务商，自动匹配最近时间服务商，是否确定?",function () {
 
                                         $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
                                         queryData(1);
@@ -436,7 +437,7 @@
                     });
 
                     if(str.length>0){
-                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName,"serviceProviderContact":data[0].contactName,"serviceProviderContactPhone":data[0].companyPhone},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
 
                             $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
@@ -454,7 +455,7 @@
                     });
 
                     if(str.length>0){
-                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null,"serviceProviderContact":null,"serviceProviderContactPhone":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
 
                             $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
@@ -524,13 +525,17 @@
                 if(data.length>1){
                     var i=1;
                     var txt="";
+                    var serviceProviderContact="";
+                    var serviceProviderContactPhone="";
                     var goodsList = "";
                     $.each(data,function (index,RmcCompanyLineVo) {
                         if(i==1){
                             txt=RmcCompanyLineVo.companyName;
+                            serviceProviderContact=RmcCompanyLineVo.contactName;
+                            serviceProviderContactPhone=RmcCompanyLineVo.companyPhone;
                         }
                         goodsList =goodsList + "<tr role='row' class='odd'>";
-                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                        goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='compListQuantity' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyName)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.beginProvinceName)+"</td>";
@@ -539,6 +544,8 @@
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.contactName)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
+                        goodsList =goodsList + "</tr>";
                         i=i+1;
                     });
                     $("#goodsSelectListTbody2").html(goodsList);
@@ -553,7 +560,7 @@
                     });
 
                     if(str.length>0){
-                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":txt},"城配计划单，记录有多条时将自动选择第一条记录，是否确定?",function () {
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":txt,"serviceProviderContact":serviceProviderContact,"serviceProviderContactPhone":serviceProviderContactPhone},"城配计划单，记录有多条时将自动选择第一条记录，是否确定?",function () {
 
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
@@ -589,7 +596,7 @@
                     });
 
                     if(str.length>0){
-                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"20","serviceProviderName":null,"serviceProviderContact":null,"serviceProviderContactPhone":null},"查不到数据，将更新资源分配状态为未分配，是否确定?",function () {
 
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
@@ -598,6 +605,62 @@
                 }
 
             },"json");
+        });
+
+        $("#goodsEnter1").click(function () {
+            var str="";
+            var var3=null;
+            var serviceProviderName="";
+            var serviceProviderContact="";
+            var serviceProviderContactPhone="";
+            debugger;
+            $("#goodsSelectListTbody1").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    serviceProviderName = tdArr.eq(1).text();
+                    serviceProviderContact = tdArr.eq(9).text();
+                    serviceProviderContactPhone = tdArr.eq(10).text();
+                    debugger;
+                }
+            });
+            $("#dataTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                var3 = tdArr.eq(3).text();
+                if(tdArr.eq(1).find("input").prop("checked")){
+                    str=str+var3+"@";
+                }
+            });
+            CommonClient.post(sys.rootPath + "/ofc/planUpdate", "planCode="+str+"&planStatus=30"+"&serviceProviderName="+serviceProviderName+"&serviceProviderContact="+serviceProviderContact+"&serviceProviderContactPhone"+serviceProviderContactPhone, function(data){
+                $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
+                queryData(1);
+            });
+        });
+
+        $("#goodsEnter2").click(function () {
+            var str="";
+            var var3=null;
+            var serviceProviderName="";
+            var serviceProviderContact="";
+            var serviceProviderContactPhone="";
+            $("#goodsSelectListTbody2").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    serviceProviderName = tdArr.eq(1).text();
+                    serviceProviderContact = tdArr.eq(7).text();
+                    serviceProviderContactPhone = tdArr.eq(8).text();
+                }
+            });
+            $("#dataTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                var3 = tdArr.eq(3).text();
+                if(tdArr.eq(1).find("input").prop("checked")){
+                    str=str+var3+"@";
+                }
+            });
+            CommonClient.post(sys.rootPath + "/ofc/planUpdate", "planCode="+str+"&planStatus=30"+"&serviceProviderName="+serviceProviderName+"&serviceProviderContact="+serviceProviderContact+"&serviceProviderContactPhone"+serviceProviderContactPhone, function(data){
+                $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
+                queryData(1);
+            });
         });
 
         $("#doEnter").click(function(){
