@@ -46,6 +46,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
@@ -261,6 +263,30 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }catch (IOException ex) {
             logger.error("订单中心筛选供应商出现异常:{},{}", ex.getMessage(), ex);
         }
+    }
+    /*
+    校验客户订单编号
+     */
+    @RequestMapping(value = "/checkCustOrderCode",method = RequestMethod.POST)
+    @ResponseBody
+    public boolean checkCustOrderCode(Model model, String custOrderCode, String selfCustOrderCode){
+        logger.info("==> custOrderCode={}", custOrderCode);
+        logger.info("==> selfCustOrderCode={}", selfCustOrderCode);
+
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+        ofcFundamentalInformation.setSelfCustOrderCode(selfCustOrderCode);
+        boolean flag = false;
+        try {
+            int count = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+            if (count < 1){
+                flag = true;
+            }
+
+        } catch (Exception e) {
+            logger.error("校验客户订单编号出错:　", e.getMessage());
+        }
+        return flag;
     }
 
 

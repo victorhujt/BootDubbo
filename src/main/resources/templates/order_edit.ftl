@@ -337,6 +337,7 @@
                 <div class="page-header">
                     <p>
                         基本信息
+                        <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                     </p>
                 </div>
                 <div class="row">
@@ -367,7 +368,8 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <input id="custOrderCode" name="custOrderCode" type="text" <#if orderInfo.custOrderCode?? >value="${orderInfo.custOrderCode}"</#if>>
+                                                    <input id="selfCustOrderCode" name="selfCustOrderCode" type="hidden" value="${(orderInfo.custOrderCode)!}">
+                                                    <input id="custOrderCode" name="custOrderCode" type="text" <#if orderInfo.custOrderCode?? >value="${(orderInfo.custOrderCode)!}"</#if>>
                                                 </div>
                                             </div>
                                         </div>
@@ -975,9 +977,22 @@
                 orderTime:{
                     required:true
                 },
-                custOrderCode:{
+                custOrderCode:{//ofc_url
                     required:true,
-                    maxlength: 30
+                    maxlength: 30,
+                    remote:{
+                        url : ofc_url + "/ofc/checkCustOrderCode",
+                        type : "POST",
+                        dataType : "json",
+                        data : {
+                            custOrderCode : function() {
+                                return $("#custOrderCode").val();
+                            },
+                            selfCustOrderCode : function () {
+                                return $("#selfCustOrderCode").val();
+                            }
+                        }
+                    }
                 },
                 notes:{
                     maxlength:300
@@ -989,7 +1004,8 @@
                 },
                 custOrderCode:{
                     required: "请输入客户订单编号",
-                    maxlength: "超过最大长度"
+                    maxlength: "超过最大长度",
+                    remote: "该客户订单编号已经存在"
                 },
                 notes:{
                     maxlength:"超过最大长度"

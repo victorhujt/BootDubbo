@@ -168,6 +168,10 @@ public class OfcFundamentalInformation {
      * 操作人员名称
      */
     private String operatorName;
+    /**
+     * 校验客户订单编号专用字段
+     */
+    private String selfCustOrderCode;
 
    /* private String saleOrganization;
     private String productGroup;
@@ -184,6 +188,14 @@ public class OfcFundamentalInformation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
+
+    public String getSelfCustOrderCode() {
+        return selfCustOrderCode;
+    }
+
+    public void setSelfCustOrderCode(String selfCustOrderCode) {
+        this.selfCustOrderCode = selfCustOrderCode;
+    }
 
     public String getAbolisherName() {
         return abolisherName;

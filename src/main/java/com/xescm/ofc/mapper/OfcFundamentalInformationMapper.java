@@ -6,4 +6,6 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamentalInformation> {
     String getOrderCodeByCustOrderCode(Object key);
+
+    int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation);
 }

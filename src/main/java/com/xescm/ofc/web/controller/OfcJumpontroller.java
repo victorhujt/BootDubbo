@@ -44,6 +44,7 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
+        setDefaultModel(model);
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
