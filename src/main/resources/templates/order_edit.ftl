@@ -418,7 +418,7 @@
                                                 <div class="clearfix">
                                                     <select id="storeCode" name="storeCode" value="${(orderInfo.storeCode)!""}">
                                                         <#list cscStoreByCustId! as cscStore>
-                                                            <option value="${(cscStore.storeCode)!""}">${(cscStore.storeName)!""}</option>
+                                                            <option value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
                                                         </#list>
                                                         <#--<option value="线下销售" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '线下销售')>selected="selected"</#if></#if>>线下销售</option>
                                                         <option value="众品天猫生鲜旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品天猫生鲜旗舰店')>selected="selected"</#if></#if>>众品天猫生鲜旗舰店</option>
@@ -786,7 +786,7 @@
                                                                         <div class="clearfix">
                                                                             <select id="warehouseName" name="warehouseName"   value="${(orderInfo.wareHouseCode)!""}">
                                                                             <#list rmcWarehouseByCustCode! as warehouse>
-                                                                                <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!}</option>
+                                                                                <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
                                                                             </#list>
                                                                             </select>
 
@@ -897,7 +897,7 @@
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
                                                                         <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="supportAddress" name="supportAddress" <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportAddress" name="supportAddress" <#if (supportMessage.completeAddress)!?? >value="${(supportMessage.completeAddress)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1525,7 +1525,7 @@
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
                     supplierList =supplierList + "</tr>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
@@ -1901,8 +1901,10 @@
         jsonStr.orderType = $("#orderType").val();
         jsonStr.businessType = $("#businessType").val();
         jsonStr.provideTransport = $("#provideTransport1").val();
-        jsonStr.storeCode = $("#storeCode").val();
+        var pageStoreMessage = $("#storeCode").val().split("/");
+        jsonStr.storeCode = pageStoreMessage[0];
         jsonStr.storeName = $("#storeCode option:selected").text();
+        jsonStr.platformType = pageStoreMessage[1];
         jsonStr.notes = $("#notes").val();
         //货品添加
 
@@ -1942,9 +1944,10 @@
         var cscContantAndCompanyDtoConsigneeStr;
         var cscSupplierInfoDtoStr;
         if(orderType == '60'){//运输订单
-            jsonStr = orderPlaceAddTranInfo(jsonStr);
+
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
+            jsonStr = orderPlaceAddTranInfo(jsonStr);
         }
 
         if(orderType == '61' && businessType == '61'){//仓储出库订单
