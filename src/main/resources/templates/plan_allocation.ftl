@@ -571,8 +571,8 @@
                     });
 
                     if(str.length>0){
-                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
-
+                        xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName,"serviceProviderContact":data[0].contactName,"serviceProviderContactPhone":data[0].companyPhone},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
+                            debugger;
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });

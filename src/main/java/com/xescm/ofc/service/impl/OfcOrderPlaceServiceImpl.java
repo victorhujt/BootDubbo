@@ -59,9 +59,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         ofcFundamentalInformation.setCreationTime(new Date());
-        ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setCreator(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());
-        ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
@@ -259,7 +259,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
-        ofcOrderStatus.setOperator(authResDtoByToken.getUserId());
+        ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
