@@ -60,7 +60,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         ofcFundamentalInformation.setCreationTime(new Date());
         ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -84,6 +86,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ofcWarehouseInformation.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
                         }
                         if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                            /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                             saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                             saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
@@ -110,7 +113,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }else{
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                         }
-                        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                        /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);

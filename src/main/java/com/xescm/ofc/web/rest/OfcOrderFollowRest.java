@@ -81,8 +81,8 @@ public class OfcOrderFollowRest extends BaseController{
     }
 
 
-    @RequestMapping(value = "/orderDetails/{orderCode}/{followTag}", method = RequestMethod.GET)
-    public String orderDetails(Model model,@PathVariable("orderCode") String code,@PathVariable String followTag, Map<String,Object> map) throws InvocationTargetException{
+    @RequestMapping(value = "/orderDetails/{orderCode}/{followTag}/{historyUrlTag}", method = RequestMethod.GET)
+    public String orderDetails(Model model,@PathVariable("orderCode") String code,@PathVariable String followTag,@PathVariable String historyUrlTag, Map<String,Object> map) throws InvocationTargetException{
         logger.debug("==>订单中心订单详情code code={}", code);
         logger.debug("==>订单中心订单详情标志位 followTag={}", followTag);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -121,7 +121,8 @@ public class OfcOrderFollowRest extends BaseController{
             }
 
         }catch (Exception ex){
-
+            logger.error("订单中心订单追踪出现异常:{},{}", ex.getMessage(), ex);
+//            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         map.put("ofcOrderDTO",ofcOrderDTO);
         map.put("orderStatusList",ofcOrderStatuses);
@@ -129,6 +130,12 @@ public class OfcOrderFollowRest extends BaseController{
         map.put("consignorMessage",consignorMessage);
         map.put("consigneeMessage",consigneeMessage);
         map.put("supportMessage",supportMessage);
+        if("orderManage".equals(historyUrlTag)){
+            map.put("historyUrl",historyUrlTag);
+        }else if("orderScreen".equals(historyUrlTag)){
+            map.put("historyUrl",historyUrlTag);
+        }
+
         return "order_detail";
     }
 

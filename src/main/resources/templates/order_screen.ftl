@@ -391,6 +391,13 @@
 
 </script>
 <script type="text/javascript">
+    function orderDetail(orderCode) {
+        var followTag = "orderCode";
+        var historyUrlTag = "orderScreen";
+        var url = "/ofc/orderDetails/" + orderCode + "/" + followTag + "/" + historyUrlTag;
+        xescm.common.loadPage(url);
+    }
+
     // 查询
     $("#screenOrderFormBtn").click(function () {
 

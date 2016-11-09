@@ -399,7 +399,8 @@
     }
     function orderDetail(orderCode) {
         var followTag = "orderCode";
-        var url = "/ofc/orderDetails/" + orderCode + "/" + followTag;
+        var historyUrlTag = "orderManage";
+        var url = "/ofc/orderDetails/" + orderCode + "/" + followTag + "/" + historyUrlTag;
         xescm.common.loadPage(url);
     }
 

@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="col-sm-6" style="float: right">
-                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" onclick="javascript:history.go(-1)">
+                            <button class="btn btn-white btn-info btn-bold filters" id="goBack" value="${(historyUrl)!}" onclick="detailBackToHistory()">
                                 返回
                             </button>
                         </div>
@@ -60,7 +60,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.orderTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -68,7 +68,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderCode" value = "${(ofcOrderDTO.orderCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderCode" value = "${(ofcOrderDTO.orderCode)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -76,7 +76,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="custOrderCode" value = "${(ofcOrderDTO.custOrderCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="custOrderCode" value = "${(ofcOrderDTO.custOrderCode)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="storeName" value = "${(ofcOrderDTO.storeName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="storeName" value = "${(ofcOrderDTO.storeName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -131,7 +131,16 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">平台类型</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="platformType" value = "${(ofcOrderDTO.platformType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <#if (ofcOrderDTO.platformType)! == '1'>
+                                                        <input id="platformType" value = "线下" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        <#elseif (ofcOrderDTO.platformType)! == '2'>
+                                                        <input id="platformType" value = "天猫" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        <#elseif (ofcOrderDTO.platformType)! == '3'>
+                                                        <input id="platformType" value = "京东" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        <#elseif (ofcOrderDTO.platformType)! == '4'>
+                                                        <input id="platformType" value = "鲜易网" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    </#if>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -140,7 +149,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">服务产品</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="productName" value = "${(ofcOrderDTO.productName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="productName" value = "${(ofcOrderDTO.productName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -148,7 +157,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">订单来源</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderSource" value = "${(ofcOrderDTO.orderSource)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderSource" value = "${(ofcOrderDTO.orderSource)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -156,7 +165,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="notes" value = "${(ofcOrderDTO.notes)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="notes" value = "${(ofcOrderDTO.notes)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -164,7 +173,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">创建日期</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="creationTime" value = "${(ofcOrderDTO.creationTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="creationTime" value = "${(ofcOrderDTO.creationTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -173,7 +182,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">创建人员</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="" value = "${(ofcOrderDTO.creator)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="" value = "${(ofcOrderDTO.creatorName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -181,7 +190,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">完成日期</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="" value = "${("")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="" value = "${((ofcOrderDTO.finishedTime)?string('yyyy-MM-dd HH:mm:ss'))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -189,7 +198,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">取消日期</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="" value = "${("")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="" value = "${((ofcOrderDTO.abolishTime)?string('yyyy-MM-dd HH:mm:ss'))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -197,7 +206,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">取消人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="" value = "${("")!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="" value = "${(ofcOrderDTO.abolisherName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -208,7 +217,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">货品类型</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="goodsType" value = "${(ofcOrderDTO.goodsType)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="goodsType" value = "${(ofcOrderDTO.goodsType)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>-->
@@ -216,7 +225,11 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="urgent" value = "${(ofcOrderDTO.urgent)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                <#if (ofcOrderDTO.urgent)! == 1>
+                                                    <input id="urgent" value = "加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                <#elseif (ofcOrderDTO.urgent)! == 0>
+                                                    <input id="urgent" value = "不加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                </#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,7 +237,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="departurePlace" value = "${(ofcOrderDTO.departurePlace)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="departurePlace" value = "${(ofcOrderDTO.departurePlace)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -232,7 +245,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="destination" value = "${(ofcOrderDTO.destination)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="destination" value = "${(ofcOrderDTO.destination)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -241,7 +254,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="quantity" value = "${(ofcOrderDTO.quantity)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="quantity" value = "${((ofcOrderDTO.quantity)?replace(',',''))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -249,7 +262,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="weight" value = "${(ofcOrderDTO.weight)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="weight" value = "${((ofcOrderDTO.weight)?replace(',',''))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -257,7 +270,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="cubage" value = "${(ofcOrderDTO.cubage)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="cubage" value = "${(ofcOrderDTO.cubage)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -265,7 +278,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="transRequire" value = "${(ofcOrderDTO.transRequire)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="transRequire" value = "${(ofcOrderDTO.transRequire)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +287,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="pickupTime" value = "${(ofcOrderDTO.pickupTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="pickupTime" value = "${(ofcOrderDTO.pickupTime?string("yyyy-MM-dd HH:mm"))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -282,7 +295,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">运输单号</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="transCode" value = "${(ofcOrderDTO.transCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="transCode" value = "${(ofcOrderDTO.transCode)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -291,7 +304,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(ofcOrderDTO.plateNumber)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.plateNumber)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -299,7 +312,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="expectedArrivedTime" value = "${(ofcOrderDTO.expectedArrivedTime?string("yyyy-MM-dd HH:mm:ss"))!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="expectedArrivedTime" value = "${(ofcOrderDTO.expectedArrivedTime?string("yyyy-MM-dd HH:mm"))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -308,7 +321,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="driverName" value = "${(ofcOrderDTO.driverName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="driverName" value = "${(ofcOrderDTO.driverName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -316,7 +329,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="contactNumber" value = "${(ofcOrderDTO.contactNumber)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="contactNumber" value = "${(ofcOrderDTO.contactNumber)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -334,7 +347,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -342,7 +355,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.contactName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.contactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -350,7 +363,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.email)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.email)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -358,7 +371,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.phone)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.phone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -367,7 +380,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.fax)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.fax)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -375,7 +388,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.address)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -383,7 +396,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.postCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consignorMessage.postCode)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -397,7 +410,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -405,7 +418,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.contactName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.contactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -413,7 +426,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.email)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.email)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -421,7 +434,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.phone)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.phone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -430,7 +443,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.fax)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.fax)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -438,7 +451,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.address)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -446,7 +459,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.postCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(consigneeMessage.postCode)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -501,7 +514,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.supplierName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.supplierName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -509,7 +522,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.contactName)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.contactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -517,7 +530,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.email)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.email)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -525,7 +538,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.contactPhone)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.contactPhone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -534,7 +547,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.fax)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.fax)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -542,7 +555,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.address)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.completeAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -550,7 +563,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(supportMessage.postCode)!""}" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(supportMessage.postCode)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -609,7 +622,7 @@
                                     ${((goodsDetails.invalidTime)?string('yyyy-MM-dd'))!""}
                                     </td>
                                     <td>
-                                    ${(goodsDetails.quantity)!""}
+                                    ${((goodsDetails.quantity)?replace(',',''))!""}
                                     </td>
                                 </tr>
                                 </#list>
@@ -678,5 +691,16 @@
         }
     </#if>
     });
+    function detailBackToHistory() {
+        debugger;
+        console.log($("#goBack").val())
+        var tag = $("#goBack").val();
+        if("orderManage" == tag){
+            xescm.common.loadPage("/ofc/orderManage");
+        }
+        else if("orderScreen" == tag){
+            xescm.common.loadPage("/ofc/orderScreen");
+        }
+    }
 </script>
 </body>
