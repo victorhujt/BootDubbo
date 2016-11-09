@@ -163,7 +163,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
                         if(select.size() > 0){//有运输信息
                             ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
-                        }else if (select.size() < 0){
+                        }else if (select.size() == 0){
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         }
                     //仓配单不需要运输,需要将属于该订单的仓配信息删除

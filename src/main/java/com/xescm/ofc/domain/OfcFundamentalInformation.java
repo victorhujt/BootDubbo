@@ -173,7 +173,6 @@ public class OfcFundamentalInformation {
     /**
      * 校验客户订单编号专用字段
      */
-    @Transient
     private String selfCustOrderCode;
 
    /* private String saleOrganization;

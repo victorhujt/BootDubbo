@@ -225,11 +225,14 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                <#if (ofcOrderDTO.urgent)! == 1>
-                                                    <input id="urgent" value = "加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                <#elseif (ofcOrderDTO.urgent)! == 0>
-                                                    <input id="urgent" value = "不加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                </#if>
+                                                    <#if (ofcOrderDTO.urgent) ??>
+                                                        <#if (ofcOrderDTO.urgent)! == 1>
+                                                            <input id="urgent" value = "加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        <#elseif (ofcOrderDTO.urgent)! == 0>
+                                                            <input id="urgent" value = "不加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        </#if>
+                                                    </#if>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -631,6 +634,8 @@
                             <div class="page-header">
                                 <p>
                                     订单跟踪信息
+                                    <span id="hiddenOrderType" hidden="true">${(ofcOrderDTO.orderType)!}</span>
+                                    <span id="hiddenBusinessType" hidden="true">${(ofcOrderDTO.businessType)!}</span>
                                 </p>
                             </div>
                             <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -662,34 +667,35 @@
 </div><!-- /.main-container -->
 <script type="text/javascript">
     $(function(){
+        debugger
 
         console.log(${(ofcOrderDTO.orderType)!});
         console.log(${(ofcOrderDTO.businessType)!});
-    <#if ofcOrderDTO.orderType == '60' >
-        $('.warmessages').hide();
-        $('.supportMessages').hide();
-    <#elseif ofcOrderDTO.orderType == '61'>
-
-        var businessType = ${ofcOrderDTO.businessType};
-        var businessTypeStr = businessType.toString().substring(0,2);
+        var businessType = $("#hiddenBusinessType").html();
+        businessType = businessType.toString().substring(0,2);
+        var orderType = $("#hiddenOrderType").html();
         var provideTrans = ${(ofcOrderDTO.provideTransport)!"0"};
-        var provideTransStr = provideTrans.toString();
-        if(businessTypeStr == '62'){
-
-            if(provideTransStr == '0'){
-                $('.tramessages').hide();
-                $('.dropdown').hide();
-            }
-        }else if(businessTypeStr == '61'){
-
+        provideTrans = provideTrans.toString();
+        if(orderType == '60'){//运输订单
+            $('.warmessages').hide();
             $('.supportMessages').hide();
-            if(provideTransStr == '0'){
-                $('.tramessages').hide();
-                $('.dropdown').hide();
-            }
+        }else if(orderType == '61'){//仓配订单
+            if(businessType == '62'){//入库
+                if(provideTrans == 0){//不需运输
+                    $('.tramessages').hide();
+                    $('.dropdown').hide();
+                }
+            }else if(businessType == '61'){//出库
+                $('.supportMessages').hide();
+                if(provideTrans == 0){//不需运输
+                    $('.tramessages').hide();
+                    $('.dropdown').hide();
+                }
 
+            }
         }
-    </#if>
+
+
     });
     function detailBackToHistory() {
         debugger;
