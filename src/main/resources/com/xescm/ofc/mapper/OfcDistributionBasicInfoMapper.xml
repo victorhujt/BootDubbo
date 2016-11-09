@@ -8,8 +8,16 @@
     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
     <result column="urgent" property="urgent" jdbcType="INTEGER" />
     <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="departure_province" jdbcType="VARCHAR" property="departureProvince" />
+    <result column="departure_city" jdbcType="VARCHAR" property="departureCity" />
+    <result column="departure_district" jdbcType="VARCHAR" property="departureDistrict" />
+    <result column="departure_towns" jdbcType="VARCHAR" property="departureTowns" />
     <result column="departure_place_code" property="departurePlaceCode" jdbcType="VARCHAR" />
     <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="destination_province" jdbcType="VARCHAR" property="destinationProvince" />
+    <result column="destination_city" jdbcType="VARCHAR" property="destinationCity" />
+    <result column="destination_district" jdbcType="VARCHAR" property="destinationDistrict" />
+    <result column="destination_towns" jdbcType="VARCHAR" property="destinationTowns" />
     <result column="destination_code" property="destinationCode" jdbcType="VARCHAR" />
     <result column="quantity" property="quantity" jdbcType="DECIMAL" />
     <result column="weight" property="weight" jdbcType="DECIMAL" />
@@ -58,11 +66,35 @@
       <if test="departurePlace != null" >
         departure_place = #{departurePlace,jdbcType=INTEGER},
       </if>
+      <if test="departureProvince != null" >
+        departure_province = #{departureProvince,jdbcType=INTEGER},
+      </if>
+      <if test="departureCity != null" >
+        departure_city = #{departureCity,jdbcType=INTEGER},
+      </if>
+      <if test="departureDistrict != null" >
+        departure_district = #{departureDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="departureTowns != null" >
+        departure_towns = #{departureTowns,jdbcType=INTEGER},
+      </if>
       <if test="departurePlaceCode != null" >
         departure_place_code = #{departurePlaceCode,jdbcType=INTEGER},
       </if>
       <if test="destination != null" >
         destination = #{destination,jdbcType=INTEGER},
+      </if>
+      <if test="destinationProvince != null" >
+        destination_province = #{destinationProvince,jdbcType=INTEGER},
+      </if>
+      <if test="destinationCity != null" >
+        destination_city = #{destinationCity,jdbcType=INTEGER},
+      </if>
+      <if test="destinationDistrict != null" >
+        destination_district = #{destinationDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="destinationTowns != null" >
+        destination_towns = #{destinationTowns,jdbcType=INTEGER},
       </if>
       <if test="destinationCode != null" >
         destination_code = #{destinationCode,jdbcType=INTEGER},
