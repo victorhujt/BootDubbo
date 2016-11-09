@@ -6,6 +6,8 @@ import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
+import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
+import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
@@ -39,7 +41,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
-
+    @Autowired
+    private FeignRmcCompanyAPIClient feignRmcCompanyAPIClient;
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
@@ -210,15 +213,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
             }
+            RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
             if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
                     && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                             .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
                         ofcTransplanInfo.setBusinessType("600");
+                        rmcCompanyLineQO.setLineType("2");
                     }else {
                         ofcTransplanInfo.setBusinessType("601");
+                        rmcCompanyLineQO.setLineType("1");
                     }
+            }else if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")){
+                rmcCompanyLineQO.setLineType("2");
+            }else{
+                rmcCompanyLineQO.setLineType("1");
             }
+            Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
+            /*if(){
+
+            }*/
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
             ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -542,5 +556,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("缺少计划单编号");
         }
         return null;
+    }
+
+    @Override
+    public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
+        try{
+            rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+        }catch (Exception ex){
+            throw new BusinessException("服务商查询出错");
+        }
+        return rmcCompanyLists;
     }
 }

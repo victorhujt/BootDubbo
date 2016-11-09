@@ -55,10 +55,6 @@ public class OfcOrderManageRest extends BaseController{
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
-    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Autowired
-    private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
-    @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
@@ -226,7 +222,7 @@ public class OfcOrderManageRest extends BaseController{
             //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/companySelect",method = RequestMethod.POST)
-    public void goodsSelectByCscApi(Model model, RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
+    public void companySelByApi(Model model, RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -236,7 +232,7 @@ public class OfcOrderManageRest extends BaseController{
             String custId = (String) wrapper.getResult();
             cscGoods.setCustomerId(custId);*/
             //rmcCompanyLineQO.setLineType("2");
-            Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+            Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = ofcOrderManageService.companySelByApi(rmcCompanyLineQO);
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
