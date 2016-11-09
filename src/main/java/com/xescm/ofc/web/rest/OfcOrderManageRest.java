@@ -231,13 +231,13 @@ public class OfcOrderManageRest extends BaseController{
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
             cscGoods.setCustomerId(custId);*/
-            rmcCompanyLineQO.setLineType("1");
+            //rmcCompanyLineQO.setLineType("1");
             Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = ofcOrderManageService.companySelByApi(rmcCompanyLineQO);
-            List<RmcCompanyLineVo> lineVos1=rmcCompanyLists.getResult();
+            /*List<RmcCompanyLineVo> lineVos1=rmcCompanyLists.getResult();
             List<RmcCompanyLineVo> lineVos2=rmcCompanyLists.getResult();
             lineVos1.addAll(lineVos2);
             lineVos1.get(0).setCompanyName("孙悟空");
-            rmcCompanyLists.setResult(lineVos1);
+            rmcCompanyLists.setResult(lineVos1);*/
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);

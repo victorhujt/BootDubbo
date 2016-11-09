@@ -630,7 +630,7 @@
                     str=str+var3+"@";
                 }
             });
-            CommonClient.post(sys.rootPath + "/ofc/planUpdate", "planCode="+str+"&planStatus=30"+"&serviceProviderName="+serviceProviderName+"&serviceProviderContact="+serviceProviderContact+"&serviceProviderContactPhone"+serviceProviderContactPhone, function(data){
+            CommonClient.post(sys.rootPath + "/ofc/planUpdate", "planCode="+str+"&planStatus=30"+"&serviceProviderName="+serviceProviderName+"&serviceProviderContact="+serviceProviderContact+"&serviceProviderContactPhone="+serviceProviderContactPhone, function(data){
                 $("#serviceProviderListDiv1").fadeOut("slow");//淡入淡出效果 隐藏div
                 queryData(1);
             });
@@ -657,7 +657,7 @@
                     str=str+var3+"@";
                 }
             });
-            CommonClient.post(sys.rootPath + "/ofc/planUpdate", "planCode="+str+"&planStatus=30"+"&serviceProviderName="+serviceProviderName+"&serviceProviderContact="+serviceProviderContact+"&serviceProviderContactPhone"+serviceProviderContactPhone, function(data){
+            CommonClient.post(sys.rootPath + "/ofc/planUpdate","planCode="+str+"&planStatus=30"+"&serviceProviderName="+serviceProviderName+"&serviceProviderContact="+serviceProviderContact+"&serviceProviderContactPhone="+serviceProviderContactPhone, function(data){
                 $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                 queryData(1);
             });
