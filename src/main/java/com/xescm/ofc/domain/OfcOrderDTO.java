@@ -150,6 +150,7 @@ public class OfcOrderDTO {
     private BigDecimal collectServiceCharge;
     private String collectFlag;
     private String countFlag;
+    private String selfCustOrderCode;
 //    private String orderCode;
 //    private String notes;
 //    private Date creationTime;
@@ -157,6 +158,14 @@ public class OfcOrderDTO {
 //    private String operator;
 //    private Date operTime;
 
+
+    public String getSelfCustOrderCode() {
+        return selfCustOrderCode;
+    }
+
+    public void setSelfCustOrderCode(String selfCustOrderCode) {
+        this.selfCustOrderCode = selfCustOrderCode;
+    }
 
     public String getAbolisherName() {
         return abolisherName;
