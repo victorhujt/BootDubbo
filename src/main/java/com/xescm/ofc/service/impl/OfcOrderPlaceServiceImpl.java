@@ -98,14 +98,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
 
                         }
-//                        ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
                         ofcWarehouseInformationService.save(ofcWarehouseInformation);
                         if("61".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿是出库
-                            // saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId){
                             ofcWarehouseInformation.setSupportCode("");
                             ofcWarehouseInformation.setSupportName("");
                         }
-//                        saveSupportMessage(cscSupplierInfoDto,custId);//0000
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
                         if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                                 .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
@@ -176,7 +173,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                     //入库
                     if("62".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
-                        saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                        String saveSupportMessageResult = saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
                     }
                     //出库
                     if("61".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
@@ -363,10 +360,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
             }catch (Exception ex){
                 if(Wrapper.ERROR_CODE != listWrapper.getCode()){
-                    return "该供应商信息已在资源中心中存在,无需再次添加!";
-                }else if(listWrapper.getResult().size() > 0){
-                    return "该供应商信息已在资源中心中存在,无需再次添加!";
+                    return listWrapper.getMessage();
                 }
+            }
+            if(listWrapper.getResult().size() > 0){
+                return "该供应商信息已在资源中心中存在,无需再次添加!";
             }
             cscSupplierInfoDto.setSupplierCode("spofc" + System.currentTimeMillis());
             cscSupplierInfoDto.setUserId(authResDtoByToken.getUserId());
