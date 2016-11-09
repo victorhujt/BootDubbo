@@ -69,8 +69,16 @@ public class OfcOrderDTO {
     //private String goodsType;
     private Integer urgent;
     private String departurePlace;
+    private String departureProvince;
+    private String departureCity;
+    private String departureDistrict;
+    private String departureTowns;
     private String departurePlaceCode;
     private String destination;
+    private String destinationProvince;
+    private String destinationCity;
+    private String destinationDistrict;
+    private String destinationTowns;
     private String destinationCode;
     private BigDecimal quantity;
     private BigDecimal weight;
@@ -408,6 +416,38 @@ public class OfcOrderDTO {
         this.departurePlace = departurePlace;
     }
 
+    public String getDepartureProvince() {
+        return departureProvince;
+    }
+
+    public void setDepartureProvince(String departureProvince) {
+        this.departureProvince = departureProvince;
+    }
+
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public String getDepartureDistrict() {
+        return departureDistrict;
+    }
+
+    public void setDepartureDistrict(String departureDistrict) {
+        this.departureDistrict = departureDistrict;
+    }
+
+    public String getDepartureTowns() {
+        return departureTowns;
+    }
+
+    public void setDepartureTowns(String departureTowns) {
+        this.departureTowns = departureTowns;
+    }
+
     public String getDeparturePlaceCode() {
         return departurePlaceCode;
     }
@@ -422,6 +462,38 @@ public class OfcOrderDTO {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public String getDestinationProvince() {
+        return destinationProvince;
+    }
+
+    public void setDestinationProvince(String destinationProvince) {
+        this.destinationProvince = destinationProvince;
+    }
+
+    public String getDestinationCity() {
+        return destinationCity;
+    }
+
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
+    }
+
+    public String getDestinationDistrict() {
+        return destinationDistrict;
+    }
+
+    public void setDestinationDistrict(String destinationDistrict) {
+        this.destinationDistrict = destinationDistrict;
+    }
+
+    public String getDestinationTowns() {
+        return destinationTowns;
+    }
+
+    public void setDestinationTowns(String destinationTowns) {
+        this.destinationTowns = destinationTowns;
     }
 
     public String getDestinationCode() {

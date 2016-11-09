@@ -28,6 +28,30 @@ public class OfcDistributionBasicInfo {
     private String departurePlace;
 
     /**
+     * 出发省份
+     */
+    @Column(name = "departure_province")
+    private String departureProvince;
+
+    /**
+     * 出发城市
+     */
+    @Column(name = "departure_city")
+    private String departureCity;
+
+    /**
+     * 出发区县
+     */
+    @Column(name = "departure_district")
+    private String departureDistrict;
+
+    /**
+     * 出发乡镇
+     */
+    @Column(name = "departure_towns")
+    private String departureTowns;
+
+    /**
      * 出发地区域编码
      */
     @Column(name = "departure_place_code")
@@ -37,6 +61,31 @@ public class OfcDistributionBasicInfo {
      * 目的地
      */
     private String destination;
+
+    /**
+     * 目的省份
+     */
+    @Column(name = "destination_province")
+    private String destinationProvince;
+
+    /**
+     * 目的城市
+     */
+    @Column(name = "destination_city")
+    private String destinationCity;
+
+    /**
+     * 目的区县
+     */
+    @Column(name = "destination_district")
+    private String destinationDistrict;
+
+    /**
+     * 目的乡镇
+     */
+    @Column(name = "destination_towns")
+    private String destinationTowns;
+
 
     /**
      * 目的地区域编码
@@ -316,6 +365,78 @@ public class OfcDistributionBasicInfo {
     }
 
     /**
+     * 获取出发省份
+     *
+     * @return departure_province - 出发省份
+     */
+    public String getDepartureProvince() {
+        return departureProvince;
+    }
+
+    /**
+     * 设置出发省份
+     *
+     * @param departureProvince 出发省份
+     */
+    public void setDepartureProvince(String departureProvince) {
+        this.departureProvince = departureProvince;
+    }
+
+    /**
+     * 获取出发城市
+     *
+     * @return departure_city - 出发城市
+     */
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    /**
+     * 设置出发城市
+     *
+     * @param departureCity 出发城市
+     */
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    /**
+     * 获取出发区县
+     *
+     * @return departure_district - 出发区县
+     */
+    public String getDepartureDistrict() {
+        return departureDistrict;
+    }
+
+    /**
+     * 设置出发区县
+     *
+     * @param departureDistrict 出发区县
+     */
+    public void setDepartureDistrict(String departureDistrict) {
+        this.departureDistrict = departureDistrict;
+    }
+
+    /**
+     * 获取出发乡镇
+     *
+     * @return departure_towns - 出发乡镇
+     */
+    public String getDepartureTowns() {
+        return departureTowns;
+    }
+
+    /**
+     * 设置出发乡镇
+     *
+     * @param departureTowns 出发乡镇
+     */
+    public void setDepartureTowns(String departureTowns) {
+        this.departureTowns = departureTowns;
+    }
+
+    /**
      * 获取出发地区域编码
      *
      * @return departure_place_code - 出发地区域编码
@@ -350,6 +471,79 @@ public class OfcDistributionBasicInfo {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
+    /**
+     * 获取目的省份
+     *
+     * @return destination_province - 目的省份
+     */
+    public String getDestinationProvince() {
+        return destinationProvince;
+    }
+
+    /**
+     * 设置目的省份
+     *
+     * @param destinationProvince 目的省份
+     */
+    public void setDestinationProvince(String destinationProvince) {
+        this.destinationProvince = destinationProvince;
+    }
+
+    /**
+     * 获取目的城市
+     *
+     * @return destination_city - 目的城市
+     */
+    public String getDestinationCity() {
+        return destinationCity;
+    }
+
+    /**
+     * 设置目的城市
+     *
+     * @param destinationCity 目的城市
+     */
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
+    }
+
+    /**
+     * 获取目的区县
+     *
+     * @return destination_district - 目的区县
+     */
+    public String getDestinationDistrict() {
+        return destinationDistrict;
+    }
+
+    /**
+     * 设置目的区县
+     *
+     * @param destinationDistrict 目的区县
+     */
+    public void setDestinationDistrict(String destinationDistrict) {
+        this.destinationDistrict = destinationDistrict;
+    }
+
+    /**
+     * 获取目的乡镇
+     *
+     * @return destination_towns - 目的乡镇
+     */
+    public String getDestinationTowns() {
+        return destinationTowns;
+    }
+
+    /**
+     * 设置目的乡镇
+     *
+     * @param destinationTowns 目的乡镇
+     */
+    public void setDestinationTowns(String destinationTowns) {
+        this.destinationTowns = destinationTowns;
+    }
+
 
     /**
      * 获取目的地区域编码
