@@ -47,7 +47,10 @@ public final class OrderConstEnum {
     public static final String RENWUZHONG="30";   //任务中
     public static final String RENWUWANCH="40";  //任务完成
     public static final String YIZUOFEI="50";  //已作废
-
+    /** 跨域URL */
+    public static final String CROSS_DOMAIN_URL = "crossDomainUrl";
+    /** OFC 绝对路径 */
+    public static final String OFC_URL = "OFC_URL";
     public OrderConstEnum() {
     }
 }

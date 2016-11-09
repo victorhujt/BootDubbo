@@ -328,6 +328,7 @@
                 <div class="page-header">
                     <p>
                         基本信息
+                        <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                     </p>
                 </div>
 
@@ -947,7 +948,7 @@
      */
 
     function validateForm() {
-        var csc_url = $("#csc_url").html();
+        var ofc_url = $("#ofc_url").html();
         $('#orderFundamentalFormValidate').validate({
             errorElement : 'div',
             errorClass : 'help-block',
@@ -959,16 +960,26 @@
                 },
                 custOrderCode:{
                     required:true,
-                    maxlength: 30
+                    maxlength:30,
+                    remote:{
+                        url : ofc_url + "/ofc/checkCustOrderCode",
+                        type : "POST",
+                        dataType : "json",
+                        data : {
+                            custOrderCode : function() {
+                                return $("#custOrderCode").val();
+                            }
+                        }
+                    }
                 },
                 notes:{
                     maxlength:300
-                },
+                }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
                     maxlength:19
 
-                }/*,
+                *!/}*//*,
                 goodsListProductionBatch:{
                     maxlength:100
                 }*/
@@ -979,16 +990,17 @@
                 },
                 custOrderCode:{
                     required: "请输入客户订单编号",
-                    maxlength: "超过最大长度"
+                    maxlength: "超过最大长度",
+                    remote: "该客户订单编号已经存在"
                 },
                 notes:{
                     maxlength:"超过最大长度"
-                },
+                }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
                     maxlength:"超过最大长度"
 
-                }/*,
+                }*//*,
                 goodsListProductionBatch:{
                     maxlength:"超过最大长度"
                 }*/

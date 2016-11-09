@@ -62,4 +62,5 @@ public interface IService<T> {
 	List<T> selectByExampleAndRowBounds(Object example, RowBounds rowBounds);
 
 
+
 }

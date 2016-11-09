@@ -24,4 +24,10 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
         String orderCode = ofcFundamentalInformationMapper.getOrderCodeByCustOrderCode(custOrderCode);
         return orderCode;
     }
+
+    @Override
+    public int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation) {
+        int result =  ofcFundamentalInformationMapper.checkCustOrderCode(ofcFundamentalInformation);
+        return result;
+    }
 }

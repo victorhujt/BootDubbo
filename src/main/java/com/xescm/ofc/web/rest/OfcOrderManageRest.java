@@ -142,6 +142,7 @@ public class OfcOrderManageRest extends BaseController{
     public String getOrderDetailByCode(Model model, @PathVariable String orderCode, @PathVariable String dtotag, Map<String,Object> map){
         logger.debug("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
+        setDefaultModel(model);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
         queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
