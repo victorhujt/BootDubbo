@@ -230,9 +230,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 rmcCompanyLineQO.setLineType("1");
             }
             Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
-            /*if(){
-
-            }*/
+            if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
+                    && companyList.getResult().size()==1){
+                RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
+                ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
+                ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
+                ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
+                ofcTraplanSourceStatus.setResourceAllocationStatus("30");
+            }
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
             ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
