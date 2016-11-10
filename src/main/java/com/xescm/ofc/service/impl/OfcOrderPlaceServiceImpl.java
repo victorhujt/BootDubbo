@@ -105,13 +105,18 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
                         //运输订单
-                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
-                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
-                        if(depatrueCode == destinationCode){
+                        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
+                            String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                            String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                            if(depatrueCode == destinationCode){
+                                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                            }else {
+                                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                            }
+                        }else{
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
-                        }else {
-                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                         }
+
                         /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
@@ -348,7 +353,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException(wrapper.getMessage());
             }
         }catch (Exception ex){
-            throw new BusinessException("添加联系人信息出错!");
+            throw new BusinessException(ex.getMessage());
         }
         return Wrapper.SUCCESS_MESSAGE;
     }
