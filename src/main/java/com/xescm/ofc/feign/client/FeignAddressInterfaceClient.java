@@ -20,7 +20,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class FeignAddressInterfaceClient {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeignAddressInterfaceClient.class);
 
     @Resource
     RestConfig restConfig;
@@ -28,14 +28,15 @@ public class FeignAddressInterfaceClient {
 
     public AddressInterface getApi() {
         AddressInterface res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+               /* .requestInterceptor(new AuthRequestInterceptor())*/
+                .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(AddressInterface.class, restConfig.getAddrUrl());
         return res;
     }
-    public Wrapper<Address> queryAddressByCodeAndType(QueryAddress queryAddress){
+    public Wrapper<?> queryAddressByCodeAndType(QueryAddress queryAddress){
         logger.debug("==>查询四级地址 queryAddress={}", queryAddress);
-        Wrapper<Address> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
+        Wrapper<?> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
         return wrapper;
     }
 }

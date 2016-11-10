@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Service
 public class FeignCscStoreAPIClient {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscGoodsAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeignCscStoreAPI.class);
     @Resource
     RestConfig restConfig;
 
