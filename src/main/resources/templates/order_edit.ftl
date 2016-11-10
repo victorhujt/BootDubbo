@@ -416,13 +416,11 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <select id="storeCode" name="storeCode" value="${(orderInfo.storeCode)!""}">
+                                                    <#--<input id="hiddenStoreCode" name="hiddenStoreCode" value="${(orderInfo.storeCode)!""}">-->
+                                                    <select id="storeCode" name="storeCode" >
                                                         <#list cscStoreByCustId! as cscStore>
-                                                            <option value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
+                                                            <option <#if cscStore.storeCode == orderInfo.storeCode >selected="selected"</#if> value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
                                                         </#list>
-                                                        <#--<option value="线下销售" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '线下销售')>selected="selected"</#if></#if>>线下销售</option>
-                                                        <option value="众品天猫生鲜旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品天猫生鲜旗舰店')>selected="selected"</#if></#if>>众品天猫生鲜旗舰店</option>
-                                                        <option value="众品京东旗舰店" <#if orderInfo.storeName?? ><#if ((orderInfo.storeName)== '众品京东旗舰店')>selected="selected"</#if></#if>>众品京东旗舰店</option>-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -784,10 +782,10 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <select id="warehouseName" name="warehouseName"   value="${(orderInfo.wareHouseCode)!""}">
-                                                                            <#list rmcWarehouseByCustCode! as warehouse>
-                                                                                <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
-                                                                            </#list>
+                                                                            <select id="warehouseName" name="warehouseName"  <#-- value="${(orderInfo.wareHouseCode)!""}"-->>
+                                                                                <#list rmcWarehouseByCustCode! as warehouse>
+                                                                                    <option <#if warehouse.id == orderInfo.warehouseCode> selected="selected" </#if> value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
+                                                                                </#list>
                                                                             </select>
 
                                                                         </div>
@@ -904,12 +902,7 @@
 
                                                         </div>
 
-
-
                                                     </div>
-
-
-
                                                 </div>
                                             </div>
 
@@ -1415,6 +1408,10 @@
 
 
     $(function(){
+
+
+
+
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);

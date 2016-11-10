@@ -74,18 +74,18 @@ public class OfcOrderDTO {
     private String transCode;
     //private String goodsType;
     private Integer urgent;
-    private String departurePlace;
+    private String departurePlace;//完整地址
     private String departureProvince;
     private String departureCity;
     private String departureDistrict;
     private String departureTowns;
-    private String departurePlaceCode;
-    private String destination;
+    private String departurePlaceCode;//完整地址编码
+    private String destination;//完整地址
     private String destinationProvince;
     private String destinationCity;
     private String destinationDistrict;
     private String destinationTowns;
-    private String destinationCode;
+    private String destinationCode;//完整地址编码   111/2222/3333
     private BigDecimal quantity;
     private BigDecimal weight;
     private String cubage;

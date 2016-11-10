@@ -95,14 +95,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <#--<div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">货品类型</label>
                                 <div class="col-sm-3">
                                     <div class="clearfix">
                                         <input id="goodsType" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                 <div class="col-sm-3">

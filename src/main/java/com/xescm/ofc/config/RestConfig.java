@@ -33,6 +33,19 @@ public class RestConfig {
      */
     private String cscUrl;
 
+    /**
+     * 地址库地址
+     * @return
+     */
+    private String addrUrl;
+
+    public String getAddrUrl() {
+        return addrUrl;
+    }
+
+    public void setAddrUrl(String addrUrl) {
+        this.addrUrl = addrUrl;
+    }
 
     public String getOfcUrl() {
         return ofcUrl;

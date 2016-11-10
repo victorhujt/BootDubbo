@@ -193,6 +193,8 @@ public class OfcOrderManageRest extends BaseController{
             map.put("supportMessage",supportMessage);
             map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
             map.put("cscStoreByCustId",cscStoreListResult);
+            /*map.put("warehouseCodeByOrderCode",warehouseCodeByOrderCode);
+            map.put("storeCodeByOrderCode",storeCodeByOrderCode);*/
             return "/order_edit";
         }
         return "order_manage";

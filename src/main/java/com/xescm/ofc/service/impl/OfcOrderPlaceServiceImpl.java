@@ -104,10 +104,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ofcWarehouseInformation.setSupportName("");
                         }
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
-                        if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
-                                .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+                        //运输订单
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        if(depatrueCode == destinationCode){
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
-                        }else{
+                        }else {
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                         }
                         /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
@@ -163,7 +165,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }else if (select.size() == 0){
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         }
-                    //仓配单不需要运输,需要将属于该订单的仓配信息删除
+                    //仓配单不需要运输,需要将属于该订单的运输信息删除
                     }else if (ofcWarehouseInformation.getProvideTransport() == OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         ofcFundamentalInformation.setSecCustCode("");
                         ofcFundamentalInformation.setSecCustName("");
@@ -191,6 +193,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         saveWarehouseMessage(ofcWarehouseInformation);
                     }
                 }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+                    //删除仓配信息
+                    OfcWarehouseInformation ofcWarehouseInformationForTrans = new OfcWarehouseInformation();
+                    ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    ofcWarehouseInformationService.delete(ofcWarehouseInformationForTrans);
                     //更新运输信息
                     if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
                             .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){

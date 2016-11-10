@@ -51,6 +51,14 @@ public final class OrderConstEnum {
     public static final String CROSS_DOMAIN_URL = "crossDomainUrl";
     /** OFC 绝对路径 */
     public static final String OFC_URL = "OFC_URL";
+    //支付方式
+    public static final String FINNANCEPAYWAYCASH="6810";//现金支付
+    public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡
+    public static final String FINNANCEPAYWAYWECHAT="6830";//微信
+    public static final String FINNANCEPAYWAYALIPAY="6840";//支付宝
+    public static final String FINNANCEPAYWAYBANK="6850";//银行支付
+    public static final String FINNANCEPAYWAYACCOUNT="6860";//账户结算
+
     public OrderConstEnum() {
     }
 }

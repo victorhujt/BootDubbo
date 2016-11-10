@@ -1299,8 +1299,6 @@
         jsonStr.transRequire = $("#transRequire").val();
 
 
-
-
         jsonStr.consignorCode = $("#consignorCode").val();
         jsonStr.consignorType = $("#consignorType").val();
         jsonStr.consignorName = $("#consignorName").val();
@@ -1311,6 +1309,64 @@
         jsonStr.consignorContactName = $("#consignorContactName").val();
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
+
+
+        jsonStr.departureProvince=$("#consignorProvinceName").val();
+        jsonStr.departureCity=$("#consignorCityName").val();
+        jsonStr.departureDistrict=$("#consignorAreaName").val();
+        jsonStr.departureTowns=$("#consignorStreetName").val();
+        jsonStr.departurePlaceCode=$("#consignorProvinceCode").val()
+                + "/" + $("#consignorCityCode").val()
+                + "/" +  $("#consignorAreaCode").val()
+                + "/" + $("#consignorStreetCode").val();
+        jsonStr.departurePlace=$("#consignorProvinceName").val()
+                + $("#consignorCityName").val()
+                + $("#consignorAreaName").val()
+                + $("#consignorStreetName").val()
+                + $("#consignorAddress").val();
+        jsonStr.destinationProvince=$("#consigneeProvinceName").val();
+        jsonStr.destinationCity=$("#consigneeCityName").val();
+        jsonStr.destinationDistrict=$("#consigneeAreaName").val();
+        jsonStr.destinationTowns=$("#consigneeStreetName").val();
+        jsonStr.destinationCode=$("#consigneeProvinceCode").val()
+                + "/" + $("#consigneeCityCode").val()
+                + "/" +  $("#consigneeAreaCode").val()
+                + "/" + $("#consigneeStreetCode").val();
+        jsonStr.destination=$("#consigneeProvinceName").val()
+                + $("#consigneeCityName").val()
+                + $("#consigneeAreaName").val()
+                + $("#consigneeStreetName").val()
+                + $("#consigneeAddress").val();
+
+
+        /*
+        private String departurePlace;//完整地址
+        private String departureProvince;
+        private String departureCity;
+        private String departureDistrict;
+        private String departureTowns;
+        private String departurePlaceCode;//完整地址编码
+        private String destination;//完整地址
+        private String destinationProvince;
+        private String destinationCity;
+        private String destinationDistrict;
+        private String destinationTowns;
+        private String destinationCode;//完整地址编码   111/2222/3333/4444
+        */
+
+
+        /*
+         cscContact.province = $("#consignorProvinceCode").val();
+        cscContact.provinceName = $("#consignorProvinceName").val();
+        cscContact.city = $("#consignorCityCode").val();
+        cscContact.cityName = $("#consignorCityName").val();
+        cscContact.area = $("#consignorAreaCode").val();
+        cscContact.areaName = $("#consignorAreaName").val();
+        cscContact.street = $("#consignorStreet").val();
+        cscContact.address = $("#consignorAddress").val();
+
+        */
+
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
@@ -1366,7 +1422,17 @@
         cscContact.fax = $("#consignorFax").val();
         cscContact.email = $("#consignorEmail").val();
         cscContact.postCode = $("#consignorPostCode").val();
+
+        cscContact.province = $("#consignorProvinceCode").val();
+        cscContact.provinceName = $("#consignorProvinceName").val();
+        cscContact.city = $("#consignorCityCode").val();
+        cscContact.cityName = $("#consignorCityName").val();
+        cscContact.area = $("#consignorAreaCode").val();
+        cscContact.areaName = $("#consignorAreaName").val();
+        cscContact.street = $("#consignorStreetName").val();
         cscContact.address = $("#consignorAddress").val();
+
+//        cscContact.address = $("#consignorAddress").val();
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
@@ -1403,7 +1469,16 @@
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
+
+        cscContact.province = $("#consigneeProvinceCode").val();
+        cscContact.provinceName = $("#consigneeProvinceName").val();
+        cscContact.city = $("#consigneeCityCode").val();
+        cscContact.cityName = $("#consigneeCityName").val();
+        cscContact.area = $("#consigneeAreaCode").val();
+        cscContact.areaName = $("#consigneeAreaName").val();
+        cscContact.street = $("#consigneeStreetName").val();
         cscContact.address = $("#consigneeAddress").val();
+
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
@@ -1419,14 +1494,22 @@
         paramSupport.fax = $("#supportFax").val();
         paramSupport.email = $("#supportEmail").val();
         paramSupport.postCode = $("#supportPostCode").val();
+
+        paramSupport.province = $("#supportProvinceCode").val();
+        paramSupport.provinceName = $("#supportProvinceName").val();
+        paramSupport.city = $("#supportCityCode").val();
+        paramSupport.cityName = $("#supportCityName").val();
+        paramSupport.area = $("#supportAreaCode").val();
+        paramSupport.areaName = $("#supportAreaName").val();
+        paramSupport.street = $("#supportStreetName").val();
         paramSupport.address = $("#supportAddress").val();
+
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
         console.log("function  support " + cscSupplierInfoDtoStr);
         return cscSupplierInfoDtoStr;
     }
 
     $(function(){
-
 
         $("#provideTransport").change(function () {
             if($(this).prop("checked")){
@@ -1444,6 +1527,16 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+            //确认下单的按钮, 这里应该根据当前页面上的订单类型和业务类型进行判断, 应该提交哪几个表单
+            //基本信息和货品的表单先提交
+
+            //如果是运输订单, 就再提交运输信息标签页
+
+            //如果是仓配订单, 就再提交仓配信息标签页, 如果是入库单再提交供应商信息
+
+            //如果是仓配需运输订单, 就再提交运输信息和仓配信息标签页, 如果是入库单再提交供应商信息
+
+
 
             var jsonStr = {};
             //订单基本信息

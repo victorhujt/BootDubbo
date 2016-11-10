@@ -267,16 +267,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     /*
     校验客户订单编号
      */
-    @RequestMapping(value = "/checkCustOrderCode",method = RequestMethod.POST)
-    @ResponseBody
-    public boolean checkCustOrderCode(Model model, String custOrderCode, String selfCustOrderCode){
-        logger.info("==> custOrderCode={}", custOrderCode);
-        logger.info("==> selfCustOrderCode={}", selfCustOrderCode);
+        @RequestMapping(value = "/checkCustOrderCode",method = RequestMethod.POST)
+        @ResponseBody
+        public boolean checkCustOrderCode(Model model, String custOrderCode, String selfCustOrderCode){
+            logger.info("==> custOrderCode={}", custOrderCode);
+            logger.info("==> selfCustOrderCode={}", selfCustOrderCode);
 
-        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-        ofcFundamentalInformation.setCustOrderCode(custOrderCode);
-        ofcFundamentalInformation.setSelfCustOrderCode(selfCustOrderCode);
-        boolean flag = false;
+            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+            ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+            ofcFundamentalInformation.setSelfCustOrderCode(selfCustOrderCode);
+            boolean flag = false;
         try {
             int count = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
             if (count < 1){
