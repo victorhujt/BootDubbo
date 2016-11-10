@@ -42,7 +42,10 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsCodeCondition1" name="beginProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <div class="docs-methods">
+                                <input id="city-picker-cfd1" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input  id = "goodsCodeCondition1" name="beginProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,7 +53,10 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition1" name="arriveProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <div class="docs-methods">
+                                <input id="city-picker-mdd1" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input  id = "goodsNameCondition1" name="arriveProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,7 +118,10 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsCodeCondition2" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <div class="docs-methods">
+                                <input id="city-picker-cfd2" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input  id = "goodsCodeCondition2" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,7 +129,10 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition2" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <div class="docs-methods">
+                                <input id="city-picker-mdd2" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input  id = "goodsNameCondition2" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -900,7 +912,11 @@
     }
 
 </script>
+<link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
+<script src="../js/city-picker.data.js"></script><#--111-->
+<script src="../js/city-picker.js"></script><#--111-->
 
 </body>

@@ -18,24 +18,28 @@
     height:28px;
     line-height:28px;
     padding:0 0 2px 3px;
-    border-radius: 4px;
 }
-
 
 .city-picker-span > .placeholder {
     color: #aaa;
 }
-
-.city-picker-span > .arrow {
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    width: 10px;
-    margin-top: -3px;
-    height: 5px;
-    background: url(../images/drop-arrow.png) -10px -25px no-repeat;
+.ct-reset{
+    position: relative;
+    background: #f0f0f0;
+    text-align: center;
+    height: 30px;
+    padding-top: 5px;
 }
-
+.btn-ct{
+    display: inline-block;
+    position:relative;
+    border:1px solid #666;
+    margin-left: 15px;
+    width:40px;
+    cursor: pointer;
+    background:#fff;
+    border-radius: 4px;
+}
 .city-picker-span.focus,
 .city-picker-span.open {
     border-bottom-color: #46A4FF;
@@ -47,12 +51,15 @@
 
 .city-picker-span > .title > span {
     color: #333;
-    padding: 0 5px 0 5px;
+    padding: 5px;
+    border-radius: 3px;
 }
-
 
 .city-picker-span > .title > span:hover {
     background-color: #f1f8ff;
+    color: #333;
+    padding: 0 5px 0 5px;
+
 }
 
 .city-picker-dropdown {

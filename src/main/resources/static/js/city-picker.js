@@ -32,7 +32,9 @@
     var PROVINCE = 'province';
     var CITY = 'city';
     var DISTRICT = 'district';
-    var STREET = 'street';
+    var STREET='street';
+
+    var selectCodes;
 
     function CityPicker(element, options) {
         this.$element = $(element);
@@ -63,7 +65,7 @@
                 placeholder = this.$element.attr('placeholder') || this.options.placeholder,
                 textspan = '<span class="city-picker-span">' +
                     (placeholder ? '<span class="placeholder">' + placeholder + '</span>' : '') +
-                    '<span class="title"></span>' + '</span>',
+                    '<span class="title"></span><div class="arrow"></div>' + '</span>',
 
                 dropdown = '<div class="city-picker-dropdown" style="left:0px;top:100%;' +
                     this.getWidthStyle(p.width, true) + '">' +
@@ -78,7 +80,9 @@
                     (this.includeDem('city') ? '<div class="city-select city" data-count="city"></div>' : '') +
                     (this.includeDem('district') ? '<div class="city-select district" data-count="district"></div>' : '') +
                     (this.includeDem('street') ? '<div class="city-select street" data-count="street"></div>' : '') +
-                    '</div></div>';
+                    '</div>'+
+                    '<div class="ct-reset"><div class="cy-reset btn-ct">清空</div></div>'+
+                    +'</div>';
 
             this.$element.addClass('city-picker-input');
             this.$textspan = $(textspan).insertAfter(this.$element);
@@ -92,7 +96,6 @@
 
             this.refresh();
         },
-
         refresh: function (force) {
             // clean the data-item for each $select
             var $select = this.$dropdown.find('.city-select');
@@ -112,10 +115,9 @@
             this.feedText();
             this.feedVal();
         },
-
         defineDems: function () {
             var stop = false;
-            $.each([PROVINCE, CITY, DISTRICT, STREET], $.proxy(function (i, type) {
+            $.each([PROVINCE, CITY, DISTRICT,STREET], $.proxy(function (i, type) {
                 if (!stop) {
                     this.dems.push(type);
                 }
@@ -209,14 +211,20 @@
                 } else if ($target.is('.city-picker-dropdown *')) {
                     $dropdown = $target.parents('.city-picker-dropdown');
                 }
-                /*if ((!$input && !$span && !$dropdown) ||
-                 ($span && $span.get(0) !== $this.$textspan.get(0)) ||
-                 ($input && $input.get(0) !== $this.$element.get(0)) ||
-                 ($dropdown && $dropdown.get(0) !== $this.$dropdown.get(0))) {
-                 $this.close(true);
-                 }*/
+                console.log($dropdown);
+                if (
+                    (!$input && !$span && !$dropdown) ||
+                    ($span && $span.get(0) !== $this.$textspan.get(0)) ||
+                    ($input && $input.get(0) !== $this.$element.get(0)) ||
+                    ($dropdown && $dropdown.get(0) !== $this.$dropdown.get(0))) {
+                     $this.close(true);
+                }
 
             }));
+
+            $(".cy-reset").on('click',function(){
+                $this.reset();
+            });
 
             this.$element.on('change', (this._changeElement = $.proxy(function () {
                 this.close(true);
@@ -276,6 +284,7 @@
 
             if (this.$province) {
                 this.$province.on(EVENT_CHANGE, (this._changeProvince = $.proxy(function () {
+                    // $select.data('item', null);
                     this.output(CITY);
                     this.output(DISTRICT);
                     this.output(STREET);
@@ -293,11 +302,13 @@
 
             if (this.$district) {
                 this.$district.on(EVENT_CHANGE, (this._changeDistrict = $.proxy(function () {
-                    this.output(DISTRICT);
                     this.output(STREET);
+                    //yukai 判断是否需要关闭
                     this.tab(STREET);
                 }, this)));
             }
+
+
         },
 
         open: function (type) {
@@ -371,6 +382,19 @@
             }
         },
 
+        getValCode: function () {
+            var text = '';
+            this.$dropdown.find('.city-select')
+              .each(function () {
+                  var item = $(this).data('item');
+                  if (item) {
+                      text += ($(this).hasClass('province') ? '' : ',') + item.code;
+                  }
+              });
+
+            return text;
+        },
+
         getVal: function () {
             var text = '';
             this.$dropdown.find('.city-select')
@@ -384,28 +408,28 @@
         },
 
         feedVal: function () {
-            this.$element.val(this.getVal());
+            this.$element.val(this.getVal()+"~"+this.getValCode());
         },
 
-        getAreaInfo: function (type, code) {
+        getAreaInfo: function(type,code){
             var res;
             if (type === PROVINCE) {
                 res = ChineseDistricts[86];
             } else {
-                var param = {};
-                param.type = type;
-                param.code = code;
-                $.ajax({
-                    type: "post",
-                    url: sys.rootPath + "/api/addr/citypicker/findByCodeAndType",
-                    data: param,
-                    async: false,
-                    success: function (data) {
-                        res = data.result;
-                    }
-                });
+                res = ChineseDistricts[code];
+                // var param = {};
+                // param.type = type;
+                // param.code = code;
+                // $.ajax({
+                //     type: "post",
+                //     url: sys.rootPath + "/api/addr/citypicker/findByCodeAndType",
+                //     data: param,
+                //     async: false,
+                //     success: function (data) {
+                //         res = data.result;
+                //     }
+                // });
             }
-            //var ChineseDistricts = {};
             return res;
         },
 
@@ -426,16 +450,18 @@
 
             item = $select.data('item');
 
+
             value = (item ? item.address : null) || options[type];
 
             code = (
                 type === PROVINCE ? 86 :
                     type === CITY ? this.$province && this.$province.find('.active').data('code') :
                         type === DISTRICT ? this.$city && this.$city.find('.active').data('code') :
-                            type === STREET ? this.$district && this.$district.find('.active').data('code') : code
+                           type === STREET ? this.$district && this.$district.find('.active').data('code') :code
             );
 
-            districts = $.isNumeric(code) ? this.getAreaInfo(type, code) : null;
+            districts = $.isNumeric(code) ? this.getAreaInfo(type,code) : null;
+
             // districts = $.isNumeric(code) ? ChineseDistricts[code] : null;
             if ($.isPlainObject(districts)) {
                 $.each(districts, function (code, address) {
@@ -471,11 +497,13 @@
                     }
                 });
             }
-
             $select.html(type === PROVINCE ? this.getProvinceList(data) :
                 this.getList(data, type));
             $select.data('item', matched);
+
         },
+
+
 
         getProvinceList: function (data) {
             var list = [],
