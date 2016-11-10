@@ -235,6 +235,12 @@ public class OfcDistributionBasicInfo {
     private String driverName;
 
     /**
+     * 基地ID(电商)
+     */
+    @Column(name = "base_id")
+    private String baseId;
+
+    /**
      * 联系电话
      */
     @Column(name = "contact_number")
@@ -867,6 +873,24 @@ public class OfcDistributionBasicInfo {
      */
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    /**
+     * 获取基地ID(电商)
+     *
+     * @return base_id - 基地ID(电商)
+     */
+    public String getBaseId() {
+        return baseId;
+    }
+
+    /**
+     * 设置基地ID(电商)
+     *
+     * @param baseId 基地ID(电商)
+     */
+    public void setBaseId(String baseId) {
+        this.baseId = baseId;
     }
 
     /**

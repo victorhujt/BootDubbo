@@ -25,17 +25,17 @@ public class FeignAddressInterfaceClient {
     @Resource
     RestConfig restConfig;
 
+
     public AddressInterface getApi() {
         AddressInterface res = Feign.builder()
-                /*.requestInterceptor(new AuthRequestInterceptor())*/
-                .encoder(new JacksonEncoder())
+                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(AddressInterface.class, restConfig.getAddrUrl());
         return res;
     }
-    public Wrapper<?> queryAddressByCodeAndType(QueryAddress queryAddress){
+    public Wrapper<Address> queryAddressByCodeAndType(QueryAddress queryAddress){
         logger.debug("==>查询四级地址 queryAddress={}", queryAddress);
-        Wrapper<?> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
+        Wrapper<Address> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
         return wrapper;
     }
 }
