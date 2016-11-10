@@ -104,10 +104,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ofcWarehouseInformation.setSupportName("");
                         }
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
-                        if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
-                                .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+                        //运输订单
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        if(depatrueCode == destinationCode){
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
-                        }else{
+                        }else {
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
                         }
                         /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
