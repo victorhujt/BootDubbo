@@ -293,8 +293,6 @@
 
 
 
-
-<#include "common/include.ftl">
 <script type="text/javascript">
     $(function () {
 

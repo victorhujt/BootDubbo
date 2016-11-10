@@ -2,6 +2,7 @@ package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.dto.addr.QueryAddress;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
@@ -10,6 +11,7 @@ import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.client.FeignAddressInterfaceClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
@@ -53,6 +55,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+    @Autowired
+    private FeignAddressInterfaceClient feignAddressInterfaceClient;
 
     /**
      * 编辑
@@ -288,6 +292,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
         return flag;
     }
+
+
 
 
 }

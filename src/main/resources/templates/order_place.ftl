@@ -46,6 +46,7 @@
         }
     </style>
 <#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
+
 </head>
 
 <body class="no-skin">
@@ -329,6 +330,8 @@
                     <p>
                         基本信息
                         <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                        <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
+                        <#--<#import "address.ftl" as apiAddrFtl>-->
                     </p>
                 </div>
 
@@ -726,10 +729,29 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <select><option value="">--省--</option></select>
+                                                                       <#-- <select><option value="">--省--</option></select>
                                                                         <select><option value="">--市--</option></select>
                                                                         <select><option value="">--区/县--</option></select>
-                                                                        <select><option value="">--乡镇/街道--</option></select>
+                                                                        <select><option value="">--乡镇/街道--</option></select>-->
+                                                                           <#--<@apiAddrFtl.greet  fromUrl="${(ADDR_URL)!}"/>-->
+                                                                           <div class="docs-methods">
+                                                                               <form class="form-inline">
+                                                                                   <div id="distpicker">
+                                                                                       <div class="form-group">
+                                                                                           <div style="position: relative;">
+                                                                                               <input id="city-picker3" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                                                                           </div>
+                                                                                       </div>
+                                                                                       <#--<div class="form-group">
+                                                                                           <button class="btn btn-warning" id="reset" type="button">重置</button>
+                                                                                           <button class="btn btn-danger" id="destroy" type="button">确定</button>
+                                                                                       </div>-->
+                                                                                   </div>
+                                                                               </form>
+                                                                           </div>
+
+
+
                                                                         <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
@@ -900,14 +922,19 @@
 
 </div><!-- /.main-container -->
 <#--</form>-->
-
-
-
+<script type="text/javascript">
+    var sys = sys || {};
+    sys.rootPath = $("#ofc_url").html();
+</script>
+<link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
+<script src="../js/city-picker.data.js"></script><#--111-->
+<script src="../js/city-picker.js"></script><#--111-->
 
 
-<#--<#include "common/include.ftl">-->
+
 <script type="text/javascript">
     var scripts = [ null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
@@ -1310,8 +1337,34 @@
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
 
+        var consignorAddressCodeMessage = $("#xxxxxCode").split('/');
+        var consigneeAddressCodeMessage = $("#xxxxxCode").split('/');
+        var consignorAddressNameMessage = $("#xxxxxName").split('/');
+        var consigneeAddressNameMessage = $("#xxxxxName").split('/');
 
-        jsonStr.departureProvince=$("#consignorProvinceName").val();
+        jsonStr.departureProvince = consignorAddressNameMessage[0];
+        jsonStr.departureCity = consignorAddressNameMessage[1];
+        jsonStr.departureTowns = consignorAddressNameMessage[2];
+        jsonStr.departureTowns = consignorAddressNameMessage[3];
+        jsonStr.departurePlaceCode = consignorAddressCodeMessage;
+        cscContact.address = consignorAddressNameMessage[0]
+                + consignorAddressNameMessage[1]
+                + consignorAddressNameMessage[2]
+                + consignorAddressNameMessage[3]
+                + $("#consignorAddress").val();
+        jsonStr.destinationProvince = consigneeAddressNameMessage[0];
+        jsonStr.destinationCity = consigneeAddressNameMessage[1];
+        jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
+        jsonStr.destinationCode = consigneeAddressNameMessage[3];
+        jsonStr.destinationCode=consigneeAddressCodeMessage;
+        jsonStr.destination=consigneeAddressNameMessage[0]
+                + consigneeAddressNameMessage[1]
+                + consigneeAddressNameMessage[2]
+                + consigneeAddressNameMessage[3]
+                + $("#consigneeAddress").val();
+
+
+        /*jsonStr.departureProvince=$("#consignorProvinceName").val();
         jsonStr.departureCity=$("#consignorCityName").val();
         jsonStr.departureDistrict=$("#consignorAreaName").val();
         jsonStr.departureTowns=$("#consignorStreetName").val();
@@ -1336,36 +1389,10 @@
                 + $("#consigneeCityName").val()
                 + $("#consigneeAreaName").val()
                 + $("#consigneeStreetName").val()
-                + $("#consigneeAddress").val();
+                + $("#consigneeAddress").val();*/
 
 
-        /*
-        private String departurePlace;//完整地址
-        private String departureProvince;
-        private String departureCity;
-        private String departureDistrict;
-        private String departureTowns;
-        private String departurePlaceCode;//完整地址编码
-        private String destination;//完整地址
-        private String destinationProvince;
-        private String destinationCity;
-        private String destinationDistrict;
-        private String destinationTowns;
-        private String destinationCode;//完整地址编码   111/2222/3333/4444
-        */
 
-
-        /*
-         cscContact.province = $("#consignorProvinceCode").val();
-        cscContact.provinceName = $("#consignorProvinceName").val();
-        cscContact.city = $("#consignorCityCode").val();
-        cscContact.cityName = $("#consignorCityName").val();
-        cscContact.area = $("#consignorAreaCode").val();
-        cscContact.areaName = $("#consignorAreaName").val();
-        cscContact.street = $("#consignorStreet").val();
-        cscContact.address = $("#consignorAddress").val();
-
-        */
 
         return jsonStr;
     }
@@ -1423,14 +1450,19 @@
         cscContact.email = $("#consignorEmail").val();
         cscContact.postCode = $("#consignorPostCode").val();
 
-        cscContact.province = $("#consignorProvinceCode").val();
-        cscContact.provinceName = $("#consignorProvinceName").val();
-        cscContact.city = $("#consignorCityCode").val();
-        cscContact.cityName = $("#consignorCityName").val();
-        cscContact.area = $("#consignorAreaCode").val();
-        cscContact.areaName = $("#consignorAreaName").val();
-        cscContact.street = $("#consignorStreetName").val();
-        cscContact.address = $("#consignorAddress").val();
+        var consignorAddressCodeMessage = $("#xxxxxCode").split('/');
+        var consignorAddressNameMessage = $("#xxxxxName").split('/');
+
+
+        cscContact.province = consignorAddressCodeMessage[0];
+        cscContact.city = consignorAddressCodeMessage[1];
+        cscContact.area = consignorAddressCodeMessage[2];
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContact.provinceName = consignorAddressNameMessage[0];
+        cscContact.cityName = consignorAddressNameMessage[1];
+        cscContact.areaName = consignorAddressNameMessage[2];
+        cscContact.street = consignorAddressNameMessage[3];
+        cscContact.address = $("#consigneeAddress").val();
 
 //        cscContact.address = $("#consignorAddress").val();
         paramConsignor.cscContact = cscContact;
@@ -1470,14 +1502,28 @@
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
 
-        cscContact.province = $("#consigneeProvinceCode").val();
+     /*   cscContact.province = $("#consigneeProvinceCode").val();
         cscContact.provinceName = $("#consigneeProvinceName").val();
         cscContact.city = $("#consigneeCityCode").val();
         cscContact.cityName = $("#consigneeCityName").val();
         cscContact.area = $("#consigneeAreaCode").val();
         cscContact.areaName = $("#consigneeAreaName").val();
         cscContact.street = $("#consigneeStreetName").val();
+        cscContact.address = $("#consigneeAddress").val();*/
+        var consigneeAddressCodeMessage = $("#xxxxxCode").split('/');
+        var consigneeAddressNameMessage = $("#xxxxxName").split('/');
+
+
+        cscContact.province = consigneeAddressCodeMessage[0];
+        cscContact.city = consigneeAddressCodeMessage[1];
+        cscContact.area = consigneeAddressCodeMessage[2];
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContact.provinceName = consigneeAddressNameMessage[0];
+        cscContact.cityName = consigneeAddressNameMessage[1];
+        cscContact.areaName = consigneeAddressNameMessage[2];
+        cscContact.street = consigneeAddressNameMessage[3];
         cscContact.address = $("#consigneeAddress").val();
+
 
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
@@ -1495,14 +1541,29 @@
         paramSupport.email = $("#supportEmail").val();
         paramSupport.postCode = $("#supportPostCode").val();
 
-        paramSupport.province = $("#supportProvinceCode").val();
+       /* paramSupport.province = $("#supportProvinceCode").val();
         paramSupport.provinceName = $("#supportProvinceName").val();
         paramSupport.city = $("#supportCityCode").val();
         paramSupport.cityName = $("#supportCityName").val();
         paramSupport.area = $("#supportAreaCode").val();
         paramSupport.areaName = $("#supportAreaName").val();
         paramSupport.street = $("#supportStreetName").val();
+        paramSupport.address = $("#supportAddress").val();*/
+
+        var supportAddressCodeMessage = $("#xxxxxCode").split('/');
+        var supportAddressNameMessage = $("#xxxxxName").split('/');
+        paramSupport.province = supportAddressCodeMessage[0];
+        paramSupport.city = supportAddressCodeMessage[1];
+        paramSupport.area = supportAddressCodeMessage[2];
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        paramSupport.provinceName = supportAddressNameMessage[0];
+        paramSupport.cityName = supportAddressNameMessage[1];
+        paramSupport.areaName = supportAddressNameMessage[2];
+        paramSupport.street = supportAddressNameMessage[3];
         paramSupport.address = $("#supportAddress").val();
+
+
+
 
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
         console.log("function  support " + cscSupplierInfoDtoStr);
@@ -1510,6 +1571,8 @@
     }
 
     $(function(){
+
+
 
         $("#provideTransport").change(function () {
             if($(this).prop("checked")){
@@ -1527,6 +1590,12 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+
+
+
+
+
+
             //确认下单的按钮, 这里应该根据当前页面上的订单类型和业务类型进行判断, 应该提交哪几个表单
             //基本信息和货品的表单先提交
 

@@ -38,6 +38,7 @@ public class BaseController {
 	public void setDefaultModel(Model model){
 		model.addAttribute(OrderConstEnum.CROSS_DOMAIN_URL, restConfig.getUamUrl());
 		model.addAttribute(OrderConstEnum.OFC_URL, restConfig.getOfcUrl());
+		model.addAttribute(OrderConstEnum.ADDR_URL, restConfig.getOfcUrl());
 	}
 	protected AuthResDto getAuthResDtoByToken(){
 		AuthResDto authResDto = (AuthResDto) ThreadLocalMap.get(UamConstant.TOKEN_AUTH_DTO);

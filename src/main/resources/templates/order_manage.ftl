@@ -163,7 +163,6 @@
 
 
 
-<#include "common/include.ftl">
 <script type="text/javascript">
     var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
