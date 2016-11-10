@@ -1605,6 +1605,7 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+            alert($("#city-picker-consignee").val());
             //订单类型
             var orderType = $("#orderTypeSel").val();
             //业务类型前两位

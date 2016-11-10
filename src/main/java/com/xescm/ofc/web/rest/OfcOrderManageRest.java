@@ -228,6 +228,23 @@ public class OfcOrderManageRest extends BaseController{
         //调用外部接口,最低传CustomerCode
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
+                    && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
+                    && rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",").length>=2){
+
+                String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",");
+                rmcCompanyLineQO.setBeginCityName(beginCity[1]);
+            }else{
+                rmcCompanyLineQO.setBeginCityName(null);
+            }
+            if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
+                    && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
+                    && rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",").length>=2){
+                String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",");
+                rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
+            }else {
+                rmcCompanyLineQO.setArriveCityName(null);
+            }
             /*QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
@@ -296,7 +313,23 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心筛选服务商出现异常:{},{}");
             return;
         }
+        if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
+                && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
+                && rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",").length>=2){
 
+            String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",");
+            rmcCompanyLineQO.setBeginCityName(beginCity[1]);
+        }else{
+            rmcCompanyLineQO.setBeginCityName(null);
+        }
+        if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
+                && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
+                && rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",").length>=2){
+            String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",");
+            rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
+        }else {
+            rmcCompanyLineQO.setArriveCityName(null);
+        }
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
         try{
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
