@@ -9,12 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static com.xescm.ofc.enums.OrderConstEnum.OFC_ENV;
+
 /**
  * Created by Ptrk on 2015/11/25.
  */
 @Component
 public class CodeGenUtils {
-	public static final String OFC_ENV = "OFC";
 	@Autowired
 	private StringRedisTemplate rt;
 

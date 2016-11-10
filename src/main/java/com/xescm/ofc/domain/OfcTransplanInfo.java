@@ -244,6 +244,12 @@ public class OfcTransplanInfo {
     private BigDecimal serviceCharge;
 
     /**
+     * 基地ID(电商)
+     */
+    @Column(name = "base_id")
+    private String baseId;
+
+    /**
      * 创建时间
      */
     @Column(name = "creation_time")
@@ -985,6 +991,24 @@ public class OfcTransplanInfo {
      */
     public void setServiceCharge(BigDecimal serviceCharge) {
         this.serviceCharge = serviceCharge;
+    }
+
+    /**
+     * 获取基地ID(电商)
+     *
+     * @return base_id - 基地ID(电商)
+     */
+    public String getBaseId() {
+        return baseId;
+    }
+
+    /**
+     * 设置基地ID(电商)
+     *
+     * @param baseId 基地ID(电商)
+     */
+    public void setBaseId(String baseId) {
+        this.baseId = baseId;
     }
 
     /**

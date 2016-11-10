@@ -1,5 +1,6 @@
 package com.xescm.ofc.feign.api;
 
+import com.xescm.ofc.domain.dto.addr.Address;
 import com.xescm.ofc.domain.dto.addr.QueryAddress;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
@@ -14,5 +15,5 @@ import feign.RequestLine;
 public interface AddressInterface {
     @RequestLine("POST /api/addr/citypicker/findByCodeAndType")
     @Headers("Content-Type: application/json")
-    Wrapper<?> queryAddressByCodeAndType(QueryAddress queryAddress);
+    Wrapper<Address> queryAddressByCodeAndType(QueryAddress queryAddress);
 }

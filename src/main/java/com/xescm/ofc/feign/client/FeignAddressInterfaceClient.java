@@ -1,6 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.domain.dto.addr.Address;
 import com.xescm.ofc.domain.dto.addr.QueryAddress;
 import com.xescm.ofc.feign.api.AddressInterface;
 import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
@@ -31,9 +32,9 @@ public class FeignAddressInterfaceClient {
                 .target(AddressInterface.class, restConfig.getAddrUrl());
         return res;
     }
-    Wrapper<?> queryAddressByCodeAndType(QueryAddress queryAddress){
+    Wrapper<Address> queryAddressByCodeAndType(QueryAddress queryAddress){
         logger.debug("==>查询四级地址 queryAddress={}", queryAddress);
-        Wrapper<?> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
+        Wrapper<Address> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
         return wrapper;
     }
 }
