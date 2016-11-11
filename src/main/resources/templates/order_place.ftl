@@ -721,8 +721,6 @@
                                                     </div>
                                                 </div>
 
-
-
                                             </div>
                                         </div>
 
@@ -740,7 +738,7 @@
                                                         <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
-                                                                <select id="warehouseName" name="warehouseName">
+                                                                <select id="warehouseName" name="warehouseName" class="col-xs-3">
                                                                 <#list rmcWarehouseByCustCode! as warehouse>
                                                                     <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
                                                                 </#list>

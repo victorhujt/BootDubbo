@@ -790,9 +790,9 @@
                                                                         <div class="clearfix">
                                                                             <select id="warehouseName" name="warehouseName"  <#-- value="${(orderInfo.wareHouseCode)!""}"-->>
                                                                             <#list rmcWarehouseByCustCode! as warehouse>
-                                                                                <#if orderInfo.warehouseCod ?? >
-                                                                                    <option <#if warehouse.id == orderInfo.warehouseCode> selected="selected" </#if> value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
-                                                                                </#if>
+
+                                     <option <#if orderInfo.warehouseCode ??><#if warehouse.id == orderInfo.warehouseCode> selected="selected" </#if></#if> value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
+
 
 
                                                                             </#list>
@@ -902,7 +902,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
 
-                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.CityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
+                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.cityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
                                                                     </div>
                                                                 </div>
                                                             </div>
