@@ -538,7 +538,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group" >
+                                                                <#--<div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
@@ -553,7 +553,7 @@
                                                                             <input id="destination" name="destination" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </div>-->
                                                                 <div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
@@ -1514,22 +1514,9 @@
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
 
-        /*   cscContact.province = $("#consigneeProvinceCode").val();
-           cscContact.provinceName = $("#consigneeProvinceName").val();
-           cscContact.city = $("#consigneeCityCode").val();
-           cscContact.cityName = $("#consigneeCityName").val();
-           cscContact.area = $("#consigneeAreaCode").val();
-           cscContact.areaName = $("#consigneeAreaName").val();
-           cscContact.street = $("#consigneeStreetName").val();
-           cscContact.address = $("#consigneeAddress").val();*/
         var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
-
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
-
-        debugger
-
-
         cscContact.province = consigneeAddressCodeMessage[0];
         cscContact.city = consigneeAddressCodeMessage[1];
         cscContact.area = consigneeAddressCodeMessage[2];
@@ -1556,6 +1543,19 @@
         paramSupport.fax = $("#supportFax").val();
         paramSupport.email = $("#supportEmail").val();
         paramSupport.postCode = $("#supportPostCode").val();
+        var supportAddressMessage = $("#city-picker3-support").val().split('~');
+        var supportAddressCodeMessage = supportAddressMessage[1].split(',');
+        var supportAddressNameMessage = supportAddressMessage[0].split('/');
+
+        paramSupport.province = supportAddressCodeMessage[0];
+        paramSupport.city = supportAddressCodeMessage[1];
+        paramSupport.area = supportAddressCodeMessage[2];
+//        paramSupport.streetCode = supportAddressCodeMessage[3];
+        paramSupport.provinceName = supportAddressNameMessage[0];
+        paramSupport.cityName = supportAddressNameMessage[1];
+        paramSupport.areaName = supportAddressNameMessage[2];
+        paramSupport.street = supportAddressNameMessage[3];
+        paramSupport.address = $("#supportAddress").val();
 
         /* paramSupport.province = $("#supportProvinceCode").val();
          paramSupport.provinceName = $("#supportProvinceName").val();
@@ -1792,7 +1792,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "</tr>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
@@ -1826,7 +1826,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
@@ -1849,7 +1849,7 @@
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
                     supplierList =supplierList + "</tr>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
@@ -2065,7 +2065,7 @@
             }
         });
 
-        $("#supplierEnter").click(function () {
+        $("#supplierEnter").click(function () {//
             var support = "";
             $("#supplierSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
@@ -2085,6 +2085,29 @@
                     $("#supportEmail").val(email);
                     $("#supportPostCode").val(code);
                     $("#supportAddress").val(address);
+                    CommonClient.post(sys.rootPath + "/ofc/supplierSelect"
+                            ,"supplierName="+$("#supportName").val()
+                            +"&contactName="+$("#supportContactName").val()
+                            +"&contactPhone"+$("#supportPhone").val()
+                            , function(data) {
+                        debugger
+                        console.log("==-------data-----111-xxx--"+data);
+                        data=eval(data);
+                        var supplierList = "";
+                        $.each(data,function (index,CscSupplierInfoDto) {
+                            var provinceName = CscSupplierInfoDto.provinceName;
+                            var cityName = CscSupplierInfoDto.cityName;
+                            var areaName = CscSupplierInfoDto.areaName;
+                            var street = CscSupplierInfoDto.street;
+                            var paramAddressNameToPage = provinceName
+                                    + "/" + cityName
+                                    + "/" + areaName
+                                    + "/" + street;
+                            console.log("==------------111-xxx--"+paramAddressNameToPage);
+                            $("#city-picker3-support").val(paramAddressNameToPage);
+                            $("#city-picker3-support").citypicker('refresh');
+                        });
+                    },"json");
 
                 }
             });
