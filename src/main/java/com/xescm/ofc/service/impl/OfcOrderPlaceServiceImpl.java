@@ -112,9 +112,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
                             }else {
                                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+
                             }
                         }else{
-                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                            throw new BusinessException("四级地址编码为空!");
                         }
 
                         /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
