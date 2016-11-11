@@ -55,7 +55,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     public String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,String tag,AuthResDto authResDtoByToken, String custId
                             ,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,CscSupplierInfoDto cscSupplierInfoDto) {
-
+        Wrapper<?> wrapperFun = validateFundamentalMessage(ofcOrderDTO);
+        if(Wrapper.ERROR_CODE == wrapperFun.getCode()){
+            throw new BusinessException(wrapperFun.getMessage());
+        }
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
@@ -472,15 +475,29 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         return Wrapper.SUCCESS_MESSAGE;
     }
 
+
+    public Wrapper<?> validateFundamentalMessage(OfcOrderDTO ofcOrderDTO){
+        if(null == ofcOrderDTO.getOrderTime()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请选择订单日期");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
+    /**
+     * 校验收发货方信息
+     * @param cscContantAndCompanyDtoConsignor
+     * @param cscContantAndCompanyDtoConsignee
+     * @return
+     */
     public Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompany().getContactCompanyName())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
         }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getContactName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人名称未填写");
         }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getPhone())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人电话名称未填写");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人电话未填写");
         }
         //二级地址还需特殊处理
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getProvinceName())){
@@ -494,13 +511,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
 
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompany().getContactCompanyName())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
         }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getContactName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人名称未填写");
         }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getPhone())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人电话名称未填写");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人电话未填写");
         }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getProvinceName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
@@ -526,7 +543,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人名称未填写");
         }
         if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getContactPhone())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人电话名称未填写");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人电话未填写");
         }
         if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getProvinceName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
