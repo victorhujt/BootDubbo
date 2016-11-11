@@ -561,7 +561,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group" >
+                                                               <#-- <div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
@@ -576,7 +576,7 @@
                                                                             <input id="destination" name="destination" <#if orderInfo.destination?? >value="${orderInfo.destination}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </div>-->
                                                                 <div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
@@ -675,14 +675,19 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <select><option value="">--省--</option></select>
-                                                                        <select><option value="">--市--</option></select>
-                                                                        <select><option value="">--区/县--</option></select>
-                                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consignorAddress" name="consignorAddress" <#if (consignorMessage.detailAddress)!?? >value="${(consignorMessage.detailAddress)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="city-picker3-consignor" value="${(consignorMessage.provinceName)!}/${(consignorMessage.cityName)!}/${(consignorMessage.areaName)!}/${(consignorMessage.street)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input id="consignorAddress" name="consignorAddress" <#if (orderInfo.departurePlace)!?? >value="${(orderInfo.departurePlace)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -748,19 +753,22 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <select><option value="">--省--</option></select>
-                                                                        <select><option value="">--市--</option></select>
-                                                                        <select><option value="">--区/县--</option></select>
-                                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (consigneeMessage.detailAddress)!?? >value="${(consigneeMessage.detailAddress)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="city-picker3-consignee" value="${(consigneeMessage.provinceName)!}/${(consigneeMessage.cityName)!}/${(consigneeMessage.areaName)!}/${(consigneeMessage.street)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (orderInfo.destination)!?? >value="${(orderInfo.destination)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
 
                                                         </div>
@@ -888,14 +896,19 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <select><option value="">--省--</option></select>
-                                                                        <select><option value="">--市--</option></select>
-                                                                        <select><option value="">--区/县--</option></select>
-                                                                        <select><option value="">--乡镇/街道--</option></select>
-                                                                        <input id="supportAddress" name="supportAddress" <#if (supportMessage.completeAddress)!?? >value="${(supportMessage.completeAddress)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.CityName)!}/${(supportMessage.areaName)!}/${(supportMessage.street)!}" readonly type="text" value="" data-toggle="city-picker">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
+                                                                        <input id="supportAddress" name="supportAddress" <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -920,6 +933,11 @@
     </div><!-- /.main-content -->
 </div><!-- /.main-container -->
 <!-- basic scripts -->
+<link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
+<#--<link rel="stylesheet" href="../components/chosen/chosen.css" />
+<script src="../components/chosen/chosen.jquery.js"></script>-->
+<script src="../js/city-picker.data.js"></script><#--111-->
+<script src="../js/city-picker.js"></script><#--111-->
 <script type="text/javascript">
     var scripts = [ null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
@@ -1281,8 +1299,8 @@
         jsonStr.weight = $("#weight").val();
         jsonStr.cubage = $("#cubage").val();
         jsonStr.totalStandardBox = $("#totalStandardBox").val();
-        jsonStr.departurePlace = $("#departurePlace").val();
-        jsonStr.destination = $("#destination").val();
+        /*jsonStr.departurePlace = $("#consignorAddress").val();
+        jsonStr.destination = $("#consigneeAddress").val();*/
         jsonStr.pickupTime = $dp.$('pickupTime').value;
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgent1").val();
@@ -1297,6 +1315,63 @@
         jsonStr.consignorContactName = $("#consignorContactName").val();
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
+
+
+        var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
+        var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
+        var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
+
+        var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
+        var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
+        var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
+
+        debugger
+
+
+        jsonStr.departureProvince = consignorAddressNameMessage[0];
+        jsonStr.departureCity = consignorAddressNameMessage[1];
+        jsonStr.departureDistrict = consignorAddressNameMessage[2];
+        jsonStr.departureTowns = consignorAddressNameMessage[3];
+        jsonStr.departurePlaceCode = consignorAddressMessage[1];
+        jsonStr.departurePlace = $("#consignorAddress").val();
+        jsonStr.destinationProvince = consigneeAddressNameMessage[0];
+        jsonStr.destinationCity = consigneeAddressNameMessage[1];
+        jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
+        jsonStr.destinationTowns = consigneeAddressNameMessage[3];
+        jsonStr.destinationCode=consigneeAddressMessage[1];
+        jsonStr.destination = $("#consigneeAddress").val();
+
+
+        /*jsonStr.departureProvince=$("#consignorProvinceName").val();
+        jsonStr.departureCity=$("#consignorCityName").val();
+        jsonStr.departureDistrict=$("#consignorAreaName").val();
+        jsonStr.departureTowns=$("#consignorStreetName").val();
+        jsonStr.departurePlaceCode=$("#consignorProvinceCode").val()
+                + "/" + $("#consignorCityCode").val()
+                + "/" +  $("#consignorAreaCode").val()
+                + "/" + $("#consignorStreetCode").val();
+        jsonStr.departurePlace=$("#consignorProvinceName").val()
+                + $("#consignorCityName").val()
+                + $("#consignorAreaName").val()
+                + $("#consignorStreetName").val()
+                + $("#consignorAddress").val();
+        jsonStr.destinationProvince=$("#consigneeProvinceName").val();
+        jsonStr.destinationCity=$("#consigneeCityName").val();
+        jsonStr.destinationDistrict=$("#consigneeAreaName").val();
+        jsonStr.destinationTowns=$("#consigneeStreetName").val();
+        jsonStr.destinationCode=$("#consigneeProvinceCode").val()
+                + "/" + $("#consigneeCityCode").val()
+                + "/" +  $("#consigneeAreaCode").val()
+                + "/" + $("#consigneeStreetCode").val();
+        jsonStr.destination=$("#consigneeProvinceName").val()
+                + $("#consigneeCityName").val()
+                + $("#consigneeAreaName").val()
+                + $("#consigneeStreetName").val()
+                + $("#consigneeAddress").val();*/
+
+
+
+
         return jsonStr;
     }
     function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
@@ -1319,38 +1394,58 @@
         cscContact.contactName = $("#consignorContactName").val();
         cscContact.purpose = "2";
         cscContact.phone = $("#consignorPhone").val();
-        var cscContantAndCompanyDto = {};
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-        var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-            data = eval(data);
-            $.each(data,function (index,CscContantAndCompanyDto) {
-                /*
-                resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
-                resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
-                resultConsignorType = CscContantAndCompanyDto.type;*/
-                $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
-                $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
-                $("#consignorType").val(CscContantAndCompanyDto.type);
-                console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
-            });
-        });
+        /*var cscContantAndCompanyDto = {};
+       cscContantAndCompanyDto.cscContact = cscContact;
+       cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+       var param = JSON.stringify(cscContantAndCompanyDto);
 
-        cscContactCompany.contactCompanyId = $("#consignorCode").val();
+      CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+          data = eval(data);
+          $.each(data,function (index,CscContantAndCompanyDto) {
+              debugger;
+              resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
+              resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+              resultConsignorType = CscContantAndCompanyDto.type;
+              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+              $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+              $("#consignorType").val(CscContantAndCompanyDto.type);
+              console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
+          });
+      });*/
+
+        cscContact.contactCompanyId = $("#consignorCode").val();
         cscContact.contactCode = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
+        //cscContactCompany.id = $("#consignorCode").val();
 
         cscContact.fax = $("#consignorFax").val();
         cscContact.email = $("#consignorEmail").val();
         cscContact.postCode = $("#consignorPostCode").val();
-        cscContact.address = $("#consignorAddress").val();
 
+        var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
+        debugger
+
+        var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
+        var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
+
+
+        cscContact.province = consignorAddressCodeMessage[0];
+        cscContact.city = consignorAddressCodeMessage[1];
+        cscContact.area = consignorAddressCodeMessage[2];
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContact.provinceName = consignorAddressNameMessage[0];
+        cscContact.cityName = consignorAddressNameMessage[1];
+        cscContact.areaName = consignorAddressNameMessage[2];
+        cscContact.street = consignorAddressNameMessage[3];
+        cscContact.address = $("#consigneeAddress").val();
+
+//        cscContact.address = $("#consignorAddress").val();
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
         console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
         return cscContantAndCompanyDtoConsignorStr;
+
 
     }
     function getCscContantAndCompanyDtoConsigneeStr() {
@@ -1360,30 +1455,29 @@
         var cscContactCompany = {};
         cscContactCompany.contactCompanyName = $("#consigneeName").val();
         cscContact.contactName = $("#consigneeContactName").val();
-        cscContact.phone = $("#consigneePhone").val();
         cscContact.purpose = "1";
-        var cscContantAndCompanyDto = {};
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-        var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-            data = eval(data);
-            console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
-            $.each(data,function (index,CscContantAndCompanyDto) {
-                $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
-                $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
-                $("#consigneeType").val(CscContantAndCompanyDto.type);
+        cscContact.phone = $("#consigneePhone").val();
 
-            });
-        });
-        cscContactCompany.contactCompanyId = $("#consigneeCode").val();
+        cscContact.contactCompanyId = $("#consigneeCode").val();
         cscContact.contactCode = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
-
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
-        cscContact.address = $("#consigeeAddress").val();
+
+        var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
+        var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
+        var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
+        cscContact.province = consigneeAddressCodeMessage[0];
+        cscContact.city = consigneeAddressCodeMessage[1];
+        cscContact.area = consigneeAddressCodeMessage[2];
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContact.provinceName = consigneeAddressNameMessage[0];
+        cscContact.cityName = consigneeAddressNameMessage[1];
+        cscContact.areaName = consigneeAddressNameMessage[2];
+        cscContact.street = consigneeAddressNameMessage[3];
+        cscContact.address = $("#consigneeAddress").val();
+
 
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
@@ -1393,13 +1487,25 @@
     }
     function getCscSupplierInfoDtoStr(){
         var paramSupport = {};
-        debugger
+
         paramSupport.supplierName = $("#supportName").val();
         paramSupport.contactName = $("#supportContactName").val();
         paramSupport.contactPhone = $("#supportPhone").val();
         paramSupport.fax = $("#supportFax").val();
         paramSupport.email = $("#supportEmail").val();
         paramSupport.postCode = $("#supportPostCode").val();
+        var supportAddressMessage = $("#city-picker3-support").val().split('~');
+        var supportAddressCodeMessage = supportAddressMessage[1].split(',');
+        var supportAddressNameMessage = supportAddressMessage[0].split('/');
+
+        paramSupport.province = supportAddressCodeMessage[0];
+        paramSupport.city = supportAddressCodeMessage[1];
+        paramSupport.area = supportAddressCodeMessage[2];
+//        paramSupport.streetCode = supportAddressCodeMessage[3];
+        paramSupport.provinceName = supportAddressNameMessage[0];
+        paramSupport.cityName = supportAddressNameMessage[1];
+        paramSupport.areaName = supportAddressNameMessage[2];
+        paramSupport.street = supportAddressNameMessage[3];
         paramSupport.address = $("#supportAddress").val();
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
         console.log("function  support " + cscSupplierInfoDtoStr);
@@ -1548,7 +1654,42 @@
                     $("#consigneeFax").val(fax);
                     $("#consigneeEmail").val(email);
                     $("#consigneePostCode").val(code);
-                    $("#consigneeAddress").val(address);
+                    /*$("#consigneeAddress").val(address);*/
+                    var paramConsignor = {};
+                    var paramConsignee = {};
+                    var cscContact = {};
+                    var cscContactCompany = {};
+                    cscContactCompany.contactCompanyName = $("#consigneeName").val();
+                    cscContact.contactName = $("#consigneeContactName").val();
+                    cscContact.purpose = "1";
+                    cscContact.phone = $("#consigneePhone").val();
+                    var cscContantAndCompanyDto = {};
+                    cscContantAndCompanyDto.cscContact = cscContact;
+                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    var param = JSON.stringify(cscContantAndCompanyDto);
+                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+                        data = eval(data);
+                        console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
+                        $.each(data,function (index,CscContantAndCompanyDto) {
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consigneeType").val(CscContantAndCompanyDto.type);
+                            $("#consigneeAddress").val(CscContantAndCompanyDto.address);
+
+                            var provinceName = CscContantAndCompanyDto.provinceName;
+                            var cityName = CscContantAndCompanyDto.cityName;
+                            var areaName = CscContantAndCompanyDto.areaName;
+                            var street = CscContantAndCompanyDto.street;
+                            var paramAddressNameToPage = provinceName
+                                    + "/" + cityName
+                                    + "/" + areaName
+                                    + "/" + street;
+                            $("#city-picker3-consignee").val(paramAddressNameToPage);
+                            $("#city-picker3-consignee").citypicker('refresh');
+
+                        });
+                    });
+
 
 
                 }
@@ -1631,21 +1772,65 @@
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
                     var fax = tdArr.eq(5).text();//    传真
                     var email = tdArr.eq(6).text();//    email
-                    var code = tdArr.eq(7).text();//    邮编
                     var address = tdArr.eq(8).text();//    地址
-                    $("#testtest").text(consignorName);
+                    var code = tdArr.eq(7).text();//    邮编
+
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
                     $("#consignorFax").val(fax);
                     $("#consignorEmail").val(email);
                     $("#consignorPostCode").val(code);
-                    $("#consignorAddress").val(address);
+                    /*$("#consignorAddress").val(address);*/
+
+                    //在这里将所有的信息补全!!
+                    var paramConsignor = {};
+                    var paramConsignee = {};
+                    var cscContact = {};
+                    var cscContactCompany = {};
+                    cscContactCompany.contactCompanyName = consignorName;
+                    cscContact.contactName = contacts;
+                    cscContact.purpose = "2";
+                    cscContact.phone = contactsNumber;
+                    var cscContantAndCompanyDto = {};
+                    cscContantAndCompanyDto.cscContact = cscContact;
+                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    var param = JSON.stringify(cscContantAndCompanyDto);
+
+                    debugger
+                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+                        debugger
+                        data = eval(data);
+                        $.each(data,function (index,CscContantAndCompanyDto) {
+                            debugger;
+//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
+//                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+//                            resultConsignorType = CscContantAndCompanyDto.type;
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consignorType").val(CscContantAndCompanyDto.type);
+                            $("#consignorAddress").val(CscContantAndCompanyDto.address);
+                            console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
+                            var provinceName = CscContantAndCompanyDto.provinceName;
+                            var cityName = CscContantAndCompanyDto.cityName;
+                            var areaName = CscContantAndCompanyDto.areaName;
+                            var street = CscContantAndCompanyDto.street;
+                            var paramAddressNameToPage = provinceName
+                                    + "/" + cityName
+                                    + "/" + areaName
+                                    + "/" + street;
+                            $("#city-picker3-consignor").val(paramAddressNameToPage);
+                            $("#city-picker3-consignor").citypicker('refresh');
+                        });
+                    });
+
                 }
             });
             if(consignorin==""){
                 alert("请至少选择一行");
             }
+
+
         });
 
         $("#supplierEnter").click(function () {
@@ -1667,7 +1852,31 @@
                     $("#supportFax").val(fax);
                     $("#supportEmail").val(email);
                     $("#supportPostCode").val(code);
-                    $("#supportAddress").val(address);
+                    /*$("#supportAddress").val(address);*/
+                    CommonClient.post(sys.rootPath + "/ofc/supplierSelect"
+                            ,"supplierName="+$("#supportName").val()
+                            +"&contactName="+$("#supportContactName").val()
+                            +"&contactPhone"+$("#supportPhone").val()
+                            , function(data) {
+                                debugger
+                                console.log("==-------data-----111-xxx--"+data);
+                                data=eval(data);
+                                var supplierList = "";
+                                $.each(data,function (index,CscSupplierInfoDto) {
+                                    $("#supportAddress").val(CscSupplierInfoDto.address);
+                                    var provinceName = CscSupplierInfoDto.provinceName;
+                                    var cityName = CscSupplierInfoDto.cityName;
+                                    var areaName = CscSupplierInfoDto.areaName;
+                                    var street = CscSupplierInfoDto.street;
+                                    var paramAddressNameToPage = provinceName
+                                            + "/" + cityName
+                                            + "/" + areaName
+                                            + "/" + street;
+                                    console.log("==------------111-xxx--"+paramAddressNameToPage);
+                                    $("#city-picker3-support").val(paramAddressNameToPage);
+                                    $("#city-picker3-support").citypicker('refresh');
+                                });
+                            },"json");
 
                 }
             });

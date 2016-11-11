@@ -498,89 +498,89 @@
 
                                                 <div id="dynamic-table_filter" class="dataTables_length">
 
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="quantity" name="quantity" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="quantity" name="quantity" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="weight" name="weight" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">合计标准箱</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="totalStandardBox" name="totalStandardBox" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <#--<div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="departurePlace" name="departurePlace" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="destination" name="destination" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>-->
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="urgent" type="checkbox" name=""  />
+                                                                            <input id="urgentHel" type="hidden" name="urgent"  value="0" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" >
+                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="clearfix">
+                                                                            <input id="transRequire" name="transRequire" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="weight" name="weight" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">合计标准箱</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="totalStandardBox" name="totalStandardBox" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="departurePlace" name="departurePlace" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="destination" name="destination" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="urgent" type="checkbox" name=""  />
-                                                                <input id="urgentHel" type="hidden" name="urgent"  value="0" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
-                                                        <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="transRequire" name="transRequire" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             <div class="page-header">
                                                 <h4>发货方信息</h4>
@@ -1316,8 +1316,8 @@
         jsonStr.weight = $("#weight").val();
         jsonStr.cubage = $("#cubage").val();
         jsonStr.totalStandardBox = $("#totalStandardBox").val();
-        jsonStr.departurePlace = $("#departurePlace").val();
-        jsonStr.destination = $("#destination").val();
+        /*jsonStr.departurePlace = $("#consignorAddress").val();
+        jsonStr.destination = $("#consigneeAddress").val();*/
         jsonStr.pickupTime = $dp.$('pickupTime').value;
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgentHel").val();
@@ -1349,24 +1349,16 @@
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
         jsonStr.departureCity = consignorAddressNameMessage[1];
-        jsonStr.departureTowns = consignorAddressNameMessage[2];
+        jsonStr.departureDistrict = consignorAddressNameMessage[2];
         jsonStr.departureTowns = consignorAddressNameMessage[3];
         jsonStr.departurePlaceCode = consignorAddressMessage[1];
-        jsonStr.departurePlace = consignorAddressNameMessage[0]
-                + consignorAddressNameMessage[1]
-                + consignorAddressNameMessage[2]
-                + consignorAddressNameMessage[3]
-                + $("#consignorAddress").val();
+        jsonStr.departurePlace = $("#consignorAddress").val();
         jsonStr.destinationProvince = consigneeAddressNameMessage[0];
         jsonStr.destinationCity = consigneeAddressNameMessage[1];
         jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
-        jsonStr.destinationCode = consigneeAddressNameMessage[3];
+        jsonStr.destinationTowns = consigneeAddressNameMessage[3];
         jsonStr.destinationCode=consigneeAddressMessage[1];
-        jsonStr.destination=consigneeAddressNameMessage[0]
-                + consigneeAddressNameMessage[1]
-                + consigneeAddressNameMessage[2]
-                + consigneeAddressNameMessage[3]
-                + $("#consigneeAddress").val();
+        jsonStr.destination=$("#consigneeAddress").val();
 
 
         /*jsonStr.departureProvince=$("#consignorProvinceName").val();
@@ -1469,7 +1461,7 @@
         cscContact.cityName = consignorAddressNameMessage[1];
         cscContact.areaName = consignorAddressNameMessage[2];
         cscContact.street = consignorAddressNameMessage[3];
-        cscContact.address = $("#consigneeAddress").val();
+        cscContact.address = $("#consignorAddress").val();
 
 //        cscContact.address = $("#consignorAddress").val();
         paramConsignor.cscContact = cscContact;
@@ -1496,22 +1488,9 @@
         cscContact.email = $("#consigneeEmail").val();
         cscContact.postCode = $("#consigneePostCode").val();
 
-        /*   cscContact.province = $("#consigneeProvinceCode").val();
-           cscContact.provinceName = $("#consigneeProvinceName").val();
-           cscContact.city = $("#consigneeCityCode").val();
-           cscContact.cityName = $("#consigneeCityName").val();
-           cscContact.area = $("#consigneeAreaCode").val();
-           cscContact.areaName = $("#consigneeAreaName").val();
-           cscContact.street = $("#consigneeStreetName").val();
-           cscContact.address = $("#consigneeAddress").val();*/
         var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
-
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
-
-        debugger
-
-
         cscContact.province = consigneeAddressCodeMessage[0];
         cscContact.city = consigneeAddressCodeMessage[1];
         cscContact.area = consigneeAddressCodeMessage[2];
@@ -1538,6 +1517,19 @@
         paramSupport.fax = $("#supportFax").val();
         paramSupport.email = $("#supportEmail").val();
         paramSupport.postCode = $("#supportPostCode").val();
+        var supportAddressMessage = $("#city-picker3-support").val().split('~');
+        var supportAddressCodeMessage = supportAddressMessage[1].split(',');
+        var supportAddressNameMessage = supportAddressMessage[0].split('/');
+
+        paramSupport.province = supportAddressCodeMessage[0];
+        paramSupport.city = supportAddressCodeMessage[1];
+        paramSupport.area = supportAddressCodeMessage[2];
+//        paramSupport.streetCode = supportAddressCodeMessage[3];
+        paramSupport.provinceName = supportAddressNameMessage[0];
+        paramSupport.cityName = supportAddressNameMessage[1];
+        paramSupport.areaName = supportAddressNameMessage[2];
+        paramSupport.street = supportAddressNameMessage[3];
+        paramSupport.address = $("#supportAddress").val();
 
         /* paramSupport.province = $("#supportProvinceCode").val();
          paramSupport.provinceName = $("#supportProvinceName").val();
@@ -1586,7 +1578,6 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            alert($("#city-picker-consignee").val());
             //订单类型
             var orderType = $("#orderTypeSel").val();
             //业务类型前两位
@@ -1962,6 +1953,7 @@
                             $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
+                            $("#consignorAddress").val(CscContantAndCompanyDto.address);
                             console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
@@ -2027,7 +2019,7 @@
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
-
+                            $("#consigneeAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -2048,7 +2040,7 @@
             }
         });
 
-        $("#supplierEnter").click(function () {
+        $("#supplierEnter").click(function () {//
             var support = "";
             $("#supplierSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
@@ -2067,7 +2059,31 @@
                     $("#supportFax").val(fax);
                     $("#supportEmail").val(email);
                     $("#supportPostCode").val(code);
-                    $("#supportAddress").val(address);
+                   /* $("#supportAddress").val(address);*/
+                    CommonClient.post(sys.rootPath + "/ofc/supplierSelect"
+                            ,"supplierName="+$("#supportName").val()
+                            +"&contactName="+$("#supportContactName").val()
+                            +"&contactPhone"+$("#supportPhone").val()
+                            , function(data) {
+                        debugger
+                        console.log("==-------data-----111-xxx--"+data);
+                        data=eval(data);
+                        var supplierList = "";
+                        $.each(data,function (index,CscSupplierInfoDto) {
+                            $("#supportAddress").val(CscSupplierInfoDto.address);
+                            var provinceName = CscSupplierInfoDto.provinceName;
+                            var cityName = CscSupplierInfoDto.cityName;
+                            var areaName = CscSupplierInfoDto.areaName;
+                            var street = CscSupplierInfoDto.street;
+                            var paramAddressNameToPage = provinceName
+                                    + "/" + cityName
+                                    + "/" + areaName
+                                    + "/" + street;
+                            console.log("==------------111-xxx--"+paramAddressNameToPage);
+                            $("#city-picker3-support").val(paramAddressNameToPage);
+                            $("#city-picker3-support").citypicker('refresh');
+                        });
+                    },"json");
 
                 }
             });
