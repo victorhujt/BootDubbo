@@ -535,7 +535,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             String status=ofcOrderScreenService.orderScreen(condition).get(0).getOrderStatus();
                             if(PubUtils.trimAndNullAsEmpty(status).equals("")){
                                 throw new BusinessException("订单状态更新异常！");
-                            }else if(!status.equals(ALREADYEXAMINE)){
+                            }else if(!status.equals(ALREADYEXAMINE)
+                                    && ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(ofcTransplanInfo.getOrderCode()).size()==0){
                                 throw new BusinessException("订单状态异常，无法变更为执行中");
                             }else {
                                 OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();

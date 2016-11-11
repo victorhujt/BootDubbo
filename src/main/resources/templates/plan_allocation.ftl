@@ -37,46 +37,51 @@
         <h4 class="modal-title">服务商列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
-            <form id="goodsSelConditionForm1" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
-                    <div class="col-sm-3">
-                        <div class="clearfix">
-                            <div class="docs-methods">
-                                <input id="city-picker-cfd1" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
-                                <input  id = "goodsCodeCondition1" name="beginProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form id="goodsSelConditionForm1" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
+                            <div class="col-sm-3">
+                                <div class="clearfix">
+                                    <div class="docs-methods">
+                                        <input id="city-picker-cfd1" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
+                                        <input  id = "goodsCodeCondition1" name="beginProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
-                    <div class="col-sm-3">
-                        <div class="clearfix">
-                            <div class="docs-methods">
-                                <input id="city-picker-mdd1" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
-                                <input  id = "goodsNameCondition1" name="arriveProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        <div class="form-group">
+                            <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
+                            <div class="col-sm-3">
+                                <div class="clearfix">
+                                    <div class="docs-methods">
+                                        <input id="city-picker-mdd1" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
+                                        <input  id = "goodsNameCondition1" name="arriveProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
-                    <div class="col-sm-3">
-                        <div class="clearfix">
-                            <input  id = "companyName1" name="companyName1" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        <div class="form-group">
+                            <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
+                            <div class="col-sm-3">
+                                <div class="clearfix">
+                                    <input  id = "companyName1" name="companyName1" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
-                    <div class="col-sm-3">
-                        <div class="clearfix">
-                            <span id="goodsSelectFormBtn1" class="btn btn-info btn-sm popover-info">筛选</span>
+                        <div class="form-group">
+                            <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                            <div class="col-sm-3">
+                                <div class="clearfix">
+                                    <span id="goodsSelectFormBtn1" class="btn btn-info btn-sm popover-info">筛选</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -116,11 +121,11 @@
             <form id="goodsSelConditionForm2" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-6">
                         <div class="clearfix">
                             <div class="docs-methods">
-                                <input id="city-picker-cfd2" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
-                                <input  id = "goodsCodeCondition2" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                <input id="city-picker-cfd2" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker" style="width:540px;">
+                                <input  id = "goodsCodeCondition2" name="goodsCode" type="text" style="color: black"  placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
                     </div>
