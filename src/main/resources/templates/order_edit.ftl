@@ -678,7 +678,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="city-picker3-consignor" value="${(consignorMessage.provinceName)!}/${(consignorMessage.cityName)!}/${(consignorMessage.areaName)!}/${(consignorMessage.street)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                                                        <input id="city-picker3-consignor" value="${(consignorMessage.provinceName)!}/${(consignorMessage.cityName)!}/${(consignorMessage.areaName)!}/${(consignorMessage.streetName)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
 
                                                                     </div>
                                                                 </div>
@@ -756,7 +756,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="city-picker3-consignee" value="${(consigneeMessage.provinceName)!}/${(consigneeMessage.cityName)!}/${(consigneeMessage.areaName)!}/${(consigneeMessage.street)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                                                        <input id="city-picker3-consignee" value="${(consigneeMessage.provinceName)!}/${(consigneeMessage.cityName)!}/${(consigneeMessage.areaName)!}/${(consigneeMessage.streetName)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
 
                                                                     </div>
                                                                 </div>
@@ -900,7 +900,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
 
-                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.CityName)!}/${(supportMessage.areaName)!}/${(supportMessage.street)!}" readonly type="text" value="" data-toggle="city-picker">
+                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.CityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1432,11 +1432,11 @@
         cscContact.province = consignorAddressCodeMessage[0];
         cscContact.city = consignorAddressCodeMessage[1];
         cscContact.area = consignorAddressCodeMessage[2];
-//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContact.street = consignorAddressCodeMessage[3];
         cscContact.provinceName = consignorAddressNameMessage[0];
         cscContact.cityName = consignorAddressNameMessage[1];
         cscContact.areaName = consignorAddressNameMessage[2];
-        cscContact.street = consignorAddressNameMessage[3];
+        cscContact.streetName = consignorAddressNameMessage[3];
         cscContact.address = $("#consigneeAddress").val();
 
 //        cscContact.address = $("#consignorAddress").val();
@@ -1471,11 +1471,11 @@
         cscContact.province = consigneeAddressCodeMessage[0];
         cscContact.city = consigneeAddressCodeMessage[1];
         cscContact.area = consigneeAddressCodeMessage[2];
-//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContact.street = consigneeAddressCodeMessage[3];
         cscContact.provinceName = consigneeAddressNameMessage[0];
         cscContact.cityName = consigneeAddressNameMessage[1];
         cscContact.areaName = consigneeAddressNameMessage[2];
-        cscContact.street = consigneeAddressNameMessage[3];
+        cscContact.streetName = consigneeAddressNameMessage[3];
         cscContact.address = $("#consigneeAddress").val();
 
 
@@ -1501,11 +1501,11 @@
         paramSupport.province = supportAddressCodeMessage[0];
         paramSupport.city = supportAddressCodeMessage[1];
         paramSupport.area = supportAddressCodeMessage[2];
-//        paramSupport.streetCode = supportAddressCodeMessage[3];
+        paramSupport.street = supportAddressCodeMessage[3];
         paramSupport.provinceName = supportAddressNameMessage[0];
         paramSupport.cityName = supportAddressNameMessage[1];
         paramSupport.areaName = supportAddressNameMessage[2];
-        paramSupport.street = supportAddressNameMessage[3];
+        paramSupport.streetName = supportAddressNameMessage[3];
         paramSupport.address = $("#supportAddress").val();
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
         console.log("function  support " + cscSupplierInfoDtoStr);
@@ -1679,11 +1679,11 @@
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
-                            var street = CscContantAndCompanyDto.street;
+                            var streetName = CscContantAndCompanyDto.streetName;
                             var paramAddressNameToPage = provinceName
                                     + "/" + cityName
                                     + "/" + areaName
-                                    + "/" + street;
+                                    + "/" + streetName;
                             $("#city-picker3-consignee").val(paramAddressNameToPage);
                             $("#city-picker3-consignee").citypicker('refresh');
 
@@ -1814,11 +1814,11 @@
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
-                            var street = CscContantAndCompanyDto.street;
+                            var streetName = CscContantAndCompanyDto.streetName;
                             var paramAddressNameToPage = provinceName
                                     + "/" + cityName
                                     + "/" + areaName
-                                    + "/" + street;
+                                    + "/" + streetName;
                             $("#city-picker3-consignor").val(paramAddressNameToPage);
                             $("#city-picker3-consignor").citypicker('refresh');
                         });
@@ -1867,11 +1867,11 @@
                                     var provinceName = CscSupplierInfoDto.provinceName;
                                     var cityName = CscSupplierInfoDto.cityName;
                                     var areaName = CscSupplierInfoDto.areaName;
-                                    var street = CscSupplierInfoDto.street;
+                                    var streetName = CscSupplierInfoDto.streetName;
                                     var paramAddressNameToPage = provinceName
                                             + "/" + cityName
                                             + "/" + areaName
-                                            + "/" + street;
+                                            + "/" + streetName;
                                     console.log("==------------111-xxx--"+paramAddressNameToPage);
                                     $("#city-picker3-support").val(paramAddressNameToPage);
                                     $("#city-picker3-support").citypicker('refresh');
