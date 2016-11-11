@@ -675,10 +675,18 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="city-picker3-consignor" value="${(consignorMessage.provinceName)!}/${(consignorMessage.cityName)!}/${(consignorMessage.areaName)!}/${(consignorMessage.street)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
                                                                         <input id="consignorAddress" name="consignorAddress" <#if (consignorMessage.address)!?? >value="${(consignorMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
@@ -745,16 +753,22 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="city-picker3-consignee" value="${(consigneeMessage.provinceName)!}/${(consigneeMessage.cityName)!}/${(consigneeMessage.areaName)!}/${(consigneeMessage.street)!}" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
                                                                         <input id="consigneeAddress" name="consigneeAddress" <#if (consigneeMessage.address)!?? >value="${(consigneeMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-
 
 
                                                         </div>
@@ -882,11 +896,18 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" >
-                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
 
                                                                         <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.CityName)!}/${(supportMessage.areaName)!}/${(supportMessage.street)!}" readonly type="text" value="" data-toggle="city-picker">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" >
+                                                                <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
+                                                                <div class="col-sm-6">
+                                                                    <div class="clearfix">
                                                                         <input id="supportAddress" name="supportAddress" <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
@@ -1278,8 +1299,8 @@
         jsonStr.weight = $("#weight").val();
         jsonStr.cubage = $("#cubage").val();
         jsonStr.totalStandardBox = $("#totalStandardBox").val();
-        jsonStr.departurePlace = $("#departurePlace").val();
-        jsonStr.destination = $("#destination").val();
+        jsonStr.departurePlace = $("#consignorAddress").val();
+        jsonStr.destination = $("#consigneeAddress").val();
         jsonStr.pickupTime = $dp.$('pickupTime').value;
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgentHel").val();

@@ -1316,8 +1316,8 @@
         jsonStr.weight = $("#weight").val();
         jsonStr.cubage = $("#cubage").val();
         jsonStr.totalStandardBox = $("#totalStandardBox").val();
-        jsonStr.departurePlace = $("#departurePlace").val();
-        jsonStr.destination = $("#destination").val();
+        jsonStr.departurePlace = $("#consignorAddress").val();
+        jsonStr.destination = $("#consigneeAddress").val();
         jsonStr.pickupTime = $dp.$('pickupTime').value;
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgentHel").val();
@@ -1469,7 +1469,7 @@
         cscContact.cityName = consignorAddressNameMessage[1];
         cscContact.areaName = consignorAddressNameMessage[2];
         cscContact.street = consignorAddressNameMessage[3];
-        cscContact.address = $("#consigneeAddress").val();
+        cscContact.address = $("#consignorAddress").val();
 
 //        cscContact.address = $("#consignorAddress").val();
         paramConsignor.cscContact = cscContact;

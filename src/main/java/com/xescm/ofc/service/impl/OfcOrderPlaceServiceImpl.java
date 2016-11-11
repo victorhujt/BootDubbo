@@ -108,7 +108,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
                             String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
                             String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
-                            if(depatrueCode == destinationCode){
+                            if(depatrueCode.equals(destinationCode)){
                                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
                             }else {
                                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
@@ -203,11 +203,17 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     ofcWarehouseInformationService.delete(ofcWarehouseInformationForTrans);
                     //更新运输信息
-                    if (PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
-                            .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                    //运输订单
+                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        if(depatrueCode == destinationCode){
+                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                        }else {
+                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                        }
                     }else{
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
                     }
                     ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                     saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
