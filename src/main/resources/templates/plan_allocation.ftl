@@ -752,7 +752,10 @@
                     if(i==1){
                         serive=businessType;
                         diff=businessType;
-
+                        $("#city-picker-cfd1").val(null).trigger('change');
+                        $("#city-picker-mdd1").val(null).trigger('change');
+                        $("#city-picker-cfd2").val(null).trigger('change');
+                        $("#city-picker-mdd2").val(null).trigger('change');
                         //$("#city-picker-cfd1").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
                         $("#city-picker-cfd1").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
                         $("#city-picker-mdd1").val(destination1+'/'+destination2+'/'+destination3+'/'+destination4);
@@ -889,7 +892,6 @@
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.planCode)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getPlanType(order.businessType))+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getPlanStatus(order.plannedSingleState))+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus(order.resourceAllocationStatus))+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderTime)+"</td>"
@@ -909,6 +911,7 @@
                     +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationCity)+"</td>"
                     +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationDistrict)+"</td>"
                     +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationTown)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getPlanStatus(order.plannedSingleState))+"</td>"
                     + "</tr>";
         }
         $("#dataTbody").html(htmlText);
