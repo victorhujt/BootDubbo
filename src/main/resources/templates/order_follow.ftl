@@ -187,7 +187,7 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">收货地址</label>
                                 <div class="col-sm-3">
                                     <div class="clearfix">
-                                        <input id="destination" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="destinationPlace" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
                             </div>
@@ -310,9 +310,19 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#notes").val(orderDTO.notes);
-        $("#goodsType").val(orderDTO.goodsType);
-        $("#departurePlace" ).val(orderDTO.departurePlace);
-        $("#destination").val(orderDTO.destination);
+        $("#departurePlace" ).val(orderDTO.departureProvince
+                + orderDTO.departureCity
+                + orderDTO.departureDistrict
+                + orderDTO.departureTowns);
+        $("#destination").val(orderDTO.destinationProvince
+                + orderDTO.destinationCity
+                + orderDTO.destinationDistrict
+                + orderDTO.destinationTowns);
+        $("#destinationPlace").val(orderDTO.destinationProvince
+                + orderDTO.destinationCity
+                + orderDTO.destinationDistrict
+                + orderDTO.destinationTowns
+                + orderDTO.destination);
         $("#quantity").val(orderDTO.quantity);
         $("#weight").val(orderDTO.weight);
         $("#cubage").val(orderDTO.cubage);
@@ -321,7 +331,7 @@
         $("#plateNumber").val(orderDTO.plateNumber);
         $("#driverName").val(orderDTO.driverName);
         $("#contactNumber").val(orderDTO.contactNumber);
-        $("#destination").val(orderDTO.destination);
+       /* $("#destination").val(orderDTO.destination);*/
     }
 
     function getOrderStatus(status) {

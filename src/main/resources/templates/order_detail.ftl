@@ -240,7 +240,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="departurePlace" value = "${(ofcOrderDTO.departurePlace)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="departurePlace" value = "${(consignorMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -248,7 +248,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="destination" value = "${(ofcOrderDTO.destination)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="destination" value = "${(consigneeMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>

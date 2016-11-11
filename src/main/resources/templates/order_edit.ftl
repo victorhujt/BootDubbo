@@ -416,11 +416,11 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
-                                                    <#--<input id="hiddenStoreCode" name="hiddenStoreCode" value="${(orderInfo.storeCode)!""}">-->
+                                                <#--<input id="hiddenStoreCode" name="hiddenStoreCode" value="${(orderInfo.storeCode)!""}">-->
                                                     <select id="storeCode" name="storeCode" >
-                                                        <#list cscStoreByCustId! as cscStore>
-                                                            <option <#if cscStore.storeCode == orderInfo.storeCode >selected="selected"</#if> value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
-                                                        </#list>
+                                                    <#list cscStoreByCustId! as cscStore>
+                                                        <option <#if cscStore.storeCode == orderInfo.storeCode >selected="selected"</#if> value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
+                                                    </#list>
                                                     </select>
                                                 </div>
                                             </div>
@@ -561,6 +561,22 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                            <#-- <div class="form-group" >
+                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
+                                                                 <div class="col-sm-6">
+                                                                     <div class="clearfix">
+                                                                         <input id="departurePlace" name="departurePlace" <#if orderInfo.departurePlace?? >value="${orderInfo.departurePlace}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
+                                                             <div class="form-group" >
+                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
+                                                                 <div class="col-sm-6">
+                                                                     <div class="clearfix">
+                                                                         <input id="destination" name="destination" <#if orderInfo.destination?? >value="${orderInfo.destination}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly="readonly">
+                                                                     </div>
+                                                                 </div>
+                                                             </div>-->
                                                                 <div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
@@ -768,16 +784,18 @@
                                                             <div id="dynamic-table_filter" class="dataTables_length">
 
 
-
-
                                                                 <div class="form-group" >
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
                                                                             <select id="warehouseName" name="warehouseName"  <#-- value="${(orderInfo.wareHouseCode)!""}"-->>
-                                                                                <#list rmcWarehouseByCustCode! as warehouse>
-                                                                                    <option <#if warehouse.id == orderInfo.warehouseCode> selected="selected" </#if> value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
-                                                                                </#list>
+                                                                            <#list rmcWarehouseByCustCode! as warehouse>
+
+                                     <option <#if orderInfo.warehouseCode ??><#if warehouse.id == orderInfo.warehouseCode> selected="selected" </#if></#if> value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
+
+
+
+                                                                            </#list>
                                                                             </select>
 
                                                                         </div>
@@ -884,7 +902,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
 
-                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.CityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
+                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.cityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1309,25 +1327,19 @@
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
 
-        
+        debugger
 
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
         jsonStr.departureCity = consignorAddressNameMessage[1];
         jsonStr.departureDistrict = consignorAddressNameMessage[2];
-        if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-            jsonStr.departureTowns = consignorAddressNameMessage[3];
-        }
-
+        jsonStr.departureTowns = consignorAddressNameMessage[3];
         jsonStr.departurePlaceCode = consignorAddressMessage[1];
         jsonStr.departurePlace = $("#consignorAddress").val();
         jsonStr.destinationProvince = consigneeAddressNameMessage[0];
         jsonStr.destinationCity = consigneeAddressNameMessage[1];
         jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
-        if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-            jsonStr.destinationTowns = consigneeAddressNameMessage[3];
-        }
-
+        jsonStr.destinationTowns = consigneeAddressNameMessage[3];
         jsonStr.destinationCode=consigneeAddressMessage[1];
         jsonStr.destination = $("#consigneeAddress").val();
 
@@ -1392,7 +1404,7 @@
       CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
           data = eval(data);
           $.each(data,function (index,CscContantAndCompanyDto) {
-              ;
+              debugger;
               resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
               resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
               resultConsignorType = CscContantAndCompanyDto.type;
@@ -1413,7 +1425,7 @@
         cscContact.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        
+        debugger
 
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
@@ -1422,17 +1434,16 @@
         cscContact.province = consignorAddressCodeMessage[0];
         cscContact.city = consignorAddressCodeMessage[1];
         cscContact.area = consignorAddressCodeMessage[2];
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
         if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
             cscContact.street = consignorAddressCodeMessage[3];
         }
-
         cscContact.provinceName = consignorAddressNameMessage[0];
         cscContact.cityName = consignorAddressNameMessage[1];
         cscContact.areaName = consignorAddressNameMessage[2];
         if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
             cscContact.streetName = consignorAddressNameMessage[3];
         }
-
         cscContact.address = $("#consigneeAddress").val();
 
 //        cscContact.address = $("#consignorAddress").val();
@@ -1467,7 +1478,8 @@
         cscContact.province = consigneeAddressCodeMessage[0];
         cscContact.city = consigneeAddressCodeMessage[1];
         cscContact.area = consigneeAddressCodeMessage[2];
-        if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3)){
+//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
             cscContact.street = consigneeAddressCodeMessage[3];
         }
 
@@ -1477,7 +1489,6 @@
         if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
             cscContact.streetName = consigneeAddressNameMessage[3];
         }
-
         cscContact.address = $("#consigneeAddress").val();
 
 
@@ -1503,17 +1514,16 @@
         paramSupport.province = supportAddressCodeMessage[0];
         paramSupport.city = supportAddressCodeMessage[1];
         paramSupport.area = supportAddressCodeMessage[2];
+//        paramSupport.streetCode = supportAddressCodeMessage[3];
         if(!StringUtil.isEmpty(supportAddressCodeMessage[3])){
             paramSupport.street = supportAddressCodeMessage[3];
         }
-
         paramSupport.provinceName = supportAddressNameMessage[0];
         paramSupport.cityName = supportAddressNameMessage[1];
         paramSupport.areaName = supportAddressNameMessage[2];
         if(!StringUtil.isEmpty(supportAddressNameMessage[3])){
             paramSupport.streetName = supportAddressNameMessage[3];
         }
-
         paramSupport.address = $("#supportAddress").val();
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
         console.log("function  support " + cscSupplierInfoDtoStr);
@@ -1805,12 +1815,12 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
-                    
+                    debugger
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        
+                        debugger
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            ;
+                            debugger;
 //                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
 //                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
 //                            resultConsignorType = CscContantAndCompanyDto.type;
@@ -1866,7 +1876,7 @@
                             +"&contactName="+$("#supportContactName").val()
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
-                                
+                                debugger
                                 console.log("==-------data-----111-xxx--"+data);
                                 data=eval(data);
                                 var supplierList = "";
@@ -2203,7 +2213,7 @@
                     ,"tag":tag}
                 ,"您确认提交订单吗?"
                 ,function () {
-                    
+                    debugger
                     xescm.common.loadPage("/ofc/orderManage");
                 })
     }

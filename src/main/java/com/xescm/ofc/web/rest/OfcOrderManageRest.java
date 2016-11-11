@@ -156,6 +156,7 @@ public class OfcOrderManageRest extends BaseController{
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             //如果是运输订单,就去找收发货方联系人的信息
             if(OrderConstEnum.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
                 consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
@@ -163,7 +164,7 @@ public class OfcOrderManageRest extends BaseController{
             }
             //仓配订单
             if(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
-                rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
                 if(OrderConstEnum.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
