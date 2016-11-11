@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcOrderScreenMapper" >
+    <resultMap id="orderSearchResult_resultMap" type="com.xescm.ofc.domain.OrderScreenResult">
+        <!--配置映射关系-->
+        <!--column是结果集中的列名,property是pojo的属性-->
+        <result property="orderCode" column="order_code"></result>
+        <result property="custOrderCode" column="cust_order_code"></result>
+        <result property="orderTime" column="order_time"></result>
+        <result property="orderType" column="order_type"></result>
+        <result property="businessType" column="business_type"></result>
+        <result property="orderStatus" column="order_status"></result>
+        <result property="consigneeName" column="consignee_name"></result>
+        <result property="warehouseName" column="warehouse_name"></result>
+        <result property="notes" column="notes"></result>
+        <result property="storeName" column="store_name"></result>
+    </resultMap>
+
+    <!--
+    SELECT
+    ofi.order_code 订单编号,
+    ofi.cust_order_code 客户订单编号,
+    ofi.order_time 订单日期,
+    ofi.order_type 订单类型,
+    ofi.business_type 业务类型,
+    oos.order_status 订单状态,
+    odbi.consignee_name 收货方名称,
+    owi.warehouse_name 仓库名称,
+    ofi.notes 备注,
+    ofi.store_name 店铺名称
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_status oos ON ofi.order_code = oos.order_code
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    -->
+    <select id="orderScreen" parameterType="orderScreenCondition" resultMap="orderSearchResult_resultMap">
+        SELECT
+        ofi.order_code orderCode,
+        ofi.cust_order_code custOrderCode,
+        ofi.order_time orderTime,
+        ofi.order_type orderType,
+        ofi.business_type businessType,
+        oos.order_status orderStatus,
+        odbi.consignee_type consigneeType,
+        odbi.consignee_name consigneeName,
+        odbi.consignee_contact_name consigneeContactName,
+        owi.warehouse_name warehouseName,
+        ofi.notes notes,
+        ofi.store_name storeName
+        FROM
+          ofc_fundamental_information ofi
+        LEFT JOIN (
+        SELECT
+        s.order_code,
+        s.order_status,
+        s.status_desc,
+        s.lasted_oper_time,
+        s.notes,
+        s.operator
+        FROM
+        ofc_order_status s,
+        (
+        SELECT
+        s.order_code,
+        max(s.lasted_oper_time) val
+        FROM
+        ofc_order_status s
+        GROUP BY
+        s.order_code
+        ) b
+        WHERE
+        s.order_code = b.order_code
+        AND s.lasted_oper_time = b.val
+        ORDER BY
+        s.order_code
+        ) oos ON ofi.order_code = oos.order_code
+        LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+        LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+            <where>
+                <if test="orderTimePre!=null and orderTimePre!=''">
+                    AND ofi.order_time <![CDATA[ >= ]]>  #{orderTimePre}
+                </if>
+                <if test="orderTimeSuf!=null and orderTimeSuf!=''">
+                    AND ofi.order_time <![CDATA[ <= ]]>  #{orderTimeSuf}
+                </if>
+                <if test="orderCode!=null and orderCode!=''">
+                    AND ofi.order_code = #{orderCode}
+                </if>
+                <if test="custOrderCode!=null and custOrderCode!=''">
+                    AND ofi.cust_order_code = #{custOrderCode}
+                </if>
+                <if test="orderStatus!=null and orderStatus!=''">
+                    AND oos.order_status = #{orderStatus}
+                </if>
+                <if test="orderType!=null and orderType!=''">
+                    AND ofi.order_type = #{orderType}
+                </if>
+                <if test="businessType!=null and businessType!=''">
+                    AND ofi.business_type = #{businessType}
+                </if>
+        </where>
+        GROUP BY ofi.order_code
+    </select>
+</mapper>

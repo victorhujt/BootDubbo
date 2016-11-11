@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcDistributionBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+    <result column="urgent" property="urgent" jdbcType="INTEGER" />
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="departure_province" jdbcType="VARCHAR" property="departureProvince" />
+    <result column="departure_city" jdbcType="VARCHAR" property="departureCity" />
+    <result column="departure_district" jdbcType="VARCHAR" property="departureDistrict" />
+    <result column="departure_towns" jdbcType="VARCHAR" property="departureTowns" />
+    <result column="departure_place_code" property="departurePlaceCode" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="destination_province" jdbcType="VARCHAR" property="destinationProvince" />
+    <result column="destination_city" jdbcType="VARCHAR" property="destinationCity" />
+    <result column="destination_district" jdbcType="VARCHAR" property="destinationDistrict" />
+    <result column="destination_towns" jdbcType="VARCHAR" property="destinationTowns" />
+    <result column="destination_code" property="destinationCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="VARCHAR" />
+    <result column="total_standard_box" property="totalStandardBox" jdbcType="INTEGER" />
+    <result column="trans_require" property="transRequire" jdbcType="VARCHAR" />
+    <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+    <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
+    <result column="consignor_code" property="consignorCode" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignee_code" property="consigneeCode" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_code" property="consignorContactCode" jdbcType="VARCHAR" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_code" property="consigneeContactCode" jdbcType="VARCHAR" />
+    <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR" />
+    <result column="consignor_type" property="consignorType" jdbcType="VARCHAR" />
+    <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR" />
+    <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
+    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="base_id" jdbcType="VARCHAR" property="baseId" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByOrderCode" parameterType="java.lang.String" >
+    <!--
+      根据订单编号进行删除
+    -->
+    delete from ofc_distribution_basic_info
+    where order_code = #{orderCode,jdbcType=VARCHAR}
+  </delete>
+  <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+    <!--
+      根据订单号进行修改
+    -->
+    update ofc_distribution_basic_info
+    <set >
+      <if test="transCode != null" >
+        trans_code = #{transCode,jdbcType=VARCHAR},
+      </if>
+      <if test="urgent != null" >
+        urgent = #{urgent,jdbcType=INTEGER},
+      </if>
+      <if test="departurePlace != null" >
+        departure_place = #{departurePlace,jdbcType=INTEGER},
+      </if>
+      <if test="departureProvince != null" >
+        departure_province = #{departureProvince,jdbcType=INTEGER},
+      </if>
+      <if test="departureCity != null" >
+        departure_city = #{departureCity,jdbcType=INTEGER},
+      </if>
+      <if test="departureDistrict != null" >
+        departure_district = #{departureDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="departureTowns != null" >
+        departure_towns = #{departureTowns,jdbcType=INTEGER},
+      </if>
+      <if test="departurePlaceCode != null" >
+        departure_place_code = #{departurePlaceCode,jdbcType=INTEGER},
+      </if>
+      <if test="destination != null" >
+        destination = #{destination,jdbcType=INTEGER},
+      </if>
+      <if test="destinationProvince != null" >
+        destination_province = #{destinationProvince,jdbcType=INTEGER},
+      </if>
+      <if test="destinationCity != null" >
+        destination_city = #{destinationCity,jdbcType=INTEGER},
+      </if>
+      <if test="destinationDistrict != null" >
+        destination_district = #{destinationDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="destinationTowns != null" >
+        destination_towns = #{destinationTowns,jdbcType=INTEGER},
+      </if>
+      <if test="destinationCode != null" >
+        destination_code = #{destinationCode,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="cubage != null" >
+        cubage = #{cubage,jdbcType=INTEGER},
+      </if>
+      <if test="totalStandardBox != null" >
+        total_standard_box = #{totalStandardBox,jdbcType=INTEGER},
+      </if>
+      <if test="transRequire != null" >
+        trans_require = #{transRequire,jdbcType=INTEGER},
+      </if>
+      <if test="pickupTime != null" >
+        pickup_time = #{pickupTime,jdbcType=INTEGER},
+      </if>
+      <if test="expectedArrivedTime != null" >
+        expected_arrived_time = #{expectedArrivedTime,jdbcType=INTEGER},
+      </if>
+      <if test="consignorCode != null" >
+        consignor_code = #{consignorCode,jdbcType=INTEGER},
+      </if>
+      <if test="consignorName != null" >
+        consignor_name = #{consignorName,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeCode != null" >
+        consignee_code = #{consigneeCode,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name = #{consigneeName,jdbcType=INTEGER},
+      </if>
+      <if test="consignorContactCode != null" >
+        consignor_contact_code = #{consignorContactCode,jdbcType=INTEGER},
+      </if>
+      <if test="consignorContactName != null" >
+        consignor_contact_name = #{consignorContactName,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeContactCode != null" >
+        consignee_contact_code = #{consigneeContactCode,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeContactName != null" >
+        consignee_contact_name = #{consigneeContactName,jdbcType=INTEGER},
+      </if>
+      <if test="consignorType != null" >
+        consignor_type = #{consignorType,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeType != null" >
+        consignee_type = #{consigneeType,jdbcType=INTEGER},
+      </if>
+      <if test="carrierCode != null" >
+        carrier_code = #{carrierCode,jdbcType=INTEGER},
+      </if>
+      <if test="carrierName != null" >
+        carrier_name = #{carrierName,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null" >
+        order_code = #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="baseId != null" >
+        base_id = #{baseId,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="operTime != null" >
+        oper_time = #{operTime,jdbcType=INTEGER}
+      </if>
+    </set>
+    where order_code = #{orderCode,jdbcType=VARCHAR}
+  </update>
+
+  <!--
+      根据订单号进行查询对应数据
+    -->
+  <select id="ofcDistributionBasicInfoSelect" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM ofc_distribution_basic_info ofd
+        WHERE ofd.order_code =#{orderCode,jdbcType=VARCHAR}
+    ORDER BY ofd.oper_time DESC limit 1
+  </select>
+
+  <!--
+    根据运输单号查订单号
+  -->
+  <resultMap id="convTransCode" type="java.lang.String" >
+     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getOrderCodeByTransCode" parameterType="java.util.Map" resultMap="convTransCode">
+    select
+    odbi.order_code
+    from
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+        WHERE odbi.trans_code =#{transCode,jdbcType=VARCHAR}
+        AND ofi.cust_code = #{custCode,jdbcType=VARCHAR}
+        ORDER BY odbi.oper_time DESC limit 1
+  </select>
+</mapper>

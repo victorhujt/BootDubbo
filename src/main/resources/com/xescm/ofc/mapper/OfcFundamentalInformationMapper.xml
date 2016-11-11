@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcFundamentalInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcFundamentalInformation" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="sec_cust_code" property="secCustCode" jdbcType="VARCHAR" />
+    <result column="sec_cust_name" property="secCustName" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="platform_type" property="platformType" jdbcType="VARCHAR" />
+    <result column="order_source" property="orderSource" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="finished_time" property="finishedTime" jdbcType="TIMESTAMP" />
+    <result column="abolish_mark" property="abolishMark" jdbcType="INTEGER" />
+    <result column="abolish_time" property="abolishTime" jdbcType="TIMESTAMP" />
+    <result column="abolisher" property="abolisher" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="convCustOrderCode" type="java.lang.String">
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getOrderCodeByCustOrderCode" parameterType="java.lang.String" resultMap="convCustOrderCode">
+    select
+    ofi.order_code
+    from
+    ofc_fundamental_information ofi
+      WHERE ofi.cust_order_code =#{custOrderCode}
+  </select>
+
+  <select id="checkCustOrderCode" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" resultType="java.lang.Integer">
+    SELECT
+    count(order_code) AS countOrderCode
+    FROM
+    ofc_fundamental_information ofi
+    <where>
+      <if test="selfCustOrderCode != null and selfCustOrderCode != ''" >
+        cust_order_code != #{selfCustOrderCode}
+      </if>
+      AND
+      cust_order_code = #{custOrderCode}
+    </where>
+  </select>
+
+</mapper>

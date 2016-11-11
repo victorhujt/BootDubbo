@@ -9,11 +9,15 @@ target/
 .springBeans
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
-
+.mvn/
+mvn*
+logs/
+logs/*.log
+logs/*.log*
 ### NetBeans ###
 nbproject/private/
 build/
