@@ -285,10 +285,10 @@
             var order = data.result.list[i];
             var consigneeName = "";
             if("2"==StringUtil.nullToEmpty(order.consigneeType)){
-                debugger;
+
                 consigneeName = "个人-"+order.consigneeContactName;
             }else{
-                debugger;
+
                 consigneeName = order.consigneeName;
             }
 

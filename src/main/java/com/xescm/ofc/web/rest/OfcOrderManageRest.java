@@ -230,17 +230,17 @@ public class OfcOrderManageRest extends BaseController{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
                     && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
-                    && rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",").length>=2){
+                    && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
 
-                String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",");
+                String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/");
                 rmcCompanyLineQO.setBeginCityName(beginCity[1]);
             }else{
                 rmcCompanyLineQO.setBeginCityName(null);
             }
             if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
                     && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
-                    && rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",").length>=2){
-                String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",");
+                    && rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/").length>=2){
+                String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/");
                 rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
             }else {
                 rmcCompanyLineQO.setArriveCityName(null);
@@ -315,17 +315,17 @@ public class OfcOrderManageRest extends BaseController{
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
                 && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
-                && rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",").length>=2){
+                && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
 
-            String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[1].split(",");
+            String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/");
             rmcCompanyLineQO.setBeginCityName(beginCity[1]);
         }else{
             rmcCompanyLineQO.setBeginCityName(null);
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
                 && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
-                && rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",").length>=2){
-            String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[1].split(",");
+                && rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/").length>=2){
+            String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/");
             rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
         }else {
             rmcCompanyLineQO.setArriveCityName(null);

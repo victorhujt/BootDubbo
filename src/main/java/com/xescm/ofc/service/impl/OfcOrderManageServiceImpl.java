@@ -229,6 +229,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else{
                 rmcCompanyLineQO.setLineType("1");
             }
+            rmcCompanyLineQO.setBeginCityName(ofcTransplanInfo.getDepartureCity());
+            rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
             Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
             if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
                     && companyList.getResult().size()==1){

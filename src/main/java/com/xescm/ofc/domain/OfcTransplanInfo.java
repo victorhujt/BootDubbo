@@ -131,6 +131,12 @@ public class OfcTransplanInfo {
     private String departureTowns;
 
     /**
+     * 出发地区域编码
+     */
+    @Column(name = "departure_place_code")
+    private String departurePlaceCode;
+
+    /**
      * 收货客户代码
      */
     @Column(name = "receiving_customer_code")
@@ -177,6 +183,13 @@ public class OfcTransplanInfo {
      */
     @Column(name = "destination_town")
     private String destinationTown;
+
+    /**
+     * 目的地区域编码
+     */
+    @Column(name = "destination_code")
+    private String destinationCode;
+
 
     /**
      * 收货地址经度
@@ -652,6 +665,25 @@ public class OfcTransplanInfo {
     }
 
     /**
+     * 获取出发地区域编码
+     *
+     * @return departure_place_code - 出发地区域编码
+     */
+    public String getDeparturePlaceCode() {
+        return departurePlaceCode;
+    }
+
+    /**
+     * 设置出发地区域编码
+     *
+     * @param departurePlaceCode 出发地区域编码
+     */
+    public void setDeparturePlaceCode(String departurePlaceCode) {
+        this.departurePlaceCode = departurePlaceCode;
+    }
+
+
+    /**
      * 获取收货客户代码
      *
      * @return receiving_customer_code - 收货客户代码
@@ -793,6 +825,24 @@ public class OfcTransplanInfo {
      */
     public void setDestinationTown(String destinationTown) {
         this.destinationTown = destinationTown;
+    }
+
+    /**
+     * 获取目的地区域编码
+     *
+     * @return destination_code - 目的地区域编码
+     */
+    public String getDestinationCode() {
+        return destinationCode;
+    }
+
+    /**
+     * 设置目的地区域编码
+     *
+     * @param destinationCode 目的地区域编码
+     */
+    public void setDestinationCode(String destinationCode) {
+        this.destinationCode = destinationCode;
     }
 
     /**

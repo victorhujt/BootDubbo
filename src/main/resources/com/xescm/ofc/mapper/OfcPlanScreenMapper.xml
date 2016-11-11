@@ -11,6 +11,7 @@
         <result property="businessType" column="business_type"></result>
         <result property="custCode" column="cust_code"></result>
         <result property="custName" column="cust_name"></result>
+        <result property="plannedSingleState" column="planned_single_state"></result>
         <result property="resourceAllocationStatus" column="resource_allocation_status"></result>
         <result property="serviceProviderName" column="service_provider_name"></result>
         <result property="departureProvince" column="departure_province"></result>
@@ -38,6 +39,7 @@
         otp.order_batch_number orderBatchNumber,
         otp.business_type businessType,
         otp.cust_code custCode,
+        ots.planned_single_state,
         otss.resource_allocation_status resourceAllocationStatus,
         otss.service_provider_name serviceProviderName,
         otp.departure_province departureProvince,

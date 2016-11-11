@@ -277,14 +277,14 @@
         for ( var i = 0; i < data.result.list.length; i++) {
             var order = data.result.list[i];
 
-            debugger;
+
             console.log("--zaa--"+JSON.stringify(order));
             var consigneeName = "";
             if("2"==StringUtil.nullToEmpty(order.consigneeType)){
-                debugger;
+
                 consigneeName = "个人-"+order.consigneeContactName;
             }else{
-                debugger;
+
                 consigneeName = order.consigneeName;
             }
 
