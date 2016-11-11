@@ -1622,7 +1622,7 @@
             var jsonStr = {};
             //订单基本信息
             //$dp.$('orderTimePre').value;
-            debugger;
+
             jsonStr.orderTime = $dp.$('orderTime').value;
             jsonStr.custOrderCode = $("#custOrderCode").val();
             jsonStr.orderType = $("#orderTypeSel").val();
@@ -1713,7 +1713,7 @@
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
-                debugger;
+
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
@@ -1946,7 +1946,7 @@
                         debugger
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            debugger;
+
 //                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
 //                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
 //                            resultConsignorType = CscContantAndCompanyDto.type;

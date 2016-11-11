@@ -26,6 +26,7 @@
     <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
     <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
     <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="departure_place_code" jdbcType="VARCHAR" property="departurePlaceCode" />
     <result column="receiving_customer_code" property="receivingCustomerCode" jdbcType="VARCHAR" />
     <result column="receiving_customer_address" property="receivingCustomerAddress" jdbcType="VARCHAR" />
     <result column="receiving_customer_contact" property="receivingCustomerContact" jdbcType="VARCHAR" />
@@ -34,6 +35,7 @@
     <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
     <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
     <result column="destination_town" property="destinationTown" jdbcType="VARCHAR" />
+    <result column="destination_code" jdbcType="VARCHAR" property="destinationCode" />
     <result column="receiving_address_longitude" property="receivingAddressLongitude" jdbcType="VARCHAR" />
     <result column="receiving_address_latitude" property="receivingAddressLatitude" jdbcType="VARCHAR" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />

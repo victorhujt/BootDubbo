@@ -272,6 +272,7 @@
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">计划单编号</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单批次号</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">类型</th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计划单状态</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">资源分配状态</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商名称</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单日期</th>
@@ -427,7 +428,7 @@
                                         str=str+var3+"@";
                                     }
                                 });
-                                debugger;
+
                                 if(str.length>0){
                                     xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName,"serviceProviderContact":data[0].contactName,"serviceProviderContactPhone":data[0].companyPhone},"已找到相关服务商，自动匹配最近时间服务商，是否确定?",function () {
 
@@ -594,7 +595,7 @@
 
                     if(str.length>0){
                         xescm.common.submit("/ofc/planUpdate",{"planCode":str,"planStatus":"30","serviceProviderName":data[0].companyName,"serviceProviderContact":data[0].contactName,"serviceProviderContactPhone":data[0].companyPhone},"查询结果只有一条记录，将自动进行分配，是否确定?",function () {
-                            debugger;
+
                             $("#serviceProviderListDiv2").fadeOut("slow");//淡入淡出效果 隐藏div
                             queryData(1);
                         });
@@ -628,14 +629,14 @@
             var serviceProviderName="";
             var serviceProviderContact="";
             var serviceProviderContactPhone="";
-            debugger;
+
             $("#goodsSelectListTbody1").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
                     serviceProviderName = tdArr.eq(1).text();
                     serviceProviderContact = tdArr.eq(9).text();
                     serviceProviderContactPhone = tdArr.eq(10).text();
-                    debugger;
+
                 }
             });
             $("#dataTbody").find("tr").each(function(index){
@@ -751,7 +752,7 @@
                     if(i==1){
                         serive=businessType;
                         diff=businessType;
-                        debugger;
+
                         //$("#city-picker-cfd1").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
                         $("#city-picker-cfd1").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
                         $("#city-picker-mdd1").val(destination1+'/'+destination2+'/'+destination3+'/'+destination4);
@@ -888,6 +889,7 @@
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.planCode)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getPlanType(order.businessType))+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getPlanStatus(order.plannedSingleState))+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(getSourceStatus(order.resourceAllocationStatus))+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderTime)+"</td>"
@@ -919,6 +921,24 @@
             value = "城配"
         }else if(status == '601'){
             value = "干线"
+        }else{
+            value = "类型有误"
+        }
+        return value;
+    }
+
+    function getPlanStatus(status) {
+        var value ="";
+        if(status == '10'){
+            value = "资源分配中"
+        }else if(status == '20'){
+            value = "已推送"
+        }else if(status == '30'){
+            value = "任务中"
+        }else if(status == '40'){
+            value = "任务完成"
+        }else if(status == '50'){
+            value = "已作废"
         }else{
             value = "类型有误"
         }

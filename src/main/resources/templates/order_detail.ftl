@@ -698,7 +698,7 @@
 
     });
     function detailBackToHistory() {
-        debugger;
+
         console.log($("#goBack").val())
         var tag = $("#goBack").val();
         if("orderManage" == tag){

@@ -1305,8 +1305,6 @@
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgent1").val();
         jsonStr.transRequire = $("#transRequire").val();
-
-
         jsonStr.consignorCode = $("#consignorCode").val();
         jsonStr.consignorType = $("#consignorType").val();
         jsonStr.consignorName = $("#consignorName").val();
@@ -1509,10 +1507,6 @@
         paramSupport.areaName = supportAddressNameMessage[2];
         paramSupport.street = supportAddressNameMessage[3];
         paramSupport.address = $("#supportAddress").val();
-
-
-
-
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
         console.log("function  support " + cscSupplierInfoDtoStr);
         return cscSupplierInfoDtoStr;
@@ -1520,7 +1514,6 @@
 
 
     $(function(){
-        alert($("#city-picker3-consignee").val());
 
 
 
@@ -1719,7 +1712,7 @@
                 var production_batch = tdArr.eq(7).children().val();//    批次
                 var production_time = tdArr.eq(8).children().val();//    生产日期
                 var invalid_time = tdArr.eq(9).children().val();//    失效日期
-                debugger;
+
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/

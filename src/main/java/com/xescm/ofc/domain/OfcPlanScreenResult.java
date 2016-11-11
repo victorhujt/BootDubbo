@@ -71,6 +71,7 @@ public class OfcPlanScreenResult {
      已完成:3
      已取消:4
      */
+    private String plannedSingleState;
     private String resourceAllocationStatus;
     private String custName;
     private String custCode;
@@ -275,5 +276,13 @@ public class OfcPlanScreenResult {
 
     public void setCustCode(String custCode) {
         this.custCode = custCode;
+    }
+
+    public String getPlannedSingleState() {
+        return plannedSingleState;
+    }
+
+    public void setPlannedSingleState(String plannedSingleState) {
+        this.plannedSingleState = plannedSingleState;
     }
 }
