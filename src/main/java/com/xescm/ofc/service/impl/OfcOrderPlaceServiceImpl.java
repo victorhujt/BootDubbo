@@ -147,7 +147,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
                 //现在订单编辑没有对客户订单编号进行校验
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
-                    throw new BusinessException("您的客户订单编号填写有误!");
+                    throw new BusinessException("您没有填写客户订单编号!");
                 }
                 if (("").equals(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode())) || null == PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode())){
                     ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
@@ -340,7 +340,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     public String saveContactMessage(CscContantAndCompanyDto cscContantAndCompanyDto,String custId,AuthResDto authResDtoByToken){//AuthResDto authResDtoByToken,//String custId,String userId,String userName,String groupId
         if(null == cscContantAndCompanyDto){
-            return "未添加联系人信息";
+            throw new BusinessException("未添加联系人信息");
         }
         try {
             cscContantAndCompanyDto.setCustomerId(custId);
@@ -355,6 +355,23 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             cscContantAndCompanyDto.getCscContact().setCity("ofc001");
             cscContantAndCompanyDto.getCscContact().setArea("ofc001");
             cscContantAndCompanyDto.getCscContact().setStreet("ofc001");*/
+            /**
+             * 校验前三级地址编码和名称是否完整
+             */
+            String provinceCode = cscContantAndCompanyDto.getCscContact().getProvince();
+            String provinceName = cscContantAndCompanyDto.getCscContact().getProvinceName();
+            String cityCode = cscContantAndCompanyDto.getCscContact().getCity();
+            String cityName = cscContantAndCompanyDto.getCscContact().getCityName();
+            String areaCode = cscContantAndCompanyDto.getCscContact().getArea();
+            String areaName = cscContantAndCompanyDto.getCscContact().getAreaName();
+            if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
+                    || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
+                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)){
+                throw new BusinessException("联系人地址不完整");
+            }
+
+
+
             Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
@@ -369,9 +386,20 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     public String saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId,AuthResDto authResDtoByToken){
         if(null == cscSupplierInfoDto){
-            return "未添加供应商信息";
+            throw new BusinessException( "未添加供应商信息");
         }
         try {
+            String provinceCode = cscSupplierInfoDto.getProvince();
+            String provinceName = cscSupplierInfoDto.getProvinceName();
+            String cityCode = cscSupplierInfoDto.getCity();
+            String cityName = cscSupplierInfoDto.getCityName();
+            String areaCode = cscSupplierInfoDto.getArea();
+            String areaName = cscSupplierInfoDto.getAreaName();
+            if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
+                    || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
+                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)){
+                throw new BusinessException("联系人地址不完整");
+            }
             cscSupplierInfoDto.setCustomerId(custId);
             Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
             try{
@@ -414,4 +442,5 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
         return Wrapper.SUCCESS_MESSAGE;
     }
+
 }
