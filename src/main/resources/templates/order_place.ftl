@@ -1316,8 +1316,8 @@
         jsonStr.weight = $("#weight").val();
         jsonStr.cubage = $("#cubage").val();
         jsonStr.totalStandardBox = $("#totalStandardBox").val();
-        jsonStr.departurePlace = $("#consignorAddress").val();
-        jsonStr.destination = $("#consigneeAddress").val();
+        /*jsonStr.departurePlace = $("#consignorAddress").val();
+        jsonStr.destination = $("#consigneeAddress").val();*/
         jsonStr.pickupTime = $dp.$('pickupTime').value;
         jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
         jsonStr.urgent = $("#urgentHel").val();
@@ -1352,21 +1352,13 @@
         jsonStr.departureDistrict = consignorAddressNameMessage[2];
         jsonStr.departureTowns = consignorAddressNameMessage[3];
         jsonStr.departurePlaceCode = consignorAddressMessage[1];
-        jsonStr.departurePlace = consignorAddressNameMessage[0]
-                + consignorAddressNameMessage[1]
-                + consignorAddressNameMessage[2]
-                + consignorAddressNameMessage[3]
-                + $("#consignorAddress").val();
+        jsonStr.departurePlace = $("#consignorAddress").val();
         jsonStr.destinationProvince = consigneeAddressNameMessage[0];
         jsonStr.destinationCity = consigneeAddressNameMessage[1];
         jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
         jsonStr.destinationTowns = consigneeAddressNameMessage[3];
         jsonStr.destinationCode=consigneeAddressMessage[1];
-        jsonStr.destination=consigneeAddressNameMessage[0]
-                + consigneeAddressNameMessage[1]
-                + consigneeAddressNameMessage[2]
-                + consigneeAddressNameMessage[3]
-                + $("#consigneeAddress").val();
+        jsonStr.destination=$("#consigneeAddress").val();
 
 
         /*jsonStr.departureProvince=$("#consignorProvinceName").val();
