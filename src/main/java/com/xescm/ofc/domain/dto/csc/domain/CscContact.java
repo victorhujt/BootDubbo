@@ -101,6 +101,11 @@ public class CscContact implements Serializable {
      * 乡镇街道
      */
     private String street;
+    /**
+     * 乡镇街道名称
+     */
+    @Column(name = "street_name")
+    private String streetName;
 
     /**
      * 地址
@@ -167,6 +172,14 @@ public class CscContact implements Serializable {
      * 删除（1 - 已删除；0未删除）
      */
     private Integer yn;
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
 
     /**
      * 获取主键
