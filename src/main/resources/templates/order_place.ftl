@@ -1367,7 +1367,7 @@
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
         jsonStr.departureCity = consignorAddressNameMessage[1];
-        jsonStr.departureTowns = consignorAddressNameMessage[2];
+        jsonStr.departureDistrict = consignorAddressNameMessage[2];
         jsonStr.departureTowns = consignorAddressNameMessage[3];
         jsonStr.departurePlaceCode = consignorAddressMessage[1];
         jsonStr.departurePlace = consignorAddressNameMessage[0]
@@ -1378,7 +1378,7 @@
         jsonStr.destinationProvince = consigneeAddressNameMessage[0];
         jsonStr.destinationCity = consigneeAddressNameMessage[1];
         jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
-        jsonStr.destinationCode = consigneeAddressNameMessage[3];
+        jsonStr.destinationTowns = consigneeAddressNameMessage[3];
         jsonStr.destinationCode=consigneeAddressMessage[1];
         jsonStr.destination=consigneeAddressNameMessage[0]
                 + consigneeAddressNameMessage[1]
@@ -1792,7 +1792,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                     contactList =contactList + "</tr>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
@@ -1826,7 +1826,7 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                     contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
@@ -1849,7 +1849,7 @@
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
                     supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.address+"</td>";
+                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
                     supplierList =supplierList + "</tr>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
@@ -1951,7 +1951,7 @@
                     $("#consignorFax").val(fax);
                     $("#consignorEmail").val(email);
                     $("#consignorPostCode").val(code);
-                    $("#consignorAddress").val(address);
+                   /* $("#consignorAddress").val(address);*/
 
                     //在这里将所有的信息补全!!
                     var paramConsignor = {};
@@ -1979,6 +1979,7 @@
                             $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
+                            $("#consignorAddress").val(CscContantAndCompanyDto.address);
                             console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
@@ -2022,7 +2023,7 @@
                     $("#consigneeFax").val(fax);
                     $("#consigneeEmail").val(email);
                     $("#consigneePostCode").val(code);
-                    $("#consigneeAddress").val(address);
+                   /* $("#consigneeAddress").val(address);*/
 
 
                     var paramConsignor = {};
@@ -2044,7 +2045,7 @@
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
-
+                            $("#consigneeAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -2084,7 +2085,7 @@
                     $("#supportFax").val(fax);
                     $("#supportEmail").val(email);
                     $("#supportPostCode").val(code);
-                    $("#supportAddress").val(address);
+                   /* $("#supportAddress").val(address);*/
                     CommonClient.post(sys.rootPath + "/ofc/supplierSelect"
                             ,"supplierName="+$("#supportName").val()
                             +"&contactName="+$("#supportContactName").val()
@@ -2095,6 +2096,7 @@
                         data=eval(data);
                         var supplierList = "";
                         $.each(data,function (index,CscSupplierInfoDto) {
+                            $("#supportAddress").val(CscSupplierInfoDto.address);
                             var provinceName = CscSupplierInfoDto.provinceName;
                             var cityName = CscSupplierInfoDto.cityName;
                             var areaName = CscSupplierInfoDto.areaName;

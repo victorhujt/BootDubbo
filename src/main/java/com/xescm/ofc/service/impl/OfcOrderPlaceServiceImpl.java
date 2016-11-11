@@ -287,8 +287,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     public OfcDistributionBasicInfo upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo
             ,OfcFundamentalInformation ofcFundamentalInformation){
         ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
-        ofcDistributionBasicInfo.setDeparturePlaceCode("001");
-        ofcDistributionBasicInfo.setDestinationCode("001");
+        /*ofcDistributionBasicInfo.setDeparturePlaceCode("001");
+        ofcDistributionBasicInfo.setDestinationCode("001");*/
         if(null == ofcFundamentalInformation.getCreationTime()){
             ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
             ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
@@ -344,10 +344,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             cscContantAndCompanyDto.setUserId(authResDtoByToken.getUserId());
             cscContantAndCompanyDto.setUserName(authResDtoByToken.getUamUser().getUserName());
             cscContantAndCompanyDto.setGroupId(authResDtoByToken.getGroupId());
-            cscContantAndCompanyDto.getCscContact().setProvince("ofc001");
+            /*cscContantAndCompanyDto.getCscContact().setProvince("ofc001");
             cscContantAndCompanyDto.getCscContact().setCity("ofc001");
             cscContantAndCompanyDto.getCscContact().setArea("ofc001");
-            cscContantAndCompanyDto.getCscContact().setStreet("ofc001");
+            cscContantAndCompanyDto.getCscContact().setStreet("ofc001");*/
             Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
