@@ -28,6 +28,7 @@ public class CscContantAndCompanyVo implements Serializable {
     private String area;
     private String areaName;
     private String street;
+    private String streetName;
     private String address;
     private String detailAddress;
     private String contactJob;
@@ -38,6 +39,14 @@ public class CscContantAndCompanyVo implements Serializable {
     private String lastOperator;
     private String lastOperatorId;
     private Date updateTime;
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
 
     public String getContactCompanyName() {
         return contactCompanyName;

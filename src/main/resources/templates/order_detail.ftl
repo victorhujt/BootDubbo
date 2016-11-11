@@ -667,7 +667,7 @@
 </div><!-- /.main-container -->
 <script type="text/javascript">
     $(function(){
-        debugger
+        
 
         console.log(${(ofcOrderDTO.orderType)!});
         console.log(${(ofcOrderDTO.businessType)!});

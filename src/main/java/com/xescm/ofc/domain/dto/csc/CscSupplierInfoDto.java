@@ -127,6 +127,11 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
     private String street;
 
     /**
+     * 乡镇街道
+     */
+    private String streetName;
+
+    /**
      * 地址
      */
     private String address;
@@ -151,6 +156,13 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
      */
     private String selfPhone;
 
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
 
     public Long getVersion() {
         return version;
