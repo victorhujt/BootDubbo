@@ -365,7 +365,12 @@
         });
 
         $("#goodsSelectFormBtn1").click(function () {
-            CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm1").serialize()+"&lineType=1", function(data) {
+            /*天津/天津市/河西区/桃园街道~120000,120100,120103,120103003
+            var cfcity=$("#city-picker-cfd1").val().split("/");//以斜杠作为分隔字符串
+            cfcity=city[1];
+            var mdcity=$("#city-picker-mdd1").val().split("/");//以斜杠作为分隔字符串
+            mdcity=city[1];*/
+            CommonClient.post(sys.rootPath + "/ofc/companySelect", "beginCityName="+$("#city-picker-cfd1").val()+"&arriveCityName="+$("#city-picker-mdd1").val()+"&lineType=1", function(data) {
                 data=eval(data);
 
                 if(data.length>1){
@@ -383,6 +388,7 @@
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.contactName)+"</td>";
+                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
                         goodsList =goodsList + "</tr>";
                         if(RmcCompanyLineVo.frequency!=null){
@@ -406,7 +412,7 @@
                         icon : 3,
                         title : '确认操作'
                     }, function(){
-                        CommonClient.post(sys.rootPath + "/ofc/planSeleForTime", $("#goodsSelConditionForm1").serialize()+"&planCode="+var3+"&lineType=1", function(data){
+                        CommonClient.post(sys.rootPath + "/ofc/planSeleForTime", "beginCityName="+$("#city-picker-cfd1").val()+"&arriveCityName="+$("#city-picker-mdd1").val()+"&planCode="+var3+"&lineType=1", function(data){
                             //xescm.common.submit("/ofc/planSeleForTime",{"planCode":var3},"查询结果为多条记录，将根据预计发货时间或者订单时间进行二次筛选，是否确定?",function (data) {
                             alert(data);
 
@@ -529,7 +535,7 @@
         });
 
         $("#goodsSelectFormBtn2").click(function () {
-            CommonClient.post(sys.rootPath + "/ofc/companySelect", $("#goodsSelConditionForm2").serialize()+"&lineType=2", function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/companySelect", "beginCityName="+$("#city-picker-cfd2").val()+"&arriveCityName="+$("#city-picker-mdd2").val()+"&lineType=2", function(data) {
 
                 data=eval(data);
                 if(data.length>1){
@@ -721,10 +727,17 @@
                 var tdArr = $(this).children();
 
                 if(tdArr.eq(1).find("input").prop("checked")){
+                    /*alert(tdArr.eq(17).text());*/
                     var businessType = tdArr.eq(5).text();//计划单类型
                     var resourceAllocationStatus = tdArr.eq(6).text();//资源分配状态
-                    var departure = tdArr.eq(9).text();//出发地
-                    var destination = tdArr.eq(10).text();//    目的地
+                    var departure1 = tdArr.eq(17).text();//出发地
+                    var departure2 = tdArr.eq(18).text();//出发地
+                    var departure3 = tdArr.eq(19).text();//出发地
+                    var departure4 = tdArr.eq(20).text();//出发地
+                    var destination1 = tdArr.eq(21).text();//    目的地
+                    var destination2 = tdArr.eq(22).text();//    目的地
+                    var destination3 = tdArr.eq(23).text();//    目的地
+                    var destination4 = tdArr.eq(24).text();//    目的地
                     if(resourceAllocationStatus=="已确定"){
                         alert("您选择的记录中存在【已确认】的记录，请重新选择！");
                         serive="determined"
@@ -738,10 +751,17 @@
                     if(i==1){
                         serive=businessType;
                         diff=businessType;
-                        $("#goodsCodeCondition1").val(departure);
-                        $("#goodsNameCondition1").val(destination);
-                        $("#goodsCodeCondition2").val(departure);
-                        $("#goodsNameCondition2").val(destination);
+                        debugger;
+                        //$("#city-picker-cfd1").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
+                        $("#city-picker-cfd1").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
+                        $("#city-picker-mdd1").val(destination1+'/'+destination2+'/'+destination3+'/'+destination4);
+                        //$("#city-picker-cfd2").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
+                        $("#city-picker-cfd2").val(departure1+'/'+departure2+'/'+departure3+'/'+departure4);
+                        $("#city-picker-mdd2").val(destination1+'/'+destination2+'/'+destination3+'/'+destination4);
+                        $("#city-picker-cfd1").citypicker('refresh');
+                        $("#city-picker-mdd1").citypicker('refresh');
+                        $("#city-picker-cfd2").citypicker('refresh');
+                        $("#city-picker-mdd2").citypicker('refresh');
                     }else{
                         if(diff!=businessType){
                             alert("不允许同时选择干线与城配类型的计划单，请重新选择！");
@@ -879,6 +899,14 @@
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.resourceConfirmationTime)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderContact)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.serviceProviderContactPhone)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.departureProvince)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.departureCity)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.departureDistrict)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.departureTowns)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationProvince)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationCity)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationDistrict)+"</td>"
+                    +"<td style=\"display:none\">"+StringUtil.nullToEmpty(order.destinationTown)+"</td>"
                     + "</tr>";
         }
         $("#dataTbody").html(htmlText);
@@ -914,9 +942,9 @@
 </script>
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="../components/chosen/chosen.css" />
-<script src="../components/chosen/chosen.jquery.js"></script>
-<script src="../js/city-picker.data.js"></script><#--111-->
-<script src="../js/city-picker.js"></script><#--111-->
+<#--<link rel="stylesheet" href="../components/chosen/chosen.css" />
+<script src="../components/chosen/chosen.jquery.js"></script>-->
+<script src="../js/city-picker.data.js"></script>
+<script src="../js/city-picker.js"></script>
 
 </body>
