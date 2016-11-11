@@ -64,7 +64,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition1" name="companyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "companyName1" name="companyName1" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">服务商名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition2" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "companyName2" name="companyName2" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -370,7 +370,7 @@
             cfcity=city[1];
             var mdcity=$("#city-picker-mdd1").val().split("/");//以斜杠作为分隔字符串
             mdcity=city[1];*/
-            CommonClient.post(sys.rootPath + "/ofc/companySelect", "beginCityName="+$("#city-picker-cfd1").val()+"&arriveCityName="+$("#city-picker-mdd1").val()+"&lineType=1", function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/companySelect", "beginCityName="+$("#city-picker-cfd1").val()+"&arriveCityName="+$("#city-picker-mdd1").val()+"&companyName="+$("#companyName1").val()+"&lineType=1", function(data) {
                 data=eval(data);
 
                 if(data.length>1){
@@ -411,7 +411,7 @@
                         icon : 3,
                         title : '确认操作'
                     }, function(){
-                        CommonClient.post(sys.rootPath + "/ofc/planSeleForTime", "beginCityName="+$("#city-picker-cfd1").val()+"&arriveCityName="+$("#city-picker-mdd1").val()+"&planCode="+var3+"&lineType=1", function(data){
+                        CommonClient.post(sys.rootPath + "/ofc/planSeleForTime", "beginCityName="+$("#city-picker-cfd1").val()+"&arriveCityName="+$("#city-picker-mdd1").val()+"&companyName="+$("#companyName1").val()+"&planCode="+var3+"&lineType=1", function(data){
                             //xescm.common.submit("/ofc/planSeleForTime",{"planCode":var3},"查询结果为多条记录，将根据预计发货时间或者订单时间进行二次筛选，是否确定?",function (data) {
                             alert(data);
 
@@ -534,7 +534,7 @@
         });
 
         $("#goodsSelectFormBtn2").click(function () {
-            CommonClient.post(sys.rootPath + "/ofc/companySelect", "beginCityName="+$("#city-picker-cfd2").val()+"&arriveCityName="+$("#city-picker-mdd2").val()+"&lineType=2", function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/companySelect", "beginCityName="+$("#city-picker-cfd2").val()+"&arriveCityName="+$("#city-picker-mdd2").val()+"&companyName="+$("#companyName2").val()+"&lineType=2", function(data) {
 
                 data=eval(data);
                 if(data.length>1){
