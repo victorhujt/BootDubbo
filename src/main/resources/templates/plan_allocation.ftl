@@ -43,7 +43,7 @@
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <div class="docs-methods">
-                                <input id="city-picker-cfd1" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input id="city-picker-cfd1" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                 <input  id = "goodsCodeCondition1" name="beginProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <div class="docs-methods">
-                                <input id="city-picker-mdd1" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input id="city-picker-mdd1" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                 <input  id = "goodsNameCondition1" name="arriveProvinceName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <div class="docs-methods">
-                                <input id="city-picker-cfd2" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input id="city-picker-cfd2" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                 <input  id = "goodsCodeCondition2" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <div class="docs-methods">
-                                <input id="city-picker-mdd2" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                <input id="city-picker-mdd2" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                 <input  id = "goodsNameCondition2" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>

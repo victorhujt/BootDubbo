@@ -216,14 +216,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
             if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
                     && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
-                    if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace())
-                            .equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))){
+
+                if(!PubUtils.isSEmptyOrNull(ofcTransplanInfo.getDeparturePlaceCode()) && ofcTransplanInfo.getDeparturePlaceCode().length() > 12){
+                    String depatrueCode = ofcTransplanInfo.getDeparturePlaceCode().substring(0,12);
+                    String destinationCode = ofcTransplanInfo.getDestinationCode().substring(0,12);
+                    if(depatrueCode.equals(destinationCode)){
                         ofcTransplanInfo.setBusinessType("600");
                         rmcCompanyLineQO.setLineType("2");
                     }else {
                         ofcTransplanInfo.setBusinessType("601");
                         rmcCompanyLineQO.setLineType("1");
+
                     }
+                }else{
+                    throw new BusinessException("四级地址编码为空!");
+                }
             }else if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")){
                 rmcCompanyLineQO.setLineType("2");
             }else{
