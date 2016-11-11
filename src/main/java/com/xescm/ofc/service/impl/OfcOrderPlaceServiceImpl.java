@@ -356,7 +356,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             cscContantAndCompanyDto.getCscContact().setArea("ofc001");
             cscContantAndCompanyDto.getCscContact().setStreet("ofc001");*/
             /**
-             * 校验前三级地址编码和名称是否完整
+             * 校验地址编码和名称是否完整
              */
             String provinceCode = cscContantAndCompanyDto.getCscContact().getProvince();
             String provinceName = cscContantAndCompanyDto.getCscContact().getProvinceName();
@@ -364,9 +364,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             String cityName = cscContantAndCompanyDto.getCscContact().getCityName();
             String areaCode = cscContantAndCompanyDto.getCscContact().getArea();
             String areaName = cscContantAndCompanyDto.getCscContact().getAreaName();
+            String streetCode = cscContantAndCompanyDto.getCscContact().getStreet();
+//            String streetName = cscContantAndCompanyDto.getCscContact().getStreetName();
             if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
                     || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
-                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)){
+                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)
+                   /* || PubUtils.isSEmptyOrNull(streetCode) || PubUtils.isSEmptyOrNull(streetName)*/){
                 throw new BusinessException("联系人地址不完整");
             }
 
@@ -395,9 +398,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             String cityName = cscSupplierInfoDto.getCityName();
             String areaCode = cscSupplierInfoDto.getArea();
             String areaName = cscSupplierInfoDto.getAreaName();
+            String streetCode = cscSupplierInfoDto.getStreet();
+//            String streetName = cscSupplierInfoDto.getStreetName();
             if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
                     || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
-                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)){
+                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)
+                    /*|| PubUtils.isSEmptyOrNull(streetCode) || PubUtils.isSEmptyOrNull(streetName)*/){
                 throw new BusinessException("联系人地址不完整");
             }
             cscSupplierInfoDto.setCustomerId(custId);
