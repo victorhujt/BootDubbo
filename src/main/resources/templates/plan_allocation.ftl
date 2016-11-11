@@ -272,7 +272,6 @@
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">计划单编号</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单批次号</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">类型</th>
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计划单状态</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">资源分配状态</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商名称</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单日期</th>
@@ -284,7 +283,7 @@
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">资源确认时间</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商联系人</th>
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">服务商联系电话</th>
-
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计划单状态</th>
                             </thead>
                             <tbody id="dataTbody">
                             <#--订单列表数据-->
@@ -389,7 +388,6 @@
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.frequency)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.contactName)+"</td>";
-                        goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
                         goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(RmcCompanyLineVo.companyPhone)+"</td>";
                         goodsList =goodsList + "</tr>";
                         if(RmcCompanyLineVo.frequency!=null){
