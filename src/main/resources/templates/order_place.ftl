@@ -316,13 +316,13 @@
     </div>
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="supplierEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-
+<#--
 <div class="main-container ace-save-state" id="main-container">
 
 
-    <!-- /section:basics/sidebar -->
+    <!-- /section:basics/sidebar &ndash;&gt;
     <div class="main-content">
-        <div class="main-content-inner">
+        <div class="main-content-inner">-->
             <div class="page-header">
                 <p>
                     基本信息
@@ -337,7 +337,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
-                            <div class="form-group">
+                           <#-- <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
@@ -345,15 +345,33 @@
 
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div>-->
+                            <#--<div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                         <input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
+                           <div class="form-group">
+                               <label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
+                               <div class="col-xs-3">
+                                   <div class="clearfix">
+                                       <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单编号</label>
+                               <div class="col-xs-3">
+                                   <div class="clearfix">
+                                       <input class="col-xs-10 col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
+
+                                   </div>
+                               </div>
+                           </div>
+
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
                                 <div class="col-sm-6">
@@ -895,12 +913,12 @@
 
                 </div>
             </div>
-
+<#--
         </div>
-    </div><!-- /.main-content -->
+    </div><!-- /.main-content &ndash;&gt;
 
 
-</div><!-- /.main-container -->
+</div><!-- /.main-container &ndash;&gt;-->
 
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />

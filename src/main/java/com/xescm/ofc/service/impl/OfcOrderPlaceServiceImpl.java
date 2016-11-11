@@ -13,6 +13,7 @@ import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,9 +71,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
-                if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
-                    throw new BusinessException("您的客户订单编号没有填写!");
-                }
+
                 String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
                 if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
                     ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
@@ -82,11 +81,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
                     ofcFundamentalInformation.setAbolishMark(OrderConstEnum.ORDERWASNOTABOLISHED);//未作废
                     if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
+
                         if(null == ofcWarehouseInformation.getProvideTransport()){
                             ofcWarehouseInformation.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
                         }
                         if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
                             /*ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);*/
+                            Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                                throw new BusinessException(wrapper.getMessage());
+                            }
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                             saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                             saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
@@ -95,6 +99,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                         String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
                         if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
+                            Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
+                            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                                throw new BusinessException(wrapper.getMessage());
+                            }
                             saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
 
                         }
@@ -104,6 +112,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             ofcWarehouseInformation.setSupportName("");
                         }
                     }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+                        Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                            throw new BusinessException(wrapper.getMessage());
+                        }
                         //运输订单
                         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
                             String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
@@ -112,7 +124,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
                             }else {
                                 ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
-
                             }
                         }else{
                             throw new BusinessException("四级地址编码为空!");
@@ -159,6 +170,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }
                     //仓配单需要运输
                     if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                        Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                            throw new BusinessException(wrapper.getMessage());
+                        }
                         //如果编辑订单后, 还是需要提供运输, 就要更新运输信息
                         ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
@@ -181,6 +196,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                     //入库
                     if("62".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
+                        Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
+                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                            throw new BusinessException(wrapper.getMessage());
+                        }
                         String saveSupportMessageResult = saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
                     }
                     //出库
@@ -199,6 +218,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         saveWarehouseMessage(ofcWarehouseInformation);
                     }
                 }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+                    Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                        throw new BusinessException(wrapper.getMessage());
+                    }
                     //删除仓配信息
                     OfcWarehouseInformation ofcWarehouseInformationForTrans = new OfcWarehouseInformation();
                     ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -448,5 +471,78 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
         return Wrapper.SUCCESS_MESSAGE;
     }
+
+    public Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompany().getContactCompanyName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getContactName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getPhone())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人电话名称未填写");
+        }
+        //二级地址还需特殊处理
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getProvinceName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址未选择");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getCityName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
+        }
+
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompany().getContactCompanyName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getContactName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getPhone())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人电话名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getProvinceName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getCityName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
+        }
+
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
+    /**
+     * 校验供应商联系人
+     */
+    public Wrapper<?> validateSupportContactMessage(CscSupplierInfoDto cscSupplierInfoDto){
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入供应商信息");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getContactName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getContactPhone())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人电话名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getProvinceName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getCityName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getAreaName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+
+    }
+
+
+
+
 
 }
