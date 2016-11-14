@@ -19,9 +19,9 @@ import javax.annotation.Resource;
 @SpringApplicationConfiguration(classes = XescmOfcApplication.class)
 @WebAppConfiguration
 public class XescmOfcApplicationTests {
-	@Resource
+	@Autowired
 	private DefaultMqProducer defaultMqProducer;
-	@Resource
+	@Autowired
 	private DefaultMqConsumer defaultMqConsumer;
 	@Resource
 	MqConfig mqConfig;

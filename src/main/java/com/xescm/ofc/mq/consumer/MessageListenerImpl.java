@@ -51,7 +51,11 @@ import static javafx.scene.input.KeyCode.M;
  */
 @Service
 public class MessageListenerImpl implements MessageListener {
-
+    @Override
+    public Action consume(Message message, ConsumeContext consumeContext) {
+        return null;
+    }
+/*
     @Autowired
     private OfcPlanFedBackService ofcPlanFedBackService;
 
@@ -86,5 +90,5 @@ public class MessageListenerImpl implements MessageListener {
 
         //如果想测试消息重投的功能,可以将Action.CommitMessage 替换成Action.ReconsumeLater
         return Action.CommitMessage;
-    }
+    }*/
 }
