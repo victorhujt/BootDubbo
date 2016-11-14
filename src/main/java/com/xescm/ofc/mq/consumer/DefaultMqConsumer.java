@@ -23,10 +23,10 @@ public class DefaultMqConsumer  {
 
     @Resource
     MessageListenerImpl messageListener;
-    public void MqConsumer() {
+    public void MqConsumer(String topic) {
         logger.info("XX消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(mqConfig.getTopic(), mqConfig.getTag(), new MessageListenerImpl());
+        consumer.subscribe(topic, mqConfig.getTag(), new MessageListenerImpl());
         consumer.start();
         //等待固定时间防止进程退出
         try {
