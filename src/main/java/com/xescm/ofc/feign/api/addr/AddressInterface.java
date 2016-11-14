@@ -1,4 +1,4 @@
-package com.xescm.ofc.feign.api;
+package com.xescm.ofc.feign.api.addr;
 
 import com.xescm.ofc.domain.dto.addr.QueryAddress;
 import com.xescm.uam.utils.wrap.Wrapper;

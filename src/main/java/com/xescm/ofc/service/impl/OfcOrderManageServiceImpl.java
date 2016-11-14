@@ -10,7 +10,7 @@ import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
+import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;

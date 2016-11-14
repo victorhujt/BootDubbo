@@ -4,7 +4,7 @@ import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.FeignCscGoodsAPI;
+import com.xescm.ofc.feign.api.csc.FeignCscGoodsAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
