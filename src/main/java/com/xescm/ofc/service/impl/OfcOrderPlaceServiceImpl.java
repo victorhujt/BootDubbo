@@ -304,10 +304,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
         ofcFundamentalInformation.setSecCustCode("001");
         ofcFundamentalInformation.setSecCustName("众品");
-        if(null == ofcFundamentalInformation.getCreationTime()){
-            ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
-            ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
-        }
+        ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
+        ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
         ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
         ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
