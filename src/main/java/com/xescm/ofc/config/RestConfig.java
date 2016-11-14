@@ -39,6 +39,20 @@ public class RestConfig {
      */
     private String addrUrl;
 
+    /**
+     * 分拣中心地址
+     * @return
+     */
+    private String dmsUrl;
+
+    public String getDmsUrl() {
+        return dmsUrl;
+    }
+
+    public void setDmsUrl(String dmsUrl) {
+        this.dmsUrl = dmsUrl;
+    }
+
     public String getAddrUrl() {
         return addrUrl;
     }

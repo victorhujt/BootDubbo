@@ -1,7 +1,12 @@
 package com.xescm.ofc;
 
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.mq.consumer.DefaultMqConsumer;
+import com.xescm.ofc.mq.producer.DefaultMqProducer;
+import com.xescm.ofc.utils.JSONUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -11,9 +16,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @SpringApplicationConfiguration(classes = XescmOfcApplication.class)
 @WebAppConfiguration
 public class XescmOfcApplicationTests {
+	@Autowired
+	private DefaultMqProducer defaultMqProducer;
+	@Autowired
+	private DefaultMqConsumer defaultMqConsumer;
 
 	@Test
-	public void contextLoads() {
+	public void sendMQTest() {
+		defaultMqProducer.toSendMQ(JSONUtils.objectToJson(new OfcFundamentalInformation()));
+	}
+
+	@Test
+	public void receiveMQTest(){
+		defaultMqConsumer.MqConsumer();
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.xescm.ofc.feign.api;
+package com.xescm.ofc.feign.api.rmc;
 
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.uam.utils.wrap.Wrapper;
