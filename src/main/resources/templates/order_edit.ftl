@@ -49,7 +49,6 @@
 </head>
 
 <body class="no-skin">
-<!-- #section:basics/navbar.layout -->
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -329,11 +328,7 @@
     </div>
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="supplierEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <div class="main-content">
-        <div class="main-content-inner">
-            <div class="page-content">
+
                 <div class="page-header">
                     <p>
                         基本信息
@@ -930,11 +925,7 @@
                     </div>
                     <button type="button" class="btn btn-info" id="bootbox-confirm" onclick="subOrder()">保存修改</button>
                 </div>
-            </div><!-- /.page-content -->
-        </div>
-    </div><!-- /.main-content -->
-</div><!-- /.main-container -->
-<!-- basic scripts -->
+
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
 <#--<link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>-->

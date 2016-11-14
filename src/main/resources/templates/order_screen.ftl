@@ -1,23 +1,12 @@
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
     <title>订单查询</title>
-
-    <meta name="description" content="Static &amp; Dynamic Tables">
-
     <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
-
 </head>
 
 <body class="no-skin">
 <!-- #section:basics/navbar.layout -->
 
 
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <!-- /section:basics/sidebar -->
-    <div class="main-content">
-        <div class="main-content-inner">
             <!-- /section:basics/content.breadcrumbs -->
             <div class="page-content">
                 <div class="page-header">
@@ -155,15 +144,8 @@
                             <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
                         </div>
                     </div>
-
-                <!-- PAGE CONTENT ENDS -->
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.page-content -->
-</div>
-</div><!-- /.main-content -->
-
-</div><!-- /.main-container -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
 
 
 <script type="text/javascript">

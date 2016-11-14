@@ -316,13 +316,7 @@
     </div>
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="supplierEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
-<#--
-<div class="main-container ace-save-state" id="main-container">
 
-
-    <!-- /section:basics/sidebar &ndash;&gt;
-    <div class="main-content">
-        <div class="main-content-inner">-->
             <div class="page-header">
                 <p>
                     基本信息
@@ -828,7 +822,6 @@
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportContactName" name="supportContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
                                                         </div>
                                                     </div>
                                                 </div>

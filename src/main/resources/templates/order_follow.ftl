@@ -3,12 +3,7 @@
     <!-- bootstrap & fontawesome -->
 </head>
 <body class="no-skin">
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <div class="main-content">
-        <div class="main-content-inner">
-            <div class="page-content">
-                <div class="row">
+
                     <div class="col-xs-12">
                         <div class="page-header">
                             <p>
@@ -207,11 +202,7 @@
 
                     </div><!-- /.col -->
 
-                </div><!-- /.row -->
-            </div><!-- /.page-content -->
-        </div>
-    </div><!-- /.main-content -->
-</div><!-- /.main-container -->
+
 
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
