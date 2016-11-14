@@ -5,6 +5,7 @@ import com.aliyun.openservices.ons.api.transaction.LocalTransactionExecuter;
 import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
 import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
 import com.xescm.ofc.config.MqConfig;
+import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.utils.MQUtil;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +51,7 @@ public class DefaultMqProducer {
     public void toSendMQ(String jsonStr) {
         System.out.println("Producer Started");
         Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
+
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {
             System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
