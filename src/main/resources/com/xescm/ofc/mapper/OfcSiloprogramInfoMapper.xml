@@ -63,6 +63,9 @@
         osp.order_code =#{orderCode}
       </if>
       AND oss.planned_single_state !='50'
+      <if test="ifFinished!=null and ifFinished!=''">
+        AND oss.planned_single_state !='40'
+      </if>
     </where>
   </select>
 

@@ -177,6 +177,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.13</version>
         </dependency>
+		<dependency>
+			<groupId>com.aliyun.openservices</groupId>
+			<artifactId>ons-client</artifactId>
+			<version>1.2.3</version>
+		</dependency>
     </dependencies>
 
 	<build>

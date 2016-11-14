@@ -6,6 +6,12 @@ import java.util.Date;
 @Table(name = "ofc_siloprogram_info")
 public class OfcSiloprogramInfo {
     /**
+     * 是否完成标记，查询时使用，非表中字段
+     */
+    @Transient
+    private String ifFinished;
+
+    /**
      * 计划单编号
      */
     @Id
@@ -1059,5 +1065,13 @@ public class OfcSiloprogramInfo {
      */
     public void setVoidTime(Date voidTime) {
         this.voidTime = voidTime;
+    }
+
+    public String getIfFinished() {
+        return ifFinished;
+    }
+
+    public void setIfFinished(String ifFinished) {
+        this.ifFinished = ifFinished;
     }
 }

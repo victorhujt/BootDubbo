@@ -63,6 +63,12 @@ public final class OrderConstEnum {
     public static final String FINNANCEPAYWAYBANK="6850";//银行支付
     public static final String FINNANCEPAYWAYACCOUNT="6860";//账户结算
 
+    public static final String YIDIAODU="10";  //已调度
+    public static final String YIFAYUN="20";  //已发运
+    public static final String YIDAODA="30";   //已到达
+    public static final String YIQIANSHOU="40";  //已签收
+    public static final String YIHUIDAN="50";  //已回单
+
     public OrderConstEnum() {
     }
 }

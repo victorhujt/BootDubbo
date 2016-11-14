@@ -66,6 +66,9 @@
         otp.order_code =#{orderCode}
       </if>
       AND ots.planned_single_state !='50'
+      <if test="ifFinished!=null and ifFinished!=''">
+        AND ots.planned_single_state !='40'
+      </if>
     </where>
   </select>
 
