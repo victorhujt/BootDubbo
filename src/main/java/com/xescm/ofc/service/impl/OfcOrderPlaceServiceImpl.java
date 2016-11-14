@@ -295,6 +295,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
     }
 
+    /**
+     * 更新并保存订单状态
+     * @param ofcOrderStatus
+     * @param ofcFundamentalInformation
+     * @param authResDtoByToken
+     */
     public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
@@ -304,6 +310,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
+
+    /**
+     * 添加运输订单
+     * @param ofcDistributionBasicInfo
+     * @param ofcFundamentalInformation
+     */
     public void addDistributionInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation){
         ofcFundamentalInformation.setSecCustCode("001");
         ofcFundamentalInformation.setSecCustName("众品");

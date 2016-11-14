@@ -9,6 +9,7 @@ public final class OrderConstEnum {
 
     public static final String WITHTHECITY="600";       //城配
     public static final String WITHTHETRUNK="601";      //干线
+    public static final String WITHTHEKABAN="602";      //卡班
 
     public static final String SALESOUTOFTHELIBRARY="610";      //销售出库
     public static final String TRANSFEROUTOFTHELIBRARY="611";        //调拨出库
