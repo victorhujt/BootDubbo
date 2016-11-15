@@ -36,9 +36,18 @@ public class MqConfig {
     private String secretKey;  //阿里云密钥
     private String topic;
     private String tag;
+    private String tfcCancelTag;
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
     private String onsAddr;  //阿里云地址
+
+    public String getTfcCancelTag() {
+        return tfcCancelTag;
+    }
+
+    public void setTfcCancelTag(String tfcCancelTag) {
+        this.tfcCancelTag = tfcCancelTag;
+    }
 
     public String getOnsAddr() {
         return onsAddr;

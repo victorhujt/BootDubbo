@@ -57,6 +57,19 @@ public class DefaultMqProducer {
             System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
         }
     }
+    /**
+     * MQ发送普通消息示例 Demo
+     */
+
+    public void toSendMQTfcCancelPlanOrder(String jsonStr) {
+        System.out.println("Producer Started");
+        Message message = new Message(mqConfig.getTopic(), mqConfig.getTfcCancelTag(),jsonStr.getBytes());
+
+        SendResult sendResult = producer().send(message);
+        if (sendResult != null) {
+            System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
+        }
+    }
 
     /**
      * MQ 发送事务消息示例 Demo

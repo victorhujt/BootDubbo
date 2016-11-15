@@ -25,7 +25,7 @@ import static com.xescm.ofc.enums.OrderConstEnum.*;
  */
 @Service
 @Transactional
-public class OfcPlanFedBackServiceImpl extends BaseService<OfcPlanFedBackCondition> implements OfcPlanFedBackService {
+public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     @Autowired
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;

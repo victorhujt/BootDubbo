@@ -12,9 +12,11 @@ import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.client.*;
+import com.xescm.ofc.model.dto.tfc.TransportDTO;
+import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
+import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.utils.*;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
@@ -83,6 +85,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcOrderScreenService ofcOrderScreenService;
     @Resource
     private CodeGenUtils codeGenUtils;
+    @Autowired
+    private DefaultMqProducer defaultMqProducer;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
@@ -95,6 +99,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE)&&reviewTag.equals("rereview")){
                 planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
+
+
                 logger.debug("作废计划单完成");
                 ofcOrderStatus.setOrderStatus(OrderConstEnum.PENDINGAUDIT);
                 ofcOrderStatus.setStatusDesc("反审核");
@@ -246,6 +252,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
                 ofcTraplanSourceStatus.setResourceAllocationStatus("30");
+                ofcTransplanInfoService.save(ofcTransplanInfo);
+                logger.debug("计划单信息保存成功");
+                ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
+                logger.debug("计划单最新状态保存成功");
+                ofcTransplanStatusService.save(ofcTransplanStatus);
+                logger.debug("计划单状态保存成功");
+                ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
+                //自动确认资源后，需要调用本接口进行推送。
+                ofcTransplanInfoToTfc(ofcTransplanInfo);
+                return;
             }
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
@@ -262,6 +278,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         //ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
     }
+
+
 
     /**
      * 创建仓储计划单
@@ -336,7 +354,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public void planCancle(String orderCode,String userId){
         List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
         for(int i=0;i<ofcTransplanInfoList.size();i++){
-            OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoList.get(i);
+            OfcTransplanInfo ofcTransplanInfo = ofcTransplanInfoList.get(i);
+           /* try {
+                defaultMqProducer.toSendMQTfcCancelPlanOrder(JSONUtils.objectToJson(ofcTransplanInfo.getPlanCode()));
+            }catch (Exception ex){
+                logger.error("运输计划单调用TFC取消端口出现异常",ex.getMessage());
+                throw new BusinessException("运输计划单调用TFC取消端口出现异常"+ex.getMessage());
+            }
+*/
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
             ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
             ofcTransplanStatus=ofcTransplanStatusService.selectOne(ofcTransplanStatus);
@@ -552,6 +577,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                         ofcTraplanSourceStatus.setResourceConfirmation(userName);
                         ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
+                        //向TFC推送
+                        ofcTransplanInfoToTfc(ofcTransplanInfo);
                     }
                     if(!PubUtils.trimAndNullAsEmpty(serviceProviderName).equals("")){
                         ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
@@ -563,6 +590,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         ofcTraplanSourceStatus.setServiceProviderContactPhone(serviceProviderContactPhone);
                     }
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
+
                 }
             } catch (Exception ex) {
                 throw new BusinessException("计划单状态更新异常！");
@@ -582,5 +610,83 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("服务商查询出错");
         }
         return rmcCompanyLists;
+    }
+
+    public void ofcTransplanInfoToTfc(OfcTransplanInfo ofcTransplanInfo) {
+        try{
+            TransportDTO transportDTO = new TransportDTO();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            transportDTO.setTransportNo(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getPlanCode()));//运输单号
+            transportDTO.setCreateTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getCreationTime())));//运输单生成时间
+            transportDTO.setBillType(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()));//运输单类型
+            transportDTO.setCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustCode()));//客户编码(委托方代码)
+//            transportDTO.setCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustName()));//客户名称（委托方名称）
+            transportDTO.setCustomerTel(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//客户联系方式
+            transportDTO.setFromTransportName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()));//运输单产生机构
+            transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getPickupTime())));//预计发货时间
+            transportDTO.setExpectedArriveTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getExpectedArrivedTime())));//预计到达时间
+            if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getWeight())){
+                transportDTO.setWeight(ofcTransplanInfo.getWeight().doubleValue());//重量
+            }
+            if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getQuantity())){
+                transportDTO.setQty(ofcTransplanInfo.getQuantity().doubleValue());//数量
+            }
+            if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getVolume())){
+                transportDTO.setVolume(ofcTransplanInfo.getVolume().doubleValue());//体积
+            }
+            if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getMoney())){
+                transportDTO.setMoney(ofcTransplanInfo.getMoney().doubleValue());//金额
+            }
+            transportDTO.setFromCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerCode()));//发货客户代码
+//            transportDTO.setFromCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerName()));//发货客户名称
+            transportDTO.setFromCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippingAddress()));//发货客户地址
+            transportDTO.setFromCustomer(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippingCustomerContact()));//发货客户联系人
+            transportDTO.setFromCustomerTle(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//发货客户联系电话
+            transportDTO.setFromProvince(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureProvince()));//出发省份
+            transportDTO.setFromCity(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureCity()));//出发城市
+            transportDTO.setFromDistrict(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureDistrict()));//出发区县
+            transportDTO.setFromTown(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationTown()));//出发乡镇
+            transportDTO.setToCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerCode()));//收货客户代码
+//            transportDTO.setToCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerName()));//收货客户名称
+            transportDTO.setToCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerAddress()));//收货客户地址
+            transportDTO.setToCustomer(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerContact()));//收货客户联系人
+            transportDTO.setToCustomerTle(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerContactPhone()));//收货客户联系电话
+            transportDTO.setToProvince(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationProvince()));//目的省份
+            transportDTO.setToCity(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationCity()));//目的城市
+            transportDTO.setToDistrict(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationDistrict()));//目的区县
+            transportDTO.setToTown(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationTown()));//目的乡镇
+            transportDTO.setToLon(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingAddressLongitude()));//收货地址经度
+            transportDTO.setToLat(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingAddressLatitude()));//收货地址纬度
+            transportDTO.setNotes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getNotes()));//备注
+            transportDTO.setMarketOrg(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProductGroup()));//产品组
+            transportDTO.setMarketDep(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleDepartment()));//销售部门
+            transportDTO.setMarketTeam(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleGroup()));//销售组
+            transportDTO.setMarketDepDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleDepartmentDesc()));//销售部门描述
+            transportDTO.setMarketTeamDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleGroupDesc()));//销售组描述
+            transportDTO.setTransportSource(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSingleSourceOfTransport()));//运输单来源
+            OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
+            ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+            List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
+            for(OfcPlannedDetail detail : ofcPlannedDetailList){
+                TransportDetailDTO transportDetailDTO = new TransportDetailDTO();
+                transportDetailDTO.setTransportNo(detail.getPlanCode());
+                transportDetailDTO.setItemCode(detail.getGoodsCode());
+                transportDetailDTO.setItemName(detail.getGoodsName());
+                transportDetailDTO.setQty(detail.getQuantity().doubleValue());
+                transportDetailDTO.setUom(detail.getUnit());
+                transportDetailDTO.setStandard(detail.getGoodsSpec());
+                transportDTO.getProductDetail().add(transportDetailDTO);
+            }
+            String json = JacksonUtil.toJsonWithFormat(transportDTO);
+            TransportDTO transportDTO1 = JacksonUtil.parseJsonWithFormat(json, TransportDTO.class);
+
+            defaultMqProducer.toSendMQ(json);
+            OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
+            ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+            ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
+            ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+        }catch (Exception ex){
+            throw new BusinessException("OFC推送TFC运输订单异常");
+        }
     }
 }
