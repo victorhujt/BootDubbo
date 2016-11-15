@@ -50,7 +50,7 @@ public class DefaultMqProducer {
 
     public void toSendMQ(String jsonStr) {
         System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
+         Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
 
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {
@@ -63,7 +63,7 @@ public class DefaultMqProducer {
 
     public void toSendMQTfcCancelPlanOrder(String jsonStr) {
         System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getTopic(), mqConfig.getTfcCancelTag(),jsonStr.getBytes());
+        Message message = new Message(mqConfig.getTfcCancelTopic(), mqConfig.getTfcCancelTag(),jsonStr.getBytes());
 
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {

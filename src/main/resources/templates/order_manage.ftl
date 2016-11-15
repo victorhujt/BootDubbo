@@ -126,7 +126,10 @@
                 </thead>
                 <tbody id="dataTbody"></tbody>
             </table>
-        </div>
+            <div class="row">
+                <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                </div>
+            </div>
 
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>

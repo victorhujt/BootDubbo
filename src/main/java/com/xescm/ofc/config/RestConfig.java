@@ -45,6 +45,20 @@ public class RestConfig {
      */
     private String dmsUrl;
 
+    /**
+     * 运输中心地址
+     * @return
+     */
+    private String tfcUrl;
+
+    public String getTfcUrl() {
+        return tfcUrl;
+    }
+
+    public void setTfcUrl(String tfcUrl) {
+        this.tfcUrl = tfcUrl;
+    }
+
     public String getDmsUrl() {
         return dmsUrl;
     }

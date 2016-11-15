@@ -26,7 +26,7 @@ public class DefaultMqConsumer  {
     public void MqConsumer() {
         logger.info("XX消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(mqConfig.getTopic(), mqConfig.getTag(), new MessageListenerImpl());
+        consumer.subscribe(mqConfig.getTfcCancelTopic(), mqConfig.getTfcCancelTag(), new MessageListenerImpl());
         consumer.start();
         //等待固定时间防止进程退出
         try {
