@@ -1,9 +1,11 @@
 package com.xescm.ofc.model.dto.tfc;
 
+import java.io.Serializable;
+
 /**
  * Created by sql on 2016/11/15.
  */
-public class TransportNoDTO {
+public class TransportNoDTO implements Serializable {
 
     private String transportNo;
 

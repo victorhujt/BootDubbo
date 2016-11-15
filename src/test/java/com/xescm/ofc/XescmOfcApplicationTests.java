@@ -23,7 +23,7 @@ public class XescmOfcApplicationTests {
 
 	@Test
 	public void sendMQTest() {
-		defaultMqProducer.toSendMQ(JSONUtils.objectToJson(new OfcFundamentalInformation()));
+		//defaultMqProducer.toSendMQ(JSONUtils.objectToJson(new OfcFundamentalInformation()));
 	}
 
 	@Test

@@ -106,7 +106,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE)&&reviewTag.equals("rereview")){
-                planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
+                //planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
 
 
                 logger.debug("作废计划单完成");
@@ -358,10 +358,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 TransportNoDTO transportNoDTO = new TransportNoDTO();
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
-                if(Response.ERROR_CODE == response.getResult()){
-                    throw new BusinessException(response.getMessage());
+                if(Response.ERROR_CODE == response.getCode()){
+                    logger.error("运输计划单调用TFC取消端口出现异常",response.getMessage());
+                    throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
                 }
-            }catch (Exception ex){
+            }
+            catch (Exception ex){
                 logger.error("运输计划单调用TFC取消端口出现异常",ex.getMessage());
                 throw new BusinessException("运输计划单调用TFC取消端口出现异常"+ex.getMessage());
             }
@@ -373,9 +375,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUZHONG)
                     || PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUWANCH)){
                 throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YITUISONG)){
+            }/*else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YITUISONG)){
                 throw new BusinessException("其是运输计划单，需调用【配送中心】运单取消接口");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")){
+            }*/else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")){
                 throw new BusinessException("状态有误");
             }
             ofcTransplanInfo.setVoidPersonnel(userId);
@@ -582,8 +584,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                         ofcTraplanSourceStatus.setResourceConfirmation(userName);
                         ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
-                        //向TFC推送
-                        ofcTransplanInfoToTfc(ofcTransplanInfoList);
+
                     }
                     if(!PubUtils.trimAndNullAsEmpty(serviceProviderName).equals("")){
                         ofcTraplanSourceStatus.setServiceProviderName(serviceProviderName);
@@ -595,10 +596,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         ofcTraplanSourceStatus.setServiceProviderContactPhone(serviceProviderContactPhone);
                     }
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
-
                 }
+                //向TFC推送
+                ofcTransplanInfoToTfc(ofcTransplanInfoList);
             } catch (Exception ex) {
-                throw new BusinessException("计划单状态更新异常！");
+                throw new BusinessException("计划单状态更新异常！"+ex.getMessage());
             }
         }else {
             throw new BusinessException("缺少计划单编号");
@@ -686,16 +688,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                defaultMqProducer.toSendMQ(json);
+                //defaultMqProducer.sendTransactionalMQ(json,ofcTransplanInfo.getPlanCode());
+
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+                defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
             }
-
-
         }catch (Exception ex){
-            throw new BusinessException("OFC推送TFC运输订单异常");
+            throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage());
         }
     }
 }

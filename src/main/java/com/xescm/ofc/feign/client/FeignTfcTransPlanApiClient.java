@@ -42,7 +42,7 @@ public class FeignTfcTransPlanApiClient {
         return res;
     }
 
-    public Response cancelTransport(@RequestParam TransportNoDTO transportNoDTO){
+    public Response cancelTransport(TransportNoDTO transportNoDTO){
         logger.debug("==>订单中心向TFC发送取消运输计划单请求 transportNoDTO={}", transportNoDTO);
         Response response = null;
         if(null == transportNoDTO){
