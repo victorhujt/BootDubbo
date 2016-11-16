@@ -43,6 +43,7 @@ public class MqConfig {
     private String accessKey;  //阿里云公钥
     private String secretKey;  //阿里云密钥
     private String topic;
+    private String tfcCancelTopic;
     private String TFCTopic;
     private String OFCTopic;
     private String tfcCancelTopic;
