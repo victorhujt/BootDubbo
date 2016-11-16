@@ -1,10 +1,8 @@
 package com.xescm.ofc;
 
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mq.consumer.DefaultMqConsumer;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
-import com.xescm.ofc.utils.JSONUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

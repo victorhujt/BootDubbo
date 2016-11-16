@@ -1,6 +1,7 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.uam.domain.dto.AuthResDto;

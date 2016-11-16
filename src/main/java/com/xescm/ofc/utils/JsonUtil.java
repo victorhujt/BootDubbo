@@ -6,8 +6,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-//import net.sf.json.JSONArray;
-//import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -17,6 +15,9 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+//import net.sf.json.JSONArray;
+//import net.sf.json.JSONObject;
 
 /**
  * @Description: Json工具类，使用jackson包处理

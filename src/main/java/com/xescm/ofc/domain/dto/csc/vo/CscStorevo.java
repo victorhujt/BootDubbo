@@ -1,8 +1,5 @@
 package com.xescm.ofc.domain.dto.csc.vo;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.io.Serializable;
 
 /**

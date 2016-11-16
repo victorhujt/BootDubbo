@@ -15,8 +15,6 @@
  */
 package com.xescm.ofc.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
 import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
@@ -24,7 +22,6 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
 import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
-import com.xescm.ofc.enums.MqTopicConstants;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;

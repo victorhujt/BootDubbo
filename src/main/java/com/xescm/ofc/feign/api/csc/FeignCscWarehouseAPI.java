@@ -3,7 +3,6 @@ package com.xescm.ofc.feign.api.csc;
 import com.xescm.ofc.domain.dto.csc.CscWarehouse;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
-import feign.Param;
 import feign.RequestLine;
 
 import java.util.List;

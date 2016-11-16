@@ -2,7 +2,6 @@ package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
-import com.xescm.ofc.domain.dto.csc.CscWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscWarehouseAPI;
 import com.xescm.ofc.feign.api.dms.FeignOfcDistributionAPI;
@@ -16,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * Created by lyh on 2016/11/14.

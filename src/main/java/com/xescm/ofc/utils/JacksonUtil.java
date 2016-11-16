@@ -1,6 +1,5 @@
 package com.xescm.ofc.utils;
 
-import com.google.common.collect.Lists;
 import org.codehaus.jackson.map.DeserializationConfig.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -8,7 +7,6 @@ import org.codehaus.jackson.type.JavaType;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 /**
  * Jackson Json 工具类
