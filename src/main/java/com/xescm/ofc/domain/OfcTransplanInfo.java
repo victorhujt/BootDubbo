@@ -94,6 +94,12 @@ public class OfcTransplanInfo {
     private String shippinCustomerCode;
 
     /**
+     * 发货客户代码
+     */
+    @Column(name = "shippin_customer_name")
+    private String shippinCustomerName;
+
+    /**
      * 发货客户地址
      */
     @Column(name = "shipping_address")
@@ -146,6 +152,12 @@ public class OfcTransplanInfo {
      */
     @Column(name = "receiving_customer_code")
     private String receivingCustomerCode;
+
+    /**
+     * 收货客户代码
+     */
+    @Column(name = "receiving_customer_name")
+    private String receivingCustomerName;
 
     /**
      * 收货客户地址
@@ -290,6 +302,22 @@ public class OfcTransplanInfo {
      */
     @Column(name = "void_time")
     private Date voidTime;
+
+    public String getShippinCustomerName() {
+        return shippinCustomerName;
+    }
+
+    public void setShippinCustomerName(String shippinCustomerName) {
+        this.shippinCustomerName = shippinCustomerName;
+    }
+
+    public String getReceivingCustomerName() {
+        return receivingCustomerName;
+    }
+
+    public void setReceivingCustomerName(String receivingCustomerName) {
+        this.receivingCustomerName = receivingCustomerName;
+    }
 
     /**
      * 获取计划单编号

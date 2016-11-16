@@ -109,7 +109,7 @@ public class DefaultMqProducer {
         tranProducerProperties.setProperty(PropertyKeyConst.ONSAddr, mqConfig.getOnsAddr());
         MQUtil.propertiesUtil(tranProducerProperties);
         //初始化事务消息Producer时,需要注册一个本地事务状态的的Checker
-        LocalTransactionCheckerImpl localTransactionChecker = new LocalTransactionCheckerImpl();
+        LocalTransactionCheckerImpl localTransactionChecker = LocalTransactionCheckerImpl.getInstance();
         TransactionProducer transactionProducer = ONSFactory.createTransactionProducer(tranProducerProperties, localTransactionChecker);
         transactionProducer.start();
         return transactionProducer;

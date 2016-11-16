@@ -8,6 +8,14 @@ import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
  * MQ 发送事务消息本地Check接口实现类
  */
 public class LocalTransactionCheckerImpl implements LocalTransactionChecker {
+    private LocalTransactionCheckerImpl(){}
+    private static LocalTransactionCheckerImpl localTransactionChecker ;
+    public static LocalTransactionCheckerImpl getInstance(){
+        if(localTransactionChecker == null){
+            localTransactionChecker = new LocalTransactionCheckerImpl();
+        }
+        return localTransactionChecker;
+    }
 
     /**
      * 本地事务Checker,详见: https://help.aliyun.com/document_detail/29548.html?spm=5176.doc35104.6.133.pJkthu

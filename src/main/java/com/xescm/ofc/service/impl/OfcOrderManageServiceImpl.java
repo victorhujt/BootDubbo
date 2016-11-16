@@ -106,7 +106,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE)&&reviewTag.equals("rereview")){
-                //planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
+                planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
 
 
                 logger.debug("作废计划单完成");
@@ -134,7 +134,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    }
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
@@ -205,7 +207,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
-            ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
+
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userId);
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);
@@ -261,6 +263,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
                 ofcTraplanSourceStatus.setResourceAllocationStatus("30");
             }
+            ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
+            ofcTransplanInfo.setShippinCustomerName(ofcDistributionBasicInfo.getConsignorName());
+            ofcTransplanInfo.setReceivingCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());
+            ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
             ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -598,7 +604,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
                 }
                 //向TFC推送
-                ofcTransplanInfoToTfc(ofcTransplanInfoList);
+                ofcTransplanInfoToTfc(ofcTransplanInfoList,userName);
             } catch (Exception ex) {
                 throw new BusinessException("计划单状态更新异常！"+ex.getMessage());
             }
@@ -619,7 +625,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return rmcCompanyLists;
     }
 
-    public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList) {
+    public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList,String userName) {
         List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
@@ -629,7 +635,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTO.setCreateTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getCreationTime())));//运输单生成时间
                 transportDTO.setBillType(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()));//运输单类型
                 transportDTO.setCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustCode()));//客户编码(委托方代码)
-//            transportDTO.setCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustName()));//客户名称（委托方名称）
+                transportDTO.setCustomerName(PubUtils.trimAndNullAsEmpty(userName));//客户名称（委托方名称）
                 transportDTO.setCustomerTel(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//客户联系方式
                 transportDTO.setFromTransportName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()));//运输单产生机构
                 transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getPickupTime())));//预计发货时间
@@ -647,23 +653,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     transportDTO.setMoney(ofcTransplanInfo.getMoney().doubleValue());//金额
                 }
                 transportDTO.setFromCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerCode()));//发货客户代码
-//            transportDTO.setFromCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerName()));//发货客户名称
+                transportDTO.setFromCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerName()));//发货客户名称
                 transportDTO.setFromCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippingAddress()));//发货客户地址
                 transportDTO.setFromCustomer(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippingCustomerContact()));//发货客户联系人
                 transportDTO.setFromCustomerTle(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//发货客户联系电话
                 transportDTO.setFromProvince(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureProvince()));//出发省份
                 transportDTO.setFromCity(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureCity()));//出发城市
                 transportDTO.setFromDistrict(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureDistrict()));//出发区县
-                transportDTO.setFromTown(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationTown()));//出发乡镇
                 transportDTO.setToCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerCode()));//收货客户代码
-//            transportDTO.setToCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerName()));//收货客户名称
+                transportDTO.setToCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerName()));//收货客户名称
                 transportDTO.setToCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerAddress()));//收货客户地址
                 transportDTO.setToCustomer(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerContact()));//收货客户联系人
                 transportDTO.setToCustomerTle(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerContactPhone()));//收货客户联系电话
                 transportDTO.setToProvince(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationProvince()));//目的省份
                 transportDTO.setToCity(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationCity()));//目的城市
                 transportDTO.setToDistrict(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationDistrict()));//目的区县
-                transportDTO.setToTown(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationTown()));//目的乡镇
                 transportDTO.setToLon(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingAddressLongitude()));//收货地址经度
                 transportDTO.setToLat(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingAddressLatitude()));//收货地址纬度
                 transportDTO.setNotes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getNotes()));//备注
@@ -688,13 +692,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                //defaultMqProducer.sendTransactionalMQ(json,ofcTransplanInfo.getPlanCode());
-
+                defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-                defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
             }
         }catch (Exception ex){
             throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage());

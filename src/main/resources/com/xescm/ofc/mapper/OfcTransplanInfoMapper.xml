@@ -19,6 +19,7 @@
     <result column="cubage" property="cubage" jdbcType="DECIMAL" />
     <result column="money" property="money" jdbcType="DECIMAL" />
     <result column="shippin_customer_code" property="shippinCustomerCode" jdbcType="VARCHAR" />
+    <result column="shippin_customer_name" property="shippinCustomerName" jdbcType="VARCHAR" />
     <result column="shipping_address" property="shippingAddress" jdbcType="VARCHAR" />
     <result column="shipping_customer_contact" property="shippingCustomerContact" jdbcType="VARCHAR" />
     <result column="customer_contact_phone" property="customerContactPhone" jdbcType="VARCHAR" />
@@ -28,6 +29,7 @@
     <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
     <result column="departure_place_code" jdbcType="VARCHAR" property="departurePlaceCode" />
     <result column="receiving_customer_code" property="receivingCustomerCode" jdbcType="VARCHAR" />
+    <result column="receiving_customer_name" property="receivingCustomerName" jdbcType="VARCHAR" />
     <result column="receiving_customer_address" property="receivingCustomerAddress" jdbcType="VARCHAR" />
     <result column="receiving_customer_contact" property="receivingCustomerContact" jdbcType="VARCHAR" />
     <result column="receiving_customer_contact_phone" property="receivingCustomerContactPhone" jdbcType="VARCHAR" />
