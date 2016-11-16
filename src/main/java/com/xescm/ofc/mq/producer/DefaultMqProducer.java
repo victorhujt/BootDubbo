@@ -50,7 +50,7 @@ public class DefaultMqProducer {
 
     public void toSendMQ(String jsonStr,String code) {
         System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
+        Message message = new Message(mqConfig.getTfcTransPlanTopic(), mqConfig.getTfcTransPlanTag(),jsonStr.getBytes());
         message.setKey(code);
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {

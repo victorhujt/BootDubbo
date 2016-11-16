@@ -14,9 +14,9 @@ import java.util.Properties;
 /**
  * Created by MT on 2016/11/11.
  */
-@Component
+//@Component
 public class DefaultMqConsumer  {
-    Logger logger = LoggerFactory.getLogger(DefaultMqConsumer.class);
+    /*Logger logger = LoggerFactory.getLogger(DefaultMqConsumer.class);
 
     @Resource
     MqConfig mqConfig;
@@ -44,7 +44,7 @@ public class DefaultMqConsumer  {
         consumerProperties.setProperty(PropertyKeyConst.SecretKey, mqConfig.getSecretKey());
         consumerProperties.setProperty(PropertyKeyConst.ONSAddr, "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
         return consumerProperties;
-    }
+    }*/
 
 
 }

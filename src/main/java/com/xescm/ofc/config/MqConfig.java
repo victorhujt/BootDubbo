@@ -53,6 +53,8 @@ public class MqConfig {
     private String onsAddr;  //阿里云地址
     private String tranTag;
     private String deliveryTag;
+    private String TfcTransPlanTopic;
+    private String TfcTransPlanTag;
 
     @Resource
     SchedulingSingleFedbackImpl schedulingSingleFedback;
@@ -71,6 +73,38 @@ public class MqConfig {
         consumerProperties.setProperty(PropertyKeyConst.SecretKey, secretKey);
         consumerProperties.setProperty(PropertyKeyConst.ONSAddr, "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
         return consumerProperties;
+    }
+
+    public String getTfcTransPlanTopic() {
+        return TfcTransPlanTopic;
+    }
+
+    public void setTfcTransPlanTopic(String tfcTransPlanTopic) {
+        TfcTransPlanTopic = tfcTransPlanTopic;
+    }
+
+    public String getTfcTransPlanTag() {
+        return TfcTransPlanTag;
+    }
+
+    public void setTfcTransPlanTag(String tfcTransPlanTag) {
+        TfcTransPlanTag = tfcTransPlanTag;
+    }
+
+    public String getTFCTopic() {
+        return TFCTopic;
+    }
+
+    public void setTFCTopic(String TFCTopic) {
+        this.TFCTopic = TFCTopic;
+    }
+
+    public String getOFCTopic() {
+        return OFCTopic;
+    }
+
+    public void setOFCTopic(String OFCTopic) {
+        this.OFCTopic = OFCTopic;
     }
 
     public String getTfcCancelTopic() {

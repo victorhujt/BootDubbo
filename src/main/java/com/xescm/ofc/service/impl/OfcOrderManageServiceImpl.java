@@ -91,8 +91,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
 
     @Autowired
-    private DefaultMqConsumer defaultMqConsumer;
-    @Autowired
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
 
     @Override
