@@ -48,9 +48,22 @@ public class DefaultMqProducer {
      * MQ发送普通消息示例 Demo
      */
 
-    public void toSendMQ(String jsonStr) {
+    public void toSendMQ(String jsonStr,String code) {
         System.out.println("Producer Started");
         Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
+        message.setKey(code);
+        SendResult sendResult = producer().send(message);
+        if (sendResult != null) {
+            System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
+        }
+    }
+    /**
+     * MQ发送普通消息示例 Demo
+     */
+
+    public void toSendMQTfcCancelPlanOrder(String jsonStr) {
+        System.out.println("Producer Started");
+        Message message = new Message(mqConfig.getTfcCancelTopic(), mqConfig.getTfcCancelTag(),jsonStr.getBytes());
 
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {
@@ -62,21 +75,14 @@ public class DefaultMqProducer {
      * MQ 发送事务消息示例 Demo
      */
 
-    public void sendTransactionalMQ(String jsonStr){
-        Properties tranProducerProperties = new Properties();
-        MQUtil.propertiesUtil(tranProducerProperties);
-        //初始化事务消息Producer时,需要注册一个本地事务状态的的Checker
-        LocalTransactionCheckerImpl localTransactionChecker = new LocalTransactionCheckerImpl();
-        TransactionProducer transactionProducer = ONSFactory.createTransactionProducer(tranProducerProperties, localTransactionChecker);
-        transactionProducer.start();
-
+    public void sendTransactionalMQ(String jsonStr,String code){
         Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(), jsonStr.getBytes());
-
-        SendResult sendResult = transactionProducer.send(message, new LocalTransactionExecuter() {
+        message.setKey(code);
+        SendResult sendResult = transactionProducer().send(message, new LocalTransactionExecuter() {
             public TransactionStatus execute(Message msg, Object arg) {
-                System.out.println("执行本地事务, 并根据本地事务的状态提交TransactionStatus.");
-                return TransactionStatus.CommitTransaction;
-            }
+                    System.out.println("执行本地事务, 并根据本地事务的状态提交TransactionStatus.");
+                    return TransactionStatus.CommitTransaction;
+                }
         }, null);
 
         System.out.println("Send transaction message success.");
@@ -94,6 +100,19 @@ public class DefaultMqProducer {
         Producer producer = ONSFactory.createProducer(producerProperties);
         producer.start();
         return producer;
+    }
+    private TransactionProducer transactionProducer(){
+        Properties tranProducerProperties = new Properties();
+        tranProducerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
+        tranProducerProperties.setProperty(PropertyKeyConst.AccessKey, mqConfig.getAccessKey());
+        tranProducerProperties.setProperty(PropertyKeyConst.SecretKey, mqConfig.getSecretKey());
+        tranProducerProperties.setProperty(PropertyKeyConst.ONSAddr, mqConfig.getOnsAddr());
+        MQUtil.propertiesUtil(tranProducerProperties);
+        //初始化事务消息Producer时,需要注册一个本地事务状态的的Checker
+        LocalTransactionCheckerImpl localTransactionChecker = new LocalTransactionCheckerImpl();
+        TransactionProducer transactionProducer = ONSFactory.createTransactionProducer(tranProducerProperties, localTransactionChecker);
+        transactionProducer.start();
+        return transactionProducer;
     }
 
 

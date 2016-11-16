@@ -45,7 +45,9 @@ public class MqConfig {
     private String topic;
     private String TFCTopic;
     private String OFCTopic;
+    private String tfcCancelTopic;
     private String tag;
+    private String tfcCancelTag;
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
     private String onsAddr;  //阿里云地址
@@ -69,6 +71,22 @@ public class MqConfig {
         consumerProperties.setProperty(PropertyKeyConst.SecretKey, secretKey);
         consumerProperties.setProperty(PropertyKeyConst.ONSAddr, "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
         return consumerProperties;
+    }
+
+    public String getTfcCancelTopic() {
+        return tfcCancelTopic;
+    }
+
+    public void setTfcCancelTopic(String tfcCancelTopic) {
+        this.tfcCancelTopic = tfcCancelTopic;
+    }
+
+    public String getTfcCancelTag() {
+        return tfcCancelTag;
+    }
+
+    public void setTfcCancelTag(String tfcCancelTag) {
+        this.tfcCancelTag = tfcCancelTag;
     }
 
     public String getOnsAddr() {

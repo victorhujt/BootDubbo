@@ -1,5 +1,6 @@
 package com.xescm.ofc.model.dto.tfc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -129,7 +130,7 @@ public class TransportDTO {
     private String transportSource;
 
 
-    private List<TransportDetailDTO> productDetail;
+    private List<TransportDetailDTO> productDetail = new ArrayList<>();
 
     public String getTransportNo() {
         return transportNo;

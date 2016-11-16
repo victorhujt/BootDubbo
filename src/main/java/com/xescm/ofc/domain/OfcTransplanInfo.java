@@ -17,7 +17,6 @@ public class OfcTransplanInfo {
      */
     @Id
     @Column(name = "plan_code")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String planCode;
 
     /**
