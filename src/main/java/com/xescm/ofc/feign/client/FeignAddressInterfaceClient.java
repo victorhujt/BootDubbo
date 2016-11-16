@@ -2,9 +2,7 @@ package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.addr.QueryAddress;
-import com.xescm.ofc.feign.api.AddressInterface;
-import com.xescm.ofc.feign.api.FeignCscCustomerAPI;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.ofc.feign.api.addr.AddressInterface;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;

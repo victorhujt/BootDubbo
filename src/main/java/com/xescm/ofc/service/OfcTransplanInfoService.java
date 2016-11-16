@@ -1,6 +1,5 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcSiloproStatus;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 
 import java.util.List;

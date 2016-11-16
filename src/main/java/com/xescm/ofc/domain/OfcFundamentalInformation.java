@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.persistence.Transient;
-import java.beans.*;
 import java.util.Date;
 
 @Table(name = "ofc_fundamental_information")

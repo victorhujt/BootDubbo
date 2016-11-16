@@ -1,7 +1,9 @@
 package com.xescm.ofc;
 
 import com.xescm.uam.domain.feign.FeignUamAPIClient;
-import com.xescm.uam.utils.jwt.*;
+import com.xescm.uam.utils.jwt.AppkeyLoader;
+import com.xescm.uam.utils.jwt.SimpleCORSFilter;
+import com.xescm.uam.utils.jwt.TokenUtils;
 import com.xescm.uam.web.interceptor.AuthApiInterceptor;
 import com.xescm.uam.web.interceptor.AuthViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;

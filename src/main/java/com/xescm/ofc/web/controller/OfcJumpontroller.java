@@ -103,4 +103,35 @@ public class OfcJumpontroller extends BaseController{
     public String planAllocation(Model model){
         return "plan_allocation";
     }
+
+    @RequestMapping(value="/ofc/tranLoad")
+    public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
+        List<RmcWarehouse> rmcWarehouseByCustCode = null;
+        List<CscStorevo> cscStoreListResult = null;
+        setDefaultModel(model);
+        try{
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            QueryStoreDto queryStoreDto = new QueryStoreDto();
+            queryStoreDto.setCustomerId(custId);
+            Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
+            cscStoreListResult = storeByCustomerId.getResult();
+        }catch (BusinessException ex){
+            logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            rmcWarehouseByCustCode = new ArrayList<>();
+        }catch (Exception ex){
+            logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
+            ex.printStackTrace();
+            rmcWarehouseByCustCode = new ArrayList<>();
+        }
+        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
+        map.put("cscStoreByCustId",cscStoreListResult);
+        return new ModelAndView("order_tranload");
+
+    }
 }

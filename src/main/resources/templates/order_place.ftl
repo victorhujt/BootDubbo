@@ -377,6 +377,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                           <div class="form-group" id="transBusinessTypeDiv">
+                               <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                               <div class="col-sm-6">
+                                   <div class="clearfix">
+                                       <select  id="businessType" name="businessType">
+                                           <option value="600">城配</option>
+                                           <option value="601">干线</option>
+                                           <option value="602">卡班</option>
+                                       </select>
+                                   </div>
+                               </div>
+                           </div>
                             <div class="form-group" id="businessTypeDiv" style="display: none">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                 <div class="col-sm-6">
@@ -915,8 +928,6 @@
 
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
-<#--<link rel="stylesheet" href="../components/chosen/chosen.css" />
-<script src="../components/chosen/chosen.jquery.js"></script>-->
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
 
@@ -2092,6 +2103,7 @@
             if($(this).children('option:selected').val() == '61'){//仓配订单
                 $("#provideTransportDiv").show();
                 $("#businessTypeDiv").show();
+//                $("#transBusinessTypeDiv").hide():
                 $('.storeLi').show();
                 $('.transLi').hide();
                 //$('#myTab4').children('li').first().addClass("active");
@@ -2114,6 +2126,7 @@
 
             }
             if($(this).children('option:selected').val() == '60'){//运输订单
+//                $("#transBusinessTypeDiv").show();
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();

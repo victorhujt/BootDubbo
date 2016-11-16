@@ -2,7 +2,6 @@ package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.utils.MyMapper;
-import tk.mybatis.mapper.common.Mapper;
 
 import java.util.Map;
 

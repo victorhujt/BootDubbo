@@ -1,4 +1,4 @@
-package com.xescm.ofc.feign.api;
+package com.xescm.ofc.feign.api.csc;
 
 import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;

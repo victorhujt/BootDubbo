@@ -1,6 +1,5 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcTransplanNewstatus;
 import com.xescm.ofc.domain.OfcTransplanStatus;
 
 /**

@@ -1,18 +1,13 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
-import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ydx on 2016/10/12.

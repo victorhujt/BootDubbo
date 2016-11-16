@@ -1,11 +1,7 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcSiloproSourceStatus;
 import com.xescm.ofc.domain.OfcSiloproStatus;
 import com.xescm.ofc.mapper.OfcSiloproStatusMapper;
-import com.xescm.ofc.mapper.OfcSiloprogramInfoMapper;
-import com.xescm.ofc.mapper.OfcTransplanStatusMapper;
-import com.xescm.ofc.service.OfcSiloproSourceStatusService;
 import com.xescm.ofc.service.OfcSiloproStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
