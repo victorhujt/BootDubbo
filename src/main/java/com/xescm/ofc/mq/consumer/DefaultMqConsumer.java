@@ -22,11 +22,11 @@ public class DefaultMqConsumer  {
     MqConfig mqConfig;
 
     @Resource
-    MessageListenerImpl messageListener;
+    SchedulingSingleFedbackImpl schedulingSingleFedback;
     public void MqConsumer(String topic) {
         logger.info("XX消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(topic, mqConfig.getTag(), new MessageListenerImpl());
+        consumer.subscribe(topic, mqConfig.getTag(), schedulingSingleFedback);
         consumer.start();
         //等待固定时间防止进程退出
         try {

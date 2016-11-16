@@ -33,6 +33,7 @@ public class XescmOfcApplicationTests {
 	@Test
 	public void receiveMQTest(){
 		defaultMqConsumer.MqConsumer(mqConfig.getTopic());
+
 	}
 
 }

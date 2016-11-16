@@ -16,9 +16,17 @@
 package com.xescm.ofc.config;
 
 
+import com.aliyun.openservices.ons.api.Consumer;
+import com.aliyun.openservices.ons.api.ONSFactory;
+import com.aliyun.openservices.ons.api.PropertyKeyConst;
+import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
+import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
+import java.util.Properties;
 /**
  * <p>Title:    MqConfig. </p>
  * <p>Description TODO </p>
@@ -35,10 +43,33 @@ public class MqConfig {
     private String accessKey;  //阿里云公钥
     private String secretKey;  //阿里云密钥
     private String topic;
+    private String TFCTopic;
+    private String OFCTopic;
     private String tag;
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
     private String onsAddr;  //阿里云地址
+    private String tranTag;
+    private String deliveryTag;
+
+    @Resource
+    SchedulingSingleFedbackImpl schedulingSingleFedback;
+
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
+    public Consumer consumer(){
+        System.out.println("yyyyyyyyy消费开始---:");
+        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
+        consumer.subscribe(topic, null, schedulingSingleFedback);
+        return consumer;
+    }
+    private Properties consumerProperties(){
+        Properties consumerProperties = new Properties();
+        consumerProperties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
+        consumerProperties.setProperty(PropertyKeyConst.AccessKey, accessKey);
+        consumerProperties.setProperty(PropertyKeyConst.SecretKey, secretKey);
+        consumerProperties.setProperty(PropertyKeyConst.ONSAddr, "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
+        return consumerProperties;
+    }
 
     public String getOnsAddr() {
         return onsAddr;
@@ -96,7 +127,23 @@ public class MqConfig {
         this.topic = topic;
     }
 
-//    public static final String TOPIC = "Ray_MQ_demoTest";
+    public String getTranTag() {
+        return tranTag;
+    }
+
+    public void setTranTag(String tranTag) {
+        this.tranTag = tranTag;
+    }
+
+    public String getDeliveryTag() {
+        return deliveryTag;
+    }
+
+    public void setDeliveryTag(String deliveryTag) {
+        this.deliveryTag = deliveryTag;
+    }
+
+    //    public static final String TOPIC = "Ray_MQ_demoTest";
 //    public static final String PRODUCER_ID = "PID_demoTest";
 //    public static final String CONSUMER_ID = "CID_MQ_demoTest";
 //    public static final String ACCESS_KEY = "LTAI3W8se7p0zD5b";
