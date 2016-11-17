@@ -1713,8 +1713,10 @@
             });
             if(consignorout==""){
                 alert("请至少选择一行");
+            }else{
+
+                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             }
-            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
         });
 
         $("#goodsEnter").click(function () {
@@ -1782,9 +1784,9 @@
                 alert("请至少选择一行");
             }else{
                 $("#goodsInfoListDiv").html(goodsInfoListDiv);
+                $("#goodsListDiv").fadeOut("slow");
             }
             validateForm();
-            $("#goodsListDiv").fadeOut("slow");
         });
 
         $("#contactinEnter").click(function () {
@@ -1854,8 +1856,10 @@
             });
             if(consignorin==""){
                 alert("请至少选择一行");
+            }else{
+
+                $("#consignorListDiv").fadeOut("slow");
             }
-            $("#consignorListDiv").fadeOut("slow");
 
         });
 
@@ -1908,8 +1912,9 @@
             });
             if(support==""){
                 alert("请至少选择一行");
+            }else{
+                $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             }
-            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
         });
 
         $("#goodcheck").change(function () {
