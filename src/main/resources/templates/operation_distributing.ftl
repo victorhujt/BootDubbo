@@ -49,7 +49,8 @@
             <label class="control-label col-label no-padding-right" for="supplierCode">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="客户名称" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                    <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="客户名称"/>
+                    <button type="button" class="btn btn-minier btn-inverse no-padding-right" id="consignorListDivBlock">选择</button>
                 </div>
             </div>
             <label class="control-label col-label no-padding-right" for="supplierCode">配送仓库</label>
@@ -77,6 +78,7 @@
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="名称"  />
+                        <button type="button" class="btn btn-minier btn-inverse no-padding-right" id="consignorListDivBlock">选择</button>
                     </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="supplierCode">联系人</label>
