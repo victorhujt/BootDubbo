@@ -301,10 +301,11 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#notes").val(orderDTO.notes);
-        $("#departurePlace" ).val(orderDTO.departureProvince
-                + orderDTO.departureCity
-                + orderDTO.departureDistrict
-                + orderDTO.departureTowns);
+        var departurePlace = (orderDTO.departureProvince
+        + orderDTO.departureCity
+        + orderDTO.departureDistrict
+        + orderDTO.departureTowns).replace(/null/,"");
+        $("#departurePlace" ).val();
         $("#destination").val(orderDTO.destinationProvince
                 + orderDTO.destinationCity
                 + orderDTO.destinationDistrict

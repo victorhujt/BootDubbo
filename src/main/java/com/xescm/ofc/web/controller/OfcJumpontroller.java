@@ -104,6 +104,10 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
+    @RequestMapping(value = "/ofc/operationDistributing")
+    public String operationDistributing(Model model){
+        return "operation_distributing";
+    }
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;

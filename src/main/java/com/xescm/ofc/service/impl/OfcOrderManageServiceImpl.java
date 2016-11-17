@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -57,8 +58,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
-    @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
     @Autowired
@@ -91,9 +90,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
 
     @Autowired
-    private DefaultMqConsumer defaultMqConsumer;
-    @Autowired
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
+    @Autowired
+    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
@@ -262,10 +261,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
                 ofcTraplanSourceStatus.setResourceAllocationStatus("30");
             }
+
             ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
             ofcTransplanInfo.setShippinCustomerName(ofcDistributionBasicInfo.getConsignorName());
+
+
             ofcTransplanInfo.setReceivingCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());
             ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
+
+            String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
+            BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2]))).divide(BigDecimal.valueOf(1000000));
+            ofcTransplanInfo.setVolume(volume);
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
             ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -653,15 +659,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTO.setFromCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerCode()));//发货客户代码
                 transportDTO.setFromCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippinCustomerName()));//发货客户名称
-                transportDTO.setFromCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippingAddress()));//发货客户地址
+                transportDTO.setFromCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureTowns()+ofcTransplanInfo.getShippingAddress()));//发货客户地址
                 transportDTO.setFromCustomer(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getShippingCustomerContact()));//发货客户联系人
                 transportDTO.setFromCustomerTle(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//发货客户联系电话
                 transportDTO.setFromProvince(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureProvince()));//出发省份
                 transportDTO.setFromCity(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureCity()));//出发城市
                 transportDTO.setFromDistrict(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureDistrict()));//出发区县
+//                transportDTO.setFromCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDepartureTowns()+ofcTransplanInfo.getDe));
                 transportDTO.setToCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerCode()));//收货客户代码
                 transportDTO.setToCustomerName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerName()));//收货客户名称
-                transportDTO.setToCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerAddress()));//收货客户地址
+                transportDTO.setToCustomerAddress(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationTown()+ofcTransplanInfo.getReceivingCustomerAddress()));//收货客户地址
                 transportDTO.setToCustomer(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerContact()));//收货客户联系人
                 transportDTO.setToCustomerTle(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getReceivingCustomerContactPhone()));//收货客户联系电话
                 transportDTO.setToProvince(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getDestinationProvince()));//目的省份
@@ -685,7 +692,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     transportDetailDTO.setItemCode(detail.getGoodsCode());
                     transportDetailDTO.setItemName(detail.getGoodsName());
                     transportDetailDTO.setQty(detail.getQuantity().doubleValue());
+                    transportDetailDTO.setWeight(detail.getWeight().doubleValue());
+                    transportDetailDTO.setVolume(detail.getCubage().doubleValue());
+                    transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
+                    transportDetailDTO.setMoney(123456.7);
                     transportDetailDTO.setUom(detail.getUnit());
+                    transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
                     transportDetailDTO.setStandard(detail.getGoodsSpec());
                     transportDTO.getProductDetail().add(transportDetailDTO);
                 }

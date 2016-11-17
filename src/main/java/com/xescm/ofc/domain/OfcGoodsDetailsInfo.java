@@ -103,6 +103,36 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "oper_time")
     private Date operTime;
 
+    private BigDecimal weight;
+
+    private BigDecimal cubage;
+
+    private Integer totalBox;
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
+    public BigDecimal getCubage() {
+        return cubage;
+    }
+
+    public void setCubage(BigDecimal cubage) {
+        this.cubage = cubage;
+    }
+
+    public Integer getTotalBox() {
+        return totalBox;
+    }
+
+    public void setTotalBox(Integer totalBox) {
+        this.totalBox = totalBox;
+    }
+
     /**
      * 货品类别
      */
