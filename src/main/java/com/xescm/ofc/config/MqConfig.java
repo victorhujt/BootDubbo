@@ -20,7 +20,6 @@ import com.aliyun.openservices.ons.api.Consumer;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
-import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

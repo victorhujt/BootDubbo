@@ -1,8 +1,6 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcSiloproNewstatus;
 import com.xescm.ofc.domain.OfcSiloproSourceStatus;
-import com.xescm.ofc.service.OfcSiloproNewstatusService;
 import com.xescm.ofc.service.OfcSiloproSourceStatusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

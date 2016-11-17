@@ -11,15 +11,14 @@ import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.PrimaryGenerater;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
+import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.xescm.uam.utils.wrap.Wrapper;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;

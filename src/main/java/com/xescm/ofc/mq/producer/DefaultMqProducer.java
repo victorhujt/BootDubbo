@@ -5,7 +5,6 @@ import com.aliyun.openservices.ons.api.transaction.LocalTransactionExecuter;
 import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
 import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.utils.MQUtil;
 import org.springframework.stereotype.Component;
 

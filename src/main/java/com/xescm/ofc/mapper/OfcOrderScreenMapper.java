@@ -1,8 +1,7 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderScreenCondition;
+import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.utils.MyMapper;
 
 import java.util.List;
