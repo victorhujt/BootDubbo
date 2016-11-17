@@ -369,14 +369,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
                 if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("运输计划单调用TFC取消端口出现异常:message",response.getMessage());
-                    logger.error("运输计划单调用TFC取消端口出现异常:result",response.getResult());
+                    logger.error("TMS已经在执行,您无法取消,请联系管理员!:message",response.getMessage());
+                    logger.error("TMS已经在执行,您无法取消,请联系管理员!:result",response.getResult());
                     throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
                 }
             }
             catch (Exception ex){
                 logger.error("运输计划单调用TFC取消端口出现异常",ex.getMessage());
-                throw new BusinessException("运输计划单调用TFC取消端口出现异常");
+                throw new BusinessException(ex.getMessage());
             }
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
             ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());

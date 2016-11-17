@@ -161,105 +161,15 @@
                            aria-labelledby="gbox_grid-table">
                         <thead>
                         <tr class="ui-jqgrid-labels" role="row">
-                            <th id="grid-table_cb" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 35px;">
-                                <div id="jqgh_grid-table_cb"><input role="checkbox" id="cb_grid-table" class="cbox"
-                                                                    type="checkbox"><span class="s-ico"
-                                                                                          style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_subgrid" role="columnheader"
-                                class="ui-th-column ui-th-ltr ui-state-default" style="width: 25px;">
-                                <div id="jqgh_grid-table_subgrid"><span class="s-ico" style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_myac" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 80px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                           style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_myac" class="ui-jqgrid-sortable"><span class="s-ico"
-                                                                                                style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_id" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 65px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                           style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_id" class="ui-jqgrid-sortable">ID<span class="s-ico"
-                                                                                                style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_sdate" role="columnheader"
-                                class="ui-th-column ui-th-ltr ui-state-default" style="width: 98px;"><span
-                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                    style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_sdate" class="ui-jqgrid-sortable">Last Sales<span class="s-ico"
-                                                                                                           style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_name" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 164px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                            style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_name" class="ui-jqgrid-sortable">Name<span class="s-ico"
-                                                                                                    style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_stock" role="columnheader"
-                                class="ui-th-column ui-th-ltr ui-state-default" style="width: 76px;"><span
-                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                    style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_stock" class="ui-jqgrid-sortable">Stock<span class="s-ico"
-                                                                                                      style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_ship" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 98px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                           style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_ship" class="ui-jqgrid-sortable">Ship via<span class="s-ico"
-                                                                                                        style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_note" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 164px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                            style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_note" class="ui-jqgrid-sortable">Notes<span class="s-ico"
-                                                                                                     style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                     </table>
@@ -267,7 +177,7 @@
             </div>
             <div class="ui-jqgrid-bdiv" style="height: 250px; width: 823px;">
                 <div style="position:relative;">
-                    <div></div>
+
                     <table id="grid-table" tabindex="0" role="presentation" aria-multiselectable="true"
                            aria-labelledby="gbox_grid-table" class="ui-jqgrid-btable ui-common-table"
                            style="width: 805px;">
