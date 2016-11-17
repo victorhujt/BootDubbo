@@ -311,6 +311,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
         //如果订单类型是卡班订单, 则向DMS推送该订单
         if(OrderConstEnum.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
+            ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
             Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException("向分拣中心推送卡班订单失败");

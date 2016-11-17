@@ -2,6 +2,7 @@
     <title>城配下单</title>
 </head>
 <body>
+
 <div class="col-xs-9">
     <button class="btn btn-white btn-info btn-bold btn-interval" id="">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
@@ -18,7 +19,8 @@
         收发货方档案
     </button>
 </div>
-
+<div class="page-header">
+</div>
 <form id="" method="post" class="form-horizontal" role="form" >
     <div class="col-xs-12">
         <div class="form-group">
@@ -63,6 +65,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="page-header">
     </div>
     <div class="row">
         <span style="float: left">发货方</span>
