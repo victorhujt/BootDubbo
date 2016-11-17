@@ -70,7 +70,7 @@ public class MqConfig {
         consumerProperties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
         consumerProperties.setProperty(PropertyKeyConst.AccessKey, accessKey);
         consumerProperties.setProperty(PropertyKeyConst.SecretKey, secretKey);
-        consumerProperties.setProperty(PropertyKeyConst.ONSAddr, "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
+        consumerProperties.setProperty(PropertyKeyConst.ONSAddr, onsAddr);
         return consumerProperties;
     }
 

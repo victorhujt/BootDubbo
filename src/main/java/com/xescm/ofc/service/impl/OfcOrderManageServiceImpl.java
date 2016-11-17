@@ -691,10 +691,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     transportDetailDTO.setTransportNo(detail.getPlanCode());
                     transportDetailDTO.setItemCode(detail.getGoodsCode());
                     transportDetailDTO.setItemName(detail.getGoodsName());
-                    transportDetailDTO.setQty(detail.getQuantity().doubleValue());
-                    transportDetailDTO.setWeight(detail.getWeight().doubleValue());
-                    transportDetailDTO.setVolume(detail.getCubage().doubleValue());
-                    transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setQty(0.0);
+                    }else{
+                        transportDetailDTO.setQty(detail.getQuantity().doubleValue());
+                    }
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setWeight(0.0);
+                    }else{
+                        transportDetailDTO.setWeight(detail.getWeight().doubleValue());
+                    }
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setVolume(0.0);
+                    }else{
+                        transportDetailDTO.setVolume(detail.getCubage().doubleValue());
+                    }
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setPrice(0.0);
+                    }else{
+                        transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
+                    }
                     transportDetailDTO.setMoney(123456.7);
                     transportDetailDTO.setUom(detail.getUnit());
                     transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
@@ -703,7 +719,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
+                System.out.println("订单中心向运输中心开始推送运输订单");
                 defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
+                System.out.println("订单中心向运输中心推送运输订单成功");
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);

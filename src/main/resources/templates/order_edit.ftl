@@ -544,7 +544,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="cubage" name="cubage" <#if orderInfo.cubage?? >value="${orderInfo.cubage}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)
+                                                                            <input id="cubage" name="cubage" <#if orderInfo.cubage?? >value="${orderInfo.cubage}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:m)
                                                                         </div>
                                                                     </div>
                                                                 </div>

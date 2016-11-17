@@ -76,8 +76,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
-
-                String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
+                String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode().trim());
+                if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustOrderCode()) == ""){
+                    orderCodeByCustOrderCode = "";
+                }
                 if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
                     ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
                     //"SO"+ PrimaryGenerater.getInstance()
