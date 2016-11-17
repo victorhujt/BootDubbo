@@ -16,5 +16,8 @@
     <result column="production_batch" property="productionBatch" jdbcType="VARCHAR" />
     <result column="production_time" property="productionTime" jdbcType="TIMESTAMP" />
     <result column="invalid_time" property="invalidTime" jdbcType="TIMESTAMP" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="total_box" property="totalBox" jdbcType="INTEGER" />
   </resultMap>
 </mapper>

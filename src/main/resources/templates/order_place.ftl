@@ -1332,8 +1332,10 @@
         jsonStr.consigneeName = $("#consigneeName").val();
         jsonStr.consignorContactCode = $("#consignorContactCode").val();
         jsonStr.consignorContactName = $("#consignorContactName").val();
+        jsonStr.consignorContactPhone = $("#consignorPhone").val();
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
+        jsonStr.consignorContactPhone = $("#consigneePhone").val();
 
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
@@ -1794,7 +1796,7 @@
                 var production_batch = tdArr.eq(7).children().val();//    批次
                 var production_time = tdArr.eq(8).children().val();//    生产日期
                 var invalid_time = tdArr.eq(9).children().val();//    失效日期
-                ;
+
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
