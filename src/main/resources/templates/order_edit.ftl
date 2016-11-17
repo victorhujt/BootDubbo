@@ -982,7 +982,7 @@
                     required:true
                 },
                 custOrderCode:{//ofc_url
-                    required:true,
+
                     maxlength: 30,
                     remote:{
                         url : ofc_url + "/ofc/checkCustOrderCode",
@@ -1007,7 +1007,7 @@
                     required:true
                 },
                 custOrderCode:{
-                    required: "请输入客户订单编号",
+
                     maxlength: "超过最大长度",
                     remote: "该客户订单编号已经存在"
                 },
@@ -1306,8 +1306,10 @@
         jsonStr.consigneeName = $("#consigneeName").val();
         jsonStr.consignorContactCode = $("#consignorContactCode").val();
         jsonStr.consignorContactName = $("#consignorContactName").val();
+        jsonStr.consignorContactPhone = $("#consignorPhone").val();
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
+        jsonStr.consigneeContactPhone = $("#consigneePhone").val();
 
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');

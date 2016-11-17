@@ -108,6 +108,9 @@ public class OfcOrderDTO {
     private String consigneeContactName;
     private String consignorType;
     private String consigneeType;
+    private String consignorContactPhone;
+    private String consigneeContactPhone;
+
 
 
 //    private String orderCode;
@@ -156,6 +159,22 @@ public class OfcOrderDTO {
 //    private String operator;
 //    private Date operTime;
 
+
+    public String getConsignorContactPhone() {
+        return consignorContactPhone;
+    }
+
+    public void setConsignorContactPhone(String consignorContactPhone) {
+        this.consignorContactPhone = consignorContactPhone;
+    }
+
+    public String getConsigneeContactPhone() {
+        return consigneeContactPhone;
+    }
+
+    public void setConsigneeContactPhone(String consigneeContactPhone) {
+        this.consigneeContactPhone = consigneeContactPhone;
+    }
 
     public String getSelfCustOrderCode() {
         return selfCustOrderCode;
