@@ -575,7 +575,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         if(businessType.equals("600") || businessType.equals("601")){
                             OrderScreenCondition condition=new OrderScreenCondition();
                             condition.setOrderCode(ofcTransplanInfo.getOrderCode());
-                            String status=ofcOrderScreenService.orderScreen(condition).get(0).getOrderStatus();
+                            String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
                             if(PubUtils.trimAndNullAsEmpty(status).equals("")){
                                 throw new BusinessException("订单状态更新异常！");
                             }else if(!status.equals(ALREADYEXAMINE)
