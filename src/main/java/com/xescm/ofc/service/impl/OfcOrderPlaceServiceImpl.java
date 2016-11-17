@@ -64,6 +64,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
+        OfcFinanceInformation  ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
         ofcFundamentalInformation.setCreationTime(new Date());
         ofcFundamentalInformation.setCreator(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());

@@ -179,7 +179,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
                     if(!(orderStatus.getLastedOperTime().toString().equals(ofcSchedulingSingleFeedbackCondition.getCreateTime().toString()))
-                            ||!(orderStatus.getNotes().endsWith("调度"))){
+                            || !(orderStatus.getNotes().endsWith("调度"))){
                         orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
                                 +" "+"订单已调度");
