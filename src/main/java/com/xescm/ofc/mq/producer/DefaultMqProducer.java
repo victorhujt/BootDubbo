@@ -6,6 +6,7 @@ import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
 import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.utils.MQUtil;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -88,6 +89,7 @@ public class DefaultMqProducer {
     }
 
 
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
     private Producer producer(){
         Properties producerProperties = new Properties();
         producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
@@ -97,7 +99,7 @@ public class DefaultMqProducer {
 
         MQUtil.propertiesUtil(producerProperties);
         Producer producer = ONSFactory.createProducer(producerProperties);
-        producer.start();
+        // producer.start();
         return producer;
     }
     private TransactionProducer transactionProducer(){
@@ -113,7 +115,6 @@ public class DefaultMqProducer {
         transactionProducer.start();
         return transactionProducer;
     }
-
 
 
 }
