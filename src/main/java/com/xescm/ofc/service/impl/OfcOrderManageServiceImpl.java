@@ -702,17 +702,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else{
                         transportDetailDTO.setQty(detail.getQuantity().doubleValue());
                     }
-                    if(null == detail.getQuantity()){
+                    if(null == detail.getWeight()){
                         transportDetailDTO.setWeight(0.0);
                     }else{
                         transportDetailDTO.setWeight(detail.getWeight().doubleValue());
                     }
-                    if(null == detail.getQuantity()){
+                    if(null == detail.getCubage()){
                         transportDetailDTO.setVolume(0.0);
                     }else{
                         transportDetailDTO.setVolume(detail.getCubage().doubleValue());
                     }
-                    if(null == detail.getQuantity()){
+                    if(null == detail.getUnitPrice()){
                         transportDetailDTO.setPrice(0.0);
                     }else{
                         transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
@@ -721,6 +721,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     transportDetailDTO.setUom(detail.getUnit());
                     if(null == detail.getTotalBox()){
                         detail.setTotalBox(666);
+                    }else{
+                        detail.setTotalBox(detail.getTotalBox());
                     }
                     transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
                     transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
@@ -737,7 +739,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
             }
         }catch (Exception ex){
-            throw new BusinessException("OFC推送TFC运输订单异常");
+            throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage(),ex);
         }
     }
 }
