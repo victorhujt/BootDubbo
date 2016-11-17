@@ -90,6 +90,117 @@ public class OfcFinanceInformation {
     private Date operTime;
 
     /**
+     * 是否打印发票(电商)
+     */
+    @Column(name = "print_invoice")
+    private String printInvoice;
+
+    /**
+     * 买家支付方式(电商)
+     */
+    @Column(name = "buyer_payment_method")
+    private String buyerPaymentMethod;
+
+    /**
+     * 是否保价(电商)
+     */
+    private String insure;
+
+    /**
+     * 保价金额(电商)
+     */
+    @Column(name = "insure_value")
+    private String insureValue;
+
+    /**
+     * 是否上门提货
+     */
+    @Column(name = "pick_up_goods")
+    private String pickUpGoods;
+
+    /**
+     * 上门提货费用
+     */
+    @Column(name = "home_delivery_fee")
+    private BigDecimal homeDeliveryFee;
+
+    /**
+     * 货物保险费用
+     */
+    @Column(name = "cargo_insurance_fee")
+    private BigDecimal cargoInsuranceFee;
+
+    /**
+     * 保险金额
+     */
+    private BigDecimal insurance;
+
+    /**
+     * 是否二次配送
+     */
+    @Column(name = "two_distribution")
+    private String twoDistribution;
+
+    /**
+     * 二次配送费用
+     */
+    @Column(name = "two_distribution_fee")
+    private BigDecimal twoDistributionFee;
+
+    /**
+     * 是否签单返回
+     */
+    @Column(name = "return_list")
+    private String returnList;
+
+    /**
+     * 签单返回费用
+     */
+    @Column(name = "return_list_fee")
+    private BigDecimal returnListFee;
+
+    /**
+     * 费用支付方
+     */
+    @Column(name = "expense_payment_party")
+    private String expensePaymentParty;
+
+    /**
+     * 支付方式
+     */
+    private String payment;
+
+    /**
+     * 现结金额
+     */
+    @Column(name = "current_amount")
+    private BigDecimal currentAmount;
+
+    /**
+     * 到付金额
+     */
+    @Column(name = "to_pay_amount")
+    private BigDecimal toPayAmount;
+
+    /**
+     * 回付金额
+     */
+    @Column(name = "return_amount")
+    private BigDecimal returnAmount;
+
+    /**
+     * 月结金额
+     */
+    @Column(name = "monthly_amount")
+    private BigDecimal monthlyAmount;
+
+    /**
+     * 运费
+     */
+    private BigDecimal luggage;
+
+
+    /**
      * 获取服务费
      *
      * @return service_charge - 服务费
@@ -321,5 +432,347 @@ public class OfcFinanceInformation {
      */
     public void setOperTime(Date operTime) {
         this.operTime = operTime;
+    }
+
+    /**
+     * 获取是否打印发票(电商)
+     *
+     * @return print_invoice - 是否打印发票(电商)
+     */
+    public String getPrintInvoice() {
+        return printInvoice;
+    }
+
+    /**
+     * 设置是否打印发票(电商)
+     *
+     * @param printInvoice 是否打印发票(电商)
+     */
+    public void setPrintInvoice(String printInvoice) {
+        this.printInvoice = printInvoice;
+    }
+
+    /**
+     * 获取买家支付方式(电商)
+     *
+     * @return buyer_payment_method - 买家支付方式(电商)
+     */
+    public String getBuyerPaymentMethod() {
+        return buyerPaymentMethod;
+    }
+
+    /**
+     * 设置买家支付方式(电商)
+     *
+     * @param buyerPaymentMethod 买家支付方式(电商)
+     */
+    public void setBuyerPaymentMethod(String buyerPaymentMethod) {
+        this.buyerPaymentMethod = buyerPaymentMethod;
+    }
+
+    /**
+     * 获取是否保价(电商)
+     *
+     * @return insure - 是否保价(电商)
+     */
+    public String getInsure() {
+        return insure;
+    }
+
+    /**
+     * 设置是否保价(电商)
+     *
+     * @param insure 是否保价(电商)
+     */
+    public void setInsure(String insure) {
+        this.insure = insure;
+    }
+
+    /**
+     * 获取保价金额(电商)
+     *
+     * @return insure_value - 保价金额(电商)
+     */
+    public String getInsureValue() {
+        return insureValue;
+    }
+
+    /**
+     * 设置保价金额(电商)
+     *
+     * @param insureValue 保价金额(电商)
+     */
+    public void setInsureValue(String insureValue) {
+        this.insureValue = insureValue;
+    }
+
+    /**
+     * 获取是否上门提货
+     *
+     * @return pick_up_goods - 是否上门提货
+     */
+    public String getPickUpGoods() {
+        return pickUpGoods;
+    }
+
+    /**
+     * 设置是否上门提货
+     *
+     * @param pickUpGoods 是否上门提货
+     */
+    public void setPickUpGoods(String pickUpGoods) {
+        this.pickUpGoods = pickUpGoods;
+    }
+
+    /**
+     * 获取上门提货费用
+     *
+     * @return home_delivery_fee - 上门提货费用
+     */
+    public BigDecimal getHomeDeliveryFee() {
+        return homeDeliveryFee;
+    }
+
+    /**
+     * 设置上门提货费用
+     *
+     * @param homeDeliveryFee 上门提货费用
+     */
+    public void setHomeDeliveryFee(BigDecimal homeDeliveryFee) {
+        this.homeDeliveryFee = homeDeliveryFee;
+    }
+
+    /**
+     * 获取货物保险费用
+     *
+     * @return cargo_insurance_fee - 货物保险费用
+     */
+    public BigDecimal getCargoInsuranceFee() {
+        return cargoInsuranceFee;
+    }
+
+    /**
+     * 设置货物保险费用
+     *
+     * @param cargoInsuranceFee 货物保险费用
+     */
+    public void setCargoInsuranceFee(BigDecimal cargoInsuranceFee) {
+        this.cargoInsuranceFee = cargoInsuranceFee;
+    }
+
+    /**
+     * 获取保险金额
+     *
+     * @return insurance - 保险金额
+     */
+    public BigDecimal getInsurance() {
+        return insurance;
+    }
+
+    /**
+     * 设置保险金额
+     *
+     * @param insurance 保险金额
+     */
+    public void setInsurance(BigDecimal insurance) {
+        this.insurance = insurance;
+    }
+
+    /**
+     * 获取是否二次配送
+     *
+     * @return two_distribution - 是否二次配送
+     */
+    public String getTwoDistribution() {
+        return twoDistribution;
+    }
+
+    /**
+     * 设置是否二次配送
+     *
+     * @param twoDistribution 是否二次配送
+     */
+    public void setTwoDistribution(String twoDistribution) {
+        this.twoDistribution = twoDistribution;
+    }
+
+    /**
+     * 获取二次配送费用
+     *
+     * @return two_distribution_fee - 二次配送费用
+     */
+    public BigDecimal getTwoDistributionFee() {
+        return twoDistributionFee;
+    }
+
+    /**
+     * 设置二次配送费用
+     *
+     * @param twoDistributionFee 二次配送费用
+     */
+    public void setTwoDistributionFee(BigDecimal twoDistributionFee) {
+        this.twoDistributionFee = twoDistributionFee;
+    }
+
+    /**
+     * 获取是否签单返回
+     *
+     * @return return_list - 是否签单返回
+     */
+    public String getReturnList() {
+        return returnList;
+    }
+
+    /**
+     * 设置是否签单返回
+     *
+     * @param returnList 是否签单返回
+     */
+    public void setReturnList(String returnList) {
+        this.returnList = returnList;
+    }
+
+    /**
+     * 获取签单返回费用
+     *
+     * @return return_list_fee - 签单返回费用
+     */
+    public BigDecimal getReturnListFee() {
+        return returnListFee;
+    }
+
+    /**
+     * 设置签单返回费用
+     *
+     * @param returnListFee 签单返回费用
+     */
+    public void setReturnListFee(BigDecimal returnListFee) {
+        this.returnListFee = returnListFee;
+    }
+
+    /**
+     * 获取费用支付方
+     *
+     * @return expense_payment_party - 费用支付方
+     */
+    public String getExpensePaymentParty() {
+        return expensePaymentParty;
+    }
+
+    /**
+     * 设置费用支付方
+     *
+     * @param expensePaymentParty 费用支付方
+     */
+    public void setExpensePaymentParty(String expensePaymentParty) {
+        this.expensePaymentParty = expensePaymentParty;
+    }
+
+    /**
+     * 获取支付方式
+     *
+     * @return payment - 支付方式
+     */
+    public String getPayment() {
+        return payment;
+    }
+
+    /**
+     * 设置支付方式
+     *
+     * @param payment 支付方式
+     */
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    /**
+     * 获取现结金额
+     *
+     * @return current_amount - 现结金额
+     */
+    public BigDecimal getCurrentAmount() {
+        return currentAmount;
+    }
+
+    /**
+     * 设置现结金额
+     *
+     * @param currentAmount 现结金额
+     */
+    public void setCurrentAmount(BigDecimal currentAmount) {
+        this.currentAmount = currentAmount;
+    }
+
+    /**
+     * 获取到付金额
+     *
+     * @return to_pay_amount - 到付金额
+     */
+    public BigDecimal getToPayAmount() {
+        return toPayAmount;
+    }
+
+    /**
+     * 设置到付金额
+     *
+     * @param toPayAmount 到付金额
+     */
+    public void setToPayAmount(BigDecimal toPayAmount) {
+        this.toPayAmount = toPayAmount;
+    }
+
+    /**
+     * 获取回付金额
+     *
+     * @return return_amount - 回付金额
+     */
+    public BigDecimal getReturnAmount() {
+        return returnAmount;
+    }
+
+    /**
+     * 设置回付金额
+     *
+     * @param returnAmount 回付金额
+     */
+    public void setReturnAmount(BigDecimal returnAmount) {
+        this.returnAmount = returnAmount;
+    }
+
+    /**
+     * 获取月结金额
+     *
+     * @return monthly_amount - 月结金额
+     */
+    public BigDecimal getMonthlyAmount() {
+        return monthlyAmount;
+    }
+
+    /**
+     * 设置月结金额
+     *
+     * @param monthlyAmount 月结金额
+     */
+    public void setMonthlyAmount(BigDecimal monthlyAmount) {
+        this.monthlyAmount = monthlyAmount;
+    }
+
+    /**
+     * 获取运费
+     *
+     * @return luggage - 运费
+     */
+    public BigDecimal getLuggage() {
+        return luggage;
+    }
+
+    /**
+     * 设置运费
+     *
+     * @param luggage 运费
+     */
+    public void setLuggage(BigDecimal luggage) {
+        this.luggage = luggage;
     }
 }

@@ -104,6 +104,35 @@ public class OfcGoodsDetailsInfo {
     private Date operTime;
 
     /**
+     * 货品类别
+     */
+    @Column(name = "goods_category")
+    private String goodsCategory;
+
+    /**
+     * 包装
+     */
+    private String pack;
+
+    /**
+     * 数量单价
+     */
+    @Column(name = "quantity_unit_price")
+    private BigDecimal quantityUnitPrice;
+
+    /**
+     * 重量单价
+     */
+    @Column(name = "weight_unit_price")
+    private BigDecimal weightUnitPrice;
+
+    /**
+     * 体积单价
+     */
+    @Column(name = "volume_unit_price")
+    private BigDecimal volumeUnitPrice;
+
+    /**
      * 获取货品代码
      *
      * @return goods_code - 货品代码
