@@ -47,8 +47,8 @@ public class SchedulingSingleFedbackImpl extends BaseController implements Messa
     @Override
     public Action consume(Message msg, ConsumeContext consumeContext) {
         Logger logger = LoggerFactory.getLogger(SchedulingSingleFedbackImpl.class);
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        String userName=authResDtoByToken.getUamUser().getUserName();
+        //AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        String userName="";//authResDtoByToken.getUamUser().getUserName();
         String message = new String(msg.getBody());
         String topicName = msg.getTopic();
         if(!PubUtils.isNull(message)&&!PubUtils.isNull(topicName)){

@@ -39,6 +39,9 @@
     <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
     <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="plate_number" jdbcType="VARCHAR" property="plateNumber" />
+    <result column="driver_name" jdbcType="VARCHAR" property="driverName" />
+    <result column="contact_number" jdbcType="VARCHAR" property="contactNumber" />
     <result column="base_id" jdbcType="VARCHAR" property="baseId" />
     <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
     <result column="creator" property="creator" jdbcType="VARCHAR" />
@@ -171,6 +174,15 @@
       </if>
       <if test="orderCode != null" >
         order_code = #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="plateNumber != null" >
+        plate_number = #{plateNumber,jdbcType=INTEGER},
+      </if>
+      <if test="driverName != null" >
+        driver_name = #{driverName,jdbcType=INTEGER},
+      </if>
+      <if test="contactNumber != null" >
+        contact_number = #{contactNumber,jdbcType=INTEGER},
       </if>
       <if test="baseId != null" >
         base_id = #{baseId,jdbcType=INTEGER},
