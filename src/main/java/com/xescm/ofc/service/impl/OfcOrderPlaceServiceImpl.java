@@ -39,6 +39,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
+    private OfcFinanceInformationService ofcFinanceInformationService;
+    @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
@@ -125,6 +127,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }
                         //运输订单
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
+                        ofcFinanceInformation=upOfcFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
+                        ofcFinanceInformationService.save(ofcFinanceInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
                     }else{
@@ -334,6 +338,19 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
         return ofcWarehouseInformation;
     }
+
+    public OfcFinanceInformation upOfcFinanceInformation(OfcFinanceInformation ofcFinanceInformation
+            ,OfcFundamentalInformation ofcFundamentalInformation){
+        /*ofcWarehouseInformation.setSupportCode("001");
+        ofcWarehouseInformation.setSupportName("众品");*/
+        ofcFinanceInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        ofcFinanceInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
+        ofcFinanceInformation.setCreator(ofcFundamentalInformation.getCreator());
+        ofcFinanceInformation.setOperTime(ofcFundamentalInformation.getOperTime());
+        ofcFinanceInformation.setOperator(ofcFundamentalInformation.getOperator());
+        return ofcFinanceInformation;
+    }
+
 
     /**
      * 下单或编辑时在订单中心本地保存客户订单中的货品信息
