@@ -713,8 +713,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }
                     transportDetailDTO.setMoney(123456.7);
                     transportDetailDTO.setUom(detail.getUnit());
+                    if(null == detail.getTotalBox()){
+                        detail.setTotalBox(666);
+                    }
                     transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
-                    transportDetailDTO.setStandard(detail.getGoodsSpec());
+                    transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
                     transportDTO.getProductDetail().add(transportDetailDTO);
                 }
                 transportDTOList.add(transportDTO);
@@ -728,7 +731,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
             }
         }catch (Exception ex){
-            throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage());
+            throw new BusinessException("OFC推送TFC运输订单异常");
         }
     }
 }
