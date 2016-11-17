@@ -103,35 +103,21 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "oper_time")
     private Date operTime;
 
+    /**
+     * 重量
+     */
     private BigDecimal weight;
 
+    /**
+     * 体积
+     */
     private BigDecimal cubage;
 
+    /**
+     * 合计标准箱
+     */
+    @Column(name = "total_box")
     private Integer totalBox;
-
-    public BigDecimal getWeight() {
-        return weight;
-    }
-
-    public void setWeight(BigDecimal weight) {
-        this.weight = weight;
-    }
-
-    public BigDecimal getCubage() {
-        return cubage;
-    }
-
-    public void setCubage(BigDecimal cubage) {
-        this.cubage = cubage;
-    }
-
-    public Integer getTotalBox() {
-        return totalBox;
-    }
-
-    public void setTotalBox(Integer totalBox) {
-        this.totalBox = totalBox;
-    }
 
     /**
      * 货品类别
@@ -430,5 +416,149 @@ public class OfcGoodsDetailsInfo {
      */
     public void setOperTime(Date operTime) {
         this.operTime = operTime;
+    }
+
+    /**
+     * 获取重量
+     *
+     * @return weight - 重量
+     */
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    /**
+     * 设置重量
+     *
+     * @param weight 重量
+     */
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
+    /**
+     * 获取体积
+     *
+     * @return cubage - 体积
+     */
+    public BigDecimal getCubage() {
+        return cubage;
+    }
+
+    /**
+     * 设置体积
+     *
+     * @param cubage 体积
+     */
+    public void setCubage(BigDecimal cubage) {
+        this.cubage = cubage;
+    }
+
+    /**
+     * 获取合计标准箱
+     *
+     * @return total_box - 合计标准箱
+     */
+    public Integer getTotalBox() {
+        return totalBox;
+    }
+
+    /**
+     * 设置合计标准箱
+     *
+     * @param totalBox 合计标准箱
+     */
+    public void setTotalBox(Integer totalBox) {
+        this.totalBox = totalBox;
+    }
+
+    /**
+     * 获取货品类别
+     *
+     * @return goods_category - 货品类别
+     */
+    public String getGoodsCategory() {
+        return goodsCategory;
+    }
+
+    /**
+     * 设置货品类别
+     *
+     * @param goodsCategory 货品类别
+     */
+    public void setGoodsCategory(String goodsCategory) {
+        this.goodsCategory = goodsCategory;
+    }
+
+    /**
+     * 获取包装
+     *
+     * @return pack - 包装
+     */
+    public String getPack() {
+        return pack;
+    }
+
+    /**
+     * 设置包装
+     *
+     * @param pack 包装
+     */
+    public void setPack(String pack) {
+        this.pack = pack;
+    }
+
+    /**
+     * 获取数量单价
+     *
+     * @return quantity_unit_price - 数量单价
+     */
+    public BigDecimal getQuantityUnitPrice() {
+        return quantityUnitPrice;
+    }
+
+    /**
+     * 设置数量单价
+     *
+     * @param quantityUnitPrice 数量单价
+     */
+    public void setQuantityUnitPrice(BigDecimal quantityUnitPrice) {
+        this.quantityUnitPrice = quantityUnitPrice;
+    }
+
+    /**
+     * 获取重量单价
+     *
+     * @return weight_unit_price - 重量单价
+     */
+    public BigDecimal getWeightUnitPrice() {
+        return weightUnitPrice;
+    }
+
+    /**
+     * 设置重量单价
+     *
+     * @param weightUnitPrice 重量单价
+     */
+    public void setWeightUnitPrice(BigDecimal weightUnitPrice) {
+        this.weightUnitPrice = weightUnitPrice;
+    }
+
+    /**
+     * 获取体积单价
+     *
+     * @return volume_unit_price - 体积单价
+     */
+    public BigDecimal getVolumeUnitPrice() {
+        return volumeUnitPrice;
+    }
+
+    /**
+     * 设置体积单价
+     *
+     * @param volumeUnitPrice 体积单价
+     */
+    public void setVolumeUnitPrice(BigDecimal volumeUnitPrice) {
+        this.volumeUnitPrice = volumeUnitPrice;
     }
 }
