@@ -264,11 +264,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
             ofcTransplanInfo.setShippinCustomerName(ofcDistributionBasicInfo.getConsignorName());
-
-
+            ofcTransplanInfo.setCustomerContactPhone(ofcDistributionBasicInfo.getConsignorContactPhone());
             ofcTransplanInfo.setReceivingCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());
             ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
-
+            ofcTransplanInfo.setReceivingCustomerContactPhone(ofcDistributionBasicInfo.getConsigneeContactPhone());
             String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
             BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2]))).divide(BigDecimal.valueOf(1000000));
             ofcTransplanInfo.setVolume(volume);
@@ -370,13 +369,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
                 if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("运输计划单调用TFC取消端口出现异常",response.getMessage());
+                    logger.error("运输计划单调用TFC取消端口出现异常:message",response.getMessage());
+                    logger.error("运输计划单调用TFC取消端口出现异常:result",response.getResult());
                     throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
                 }
             }
             catch (Exception ex){
                 logger.error("运输计划单调用TFC取消端口出现异常",ex.getMessage());
-                throw new BusinessException("运输计划单调用TFC取消端口出现异常"+ex.getMessage());
+                throw new BusinessException("运输计划单调用TFC取消端口出现异常");
             }
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
             ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
@@ -691,26 +691,47 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     transportDetailDTO.setTransportNo(detail.getPlanCode());
                     transportDetailDTO.setItemCode(detail.getGoodsCode());
                     transportDetailDTO.setItemName(detail.getGoodsName());
-                    transportDetailDTO.setQty(detail.getQuantity().doubleValue());
-                    transportDetailDTO.setWeight(detail.getWeight().doubleValue());
-                    transportDetailDTO.setVolume(detail.getCubage().doubleValue());
-                    transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setQty(0.0);
+                    }else{
+                        transportDetailDTO.setQty(detail.getQuantity().doubleValue());
+                    }
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setWeight(0.0);
+                    }else{
+                        transportDetailDTO.setWeight(detail.getWeight().doubleValue());
+                    }
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setVolume(0.0);
+                    }else{
+                        transportDetailDTO.setVolume(detail.getCubage().doubleValue());
+                    }
+                    if(null == detail.getQuantity()){
+                        transportDetailDTO.setPrice(0.0);
+                    }else{
+                        transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
+                    }
                     transportDetailDTO.setMoney(123456.7);
                     transportDetailDTO.setUom(detail.getUnit());
+                    if(null == detail.getTotalBox()){
+                        detail.setTotalBox(666);
+                    }
                     transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
-                    transportDetailDTO.setStandard(detail.getGoodsSpec());
+                    transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
                     transportDTO.getProductDetail().add(transportDetailDTO);
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
+                System.out.println("订单中心向运输中心开始推送运输订单");
                 defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
+                System.out.println("订单中心向运输中心推送运输订单成功");
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
             }
         }catch (Exception ex){
-            throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage());
+            throw new BusinessException("OFC推送TFC运输订单异常");
         }
     }
 }

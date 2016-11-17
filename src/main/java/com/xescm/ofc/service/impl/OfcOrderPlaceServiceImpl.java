@@ -79,8 +79,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
-
-                String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
+                String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode().trim());
+                if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustOrderCode()) == ""){
+                    orderCodeByCustOrderCode = "";
+                }
                 if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
                     ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
                     //"SO"+ PrimaryGenerater.getInstance()
@@ -149,7 +151,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                 }else{
-                    throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");
+                    throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
                 //现在订单编辑没有对客户订单编号进行校验
@@ -216,7 +218,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }else if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
                     Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                        throw new BusinessException(wrapper.getMessage());
+                        throw new BusinessException("校验联系人信息失败");
                     }
                     //删除仓配信息
                     OfcWarehouseInformation ofcWarehouseInformationForTrans = new OfcWarehouseInformation();
