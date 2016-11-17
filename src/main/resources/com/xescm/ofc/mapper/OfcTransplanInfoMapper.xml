@@ -54,6 +54,8 @@
     <result column="create_personnel" property="createPersonnel" jdbcType="VARCHAR" />
     <result column="void_personnel" property="voidPersonnel" jdbcType="VARCHAR" />
     <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
+    <result column="merchandiser" jdbcType="VARCHAR" property="merchandiser" />
+    <result column="transport_type" jdbcType="VARCHAR" property="transportType" />
   </resultMap>
 
   <!--非作废运输计划单列表查询-->

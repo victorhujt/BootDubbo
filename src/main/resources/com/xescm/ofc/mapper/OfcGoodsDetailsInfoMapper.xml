@@ -23,6 +23,11 @@
     <result column="weight" property="weight" jdbcType="DECIMAL" />
     <result column="cubage" property="cubage" jdbcType="DECIMAL" />
     <result column="total_box" property="totalBox" jdbcType="INTEGER" />
+    <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+    <result column="pack" property="pack" jdbcType="VARCHAR" />
+    <result column="quantity_unit_price" property="quantityUnitPrice" jdbcType="DECIMAL" />
+    <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
+    <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
   </resultMap>
 
   <!--订单货品列表查询-->

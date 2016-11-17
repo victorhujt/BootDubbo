@@ -157,7 +157,7 @@ public class OfcTransplanInfo {
     private String receivingCustomerCode;
 
     /**
-     * 收货客户代码
+     * 收货客户名称
      */
     @Column(name = "receiving_customer_name")
     private String receivingCustomerName;
@@ -306,21 +306,16 @@ public class OfcTransplanInfo {
     @Column(name = "void_time")
     private Date voidTime;
 
-    public String getShippinCustomerName() {
-        return shippinCustomerName;
-    }
+    /**
+     * 开单员
+     */
+    private String merchandiser;
 
-    public void setShippinCustomerName(String shippinCustomerName) {
-        this.shippinCustomerName = shippinCustomerName;
-    }
-
-    public String getReceivingCustomerName() {
-        return receivingCustomerName;
-    }
-
-    public void setReceivingCustomerName(String receivingCustomerName) {
-        this.receivingCustomerName = receivingCustomerName;
-    }
+    /**
+     * 运输类型
+     */
+    @Column(name = "transport_type")
+    private String transportType;
 
     /**
      * 获取计划单编号
@@ -1175,5 +1170,77 @@ public class OfcTransplanInfo {
 
     public void setIfFinished(String ifFinished) {
         this.ifFinished = ifFinished;
+    }
+
+    /**
+     * 获取发货客户名称
+     *
+     * @return shippin_customer_name - 发货客户名称
+     */
+    public String getShippinCustomerName() {
+        return shippinCustomerName;
+    }
+
+    /**
+     * 设置发货客户名称
+     *
+     * @param shippinCustomerName 发货客户名称
+     */
+    public void setShippinCustomerName(String shippinCustomerName) {
+        this.shippinCustomerName = shippinCustomerName;
+    }
+
+    /**
+     * 获取收货客户名称
+     *
+     * @return receiving_customer_name - 收货客户名称
+     */
+    public String getReceivingCustomerName() {
+        return receivingCustomerName;
+    }
+
+    /**
+     * 设置收货客户名称
+     *
+     * @param receivingCustomerName 收货客户名称
+     */
+    public void setReceivingCustomerName(String receivingCustomerName) {
+        this.receivingCustomerName = receivingCustomerName;
+    }
+
+    /**
+     * 获取开单员
+     *
+     * @return merchandiser - 开单员
+     */
+    public String getMerchandiser() {
+        return merchandiser;
+    }
+
+    /**
+     * 设置开单员
+     *
+     * @param merchandiser 开单员
+     */
+    public void setMerchandiser(String merchandiser) {
+        this.merchandiser = merchandiser;
+    }
+
+    /**
+     * 获取运输类型
+     *
+     * @return transport_type - 运输类型
+     */
+    public String getTransportType() {
+        return transportType;
+    }
+
+    /**
+     * 设置运输类型
+     *
+     * @param transportType 运输类型
+     */
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
     }
 }

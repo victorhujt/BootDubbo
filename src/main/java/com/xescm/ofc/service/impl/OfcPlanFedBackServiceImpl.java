@@ -83,8 +83,9 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 orderStatus=new OfcOrderStatus();
                                 orderStatus.setOrderCode(orderCode);
                                 orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                orderStatus.setLastedOperTime(new Date());
-                                orderStatus.setStatusDesc(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                orderStatus.setLastedOperTime(traceTime);
+                                orderStatus.setStatusDesc("已完成");
+                                orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"订单已完成");
                                 orderStatus.setOperator(userName);
                             }
