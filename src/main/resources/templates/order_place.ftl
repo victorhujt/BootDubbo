@@ -378,7 +378,7 @@
                                 </div>
                             </div>
 
-                           <div class="form-group" id="transBusinessTypeDiv">
+                           <div class="form-group" id="transBusinessTypeDiv" style="display: block">
                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                <div class="col-sm-6">
                                    <div class="clearfix">
@@ -2124,9 +2124,10 @@
         $("#orderTypeSel").change(function () {
             $("#businessType").addClass("chosen-select form-control");
             if($(this).children('option:selected').val() == '61'){//仓配订单
+                //$("#transBusinessTypeDiv").hide():
                 $("#provideTransportDiv").show();
                 $("#businessTypeDiv").show();
-//                $("#transBusinessTypeDiv").hide():
+
                 $('.storeLi').show();
                 $('.transLi').hide();
                 //$('#myTab4').children('li').first().addClass("active");
@@ -2147,9 +2148,10 @@
                 $("#dropdown14").removeClass("active");
 
 
+
             }
             if($(this).children('option:selected').val() == '60'){//运输订单
-//                $("#transBusinessTypeDiv").show();
+                //$("#transBusinessTypeDiv").show();
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();

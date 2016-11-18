@@ -93,6 +93,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
+    @Autowired
+    private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
@@ -289,12 +291,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.debug("计划单状态保存成功");
             ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
             logger.debug("计划单资源状态保存成功");
+
+            //如果订单类型是卡班订单, 则向DMS推送该运输计划单
+            //这里需要调整
+            if(OrderConstEnum.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
+                ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
+                OfcDistributionBasicInfo distributionBasicInfo = new OfcDistributionBasicInfo();
+                Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
+                if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                    throw new BusinessException("向分拣中心推送卡班订单失败");
+                }
+            }
         } catch (IllegalAccessException e) {
             throw new BusinessException(e.getMessage());
         } catch (InvocationTargetException e) {
             throw new BusinessException(e.getMessage());
         }
-        //ofcTransplanInfo.setPlanCode(ofcFundamentalInformation.getOrderCode().replace("SO","TP"));
     }
 
 
