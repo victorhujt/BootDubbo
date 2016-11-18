@@ -181,6 +181,8 @@
                                             <!--货品明细-->
 
                                             <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
+                                            <button type="button" style="float:right;" class="btn btn-minier btn-inverse"
+                                                    id="bootbox-confirm">添加一行</button>
                                             <label class="control-label" style="float:right;" for="name">kg</label>
                                             <label id="weightCount" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label class="control-label" style="float:right;" for="name">重量合计：</label>
