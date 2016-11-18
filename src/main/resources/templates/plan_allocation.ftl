@@ -121,7 +121,7 @@
             <form id="goodsSelConditionForm2" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
-                    <div class="col-sm-6">
+                    <div class="col-sm-3">
                         <div class="clearfix">
                             <div class="docs-methods">
                                 <input id="city-picker-cfd2" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker" style="width:540px;">
