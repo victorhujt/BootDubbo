@@ -89,7 +89,7 @@ public class DefaultMqProducer {
     }
 
 
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
+    //@Bean(initMethod = "start", destroyMethod = "shutdown")
     private Producer producer(){
         Properties producerProperties = new Properties();
         producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
@@ -99,7 +99,7 @@ public class DefaultMqProducer {
 
         MQUtil.propertiesUtil(producerProperties);
         Producer producer = ONSFactory.createProducer(producerProperties);
-        // producer.start();
+        producer.start();
         return producer;
     }
     private TransactionProducer transactionProducer(){
