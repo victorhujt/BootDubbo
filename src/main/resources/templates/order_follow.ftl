@@ -3,12 +3,7 @@
     <!-- bootstrap & fontawesome -->
 </head>
 <body class="no-skin">
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <div class="main-content">
-        <div class="main-content-inner">
-            <div class="page-content">
-                <div class="row">
+
                     <div class="col-xs-12">
                         <div class="page-header">
                             <p>
@@ -207,11 +202,7 @@
 
                     </div><!-- /.col -->
 
-                </div><!-- /.row -->
-            </div><!-- /.page-content -->
-        </div>
-    </div><!-- /.main-content -->
-</div><!-- /.main-container -->
+
 
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
@@ -310,19 +301,22 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#notes").val(orderDTO.notes);
-        $("#departurePlace" ).val(orderDTO.departureProvince
-                + orderDTO.departureCity
-                + orderDTO.departureDistrict
-                + orderDTO.departureTowns);
-        $("#destination").val(orderDTO.destinationProvince
-                + orderDTO.destinationCity
-                + orderDTO.destinationDistrict
-                + orderDTO.destinationTowns);
-        $("#destinationPlace").val(orderDTO.destinationProvince
-                + orderDTO.destinationCity
-                + orderDTO.destinationDistrict
-                + orderDTO.destinationTowns
-                + orderDTO.destination);
+        var departurePlace = (orderDTO.departureProvince
+        + orderDTO.departureCity
+        + orderDTO.departureDistrict
+        + orderDTO.departureTowns).replace(/null/,"");
+        $("#departurePlace" ).val(departurePlace);
+        var destination = (orderDTO.destinationProvince
+        + orderDTO.destinationCity
+        + orderDTO.destinationDistrict
+        + orderDTO.destinationTowns).replace(/null/,"");
+        $("#destination").val(destination);
+        var destinationPlace = (orderDTO.destinationProvince
+        + orderDTO.destinationCity
+        + orderDTO.destinationDistrict
+        + orderDTO.destinationTowns
+        + orderDTO.destination).replace(/null/,"");
+        $("#destinationPlace").val(destinationPlace);
         $("#quantity").val(orderDTO.quantity);
         $("#weight").val(orderDTO.weight);
         $("#cubage").val(orderDTO.cubage);

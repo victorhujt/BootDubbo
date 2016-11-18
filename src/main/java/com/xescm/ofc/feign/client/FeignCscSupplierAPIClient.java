@@ -3,7 +3,7 @@ package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.FeignCscSupplierAPI;
+import com.xescm.ofc.feign.api.csc.FeignCscSupplierAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;

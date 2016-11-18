@@ -1,4 +1,4 @@
-package com.xescm.ofc.feign.api;
+package com.xescm.ofc.feign.api.rmc;
 
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;

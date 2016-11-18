@@ -1,167 +1,138 @@
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
     <title>订单管理</title>
-
-    <meta name="description" content="Static &amp; Dynamic Tables">
-
 </head>
-
 <body class="no-skin">
-<!-- #section:basics/navbar.layout -->
 
 
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <!-- /section:basics/sidebar -->
-    <div class="main-content">
-        <div class="main-content-inner">
-            <!-- /section:basics/content.breadcrumbs -->
-            <div class="page-content">
-
-                <!-- /section:settings.box -->
-                <div class="page-header">
-                    <p>
-                        筛选条件
-                    </p>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <input id="orderTimePre" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                        至
-                                        <input id="orderTimeSuf" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <input id="orderCode" name="orderCode" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <select class="chosen-select form-control" data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus">
-                                            <option value="">----</option>
-                                            <option value="10">待审核</option>
-                                            <option value="20">已审核</option>
-                                            <option value="30">执行中</option>
-                                            <option value="40">已完成</option>
-                                            <option value="50">已取消</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <select class="chosen-select form-control" data-placeholder="请选择订单类型" id="orderType" name="orderType">
-                                            <option value="">----</option>
-                                            <option value="60">运输订单</option>
-                                            <option value="61">仓配订单</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <select class="chosen-select form-control" data-placeholder="请选择业务类型" id="businessType" name="businessType">
-                                            <option value="">----</option>
-                                            <option value="600">城配</option>
-                                            <option value="601">干线</option>
-                                            <option value="----------">----------</option>
-                                            <option value="610">销售出库</option>
-                                            <option value="611">调拨出库</option>
-                                            <option value="612">报损出库</option>
-                                            <option value="613">其他出库</option>
-                                            <option value="----------">----------</option>
-                                            <option value="620">采购入库</option>
-                                            <option value="621">调拨入库</option>
-                                            <option value="622">退货入库</option>
-                                            <option value="623">加工入库</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right"></label>
-                                <div class="col-sm-6">
-                                    <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
-                                        筛选
-                                    </button>
-                                </div>
+        <div class="page-header">
+            <p>
+                筛选条件
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <input id="orderTimePre" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                至
+                                <input id="orderTimeSuf" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="page-header">
-                    <p>
-                        订单列表
-                    </p>
-                </div>
-
-                <!-- div.table-responsive -->
-                <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                        <thead>
-                        <tr role="row">
-                            <th>序号</th>
-                            <th>订单操作</th>
-                            <th>订单编号</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
-                                <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
-                                订单日期
-                            </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方名称</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">仓库名称</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
-
-                        </thead>
-                        <tbody id="dataTbody"></tbody>
-                    </table>
-                    <div class="row">
-                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;"></div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <input id="orderCode" name="orderCode" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <select class="chosen-select form-control" data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus">
+                                    <option value="">----</option>
+                                    <option value="10">待审核</option>
+                                    <option value="20">已审核</option>
+                                    <option value="30">执行中</option>
+                                    <option value="40">已完成</option>
+                                    <option value="50">已取消</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <select class="chosen-select form-control" data-placeholder="请选择订单类型" id="orderType" name="orderType">
+                                    <option value="">----</option>
+                                    <option value="60">运输订单</option>
+                                    <option value="61">仓配订单</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <select class="chosen-select form-control" data-placeholder="请选择业务类型" id="businessType" name="businessType">
+                                    <option value="">----</option>
+                                    <option value="600">城配</option>
+                                    <option value="601">干线</option>
+                                    <option value="----------">----------</option>
+                                    <option value="610">销售出库</option>
+                                    <option value="611">调拨出库</option>
+                                    <option value="612">报损出库</option>
+                                    <option value="613">其他出库</option>
+                                    <option value="----------">----------</option>
+                                    <option value="620">采购入库</option>
+                                    <option value="621">调拨入库</option>
+                                    <option value="622">退货入库</option>
+                                    <option value="623">加工入库</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1 no-padding-right"></label>
+                        <div class="col-sm-6">
+                            <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
+                                筛选
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <!-- PAGE CONTENT ENDS -->
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.page-content -->
-</div>
-</div><!-- /.main-content -->
+            </div>
+        </div>
+        <div class="page-header">
+            <p>
+                订单列表
+            </p>
+        </div>
+        <!-- div.table-responsive -->
+        <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+            <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                <thead>
+                    <th>序号</th>
+                    <th>订单操作</th>
+                    <th>订单编号</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">客户订单编号</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">
+                        <#--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
+                        订单日期
+                    </th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单类型</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">业务类型</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">收货方名称</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">仓库名称</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">店铺</th>
+                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">备注</th>
 
-</div><!-- /.main-container -->
+                </thead>
+                <tbody id="dataTbody"></tbody>
+            </table>
+            <div class="row">
+                <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                </div>
+            </div>
 
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
-
-
 
 <script type="text/javascript">
     var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]

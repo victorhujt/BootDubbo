@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.persistence.Transient;
-import java.beans.*;
 import java.util.Date;
 
 @Table(name = "ofc_fundamental_information")
@@ -191,6 +189,17 @@ public class OfcFundamentalInformation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
+
+    /**
+     * 开单员
+     */
+    private String merchandiser;
+
+    /**
+     * 运输类型
+     */
+    @Column(name = "transport_type")
+    private String transportType;
 
     public String getSelfCustOrderCode() {
         return selfCustOrderCode;
@@ -654,6 +663,42 @@ public class OfcFundamentalInformation {
      */
     public void setOperTime(Date opertime) {
         this.operTime = opertime;
+    }
+
+    /**
+     * 获取开单员
+     *
+     * @return merchandiser - 开单员
+     */
+    public String getMerchandiser() {
+        return merchandiser;
+    }
+
+    /**
+     * 设置开单员
+     *
+     * @param merchandiser 开单员
+     */
+    public void setMerchandiser(String merchandiser) {
+        this.merchandiser = merchandiser;
+    }
+
+    /**
+     * 获取运输类型
+     *
+     * @return transport_type - 运输类型
+     */
+    public String getTransportType() {
+        return transportType;
+    }
+
+    /**
+     * 设置运输类型
+     *
+     * @param transportType 运输类型
+     */
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
     }
 
 }

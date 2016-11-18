@@ -1,10 +1,9 @@
 package com.xescm.ofc.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.xescm.ofc.service.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Transient;
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -54,6 +53,10 @@ public class OfcOrderDTO {
     private String creatorName;
 
     private String operatorName;
+
+    private String merchandiser;
+
+    private String transportType;
 
     /*订单状态表*/
 
@@ -110,6 +113,9 @@ public class OfcOrderDTO {
     private String consigneeContactName;
     private String consignorType;
     private String consigneeType;
+    private String consignorContactPhone;
+    private String consigneeContactPhone;
+
 
 
 //    private String orderCode;
@@ -150,14 +156,55 @@ public class OfcOrderDTO {
     private BigDecimal collectServiceCharge;
     private String collectFlag;
     private String countFlag;
-    private String selfCustOrderCode;
 //    private String orderCode;
 //    private String notes;
 //    private Date creationTime;
 //    private String creator;
 //    private String operator;
 //    private Date operTime;
+    private String printInvoice;
+    private String buyerPaymentMethod;
+    private String insure;
+    private String insureValue;
+    private String pickUpGoods;
+    private BigDecimal homeDeliveryFee;
+    private BigDecimal cargoInsuranceFee;
+    private BigDecimal insurance;
+    private String twoDistribution;
+    private BigDecimal twoDistributionFee;
+    private String returnList;
+    private BigDecimal returnListFee;
+    private String expensePaymentParty;
+    private String payment;
+    private BigDecimal currentAmount;
+    private BigDecimal toPayAmount;
+    private BigDecimal returnAmount;
+    private BigDecimal monthlyAmount;
+    private BigDecimal luggage;
 
+
+
+
+
+    private String selfCustOrderCode;
+
+
+
+    public String getConsignorContactPhone() {
+        return consignorContactPhone;
+    }
+
+    public void setConsignorContactPhone(String consignorContactPhone) {
+        this.consignorContactPhone = consignorContactPhone;
+    }
+
+    public String getConsigneeContactPhone() {
+        return consigneeContactPhone;
+    }
+
+    public void setConsigneeContactPhone(String consigneeContactPhone) {
+        this.consigneeContactPhone = consigneeContactPhone;
+    }
 
     public String getSelfCustOrderCode() {
         return selfCustOrderCode;
@@ -821,5 +868,173 @@ public class OfcOrderDTO {
 
     public void setSupportContactName(String supportContactName) {
         this.supportContactName = supportContactName;
+    }
+
+    public String getMerchandiser() {
+        return merchandiser;
+    }
+
+    public void setMerchandiser(String merchandiser) {
+        this.merchandiser = merchandiser;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
+    }
+
+    public String getPrintInvoice() {
+        return printInvoice;
+    }
+
+    public void setPrintInvoice(String printInvoice) {
+        this.printInvoice = printInvoice;
+    }
+
+    public String getBuyerPaymentMethod() {
+        return buyerPaymentMethod;
+    }
+
+    public void setBuyerPaymentMethod(String buyerPaymentMethod) {
+        this.buyerPaymentMethod = buyerPaymentMethod;
+    }
+
+    public String getInsure() {
+        return insure;
+    }
+
+    public void setInsure(String insure) {
+        this.insure = insure;
+    }
+
+    public String getInsureValue() {
+        return insureValue;
+    }
+
+    public void setInsureValue(String insureValue) {
+        this.insureValue = insureValue;
+    }
+
+    public String getPickUpGoods() {
+        return pickUpGoods;
+    }
+
+    public void setPickUpGoods(String pickUpGoods) {
+        this.pickUpGoods = pickUpGoods;
+    }
+
+    public BigDecimal getHomeDeliveryFee() {
+        return homeDeliveryFee;
+    }
+
+    public void setHomeDeliveryFee(BigDecimal homeDeliveryFee) {
+        this.homeDeliveryFee = homeDeliveryFee;
+    }
+
+    public BigDecimal getCargoInsuranceFee() {
+        return cargoInsuranceFee;
+    }
+
+    public void setCargoInsuranceFee(BigDecimal cargoInsuranceFee) {
+        this.cargoInsuranceFee = cargoInsuranceFee;
+    }
+
+    public BigDecimal getInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(BigDecimal insurance) {
+        this.insurance = insurance;
+    }
+
+    public String getTwoDistribution() {
+        return twoDistribution;
+    }
+
+    public void setTwoDistribution(String twoDistribution) {
+        this.twoDistribution = twoDistribution;
+    }
+
+    public BigDecimal getTwoDistributionFee() {
+        return twoDistributionFee;
+    }
+
+    public void setTwoDistributionFee(BigDecimal twoDistributionFee) {
+        this.twoDistributionFee = twoDistributionFee;
+    }
+
+    public String getReturnList() {
+        return returnList;
+    }
+
+    public void setReturnList(String returnList) {
+        this.returnList = returnList;
+    }
+
+    public BigDecimal getReturnListFee() {
+        return returnListFee;
+    }
+
+    public void setReturnListFee(BigDecimal returnListFee) {
+        this.returnListFee = returnListFee;
+    }
+
+    public String getExpensePaymentParty() {
+        return expensePaymentParty;
+    }
+
+    public void setExpensePaymentParty(String expensePaymentParty) {
+        this.expensePaymentParty = expensePaymentParty;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public BigDecimal getCurrentAmount() {
+        return currentAmount;
+    }
+
+    public void setCurrentAmount(BigDecimal currentAmount) {
+        this.currentAmount = currentAmount;
+    }
+
+    public BigDecimal getToPayAmount() {
+        return toPayAmount;
+    }
+
+    public void setToPayAmount(BigDecimal toPayAmount) {
+        this.toPayAmount = toPayAmount;
+    }
+
+    public BigDecimal getReturnAmount() {
+        return returnAmount;
+    }
+
+    public void setReturnAmount(BigDecimal returnAmount) {
+        this.returnAmount = returnAmount;
+    }
+
+    public BigDecimal getMonthlyAmount() {
+        return monthlyAmount;
+    }
+
+    public void setMonthlyAmount(BigDecimal monthlyAmount) {
+        this.monthlyAmount = monthlyAmount;
+    }
+
+    public BigDecimal getLuggage() {
+        return luggage;
+    }
+
+    public void setLuggage(BigDecimal luggage) {
+        this.luggage = luggage;
     }
 }

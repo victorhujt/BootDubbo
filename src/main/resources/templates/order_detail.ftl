@@ -1,14 +1,8 @@
 <head>
     <title>订单详情</title>
-    <!-- bootstrap & fontawesome -->
 </head>
 <body class="no-skin">
-<!-- /section:basics/navbar.layout -->
-<div class="main-container ace-save-state" id="main-container">
-    <div class="main-content">
-        <div class="main-content-inner">
-            <div class="page-content">
-                <div class="row">
+
                     <div class="col-xs-12">
                         <div class="col-sm-6" style="float: right">
                             <button class="btn btn-white btn-info btn-bold filters" id="goBack" value="${(historyUrl)!}" onclick="detailBackToHistory()">
@@ -660,11 +654,6 @@
                         </form>
                     </div><!-- /.col -->
 
-                </div><!-- /.row -->
-            </div><!-- /.page-content -->
-        </div>
-    </div><!-- /.main-content -->
-</div><!-- /.main-container -->
 <script type="text/javascript">
     $(function(){
         

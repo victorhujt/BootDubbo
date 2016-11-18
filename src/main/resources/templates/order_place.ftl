@@ -317,12 +317,6 @@
     <div class="modal-footer"><span id="supportListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="supplierEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
 </div>
 
-<div class="main-container ace-save-state" id="main-container">
-
-
-    <!-- /section:basics/sidebar -->
-    <div class="main-content">
-        <div class="main-content-inner">
             <div class="page-header">
                 <p>
                     基本信息
@@ -337,7 +331,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
-                            <div class="form-group">
+                           <#-- <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
@@ -345,15 +339,33 @@
 
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div>-->
+                            <#--<div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                         <input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
+                           <div class="form-group">
+                               <label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
+                               <div class="col-xs-3">
+                                   <div class="clearfix">
+                                       <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="form-group">
+                               <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单编号</label>
+                               <div class="col-xs-3">
+                                   <div class="clearfix">
+                                       <input class="col-xs-10 col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
+
+                                   </div>
+                               </div>
+                           </div>
+
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
                                 <div class="col-sm-6">
@@ -365,6 +377,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                           <div class="form-group" id="transBusinessTypeDiv" style="display: block">
+                               <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                               <div class="col-sm-6">
+                                   <div class="clearfix">
+                                       <select  id="businessType" name="businessType">
+                                           <option value="600">城配</option>
+                                           <option value="601">干线</option>
+                                           <option value="602">卡班</option>
+                                       </select>
+                                   </div>
+                               </div>
+                           </div>
                             <div class="form-group" id="businessTypeDiv" style="display: none">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                 <div class="col-sm-6">
@@ -518,7 +543,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)
+                                                                            <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:m)
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -810,7 +835,6 @@
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportContactName" name="supportContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -895,17 +919,15 @@
 
                 </div>
             </div>
-
+<#--
         </div>
-    </div><!-- /.main-content -->
+    </div><!-- /.main-content &ndash;&gt;
 
 
-</div><!-- /.main-container -->
+</div><!-- /.main-container &ndash;&gt;-->
 
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
-<#--<link rel="stylesheet" href="../components/chosen/chosen.css" />
-<script src="../components/chosen/chosen.jquery.js"></script>-->
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
 
@@ -962,7 +984,7 @@
                     required:true
                 },
                 custOrderCode:{
-                    required:true,
+
                     maxlength:30,
                     remote:{
                         url : ofc_url + "/ofc/checkCustOrderCode",
@@ -992,7 +1014,7 @@
                     required:true
                 },
                 custOrderCode:{
-                    required: "请输入客户订单编号",
+
                     maxlength: "超过最大长度",
                     remote: "该客户订单编号已经存在"
                 },
@@ -1310,8 +1332,10 @@
         jsonStr.consigneeName = $("#consigneeName").val();
         jsonStr.consignorContactCode = $("#consignorContactCode").val();
         jsonStr.consignorContactName = $("#consignorContactName").val();
+        jsonStr.consignorContactPhone = $("#consignorPhone").val();
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
+        jsonStr.consigneeContactPhone = $("#consigneePhone").val();
 
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
@@ -1576,6 +1600,8 @@
                         case 7 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                         case 8 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                         case 9 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.weight = param;break;
+                        case 11 :orderGoods.cubage = param;break;
                     }
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
@@ -1647,6 +1673,10 @@
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.unitPrice+"</td>";
+
+                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";
+
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
@@ -1772,7 +1802,9 @@
                 var production_batch = tdArr.eq(7).children().val();//    批次
                 var production_time = tdArr.eq(8).children().val();//    生产日期
                 var invalid_time = tdArr.eq(9).children().val();//    失效日期
-                ;
+                var weight = tdArr.eq(10).children().val();//    重量
+                var volume = tdArr.eq(11).children().val();//    体积
+
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
@@ -1785,6 +1817,8 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_batch+"'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_time+"' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+invalid_time+"' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
             });
             $("#goodsInfoListDiv").html("");
@@ -1797,6 +1831,8 @@
                     var specification = tdArr.eq(3).text();//    货品规格
                     var unit = tdArr.eq(4).text();//    单位
                     var unitPrice = tdArr.eq(5).text();//    单价
+                    var weight = tdArr.eq(6).text();//    重量
+                    var volume = tdArr.eq(7).text();//    体积
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
@@ -1809,6 +1845,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -1817,6 +1855,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#goodsInfoListDiv").html(goodsInfoListDiv);
+                $("#goodsListDiv").fadeOut("slow");
             }
             validateForm();
         });
@@ -1885,6 +1924,8 @@
             });
             if(consignorin==""){
                 alert("请至少选择一行");
+            }else{
+                $("#consignorListDiv").fadeOut("slow");
             }
         });
 
@@ -1947,6 +1988,8 @@
             });
             if(consignorout==""){
                 alert("请至少选择一行");
+            }else{
+                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             }
         });
 
@@ -1999,6 +2042,8 @@
             });
             if(support==""){
                 alert("请至少选择一行");
+            }else{
+                $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             }
         });
 
@@ -2079,8 +2124,10 @@
         $("#orderTypeSel").change(function () {
             $("#businessType").addClass("chosen-select form-control");
             if($(this).children('option:selected').val() == '61'){//仓配订单
+                //$("#transBusinessTypeDiv").hide():
                 $("#provideTransportDiv").show();
                 $("#businessTypeDiv").show();
+
                 $('.storeLi').show();
                 $('.transLi').hide();
                 //$('#myTab4').children('li').first().addClass("active");
@@ -2101,8 +2148,10 @@
                 $("#dropdown14").removeClass("active");
 
 
+
             }
             if($(this).children('option:selected').val() == '60'){//运输订单
+                //$("#transBusinessTypeDiv").show();
                 $('.transLi').show();
                 $('.storeLi').hide();
                 $("#provideTransportDiv").hide();

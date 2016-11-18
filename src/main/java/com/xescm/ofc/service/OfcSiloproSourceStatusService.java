@@ -1,6 +1,5 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcSiloproNewstatus;
 import com.xescm.ofc.domain.OfcSiloproSourceStatus;
 
 /**

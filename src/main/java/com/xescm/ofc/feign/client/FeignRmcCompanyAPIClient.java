@@ -4,7 +4,7 @@ import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.FeignRmcCompanyAPI;
+import com.xescm.ofc.feign.api.rmc.FeignRmcCompanyAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;

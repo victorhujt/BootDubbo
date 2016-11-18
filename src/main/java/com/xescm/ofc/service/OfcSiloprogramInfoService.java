@@ -1,9 +1,6 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcPlannedDetail;
 import com.xescm.ofc.domain.OfcSiloprogramInfo;
-import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.service.IService;
 
 import java.util.List;
 
