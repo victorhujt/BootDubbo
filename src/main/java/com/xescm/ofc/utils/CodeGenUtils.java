@@ -30,7 +30,7 @@ public class CodeGenUtils {
 	 * @return
 	 */
 	public String getNewCode(String envLock, String prefix, int prefixLen){
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
 		String dateStr = df.format(new Date());
 //		dateStr = dateStr.substring(2);
 		String key = envLock+ prefix +dateStr;
