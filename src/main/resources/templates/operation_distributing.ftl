@@ -2,7 +2,64 @@
     <title>城配下单</title>
 </head>
 <body>
+<!--goodsListDiv-->
+<div class="modal-content" id="goodsListDiv" style="display: none;">
+    <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">货品列表</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form id="goodsSelConditionForm" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            <input id="goodcheck" type="checkbox" class="ace">
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单价</th>
 
+                    </thead>
+                    <tbody id="goodsSelectListTbody"></tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+</div>
 <div class="col-xs-9">
     <button class="btn btn-white btn-info btn-bold btn-interval" id="">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
@@ -130,10 +187,8 @@
         <div class="tab-content">
             <div id="home4" class="tab-pane active">
                 <!--货品明细-->
-                <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"
-                                                                            id="bootbox-confirm">添加一行</button></span>
-                <table id="orderGoodsListTable"
-                       class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
+                <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
+                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
                        aria-describedby="dynamic-table_info">
                     <thead>
                     <tr role="row">
@@ -171,7 +226,7 @@
 </div>
 
 
-<div class="col-xs-12">
+<#--<div class="col-xs-12">
 
     <div class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" id="gbox_grid-table" dir="ltr"
          style="width: 1119px;">
@@ -185,7 +240,7 @@
                            aria-labelledby="gbox_grid-table">
                         <thead>
                         <tr class="ui-jqgrid-labels" role="row">
-                           <#-- <th id="grid-table_cb" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
+                           &lt;#&ndash; <th id="grid-table_cb" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
                                 style="width: 35px;">
                                 <div id="jqgh_grid-table_cb"><input role="checkbox" id="cb_grid-table" class="cbox"
                                                                     type="checkbox"><span class="s-ico"
@@ -195,7 +250,7 @@
                                         sort="desc"
                                         class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
                                 </div>
-                            </th>-->
+                            </th>&ndash;&gt;
                             <th id="grid-table_subgrid" role="columnheader"
                                 class="ui-th-column ui-th-ltr ui-state-default" style="width: 25px;">
                                 <div id="jqgh_grid-table_subgrid"><span class="s-ico" style="display:none"><span
@@ -645,8 +700,8 @@
     </div>
 
 
-    <!-- PAGE CONTENT ENDS -->
-</div>
+    <!-- PAGE CONTENT ENDS &ndash;&gt;
+</div>-->
 
 
 <div class="col-xs-12">
@@ -694,17 +749,7 @@
     }
     $(function () {
         $("#goodsListDivBlock").click(function () {
-            var goodsInfoListDiv = "";
-            goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
-            /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
-            goodsInfoListDiv = goodsInfoListDiv + "<td>HP0001</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>牛肉</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>500g</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>袋</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>20</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "</tr>";
-            $("#goodsInfoListDiv").append(goodsInfoListDiv);
+            $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
         })
     })
     function deleteGood(obj) {

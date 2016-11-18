@@ -207,7 +207,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
-
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userId);
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);
@@ -280,6 +279,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
             ofcTransplanInfo.setReceivingCustomerContact(ofcDistributionBasicInfo.getConsigneeContactName());
             ofcTransplanInfo.setReceivingCustomerContactPhone(ofcDistributionBasicInfo.getConsigneeContactPhone());
+            ofcTransplanInfo.setShippingAddress(ofcDistributionBasicInfo.getDeparturePlace());
+            ofcTransplanInfo.setReceivingCustomerAddress(ofcDistributionBasicInfo.getDestination());
+            ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
             String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
             BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2]))).divide(BigDecimal.valueOf(1000000));
             ofcTransplanInfo.setVolume(volume);
