@@ -1,5 +1,6 @@
 <head>
     <title>运输开单</title>
+    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
 
 <body class="no-skin">
@@ -32,9 +33,10 @@
                                 <div class="col-sm-3">
                                     <div class="clearfix">
                                         <select id="merchandiser" name="merchandiser">
-                                        <#list cscStoreByCustId! as cscStore>
-                                            <option value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
-                                        </#list>
+                                            <option>中国人民</option>
+                                            <option>人民中国</option>
+                                            <option>民中国人</option>
+                                            <option>国人民中</option>
                                         </select>
                                     </div>
                                 </div>
@@ -182,11 +184,18 @@
 
                                             <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
                                             <button type="button" style="float:right;" class="btn btn-minier btn-inverse"
-                                                    id="bootbox-confirm">添加一行</button>
+                                                    id="addGoods">添加一行</button>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label class="control-label" style="float:right;" for="name">kg</label>
-                                            <label id="weightCount" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label class="control-label" style="float:right;" for="name">重量合计：</label>
-                                            <label id="quantityCount" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
+                                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label class="control-label" style="float:right;" for="name">数量合计：</label>
 
                                         <#--dynamic-table-->
@@ -215,16 +224,6 @@
                                                 <tbody id="goodsInfoListDiv"></tbody>
 
                                             </table>
-                                            <div class="row">
-                                                <div class="col-xs-6">
-                                                    <div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                </div>
-                                            </div>
-
                                         </div>
 
                                         <div id="consignor14" class="tab-pane">
@@ -1657,11 +1656,37 @@
             }
         });
 
+        $("#addGoods").click(function () {
+            var goodsInfoListDiv = "";
+            goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<select  id='businessType' name='businessType'>"+
+                    "<option value='600'>动物</option>"+
+                    "<option value='601'>植物</option>"+
+                    "<option value='602'>微生物</option></select>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class=''  name='goodsCode' id='goodsCode' type='text'/>"+
+                    "<button type='button' class='btn btn-minier btn-inverse' id='goodCodeSel'>选择</button>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class=''  name='goodsName' id='goodsName' type='text'/>"+
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class=''  name='goodsSpec' id='goodsSpec' type='text'/>"+
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class=''  name='unit' id='unit' type='text'/>"+
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "</tr>";
+            $("#goodsInfoListDiv").append(goodsInfoListDiv);
+        })
 
-
+        $("#merchandiser").editableSelect();
 
     })
 
 </script>
-
+<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
