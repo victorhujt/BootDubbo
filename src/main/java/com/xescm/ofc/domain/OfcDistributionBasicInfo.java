@@ -268,6 +268,25 @@ public class OfcDistributionBasicInfo {
     @Column(name = "oper_time")
     private Date operTime;
 
+    private String consignorContactPhone;
+    private String consigneeContactPhone;
+
+    public String getConsignorContactPhone() {
+        return consignorContactPhone;
+    }
+
+    public void setConsignorContactPhone(String consignorContactPhone) {
+        this.consignorContactPhone = consignorContactPhone;
+    }
+
+    public String getConsigneeContactPhone() {
+        return consigneeContactPhone;
+    }
+
+    public void setConsigneeContactPhone(String consigneeContactPhone) {
+        this.consigneeContactPhone = consigneeContactPhone;
+    }
+
     public String getConsignorType() {
         return consignorType;
     }

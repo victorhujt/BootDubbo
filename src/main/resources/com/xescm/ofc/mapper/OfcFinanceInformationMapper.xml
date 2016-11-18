@@ -18,5 +18,24 @@
     <result column="creator" property="creator" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="print_invoice" property="printInvoice" jdbcType="VARCHAR" />
+    <result column="buyer_payment_method" property="buyerPaymentMethod" jdbcType="VARCHAR" />
+    <result column="insure" property="insure" jdbcType="VARCHAR" />
+    <result column="insure_value" property="insureValue" jdbcType="VARCHAR" />
+    <result column="pick_up_goods" property="pickUpGoods" jdbcType="VARCHAR" />
+    <result column="home_delivery_fee" property="homeDeliveryFee" jdbcType="DECIMAL" />
+    <result column="cargo_insurance_fee" property="cargoInsuranceFee" jdbcType="DECIMAL" />
+    <result column="insurance" property="insurance" jdbcType="DECIMAL" />
+    <result column="two_distribution" property="twoDistribution" jdbcType="VARCHAR" />
+    <result column="two_distribution_fee" property="twoDistributionFee" jdbcType="DECIMAL" />
+    <result column="return_list" property="returnList" jdbcType="VARCHAR" />
+    <result column="return_list_fee" property="returnListFee" jdbcType="DECIMAL" />
+    <result column="expense_payment_party" property="expensePaymentParty" jdbcType="VARCHAR" />
+    <result column="payment" property="payment" jdbcType="VARCHAR" />
+    <result column="current_amount" property="currentAmount" jdbcType="DECIMAL" />
+    <result column="to_pay_amount" property="toPayAmount" jdbcType="DECIMAL" />
+    <result column="return_amount" property="returnAmount" jdbcType="DECIMAL" />
+    <result column="monthly_amount" property="monthlyAmount" jdbcType="DECIMAL" />
+    <result column="luggage" property="luggage" jdbcType="DECIMAL" />
   </resultMap>
 </mapper>

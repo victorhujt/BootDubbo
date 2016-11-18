@@ -19,8 +19,6 @@ import javax.annotation.Resource;
 public class XescmOfcApplicationTests {
 	@Autowired
 	private DefaultMqProducer defaultMqProducer;
-	@Autowired
-	private DefaultMqConsumer defaultMqConsumer;
 	@Resource
 	MqConfig mqConfig;
 	@Test
@@ -30,7 +28,6 @@ public class XescmOfcApplicationTests {
 
 	@Test
 	public void receiveMQTest(){
-		defaultMqConsumer.MqConsumer(mqConfig.getTopic());
 
 	}
 

@@ -6,6 +6,7 @@ import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
 import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.utils.MQUtil;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -49,7 +50,7 @@ public class DefaultMqProducer {
 
     public void toSendMQ(String jsonStr,String code) {
         System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
+        Message message = new Message(mqConfig.getTfcTransPlanTopic(), mqConfig.getTfcTransPlanTag(),jsonStr.getBytes());
         message.setKey(code);
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {
@@ -88,6 +89,7 @@ public class DefaultMqProducer {
     }
 
 
+    //@Bean(initMethod = "start", destroyMethod = "shutdown")
     private Producer producer(){
         Properties producerProperties = new Properties();
         producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
@@ -113,7 +115,6 @@ public class DefaultMqProducer {
         transactionProducer.start();
         return transactionProducer;
     }
-
 
 
 }

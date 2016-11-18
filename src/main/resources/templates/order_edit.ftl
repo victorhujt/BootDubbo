@@ -498,6 +498,8 @@
                                                                 <td class="hidden-480"><input name='' type='search' value='${(goodsDetails.productionBatch)!""}' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.productionTime)?string('yyyy-MM-dd'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table'></td>
                                                                 <td class="hidden-480"><input name='' type='search' value='${((goodsDetails.invalidTime)?string('yyyy-MM-dd'))!""}' onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>
+                                                                <td  style='display:none'>${(goodsDetails.weight)!""}</td>
+                                                                <td  style='display:none'>${(goodsDetails.cubage)!""}</td>
                                                             </tr>
                                                             </#list>
                                                             </tbody>
@@ -544,7 +546,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="cubage" name="cubage" <#if orderInfo.cubage?? >value="${orderInfo.cubage}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:cm)
+                                                                            <input id="cubage" name="cubage" <#if orderInfo.cubage?? >value="${orderInfo.cubage}"</#if> type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:m)
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -982,7 +984,7 @@
                     required:true
                 },
                 custOrderCode:{//ofc_url
-                    required:true,
+
                     maxlength: 30,
                     remote:{
                         url : ofc_url + "/ofc/checkCustOrderCode",
@@ -1007,7 +1009,7 @@
                     required:true
                 },
                 custOrderCode:{
-                    required: "请输入客户订单编号",
+
                     maxlength: "超过最大长度",
                     remote: "该客户订单编号已经存在"
                 },
@@ -1306,8 +1308,10 @@
         jsonStr.consigneeName = $("#consigneeName").val();
         jsonStr.consignorContactCode = $("#consignorContactCode").val();
         jsonStr.consignorContactName = $("#consignorContactName").val();
+        jsonStr.consignorContactPhone = $("#consignorPhone").val();
         jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
         jsonStr.consigneeContactName = $("#consigneeContactName").val();
+        jsonStr.consigneeContactPhone = $("#consigneePhone").val();
 
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
@@ -1539,6 +1543,10 @@
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unitPrice)+"</td>";
+
+                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";
+
                     goodsList =goodsList + "</tr>";
 
                 });
@@ -1705,6 +1713,9 @@
             });
             if(consignorout==""){
                 alert("请至少选择一行");
+            }else{
+
+                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             }
         });
 
@@ -1721,7 +1732,8 @@
                 var production_batch = tdArr.eq(7).children().val();//    批次
                 var production_time = tdArr.eq(8).children().val();//    生产日期
                 var invalid_time = tdArr.eq(9).children().val();//    失效日期
-
+                var weight = tdArr.eq(10).children().val();//    重量
+                var volume = tdArr.eq(11).children().val();//    体积
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
@@ -1734,6 +1746,8 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_batch+"></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
             });
             $("#goodsInfoListDiv").html("");
@@ -1746,6 +1760,8 @@
                     var specification = tdArr.eq(3).text();//    货品规格
                     var unit = tdArr.eq(4).text();//    单位
                     var unitPrice = tdArr.eq(5).text();//    单价
+                    var weight = tdArr.eq(6).text();//    重量
+                    var volume = tdArr.eq(7).text();//    体积
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
@@ -1758,6 +1774,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -1766,6 +1784,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#goodsInfoListDiv").html(goodsInfoListDiv);
+                $("#goodsListDiv").fadeOut("slow");
             }
             validateForm();
         });
@@ -1837,8 +1856,10 @@
             });
             if(consignorin==""){
                 alert("请至少选择一行");
-            }
+            }else{
 
+                $("#consignorListDiv").fadeOut("slow");
+            }
 
         });
 
@@ -1891,6 +1912,8 @@
             });
             if(support==""){
                 alert("请至少选择一行");
+            }else{
+                $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             }
         });
 
@@ -2139,6 +2162,8 @@
                     case 7 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                     case 8 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
                     case 9 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                    case 10 :orderGoods.weight = param;break;
+                    case 11 :orderGoods.cubage = param;break;
                 }
             }
             orderGoodsList[tableRows - 1] = orderGoods;

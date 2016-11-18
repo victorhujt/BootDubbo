@@ -301,19 +301,22 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#notes").val(orderDTO.notes);
-        $("#departurePlace" ).val(orderDTO.departureProvince
-                + orderDTO.departureCity
-                + orderDTO.departureDistrict
-                + orderDTO.departureTowns);
-        $("#destination").val(orderDTO.destinationProvince
-                + orderDTO.destinationCity
-                + orderDTO.destinationDistrict
-                + orderDTO.destinationTowns);
-        $("#destinationPlace").val(orderDTO.destinationProvince
-                + orderDTO.destinationCity
-                + orderDTO.destinationDistrict
-                + orderDTO.destinationTowns
-                + orderDTO.destination);
+        var departurePlace = (orderDTO.departureProvince
+        + orderDTO.departureCity
+        + orderDTO.departureDistrict
+        + orderDTO.departureTowns).replace(/null/,"");
+        $("#departurePlace" ).val(departurePlace);
+        var destination = (orderDTO.destinationProvince
+        + orderDTO.destinationCity
+        + orderDTO.destinationDistrict
+        + orderDTO.destinationTowns).replace(/null/,"");
+        $("#destination").val(destination);
+        var destinationPlace = (orderDTO.destinationProvince
+        + orderDTO.destinationCity
+        + orderDTO.destinationDistrict
+        + orderDTO.destinationTowns
+        + orderDTO.destination).replace(/null/,"");
+        $("#destinationPlace").val(destinationPlace);
         $("#quantity").val(orderDTO.quantity);
         $("#weight").val(orderDTO.weight);
         $("#cubage").val(orderDTO.cubage);

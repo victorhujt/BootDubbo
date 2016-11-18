@@ -25,6 +25,8 @@ import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,7 @@ import java.util.List;
  * MQ消息处理类
  */
 @Service
-public class SchedulingSingleFedbackImpl implements MessageListener {
+public class SchedulingSingleFedbackImpl extends BaseController implements MessageListener {
 
     @Autowired
     private OfcPlanFedBackService ofcPlanFedBackService;
@@ -45,7 +47,8 @@ public class SchedulingSingleFedbackImpl implements MessageListener {
     @Override
     public Action consume(Message msg, ConsumeContext consumeContext) {
         Logger logger = LoggerFactory.getLogger(SchedulingSingleFedbackImpl.class);
-        String userName="admin";
+        //AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        String userName="";//authResDtoByToken.getUamUser().getUserName();
         String message = new String(msg.getBody());
         String topicName = msg.getTopic();
         if(!PubUtils.isNull(message)&&!PubUtils.isNull(topicName)){
