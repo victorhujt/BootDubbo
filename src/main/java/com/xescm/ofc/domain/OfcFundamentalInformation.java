@@ -665,40 +665,4 @@ public class OfcFundamentalInformation {
         this.operTime = opertime;
     }
 
-    /**
-     * 获取开单员
-     *
-     * @return merchandiser - 开单员
-     */
-    public String getMerchandiser() {
-        return merchandiser;
-    }
-
-    /**
-     * 设置开单员
-     *
-     * @param merchandiser 开单员
-     */
-    public void setMerchandiser(String merchandiser) {
-        this.merchandiser = merchandiser;
-    }
-
-    /**
-     * 获取运输类型
-     *
-     * @return transport_type - 运输类型
-     */
-    public String getTransportType() {
-        return transportType;
-    }
-
-    /**
-     * 设置运输类型
-     *
-     * @param transportType 运输类型
-     */
-    public void setTransportType(String transportType) {
-        this.transportType = transportType;
-    }
-
 }

@@ -10,4 +10,5 @@ import java.util.List;
 public interface OfcGoodsDetailsInfoService extends IService<OfcGoodsDetailsInfo>{
     List<OfcGoodsDetailsInfo> goodsDetailsScreenList(String code, String followTag);
     String deleteByOrderCode(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
+    void deleteAllByOrderCode(String orderCode);
 }

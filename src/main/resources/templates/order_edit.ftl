@@ -1399,7 +1399,7 @@
       CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
           data = eval(data);
           $.each(data,function (index,CscContantAndCompanyDto) {
-              debugger;
+              
               resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
               resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
               resultConsignorType = CscContantAndCompanyDto.type;

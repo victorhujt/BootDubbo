@@ -51,4 +51,10 @@
     delete from ofc_goods_details_info
     where order_code = #{orderCode,jdbcType=VARCHAR} AND goods_code = #{goodsCode,jdbcType=VARCHAR}
   </delete>
+
+  <delete id="deleteAllByOrderCode" >
+    <!-- 根据订单编号进行删除所有符合条件的数据 -->
+    delete from ofc_goods_details_info
+    where order_code = #{orderCode,jdbcType=VARCHAR}
+  </delete>
 </mapper>
