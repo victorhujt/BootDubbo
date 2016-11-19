@@ -84,12 +84,12 @@
                             <div class="form-group">
                                 <div class="col-sm-5">
                                     <div class="clearfix col-sm-1">
-                                        <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
+                                        <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                                         <input id="pickUpGoods" type="hidden" name="pickUpGoods"  value="0" />
                                     </div>
                                     <label class="control-label col-sm-3" for="name">上门提货:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -102,14 +102,14 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">货物保险:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">声明价值</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -122,7 +122,7 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">二次配送:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -135,14 +135,14 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">代收货款:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">代收金额</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="collectLoanAmount" disabled="true" style="color: #000" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="collectLoanAmount" disabled="true" style="color: #000" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -155,12 +155,89 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">签单返回:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                    </div>
+                                    <label class="control-label" for="name">元</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-3" for="name">运费</label>
+                                    <div class="clearfix col-sm-6">
+                                        <input id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                             </div>
                         </form>
+                        <div class="page-header">
+                        </div>
+                        <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
+                            <div class="form-group" id="transBusinessTypeDiv">
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-3" for="name">费用总计</label>
+                                    <div class="clearfix col-sm-6">
+                                        <input id="serviceCharge" disabled="true" style="color: #000" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                    <label class="control-label" for="name">元</label>
+                                </div>
+                                <label class="control-label col-sm-1 no-padding-right" for="name">费用支付</label>
+                                <div class="col-sm-1">
+                                    <div class="clearfix control-label">
+                                        <input id="transportTypeV1" type="radio" name="transportTypeV" />发货方
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="clearfix control-label">
+                                        <input id="transportTypeV2" type="radio" name="transportTypeV"/>收货方
+                                    </div>
+                                </div>
+                                <input id="transportType" type="hidden" name="transportType"/>
+                                <label class="control-label col-label no-padding-right" for="name">支付方式</label>
+                                <div class="col-sm-3">
+                                    <div class="clearfix">
+                                        <select  id="businessType" name="businessType">
+                                            <option value="01">现金</option>
+                                            <option value="02">POS刷卡</option>
+                                            <option value="03">微信</option>
+                                            <option value="04">支付宝</option>
+                                            <option value="05">银行支付</option>
+                                            <option value="06">账户结算</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="transBusinessTypeDiv">
+                                <label class="control-label col-sm-1" for="name">结算方式</label>
+                                <div class="col-sm-2">
+                                    <label class="control-label col-sm-5" for="name">现结</label>
+                                    <div class="clearfix col-sm-6">
+                                        <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost()">
+                                    </div>
+                                    <label class="control-label" for="name">元</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="control-label col-sm-5" for="name">到付</label>
+                                    <div class="clearfix col-sm-6">
+                                        <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                    <label class="control-label" for="name">元</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="control-label col-sm-5" for="name">回付</label>
+                                    <div class="clearfix col-sm-6">
+                                        <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                    <label class="control-label" for="name">元</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="control-label col-sm-5" for="name">月结</label>
+                                    <div class="clearfix col-sm-6">
+                                        <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                    <label class="control-label" for="name">元</label>
+                                </div>
+                            </div>
+                        <div class="page-header">
+                        </div>
                         <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
                             <div class="col-sm-12">
                                 <!-- #section:elements.tab.option -->
@@ -181,8 +258,6 @@
                                         <div id="home4" class="tab-pane active">
 
                                             <!--货品明细-->
-
-                                            <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
                                             <button type="button" style="float:right;" class="btn btn-minier btn-inverse"
                                                     id="addGoods">添加一行</button>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -751,6 +826,115 @@
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
     }
+    function countCost(obj) {
+        if($(obj).attr("id")=="luggage"){
+            if($(obj).val()=="0"){
+                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，不可以为空或为0，小数点后只能保留两位');
+                countCostCheck();
+                $(obj).val("");
+            }else {
+                if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val())){
+                    alert('只能输入数字，最大值不能超过999999.99元，不允许负数，不可以为空或为0，小数点后只能保留两位');
+                    $(obj).val("");
+                    countCostCheck();
+                }else{
+                    countCostCheck();
+                };
+            }
+        }else {
+            if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val())){
+                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+                $(obj).val("");
+                countCostCheck();
+            }else{
+                countCostCheck();
+            };
+        }
+    }
+    function countQuantity(obj) {
+        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,3})?$/).test($(obj).val())){
+            alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+            $(obj).val("");
+            countQuantityCheck();
+        }else{
+            countQuantityCheck();
+        };
+    }
+    function countWeight(obj) {
+        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,3})?$/).test($(obj).val())){
+            alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+            $(obj).val("");
+            countWeightCheck();
+        }else{
+            countWeightCheck();
+        };
+    }
+    function countQuantityCheck() {
+        var quantityCount=0;
+        $('input[name="quantity"]').each(function(){
+            if($(this).val()!=""){
+                quantityCount=quantityCount+parseFloat($(this).val());
+            }
+        });
+        /*$("#goodsInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            var quantity = tdArr.eq(7).children().val();//    数量
+            if($("#quantity").val()!=""){
+                quantityCount=quantityCount+parseFloat(quantity);
+            }
+        });*/
+        $("#quantityCount").html(quantityCount);
+
+    }
+    function countWeightCheck() {
+        var weightCount=0;
+        var luggage=0;
+        var flg="";
+        $('input[name="weight"]').each(function(){
+            if($(this).val()!=""){
+                //alert($(this).parent().next().find('input').first().attr("id"));
+                weightCount=weightCount+parseFloat($(this).val());
+                if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
+                    luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
+                }else{
+                    flg="error";
+                }
+            }else{
+                flg="error";
+            }
+        });
+        $("#luggage").val(luggage);
+        $("#weightCount").html(weightCount);
+    }
+    function countCostCheck() {
+        var count=0;
+        if($("#homeDeliveryFee").val()!=""){
+            count=count+parseFloat($("#homeDeliveryFee").val());
+        }
+        if($("#cargoInsuranceFee").val()!=""){
+            count=count+parseFloat($("#cargoInsuranceFee").val());
+        }
+        if($("#insureValue").val()!=""){
+            count=count+parseFloat($("#insureValue").val());
+        }
+        if($("#twoDistributionFee").val()!=""){
+            count=count+parseFloat($("#twoDistributionFee").val());
+        }
+        if($("#collectServiceCharge").val()!=""){
+            count=count+parseFloat($("#collectServiceCharge").val());
+        }
+        if($("#collectLoanAmount").val()!=""){
+            count=count+parseFloat($("#collectLoanAmount").val());
+        }
+        if($("#returnListFee").val()!=""){
+            count=count+parseFloat($("#returnListFee").val());
+        }
+        if($("#luggage").val()!=""){
+            count=count+parseFloat($("#luggage").val());
+        }
+        $("#serviceCharge").val(count);
+    }
+
     function orderPlaceAddTranInfo(jsonStr) {
         //运输基本信息
         jsonStr.quantity = $("#quantity").val();
@@ -955,20 +1139,15 @@
 
     $(function(){
 
-        $("#provideTransport").change(function () {
-            if($(this).prop("checked")){
-                $("#provideTransportHel").val("1");
-            } else {
-                $("#provideTransportHel").val("0");
-            }
-        });
         $("#pickUpGoodsV").change(function(){
             if($(this).prop("checked")){
                 $("#pickUpGoods").val("1");
                 $("#homeDeliveryFee").removeAttr("disabled");//要变成Enable，JQuery只能这么写
             }else{
                 $("#pickUpGoods").val("0");
+                $("#homeDeliveryFee").val("");
                 $("#homeDeliveryFee").attr("disabled","disabled");
+                countCostCheck();
             }
 
         });
@@ -980,7 +1159,10 @@
             }else{
                 $("#insure").val("0");
                 $("#cargoInsuranceFee").attr("disabled","disabled");
+                $("#cargoInsuranceFee").val("");
                 $("#insureValue").attr("disabled","disabled");
+                $("#insureValue").val("");
+                countCostCheck();
             }
 
         });
@@ -991,6 +1173,8 @@
             }else{
                 $("#twoDistribution").val("0");
                 $("#twoDistributionFee").attr("disabled","disabled");
+                $("#twoDistributionFee").val("");
+                countCostCheck();
             }
 
         });
@@ -1002,7 +1186,10 @@
             }else{
                 $("#collectFlag").val("0");
                 $("#collectServiceCharge").attr("disabled","disabled");
+                $("#collectServiceCharge").val("");
                 $("#collectLoanAmount").attr("disabled","disabled");
+                $("#collectLoanAmount").val("");
+                countCostCheck();
             }
 
         });
@@ -1013,6 +1200,8 @@
             }else{
                 $("#returnList").val("0");
                 $("#returnListFee").attr("disabled","disabled");
+                $("#returnListFee").val("");
+                countCostCheck();
             }
 
         });
@@ -1667,17 +1856,51 @@
                     "<option value='602'>微生物</option></select>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class=''  name='goodsCode' id='goodsCode' type='text'/>"+
-                    "<button type='button' class='btn btn-minier btn-inverse' id='goodCodeSel'>选择</button>"
+                    "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
+                    "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block' id='goodCodeSel'>选择</button>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class=''  name='goodsName' id='goodsName' type='text'/>"+
+                    "<input class='col-xs-10 col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class=''  name='goodsSpec' id='goodsSpec' type='text'/>"+
+                    "<input class='col-xs-10 col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class=''  name='unit' id='unit' type='text'/>"+
+                    "<input class='col-xs-10 col-xs-12'  name='unit' id='unit' type='text'/>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<select  id='pack' name='pack'>"+
+                    "<option value='01'>纸箱</option>"+
+                    "<option value='02'>木箱</option>"+
+                    "<option value='03'>桶</option>"+
+                    "<option value='04'>混包</option>"+
+                    "<option value='05'>裸装</option>"+
+                    "<option value='06'>编袋</option>"+
+                    "<option value='07'>托盘</option>"+
+                    "<option value='08'>木框架</option>"+
+                    "<option value='09'>泡沫箱</option>"+
+                    "<option value='10'>缠绕膜</option>"+
+                    "<option value='11'>盘</option>"+
+                    "<option value='12'>铁框</option>"+
+                    "<option value='13'>布袋</option></select>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text' onblur='countQuantity(this)'/>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class='col-xs-10 col-xs-12'  name='quantityUnitPrice' id='quantityUnitPrice' type='text'/>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
+                    "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text' onblur='countWeight(this)'/>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td id='2'>"+
+                    "<input class='col-xs-10 col-xs-12'  name='weightUnitPrice' id='weightUnitPrice' type='text'/>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class='col-xs-10 col-xs-12'  name='cubage' id='cubage' type='text'/>"
+                    +"</td>";
+            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                    "<input class='col-xs-10 col-xs-12'  name='volumeUnitPrice' id='volumeUnitPrice' type='text'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "</tr>";
             $("#goodsInfoListDiv").append(goodsInfoListDiv);

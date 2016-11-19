@@ -1,5 +1,59 @@
 <head>
     <title>城配下单</title>
+    <style type="text/css">
+        #goodsListDiv {
+            position:fixed;
+            left:285px;
+            top:85px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        #consignorListDiv {
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        #consigneeListDiv {
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        #custListDiv{
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+        #goodsAndConsigneeDiv{
+            position:fixed;
+            left:285px;
+            top:77px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+    </style>
+
+
 </head>
 <body>
 <!--goodsListDiv-->
@@ -37,18 +91,22 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            <input id="goodcheck" type="checkbox" class="ace">
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                <input id="goodcheck" type="checkbox" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品编码</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品种类</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品小类</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">品牌</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品规格</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">规格</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单价</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">条形码</th>
 
                     </thead>
                     <tbody id="goodsSelectListTbody"></tbody>
@@ -58,8 +116,257 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
 </div>
+<!--consignorListDiv-->
+<div class="modal-content" id="consignorListDiv" style="display: none;">
+    <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">发货方联系人</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
+            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorPerson2" name="cscContact.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            选择
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+
+                    </thead>
+                    <tbody id="contactSelectListTbody2"></tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+</div>
+<!--consigneeListDiv-->
+<div class="modal-content" id="consigneeListDiv" style="display: none;">
+    <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">收货方联系人</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
+            <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            <input id="consigneecheck" type="checkbox" class="ace">
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+                    </thead>
+                    <tbody id="contactSelectListTbody1"></tbody>
+                </table>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+</div>
+<!--custListDiv-->
+<div class="modal-content" id="custListDiv" style="display: none;">
+    <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+        <h4 class="modal-title">选择客户</h4></div>
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
+            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        <label class="pos-rel">
+                            选择
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">产品类别</th>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </form>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="modal-footer"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    </div>
+</div>
+<!--goods&Consigee-->
+<div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form class="form-horizontal" role="form">
+
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsNameDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">规格</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "specificationDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">单位</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "unitDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+
+                <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">发货数量</th>
+                    </tr>
+                    </thead>
+                    <tbody id="goodsAndConsigneeTbody">
+                        <tr>
+                            <td>五道口1</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>六道口</td>
+                            <td>30</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </form>
+
+        </div>
+    </div>
+    <div class="form-group" >
+        <div class="modal-footer"><button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span></div>
+    </div>
+</div>
+
+<br/>
 <div class="col-xs-9">
     <button class="btn btn-white btn-info btn-bold btn-interval" id="">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
@@ -76,24 +383,30 @@
         收发货方档案
     </button>
 </div>
-
+<br/>
+<br/>
+<br/>
 <form id="" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
         <div class="form-group">
-            <label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
+            <label class="control-label col-label no-padding-right" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="订单日期"
+                    <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="订单日期"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
                 </div>
             </div>
-            <label class="control-label col-label no-padding-right" for="supplierCode">开单员</label>
+            <label class="control-label col-label no-padding-right" for="">开单员</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="开单员"/>
+                    <select  id="merchandiser" name="merchandiser">
+                        <option value="00001">----</option>
+                        <option value="00001">张无忌</option>
+                        <option value="00002">杨过</option>
+                    </select>
                 </div>
             </div>
-            <label class="control-label col-label no-padding-right" for="supplierCode">预发货时间</label>
+            <label class="control-label col-label no-padding-right" for="">预发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="预计发货时间"
@@ -104,22 +417,27 @@
     </div>
     <div class="col-xs-12">
         <div class="form-group">
-            <label class="control-label col-label no-padding-right" for="supplierCode">客户名称</label>
+            <label class="control-label col-label no-padding-right" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12" name=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <span style="cursor:pointer" id="custListDivBlock">
                     <button type="button" class="btn btn-minier btn-inverse no-padding-right"
-                            id="consignorListDivBlock">选择
-                    </button>
+                            id="">选择
+                    </button></span>
                 </div>
             </div>
-            <label class="control-label col-label no-padding-right" for="supplierCode">配送仓库</label>
+            <label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="配送仓库"/>
+                    <select  id="merchandiser" name="merchandiser">
+                        <option value="00000">----</option>
+                        <option value="00001">北京仓库</option>
+                        <option value="00002">天津仓库</option>
+                    </select>
                 </div>
             </div>
-            <label class="control-label col-label no-padding-right" for="supplierCode">备注</label>
+            <label class="control-label col-label no-padding-right" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="备注"/>
@@ -127,43 +445,57 @@
             </div>
         </div>
     </div>
-
+    <br/>
+    <br/>
+    <br/>
     <div class="row">
-        <span style="float: left">发货方</span>
-        <span style="float: left">出发地:</span>
         <div class="col-xs-12">
             <div class="form-group">
-                <label class="control-label col-label no-padding-right" for="supplierCode">名称</label>
+                <label class="control-label col-label no-padding-right" for=""><b>发货方</b></label>
+                <div class="col-xs-6">
+                </div>
+                <label class="control-label col-label no-padding-right" for=""><b>出发地:</b></label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text"
+                        <span id="departurePlace"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="">名称</label>
+                <div class="col-xs-3">
+                    <div class="clearfix">
+                        <input class="col-xs-10 col-xs-12" name="consignorName" id="consignorName" type="text"
                                placeholder="名称"/>
+                        <span style="cursor:pointer" id="consignorListDivBlock">
                         <button type="button" class="btn btn-minier btn-inverse no-padding-right"
-                                id="consignorListDivBlock">选择
-                        </button>
+                                id="">选择
+                        </button></span>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right" for="supplierCode">联系人</label>
+                <label class="control-label col-label no-padding-right" for="">联系人</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="联系人"/>
+                        <input class="col-xs-10 col-xs-12" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right" for="supplierCode">联系电话</label>
+                <label class="control-label col-label no-padding-right" for="">联系电话</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="联系电话"/>
+                        <input class="col-xs-10 col-xs-12" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-xs-12">
             <div class="form-group">
-                <label class="control-label col-label no-padding-right" for="supplierCode">地址</label>
+                <label class="control-label col-label no-padding-right" for="">地址</label>
                 <div class="col-xs-9">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="地址"
-                               onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+                        <input class="col-xs-10 col-xs-12" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
                     </div>
                 </div>
 
@@ -171,27 +503,28 @@
         </div>
     </div>
 </form>
+<br/>
 <div class="col-sm-12">
     <div class="tabbable" style="width:1000px;">
         <ul class="nav nav-tabs" id="myTab4">
-            <li class="active">
+            <li class="goodsLi disable" >
                 <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
             </li>
 
-            <li class="transLi">
+            <li class="consigneeLi active">
                 <a data-toggle="tab" href="#profile4" aria-expanded="true">收货方列表</a>
             </li>
 
         </ul>
 
         <div class="tab-content">
-            <div id="home4" class="tab-pane active">
+            <div id="home4" class="tab-pane ">
                 <!--货品明细-->
                 <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
                        aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row">
+                    <tr role="row" id="222">
                         <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                             操作
                         </th>
@@ -217,491 +550,40 @@
                 </table>
             </div>
 
-            <div id="profile4" class="tab-pane">
+            <div id="profile4" class="tab-pane active">
+                <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">添加收货方</button></span>
+                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
+                       aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                            操作
+                        </th>
+                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Domain: activate to sort column ascending">收货方名称
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Price: activate to sort column ascending">客户订单编号
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Update: activate to sort column ascending">联系人
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Clicks: activate to sort column ascending">联系电话
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Clicks: activate to sort column ascending">地址
+                        </th>
+                    </thead>
+                    <tbody id="consigneeInfoListDiv"></tbody>
 
+                </table>
             </div>
 
         </div>
     </div>
 </div>
-
-
-<#--<div class="col-xs-12">
-
-    <div class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" id="gbox_grid-table" dir="ltr"
-         style="width: 1119px;">
-        <div class="jqgrid-overlay ui-widget-overlay" id="lui_grid-table"></div>
-        <div class="loading ui-state-default ui-state-active" id="load_grid-table" style="display: none;">Loading...
-        </div>
-        <div class="ui-jqgrid-view " role="grid" id="gview_grid-table" style="width: 1119px;">
-            <div class="ui-jqgrid-hdiv ui-state-default" style="width: 1119px;">
-                <div class="ui-jqgrid-hbox">
-                    <table class="ui-jqgrid-htable ui-common-table " style="width: 1101px;" role="presentation"
-                           aria-labelledby="gbox_grid-table">
-                        <thead>
-                        <tr class="ui-jqgrid-labels" role="row">
-                           &lt;#&ndash; <th id="grid-table_cb" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 35px;">
-                                <div id="jqgh_grid-table_cb"><input role="checkbox" id="cb_grid-table" class="cbox"
-                                                                    type="checkbox"><span class="s-ico"
-                                                                                          style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>&ndash;&gt;
-                            <th id="grid-table_subgrid" role="columnheader"
-                                class="ui-th-column ui-th-ltr ui-state-default" style="width: 25px;">
-                                <div id="jqgh_grid-table_subgrid"><span class="s-ico" style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_myac" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 80px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                           style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_myac" class="ui-jqgrid-sortable"><span class="s-ico"
-                                                                                                style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_id" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 95px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                           style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_id" class="ui-jqgrid-sortable">ID<span class="s-ico"
-                                                                                                style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_sdate" role="columnheader"
-                                class="ui-th-column ui-th-ltr ui-state-default" style="width: 142px;"><span
-                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                    style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_sdate" class="ui-jqgrid-sortable">Last Sales<span class="s-ico"
-                                                                                                           style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_name" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 236px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                            style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_name" class="ui-jqgrid-sortable">Name<span class="s-ico"
-                                                                                                    style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_stock" role="columnheader"
-                                class="ui-th-column ui-th-ltr ui-state-default" style="width: 110px;"><span
-                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                    style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_stock" class="ui-jqgrid-sortable">Stock<span class="s-ico"
-                                                                                                      style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_ship" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 142px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                            style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_ship" class="ui-jqgrid-sortable">Ship via<span class="s-ico"
-                                                                                                        style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                            <th id="grid-table_note" role="columnheader" class="ui-th-column ui-th-ltr ui-state-default"
-                                style="width: 236px;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                            style="cursor: col-resize;">&nbsp;</span>
-                                <div id="jqgh_grid-table_note" class="ui-jqgrid-sortable">Notes<span class="s-ico"
-                                                                                                     style="display:none"><span
-                                        sort="asc"
-                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                        sort="desc"
-                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                </div>
-                            </th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-            <div class="ui-jqgrid-bdiv" style="height: 250px; width: 1119px;">
-                <div style="position:relative;">
-                    <div></div>
-                    <table id="grid-table" tabindex="0" role="presentation" aria-multiselectable="true"
-                           aria-labelledby="gbox_grid-table" class="ui-jqgrid-btable ui-common-table"
-                           style="width: 1101px;">
-                        <tbody>
-                        <tr class="jqgfirstrow" role="row">
-                            <td role="gridcell" style="height:0px;width:35px;"></td>
-                            <td role="gridcell" style="height:0px;width:25px;"></td>
-                            <td role="gridcell" style="height:0px;width:80px;"></td>
-                            <td role="gridcell" style="height: 0px; width: 95px;"></td>
-                            <td role="gridcell" style="height: 0px; width: 142px;"></td>
-                            <td role="gridcell" style="height: 0px; width: 236px;"></td>
-                            <td role="gridcell" style="height: 0px; width: 110px;"></td>
-                            <td role="gridcell" style="height: 0px; width: 142px;"></td>
-                            <td role="gridcell" style="height: 0px; width: 236px;"></td>
-                        </tr>
-                        <tr role="row" id="1" tabindex="-1" class="jqgrow ui-row-ltr ui-widget-content">
-
-                            <td role="gridcell" aria-describedby="grid-table_subgrid" class="ui-sgcollapsed sgcollapsed"
-                                style=""><a style="cursor:pointer;" class="ui-sghref"><span
-                                    class="ui-icon ace-icon fa fa-plus center bigger-110 blue"></span></a></td>
-                            <td role="gridcell" style="" title="" aria-describedby="grid-table_myac">
-                                <div style="margin-left:8px;">
-                                    <div title="" style="float:left;cursor:pointer;" class="ui-pg-div ui-inline-edit"
-                                         id="jEditButton_1" onclick="jQuery.fn.fmatter.rowactions.call(this,'edit');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Edit selected row"><span
-                                            class="ui-icon ui-icon-pencil"></span></div>
-                                    <div title="" style="float:left;" class="ui-pg-div ui-inline-del"
-                                         id="jDeleteButton_1" onclick="jQuery.fn.fmatter.rowactions.call(this,'del');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Delete selected row"><span
-                                            class="ui-icon ui-icon-trash"></span></div>
-                                    <div title="" style="float:left;display:none" class="ui-pg-div ui-inline-save"
-                                         id="jSaveButton_1" onclick="jQuery.fn.fmatter.rowactions.call(this,'save');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Save row"><span class="ui-icon ui-icon-disk"></span></div>
-                                    <div title="" style="float:left;display:none;" class="ui-pg-div ui-inline-cancel"
-                                         id="jCancelButton_1"
-                                         onclick="jQuery.fn.fmatter.rowactions.call(this,'cancel');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Cancel row editing"><span
-                                            class="ui-icon ui-icon-cancel"></span></div>
-                                </div>
-                            </td>
-                            <td role="gridcell" style="" title="1" aria-describedby="grid-table_id">1</td>
-                            <td role="gridcell" style="" title="2007-12-03" aria-describedby="grid-table_sdate">
-                                2007-12-03
-                            </td>
-                            <td role="gridcell" style="" title="Desktop Computer" aria-describedby="grid-table_name">
-                                Desktop Computer
-                            </td>
-                            <td role="gridcell" style="" title="Yes" aria-describedby="grid-table_stock">Yes</td>
-                            <td role="gridcell" style="" title="FedEx" aria-describedby="grid-table_ship">FedEx</td>
-                            <td role="gridcell" style="" title="note" aria-describedby="grid-table_note">note</td>
-                        </tr>
-                        <tr role="row" id="2" tabindex="-1"
-                            class="jqgrow ui-row-ltr ui-widget-content ui-priority-secondary">
-
-                            <td role="gridcell" aria-describedby="grid-table_subgrid" class="ui-sgcollapsed sgexpanded"
-                                style=""><a style="cursor:pointer;" class="ui-sghref"><span
-                                    class="ui-icon ace-icon fa fa-minus center bigger-110 blue"></span></a></td>
-                            <td role="gridcell" style="" title="" aria-describedby="grid-table_myac">
-                                <div style="margin-left:8px;">
-                                    <div title="" style="float:left;cursor:pointer;" class="ui-pg-div ui-inline-edit"
-                                         id="jEditButton_2" onclick="jQuery.fn.fmatter.rowactions.call(this,'edit');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Edit selected row"><span
-                                            class="ui-icon ui-icon-pencil"></span></div>
-                                    <div title="" style="float:left;" class="ui-pg-div ui-inline-del"
-                                         id="jDeleteButton_2" onclick="jQuery.fn.fmatter.rowactions.call(this,'del');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Delete selected row"><span
-                                            class="ui-icon ui-icon-trash"></span></div>
-                                    <div title="" style="float:left;display:none" class="ui-pg-div ui-inline-save"
-                                         id="jSaveButton_2" onclick="jQuery.fn.fmatter.rowactions.call(this,'save');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Save row"><span class="ui-icon ui-icon-disk"></span></div>
-                                    <div title="" style="float:left;display:none;" class="ui-pg-div ui-inline-cancel"
-                                         id="jCancelButton_2"
-                                         onclick="jQuery.fn.fmatter.rowactions.call(this,'cancel');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Cancel row editing"><span
-                                            class="ui-icon ui-icon-cancel"></span></div>
-                                </div>
-                            </td>
-                            <td role="gridcell" style="" title="2" aria-describedby="grid-table_id">2</td>
-                            <td role="gridcell" style="" title="2007-12-03" aria-describedby="grid-table_sdate">
-                                2007-12-03
-                            </td>
-                            <td role="gridcell" style="" title="Laptop" aria-describedby="grid-table_name">Laptop</td>
-                            <td role="gridcell" style="" title="Yes" aria-describedby="grid-table_stock">Yes</td>
-                            <td role="gridcell" style="" title="InTime" aria-describedby="grid-table_ship">InTime</td>
-                            <td role="gridcell" style="" title="Long text " aria-describedby="grid-table_note">Long
-                                text
-                            </td>
-                        </tr>
-                        <tr role="row" id="grid-table_2_expandedContent" class="ui-subgrid ui-sg-expanded">
-                            <td colspan="1">&nbsp;</td>
-                            <td class="ui-widget-content subgrid-cell"><span
-                                    class="ui-icon ace-icon fa fa-chevron-right center orange"></span></td>
-                            <td colspan="7" class="ui-widget-content subgrid-data">
-                                <div id="grid-table_2" class="tablediv">
-                                    <div class="ui-jqgrid ui-widget ui-widget-content ui-corner-all"
-                                         id="gbox_grid-table_2_t" dir="ltr" style="width: 250px;">
-                                        <div class="jqgrid-overlay ui-widget-overlay" id="lui_grid-table_2_t"></div>
-                                        <div class="loading ui-state-default ui-state-active" id="load_grid-table_2_t"
-                                             style="display: none;">Loading...
-                                        </div>
-                                        <div class="ui-jqgrid-view " role="grid" id="gview_grid-table_2_t"
-                                             style="width: 250px;">
-                                            <div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix"
-                                                 style="display: none;"><a role="link"
-                                                                           class="ui-jqgrid-titlebar-close HeaderButton ui-corner-all"
-                                                                           title="Toggle Expand Collapse Grid"
-                                                                           style="right: 0px;"><span
-                                                    class="ui-jqgrid-headlink ui-icon ui-icon-circle-triangle-n"></span></a><span
-                                                    class="ui-jqgrid-title"></span></div>
-                                            <div class="ui-jqgrid-hdiv ui-state-default ui-corner-top"
-                                                 style="width: 250px;">
-                                                <div class="ui-jqgrid-hbox">
-                                                    <table class="ui-jqgrid-htable ui-common-table " style="width:232px"
-                                                           role="presentation" aria-labelledby="gbox_grid-table_2_t">
-                                                        <thead>
-                                                        <tr class="ui-jqgrid-labels" role="row">
-                                                            <th id="grid-table_2_t_id" role="columnheader"
-                                                                class="ui-th-column ui-th-ltr ui-state-default"
-                                                                style="width: 46px;"><span
-                                                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                                    style="cursor: col-resize;">&nbsp;</span>
-                                                                <div id="jqgh_grid-table_2_t_id"
-                                                                     class="ui-jqgrid-sortable">No<span class="s-ico"
-                                                                                                        style="display:none"><span
-                                                                        sort="asc"
-                                                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                                                        sort="desc"
-                                                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                                                </div>
-                                                            </th>
-                                                            <th id="grid-table_2_t_name" role="columnheader"
-                                                                class="ui-th-column ui-th-ltr ui-state-default"
-                                                                style="width: 139px;"><span
-                                                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                                    style="cursor: col-resize;">&nbsp;</span>
-                                                                <div id="jqgh_grid-table_2_t_name"
-                                                                     class="ui-jqgrid-sortable">Item Name<span
-                                                                        class="s-ico" style="display:none"><span
-                                                                        sort="asc"
-                                                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                                                        sort="desc"
-                                                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                                                </div>
-                                                            </th>
-                                                            <th id="grid-table_2_t_qty" role="columnheader"
-                                                                class="ui-th-column ui-th-ltr ui-state-default"
-                                                                style="width: 47px;"><span
-                                                                    class="ui-jqgrid-resize ui-jqgrid-resize-ltr"
-                                                                    style="cursor: col-resize;">&nbsp;</span>
-                                                                <div id="jqgh_grid-table_2_t_qty"
-                                                                     class="ui-jqgrid-sortable">Qty<span class="s-ico"
-                                                                                                         style="display:none"><span
-                                                                        sort="asc"
-                                                                        class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-n"></span><span
-                                                                        sort="desc"
-                                                                        class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-state-disabled ui-icon ui-icon-triangle-1-s"></span></span>
-                                                                </div>
-                                                            </th>
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="ui-jqgrid-bdiv" style="height: 150px; width: 250px;">
-                                                <div style="position:relative;">
-                                                    <div></div>
-                                                    <table id="grid-table_2_t" tabindex="0" role="presentation"
-                                                           aria-multiselectable="false"
-                                                           aria-labelledby="gbox_grid-table_2_t"
-                                                           class="ui-jqgrid-btable ui-common-table"
-                                                           style="width: 232px;">
-                                                        <tbody>
-                                                        <tr class="jqgfirstrow" role="row">
-                                                            <td role="gridcell" style="height:0px;width:46px;"></td>
-                                                            <td role="gridcell" style="height:0px;width:139px;"></td>
-                                                            <td role="gridcell" style="height:0px;width:47px;"></td>
-                                                        </tr>
-                                                        <tr role="row" id="1" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content ui-state-hover">
-                                                            <td role="gridcell" style="" title="1"
-                                                                aria-describedby="grid-table_2_t_id">1
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 1"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 1
-                                                            </td>
-                                                            <td role="gridcell" style="" title="11"
-                                                                aria-describedby="grid-table_2_t_qty">11
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="2" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content">
-                                                            <td role="gridcell" style="" title="2"
-                                                                aria-describedby="grid-table_2_t_id">2
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 2"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 2
-                                                            </td>
-                                                            <td role="gridcell" style="" title="3"
-                                                                aria-describedby="grid-table_2_t_qty">3
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="3" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content">
-                                                            <td role="gridcell" style="" title="3"
-                                                                aria-describedby="grid-table_2_t_id">3
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 3"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 3
-                                                            </td>
-                                                            <td role="gridcell" style="" title="12"
-                                                                aria-describedby="grid-table_2_t_qty">12
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="4" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content ">
-                                                            <td role="gridcell" style="" title="4"
-                                                                aria-describedby="grid-table_2_t_id">4
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 4"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 4
-                                                            </td>
-                                                            <td role="gridcell" style="" title="5"
-                                                                aria-describedby="grid-table_2_t_qty">5
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="5" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content">
-                                                            <td role="gridcell" style="" title="5"
-                                                                aria-describedby="grid-table_2_t_id">5
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 5"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 5
-                                                            </td>
-                                                            <td role="gridcell" style="" title="2"
-                                                                aria-describedby="grid-table_2_t_qty">2
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="6" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content ">
-                                                            <td role="gridcell" style="" title="6"
-                                                                aria-describedby="grid-table_2_t_id">6
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 6"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 6
-                                                            </td>
-                                                            <td role="gridcell" style="" title="9"
-                                                                aria-describedby="grid-table_2_t_qty">9
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="7" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content">
-                                                            <td role="gridcell" style="" title="7"
-                                                                aria-describedby="grid-table_2_t_id">7
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 7"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 7
-                                                            </td>
-                                                            <td role="gridcell" style="" title="3"
-                                                                aria-describedby="grid-table_2_t_qty">3
-                                                            </td>
-                                                        </tr>
-                                                        <tr role="row" id="8" tabindex="-1"
-                                                            class="jqgrow ui-row-ltr ui-widget-content ">
-                                                            <td role="gridcell" style="" title="8"
-                                                                aria-describedby="grid-table_2_t_id">8
-                                                            </td>
-                                                            <td role="gridcell" style="" title="sub grid item 8"
-                                                                aria-describedby="grid-table_2_t_name">sub grid item 8
-                                                            </td>
-                                                            <td role="gridcell" style="" title="8"
-                                                                aria-describedby="grid-table_2_t_qty">8
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="ui-jqgrid-resize-mark" id="rs_mgrid-table_2_t">&nbsp;</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr role="row" id="3" tabindex="-1" class="jqgrow ui-row-ltr ui-widget-content">
-
-                            <td role="gridcell" aria-describedby="grid-table_subgrid" class="ui-sgcollapsed sgcollapsed"
-                                style=""><a style="cursor:pointer;" class="ui-sghref"><span
-                                    class="ui-icon ace-icon fa fa-plus center bigger-110 blue"></span></a></td>
-                            <td role="gridcell" style="" title="" aria-describedby="grid-table_myac">
-                                <div style="margin-left:8px;">
-                                    <div title="" style="float:left;cursor:pointer;" class="ui-pg-div ui-inline-edit"
-                                         id="jEditButton_3" onclick="jQuery.fn.fmatter.rowactions.call(this,'edit');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Edit selected row"><span
-                                            class="ui-icon ui-icon-pencil"></span></div>
-                                    <div title="" style="float:left;" class="ui-pg-div ui-inline-del"
-                                         id="jDeleteButton_3" onclick="jQuery.fn.fmatter.rowactions.call(this,'del');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Delete selected row"><span
-                                            class="ui-icon ui-icon-trash"></span></div>
-                                    <div title="" style="float:left;display:none" class="ui-pg-div ui-inline-save"
-                                         id="jSaveButton_3" onclick="jQuery.fn.fmatter.rowactions.call(this,'save');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Save row"><span class="ui-icon ui-icon-disk"></span></div>
-                                    <div title="" style="float:left;display:none;" class="ui-pg-div ui-inline-cancel"
-                                         id="jCancelButton_3"
-                                         onclick="jQuery.fn.fmatter.rowactions.call(this,'cancel');"
-                                         onmouseover="jQuery(this).addClass('ui-state-hover');"
-                                         onmouseout="jQuery(this).removeClass('ui-state-hover');"
-                                         data-original-title="Cancel row editing"><span
-                                            class="ui-icon ui-icon-cancel"></span></div>
-                                </div>
-                            </td>
-                            <td role="gridcell" style="" title="3" aria-describedby="grid-table_id">3</td>
-                            <td role="gridcell" style="" title="2007-12-03" aria-describedby="grid-table_sdate">
-                                2007-12-03
-                            </td>
-                            <td role="gridcell" style="" title="LCD Monitor" aria-describedby="grid-table_name">LCD
-                                Monitor
-                            </td>
-                            <td role="gridcell" style="" title="Yes" aria-describedby="grid-table_stock">Yes</td>
-                            <td role="gridcell" style="" title="TNT" aria-describedby="grid-table_ship">TNT</td>
-                            <td role="gridcell" style="" title="note3" aria-describedby="grid-table_note">note3</td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- PAGE CONTENT ENDS &ndash;&gt;
-</div>-->
 
 
 <div class="col-xs-12">
@@ -710,6 +592,8 @@
         确认下单
     </button>
 </div>
+
+
 
 
 <script type="text/javascript">
@@ -746,14 +630,367 @@
 
     function main() {
         //validateForm();
+
     }
     $(function () {
-        $("#goodsListDivBlock").click(function () {
-            $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        $(".goodsLi").click(function () {
+            /*var consigneeChosen = "";
+            $("#consigneeInfoListDiv").find("tr").each(function () {
+                consigneeChosen = "param";
+            })
+            if(""==consigneeChosen){
+                debugger
+                $(".goodsLi").off('click').on("click",function(){
+                    alert("请先添加收货方")
+                });
+            }*/
         })
+
+        $("#goodsListDivBlock").click(function () {
+            var consigneeChosen = "";
+            $("#consigneeInfoListDiv").find("tr").each(function () {
+                consigneeChosen = "param";
+            })
+            if(""==consigneeChosen){
+                alert("请先添加收货方")
+            }else{
+                $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+            }
+        })
+        $("#goodsListDivNoneTop").click(function(){
+
+            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+        $("#goodsListDivNoneBottom").click(function(){
+
+            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+        });
+        $("#goodsSelectFormBtn").click(function () {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
+                data=eval(data);
+
+                var goodsList = "";
+                $.each(data,function (index,cscGoodsVo) {
+                    goodsList =goodsList + "<tr role='row' class='odd'>";
+                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//品牌
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
+                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
+                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
+                    goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+                    /*goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
+                    goodsList =goodsList + "</tr>";
+                });
+                $("#goodsSelectListTbody").html(goodsList);
+            },"json");
+        });
+        $("#goodcheck").change(function () {
+            if($("#goodcheck").prop("checked")){
+                $("#goodsSelectListTbody").find("tr").each(function(index){
+                    $(this).children().eq(0).find("input").prop('checked',true);
+                });
+            }else{
+                $("#goodsSelectListTbody").find("tr").each(function(index){
+                    $(this).children().eq(0).find("input").prop('checked',false);
+                });
+            }
+        });
+        $("#goodsEnter").click(function () {
+            var goodsInfoListDiv = "";
+            $("#goodsInfoListDiv").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                var goodsCode = tdArr.eq(1).text();//货品编码
+                var goodsName = tdArr.eq(2).text();//货品名称
+                var specification = tdArr.eq(3).text();//    货品规格
+                var unit = tdArr.eq(4).text();//    单位
+                var sendGoods = tdArr.eq(5).text();//发货数量
+
+
+                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+            });
+            $("#goodsInfoListDiv").html("");
+            var str = "";
+            $("#goodsSelectListTbody").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                if(tdArr.eq(0).find("input").prop("checked")){
+                    var goodsCode = tdArr.eq(4).text();//货品编码
+                    var goodsName = tdArr.eq(5).text();//货品名称
+                    var specification = tdArr.eq(6).text();//规格
+                    var unit = tdArr.eq(7).text();//单位
+                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";//class=\"btn btn-minier btn-yellow\"
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>" +
+                            "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                            "</td>";
+                    /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>20</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+
+                    str="str";
+                }
+            });
+            if(goodsInfoListDiv==""){
+                alert("请至少选择一行");
+            }else{
+                $("#goodsInfoListDiv").html(goodsInfoListDiv);
+                $("#goodsListDiv").fadeOut("slow");
+            }
+            //validateForm();
+
+        });
     })
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
     }
+
+    $("#goodsAndConsigneeDivNoneBottom").click(function () {
+        $("#goodsAndConsigneeDiv").fadeOut("slow");
+    });
+    function goodsAndConsignee(obj){
+        $("#goodsAndConsigneeDiv").fadeIn("slow");
+        console.log($(obj).html())
+        console.log($(obj).find('td')[1].innerText)
+
+        var goodsCode = $(obj).find('td')[1].innerText;
+        var goodsName = $(obj).find('td')[2].innerText;
+        var specification = $(obj).find('td')[3].innerText;
+        var unit = $(obj).find('td')[4].innerText;
+        $("#goodsCodeDiv").val(goodsCode);
+        $("#goodsNameDiv").val(goodsName);
+        $("#specificationDiv").val(specification);
+        $("#unitDiv").val(unit);
+    }
+
+    //校验是否选了客户
+    function validateCustChosen() {
+        var custChosen = $("#custName").val();
+        if(""==custChosen){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    $("#consignorListDivBlock").click(function(){
+
+        if(!validateCustChosen()){
+            alert("请先选择客户")
+        }else{
+            $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        }
+
+
+    });
+
+    $("#consignorListDivNoneTop").click(function(){
+
+        $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+    });
+
+    $("#consignorListDivNoneBottom").click(function(){
+
+        $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+    });
+
+    $("#consignorSelectFormBtn").click(function () {
+        var cscContantAndCompanyDto = {};
+        var cscContact = {};
+        var cscContactCompany = {};
+
+        cscContactCompany.contactCompanyName = $("#consignorName2").val();
+        cscContact.purpose = "2";
+        cscContact.contactName = $("#consignorPerson2").val();
+        cscContact.phone = $("#consignorPhoneNumber2").val();
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
+            data=eval(data);
+            var contactList = "";
+            $.each(data,function (index,CscContantAndCompanyDto) {
+                /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                consignorTypeHide = CscContantAndCompanyDto.type;*/
+                contactList =contactList + "<tr role='row' class='odd'>";
+                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                contactList =contactList + "<td>"+(index+1)+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                contactList =contactList + "</tr>";
+            });
+            $("#contactSelectListTbody2").html(contactList);
+        },"json");
+    });
+
+    $("#contactinEnter").click(function () {
+
+        var consignorin = "";
+        $("#contactSelectListTbody2").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+                consignorin = "1";
+                var consignorName = tdArr.eq(2).text();//名称
+                var contacts = tdArr.eq(3).text();//联系人
+                var contactsNumber = tdArr.eq(4).text();//    联系电话
+                var address = tdArr.eq(5).text();//    地址
+
+                $("#consignorName").val(consignorName);
+                $("#consignorContactName").val(contacts);
+                $("#consignorContactPhone").val(contactsNumber);
+                $("#consignorContactAddress").val(address);
+
+            }
+        });
+        if(consignorin==""){
+            alert("请至少选择一行");
+        }else{
+            $("#consignorListDiv").fadeOut("slow");
+        }
+    });
+
+    $("#consigneeListDivBlock").click(function(){
+
+        if(!validateCustChosen()){
+            alert("请先选择客户")
+        }else{
+            $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        }
+    });
+
+
+
+    $("#consigneeListDivNoneTop").click(function(){
+
+        $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+    });
+
+    $("#consigneeListDivNoneBottom").click(function(){
+
+        $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+
+    });
+
+    $("#consigneeSelectFormBtn").click(function () {
+        var cscContantAndCompanyDto = {};
+        var cscContact = {};
+        var cscContactCompany = {};
+        cscContactCompany.contactCompanyName = $("#consignorName1").val();
+        cscContact.purpose = "1";
+        cscContact.contactName = $("#consignorPerson1").val();
+        cscContact.phone = $("#consignorPhoneNumber1").val();
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param}, function(data) {
+            data=eval(data);
+            var contactList = "";
+            $.each(data,function (index,CscContantAndCompanyDto) {
+                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                consigneeTypeHide = CscContantAndCompanyDto.type;*/
+                contactList =contactList + "<tr role='row' class='odd'>";
+                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                contactList =contactList + "<td>"+(index+1)+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                contactList =contactList + "</tr>";
+                $("#contactSelectListTbody1").html(contactList);
+            });
+        },"json");
+    });
+    $("#consigneecheck").change(function () {
+        if($("#consigneecheck").prop("checked")){
+            $("#contactSelectListTbody1").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',true);
+            });
+        }else{
+            $("#contactSelectListTbody1").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',false);
+            });
+        }
+    });
+    $("#contactoutEnter").click(function () {
+        var consignorout = "";
+        $("#consigneeInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            var consigneeName = tdArr.eq(1).text();//
+            var consigneeContactName = tdArr.eq(3).text();//
+            var consigneeContactPhone = tdArr.eq(4).text();//
+            var consigneeContactAddress = tdArr.eq(5).text();//
+            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+            consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+            consignorout =consignorout + "<td>"+consigneeName+"</td>";
+            consignorout =consignorout + "<td><input />" +
+                    "<button type='button' class='btn btn-minier btn-inverse no-padding-right'  id=''>保存</button>" +
+                    "</td>";
+            consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
+            consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
+            consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
+            consignorout =consignorout + "</tr>";
+        });
+        $("#consigneeInfoListDiv").html("");
+
+        $("#contactSelectListTbody1").find("tr").each(function(index){
+            debugger
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+
+                var consigneeName = tdArr.eq(2).text();//名称
+                var consigneeContactName = tdArr.eq(3).text();//联系人
+                var consigneeContactPhone = tdArr.eq(4).text();//    联系电话
+                var consigneeContactAddress = tdArr.eq(5).text();//    地址
+                consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+                consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                consignorout =consignorout + "<td><input />" +
+                        "<button type='button' class='btn btn-minier btn-inverse no-padding-right'  id=''>保存</button>" +
+                        "</td>";
+                consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
+                consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
+                consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
+                consignorout =consignorout + "</tr>";
+            }
+        });
+        if(consignorout==""){
+            alert("请至少选择一行");
+        }else{
+            $("#consigneeInfoListDiv").html(consignorout);
+            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        }
+    });//custListDiv
+    $("#custListDivBlock").click(function () {
+        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+    });
+    $("#custListDivNoneBottom").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+    $("#custListDivNoneTop").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+
+
 </script>
 </body>

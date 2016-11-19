@@ -2147,8 +2147,6 @@
                 $("#profile4").removeClass("active");
                 $("#dropdown14").removeClass("active");
 
-
-
             }
             if($(this).children('option:selected').val() == '60'){//运输订单
                 //$("#transBusinessTypeDiv").show();
