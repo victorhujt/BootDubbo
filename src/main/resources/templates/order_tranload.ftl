@@ -84,12 +84,12 @@
                             <div class="form-group">
                                 <div class="col-sm-5">
                                     <div class="clearfix col-sm-1">
-                                        <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
+                                        <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                                         <input id="pickUpGoods" type="hidden" name="pickUpGoods"  value="0" />
                                     </div>
                                     <label class="control-label col-sm-3" for="name">上门提货:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost()" onkeyup= "if( ! /^d*(?:.d{0,2})?$/.test(this.value)){alert('只能输入数字，小数点后只能保留两位');this.value='';}" />
+                                        <input id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -102,14 +102,14 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">货物保险:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost()">
+                                        <input id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">声明价值</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -122,7 +122,7 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">二次配送:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -135,14 +135,14 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">代收货款:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">代收金额</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="collectLoanAmount" disabled="true" style="color: #000" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="collectLoanAmount" disabled="true" style="color: #000" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -155,14 +155,14 @@
                                     </div>
                                     <label class="control-label col-sm-3" for="name">签单返回:费用</label>
                                     <div class="clearfix col-sm-5">
-                                        <input id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">运费</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost()">
+                                        <input id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -826,14 +826,111 @@
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
     }
-    function countCost() {
-        var count=0;
-        debugger;
-        if($("#homeDeliveryFee").val()!=null || $("#homeDeliveryFee").val()!=""){
-            count=parseFloat($("#homeDeliveryFee").val());
+    function countCost(obj) {
+        if($(obj).attr("id")=="luggage"){
+            if($(obj).val()=="0"){
+                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，不可以为空或为0，小数点后只能保留两位');
+                countCostCheck();
+                $(obj).val("");
+            }else {
+                if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val())){
+                    alert('只能输入数字，最大值不能超过999999.99元，不允许负数，不可以为空或为0，小数点后只能保留两位');
+                    $(obj).val("");
+                    countCostCheck();
+                }else{
+                    countCostCheck();
+                };
+            }
+        }else {
+            if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val())){
+                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+                $(obj).val("");
+                countCostCheck();
+            }else{
+                countCostCheck();
+            };
         }
-        if($("#cargoInsuranceFee").val()!=null || $("#cargoInsuranceFee").val()!=""){
-            count=parseFloat($("#cargoInsuranceFee").val());
+    }
+    function countQuantity(obj) {
+        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,3})?$/).test($(obj).val())){
+            alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+            $(obj).val("");
+            countQuantityCheck();
+        }else{
+            countQuantityCheck();
+        };
+    }
+    function countWeight(obj) {
+        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,3})?$/).test($(obj).val())){
+            alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+            $(obj).val("");
+            countWeightCheck();
+        }else{
+            countWeightCheck();
+        };
+    }
+    function countQuantityCheck() {
+        var quantityCount=0;
+        $('input[name="quantity"]').each(function(){
+            if($(this).val()!=""){
+                quantityCount=quantityCount+parseFloat($(this).val());
+            }
+        });
+        /*$("#goodsInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            var quantity = tdArr.eq(7).children().val();//    数量
+            if($("#quantity").val()!=""){
+                quantityCount=quantityCount+parseFloat(quantity);
+            }
+        });*/
+        $("#quantityCount").html(quantityCount);
+
+    }
+    function countWeightCheck() {
+        var weightCount=0;
+        var luggage=0;
+        var flg="";
+        $('input[name="weight"]').each(function(){
+            if($(this).val()!=""){
+                //alert($(this).parent().next().find('input').first().attr("id"));
+                weightCount=weightCount+parseFloat($(this).val());
+                if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
+                    luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
+                }else{
+                    flg="error";
+                }
+            }else{
+                flg="error";
+            }
+        });
+        $("#luggage").val(luggage);
+        $("#weightCount").html(weightCount);
+    }
+    function countCostCheck() {
+        var count=0;
+        if($("#homeDeliveryFee").val()!=""){
+            count=count+parseFloat($("#homeDeliveryFee").val());
+        }
+        if($("#cargoInsuranceFee").val()!=""){
+            count=count+parseFloat($("#cargoInsuranceFee").val());
+        }
+        if($("#insureValue").val()!=""){
+            count=count+parseFloat($("#insureValue").val());
+        }
+        if($("#twoDistributionFee").val()!=""){
+            count=count+parseFloat($("#twoDistributionFee").val());
+        }
+        if($("#collectServiceCharge").val()!=""){
+            count=count+parseFloat($("#collectServiceCharge").val());
+        }
+        if($("#collectLoanAmount").val()!=""){
+            count=count+parseFloat($("#collectLoanAmount").val());
+        }
+        if($("#returnListFee").val()!=""){
+            count=count+parseFloat($("#returnListFee").val());
+        }
+        if($("#luggage").val()!=""){
+            count=count+parseFloat($("#luggage").val());
         }
         $("#serviceCharge").val(count);
     }
@@ -1042,20 +1139,15 @@
 
     $(function(){
 
-        $("#provideTransport").change(function () {
-            if($(this).prop("checked")){
-                $("#provideTransportHel").val("1");
-            } else {
-                $("#provideTransportHel").val("0");
-            }
-        });
         $("#pickUpGoodsV").change(function(){
             if($(this).prop("checked")){
                 $("#pickUpGoods").val("1");
                 $("#homeDeliveryFee").removeAttr("disabled");//要变成Enable，JQuery只能这么写
             }else{
                 $("#pickUpGoods").val("0");
+                $("#homeDeliveryFee").val("");
                 $("#homeDeliveryFee").attr("disabled","disabled");
+                countCostCheck();
             }
 
         });
@@ -1067,7 +1159,10 @@
             }else{
                 $("#insure").val("0");
                 $("#cargoInsuranceFee").attr("disabled","disabled");
+                $("#cargoInsuranceFee").val("");
                 $("#insureValue").attr("disabled","disabled");
+                $("#insureValue").val("");
+                countCostCheck();
             }
 
         });
@@ -1078,6 +1173,8 @@
             }else{
                 $("#twoDistribution").val("0");
                 $("#twoDistributionFee").attr("disabled","disabled");
+                $("#twoDistributionFee").val("");
+                countCostCheck();
             }
 
         });
@@ -1089,7 +1186,10 @@
             }else{
                 $("#collectFlag").val("0");
                 $("#collectServiceCharge").attr("disabled","disabled");
+                $("#collectServiceCharge").val("");
                 $("#collectLoanAmount").attr("disabled","disabled");
+                $("#collectLoanAmount").val("");
+                countCostCheck();
             }
 
         });
@@ -1100,6 +1200,8 @@
             }else{
                 $("#returnList").val("0");
                 $("#returnListFee").attr("disabled","disabled");
+                $("#returnListFee").val("");
+                countCostCheck();
             }
 
         });
@@ -1783,15 +1885,15 @@
                     "<option value='13'>布袋</option></select>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text' onblur='countQuantity(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                     "<input class='col-xs-10 col-xs-12'  name='quantityUnitPrice' id='quantityUnitPrice' type='text'/>"
                     +"</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text'/>"
+            goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
+                    "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text' onblur='countWeight(this)'/>"
                     +"</td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+            goodsInfoListDiv = goodsInfoListDiv + "<td id='2'>"+
                     "<input class='col-xs-10 col-xs-12'  name='weightUnitPrice' id='weightUnitPrice' type='text'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
