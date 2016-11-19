@@ -47,23 +47,23 @@ public class CreateOrderApiConsumer implements MessageListener {
         String topicName = message.getTopic();
         String key = message.getKey();
         String messageBody = new String(message.getBody());
-        if (StringUtils.equals(topicName, mqConfig.getEPCTopic()) && !keyList.contains(key)) {
-            keyList.add(key);
-            String result = null;
-            try {
-                logger.debug("创单api消费MQ获取message:{},key:{}", new String(message.getBody()), key);
-                List<CreateOrderEntity> createOrderEntityList = (List<CreateOrderEntity>) JsonUtil.json2List(messageBody, new TypeReference<List<CreateOrderEntity>>() {
-                });
-                System.out.println("创单api消费MQ Size:"+createOrderEntityList.size());
-//                result = createOrderService.createOrder(messageBody);
-            } catch (Exception ex) {
-                logger.error("创单api消费MQ异常：{}{}", ex.getMessage(), ex);
-            } finally {
-                logger.debug("创单api消费MQ获取message处理结束");
-                //调用MQ生产者
-                if (StringUtils.isNotBlank(result)) {
-                    String code = String.valueOf(result.hashCode());
-                    createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+        //TFCTopic
+        if (StringUtils.equals(topicName, mqConfig.getTFCTopic()) && !keyList.contains(key)) {
+            if(StringUtils.equals(message.getTag(),mqConfig.getEPCToTag())){
+                keyList.add(key);
+                String result = null;
+                try {
+                    logger.debug("创单api消费MQ获取message:{},key:{}", messageBody, key);
+                    result = createOrderService.createOrder(messageBody);
+                } catch (Exception ex) {
+                    logger.error("创单api消费MQ异常：{}{}", ex.getMessage(), ex);
+                } finally {
+                    logger.debug("创单api消费MQ获取message处理结束");
+                    //调用MQ生产者
+                    if (StringUtils.isNotBlank(result)) {
+                        String code = String.valueOf(result.hashCode());
+                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+                    }
                 }
             }
         }

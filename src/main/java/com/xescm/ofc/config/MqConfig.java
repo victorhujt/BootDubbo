@@ -66,6 +66,8 @@ public class MqConfig {
 
     private String XEEPCTag;
 
+    private String EPCToTag;
+
     @Resource
     SchedulingSingleFedbackImpl schedulingSingleFedback;
 
@@ -256,5 +258,13 @@ public class MqConfig {
 
     public void setXEEPCTag(String XEEPCTag) {
         this.XEEPCTag = XEEPCTag;
+    }
+
+    public String getEPCToTag() {
+        return EPCToTag;
+    }
+
+    public void setEPCToTag(String EPCToTag) {
+        this.EPCToTag = EPCToTag;
     }
 }

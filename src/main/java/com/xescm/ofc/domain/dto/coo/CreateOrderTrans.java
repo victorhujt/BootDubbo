@@ -1,6 +1,7 @@
 package com.xescm.ofc.domain.dto.coo;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -59,7 +60,7 @@ public class CreateOrderTrans {
      *
      * @return
      */
-    public List<OfcGoodsDetailsInfo> getOfcGoodsDetailsInfoList() throws Exception {
+    public List<OfcGoodsDetailsInfo> getOfcGoodsDetailsInfoList() throws BusinessException {
         if (createOrderEntity != null) {
             List<CreateOrderGoodsInfo> list = createOrderEntity.getCreateOrderGoodsInfos();
             if (null != list && !list.isEmpty()) {
@@ -106,7 +107,7 @@ public class CreateOrderTrans {
      *
      * @return
      */
-    public OfcFundamentalInformation getOfcFundamentalInformation() throws Exception {
+    public OfcFundamentalInformation getOfcFundamentalInformation() throws BusinessException {
         if (createOrderEntity != null) {
             ofcFundamentalInformation = new OfcFundamentalInformation();
             ofcFundamentalInformation.setOrderCode(this.orderCode);
@@ -135,7 +136,7 @@ public class CreateOrderTrans {
      * @return
      * @throws Exception
      */
-    public OfcDistributionBasicInfo getOfcDistributionBasicInfo() throws Exception {
+    public OfcDistributionBasicInfo getOfcDistributionBasicInfo() throws BusinessException {
         if (createOrderEntity != null) {
             ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
             ofcDistributionBasicInfo.setOrderCode(this.orderCode);
@@ -210,7 +211,7 @@ public class CreateOrderTrans {
      * @return OfcFinanceInformation
      * @throws Exception
      */
-    public OfcFinanceInformation getOfcFinanceInformation() throws Exception {
+    public OfcFinanceInformation getOfcFinanceInformation() throws BusinessException {
         if (createOrderEntity != null) {
             this.ofcFinanceInformation = new OfcFinanceInformation();
             ofcFinanceInformation.setOrderCode(this.orderCode);
@@ -239,7 +240,7 @@ public class CreateOrderTrans {
      * @return
      * @throws Exception
      */
-    public OfcWarehouseInformation getOfcWarehouseInformation() throws Exception {
+    public OfcWarehouseInformation getOfcWarehouseInformation() throws BusinessException {
         if (createOrderEntity != null) {
             this.ofcWarehouseInformation = new OfcWarehouseInformation();
             ofcWarehouseInformation.setOrderCode(this.orderCode);

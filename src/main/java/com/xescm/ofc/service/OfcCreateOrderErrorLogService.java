@@ -9,5 +9,4 @@ import java.util.List;
  */
 public interface OfcCreateOrderErrorLogService extends IService<OfcCreateOrderErrorLog> {
 
-
 }

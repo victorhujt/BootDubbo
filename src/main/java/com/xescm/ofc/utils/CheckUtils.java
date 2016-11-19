@@ -230,9 +230,15 @@ public class CheckUtils {
         return new ResultModel("1000", createOrderGoodsInfo.getGoodsName() + "货品档案不存在");
     }
 
+    /**
+     * 数量、重量、体积 三选一不能为空
+     * @param quantity 数量
+     * @param weight 重量
+     * @param cubage 体积
+     * @return
+     */
     public static ResultModel checkQuantityAndWeightAndCubage(String quantity, String weight, String cubage) {
         return (StringUtils.isBlank(quantity) && StringUtils.isBlank(weight) && StringUtils.isBlank(cubage)) ? new ResultModel(ResultModel.ResultEnum.CODE_0007) : new ResultModel(ResultModel.ResultEnum.CODE_0001);
     }
-
 
 }
