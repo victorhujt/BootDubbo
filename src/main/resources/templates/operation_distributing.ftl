@@ -457,7 +457,6 @@
                         <span id="departurePlace"></span>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="col-xs-12">
@@ -546,7 +545,6 @@
 
                 </table>
             </div>
-
             <div id="profile4" class="tab-pane active">
                 <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">添加收货方</button></span>
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"

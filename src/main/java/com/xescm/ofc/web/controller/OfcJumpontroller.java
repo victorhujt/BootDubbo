@@ -108,6 +108,12 @@ public class OfcJumpontroller extends BaseController{
     public String operationDistributing(Model model){
         return "operation_distributing";
     }
+
+    @RequestMapping(value = "/ofc/operationDistributingExcel")
+    public String operationDistributingExcel(Model model){
+        return "operation_distributing_excel";
+    }
+
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
