@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xescm.ofc.mapper.OfcFundamentalInformationMapper" >
+<mapper namespace="com.xescm.ofc.mapper.OfcCreateOrderMapper" >
   <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcFundamentalInformation" >
-    <!--
-      WARNING - @mbg.generated
-    -->
     <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
     <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
@@ -32,42 +29,23 @@
     <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
     <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
     <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
-    <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
-    <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
-  </resultMap>
-  <resultMap id="convCustOrderCode" type="java.lang.String">
-    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
   </resultMap>
 
-  <select id="getOrderCodeByCustOrderCode" parameterType="java.lang.String" resultMap="convCustOrderCode">
-    select
-    ofi.order_code
-    from
-    ofc_fundamental_information ofi
-      WHERE ofi.cust_order_code =#{custOrderCode}
-  </select>
-
-  <select id="checkCustOrderCode" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" resultType="java.lang.Integer">
+  <select id="queryCountByOrderStatus" resultType="int">
     SELECT
-    count(order_code) AS countOrderCode
+      COUNT(*)
     FROM
-    ofc_fundamental_information ofi
-    <where>
-      <if test="selfCustOrderCode != null and selfCustOrderCode != ''" >
-        cust_order_code != #{selfCustOrderCode}
-      </if>
-      AND
-      cust_order_code = #{custOrderCode}
-    </where>
-  </select>
-
-  <select id="getOrderCodeByCustOrderCodeAndCustCode" resultMap="convCustOrderCode">
-    select
-    ofi.order_code
-    from
-    ofc_fundamental_information ofi
-    WHERE ofi.cust_order_code =#{custOrderCode}
-    AND ofi.cust_code = #{custCode}
+      ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_status oos
+    ON ofi.order_code = oos.order_code
+    WHERE 1=1
+    AND ofi.order_code = #{orderCode}
+    <if test="orderStatus!= null and orderStatus !='' ">
+      AND oos.order_status = #{orderStatus}
+    </if>
+    LIMIT 1
   </select>
 
 </mapper>

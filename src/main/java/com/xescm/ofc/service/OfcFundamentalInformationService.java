@@ -10,4 +10,7 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
 
 
     int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation);
+
+    String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
+
 }

@@ -42,4 +42,9 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
         ofcGoodsDetailsInfoMapper.deleteByOrderCode(ofcGoodsDetailsInfo);
         return String.valueOf(Wrapper.SUCCESS_CODE);
     }
+
+    @Override
+    public void deleteAllByOrderCode(String orderCode) {
+        ofcGoodsDetailsInfoMapper.deleteAllByOrderCode(orderCode);
+    }
 }

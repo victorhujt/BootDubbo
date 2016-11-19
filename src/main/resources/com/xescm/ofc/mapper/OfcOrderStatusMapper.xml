@@ -83,4 +83,21 @@
   </select>
 
 
+  <select id="queryOrderStateByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
+    SELECT *
+    FROM ofc_order_status oos
+    WHERE oos.order_code = #{orderCode}
+  </select>
+
+
+  <!--修改订单状态，并标记为作废-->
+  <update id="cancelOrderStateByOrderCode">
+    UPDATE ofc_order_status oos, ofc_fundamental_information ofi
+    SET oos.order_status = '50',ofi.abolish_mark = '1'
+    WHERE oos.order_code = ofi.order_code
+    AND ofi.order_code = #{orderCode}
+    AND oos.order_status IN ('10','20','30')
+  </update>
+
+
 </mapper>

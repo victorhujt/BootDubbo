@@ -69,6 +69,9 @@ public final class OrderConstEnum {
     public static final String YIQIANSHOU="40";  //已签收
     public static final String YIHUIDAN="50";  //已回单
 
+    //通过接口创建的订单
+    public static final String CREATE_ORDER_BYAPI = "createOrderByApi";
+
     public OrderConstEnum() {
     }
 }
