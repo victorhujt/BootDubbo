@@ -1346,7 +1346,7 @@
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
 
-        
+
 
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
@@ -1409,7 +1409,7 @@
         cscContact.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        
+
 
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
@@ -1646,7 +1646,7 @@
             console.log("======cscContantAndCompanyDtoConsignorStr======"+cscContantAndCompanyDtoConsignorStr)
             console.log("======cscContantAndCompanyDtoConsigneeStr======"+cscContantAndCompanyDtoConsigneeStr)
             console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)
-            
+
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
@@ -1897,9 +1897,9 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
-                    
+
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        
+
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
@@ -2018,7 +2018,7 @@
                             +"&contactName="+$("#supportContactName").val()
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
-                        
+
                         console.log("==-------data-----111-xxx--"+data);
                         data=eval(data);
                         var supplierList = "";
