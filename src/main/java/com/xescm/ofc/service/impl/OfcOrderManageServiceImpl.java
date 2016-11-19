@@ -751,10 +751,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else{
                         transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
                     }
-                    transportDetailDTO.setMoney(123456.7);
+                    transportDetailDTO.setMoney(0.0);
                     transportDetailDTO.setUom(detail.getUnit());
                     if(null == detail.getTotalBox()){
-                        detail.setTotalBox(666);
+                        detail.setTotalBox(0);
                     }else{
                         detail.setTotalBox(detail.getTotalBox());
                     }
