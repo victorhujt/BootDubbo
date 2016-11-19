@@ -61,4 +61,13 @@
     </where>
   </select>
 
+  <select id="getOrderCodeByCustOrderCodeAndCustCode" resultMap="convCustOrderCode">
+    select
+    ofi.order_code
+    from
+    ofc_fundamental_information ofi
+    WHERE ofi.cust_order_code =#{custOrderCode}
+    AND ofi.cust_code = #{custCode}
+  </select>
+
 </mapper>

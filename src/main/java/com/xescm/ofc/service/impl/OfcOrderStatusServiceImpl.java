@@ -85,4 +85,14 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         }
 
     }
+
+    @Override
+    public OfcOrderStatus queryOrderStateByOrderCode(String orderCode) {
+        return ofcOrderStatusMapper.queryOrderStateByOrderCode(orderCode);
+    }
+
+    @Override
+    public void cancelOrderStateByOrderCode(String orderCode) {
+        ofcOrderStatusMapper.cancelOrderStateByOrderCode(orderCode);
+    }
 }

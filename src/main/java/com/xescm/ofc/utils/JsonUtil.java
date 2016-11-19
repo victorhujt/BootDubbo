@@ -6,8 +6,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.domain.dto.coo.CreateOrderTrans;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.StringWriter;
@@ -226,6 +230,114 @@ public class JsonUtil {
         }
 
         return result;
+    }
+
+    public static void main(String[] args) throws Exception {
+        String json = "[{\n" +
+                "        \"custOrderCode\": \"D161115107629044\",\n" +
+                "        \"orderTime\": \"2016-11-15.0.8. 25. 250000000\",\n" +
+                "        \"custCode\": null,\n" +
+                "        \"custName\": null,\n" +
+                "        \"orderType\": \"60\",\n" +
+                "        \"businessType\": \"600\",\n" +
+                "        \"notes\": \"订单备注\",\n" +
+                "        \"storeCode\": null,\n" +
+                "        \"orderSource\": \"EDI\",\n" +
+                "        \"expandSaleOrg\": null,\n" +
+                "        \"expandProGroup\": null,\n" +
+                "        \"expandSaleDep\": null,\n" +
+                "        \"expandSaleGroup\": null,\n" +
+                "        \"expandSaleDepDes\": null,\n" +
+                "        \"expandSaleGroupDes\": null,\n" +
+                "        \"quantity\": \"1111\",\n" +
+                "        \"weight\": \"9212.0\",\n" +
+                "        \"cubage\": null,\n" +
+                "        \"totalStandardBox\": null,\n" +
+                "        \"transRequire\": null,\n" +
+                "        \"pickupTime\": null,\n" +
+                "        \"expectedArrivedTime\": null,\n" +
+                "        \"consignorName\": \"鲜易网\",\n" +
+                "        \"consignorContact\": \"鲜易网\",\n" +
+                "        \"consignorPhone\": \"400-662-6366\",\n" +
+                "        \"consignorFax\": null,\n" +
+                "        \"consignorEmail\": null,\n" +
+                "        \"consignorZip\": null,\n" +
+                "        \"consignorProvince\": \"河南\",\n" +
+                "        \"consignorCity\": \"郑州\",\n" +
+                "        \"consignorCounty\": \"郑州新区\",\n" +
+                "        \"consignorTown\": null,\n" +
+                "        \"consignorAddress\": \"东风南路七里河路交叉口绿地之窗云峰座\",\n" +
+                "        \"consigneeName\": \"李歌\",\n" +
+                "        \"consigneeContact\": \"李歌\",\n" +
+                "        \"consigneePhone\": \"18637711063\",\n" +
+                "        \"consigneeFax\": null,\n" +
+                "        \"consigneeEmail\": null,\n" +
+                "        \"consigneeZip\": null,\n" +
+                "        \"consigneeProvince\": \"河南\",\n" +
+                "        \"consigneeCity\": \"南阳市\",\n" +
+                "        \"consigneeCounty\": \"宛城区\",\n" +
+                "        \"consigneeTown\": null,\n" +
+                "        \"consigneeAddress\": \"府衙小吃街\",\n" +
+                "        \"warehouseCode\": null,\n" +
+                "        \"warehouseName\": null,\n" +
+                "        \"provideTransport\": null,\n" +
+                "        \"supportName\": null,\n" +
+                "        \"supportContact\": null,\n" +
+                "        \"supportPhone\": null,\n" +
+                "        \"supportFax\": null,\n" +
+                "        \"supportEmail\": null,\n" +
+                "        \"supportZip\": null,\n" +
+                "        \"supportProvince\": null,\n" +
+                "        \"supportCity\": null,\n" +
+                "        \"supportCounty\": null,\n" +
+                "        \"supportTown\": null,\n" +
+                "        \"supportAddress\": null,\n" +
+                "        \"arriveTime\": null,\n" +
+                "        \"plateNumber\": null,\n" +
+                "        \"driverName\": null,\n" +
+                "        \"contactNumber\": null,\n" +
+                "        \"serviceCharge\": null,\n" +
+                "        \"orderAmount\": \"1932\",\n" +
+                "        \"paymentAmount\": \"1932\",\n" +
+                "        \"collectLoanAmount\": \"0\",\n" +
+                "        \"collectServiceCharge\": null,\n" +
+                "        \"collectFlag\": null,\n" +
+                "        \"printInvoice\": null,\n" +
+                "        \"buyerPaymentMethod\": \"6830\",\n" +
+                "        \"insure\": null,\n" +
+                "        \"insureValue\": null,\n" +
+                "        \"createOrderGoodsInfos\": [\n" +
+                "            {\n" +
+                "                \"goodsCode\": null,\n" +
+                "                \"goodsName\": \"鱿鱼切半40克 4.35kg/箱\",\n" +
+                "                \"goodsSpec\": \"4.35kg/箱\",\n" +
+                "                \"unit\": \"箱\",\n" +
+                "                \"quantity\": \"21\",\n" +
+                "                \"unitPrice\": \"92\",\n" +
+                "                \"productionBatch\": null,\n" +
+                "                \"productionTime\": null,\n" +
+                "                \"invalidTime\": null\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        \"baseId\": \"40551\"\n" +
+                "    }]";
+
+        List<CreateOrderEntity> list = (List<CreateOrderEntity>) JsonUtil.json2List(json, new TypeReference<List<CreateOrderEntity>>() {});
+        System.out.println(ToStringBuilder.reflectionToString(list.get(0)));
+        CreateOrderEntity createOrderEntity = list.get(0);
+        createOrderEntity.setOrderTime("2016-1-18 11:09:09");
+        String orderCode = "SO123456";
+        CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
+        OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
+        OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+        System.out.println(ToStringBuilder.reflectionToString(ofcFundamentalInformation));
+        System.out.println(ToStringBuilder.reflectionToString(ofcDistributionBasicInfo));
+        System.out.println(ToStringBuilder.reflectionToString(ofcFinanceInformation));
+        System.out.println(ToStringBuilder.reflectionToString(ofcWarehouseInformation));
+        System.out.println(ToStringBuilder.reflectionToString(ofcGoodsDetailsInfoList));
     }
 
 }

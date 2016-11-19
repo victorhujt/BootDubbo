@@ -19,7 +19,10 @@ package com.xescm.ofc.config;
 import com.aliyun.openservices.ons.api.Consumer;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
+import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
 import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
+import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,16 +58,37 @@ public class MqConfig {
     private String TfcTransPlanTopic;
     private String TfcTransPlanTag;
 
+    private String EPCTopic;
+
+    private String EPCTag;
+
+    private String opcToEpcTopic;
+
+    private String XEEPCTag;
+
     @Resource
     SchedulingSingleFedbackImpl schedulingSingleFedback;
 
+    @Resource
+    CreateOrderApiConsumer createOrderApiConsumer;
+
+//    @Bean(initMethod = "start", destroyMethod = "shutdown")
+//    public Consumer consumer(){
+//        System.out.println("yyyyyyyyy消费开始---:");
+//        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
+//        consumer.subscribe(EPCTopic, null, schedulingSingleFedback);
+//        return consumer;
+//    }
+
     @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Consumer consumer(){
-        System.out.println("yyyyyyyyy消费开始---:");
+    public Consumer consumerCreateOrderApi(){
+        System.out.println("createOrderApi消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(topic, null, schedulingSingleFedback);
+        consumer.subscribe(EPCTopic, null, createOrderApiConsumer);
         return consumer;
     }
+
+
     private Properties consumerProperties(){
         Properties consumerProperties = new Properties();
         consumerProperties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
@@ -202,4 +226,35 @@ public class MqConfig {
 //    public static final String TAG = "mq_test_tag";
 
 
+    public String getEPCTopic() {
+        return EPCTopic;
+    }
+
+    public void setEPCTopic(String EPCTopic) {
+        this.EPCTopic = EPCTopic;
+    }
+
+    public String getEPCTag() {
+        return EPCTag;
+    }
+
+    public void setEPCTag(String EPCTag) {
+        this.EPCTag = EPCTag;
+    }
+
+    public String getOpcToEpcTopic() {
+        return opcToEpcTopic;
+    }
+
+    public void setOpcToEpcTopic(String opcToEpcTopic) {
+        this.opcToEpcTopic = opcToEpcTopic;
+    }
+
+    public String getXEEPCTag() {
+        return XEEPCTag;
+    }
+
+    public void setXEEPCTag(String XEEPCTag) {
+        this.XEEPCTag = XEEPCTag;
+    }
 }

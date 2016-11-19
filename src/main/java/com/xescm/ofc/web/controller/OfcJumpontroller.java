@@ -7,6 +7,9 @@ import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
+import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
+import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.OfcCreateOrderService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -39,9 +42,19 @@ public class OfcJumpontroller extends BaseController{
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
+    @Autowired
+    private CreateOrderService createOrderService;
+    @Autowired
+    private OfcCreateOrderService ofcCreateOrderService;
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
+        try {
+            System.out.println("queryCountByOrderStatus:"+ofcCreateOrderService.queryCountByOrderStatus("SO20161111000006","10"));
+            createOrderService.createOrder(null);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);

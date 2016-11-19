@@ -1,5 +1,7 @@
 package com.xescm.ofc.domain.dto.coo;
 
+import com.xescm.ofc.utils.DateUtils;
+
 import java.util.List;
 
 /**
@@ -13,32 +15,42 @@ public class CreateOrderEntity {
      * 客户订单编号 Y
      * 传入对应平台的订单编号
      */
-    private String cust_order_code;
+    private String custOrderCode;
 
     /**
      * 订单日期 Y
      * 订单日期
      */
-    private String order_time;
+    private String orderTime;
 
     /**
      * 货主编码 Y
      * 固定平台客户的代码(确定接入后分配)
      */
-    private String cust_code;
+    private String custCode;
 
     /**
      * 货主名称 Y
      * 固定平台客户的公司名称
      */
-    private String cust_name;
+    private String custName;
+
+    /**
+     *二级客户编码
+     */
+    private String secCustCode;
+
+    /**
+     * 二级客户名称
+     */
+    private String secCustName;
 
     /**
      * 订单类型 Y
      * 60-运输订单, 仅运输业务
      * 61-仓配订单，有合作仓同时配送业务
      */
-    private String order_type;
+    private String orderType;
 
     /**
      * 业务类型 Y
@@ -55,7 +67,7 @@ public class CreateOrderEntity {
      * 622-【退货入库】
      * 623-【加工入库】
      */
-    private String business_type;
+    private String businessType;
 
     /**
      * 备注 Y
@@ -66,49 +78,49 @@ public class CreateOrderEntity {
      * 店铺编码 Y
      * 在工作台维护，客户方系统店铺编码，用于区分渠道,传空为默认
      */
-    private String store_code;
+    private String storeCode;
 
     /**
      * 订单来源 Y
      * 【平台、EDI、手工录入】
      */
-    private String order_source;
+    private String orderSource;
 
     /**
      * 销售组织
      * SAP专用
      */
-    private String expand_sale_org;
+    private String expandSaleOrg;
 
     /**
      * 产品组
      * SAP专用
      */
-    private String expand_pro_group;
+    private String expandProGroup;
 
     /**
      * 销售部门
      * SAP专用
      */
-    private String expand_sale_dep;
+    private String expandSaleDep;
 
     /**
      * 销售组
      * SAP专用
      */
-    private String expand_sale_group;
+    private String expandSaleGroup;
 
     /**
      * 销售部门描述
      * SAP专用
      */
-    private String expand_sale_dep_des;
+    private String expandSaleDepDes;
 
     /**
      * 销售组描述
      * SAP专用
      */
-    private String expand_sale_group_des;
+    private String expandSaleGroupDes;
 
     /**
      * 数量
@@ -132,267 +144,271 @@ public class CreateOrderEntity {
      * 合计标准箱
      * 最大值9999
      */
-    private String total_standard_box;
+    private String totalStandardBox;
 
     /**
      * 运输要求
      */
-    private String trans_require;
+    private String transRequire;
 
     /**
      * 取货时间
      */
-    private String pickup_time;
+    private String pickupTime;
 
     /**
      * 期望送货时间
      */
-    private String expected_arrived_time;
+    private String expectedArrivedTime;
 
     /**
      * 发货方名称
      */
-    private String consignor_name;
+    private String consignorName;
 
     /**
      * 发货方联系人
      */
-    private String consignor_contact;
+    private String consignorContact;
 
     /**
      * 发货方联系电话
      */
-    private String consignor_phone;
+    private String consignorPhone;
 
     /**
      * 发货方传真
      */
-    private String consignor_fax;
+    private String consignorFax;
 
     /**
      * 发货方Email
      */
-    private String consignor_email;
+    private String consignorEmail;
 
     /**
      * 发货方邮编
      */
-    private String consignor_zip;
+    private String consignorZip;
 
     /**
      * 发货方省（汉字）
      */
-    private String consignor_province;
+    private String consignorProvince;
 
     /**
      * 发货方市（汉字）
      */
-    private String consignor_city;
+    private String consignorCity;
 
     /**
      * 发货方区县（汉字）
      */
-    private String consignor_county;
+    private String consignorCounty;
 
     /**
      * 发货方乡镇街道
      */
-    private String consignor_town;
+    private String consignorTown;
 
     /**
      * 发货方地址
      */
-    private String consignor_address;
+    private String consignorAddress;
 
     /**
      * 收货方名称
      */
-    private String consignee_name;
+    private String consigneeName;
 
     /**
      * 收货方联系人
      */
-    private String consignee_contact;
+    private String consigneeContact;
 
     /**
      * 收货方联系电话
      */
-    private String consignee_phone;
+    private String consigneePhone;
 
     /**
      * 收货方传真
      */
-    private String consignee_fax;
+    private String consigneeFax;
 
     /**
      * 收货方email
      */
-    private String consignee_email;
+    private String consigneeEmail;
 
     /**
      * 收货方邮编
      */
-    private String consignee_zip;
+    private String consigneeZip;
 
     /**
      * 收货方省
      */
-    private String consignee_province;
+    private String consigneeProvince;
 
     /**
      * 收货方市
      */
-    private String consignee_city;
+    private String consigneeCity;
 
     /**
      * 收货方区县
      */
-    private String consignee_county;
+    private String consigneeCounty;
 
     /**
      * 收货方乡镇街道
      */
-    private String consignee_town;
+    private String consigneeTown;
 
     /**
      * 收货方地址
      */
-    private String consignee_address;
+    private String consigneeAddress;
 
     /**
      * 仓库编码
      * 在平台的仓库编码
      */
-    private String warehouse_code;
+    private String warehouseCode;
 
     /**
      * 仓库名称
      */
-    private String warehouse_name;
+    private String warehouseName;
 
     /**
      * 是否需要提供运输
      * 0-否 1-是
      */
-    private String provide_transport;
+    private String provideTransport;
 
     /**
      * 供应商名称
      */
-    private String support_name;
+    private String supportName;
+    /**
+     * 供应商编码
+     */
+    private String supportCode;
 
     /**
      * 供应商联系人
      */
-    private String support_contact;
+    private String supportContact;
 
     /**
      * 供应商联系电话
      */
-    private String support_phone;
+    private String supportPhone;
 
     /**
      * 供应商传真
      */
-    private String support_fax;
+    private String supportFax;
 
     /**
      * 供应商Email
      */
-    private String support_email;
+    private String supportEmail;
 
     /**
      * 供应商邮编
      */
-    private String support_zip;
+    private String supportZip;
 
     /**
      * 供应商省
      */
-    private String support_province;
+    private String supportProvince;
 
     /**
      * 供应商市
      */
-    private String support_city;
+    private String supportCity;
 
     /**
      * 供应商区县
      */
-    private String support_county;
+    private String supportCounty;
 
     /**
      * 供应商街道
      */
-    private String support_town;
+    private String supportTown;
 
     /**
      * 供应商地址
      */
-    private String support_address;
+    private String supportAddress;
 
     /**
      * 入库预计到达时间
      */
-    private String arrive_time;
+    private String arriveTime;
 
     /**
      * 车牌号
      */
-    private String plate_number;
+    private String plateNumber;
 
     /**
      * 司机姓名
      * 入库或出库自带车辆
      */
-    private String driver_name;
+    private String driverName;
 
     /**
      * 联系电话
      * 入库或出库自带车辆
      */
-    private String contact_number;
+    private String contactNumber;
 
     /**
      * 服务费
      * 平台运费
      */
-    private String service_charge;
+    private String serviceCharge;
 
     /**
      * 订单金额
      */
-    private String order_amount;
+    private String orderAmount;
 
     /**
      * 货款金额
      */
-    private String payment_amount;
+    private String paymentAmount;
 
     /**
      * 代收货款金额
      */
-    private String collect_loan_amount;
+    private String collectLoanAmount;
 
     /**
      * 代收服务费
      */
-    private String collect_service_charge;
+    private String collectServiceCharge;
 
     /**
      * 代收标记
      */
-    private String collect_flag;
+    private String collectFlag;
 
     /**
      * 是否打印发票(电商)
      */
-    private String print_invoice;
+    private String printInvoice;
 
     /**
      * 买家支付方式(电商)
      */
-    private String buyer_payment_me;
+    private String buyerPaymentMe;
 
     /**
      * 是否保价(电商)
@@ -402,64 +418,64 @@ public class CreateOrderEntity {
     /**
      * 保价金额(电商)
      */
-    private String insure_value;
+    private String insureValue;
 
     /**
      * 基地ID(电商)
      */
-    private String Base_id;
+    private String BaseId;
 
     /**
      * API订单货品明细
      */
-    private List<XebestCreateOrderGoodsInfo> xebestCreateOrderGoodsInfos;
+    private List<CreateOrderGoodsInfo> createOrderGoodsInfos;
 
-    public String getCust_order_code() {
-        return cust_order_code;
+    public String getCustOrderCode() {
+        return custOrderCode;
     }
 
-    public void setCust_order_code(String cust_order_code) {
-        this.cust_order_code = cust_order_code;
+    public void setCustOrderCode(String custOrderCode) {
+        this.custOrderCode = custOrderCode;
     }
 
-    public String getOrder_time() {
-        return order_time;
+    public String getOrderTime() {
+        return orderTime;
     }
 
-    public void setOrder_time(String order_time) {
-        this.order_time = order_time;
+    public void setOrderTime(String orderTime) {
+        this.orderTime = DateUtils.dateSubStringGetYMD(orderTime);
     }
 
-    public String getCust_code() {
-        return cust_code;
+    public String getCustCode() {
+        return custCode;
     }
 
-    public void setCust_code(String cust_code) {
-        this.cust_code = cust_code;
+    public void setCustCode(String custCode) {
+        this.custCode = custCode;
     }
 
-    public String getCust_name() {
-        return cust_name;
+    public String getCustName() {
+        return custName;
     }
 
-    public void setCust_name(String cust_name) {
-        this.cust_name = cust_name;
+    public void setCustName(String custName) {
+        this.custName = custName;
     }
 
-    public String getOrder_type() {
-        return order_type;
+    public String getOrderType() {
+        return orderType;
     }
 
-    public void setOrder_type(String order_type) {
-        this.order_type = order_type;
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
-    public String getBusiness_type() {
-        return business_type;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setBusiness_type(String business_type) {
-        this.business_type = business_type;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     public String getNotes() {
@@ -470,60 +486,68 @@ public class CreateOrderEntity {
         this.notes = notes;
     }
 
-    public String getStore_code() {
-        return store_code;
+    public String getStoreCode() {
+        return storeCode;
     }
 
-    public void setStore_code(String store_code) {
-        this.store_code = store_code;
+    public void setStoreCode(String storeCode) {
+        this.storeCode = storeCode;
     }
 
-    public String getOrder_source() {
-        return order_source;
+    public String getOrderSource() {
+        return orderSource;
     }
 
-    public void setOrder_source(String order_source) {
-        this.order_source = order_source;
+    public void setOrderSource(String orderSource) {
+        this.orderSource = orderSource;
     }
 
-    public String getExpand_sale_org() {
-        return expand_sale_org;
+    public String getExpandSaleOrg() {
+        return expandSaleOrg;
     }
 
-    public void setExpand_sale_org(String expand_sale_org) {
-        this.expand_sale_org = expand_sale_org;
+    public void setExpandSaleOrg(String expandSaleOrg) {
+        this.expandSaleOrg = expandSaleOrg;
     }
 
-    public String getExpand_pro_group() {
-        return expand_pro_group;
+    public String getExpandProGroup() {
+        return expandProGroup;
     }
 
-    public void setExpand_pro_group(String expand_pro_group) {
-        this.expand_pro_group = expand_pro_group;
+    public void setExpandProGroup(String expandProGroup) {
+        this.expandProGroup = expandProGroup;
     }
 
-    public String getExpand_sale_dep() {
-        return expand_sale_dep;
+    public String getExpandSaleDep() {
+        return expandSaleDep;
     }
 
-    public void setExpand_sale_dep(String expand_sale_dep) {
-        this.expand_sale_dep = expand_sale_dep;
+    public void setExpandSaleDep(String expandSaleDep) {
+        this.expandSaleDep = expandSaleDep;
     }
 
-    public String getExpand_sale_group() {
-        return expand_sale_group;
+    public String getExpandSaleGroup() {
+        return expandSaleGroup;
     }
 
-    public void setExpand_sale_group(String expand_sale_group) {
-        this.expand_sale_group = expand_sale_group;
+    public void setExpandSaleGroup(String expandSaleGroup) {
+        this.expandSaleGroup = expandSaleGroup;
     }
 
-    public String getExpand_sale_dep_des() {
-        return expand_sale_dep_des;
+    public String getExpandSaleDepDes() {
+        return expandSaleDepDes;
     }
 
-    public void setExpand_sale_dep_des(String expand_sale_dep_des) {
-        this.expand_sale_dep_des = expand_sale_dep_des;
+    public void setExpandSaleDepDes(String expandSaleDepDes) {
+        this.expandSaleDepDes = expandSaleDepDes;
+    }
+
+    public String getExpandSaleGroupDes() {
+        return expandSaleGroupDes;
+    }
+
+    public void setExpandSaleGroupDes(String expandSaleGroupDes) {
+        this.expandSaleGroupDes = expandSaleGroupDes;
     }
 
     public String getQuantity() {
@@ -550,412 +574,420 @@ public class CreateOrderEntity {
         this.cubage = cubage;
     }
 
-    public String getTotal_standard_box() {
-        return total_standard_box;
+    public String getTotalStandardBox() {
+        return totalStandardBox;
     }
 
-    public void setTotal_standard_box(String total_standard_box) {
-        this.total_standard_box = total_standard_box;
+    public void setTotalStandardBox(String totalStandardBox) {
+        this.totalStandardBox = totalStandardBox;
     }
 
-    public String getTrans_require() {
-        return trans_require;
+    public String getTransRequire() {
+        return transRequire;
     }
 
-    public void setTrans_require(String trans_require) {
-        this.trans_require = trans_require;
+    public void setTransRequire(String transRequire) {
+        this.transRequire = transRequire;
     }
 
-    public String getPickup_time() {
-        return pickup_time;
+    public String getPickupTime() {
+        return pickupTime;
     }
 
-    public void setPickup_time(String pickup_time) {
-        this.pickup_time = pickup_time;
+    public void setPickupTime(String pickupTime) {
+        this.pickupTime = pickupTime;
     }
 
-    public String getExpected_arrived_time() {
-        return expected_arrived_time;
+    public String getExpectedArrivedTime() {
+        return expectedArrivedTime;
     }
 
-    public void setExpected_arrived_time(String expected_arrived_time) {
-        this.expected_arrived_time = expected_arrived_time;
+    public void setExpectedArrivedTime(String expectedArrivedTime) {
+        this.expectedArrivedTime = expectedArrivedTime;
     }
 
-    public String getConsignor_name() {
-        return consignor_name;
+    public String getConsignorName() {
+        return consignorName;
     }
 
-    public void setConsignor_name(String consignor_name) {
-        this.consignor_name = consignor_name;
+    public void setConsignorName(String consignorName) {
+        this.consignorName = consignorName;
     }
 
-    public String getConsignor_contact() {
-        return consignor_contact;
+    public String getConsignorContact() {
+        return consignorContact;
     }
 
-    public void setConsignor_contact(String consignor_contact) {
-        this.consignor_contact = consignor_contact;
+    public void setConsignorContact(String consignorContact) {
+        this.consignorContact = consignorContact;
     }
 
-    public String getConsignor_phone() {
-        return consignor_phone;
+    public String getConsignorPhone() {
+        return consignorPhone;
     }
 
-    public void setConsignor_phone(String consignor_phone) {
-        this.consignor_phone = consignor_phone;
+    public void setConsignorPhone(String consignorPhone) {
+        this.consignorPhone = consignorPhone;
     }
 
-    public String getConsignor_email() {
-        return consignor_email;
+    public String getConsignorFax() {
+        return consignorFax;
     }
 
-    public void setConsignor_email(String consignor_email) {
-        this.consignor_email = consignor_email;
+    public void setConsignorFax(String consignorFax) {
+        this.consignorFax = consignorFax;
     }
 
-    public String getConsignor_zip() {
-        return consignor_zip;
+    public String getConsignorEmail() {
+        return consignorEmail;
     }
 
-    public void setConsignor_zip(String consignor_zip) {
-        this.consignor_zip = consignor_zip;
+    public void setConsignorEmail(String consignorEmail) {
+        this.consignorEmail = consignorEmail;
     }
 
-    public String getConsignor_province() {
-        return consignor_province;
+    public String getConsignorZip() {
+        return consignorZip;
     }
 
-    public void setConsignor_province(String consignor_province) {
-        this.consignor_province = consignor_province;
+    public void setConsignorZip(String consignorZip) {
+        this.consignorZip = consignorZip;
     }
 
-    public String getConsignor_city() {
-        return consignor_city;
+    public String getConsignorProvince() {
+        return consignorProvince;
     }
 
-    public void setConsignor_city(String consignor_city) {
-        this.consignor_city = consignor_city;
+    public void setConsignorProvince(String consignorProvince) {
+        this.consignorProvince = consignorProvince;
     }
 
-    public String getConsignor_county() {
-        return consignor_county;
+    public String getConsignorCity() {
+        return consignorCity;
     }
 
-    public void setConsignor_county(String consignor_county) {
-        this.consignor_county = consignor_county;
+    public void setConsignorCity(String consignorCity) {
+        this.consignorCity = consignorCity;
     }
 
-    public String getConsignor_town() {
-        return consignor_town;
+    public String getConsignorCounty() {
+        return consignorCounty;
     }
 
-    public void setConsignor_town(String consignor_town) {
-        this.consignor_town = consignor_town;
+    public void setConsignorCounty(String consignorCounty) {
+        this.consignorCounty = consignorCounty;
     }
 
-    public String getConsignor_address() {
-        return consignor_address;
+    public String getConsignorTown() {
+        return consignorTown;
     }
 
-    public void setConsignor_address(String consignor_address) {
-        this.consignor_address = consignor_address;
+    public void setConsignorTown(String consignorTown) {
+        this.consignorTown = consignorTown;
     }
 
-    public String getConsignee_name() {
-        return consignee_name;
+    public String getConsignorAddress() {
+        return consignorAddress;
     }
 
-    public void setConsignee_name(String consignee_name) {
-        this.consignee_name = consignee_name;
+    public void setConsignorAddress(String consignorAddress) {
+        this.consignorAddress = consignorAddress;
     }
 
-    public String getConsignee_contact() {
-        return consignee_contact;
+    public String getConsigneeName() {
+        return consigneeName;
     }
 
-    public void setConsignee_contact(String consignee_contact) {
-        this.consignee_contact = consignee_contact;
+    public void setConsigneeName(String consigneeName) {
+        this.consigneeName = consigneeName;
     }
 
-    public String getConsignee_phone() {
-        return consignee_phone;
+    public String getConsigneeContact() {
+        return consigneeContact;
     }
 
-    public void setConsignee_phone(String consignee_phone) {
-        this.consignee_phone = consignee_phone;
+    public void setConsigneeContact(String consigneeContact) {
+        this.consigneeContact = consigneeContact;
     }
 
-    public String getConsignee_fax() {
-        return consignee_fax;
+    public String getConsigneePhone() {
+        return consigneePhone;
     }
 
-    public void setConsignee_fax(String consignee_fax) {
-        this.consignee_fax = consignee_fax;
+    public void setConsigneePhone(String consigneePhone) {
+        this.consigneePhone = consigneePhone;
     }
 
-    public String getConsignee_email() {
-        return consignee_email;
+    public String getConsigneeFax() {
+        return consigneeFax;
     }
 
-    public void setConsignee_email(String consignee_email) {
-        this.consignee_email = consignee_email;
+    public void setConsigneeFax(String consigneeFax) {
+        this.consigneeFax = consigneeFax;
     }
 
-    public String getConsignee_zip() {
-        return consignee_zip;
+    public String getConsigneeEmail() {
+        return consigneeEmail;
     }
 
-    public void setConsignee_zip(String consignee_zip) {
-        this.consignee_zip = consignee_zip;
+    public void setConsigneeEmail(String consigneeEmail) {
+        this.consigneeEmail = consigneeEmail;
     }
 
-    public String getConsignee_province() {
-        return consignee_province;
+    public String getConsigneeZip() {
+        return consigneeZip;
     }
 
-    public void setConsignee_province(String consignee_province) {
-        this.consignee_province = consignee_province;
+    public void setConsigneeZip(String consigneeZip) {
+        this.consigneeZip = consigneeZip;
     }
 
-    public String getConsignee_city() {
-        return consignee_city;
+    public String getConsigneeProvince() {
+        return consigneeProvince;
     }
 
-    public void setConsignee_city(String consignee_city) {
-        this.consignee_city = consignee_city;
+    public void setConsigneeProvince(String consigneeProvince) {
+        this.consigneeProvince = consigneeProvince;
     }
 
-    public String getConsignee_county() {
-        return consignee_county;
+    public String getConsigneeCity() {
+        return consigneeCity;
     }
 
-    public void setConsignee_county(String consignee_county) {
-        this.consignee_county = consignee_county;
+    public void setConsigneeCity(String consigneeCity) {
+        this.consigneeCity = consigneeCity;
     }
 
-    public String getConsignee_town() {
-        return consignee_town;
+    public String getConsigneeCounty() {
+        return consigneeCounty;
     }
 
-    public void setConsignee_town(String consignee_town) {
-        this.consignee_town = consignee_town;
+    public void setConsigneeCounty(String consigneeCounty) {
+        this.consigneeCounty = consigneeCounty;
     }
 
-    public String getConsignee_address() {
-        return consignee_address;
+    public String getConsigneeTown() {
+        return consigneeTown;
     }
 
-    public void setConsignee_address(String consignee_address) {
-        this.consignee_address = consignee_address;
+    public void setConsigneeTown(String consigneeTown) {
+        this.consigneeTown = consigneeTown;
     }
 
-    public String getWarehouse_code() {
-        return warehouse_code;
+    public String getConsigneeAddress() {
+        return consigneeAddress;
     }
 
-    public void setWarehouse_code(String warehouse_code) {
-        this.warehouse_code = warehouse_code;
+    public void setConsigneeAddress(String consigneeAddress) {
+        this.consigneeAddress = consigneeAddress;
     }
 
-    public String getWarehouse_name() {
-        return warehouse_name;
+    public String getWarehouseCode() {
+        return warehouseCode;
     }
 
-    public void setWarehouse_name(String warehouse_name) {
-        this.warehouse_name = warehouse_name;
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
     }
 
-    public String getProvide_transport() {
-        return provide_transport;
+    public String getWarehouseName() {
+        return warehouseName;
     }
 
-    public void setProvide_transport(String provide_transport) {
-        this.provide_transport = provide_transport;
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
     }
 
-    public String getSupport_name() {
-        return support_name;
+    public String getProvideTransport() {
+        return provideTransport;
     }
 
-    public void setSupport_name(String support_name) {
-        this.support_name = support_name;
+    public void setProvideTransport(String provideTransport) {
+        this.provideTransport = provideTransport;
     }
 
-    public String getSupport_contact() {
-        return support_contact;
+    public String getSupportName() {
+        return supportName;
     }
 
-    public void setSupport_contact(String support_contact) {
-        this.support_contact = support_contact;
+    public void setSupportName(String supportName) {
+        this.supportName = supportName;
     }
 
-    public String getSupport_phone() {
-        return support_phone;
+    public String getSupportContact() {
+        return supportContact;
     }
 
-    public void setSupport_phone(String support_phone) {
-        this.support_phone = support_phone;
+    public void setSupportContact(String supportContact) {
+        this.supportContact = supportContact;
     }
 
-    public String getSupport_fax() {
-        return support_fax;
+    public String getSupportPhone() {
+        return supportPhone;
     }
 
-    public void setSupport_fax(String support_fax) {
-        this.support_fax = support_fax;
+    public void setSupportPhone(String supportPhone) {
+        this.supportPhone = supportPhone;
     }
 
-    public String getSupport_email() {
-        return support_email;
+    public String getSupportFax() {
+        return supportFax;
     }
 
-    public void setSupport_email(String support_email) {
-        this.support_email = support_email;
+    public void setSupportFax(String supportFax) {
+        this.supportFax = supportFax;
     }
 
-    public String getSupport_zip() {
-        return support_zip;
+    public String getSupportEmail() {
+        return supportEmail;
     }
 
-    public void setSupport_zip(String support_zip) {
-        this.support_zip = support_zip;
+    public void setSupportEmail(String supportEmail) {
+        this.supportEmail = supportEmail;
     }
 
-    public String getSupport_province() {
-        return support_province;
+    public String getSupportZip() {
+        return supportZip;
     }
 
-    public void setSupport_province(String support_province) {
-        this.support_province = support_province;
+    public void setSupportZip(String supportZip) {
+        this.supportZip = supportZip;
     }
 
-    public String getSupport_city() {
-        return support_city;
+    public String getSupportProvince() {
+        return supportProvince;
     }
 
-    public void setSupport_city(String support_city) {
-        this.support_city = support_city;
+    public void setSupportProvince(String supportProvince) {
+        this.supportProvince = supportProvince;
     }
 
-    public String getSupport_county() {
-        return support_county;
+    public String getSupportCity() {
+        return supportCity;
     }
 
-    public void setSupport_county(String support_county) {
-        this.support_county = support_county;
+    public void setSupportCity(String supportCity) {
+        this.supportCity = supportCity;
     }
 
-    public String getSupport_town() {
-        return support_town;
+    public String getSupportCounty() {
+        return supportCounty;
     }
 
-    public void setSupport_town(String support_town) {
-        this.support_town = support_town;
+    public void setSupportCounty(String supportCounty) {
+        this.supportCounty = supportCounty;
     }
 
-    public String getSupport_address() {
-        return support_address;
+    public String getSupportTown() {
+        return supportTown;
     }
 
-    public void setSupport_address(String support_address) {
-        this.support_address = support_address;
+    public void setSupportTown(String supportTown) {
+        this.supportTown = supportTown;
     }
 
-    public String getArrive_time() {
-        return arrive_time;
+    public String getSupportAddress() {
+        return supportAddress;
     }
 
-    public void setArrive_time(String arrive_time) {
-        this.arrive_time = arrive_time;
+    public void setSupportAddress(String supportAddress) {
+        this.supportAddress = supportAddress;
     }
 
-    public String getPlate_number() {
-        return plate_number;
+    public String getArriveTime() {
+        return arriveTime;
     }
 
-    public void setPlate_number(String plate_number) {
-        this.plate_number = plate_number;
+    public void setArriveTime(String arriveTime) {
+        this.arriveTime = arriveTime;
     }
 
-    public String getDriver_name() {
-        return driver_name;
+    public String getPlateNumber() {
+        return plateNumber;
     }
 
-    public void setDriver_name(String driver_name) {
-        this.driver_name = driver_name;
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
     }
 
-    public String getContact_number() {
-        return contact_number;
+    public String getDriverName() {
+        return driverName;
     }
 
-    public void setContact_number(String contact_number) {
-        this.contact_number = contact_number;
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
     }
 
-    public String getService_charge() {
-        return service_charge;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
-    public void setService_charge(String service_charge) {
-        this.service_charge = service_charge;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
-    public String getOrder_amount() {
-        return order_amount;
+    public String getServiceCharge() {
+        return serviceCharge;
     }
 
-    public void setOrder_amount(String order_amount) {
-        this.order_amount = order_amount;
+    public void setServiceCharge(String serviceCharge) {
+        this.serviceCharge = serviceCharge;
     }
 
-    public String getPayment_amount() {
-        return payment_amount;
+    public String getOrderAmount() {
+        return orderAmount;
     }
 
-    public void setPayment_amount(String payment_amount) {
-        this.payment_amount = payment_amount;
+    public void setOrderAmount(String orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
-    public String getCollect_loan_amount() {
-        return collect_loan_amount;
+    public String getPaymentAmount() {
+        return paymentAmount;
     }
 
-    public void setCollect_loan_amount(String collect_loan_amount) {
-        this.collect_loan_amount = collect_loan_amount;
+    public void setPaymentAmount(String paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 
-    public String getCollect_service_charge() {
-        return collect_service_charge;
+    public String getCollectLoanAmount() {
+        return collectLoanAmount;
     }
 
-    public void setCollect_service_charge(String collect_service_charge) {
-        this.collect_service_charge = collect_service_charge;
+    public void setCollectLoanAmount(String collectLoanAmount) {
+        this.collectLoanAmount = collectLoanAmount;
     }
 
-    public String getCollect_flag() {
-        return collect_flag;
+    public String getCollectServiceCharge() {
+        return collectServiceCharge;
     }
 
-    public void setCollect_flag(String collect_flag) {
-        this.collect_flag = collect_flag;
+    public void setCollectServiceCharge(String collectServiceCharge) {
+        this.collectServiceCharge = collectServiceCharge;
     }
 
-    public String getPrint_invoice() {
-        return print_invoice;
+    public String getCollectFlag() {
+        return collectFlag;
     }
 
-    public void setPrint_invoice(String print_invoice) {
-        this.print_invoice = print_invoice;
+    public void setCollectFlag(String collectFlag) {
+        this.collectFlag = collectFlag;
     }
 
-    public String getBuyer_payment_me() {
-        return buyer_payment_me;
+    public String getPrintInvoice() {
+        return printInvoice;
     }
 
-    public void setBuyer_payment_me(String buyer_payment_me) {
-        this.buyer_payment_me = buyer_payment_me;
+    public void setPrintInvoice(String printInvoice) {
+        this.printInvoice = printInvoice;
+    }
+
+    public String getBuyerPaymentMe() {
+        return buyerPaymentMe;
+    }
+
+    public void setBuyerPaymentMe(String buyerPaymentMe) {
+        this.buyerPaymentMe = buyerPaymentMe;
     }
 
     public String getInsure() {
@@ -966,121 +998,51 @@ public class CreateOrderEntity {
         this.insure = insure;
     }
 
-    public String getInsure_value() {
-        return insure_value;
+    public String getInsureValue() {
+        return insureValue;
     }
 
-    public void setInsure_value(String insure_value) {
-        this.insure_value = insure_value;
+    public void setInsureValue(String insureValue) {
+        this.insureValue = insureValue;
     }
 
-    public String getBase_id() {
-        return Base_id;
+    public String getBaseId() {
+        return BaseId;
     }
 
-    public void setBase_id(String base_id) {
-        Base_id = base_id;
+    public void setBaseId(String baseId) {
+        BaseId = baseId;
     }
 
-    public List<XebestCreateOrderGoodsInfo> getXebestCreateOrderGoodsInfos() {
-        return xebestCreateOrderGoodsInfos;
+    public String getSecCustCode() {
+        return secCustCode;
     }
 
-    public void setXebestCreateOrderGoodsInfos(List<XebestCreateOrderGoodsInfo> xebestCreateOrderGoodsInfos) {
-        this.xebestCreateOrderGoodsInfos = xebestCreateOrderGoodsInfos;
+    public void setSecCustCode(String secCustCode) {
+        this.secCustCode = secCustCode;
     }
 
-    public String getExpand_sale_group_des() {
-        return expand_sale_group_des;
+    public String getSecCustName() {
+        return secCustName;
     }
 
-    public void setExpand_sale_group_des(String expand_sale_group_des) {
-        this.expand_sale_group_des = expand_sale_group_des;
+    public void setSecCustName(String secCustName) {
+        this.secCustName = secCustName;
     }
 
-    public String getConsignor_fax() {
-        return consignor_fax;
+    public String getSupportCode() {
+        return supportCode;
     }
 
-    public void setConsignor_fax(String consignor_fax) {
-        this.consignor_fax = consignor_fax;
+    public void setSupportCode(String supportCode) {
+        this.supportCode = supportCode;
     }
 
-    @Override
-    public String toString() {
-        return "XebestCreateOrderEntity{" +
-                "cust_order_code='" + cust_order_code + '\'' +
-                ", order_time='" + order_time + '\'' +
-                ", cust_code='" + cust_code + '\'' +
-                ", cust_name='" + cust_name + '\'' +
-                ", order_type='" + order_type + '\'' +
-                ", business_type='" + business_type + '\'' +
-                ", notes='" + notes + '\'' +
-                ", store_code='" + store_code + '\'' +
-                ", order_source='" + order_source + '\'' +
-                ", expand_sale_org='" + expand_sale_org + '\'' +
-                ", expand_pro_group='" + expand_pro_group + '\'' +
-                ", expand_sale_dep='" + expand_sale_dep + '\'' +
-                ", expand_sale_group='" + expand_sale_group + '\'' +
-                ", expand_sale_dep_des='" + expand_sale_dep_des + '\'' +
-                ", quantity='" + quantity + '\'' +
-                ", weight='" + weight + '\'' +
-                ", cubage='" + cubage + '\'' +
-                ", total_standard_box='" + total_standard_box + '\'' +
-                ", trans_require='" + trans_require + '\'' +
-                ", pickup_time='" + pickup_time + '\'' +
-                ", expected_arrived_time='" + expected_arrived_time + '\'' +
-                ", consignor_name='" + consignor_name + '\'' +
-                ", consignor_contact='" + consignor_contact + '\'' +
-                ", consignor_phone='" + consignor_phone + '\'' +
-                ", consignor_email='" + consignor_email + '\'' +
-                ", consignor_zip='" + consignor_zip + '\'' +
-                ", consignor_province='" + consignor_province + '\'' +
-                ", consignor_city='" + consignor_city + '\'' +
-                ", consignor_county='" + consignor_county + '\'' +
-                ", consignor_town='" + consignor_town + '\'' +
-                ", consignor_address='" + consignor_address + '\'' +
-                ", consignee_name='" + consignee_name + '\'' +
-                ", consignee_contact='" + consignee_contact + '\'' +
-                ", consignee_phone='" + consignee_phone + '\'' +
-                ", consignee_fax='" + consignee_fax + '\'' +
-                ", consignee_email='" + consignee_email + '\'' +
-                ", consignee_zip='" + consignee_zip + '\'' +
-                ", consignee_province='" + consignee_province + '\'' +
-                ", consignee_city='" + consignee_city + '\'' +
-                ", consignee_county='" + consignee_county + '\'' +
-                ", consignee_town='" + consignee_town + '\'' +
-                ", consignee_address='" + consignee_address + '\'' +
-                ", warehouse_code='" + warehouse_code + '\'' +
-                ", warehouse_name='" + warehouse_name + '\'' +
-                ", provide_transport='" + provide_transport + '\'' +
-                ", support_name='" + support_name + '\'' +
-                ", support_contact='" + support_contact + '\'' +
-                ", support_phone='" + support_phone + '\'' +
-                ", support_fax='" + support_fax + '\'' +
-                ", support_email='" + support_email + '\'' +
-                ", support_zip='" + support_zip + '\'' +
-                ", support_province='" + support_province + '\'' +
-                ", support_city='" + support_city + '\'' +
-                ", support_county='" + support_county + '\'' +
-                ", support_town='" + support_town + '\'' +
-                ", support_address='" + support_address + '\'' +
-                ", arrive_time='" + arrive_time + '\'' +
-                ", plate_number='" + plate_number + '\'' +
-                ", driver_name='" + driver_name + '\'' +
-                ", contact_number='" + contact_number + '\'' +
-                ", service_charge='" + service_charge + '\'' +
-                ", order_amount='" + order_amount + '\'' +
-                ", payment_amount='" + payment_amount + '\'' +
-                ", collect_loan_amount='" + collect_loan_amount + '\'' +
-                ", collect_service_charge='" + collect_service_charge + '\'' +
-                ", collect_flag='" + collect_flag + '\'' +
-                ", print_invoice='" + print_invoice + '\'' +
-                ", buyer_payment_me='" + buyer_payment_me + '\'' +
-                ", insure='" + insure + '\'' +
-                ", insure_value='" + insure_value + '\'' +
-                ", Base_id='" + Base_id + '\'' +
-                ", xebestCreateOrderGoodsInfos=" + xebestCreateOrderGoodsInfos +
-                '}';
+    public List<CreateOrderGoodsInfo> getCreateOrderGoodsInfos() {
+        return createOrderGoodsInfos;
+    }
+
+    public void setCreateOrderGoodsInfos(List<CreateOrderGoodsInfo> createOrderGoodsInfos) {
+        this.createOrderGoodsInfos = createOrderGoodsInfos;
     }
 }

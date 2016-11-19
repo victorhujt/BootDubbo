@@ -10,17 +10,17 @@ public class CreateOrderGoodsInfo {
     /**
      * 货品代码 Y
      */
-    private String goods_code;
+    private String goodsCode;
 
     /**
      * 货品名称 Y
      */
-    private String goods_name;
+    private String goodsName;
 
     /**
      * 货品规格
      */
-    private String goods_spec;
+    private String goodsSpec;
 
     /**
      * 单位
@@ -35,45 +35,45 @@ public class CreateOrderGoodsInfo {
     /**
      * 单价
      */
-    private String unit_price;
+    private String unitPrice;
 
     /**
      * 生产批次
      */
-    private String production_batch;
+    private String productionBatch;
 
     /**
      * 生产日期
      */
-    private String production_time;
+    private String productionTime;
 
     /**
      * 失效日期
      */
-    private String invalid_time;
+    private String invalidTime;
 
-    public String getGoods_code() {
-        return goods_code;
+    public String getGoodsCode() {
+        return goodsCode;
     }
 
-    public void setGoods_code(String goods_code) {
-        this.goods_code = goods_code;
+    public void setGoodsCode(String goodsCode) {
+        this.goodsCode = goodsCode;
     }
 
-    public String getGoods_name() {
-        return goods_name;
+    public String getGoodsName() {
+        return goodsName;
     }
 
-    public void setGoods_name(String goods_name) {
-        this.goods_name = goods_name;
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
     }
 
-    public String getGoods_spec() {
-        return goods_spec;
+    public String getGoodsSpec() {
+        return goodsSpec;
     }
 
-    public void setGoods_spec(String goods_spec) {
-        this.goods_spec = goods_spec;
+    public void setGoodsSpec(String goodsSpec) {
+        this.goodsSpec = goodsSpec;
     }
 
     public String getUnit() {
@@ -92,51 +92,50 @@ public class CreateOrderGoodsInfo {
         this.quantity = quantity;
     }
 
-    public String getUnit_price() {
-        return unit_price;
+    public String getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setUnit_price(String unit_price) {
-        this.unit_price = unit_price;
+    public void setUnitPrice(String unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
-    public String getProduction_batch() {
-        return production_batch;
+    public String getProductionBatch() {
+        return productionBatch;
     }
 
-    public void setProduction_batch(String production_batch) {
-        this.production_batch = production_batch;
+    public void setProductionBatch(String productionBatch) {
+        this.productionBatch = productionBatch;
     }
 
-    public String getProduction_time() {
-        return production_time;
+    public String getProductionTime() {
+        return productionTime;
     }
 
-    public void setProduction_time(String production_time) {
-        this.production_time = production_time;
+    public void setProductionTime(String productionTime) {
+        this.productionTime = productionTime;
     }
 
-    public String getInvalid_time() {
-        return invalid_time;
+    public String getInvalidTime() {
+        return invalidTime;
     }
 
-    public void setInvalid_time(String invalid_time) {
-        this.invalid_time = invalid_time;
+    public void setInvalidTime(String invalidTime) {
+        this.invalidTime = invalidTime;
     }
 
     @Override
     public String toString() {
-        return "XebestCreateOrderGoodsInfo{" +
-                "goods_code='" + goods_code + '\'' +
-                ", goods_name='" + goods_name + '\'' +
-                ", goods_spec='" + goods_spec + '\'' +
+        return "CreateOrderGoodsInfo{" +
+                "goodsCode='" + goodsCode + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", goodsSpec='" + goodsSpec + '\'' +
                 ", unit='" + unit + '\'' +
                 ", quantity='" + quantity + '\'' +
-                ", unit_price='" + unit_price + '\'' +
-                ", production_batch='" + production_batch + '\'' +
-                ", production_time='" + production_time + '\'' +
-                ", invalid_time='" + invalid_time + '\'' +
+                ", unitPrice='" + unitPrice + '\'' +
+                ", productionBatch='" + productionBatch + '\'' +
+                ", productionTime='" + productionTime + '\'' +
+                ", invalidTime='" + invalidTime + '\'' +
                 '}';
     }
-
 }
