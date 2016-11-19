@@ -117,13 +117,13 @@ public class OfcJumpontroller extends BaseController{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            //Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            //String custId = (String) wrapper.getResult();
+            //rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             QueryStoreDto queryStoreDto = new QueryStoreDto();
-            queryStoreDto.setCustomerId(custId);
-            Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
-            cscStoreListResult = storeByCustomerId.getResult();
+            //queryStoreDto.setCustomerId(custId);
+            //Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
+            //cscStoreListResult = storeByCustomerId.getResult();
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
