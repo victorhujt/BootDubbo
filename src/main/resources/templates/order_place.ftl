@@ -349,16 +349,16 @@
                                 </div>
                             </div>-->
                            <div class="form-group">
-                               <label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
-                               <div class="col-xs-3">
+                               <label class="control-label col-sm-1 no-padding-right" for="supplierCode">订单日期</label>
+                               <div class="col-sm-6">
                                    <div class="clearfix">
                                        <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
                                    </div>
                                </div>
                            </div>
                            <div class="form-group">
-                               <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单编号</label>
-                               <div class="col-xs-3">
+                               <label class="control-label col-sm-1 no-padding-right" for="custOrderCode">客户订单编号</label>
+                               <div class="col-sm-6">
                                    <div class="clearfix">
                                        <input class="col-xs-10 col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
 
