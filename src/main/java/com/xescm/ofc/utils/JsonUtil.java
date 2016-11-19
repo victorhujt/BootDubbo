@@ -232,7 +232,7 @@ public class JsonUtil {
         return result;
     }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         String json = "[{\n" +
                 "        \"custOrderCode\": \"D161115107629044\",\n" +
                 "        \"orderTime\": \"2016-11-15.0.8. 25. 250000000\",\n" +
@@ -338,6 +338,6 @@ public class JsonUtil {
         System.out.println(ToStringBuilder.reflectionToString(ofcFinanceInformation));
         System.out.println(ToStringBuilder.reflectionToString(ofcWarehouseInformation));
         System.out.println(ToStringBuilder.reflectionToString(ofcGoodsDetailsInfoList));
-    }
+    }*/
 
 }
