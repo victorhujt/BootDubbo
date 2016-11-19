@@ -43,7 +43,7 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">运输类型</label>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="transportTypeV1" type="radio" name="transportTypeV" />零担
+                                        <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked"/>零担
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
@@ -69,7 +69,7 @@
                                <label class="control-label col-label no-padding-right" for="custOrderCode">客户名称</label>
                                <div class="col-xs-3">
                                    <div class="clearfix">
-                                       <input class="col-xs-10 col-xs-12"  name="custName" id="custName" type="text" placeholder="客户名称" />
+                                       <input class="col-xs-10 col-xs-12" readonly name="custName" id="custName" type="text" placeholder="客户名称" />
                                        <button type="button" class="btn btn-minier btn-inverse no-padding-right" id="custNameSel">选择</button>
                                    </div>
                                </div>
@@ -80,7 +80,7 @@
                                 服务项目及费用
                             </p>
                         </div>
-                        <form id="" method="post" class="form-horizontal" role="form" >
+                        <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
                             <div class="form-group">
                                 <div class="col-sm-5">
                                     <div class="clearfix col-sm-1">
@@ -142,7 +142,7 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">代收金额</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="collectLoanAmount" disabled="true" style="color: #000" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                        <input id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -170,19 +170,19 @@
                         </form>
                         <div class="page-header">
                         </div>
-                        <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
+                        <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form" >
                             <div class="form-group" id="transBusinessTypeDiv">
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-3" for="name">费用总计</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="serviceCharge" disabled="true" style="color: #000" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="serviceCharge" value="0" disabled="true" style="color: #000" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <label class="control-label col-sm-1 no-padding-right" for="name">费用支付</label>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="transportTypeV1" type="radio" name="transportTypeV" />发货方
+                                        <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked"/>发货方
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
@@ -210,28 +210,28 @@
                                 <div class="col-sm-2">
                                     <label class="control-label col-sm-5" for="name">现结</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost()">
+                                        <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="control-label col-sm-5" for="name">到付</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="control-label col-sm-5" for="name">回付</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="control-label col-sm-5" for="name">月结</label>
                                     <div class="clearfix col-sm-6">
-                                        <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                                     </div>
                                     <label class="control-label" for="name">元</label>
                                 </div>
@@ -496,25 +496,27 @@
             focusInvalid : false,
             ignore : "",
             rules : {
+                merchandiser:{
+                    required:true
+                },
                 orderTime:{
                     required:true
                 },
-                custOrderCode:{
-                    required:true,
-                    maxlength:30,
+                transCode:{
+                    maxlength:50,
                     remote:{
                         url : ofc_url + "/ofc/checkCustOrderCode",
                         type : "POST",
                         dataType : "json",
                         data : {
-                            custOrderCode : function() {
-                                return $("#custOrderCode").val();
+                            transCode : function() {
+                                return $("#transCode").val();
                             }
                         }
                     }
                 },
-                notes:{
-                    maxlength:300
+                custName:{
+                    maxlength:100
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -526,15 +528,17 @@
                 }*/
             },
             messages : {
+                merchandiser:{
+                    required:"请填写开单员"
+                },
                 orderTime:{
-                    required:true
+                    required:"请填写订单日期"
                 },
-                custOrderCode:{
-                    required: "请输入客户订单编号",
-                    maxlength: "超过最大长度",
-                    remote: "该客户订单编号已经存在"
+                transCode:{
+                    maxlength: "超过最大长度50",
+                    remote: "运输单号已存在"
                 },
-                notes:{
+                custName:{
                     maxlength:"超过最大长度"
                 }/*,
                 goodsListQuantity:{
@@ -559,259 +563,202 @@
             invalidHandler : function(form) {
             }
         });
+        $('#orderFinanceFormValidate').validate({//
+            errorElement : 'div',
+            errorClass : 'help-block',
+            focusInvalid : false,
+            ignore : "",
+            rules : {
+                luggage:{
+                    maxlength: 9,
+                    required:true,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                homeDeliveryFee:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                cargoInsuranceFee:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                insureValue:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                twoDistributionFee:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                collectServiceCharge:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                collectLoanAmount:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                returnListFee:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                }
+            },
+            messages : {
+                luggage:{
+                    maxlength: "最大999999.99元",
+                    required:"请填写运费",
+                    pattern:"只能输入金额"
+                },
+                homeDeliveryFee:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                cargoInsuranceFee:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                insureValue:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                twoDistributionFee:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                collectServiceCharge:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                collectLoanAmount:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                returnListFee:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                }
+            },
+            highlight : function(e) {
+                $(e).parent().parent().removeClass('has-info').addClass('has-error');
+            },
+            success : function(e) {
+                $(e).parent().removeClass('has-error').addClass('has-success');
+                $(e).remove();
+                countCostCheck();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent().next());
+                $(error).attr("align","center");
+            },
+            invalidHandler : function(form) {
+            }
+        });
+
+        $('#orderFinanceChargeFormValidate').validate({//
+            errorElement : 'div',
+            errorClass : 'help-block',
+            focusInvalid : false,
+            ignore : "",
+            rules : {
+                currentAmount:{
+                    maxlength: 9,
+                    required:true,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                toPayAmount:{
+                    maxlength: 9,
+                    required:true,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                returnAmount:{
+                    maxlength: 9,
+                    required:true,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                monthlyAmount:{
+                    maxlength: 9,
+                    required:true,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
+                },
+                serviceCharge:{
+                    required:true,
+                    pattern:/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/
+                }
+            },
+            messages : {
+                currentAmount:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                toPayAmount:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                returnAmount:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                monthlyAmount:{
+                    maxlength: "最大999999.99元",
+                    pattern:"只能输入金额"
+                },
+                serviceCharge:{
+                    required:"缺少费用总计",
+                    pattern:"金额格式错误"
+                }
+            },
+            highlight : function(e) {
+                $(e).parent().parent().removeClass('has-info').addClass('has-error');
+            },
+            success : function(e) {
+                //alert($(e).attr('id'));
+
+                if(countSettlement()=="false"){
+                    $(e).parent().removeClass('has-info').addClass('has-error');
+                    $(e).html("结算方式的金额合计应于费用总计一致！");
+                }else{
+                    $("#monthlyAmount-error").parent().removeClass('has-error').addClass('has-success');
+                    $("#currentAmount-error").parent().removeClass('has-error').addClass('has-success');
+                    $("#toPayAmount-error").parent().removeClass('has-error').addClass('has-success');
+                    $("#returnAmount-error").parent().removeClass('has-error').addClass('has-success');
+                    $("#monthlyAmount-error").remove();
+                    $("#currentAmount-error").remove();
+                    $("#toPayAmount-error").remove();
+                    $("#returnAmount-error").remove();
+                }
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent().next());
+            },
+            invalidHandler : function(form) {
+            }
+        });
+
         $('#orderInfoTableValidate').validate({//
             errorElement : 'div',
             errorClass : 'help-block',
             focusInvalid : false,
             ignore : "",
             rules : {
-                quantity:{
-                    maxlength: 5,
-                    integer:true
-                },
-                weight:{
-                    maxlength: 5
-                },
-                cubage:{
-                    maxlength:14
-                },
-                totalStandardBox:{
-                    maxlength: 8,
-                    integer:true
-                },
-                transRequire:{
-                    maxlength:300
-                },
-                consignorName:{
-                    required:true,
-                    maxlength:100
-                },
-                consignorContactName:{
-                    required:true,
-                    maxlength:50
-                },
-                consignorPhone:{
-                    isPhone:true,
-                    required:true,
-                    maxlength:50
-                },
-                consignorFax:{
-                    isFax:true,
-                    maxlength:50
-                },
-                consignorEmail:{
-                    isEmail:true,
-                    maxlength:50
-                },
-                consignorPostCode:{
-                    isPostCode:true,
-                    maxlength:6
-                },
-                consignorAddress:{
-                    maxlength:200
-                },
-                consigneeName:{
-                    required:true,
-                    maxlength:100
-                },
-                consigneeContactName:{
-                    required:true,
-                    maxlength:50
-                },
-                consigneePhone:{
-                    isPhone:true,
-                    required:true,
-                    maxlength:50
-                },
-                consigneeFax:{
-                    isFax:true,
-                    maxlength:50
-                },
-                consigneeEmail:{
-                    isEmail:true,
-                    maxlength:50
-                },
-                consigneePostCode:{
-                    isPostCode:true,
-                    maxlength:6
-                },
-                consigneeAddress:{
-                    maxlength:200
-                },
-                warehouseName:{
-                    required:true
-                },
-                arriveTime:{
-                    required:true
-                },
-                plateNumber:{
-                    maxlength:20
-                },
-                driverName:{
-                    maxlength:20
-                },
-                contactNumber:{
-                    isPhone:true,
-                    maxlength:50
-                },
-                supportName:{
-                    required:true,
-                    maxlength:100
-                },
-                supportContactName:{
-                    required:true,
-                    maxlength:50
-                },
-                supportPhone:{
-                    required:true,
-                    isPhone:true
-                },
-                supportFax:{
-                    isFax:true,
-                    maxlength:50
-                },
-                supportEmail:{
-                    isEmail:true,
-                    maxlength:50
-                },
-                supportPostCode:{
-                    isPostCode:true,
-                    maxlength:6
-                },
-                supportAddress:{
-                    maxlength:200
+                volumeUnitPrice:{
+                    maxlength: 9,
+                    pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 }
             },
             messages : {
-                quantity:{
+                volumeUnitPrice:{
                     maxlength: "超过最大长度",
-                    integer:"必须输入整数"
-                },
-                weight:{
-                    maxlength: "超过最大长度"
-                },
-                cubage:{
-                    maxlength:"超过最大长度"
-                },
-                totalStandardBox:{
-                    maxlength: "超过最大长度",
-                    integer:"必须输入整数"
-                },
-                transRequire:{
-                    maxlength:"超过最大长度"
-                },
-                consignorName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                consignorContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                consignorPhone:{
-                    isPhone:"请输入正确的手机号",
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                consignorFax:{
-                    isFax:"请输入正确的传真",
-                    maxlength:"超过最大长度"
-                },
-                consignorEmail:{
-                    isEmail:"请输入正确格式的邮箱",
-                    maxlength:"超过最大长度"
-                },
-                consignorPostCode:{
-                    isPostCode:"请输入正确格式的邮编",
-                    maxlength:"超过最大长度"
-                },
-                consignorAddress:{
-                    maxlength:"超过最大长度"
-                },
-                consigneeName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                consigneeContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                consigneePhone:{
-                    isPhone:"请输入正确格式的手机号",
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                consigneeFax:{
-                    isFax:"请输入正确格式的传真",
-                    maxlength:"超过最大长度"
-                },
-                consigneeEmail:{
-                    isEmail:"请输入正确格式的邮箱",
-                    maxlength:"超过最大长度"
-                },
-                consigneePostCode:{
-                    isPostCode:"请输入正确格式的邮编",
-                    maxlength:"超过最大长度"
-                },
-                consigneeAddress:{
-                    maxlength:"超过最大长度"
-                },
-                warehouseName:{
-                    required:"必须输入"
-                },
-                arriveTime:{
-                    required:"必须输入"
-                },
-                plateNumber:{
-                    maxlength:"超过最大长度"
-                },
-                driverName:{
-                    maxlength:"超过最大长度"
-                },
-                contactNumber:{
-                    isPhone:"请输入正确格式的手机号",
-                    maxlength:"超过最大长度"
-                },
-                supportName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                supportContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
-                },
-                supportPhone:{
-                    required:"必须输入",
-                    isPhone:"请输入正确的手机号"
-                },
-                supportFax:{
-                    isFax:"请输入正确格式的传真",
-                    maxlength:"超过最大长度"
-                },
-                supportEmail:{
-                    isEmail:"请输入正确格式的邮箱",
-                    maxlength:"超过最大长度"
-                },
-                supportPostCode:{
-                    isPostCode:"请输入正确格式的邮编",
-                    maxlength:"超过最大长度"
-                },
-                supportAddress:{
-                    maxlength:"超过最大长度"
+                    pattern:"只能输入金额"
                 }
-
-
-
             },
             highlight : function(e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+
             },
             success : function(e) {
-                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
-                $(e).remove();
+
             },
             errorPlacement : function(error, element) {
-                error.insertAfter(element.parent());
+                error.insertAfter(element.parent().next());
             },
             invalidHandler : function(form) {
             }
@@ -826,85 +773,96 @@
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
     }
-    function countCost(obj) {
-        if($(obj).attr("id")=="luggage"){
-            if($(obj).val()=="0"){
-                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，不可以为空或为0，小数点后只能保留两位');
-                countCostCheck();
+    function countQuantOrWeightOrCubage(obj) {
+        if(!(/^([1-9][\d]{0,4}|0)(\.[\d]{1,3})?$/).test($(obj).val()) && $(obj).val()!=""){
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'>请检查数字格式</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
-            }else {
-                if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val())){
-                    alert('只能输入数字，最大值不能超过999999.99元，不允许负数，不可以为空或为0，小数点后只能保留两位');
-                    $(obj).val("");
-                    countCostCheck();
-                }else{
-                    countCostCheck();
-                };
-            }
-        }else {
-            if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val())){
-                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
-                $(obj).val("");
-                countCostCheck();
+                countQuantityOrWeightOrCubageCheck();
             }else{
-                countCostCheck();
-            };
-        }
-    }
-    function countQuantity(obj) {
-        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,3})?$/).test($(obj).val())){
-            alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
-            $(obj).val("");
-            countQuantityCheck();
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
         }else{
-            countQuantityCheck();
+            $(obj).parent().find("div").remove();
+            countQuantityOrWeightOrCubageCheck();
         };
     }
-    function countWeight(obj) {
-        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,3})?$/).test($(obj).val())){
-            alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
-            $(obj).val("");
-            countWeightCheck();
+    function countQuantityOrWeightOrCubagePrice(obj) {
+        if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($(obj).val()) && $(obj).val()!=""){
+            //alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'>请检查金额格式</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
         }else{
-            countWeightCheck();
+            $(obj).parent().find("div").remove();
+            countQuantityOrWeightOrCubageCheck();
         };
     }
-    function countQuantityCheck() {
+    function countQuantityOrWeightOrCubageCheck() {
         var quantityCount=0;
+        var weightCount=0;
+        var luggage=0;
+        var flg1="";
+        var flg2="";
+        var flg3="";
         $('input[name="quantity"]').each(function(){
             if($(this).val()!=""){
                 quantityCount=quantityCount+parseFloat($(this).val());
+                if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
+                    luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
+                }else{
+                    flg1="error";
+                }
+            }else{
+                flg1="error";
             }
-        });
-        /*$("#goodsInfoListDiv").find("tr").each(function(index){
-            var tdArr = $(this).children();
-            var quantity = tdArr.eq(7).children().val();//    数量
-            if($("#quantity").val()!=""){
-                quantityCount=quantityCount+parseFloat(quantity);
-            }
-        });*/
-        $("#quantityCount").html(quantityCount);
 
-    }
-    function countWeightCheck() {
-        var weightCount=0;
-        var luggage=0;
-        var flg="";
+        });
+        if(flg1==""){$("#luggage").val(luggage);luggage=0;flg2="true";flg3="true";}
+        luggage=0;
         $('input[name="weight"]').each(function(){
             if($(this).val()!=""){
                 //alert($(this).parent().next().find('input').first().attr("id"));
                 weightCount=weightCount+parseFloat($(this).val());
-                if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
-                    luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
-                }else{
-                    flg="error";
+                if(flg1=="error"){
+                    if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
+                        luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
+                    }else{
+                        flg2="error";
+                    }
                 }
             }else{
-                flg="error";
+                flg2="error";
             }
         });
-        $("#luggage").val(luggage);
+        if(flg2==""){$("#luggage").val(luggage);luggage=0;flg2="true";flg3="true";}
+        luggage=0;
+        $('input[name="cubage"]').each(function(){
+            if($(this).val()!=""){
+                if(flg1=="error" && flg2=="error"){
+                    if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
+                        luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
+                    }else{
+                        flg3="error";
+                    }
+                }
+            }else{
+                flg3="error";
+            }
+        });
+        if(flg3==""){$("#luggage").val(luggage);luggage=0;}
+        if(flg1=="error" && flg2=="error" && flg3=="error"){$("#luggage").val(0);}
+        countCostCheck();
         $("#weightCount").html(weightCount);
+        $("#quantityCount").html(quantityCount);
     }
     function countCostCheck() {
         var count=0;
@@ -932,7 +890,46 @@
         if($("#luggage").val()!=""){
             count=count+parseFloat($("#luggage").val());
         }
-        $("#serviceCharge").val(count);
+        if((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test(count)){
+            $("#serviceCharge").val(count);
+            $("#currentAmount").val(count);
+            $("#toPayAmount").val(0);
+            $("#returnAmount").val(0);
+            $("#monthlyAmount").val(0);
+            $("#monthlyAmount-error").parent().removeClass('has-error').addClass('has-success');
+            $("#currentAmount-error").parent().removeClass('has-error').addClass('has-success');
+            $("#toPayAmount-error").parent().removeClass('has-error').addClass('has-success');
+            $("#returnAmount-error").parent().removeClass('has-error').addClass('has-success');
+            $("#monthlyAmount-error").remove();
+            $("#currentAmount-error").remove();
+            $("#toPayAmount-error").remove();
+            $("#returnAmount-error").remove();
+        }
+
+    }
+
+    function countSettlement(){
+        var count=0;
+        if($("#currentAmount").val()!=""){
+            /*if(!(/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#currentAmount").val())){
+                alert('只能输入数字，最大值不能超过999999.99元，不允许负数，可以为空或为0，小数点后只能保留两位');
+                $("#currentAmount").val(0);
+            }else{*/
+            count=count+parseFloat($("#currentAmount").val());
+            //};
+        }
+        if($("#toPayAmount").val()!=""){
+            count=count+parseFloat($("#toPayAmount").val());
+        }
+        if($("#returnAmount").val()!=""){
+            count=count+parseFloat($("#returnAmount").val());
+        }
+        if($("#monthlyAmount").val()!=""){
+            count=count+parseFloat($("#monthlyAmount").val());
+        }
+        if(count-parseFloat($("#serviceCharge").val())!=0){
+            return "false";
+        }
     }
 
     function orderPlaceAddTranInfo(jsonStr) {
@@ -1850,7 +1847,7 @@
             goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
             goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<select  id='businessType' name='businessType'>"+
+                    "<select  id='goodsCategory' name='goodsCategory'>"+
                     "<option value='600'>动物</option>"+
                     "<option value='601'>植物</option>"+
                     "<option value='602'>微生物</option></select>"
@@ -1885,22 +1882,22 @@
                     "<option value='13'>布袋</option></select>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text' onblur='countQuantity(this)'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class='col-xs-10 col-xs-12'  name='quantityUnitPrice' id='quantityUnitPrice' type='text'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='quantityUnitPrice' id='quantityUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                    "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text' onblur='countWeight(this)'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td id='2'>"+
-                    "<input class='col-xs-10 col-xs-12'  name='weightUnitPrice' id='weightUnitPrice' type='text'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='weightUnitPrice' id='weightUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class='col-xs-10 col-xs-12'  name='cubage' id='cubage' type='text'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='cubage' id='cubage' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<input class='col-xs-10 col-xs-12'  name='volumeUnitPrice' id='volumeUnitPrice' type='text'/>"
+                    "<input class='col-xs-10 col-xs-12'  name='volumeUnitPrice' id='volumeUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                     +"</td>";
             goodsInfoListDiv = goodsInfoListDiv + "</tr>";
             $("#goodsInfoListDiv").append(goodsInfoListDiv);
