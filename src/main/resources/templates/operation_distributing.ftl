@@ -52,8 +52,7 @@
             border:solid #7A7A7A 2px;
         }
     </style>
-
-
+    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
 <body>
 <!--goodsListDiv-->
@@ -400,7 +399,6 @@
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="merchandiser" name="merchandiser">
-                        <option value="00001">----</option>
                         <option value="00001">张无忌</option>
                         <option value="00002">杨过</option>
                     </select>
@@ -410,7 +408,7 @@
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="预计发货时间"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
             </div>
         </div>
@@ -430,8 +428,7 @@
             <label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="merchandiser" name="merchandiser">
-                        <option value="00000">----</option>
+                    <select  id="store" name="store">
                         <option value="00001">北京仓库</option>
                         <option value="00002">天津仓库</option>
                     </select>
@@ -630,9 +627,11 @@
 
     function main() {
         //validateForm();
-
+        $("#merchandiser").editableSelect();
+        $("#store").editableSelect();
     }
     $(function () {
+
         $(".goodsLi").click(function () {
             /*var consigneeChosen = "";
             $("#consigneeInfoListDiv").find("tr").each(function () {
@@ -993,4 +992,5 @@
 
 
 </script>
+<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
