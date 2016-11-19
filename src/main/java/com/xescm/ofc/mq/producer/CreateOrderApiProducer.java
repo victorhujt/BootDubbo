@@ -23,84 +23,17 @@ public class CreateOrderApiProducer {
     @Resource
     MqConfig mqConfig;
 
-    // FIXME: 2016/11/17
+    //发送MQ
     public void sendCreateOrderResultMQ(String data, String code) {
         logger.info("推送创单api返回信息：{}", data);
         if (StringUtils.isNotBlank(data)) {
-            toSendMQ(data, code);
-        }
-    }
-
-    /**
-     * MQ发送普通消息示例 Demo
-     */
-    public void toSendMQ(String jsonStr, String code) {
-        System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getOFCTopic(), mqConfig.getTag(), jsonStr.getBytes());
-        message.setKey(code);
-        SendResult sendResult = producer().send(message);
-        if (sendResult != null) {
-            System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
-        }
-    }
-
-    /**
-     * MQ发送普通消息示例 Demo
-     */
-
-    public void toSendMQTfcCancelPlanOrder(String jsonStr) {
-        System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getTfcCancelTopic(), mqConfig.getTfcCancelTag(), jsonStr.getBytes());
-
-        SendResult sendResult = producer().send(message);
-        if (sendResult != null) {
-            System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
-        }
-    }
-
-    /**
-     * MQ 发送事务消息示例 Demo
-     */
-
-    public void sendTransactionalMQ(String jsonStr, String code) {
-        Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(), jsonStr.getBytes());
-        message.setKey(code);
-        SendResult sendResult = transactionProducer().send(message, new LocalTransactionExecuter() {
-            public TransactionStatus execute(Message msg, Object arg) {
-                System.out.println("执行本地事务, 并根据本地事务的状态提交TransactionStatus.");
-                return TransactionStatus.CommitTransaction;
+            Message message = new Message(mqConfig.getOFCTopic(), mqConfig.getTag(), data.getBytes());
+            message.setKey(code);
+            SendResult sendResult = mqConfig.producer.send(message);
+            if (sendResult != null) {
+                logger.info(new Date() + " 发送 mq message success! Topic is:" + mqConfig.getTopic() + "  msgId is: " + sendResult.getMessageId());
             }
-        }, null);
-
-        System.out.println("Send transaction message success.");
-    }
-
-
-    private Producer producer() {
-        Properties producerProperties = new Properties();
-        producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
-        producerProperties.setProperty(PropertyKeyConst.AccessKey, mqConfig.getAccessKey());
-        producerProperties.setProperty(PropertyKeyConst.SecretKey, mqConfig.getSecretKey());
-        producerProperties.setProperty(PropertyKeyConst.ONSAddr, mqConfig.getOnsAddr());
-
-        MQUtil.propertiesUtil(producerProperties);
-        Producer producer = ONSFactory.createProducer(producerProperties);
-        producer.start();
-        return producer;
-    }
-
-    private TransactionProducer transactionProducer() {
-        Properties tranProducerProperties = new Properties();
-        tranProducerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
-        tranProducerProperties.setProperty(PropertyKeyConst.AccessKey, mqConfig.getAccessKey());
-        tranProducerProperties.setProperty(PropertyKeyConst.SecretKey, mqConfig.getSecretKey());
-        tranProducerProperties.setProperty(PropertyKeyConst.ONSAddr, mqConfig.getOnsAddr());
-        MQUtil.propertiesUtil(tranProducerProperties);
-        //初始化事务消息Producer时,需要注册一个本地事务状态的的Checker
-        LocalTransactionCheckerImpl localTransactionChecker = LocalTransactionCheckerImpl.getInstance();
-        TransactionProducer transactionProducer = ONSFactory.createTransactionProducer(tranProducerProperties, localTransactionChecker);
-        transactionProducer.start();
-        return transactionProducer;
+        }
     }
 
 

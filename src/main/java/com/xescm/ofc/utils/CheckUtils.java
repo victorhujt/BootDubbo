@@ -31,7 +31,7 @@ public class CheckUtils {
      * @return
      */
     public static ResultModel checkCustCode(String s) {
-        return StringUtils.isBlank(s) ? new ResultModel(ResultModel.ResultEnum.CODE_0001) : new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        return StringUtils.isBlank(s) ? new ResultModel(ResultModel.ResultEnum.CODE_0009) : new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 
     /**
@@ -43,10 +43,8 @@ public class CheckUtils {
      * @return
      */
     public static ResultModel checkOrderType(String orderType) {
-        if ("60".equals(orderType)) {
-            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
-        }
-        if ("61".equals(orderType)) {
+        orderType = StringUtils.trim(orderType);
+        if ("60".equals(orderType) ||  "61".equals(orderType)) {
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
         return new ResultModel(ResultModel.ResultEnum.CODE_0001);
@@ -181,16 +179,20 @@ public class CheckUtils {
      * 若不存在，则返回错误信息，“仓库不存在！”
      */
     public static ResultModel checkWarehouseCode(Wrapper<List<CscWarehouse>> listWrapper, String warehouse, String orderType) {
-        if (StringUtils.equals("61", orderType)) {
-            return new ResultModel(ResultModel.ResultEnum.CODE_0004);
+        warehouse = StringUtils.trim(warehouse);
+        orderType = StringUtils.trim(orderType);
+        if (StringUtils.equals("60", orderType)) {
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
-        if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
-            return new ResultModel(ResultModel.ResultEnum.CODE_0004);
-        }
-        List<CscWarehouse> cscWarehouseList = listWrapper.getResult();
-        for (CscWarehouse c : cscWarehouseList) {
-            if (StringUtils.equals(c.getCustomerCode(), warehouse)) {
-                return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        if(StringUtils.equals("61",orderType)){
+            if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
+                return new ResultModel(ResultModel.ResultEnum.CODE_0004);
+            }
+            List<CscWarehouse> cscWarehouseList = listWrapper.getResult();
+            for (CscWarehouse c : cscWarehouseList) {
+                if (StringUtils.equals(c.getCustomerCode(), warehouse)) {
+                    return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+                }
             }
         }
         return new ResultModel(ResultModel.ResultEnum.CODE_0005);
@@ -238,7 +240,7 @@ public class CheckUtils {
      * @return
      */
     public static ResultModel checkQuantityAndWeightAndCubage(String quantity, String weight, String cubage) {
-        return (StringUtils.isBlank(quantity) && StringUtils.isBlank(weight) && StringUtils.isBlank(cubage)) ? new ResultModel(ResultModel.ResultEnum.CODE_0007) : new ResultModel(ResultModel.ResultEnum.CODE_0001);
+        return (StringUtils.isBlank(quantity) && StringUtils.isBlank(weight) && StringUtils.isBlank(cubage)) ? new ResultModel(ResultModel.ResultEnum.CODE_0007) : new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 
 }

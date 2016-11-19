@@ -12,7 +12,7 @@ public class CreateOrderResultDto {
 
     private String reason;
 
-    private List<String> message;
+    private List<MessageDto> message;
 
     public String getCode() {
         return code;
@@ -30,11 +30,11 @@ public class CreateOrderResultDto {
         this.reason = reason;
     }
 
-    public List<String> getMessage() {
+    public List<MessageDto> getMessage() {
         return message;
     }
 
-    public void setMessage(List<String> message) {
+    public void setMessage(List<MessageDto> message) {
         this.message = message;
     }
 }

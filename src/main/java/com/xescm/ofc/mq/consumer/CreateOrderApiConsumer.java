@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.domain.dto.coo.CreateOrderResultDto;
+import com.xescm.ofc.domain.dto.coo.MessageDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.utils.JsonUtil;
@@ -62,6 +63,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     //调用MQ生产者
                     if (StringUtils.isNotBlank(result)) {
                         String code = String.valueOf(result.hashCode());
+
                         createOrderApiProducer.sendCreateOrderResultMQ(result, code);
                     }
                 }
@@ -81,7 +83,12 @@ public class CreateOrderApiConsumer implements MessageListener {
         createOrderResultDto.setCode("500");
         String r = "typeId:"+"123456"+"||"+"reason:"+"null"+","+"typeId:"+"123456"+"||"+"reason:"+"参数错误";
         createOrderResultDto.setReason(r);
-        List<String> list = Lists.newArrayList("typeId:123456","typeId:654321");
+        MessageDto messageDto = new MessageDto();
+        messageDto.setTypeId("123456");
+        List<MessageDto> list = Lists.newArrayList(messageDto);
+        messageDto = new MessageDto();
+        list.add(messageDto);
+        messageDto.setTypeId("654321");
         createOrderResultDto.setMessage(list);
 
         //要反回的json格式的字符串
