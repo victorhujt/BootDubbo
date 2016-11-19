@@ -372,7 +372,7 @@
         历史订单选择
     </button>
 
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="">
+    <button class="btn btn-white btn-info btn-bold btn-interval" id="to_operation_distributing_excel">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         Excel导入
     </button>
@@ -951,7 +951,7 @@
         $("#consigneeInfoListDiv").html("");
 
         $("#contactSelectListTbody1").find("tr").each(function(index){
-            debugger
+            
             var tdArr = $(this).children();
             if(tdArr.eq(0).find("input").prop("checked")){
 
@@ -986,6 +986,10 @@
     });
     $("#custListDivNoneTop").click(function () {
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+
+    $("#to_operation_distributing_excel").click(function () {
+
     });
 
 

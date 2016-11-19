@@ -19,9 +19,9 @@ package com.xescm.ofc.config;
 import com.aliyun.openservices.ons.api.Consumer;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
-import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
+//import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
 import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
-import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
+//import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -71,8 +71,8 @@ public class MqConfig {
     @Resource
     SchedulingSingleFedbackImpl schedulingSingleFedback;
 
-    @Resource
-    CreateOrderApiConsumer createOrderApiConsumer;
+    /*@Resource
+    CreateOrderApiConsumer createOrderApiConsumer;*/
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumer(){
@@ -81,14 +81,14 @@ public class MqConfig {
         consumer.subscribe(topic, null, schedulingSingleFedback);
         return consumer;
     }
-
+/*
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
         System.out.println("createOrderApi消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
         consumer.subscribe(TFCTopic, null, createOrderApiConsumer);
         return consumer;
-    }
+    }*/
 
 
     private Properties consumerProperties(){

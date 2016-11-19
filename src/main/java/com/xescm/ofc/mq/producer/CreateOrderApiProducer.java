@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Properties;
 
-@Component
+/*@Component
 public class CreateOrderApiProducer {
 
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiProducer.class);
@@ -31,9 +31,9 @@ public class CreateOrderApiProducer {
         }
     }
 
-    /**
+    *//**
      * MQ发送普通消息示例 Demo
-     */
+     *//*
     public void toSendMQ(String jsonStr, String code) {
         System.out.println("Producer Started");
         Message message = new Message(mqConfig.getOFCTopic(), mqConfig.getTag(), jsonStr.getBytes());
@@ -44,9 +44,9 @@ public class CreateOrderApiProducer {
         }
     }
 
-    /**
+    *//**
      * MQ发送普通消息示例 Demo
-     */
+     *//*
 
     public void toSendMQTfcCancelPlanOrder(String jsonStr) {
         System.out.println("Producer Started");
@@ -58,9 +58,9 @@ public class CreateOrderApiProducer {
         }
     }
 
-    /**
+    *//**
      * MQ 发送事务消息示例 Demo
-     */
+     *//*
 
     public void sendTransactionalMQ(String jsonStr, String code) {
         Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(), jsonStr.getBytes());
@@ -104,4 +104,4 @@ public class CreateOrderApiProducer {
     }
 
 
-}
+}*/

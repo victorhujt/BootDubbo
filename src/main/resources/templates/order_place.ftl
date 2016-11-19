@@ -378,7 +378,7 @@
                                 </div>
                             </div>
 
-                           <div class="form-group" id="transBusinessTypeDiv" style="display: block">
+                           <#--<div class="form-group" id="transBusinessTypeDiv" style="display: block">
                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                <div class="col-sm-6">
                                    <div class="clearfix">
@@ -389,7 +389,7 @@
                                        </select>
                                    </div>
                                </div>
-                           </div>
+                           </div>-->
                             <div class="form-group" id="businessTypeDiv" style="display: none">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                 <div class="col-sm-6">
