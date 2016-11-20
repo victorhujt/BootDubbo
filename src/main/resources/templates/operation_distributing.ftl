@@ -260,7 +260,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -288,7 +288,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">产品类别</th>
                     </thead>
-                    <tbody id=""></tbody>
+                    <tbody id="custListDivTbody"></tbody>
                 </table>
             </form>
 
@@ -990,6 +990,46 @@
 
     $("#to_operation_distributing_excel").click(function () {
 
+    });
+
+    $("#custSelectFormBtn").click(function () {
+        var custName = $("#custNameDiv").val();
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
+            data=eval(data);
+            var custList = "";
+            $.each(data,function (index,cscCustomerVo) {
+                custList =custList + "<tr role='row' class='odd'>";
+                custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                custList =custList + "<td>"+(index+1)+"</td>";
+                custList =custList + "<td>"+cscCustomerVo.type+"</td>";
+                custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+                custList =custList + "<td>"+cscCustomerVo.channel+"</td>";
+                custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+                custList =custList + "</tr>";
+                $("#custListDivTbody").html(custList);
+            });
+        },"json");
+
+    });
+
+    $("#custEnter").click(function () {
+        var custEnterTag = "";
+        $("#custListDivTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+                custEnterTag = "1";
+                var type = tdArr.eq(2).text();//类型
+                var customerName = tdArr.eq(3).text();//公司名称
+                var channel = tdArr.eq(4).text();//    渠道
+                var productType = tdArr.eq(5).text();//    产品类别
+                $("#custName").val(customerName);
+            }
+        });
+        if(custEnterTag==""){
+            alert("请至少选择一行");
+        }else{
+            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        }
     });
 
 
