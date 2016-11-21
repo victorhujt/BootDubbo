@@ -3,6 +3,7 @@ import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerCodeDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.QueryCustomerNameDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
 import com.xescm.ofc.exception.BusinessException;
@@ -63,6 +64,14 @@ public class FeignCscCustomerAPIClient {
             throw new BusinessException("参数为空");
         }
         Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(queryCustomerIdDto);
+        return wrapper;
+    }
+    public Wrapper<?> queryCustomerByName(QueryCustomerNameDto queryCustomerNameDto){
+        logger.debug("==>通过客户名称获取客户列表 queryCustomerNameDto={}", queryCustomerNameDto);
+        if(null == queryCustomerNameDto){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<?> wrapper = getApi().queryCustomerByName(queryCustomerNameDto);
         return wrapper;
     }
 
