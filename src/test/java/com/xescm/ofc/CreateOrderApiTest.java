@@ -1,10 +1,6 @@
 package com.xescm.ofc;
 
-import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.service.OfcCreateOrderService;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -17,7 +13,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @SpringApplicationConfiguration(classes = XescmOfcApplication.class)
 @WebAppConfiguration
 public class CreateOrderApiTest {
-
+/*
     @Autowired
     private CreateOrderService createOrderService;
 
@@ -126,6 +122,6 @@ public class CreateOrderApiTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 }

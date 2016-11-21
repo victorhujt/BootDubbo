@@ -1,3 +1,4 @@
+/*
 package com.xescm.ofc.web.restcontroller;
 
 import com.xescm.ofc.domain.dto.csc.QueryCustomerNameDto;
@@ -17,18 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by lyh on 2016/11/19.
- */
+ *//*
+
 @RequestMapping(value = "/ofc/distributing",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOperationDistributing extends BaseController{
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-
-
-
-
 
 
     @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
@@ -55,3 +54,4 @@ public class OfcOperationDistributing extends BaseController{
 
     }
 }
+*/
