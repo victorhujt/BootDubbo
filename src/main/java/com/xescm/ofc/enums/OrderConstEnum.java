@@ -72,6 +72,18 @@ public final class OrderConstEnum {
     //通过接口创建的订单
     public static final String CREATE_ORDER_BYAPI = "createOrderByApi";
 
+    //是或者不是
+    public static final Integer SHI=1;      //是
+    public static final Integer FOU=0;      //否
+
+    //运输类型
+    public static final Integer LINGDAN=10;       //零担
+    public static final Integer ZHENGCHE=20;        //整车
+
+    //费用支付方
+    public static final Integer FAHUOFANG=10;       //发货方
+    public static final Integer SHOUHUOFANG=20;        //收货方
+
     public OrderConstEnum() {
     }
 }
