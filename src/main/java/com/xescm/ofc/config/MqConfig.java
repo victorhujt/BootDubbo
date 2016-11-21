@@ -75,8 +75,8 @@ public class MqConfig {
     @Resource
     SchedulingSingleFedbackImpl schedulingSingleFedback;
 
-    /*@Resource
-    CreateOrderApiConsumer createOrderApiConsumer;*/
+    @Resource
+    CreateOrderApiConsumer createOrderApiConsumer;
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumer(){
@@ -85,18 +85,15 @@ public class MqConfig {
         consumer.subscribe(topic, null, schedulingSingleFedback);
         return consumer;
     }
-/*
+
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
         System.out.println("createOrderApi消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
         consumer.subscribe(TFCTopic, null, createOrderApiConsumer);
-<<<<<<< HEAD
         initProducer();
-=======
->>>>>>> origin/dev
         return consumer;
-    }*/
+    }
 
 
     private Properties consumerProperties(){

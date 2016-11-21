@@ -3,6 +3,7 @@ package com.xescm.ofc.feign.api.csc;
 import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerCodeDto;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.QueryCustomerNameDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
 import com.xescm.uam.utils.wrap.Wrapper;

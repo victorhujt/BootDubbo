@@ -1,4 +1,3 @@
-/*
 package com.xescm.ofc.mq.consumer;
 
 import com.aliyun.openservices.ons.api.Action;
@@ -24,12 +23,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-*/
 /**
  * 创单api消费MQ
- * Created by hiyond on 2016/11/17.
- *//*
-
+ */
 @Service
 public class CreateOrderApiConsumer implements MessageListener {
 
@@ -66,7 +62,6 @@ public class CreateOrderApiConsumer implements MessageListener {
                     //调用MQ生产者
                     if (StringUtils.isNotBlank(result)) {
                         String code = String.valueOf(result.hashCode());
-
                         createOrderApiProducer.sendCreateOrderResultMQ(result, code);
                     }
                 }
@@ -75,29 +70,4 @@ public class CreateOrderApiConsumer implements MessageListener {
         return Action.CommitMessage;
     }
 
-    public void sendCreateOrderResultMQDemo() {
-        String result = null;
-        String code = String.valueOf(result.hashCode());
-        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
-    }
-
-    public String test() throws Exception {
-        CreateOrderResultDto createOrderResultDto = new CreateOrderResultDto();
-        createOrderResultDto.setCode("500");
-        String r = "typeId:"+"123456"+"||"+"reason:"+"null"+","+"typeId:"+"123456"+"||"+"reason:"+"参数错误";
-        createOrderResultDto.setReason(r);
-        MessageDto messageDto = new MessageDto();
-        messageDto.setTypeId("123456");
-        List<MessageDto> list = Lists.newArrayList(messageDto);
-        messageDto = new MessageDto();
-        list.add(messageDto);
-        messageDto.setTypeId("654321");
-        createOrderResultDto.setMessage(list);
-
-        //要反回的json格式的字符串
-        String createOrderResultDtoJson = JsonUtil.object2Json(createOrderResultDto);
-        return createOrderResultDtoJson;
-    }
-
 }
-*/
