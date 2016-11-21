@@ -109,7 +109,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             if (!CollectionUtils.isEmpty(createOrderResultList)) {
                 String code = "200";
                 StringBuffer reason = new StringBuffer();
-                List<String> typeIdList = new ArrayList<>();
+                List<MessageDto> typeIdList = new ArrayList<>();
                 for (int index = 0; index < createOrderResultList.size(); index++) {
                     CreateOrderResult orderResult = createOrderResultList.get(index);
                     if (orderResult.getResult() == false) {
@@ -120,8 +120,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         typeIdAndReason = typeIdAndReason + ",";
                     }
                     reason.append(typeIdAndReason);
-                    String typeId = "typeId:" + orderResult.getTypeId();
-                    typeIdList.add(typeId);
+                    MessageDto messageDto = new MessageDto();
+                    messageDto.setTypeId(orderResult.getTypeId());
+                    typeIdList.add(messageDto);
                 }
                 CreateOrderResultDto createOrderResultDto = new CreateOrderResultDto();
                 createOrderResultDto.setCode(code);

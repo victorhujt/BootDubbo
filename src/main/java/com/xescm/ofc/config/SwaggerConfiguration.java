@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -14,17 +15,27 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@Profile({ "dev", "test" })
+//@Profile({ "dev", "test" })
 public class SwaggerConfiguration {
+//	@Bean
+//	public Docket reservationApi() {
+//		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
+//				.paths(Predicates.not(PathSelectors.regex("/error"))) // Exclude
+//				// Spring
+//				// error
+//				// controllers
+//				//.apis(RequestHandlerSelectors.basePackage("com.xescm.ofc"))
+//				.build().useDefaultResponseMessages(false);
+//	}
+
 	@Bean
-	public Docket reservationApi() {
-		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-				.paths(Predicates.not(PathSelectors.regex("/error"))) // Exclude
-				// Spring
-				// error
-				// controllers
-				//.apis(RequestHandlerSelectors.basePackage("com.xescm.ofc"))
-				.build().useDefaultResponseMessages(false);
+	public Docket createRestApi() {
+		return new Docket(DocumentationType.SWAGGER_2).
+				apiInfo(apiInfo()).//用来创建该Api的基本信息
+				select().//暴露哪些接口来访问
+				apis(RequestHandlerSelectors.basePackage("com.xescm.ofc")).//此处暴露整个controller包下类
+				paths(PathSelectors.any()).
+				build();
 	}
 
 	private ApiInfo apiInfo() {
