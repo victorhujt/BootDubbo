@@ -349,16 +349,16 @@
                                 </div>
                             </div>-->
                            <div class="form-group">
-                               <label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
-                               <div class="col-xs-3">
+                               <label class="control-label col-sm-1 no-padding-right" for="supplierCode">订单日期</label>
+                               <div class="col-sm-6">
                                    <div class="clearfix">
                                        <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
                                    </div>
                                </div>
                            </div>
                            <div class="form-group">
-                               <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单编号</label>
-                               <div class="col-xs-3">
+                               <label class="control-label col-sm-1 no-padding-right" for="custOrderCode">客户订单编号</label>
+                               <div class="col-sm-6">
                                    <div class="clearfix">
                                        <input class="col-xs-10 col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
 
@@ -378,7 +378,7 @@
                                 </div>
                             </div>
 
-                           <div class="form-group" id="transBusinessTypeDiv" style="display: block">
+                           <#--<div class="form-group" id="transBusinessTypeDiv" style="display: block">
                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                <div class="col-sm-6">
                                    <div class="clearfix">
@@ -389,7 +389,7 @@
                                        </select>
                                    </div>
                                </div>
-                           </div>
+                           </div>-->
                             <div class="form-group" id="businessTypeDiv" style="display: none">
                                 <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
                                 <div class="col-sm-6">
@@ -1346,7 +1346,7 @@
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
 
-        
+
 
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
@@ -1409,7 +1409,7 @@
         cscContact.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        
+
 
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
@@ -1646,7 +1646,7 @@
             console.log("======cscContantAndCompanyDtoConsignorStr======"+cscContantAndCompanyDtoConsignorStr)
             console.log("======cscContantAndCompanyDtoConsigneeStr======"+cscContantAndCompanyDtoConsigneeStr)
             console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)
-            
+
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
@@ -1897,9 +1897,9 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
-                    
+
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        
+
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
@@ -2018,7 +2018,7 @@
                             +"&contactName="+$("#supportContactName").val()
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
-                        
+
                         console.log("==-------data-----111-xxx--"+data);
                         data=eval(data);
                         var supplierList = "";

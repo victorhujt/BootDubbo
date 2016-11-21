@@ -98,12 +98,12 @@ public class DateUtils {
         return null;
     }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         System.out.println(DateFormatType.TYPE1.getType());
         System.out.println(Date2String(new Date(), DateFormatType.TYPE1));
         System.out.println(dateSubStringGetYMD("2016-11-1888"));
         System.out.println(String2Date(dateSubStringGetYMD("2016-11-1888"), DateUtils.DateFormatType.TYPE2));
-    }
+    }*/
 
 
 }

@@ -51,11 +51,12 @@ public class OfcJumpontroller extends BaseController{
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
             String custId = (String) wrapper.getResult();
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerId(custId);
             Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -108,6 +109,12 @@ public class OfcJumpontroller extends BaseController{
     public String operationDistributing(Model model){
         return "operation_distributing";
     }
+
+    @RequestMapping(value = "/ofc/operationDistributingExcel")
+    public String operationDistributingExcel(Model model){
+        return "operation_distributing_excel";
+    }
+
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;

@@ -122,7 +122,20 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
                         }
+
                         //运输订单
+                        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
+                            String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                            String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                            if(depatrueCode.equals(destinationCode)){
+                                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                            }else {
+                                ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                            }
+                        }else{
+                            throw new BusinessException("四级地址编码为空!");
+                        }
+
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
@@ -226,6 +239,18 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
                     ofcDist.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
+                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        if(depatrueCode.equals(destinationCode)){
+                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                        }else {
+                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                        }
+                    }else{
+                        throw new BusinessException("四级地址编码为空!");
+                    }
+
                     if(select.size() > 0){//有运输信息
 
                         ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);

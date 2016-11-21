@@ -1,3 +1,4 @@
+/*
 package com.xescm.ofc.mq.consumer;
 
 import com.aliyun.openservices.ons.api.Action;
@@ -23,10 +24,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * 创单api消费MQ
  * Created by hiyond on 2016/11/17.
- */
+ *//*
+
 @Service
 public class CreateOrderApiConsumer implements MessageListener {
 
@@ -97,3 +100,4 @@ public class CreateOrderApiConsumer implements MessageListener {
     }
 
 }
+*/
