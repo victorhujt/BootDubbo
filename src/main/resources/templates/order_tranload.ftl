@@ -43,12 +43,12 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">运输类型</label>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked"/>零担
+                                        <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" value="10"/>零担
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="transportTypeV2" type="radio" name="transportTypeV"/>整车
+                                        <input id="transportTypeV2" type="radio" name="transportTypeV" value="20"/>整车
                                     </div>
                                 </div>
                                 <input id="transportType" type="hidden" name="transportType"/>
@@ -77,7 +77,7 @@
                         </form>
                         <div class="page-header">
                             <p>
-                                服务项目及费用
+                                服务项目及费用1
                             </p>
                         </div>
                         <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
@@ -182,19 +182,19 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">费用支付</label>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked"/>发货方
+                                        <input id="expensePaymentPartyV1" type="radio" name="expensePaymentPartyV" checked="checked" value="10"/>发货方
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="transportTypeV2" type="radio" name="transportTypeV"/>收货方
+                                        <input id="expensePaymentPartyV2" type="radio" name="expensePaymentPartyV" value="20"/>收货方
                                     </div>
                                 </div>
-                                <input id="transportType" type="hidden" name="transportType"/>
+                                <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
                                 <label class="control-label col-label no-padding-right" for="name">支付方式</label>
                                 <div class="col-sm-3">
                                     <div class="clearfix">
-                                        <select  id="businessType" name="businessType">
+                                        <select  id="payment" name="payment">
                                             <option value="01">现金</option>
                                             <option value="02">POS刷卡</option>
                                             <option value="03">微信</option>
@@ -247,7 +247,7 @@
                                             <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
                                         </li>
                                         <li class="transLi">
-                                            <a data-toggle="tab" href="#consignor14" aria-expanded="true">发货方</a>
+                                            <a data-toggle="tab" href="#consignor14" aria-expanded="true">发货方1</a>
                                         </li>
                                         <li class="transLi">
                                             <a data-toggle="tab" href="#consignee14" aria-expanded="true">收货方</a>
@@ -259,7 +259,7 @@
 
                                             <!--货品明细-->
                                             <button type="button" style="float:right;" class="btn btn-minier btn-inverse"
-                                                    id="addGoods">添加一行</button>
+                                                    id="addGoods">添加1一行</button>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -267,7 +267,7 @@
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                            <label class="control-label" style="float:right;" for="name">重量合计：</label>
+                                            <label class="control-label" style="float:right;" for="name">重量合计111：</label>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                             <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
                                             <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -932,206 +932,25 @@
         }
     }
 
-    function orderPlaceAddTranInfo(jsonStr) {
-        //运输基本信息
-        jsonStr.quantity = $("#quantity").val();
-        jsonStr.weight = $("#weight").val();
-        jsonStr.cubage = $("#cubage").val();
-        jsonStr.totalStandardBox = $("#totalStandardBox").val();
-        /*jsonStr.departurePlace = $("#consignorAddress").val();
-        jsonStr.destination = $("#consigneeAddress").val();*/
-        jsonStr.pickupTime = $dp.$('pickupTime').value;
-        jsonStr.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
-        jsonStr.urgent = $("#urgentHel").val();
-        jsonStr.transRequire = $("#transRequire").val();
-
-
-        jsonStr.consignorCode = $("#consignorCode").val();
-        jsonStr.consignorType = $("#consignorType").val();
-        jsonStr.consignorName = $("#consignorName").val();
-        jsonStr.consigneeCode = $("#consigneeCode").val();
-        jsonStr.consigneeType = $("#consigneeType").val();
-        jsonStr.consigneeName = $("#consigneeName").val();
-        jsonStr.consignorContactCode = $("#consignorContactCode").val();
-        jsonStr.consignorContactName = $("#consignorContactName").val();
-        jsonStr.consigneeContactCode = $("#consigneeContactCode").val();
-        jsonStr.consigneeContactName = $("#consigneeContactName").val();
-
-
-        var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
-        var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
-
-        var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
-        var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
-        var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
-
-        
-
-
-        jsonStr.departureProvince = consignorAddressNameMessage[0];
-        jsonStr.departureCity = consignorAddressNameMessage[1];
-        jsonStr.departureDistrict = consignorAddressNameMessage[2];
-        if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-            jsonStr.departureTowns = consignorAddressNameMessage[3];
-        }
-
-        jsonStr.departurePlaceCode = consignorAddressMessage[1];
-        jsonStr.departurePlace = $("#consignorAddress").val();
-        jsonStr.destinationProvince = consigneeAddressNameMessage[0];
-        jsonStr.destinationCity = consigneeAddressNameMessage[1];
-        jsonStr.destinationDistrict = consigneeAddressNameMessage[2];
-        if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-            jsonStr.destinationTowns = consigneeAddressNameMessage[3];
-        }
-
-        jsonStr.destinationCode=consigneeAddressMessage[1];
-        jsonStr.destination=$("#consigneeAddress").val();
-
-
-
-
+    function orderFinanceInfo(jsonStr) {
+        //服务项目及费用
+        jsonStr.homeDeliveryFee = $("#homeDeliveryFee").val();
+        jsonStr.cargoInsuranceFee = $("#cargoInsuranceFee").val();
+        jsonStr.insureValue = $("#insureValue").val();
+        jsonStr.twoDistributionFee = $("#twoDistributionFee").val();
+        jsonStr.collectServiceCharge = $("#collectServiceCharge").val();
+        jsonStr.collectLoanAmount = $("#collectLoanAmount").val();
+        jsonStr.returnListFee = $("#returnListFee").val();
+        jsonStr.luggage = $("#luggage").val();
+        //费用总计
+        jsonStr.serviceCharge = $("#serviceCharge").val();
+        jsonStr.expensePaymentParty = $("#expensePaymentParty").val();
+        jsonStr.payment = $("#payment").val();
+        jsonStr.currentAmount = $("#currentAmount").val();
+        jsonStr.toPayAmount = $("#toPayAmount").val();
+        jsonStr.returnAmount = $("#returnAmount").val();
+        jsonStr.monthlyAmount = $("#monthlyAmount").val();
         return jsonStr;
-    }
-    function orderPlaceAddWareInfoWithoutSupport(jsonStr) {
-
-        //仓配基本信息
-        jsonStr.warehouseCode = $("#warehouseName").val();
-        jsonStr.warehouseName = $("#warehouseName option:selected").text();//$("#storeCode option:selected").text();
-        console.log("===========warehouseCode============"+$("#warehouseName").val());
-        console.log("===========warehouseName============"+$("#warehouseName option:selected").text());
-        jsonStr.arriveTime = $dp.$('arriveTime').value;
-        jsonStr.plateNumber = $("#plateNumber").val();
-        jsonStr.driverName = $("#driverName").val();
-        jsonStr.contactNumber = $("#contactNumber").val();
-        return jsonStr;
-    }
-    //    var resultConsignorCode = "";
-    //    var resultConsignorContactCode = "";
-    //    var resultConsignorType = "";
-    function getCscContantAndCompanyDtoConsignorStr() {
-        var paramConsignor = {};
-        var paramConsignee = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-       cscContactCompany.contactCompanyName = $("#consignorName").val();
-        cscContact.contactName = $("#consignorContactName").val();
-        cscContact.purpose = "2";
-        cscContact.phone = $("#consignorPhone").val();
-
-        cscContact.contactCompanyId = $("#consignorCode").val();
-        cscContact.contactCode = $("#consignorContactCode").val();
-        cscContactCompany.type = $("#consignorType").val();
-        //cscContactCompany.id = $("#consignorCode").val();
-
-        cscContact.fax = $("#consignorFax").val();
-        cscContact.email = $("#consignorEmail").val();
-        cscContact.postCode = $("#consignorPostCode").val();
-
-        var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        
-
-        var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
-        var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
-
-
-        cscContact.province = consignorAddressCodeMessage[0];
-        cscContact.city = consignorAddressCodeMessage[1];
-        cscContact.area = consignorAddressCodeMessage[2];
-        if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
-            cscContact.street = consignorAddressCodeMessage[3];
-        }
-
-        cscContact.provinceName = consignorAddressNameMessage[0];
-        cscContact.cityName = consignorAddressNameMessage[1];
-        cscContact.areaName = consignorAddressNameMessage[2];
-        if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-            cscContact.streetName = consignorAddressNameMessage[3];
-        }
-
-        cscContact.address = $("#consignorAddress").val();
-        paramConsignor.cscContact = cscContact;
-        paramConsignor.cscContactCompany = cscContactCompany;
-        var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
-        return cscContantAndCompanyDtoConsignorStr;
-
-    }
-    function getCscContantAndCompanyDtoConsigneeStr() {
-        var paramConsignor = {};
-        var paramConsignee = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consigneeName").val();
-        cscContact.contactName = $("#consigneeContactName").val();
-        cscContact.purpose = "1";
-        cscContact.phone = $("#consigneePhone").val();
-
-        cscContact.contactCompanyId = $("#consigneeCode").val();
-        cscContact.contactCode = $("#consigneeContactCode").val();
-        cscContactCompany.type = $("#consigneeType").val();
-        cscContact.fax = $("#consigneeFax").val();
-        cscContact.email = $("#consigneeEmail").val();
-        cscContact.postCode = $("#consigneePostCode").val();
-
-        var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
-        var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
-        var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
-        cscContact.province = consigneeAddressCodeMessage[0];
-        cscContact.city = consigneeAddressCodeMessage[1];
-        cscContact.area = consigneeAddressCodeMessage[2];
-        if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
-            cscContact.street = consigneeAddressCodeMessage[3];
-        }
-
-        cscContact.provinceName = consigneeAddressNameMessage[0];
-        cscContact.cityName = consigneeAddressNameMessage[1];
-        cscContact.areaName = consigneeAddressNameMessage[2];
-        if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-            cscContact.streetName = consigneeAddressNameMessage[3];
-        }
-
-        cscContact.address = $("#consigneeAddress").val();
-
-
-        paramConsignee.cscContact = cscContact;
-        paramConsignee.cscContactCompany = cscContactCompany;
-        var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
-        return cscContantAndCompanyDtoConsigneeStr;
-    }
-    function getCscSupplierInfoDtoStr(){
-        var paramSupport = {};
-
-        paramSupport.supplierName = $("#supportName").val();
-        paramSupport.contactName = $("#supportContactName").val();
-        paramSupport.contactPhone = $("#supportPhone").val();
-        paramSupport.fax = $("#supportFax").val();
-        paramSupport.email = $("#supportEmail").val();
-        paramSupport.postCode = $("#supportPostCode").val();
-        var supportAddressMessage = $("#city-picker3-support").val().split('~');
-        var supportAddressCodeMessage = supportAddressMessage[1].split(',');
-        var supportAddressNameMessage = supportAddressMessage[0].split('/');
-
-        paramSupport.province = supportAddressCodeMessage[0];
-        paramSupport.city = supportAddressCodeMessage[1];
-        paramSupport.area = supportAddressCodeMessage[2];
-        if(!StringUtil.isEmpty(supportAddressCodeMessage[3])){
-            paramSupport.street = supportAddressCodeMessage[3];
-        }
-
-        paramSupport.provinceName = supportAddressNameMessage[0];
-        paramSupport.cityName = supportAddressNameMessage[1];
-        paramSupport.areaName = supportAddressNameMessage[2];
-        if(!StringUtil.isEmpty(supportAddressNameMessage[3])){
-            paramSupport.streetName = supportAddressNameMessage[3];
-        }
-
-        paramSupport.address = $("#supportAddress").val();
-
-        var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
-        console.log("function  support " + cscSupplierInfoDtoStr);
-        return cscSupplierInfoDtoStr;
     }
 
     $(function(){
@@ -1204,80 +1023,40 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            //订单类型
-            var orderType = $("#orderTypeSel").val();
-            //业务类型前两位
-            var businessType = $("#businessType").val().substring(0,2);
-            ///仓配订单是否需要运输
-            var provideTrans = $("#provideTransportHel").val();
-
-
-            //确认下单的按钮, 这里应该根据当前页面上的订单类型和业务类型进行判断, 应该提交哪几个表单
-            //基本信息和货品的表单先提交
-            /*$("#orderFundamentalFormValidate").submit;
-            //如果是运输订单, 就再提交运输信息标签页
-            if(orderType == '60'){//运输订单
-                $("#orderDistributionFormValidate").submit;
-            }
-            //如果是仓配订单, 就再提交仓配信息标签页, 如果是入库单再提交供应商信息
-
-            //如果是仓配需运输订单, 就再提交运输信息和仓配信息标签页, 如果是入库单再提交供应商信息
-            if(orderType == '61' && businessType == '61'){//仓储出库订单
-                $("#orderWarehouseBaseFormValidate").submit;
-                if('1' == provideTrans){
-                    $("#orderDistributionFormValidate").submit;
-                }
-            }
-            if(orderType == '61' && businessType == '62'){ //仓储入库订单,才需要供应商信息
-                $("#orderWarehouseBaseFormValidate").submit;
-                //仓配供应商基本信息
-                $("#orderWarehouseSupportFormValidate").submit;
-                if('1' == provideTrans){
-                    $("#orderDistributionFormValidate").submit;
-                }
-            }*/
-
-
-
             var jsonStr = {};
             //订单基本信息
-            //$dp.$('orderTimePre').value;
-
-            jsonStr.orderTime = $dp.$('orderTime').value;
-            jsonStr.custOrderCode = $("#custOrderCode").val();
-            jsonStr.orderType = $("#orderTypeSel").val();
             jsonStr.businessType = $("#businessType").val();
-            jsonStr.provideTransport = $("#provideTransportHel").val();
-            var pageStoreMessage = $("#storeCode").val().split("/");
-            jsonStr.storeCode = pageStoreMessage[0];
-            jsonStr.storeName = $("#storeCode option:selected").text();
-            jsonStr.platformType = pageStoreMessage[1];
-            jsonStr.notes = $("#orderNotes").val();
-
+            jsonStr.merchandiser = $("#merchandiser").val();
+            jsonStr.transportType = $("#transportType").val();
+            jsonStr.orderTime = $dp.$('orderTime').value;
+            jsonStr.transCode = $("#transCode").val();
+            jsonStr.custName = $("#custName").val();
             //货品添加
-
             var orderGoodsList = [];
             var goodsTable = document.getElementById("orderGoodsListTable");
             for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
                 var orderGoods = {};
                 for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
-                    var param = goodsTable.rows[tableRows].cells[tableCells].innerText;
+                    var param = goodsTable.rows[tableRows].cells[tableCells];
                     switch (tableCells){
-                        case 1 :orderGoods.goodsCode = param;break;
-                        case 2 :orderGoods.goodsName = param;break;
-                        case 3 :orderGoods.goodsSpec = param;break;
-                        case 4 :orderGoods.unit = param;break;
-                        case 5 :orderGoods.unitPrice = param;break;
-                        case 6 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                        case 7 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                        case 8 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                        case 9 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                        case 1 :orderGoods.goodsCategory = param.getElementsByTagName("select")[0].value;break;
+                        case 2 :orderGoods.goodsCode = param.getElementsByTagName("input")[0].value;break;
+                        case 3 :orderGoods.goodsName = param.getElementsByTagName("input")[0].value;break;
+                        case 4 :orderGoods.goodsSpec = param.getElementsByTagName("input")[0].value;break;
+                        case 5 :orderGoods.unit = param.getElementsByTagName("input")[0].value;break;
+                        case 6 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
+                        case 7 :orderGoods.quantity = param.getElementsByTagName("input")[0].value;break;
+                        case 8 :orderGoods.quantityUnitPrice = param.getElementsByTagName("input")[0].value;break;
+                        case 9 :orderGoods.weight =  param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.weightUnitPrice = param.getElementsByTagName("input")[0].value;break;
+                        case 11 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
+                        case 12 :orderGoods.volumeUnitPrice = param.getElementsByTagName("input")[0].value;break;
                     }
                 }
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
 
-            //如果订单类型是运输订单,才拼装运单信息
+            /*//如果订单类型是运输订单,才拼装运单信息
             //如果订单类型是仓配订单而且是入库单,才拼装仓储信息和供应商信息,如果需要运输才需要拼装运输信息
             //别忘了在后台卡一下~!~~
             var cscContantAndCompanyDtoConsignorStr;
@@ -1315,9 +1094,9 @@
             console.log("======orderGoodsListStr======"+orderGoodsListStr)
             console.log("======cscContantAndCompanyDtoConsignorStr======"+cscContantAndCompanyDtoConsignorStr)
             console.log("======cscContantAndCompanyDtoConsigneeStr======"+cscContantAndCompanyDtoConsigneeStr)
-            console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)
-            
-            xescm.common.submit("/ofc/orderPlaceCon"
+            console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)*/
+
+            /*xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
                         ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
@@ -1328,7 +1107,7 @@
                     ,function () {
 
                         //xescm.common.goBack("/ofc/orderPlace");
-                    })
+                    })*/
         });
         $("#goodsSelectFormBtn").click(function () {
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
@@ -1771,75 +1550,11 @@
 
         });
 
-
-        $("#orderTypeSel").change(function () {
-            $("#businessType").addClass("chosen-select form-control");
-            if($(this).children('option:selected').val() == '61'){//仓配订单
-                $("#provideTransportDiv").show();
-                $("#businessTypeDiv").show();
-//                $("#transBusinessTypeDiv").hide():
-                $('.storeLi').show();
-                $('.transLi').hide();
-                //$('#myTab4').children('li').first().addClass("active");
-                $('#myTab4').find('li').each(function () {
-                    if($(this).index()=='0'){
-
-                        $(this).addClass("active");
-                    }
-                    if($(this).index()=='1'){
-                        $(this).removeClass("active");
-                    }
-                    if($(this).index()=='2'){
-                        $(this).removeClass("active");
-                    }
-                })
-                $("#home4").addClass("active");
-                $("#profile4").removeClass("active");
-                $("#dropdown14").removeClass("active");
-
-
-            }
-            if($(this).children('option:selected').val() == '60'){//运输订单
-//                $("#transBusinessTypeDiv").show();
-                $('.transLi').show();
-                $('.storeLi').hide();
-                $("#provideTransportDiv").hide();
-                $("#businessTypeDiv").hide();
-                $('#myTab4').find('li').each(function () {
-                    if($(this).index()=='0'){
-                        $(this).addClass("active");
-                    }
-                    if($(this).index()=='1'){
-                        $(this).removeClass("active");
-                    }
-                    if($(this).index()=='2'){
-                        $(this).removeClass("active");
-                    }
-                })
-                $("#home4").addClass("active");
-                $("#profile4").removeClass("active");
-                $("#dropdown14").removeClass("active");
-
-
-            }
+        $("input[name=transportTypeV]").change(function () {
+            $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
-
-        $("#businessType").change(function () {
-            var businessType = $("#businessType").val().substring(0,2);
-            if('62' == businessType){
-                $("#supportMessageShowDiv").show();
-            }
-            if('61' == businessType){
-                $("#supportMessageShowDiv").hide();
-            }
-        });
-
-        $("#provideTransport").change(function () {
-            if($(this).prop("checked")){
-                $('.transLi').show();
-            }else{
-                $('.transLi').hide();
-            }
+        $("input[name=expensePaymentPartyV]").change(function () {
+            $("#expensePaymentParty").val($("input[name=expensePaymentPartyV]:checked").val());
         });
 
         $("#addGoods").click(function () {

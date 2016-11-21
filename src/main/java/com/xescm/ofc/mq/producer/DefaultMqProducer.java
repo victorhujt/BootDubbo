@@ -47,11 +47,13 @@ public class DefaultMqProducer {
     /**
      * MQ发送普通消息示例 Demo
      */
+    //Producer producer= producer();
 
     public void toSendMQ(String jsonStr,String code) {
         System.out.println("Producer Started");
         Message message = new Message(mqConfig.getTfcTransPlanTopic(), mqConfig.getTfcTransPlanTag(),jsonStr.getBytes());
         message.setKey(code);
+
         SendResult sendResult = producer().send(message);
         if (sendResult != null) {
             System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
@@ -101,7 +103,7 @@ public class DefaultMqProducer {
 
 
     //@Bean(initMethod = "start", destroyMethod = "shutdown")
-    private Producer producer(){
+    public Producer producer(){
         Properties producerProperties = new Properties();
         producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
         producerProperties.setProperty(PropertyKeyConst.AccessKey, mqConfig.getAccessKey());
