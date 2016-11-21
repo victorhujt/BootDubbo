@@ -2,12 +2,10 @@ package com.xescm.ofc.web.restcontroller;
 
 import com.xescm.ofc.domain.dto.csc.QueryCustomerNameDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javafx.scene.input.KeyCode.Q;
 
 /**
  * Created by lyh on 2016/11/19.
