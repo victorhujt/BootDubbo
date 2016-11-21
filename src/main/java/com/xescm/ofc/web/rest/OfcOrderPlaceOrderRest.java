@@ -219,17 +219,24 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
-    public void contactSelectByCscApi(Model model,  String cscContantAndCompanyDto, HttpServletResponse response){
+    public void contactSelectByCscApi(Model model,  String cscContantAndCompanyDto, String groupId, String custId, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode和purpose
         try {
             CscContantAndCompanyDto csc = JSONUtils.jsonToPojo(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
+            if(PubUtils.isSEmptyOrNull(groupId)){
+                queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            }else{
+                queryCustomerIdDto.setGroupId(groupId);
+            }
+            if(PubUtils.isSEmptyOrNull(custId)){
+                Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+                custId = (String) wrapper.getResult();
+            }
             csc.setCustomerId(custId);
             csc.setGroupId(authResDtoByToken.getGroupId());
+
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
