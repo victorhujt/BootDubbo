@@ -6,6 +6,7 @@ import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -156,5 +157,16 @@ public class OfcJumpontroller extends BaseController{
         //map.put("cscGoodsVoList",cscGoodsVoList);
         return new ModelAndView("order_tranload");
 
+    }
+
+    /**
+     * 运营→订单管理 orderManageOpera
+     * @return modelAndView
+     */
+    @RequestMapping("ofc/orderManageOpera")
+    public ModelAndView orderManageOpera() {
+        ModelAndView modelAndView = new ModelAndView("order_manage_opera");
+        modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
+        return modelAndView;
     }
 }
