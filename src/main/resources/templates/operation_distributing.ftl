@@ -780,6 +780,7 @@
     function goodsAndConsignee(obj){
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
+        var goodsIndex = $(obj).find('td')[1].innerText;
         var goodsCode = $(obj).find('td')[2].innerText;
         var goodsName = $(obj).find('td')[3].innerText;
         var specification = $(obj).find('td')[4].innerText;
@@ -788,6 +789,9 @@
         $("#goodsNameDiv").val(goodsName);
         $("#specificationDiv").val(specification);
         $("#unitDiv").val(unit);
+
+debugger;
+        //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
         //显示收货人信息
         //goodsAndConsigneeTbody
         var consignorout = "";
@@ -795,9 +799,19 @@
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//
             var consigneeCode = tdArr.eq(7).text();//
+            var mapKey = goodsCode + "@" + goodsIndex;
+            var num = 0;
+            debugger;
+            if(undefined != goodsAndConsigneeMap.get(mapKey)){
+                console.log("可以!"+JSON.stringify(goodsAndConsigneeMap.get(mapKey)[1]));
+                var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
+                //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
+                num = preGoodsAndConsigneeJsonMsg[consigneeCode];
+            }
+
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='0' /></td>";
+            consignorout =consignorout + "<td><input value='"+num+"' /></td>";
             consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
             consignorout =consignorout + "</tr>";
         });
@@ -845,7 +859,7 @@
         });
         //000
         /*
-        往Map里放的数据结构应该是
+        往Map里放的数据结构
         key(货品编码@货品行号用来表示唯一一行):  value(json数组):[{"货品编码":xxx,"货品名称":xxx,...},{"收货人1code":20,"收货人2code":30}]
         */
         mapValue[0] = goodsJson;
@@ -856,37 +870,10 @@
         console.log("mapValue:" + JSON.stringify(mapValue));
 
         console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[0]))
-
-        /*!//11.21晚上添加的重要逻辑, 早晨看看对不对//000
-
-        //从货品和发货人表里取对应发货数量给发货人隐藏域循环赋值
-        $("#goodsAndConsigneeTbody").find("tr").each(function(index){
-            var tdArr = $(this).children();
-            var num = tdArr.eq(1).children().val();
-            var consigneeCustOrderCode = tdArr.eq(2).text();//客户订单编号
-            num = parseInt(num);
-            $("#consigneeInfoListDiv").find("tr").each(function(index){
-                var tdArr = $(this).children();
-                var custOrderCode = tdArr.eq(2).children().val();
-                var preGoodsNumStr = tdArr.eq(6).text();
-                if(consigneeCustOrderCode == custOrderCode){
-                    tdArr.eq(6).text(preGoodsNumStr + num + ",");
-                }
-            });
-        });
-
-        //去掉最后一个逗号","
-        $("#consigneeInfoListDiv").find("tr").each(function(index){
-            var tdArr = $(this).children();
-        });*/
-
-
+        console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[1]))
 
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     })
-
-
-
 
 
 
