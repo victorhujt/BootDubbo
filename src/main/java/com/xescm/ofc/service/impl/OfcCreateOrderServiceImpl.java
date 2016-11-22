@@ -99,8 +99,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
         queryCustomerCodeDto.setId(custId);
-        Wrapper<CscCustomerVo> customerVoWrapper =  feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
-        if(customerVoWrapper.getResult() == null){
+        Wrapper<CscCustomerVo> customerVoWrapper = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+        if (customerVoWrapper.getResult() == null) {
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
         }
         CscCustomerVo cscCustomerVo = customerVoWrapper.getResult();
@@ -129,6 +129,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         //校验：店铺编码
         String storeCode = createOrderEntity.getStoreCode();
+        storeCode = StringUtils.isBlank(storeCode) ? "20161122000001" : storeCode;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerId(custId);
         Wrapper<List<CscStorevo>> cscWarehouseList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
@@ -221,7 +222,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
             resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                logger.info("校验数据{}失败：{}", "货品档案信息", resultModel.getCode());
+                logger.info("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
                 return resultModel;
             }
         }
@@ -332,7 +333,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         UamUser uamUser = new UamUser();
         uamUser.setUserName(CREATE_ORDER_BYAPI);
         authResDto.setUamUser(uamUser);
-        ofcOrderManageService.orderAudit(orderCode, PENDINGAUDIT, "review", authResDto);
+//        ofcOrderManageService.orderAudit(orderCode, PENDINGAUDIT, "review", authResDto);
         return new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 

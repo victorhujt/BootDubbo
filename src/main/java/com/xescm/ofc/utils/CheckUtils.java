@@ -97,11 +97,11 @@ public class CheckUtils {
         List<CscStorevo> result = listWrapper.getResult();
         for (CscStorevo c : result) {
             if (StringUtils.equals(c.getStoreCode(), storeCode)) {
-                return new ResultModel(ResultModel.ResultEnum.CODE_0003);
+                return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }
         }
 
-        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        return new ResultModel(ResultModel.ResultEnum.CODE_0003);
     }
 
     /**

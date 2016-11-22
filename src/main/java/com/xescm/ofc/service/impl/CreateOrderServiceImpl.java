@@ -9,6 +9,7 @@ import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
+import com.xescm.ofc.domain.dto.epc.CannelOrderVo;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.service.*;
@@ -18,6 +19,7 @@ import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.xescm.ofc.enums.OrderConstEnum.*;
+
 /**
  * 订单api
  * Created by hiyond on 2016/11/15.
@@ -51,6 +54,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcCreateOrderErrorLogService ofcCreateOrderErrorLogService;
     @Autowired
     private OfcCreateOrderService ofcCreateOrderService;
+    @Autowired
+    private OfcOrderManageService ofcOrderManageService;
 
 
     @Override
@@ -65,7 +70,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @throws Exception
      */
     public String createOrder(String data) throws Exception {
-        logger.info("订单中心创建订单接口参数{}", data);
+        logger.info("订单中心创建订单接口开始");
         //组装接口的返回信息
         List<CreateOrderResult> createOrderResultList = null;
         try {
@@ -88,7 +93,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         custOrderCode = createOrderEntity.getCustOrderCode();
                         String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
-                        if(!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())){
+                        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
                         } else {
                             result = true;
@@ -96,7 +101,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         }
                         logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
                     } catch (Exception ex) {
-                        addCreateOrderEntityList(true, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
+                        addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
                         saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
                     }
                 }
@@ -159,22 +164,38 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
 
     @Override
-    public ResultModel cancelOrderStateByOrderCode(String custOrderCode, String custCode) {
-        String orderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCodeAndCustCode(custOrderCode, custCode);
+    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode, String orderCode, String custCode) {
+        CannelOrderVo cannelOrderVo = new CannelOrderVo();
+        cannelOrderVo.setCustOrderCode(custOrderCode);
+        cannelOrderVo.setCustCode(custCode);
+        cannelOrderVo.setResultCode("0");
         if (StringUtils.isBlank(orderCode)) {
-            return new ResultModel("1000", "发货单号不存在");
+            cannelOrderVo.setReason("发货单号不存在");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
         }
         OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
         String orderState = ofcOrderStatus.getOrderStatus();
         if (StringUtils.equals(orderState, HASBEENCOMPLETED)) {
-            return new ResultModel("1000", "订单已完成");
+            cannelOrderVo.setReason("已完成的订单");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
         } else if (StringUtils.equals(orderState, HASBEENCANCELED)) {
-            return new ResultModel("1000", "订单已取消");
-        } else if (StringUtils.equals(orderState, PENDINGAUDIT) || StringUtils.equals(orderState, ALREADYEXAMINE) || StringUtils.equals(orderState, IMPLEMENTATIONIN)) {
-            ofcOrderStatusService.cancelOrderStateByOrderCode(orderCode);
-            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+            cannelOrderVo.setReason("已取消的订单");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
         } else {
-            return new ResultModel(ResultModel.ResultEnum.CODE_9999);
+            AuthResDto authResDto = new AuthResDto();
+            UamUser uamUser = new UamUser();
+            uamUser.setUserName(CREATE_ORDER_BYAPI);
+            authResDto.setUamUser(uamUser);
+            String result = ofcOrderManageService.orderCancel(orderCode, orderState, authResDto);
+            if(StringUtils.equals("200",result)){
+                cannelOrderVo.setReason("操作成功");
+                cannelOrderVo.setResultCode("1");
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
         }
     }
 

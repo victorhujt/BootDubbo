@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -270,6 +271,10 @@ public class OfcDistributionBasicInfo {
 
     private String consignorContactPhone;
     private String consigneeContactPhone;
+
+    //校验运输单号专用字段
+    @Transient
+    private String selfTransCode;
 
     public String getConsignorContactPhone() {
         return consignorContactPhone;
@@ -982,5 +987,13 @@ public class OfcDistributionBasicInfo {
      */
     public void setOperTime(Date operTime) {
         this.operTime = operTime;
+    }
+
+    public String getSelfTransCode() {
+        return selfTransCode;
+    }
+
+    public void setSelfTransCode(String selfTransCode) {
+        this.selfTransCode = selfTransCode;
     }
 }

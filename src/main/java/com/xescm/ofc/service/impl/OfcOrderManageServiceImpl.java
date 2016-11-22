@@ -22,6 +22,7 @@ import com.xescm.ofc.utils.*;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,6 +256,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
             Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
             if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
+                    && !CollectionUtils.isEmpty(companyList.getResult())
                     && companyList.getResult().size()==1){
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());

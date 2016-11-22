@@ -165,7 +165,7 @@ public class OfcOrderDTO {
     private String printInvoice;
     private String buyerPaymentMethod;
     private String insure;
-    private String insureValue;
+    private BigDecimal insureValue;
     private String pickUpGoods;
     private BigDecimal homeDeliveryFee;
     private BigDecimal cargoInsuranceFee;
@@ -910,11 +910,11 @@ public class OfcOrderDTO {
         this.insure = insure;
     }
 
-    public String getInsureValue() {
+    public BigDecimal getInsureValue() {
         return insureValue;
     }
 
-    public void setInsureValue(String insureValue) {
+    public void setInsureValue(BigDecimal insureValue) {
         this.insureValue = insureValue;
     }
 
