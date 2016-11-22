@@ -382,7 +382,7 @@
             <label class="control-label col-label no-padding-right" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="订单日期"
+                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="订单日期"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
                 </div>
             </div>
@@ -859,7 +859,6 @@
             var num = 0;
 
             if(undefined != goodsAndConsigneeMap.get(mapKey)){
-                console.log("可以!"+JSON.stringify(goodsAndConsigneeMap.get(mapKey)[1]));
                 var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 num = preGoodsAndConsigneeJsonMsg[consigneeCode];
@@ -1288,7 +1287,6 @@
             return;
         }
         //校验收货方列表中是否所有的客户订单编号都填写了
-
         //统计收货方列表数据传给后台
         //然后将添加收货人按钮禁掉,提示用户暂时不能在添加了货品后选择收货方, 让客户订单编号的输入框变为只读的
         layer.confirm('您即将确认收货方列表,您如果添加货品将无法再添加收货方!', {
@@ -1296,32 +1294,24 @@
             icon : 3,
             title : '确认操作'
         }, function(){
-            //如果确认的话,
-            /*$("#consigneeInfoListDiv").find("tr").each(function(index) {
-                var tdArr = $(this).children();//.children()
-                //tdArr.eq(1).children().attr("readonly","readonly");
-            }*/
-
             $("#consigneeInfoListDiv").find("tr").each(function(index) {
                 var tdArr = $(this).children();
-
                 tdArr.eq(2).children().attr("readonly","readonly");
                 ifConsigneeConfirm = true;
                 //禁用添加收货人和确认收货人
+                debugger;
                 layer.close(index);
             })
-
-
         }, function(index){
             layer.close(index);
         });
-
-
     })
     
     $("#consigneeListClearDivBlock").click(function () {
+        //alert('3233')
+        debugger
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
-        if(consignorout > 1){
+        if(consignorout > 0){
             layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
                 skin : 'layui-layer-molv',
                 icon : 3,
@@ -1329,8 +1319,8 @@
             }, function(index){
                 $("#consigneeInfoListDiv").html("");
                 ifConsigneeConfirm = false;
-                //goodsAndConsigneeMap = new HashMap();
-                //$("#TfcOrderTopicTransOrder").html("");
+                goodsAndConsigneeMap = new HashMap();
+                $("#TfcOrderTopicTransOrder").html("");
                 layer.close(index);
             }, function(index){
                 layer.close(index);
@@ -1403,77 +1393,128 @@
         //如果有仓库信息就是仓配订单, 销售出库,
         var orderLists = [];
         //堆齐基本信息
-        var orderInfo = {};
-        var storeMessage = $("#store").val();
-        if("" == storeMessage){
-            orderInfo.orderType = "60";//运输
-            orderInfo.businessType = "600";//城配
+        var orderInfo = null;
 
-        }else{
-            orderInfo.orderType = "61";//仓储
-            orderInfo.businessType = "610";//销售出库
-            orderInfo.provideTransport = "1";//需要运输
-        }
-        orderInfo.orderTime = $dp.$('orderTime').value;//000
-        orderInfo.merchandiser = $("#merchandiser").val();
-        orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
-        orderInfo.custName = $("#custName").val();//后端需特别处理
-        orderInfo.custCode = $("#custId").val();//后端需特别处理
-        orderInfo.warehouseCode = $("#warehouseCode").val();
-        orderInfo.warehouseName = $("#warehouseCode option:selected").text();
-        orderInfo.notes = $("#notes").val();
-        //发货方信息
-        orderInfo.consignorName = $("#consignorName").val();
-        orderInfo.consignorContactName = $("#consignorContactName").val();
-        orderInfo.consignorContactPhone = $("#consignorContactPhone").val();
-        orderInfo.departurePlace = $("#consignorAddress").val();//出发地门牌号
-        orderInfo.consignorType = $("#consignorType").val();
-        orderInfo.consignorCode = $("#consignorContactCompanyId").val();
-        orderInfo.consignorContactCode = $("#consignorContactCode").val();
-        orderInfo.consignorContactPhone = $("#consignorPhone").val();
-        var provinceCode = $("#consignorProvince").val();
-        orderInfo.departureProvince = $("#consignorProvinceName").val();
-        var cityCode = $("#consignorCity").val();
-        orderInfo.departureCity = $("#consignorCityName").val();
-        var areaCode = $("#consignorArea").val();
-        orderInfo.departureDistrict = $("#consignorAreaName").val();
-        var streetCode = $("#consignorStreet").val();
-        orderInfo.departureTowns = $("#consignorStreetName").val();
-        orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
-        //orderInfo.departurePlace = $("#consignorAddress").val();
-        //货品信息
+
 
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
-            //添加当前收货方的信息
-            //添加当前收货方的货品信息, 遍历Map
+
+            orderInfo = {};
+
+            var storeMessage = $("#store").val();
+            if("" == storeMessage){
+                orderInfo.orderType = "60";//运输
+                orderInfo.businessType = "600";//城配
+
+            }else{
+                orderInfo.orderType = "61";//仓储
+                orderInfo.businessType = "610";//销售出库
+                orderInfo.provideTransport = "1";//需要运输
+            }
+            orderInfo.orderTime = $dp.$('orderTime').value;//000
+            orderInfo.merchandiser = $("#merchandiser").val();
+            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+            orderInfo.custName = $("#custName").val();//后端需特别处理
+            orderInfo.custCode = $("#custId").val();//后端需特别处理
+            orderInfo.warehouseCode = $("#warehouseCode").val();
+            orderInfo.warehouseName = $("#warehouseCode option:selected").text();
+            orderInfo.notes = $("#notes").val();
+            //发货方信息
+            orderInfo.consignorName = $("#consignorName").val();
+            orderInfo.consignorContactName = $("#consignorContactName").val();
+            orderInfo.consignorContactPhone = $("#consignorContactPhone").val();
+            orderInfo.departurePlace = $("#consignorAddress").val();//出发地门牌号
+            orderInfo.consignorType = $("#consignorType").val();
+            orderInfo.consignorCode = $("#consignorContactCompanyId").val();
+            orderInfo.consignorContactCode = $("#consignorContactCode").val();
+            orderInfo.consignorContactPhone = $("#consignorPhone").val();
+            var provinceCode = $("#consignorProvince").val();
+            orderInfo.departureProvince = $("#consignorProvinceName").val();
+            var cityCode = $("#consignorCity").val();
+            orderInfo.departureCity = $("#consignorCityName").val();
+            var areaCode = $("#consignorArea").val();
+            orderInfo.departureDistrict = $("#consignorAreaName").val();
+            var streetCode = $("#consignorStreet").val();
+            orderInfo.departureTowns = $("#consignorStreetName").val();
+            orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
+            //orderInfo.departurePlace = $("#consignorAddress").val();
+
+
+
+
+
+
+
+
+
+            var tdArr = $(this).children();
+            var consigneeName = tdArr.eq(1).text();//名称
+            var consigneeContactName = tdArr.eq(3).text();//联系人
+            var consigneeContactPhone = tdArr.eq(4).text();//    联系电话
+            var consigneeContactAddress = tdArr.eq(5).text();//    完整地址
+            var type = tdArr.eq(6).text();
+            var contactCompanyId = tdArr.eq(7).text();
+            var contactCode = tdArr.eq(8).text();
+            var phone = tdArr.eq(9).text();
+            var province = tdArr.eq(10).text();
+            var provinceName = tdArr.eq(11).text();
+            var city = tdArr.eq(12).text();
+            var cityName = tdArr.eq(13).text();
+            var area = tdArr.eq(14).text();
+            var areaName = tdArr.eq(15).text();
+            var street = tdArr.eq(16).text();
+            var streetName = tdArr.eq(17).text();
+            var address = tdArr.eq(18).text();
+            orderInfo.consigneeName = consigneeName;
+            orderInfo.consigneeType = type;
+            orderInfo.consigneeContactName = consigneeContactName;
+            orderInfo.consigneeCode = contactCompanyId;
+            orderInfo.consigneeContactCode = contactCode;
+            orderInfo.consigneeContactPhone = consigneeContactPhone;
+            orderInfo.destination= address;
+            orderInfo.destinationProvince = provinceName;
+            orderInfo.destinationCity = cityName;
+            orderInfo.destinationDistrict = areaName;
+            orderInfo.destinationTowns = streetName;
+            orderInfo.destinationCode = province + "," + city + "," + area + "," + street;
+
+            var goodsList = [];
+            var goods = null;
+            //遍历货品信息
+            debugger
+            $("#goodsInfoListDiv").find("tr").each(function(index) {
+                goods = {};
+                var tdArr = $(this).children();
+                var goodsIndex = tdArr.eq(1).text();//货品序号
+                var goodsCode = tdArr.eq(2).text();//货品编码
+                var goodsName = tdArr.eq(3).text();//货品名称
+                var goodsSpec = tdArr.eq(4).text();//规格
+                var goodsUnit = tdArr.eq(5).text();//单位
+                //var goodsTotalAmount = tdArr.eq(6).text();//总数量
+                goods.goodsCode = goodsCode;
+                goods.goodsName = goodsName;
+                goods.goodsSpec = goodsSpec;
+                goods.unit = goodsUnit;
+
+                var mapKey = goodsCode + "@" + goodsIndex;
+                var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
+                var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                var goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                goods.quantity = goodsAmount;
+                goodsList[index] = goods;
+                console.log("审核送到附近拉开始的减肥了肯定是"+JSON.stringify(goodsList[index]));
+            })
+            orderInfo.goodsList  = goodsList;
+            console.log("2ijohdsfgiuoerhgf"+JSON.stringify(orderInfo.goodsList));
+            console.log("index到底是个啥玩意"+index)
+            console.log("orderInfo到底是个啥玩意"+JSON.stringify(orderInfo));
+            orderLists[index] = orderInfo;
+            console.log("这到底是个share 水电费感受到发" + JSON.stringify(orderLists[index]));
         })
 
 
-        var orderGoodsList = [];
-        var goodsTable = document.getElementById("orderGoodsListTable");
-        for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
-            var orderGoods = {};
-            for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
-                var param = goodsTable.rows[tableRows].cells[tableCells].innerText;
-                switch (tableCells){
-                    case 1 :orderGoods.goodsCode = param;break;
-                    case 2 :orderGoods.goodsName = param;break;
-                    case 3 :orderGoods.goodsSpec = param;break;
-                    case 4 :orderGoods.unit = param;break;
-                    case 5 :orderGoods.unitPrice = param;break;
-                    case 6 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                    case 7 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                    case 8 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                    case 9 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
-                    case 10 :orderGoods.weight = param;break;
-                    case 11 :orderGoods.cubage = param;break;
-                }
-            }
-            orderGoodsList[tableRows - 1] = orderGoods;
-        }
-
-
+        console.log("这是啥玩意" + JSON.stringify(orderLists));
 
     })
 
