@@ -256,7 +256,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
             Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
             if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
-                    && !CollectionUtils.isEmpty(companyList.getResult())){
+                    && !CollectionUtils.isEmpty(companyList.getResult())
+                    && companyList.getResult().size()==1){
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
