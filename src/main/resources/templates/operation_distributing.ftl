@@ -398,7 +398,7 @@
             <label class="control-label col-label no-padding-right" for="">预发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="预计发货时间"
+                    <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
             </div>
@@ -421,7 +421,7 @@
             <label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="store" name="store">
+                    <select  id="warehouseCode" name="store">
                         <option value="00001">北京仓库</option>
                         <option value="00002">天津仓库</option>
                     </select>
@@ -430,7 +430,7 @@
             <label class="control-label col-label no-padding-right" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" id="" type="text" placeholder="备注"/>
+                    <input class="col-xs-10 col-xs-12" name="" id="notes" type="text" placeholder="备注"/>
                 </div>
             </div>
         </div>
@@ -485,13 +485,26 @@
                 <div class="col-xs-9">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
+                        <input class="col-xs-10 col-xs-12" name="consignorType" id="consignorType" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorContactCompanyId" id="consignorContactCompanyId" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorContactCode" id="consignorContactCode" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorPhone" id="consignorPhone" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorProvince" id="consignorProvince" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorProvinceName" id="consignorProvinceName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorCity" id="consignorCity" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorCityName" id="consignorCityName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorArea" id="consignorArea" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorAreaName" id="consignorAreaName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorStreet" id="consignorStreet" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorStreetName" id="consignorStreetName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12" name="consignorAddress" id="consignorAddress" type="hidden" />
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
-</form>
+<#--</form>-->
 <br/>
 <div class="col-sm-12">
     <div class="tabbable" style="width:1000px;">
@@ -519,6 +532,9 @@
                         </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Domain: activate to sort column ascending">序号
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="Domain: activate to sort column ascending">货品编码
                         </th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
@@ -536,14 +552,12 @@
                     </thead>
                     <tbody id="goodsInfoListDiv">
                     </tbody>
-
                 </table>
             </div>
             <div id="profile4" class="tab-pane active">
                 <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
-
                 <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info" id="">确认收货方</button></span>
-
+                <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
                 <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
                        aria-describedby="dynamic-table_info">
                     <thead>
@@ -576,7 +590,7 @@
         </div>
     </div>
 </div>
-
+</form>
 
 <div class="col-xs-12">
     <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
@@ -584,6 +598,7 @@
         确认下单
     </button>
 </div>
+
 
 
 
@@ -696,15 +711,17 @@
             var goodsInfoListDiv = "";
             $("#goodsInfoListDiv").find("tr").each(function(index){
                 var tdArr = $(this).children();
-                var goodsCode = tdArr.eq(1).text();//货品编码
-                var goodsName = tdArr.eq(2).text();//货品名称
-                var specification = tdArr.eq(3).text();//    货品规格
-                var unit = tdArr.eq(4).text();//    单位
-                var sendGoods = tdArr.eq(5).text();//发货数量
+                var index = tdArr.eq(1).text();//序号
+                var goodsCode = tdArr.eq(2).text();//货品编码
+                var goodsName = tdArr.eq(3).text();//货品名称
+                var specification = tdArr.eq(4).text();//    货品规格
+                var unit = tdArr.eq(5).text();//    单位
+                var sendGoods = tdArr.eq(6).text();//发货数量
 
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
@@ -726,6 +743,7 @@
                             "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
                             "</td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+(index+1)+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
@@ -756,10 +774,10 @@
     function goodsAndConsignee(obj){
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
-        var goodsCode = $(obj).find('td')[1].innerText;
-        var goodsName = $(obj).find('td')[2].innerText;
-        var specification = $(obj).find('td')[3].innerText;
-        var unit = $(obj).find('td')[4].innerText;
+        var goodsCode = $(obj).find('td')[2].innerText;
+        var goodsName = $(obj).find('td')[3].innerText;
+        var specification = $(obj).find('td')[4].innerText;
+        var unit = $(obj).find('td')[5].innerText;
         $("#goodsCodeDiv").val(goodsCode);
         $("#goodsNameDiv").val(goodsName);
         $("#specificationDiv").val(specification);
@@ -791,15 +809,48 @@
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
-            var goodsCode = tdArr.eq(1).text();//货品编码
+            var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsCodeDiv = $("#goodsCodeDiv").val();
             if(goodsCode == goodsCodeDiv){
-                tdArr.eq(5).text(sendNum);
+                tdArr.eq(6).text(sendNum);
             }
         });
+        //000
+
+        /*
+        往Map里放的数据结构应该是
+        key(货品编码@货品行号用来表示唯一一行):  value(json数组)
+
+
+        */
+
+        /*!//11.21晚上添加的重要逻辑, 早晨看看对不对//000
+
+        //从货品和发货人表里取对应发货数量给发货人隐藏域循环赋值
+        $("#goodsAndConsigneeTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            var num = tdArr.eq(1).children().val();
+            var consigneeCustOrderCode = tdArr.eq(2).text();//客户订单编号
+            num = parseInt(num);
+            $("#consigneeInfoListDiv").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                var custOrderCode = tdArr.eq(2).children().val();
+                var preGoodsNumStr = tdArr.eq(6).text();
+                if(consigneeCustOrderCode == custOrderCode){
+                    tdArr.eq(6).text(preGoodsNumStr + num + ",");
+                }
+            });
+        });
+
+        //去掉最后一个逗号","
+        $("#consigneeInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+        });*/
+
+
+
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     })
-
 
 
 
@@ -918,6 +969,19 @@
                 $("#consignorContactName").val(contacts);
                 $("#consignorContactPhone").val(contactsNumber);
                 $("#consignorContactAddress").val(detailaddress);
+                $("#consignorType").val(type);
+                $("#consignorContactCompanyId").val(contactCompanyId);
+                $("#consignorContactCode").val(contactCode);
+                $("#consignorPhone").val(phone);
+                $("#consignorProvince").val(province);
+                $("#consignorProvinceName").val(provinceName);
+                $("#consignorCity").val(city);
+                $("#consignorCityName").val(cityName);
+                $("#consignorArea").val(area);
+                $("#consignorAreaName").val(areaName);
+                $("#consignorStreet").val(street);
+                $("#consignorStreetName").val(streetName);
+                $("#consignorAddress").val(address);
 
                 $("#showDepaturePlace").html(provinceName+cityName+areaName+streetName);
             }
@@ -940,7 +1004,6 @@
             $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
         }
     });
-
 
 
     $("#consigneeListDivNoneTop").click(function(){
@@ -1048,6 +1111,7 @@
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
+                consignorout =consignorout + "<td style='display: none'></td>";
                 consignorout =consignorout + "</tr>";
             }
         });
@@ -1111,6 +1175,23 @@
 
 
     })
+    
+    $("#consigneeListClearDivBlock").click(function () {
+        var consignorout = $("#consigneeInfoListDiv").find("tr").size();
+        if(consignorout > 1){
+            layer.confirm('您即将清空收货方列表,您之前输入的收货方的货品需求信息将被清空!', {
+                skin : 'layui-layer-molv',
+                icon : 3,
+                title : '确认操作'
+            }, function(index){
+                $("#consigneeInfoListDiv").html("");
+                layer.close(index);
+            }, function(index){
+                layer.close(index);
+            });
+        }
+
+    })
 
     $("#custSelectFormBtn").click(function () {
         var custName = $("#custNameDiv").val();
@@ -1167,8 +1248,179 @@
         var url = "/ofc/operationDistributingExcel" + "/" + historyUrl;
         xescm.common.loadPage(url);
     })
-    
 
+
+
+
+    $("#orderPlaceConTableBtn").click(function () {
+        //如果没有仓库信息就是城配运输订单
+        //如果有仓库信息就是仓配订单, 销售出库,
+        var orderLists = [];
+        //堆齐基本信息
+        var orderInfo = {};
+        var storeMessage = $("#store").val();
+        if("" == storeMessage){
+            orderInfo.orderType = "60";//运输
+            orderInfo.businessType = "600";//城配
+
+        }else{
+            orderInfo.orderType = "61";//仓储
+            orderInfo.businessType = "610";//销售出库
+            orderInfo.provideTransport = "1";//需要运输
+        }
+        orderInfo.orderTime = $dp.$('orderTime').value;//000
+        orderInfo.merchandiser = $("#merchandiser").val();
+        orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+        orderInfo.custName = $("#custName").val();
+        orderInfo.custId = $("#custId").val();
+        orderInfo.warehouseCode = $("#warehouseCode").val();
+        orderInfo.warehouseName = $("#warehouseCode option:selected").text();
+        orderInfo.notes = $("#notes").val();
+        //发货方信息
+        orderInfo.consignorName = $("#consignorName").val();
+        orderInfo.consignorContactName = $("#consignorContactName").val();
+        orderInfo.consignorContactPhone = $("#consignorContactPhone").val();
+        orderInfo.address = $("#consignorContactAddress").val();
+        orderInfo.type = $("#consignorType").val();
+        orderInfo.contactCompanyId = $("#consignorContactCompanyId").val();
+        orderInfo.contactCode = $("#consignorContactCode").val();
+        orderInfo.phone = $("#consignorPhone").val();
+        orderInfo.province = $("#consignorProvince").val();
+        orderInfo.provinceName = $("#consignorProvinceName").val();
+        orderInfo.city = $("#consignorCity").val();
+        orderInfo.cityName = $("#consignorCityName").val();
+        orderInfo.area = $("#consignorArea").val();
+        orderInfo.areaName = $("#consignorAreaName").val();
+        orderInfo.street = $("#consignorStreet").val();
+        orderInfo.streetName = $("#consignorStreetName").val();
+        orderInfo.address = $("#consignorAddress").val();
+        //货品信息
+
+        //遍历收货方列表
+        $("#consigneeInfoListDiv").find("tr").each(function (index) {
+            //添加基本信息
+            //添加货品信息
+        })
+
+
+        var orderGoodsList = [];
+        var goodsTable = document.getElementById("orderGoodsListTable");
+        for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
+            var orderGoods = {};
+            for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
+                var param = goodsTable.rows[tableRows].cells[tableCells].innerText;
+                switch (tableCells){
+                    case 1 :orderGoods.goodsCode = param;break;
+                    case 2 :orderGoods.goodsName = param;break;
+                    case 3 :orderGoods.goodsSpec = param;break;
+                    case 4 :orderGoods.unit = param;break;
+                    case 5 :orderGoods.unitPrice = param;break;
+                    case 6 :orderGoods.quantity = goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                    case 7 :orderGoods.productionBatch =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                    case 8 :orderGoods.productionTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                    case 9 :orderGoods.invalidTime =  goodsTable.rows[tableRows].cells[tableCells].getElementsByTagName("input")[0].value;break;
+                    case 10 :orderGoods.weight = param;break;
+                    case 11 :orderGoods.cubage = param;break;
+                }
+            }
+            orderGoodsList[tableRows - 1] = orderGoods;
+        }
+
+
+
+
+
+
+
+    })
+
+</script>
+<script type="text/javascript">
+    function HashMap() {
+        /** Map 大小 **/
+        var size = 0;
+        /** 对象 **/
+        var entry = new Object();
+
+        /** 存 **/
+        this.put = function (key , value)
+        {
+            if(!this.containsKey(key))
+            {
+                size ++ ;
+            }
+            entry[key] = value;
+        }
+
+        /** 取 **/
+        this.get = function (key)
+        {
+            if( this.containsKey(key) )
+            {
+                return entry[key];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /** 删除 **/
+        this.remove = function ( key )
+        {
+            if( delete entry[key] )
+            {
+                size --;
+            }
+        }
+
+        /** 是否包含 Key **/
+        this.containsKey = function ( key )
+        {
+            return (key in entry);
+        }
+
+        /** 是否包含 Value **/
+        this.containsValue = function ( value )
+        {
+            for(var prop in entry)
+            {
+                if(entry[prop] == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** 所有 Value **/
+        this.values = function ()
+        {
+            var values = new Array(size);
+            for(var prop in entry)
+            {
+                values.push(entry[prop]);
+            }
+            return values;
+        }
+
+        /** 所有 Key **/
+        this.keys = function ()
+        {
+            var keys = new Array(size);
+            for(var prop in entry)
+            {
+                keys.push(prop);
+            }
+            return keys;
+        }
+
+        /** Map Size **/
+        this.size = function ()
+        {
+            return size;
+        }
+    }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
