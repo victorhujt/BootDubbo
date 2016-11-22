@@ -15,6 +15,7 @@ import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
+    @Autowired
+    private OfcOrderManageService ofcOrderManageService;
     @Resource
     private CodeGenUtils codeGenUtils;
 
@@ -66,6 +69,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
+        OfcFinanceInformation  ofcFinanceInformation =modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
         ofcFundamentalInformation.setCreationTime(new Date());
         ofcFundamentalInformation.setCreator(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());
@@ -282,6 +286,60 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         +" "+"订单已更新");
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 ofcFundamentalInformationService.update(ofcFundamentalInformation);
+            }else if(PubUtils.trimAndNullAsEmpty(tag).equals("tranplace")){
+                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
+                    int orderCodeByTransCode = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+                    if(orderCodeByTransCode>=1){
+                        throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
+                    }
+                }
+                ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+                ofcFundamentalInformation.setCustCode(custId);
+                ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setAbolishMark(OrderConstEnum.ORDERWASNOTABOLISHED);//未作废
+                ofcFundamentalInformation.setOrderType(OrderConstEnum.TRANSPORTORDER);
+                if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){
+                    Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                        throw new BusinessException(wrapper.getMessage());
+                    }
+                    //运输订单
+                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        /*if(depatrueCode.equals(destinationCode)){
+                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                        }else {
+                            ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                        }*/
+                    }else{
+                        throw new BusinessException("四级地址编码为空!");
+                    }
+                    addFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
+                    addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
+                    saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
+                    saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);
+                }else{
+                    throw new BusinessException("您选择的订单类型系统无法识别!");
+                }
+
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单已创建");
+                upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
+                //添加该订单的货品信息
+                for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+                    String orderCode = ofcFundamentalInformation.getOrderCode();
+                    ofcGoodsDetails.setOrderCode(orderCode);
+                    ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                    ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+                    ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+                    ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+                    ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+                }
+                //添加基本信息
+                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                ofcOrderManageService.orderAudit(ofcFundamentalInformation.getOrderCode(),ofcOrderStatus.getOrderStatus(),
+                        "review",authResDtoByToken);
             }else {
                 throw new BusinessException("未知操作!系统无法识别!");
             }
@@ -290,7 +348,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } catch (Exception e){
             throw new BusinessException(e.getMessage());
         }
-        if("place".equals(tag)){
+        if("place".equals(tag) || "tranplace".equals(tag)){
             return "您已成功下单!";
         }else if("manage".equals(tag)){
             return "您的订单修改成功!";
@@ -314,6 +372,26 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
+    /**
+     * 添加财务信息
+     * @param ofcFinanceInformation
+     * @param ofcFundamentalInformation
+     */
+    public void addFinanceInformation(OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation){
+        ofcFinanceInformation=upFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
+        ofcFinanceInformationService.save(ofcFinanceInformation);
+    }
+
+    public OfcFinanceInformation upFinanceInformation(OfcFinanceInformation ofcFinanceInformation
+            ,OfcFundamentalInformation ofcFundamentalInformation){
+//        ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
+        ofcFinanceInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
+        ofcFinanceInformation.setCreator(ofcFundamentalInformation.getCreator());
+        ofcFinanceInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        ofcFinanceInformation.setOperator(ofcFundamentalInformation.getOperator());
+        ofcFinanceInformation.setOperTime(ofcFundamentalInformation.getOperTime());
+        return ofcFinanceInformation;
+    }
 
     /**
      * 添加运输订单

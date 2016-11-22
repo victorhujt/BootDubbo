@@ -1,14 +1,18 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,6 +45,8 @@ public class OfcJumpontroller extends BaseController{
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
+    @Autowired
+    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
@@ -124,19 +130,20 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
-        List<CscStorevo> cscStoreListResult = null;
+        List<CscGoodsVo> cscGoodsVoList = null;
         setDefaultModel(model);
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            //Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            //String custId = (String) wrapper.getResult();
-            //rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
-            QueryStoreDto queryStoreDto = new QueryStoreDto();
-            //queryStoreDto.setCustomerId(custId);
-            //Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
-            //cscStoreListResult = storeByCustomerId.getResult();
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+            String custId = (String) wrapper.getResult();
+            /*CscGoods cscGoods=new CscGoods();
+            cscGoods.setCustomerId(custId);
+            cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
+            cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));
+            Wrapper<List<CscGoodsVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+            cscGoodsVoList = cscGoodsLists.getResult();*/
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
@@ -146,8 +153,7 @@ public class OfcJumpontroller extends BaseController{
             ex.printStackTrace();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
-        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
-        map.put("cscStoreByCustId",cscStoreListResult);
+        //map.put("cscGoodsVoList",cscGoodsVoList);
         return new ModelAndView("order_tranload");
 
     }

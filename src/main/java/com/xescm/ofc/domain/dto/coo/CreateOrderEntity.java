@@ -2,6 +2,7 @@ package com.xescm.ofc.domain.dto.coo;
 
 import com.xescm.ofc.utils.DateUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -418,7 +419,7 @@ public class CreateOrderEntity {
     /**
      * 保价金额(电商)
      */
-    private String insureValue;
+    private BigDecimal insureValue;
 
     /**
      * 基地ID(电商)
@@ -998,11 +999,11 @@ public class CreateOrderEntity {
         this.insure = insure;
     }
 
-    public String getInsureValue() {
+    public BigDecimal getInsureValue() {
         return insureValue;
     }
 
-    public void setInsureValue(String insureValue) {
+    public void setInsureValue(BigDecimal insureValue) {
         this.insureValue = insureValue;
     }
 

@@ -1,6 +1,7 @@
 package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
@@ -16,6 +17,7 @@ import com.xescm.ofc.feign.client.FeignAddressInterfaceClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
+import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
@@ -54,6 +56,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
@@ -296,7 +300,30 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return flag;
     }
 
+    /*
+    校验客户订单编号
+     */
+    @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
+    @ResponseBody
+    public boolean checkTransCode(Model model, String transCode, String selfTransCode){
+        logger.info("==> custOrderCode={}", transCode);
+        logger.info("==> selfCustOrderCode={}", selfTransCode);
 
+        OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
+        ofcDistributionBasicInfo.setTransCode(transCode);
+        ofcDistributionBasicInfo.setSelfTransCode(selfTransCode);
+        boolean flag = false;
+        try {
+            int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+            if (count < 1){
+                flag = true;
+            }
+
+        } catch (Exception e) {
+            logger.error("校验运输单号出错:　", e.getMessage());
+        }
+        return flag;
+    }
 
 
 }
