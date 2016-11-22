@@ -1125,6 +1125,7 @@
 <script type="text/javascript">
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
+        countQuantityOrWeightOrCubageCheck();
     }
     function seleGoods(obj) {
         $(obj).attr("id","yangdongxushinanshen");
@@ -2166,6 +2167,8 @@
                 $("#goodsListDiv").fadeOut("slow");
             }
         });
+
+        $('#merchandiser').editableSelect();
     })
 
 </script>
