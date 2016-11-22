@@ -271,6 +271,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanInfo.setSingleSourceOfTransport("6001");
             }else if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())){
                 ofcTransplanInfo.setSingleSourceOfTransport("6003");
+            }else{
+                ofcTransplanInfo.setSingleSourceOfTransport("6003");
             }
             if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()).equals("")){
                 ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());

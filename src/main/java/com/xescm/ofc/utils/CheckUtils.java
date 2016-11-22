@@ -4,6 +4,7 @@ import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.CscWarehouse;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -220,11 +221,11 @@ public class CheckUtils {
      * 货品档案信息，在统一对接平台调用时，需要将外部的货品信息编码与平台的货品编码做对应。
      * 若传递的货品代码不存在，则返回错误信息，给予提示”XXXX货品档案不存在！
      */
-    public static ResultModel checkGoodsInfo(Wrapper<List<CscGoodsVo>> listWrapper, CreateOrderGoodsInfo createOrderGoodsInfo) {
+    public static ResultModel checkGoodsInfo(Wrapper<List<CscGoodsApiVo>> listWrapper, CreateOrderGoodsInfo createOrderGoodsInfo) {
         if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
             return new ResultModel(ResultModel.ResultEnum.CODE_0004);
         }
-        for (CscGoodsVo c : listWrapper.getResult()) {
+        for (CscGoodsApiVo c : listWrapper.getResult()) {
             if (StringUtils.equals(c.getGoodsCode(), createOrderGoodsInfo.getGoodsCode())) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }

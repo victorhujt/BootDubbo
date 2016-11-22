@@ -9,10 +9,7 @@ import com.xescm.ofc.domain.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
+import com.xescm.ofc.domain.dto.csc.vo.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
@@ -220,9 +217,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //校验：货品档案信息
         List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
-            CscGoods cscGoods = new CscGoods();
+            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
             cscGoods.setCustomerId(custId);
-            Wrapper<List<CscGoodsVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+            Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
             resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                 logger.info("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
