@@ -1,5 +1,9 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.domain.OfcFinanceInformation;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
@@ -14,6 +18,9 @@ import java.util.List;
  */
 public interface OfcOrderManageService {
     String orderAudit(String orderCode,String orderStatus,String reviewTag, AuthResDto authResDtoByToken);
+    String orderAuditByTrans(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList,
+                             OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation,
+                             String orderStatus, String reviewTag, AuthResDto authResDtoByToken);
     String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
     String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
     CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId, AuthResDto authResDtoByToken);
