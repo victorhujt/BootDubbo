@@ -1329,8 +1329,8 @@
             }, function(index){
                 $("#consigneeInfoListDiv").html("");
                 ifConsigneeConfirm = false;
-                goodsAndConsigneeMap = new HashMap();
-                $("#TfcOrderTopicTransOrder").html("");
+                //goodsAndConsigneeMap = new HashMap();
+                //$("#TfcOrderTopicTransOrder").html("");
                 layer.close(index);
             }, function(index){
                 layer.close(index);
@@ -1417,8 +1417,8 @@
         orderInfo.orderTime = $dp.$('orderTime').value;//000
         orderInfo.merchandiser = $("#merchandiser").val();
         orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
-        orderInfo.custName = $("#custName").val();
-        orderInfo.custId = $("#custId").val();
+        orderInfo.custName = $("#custName").val();//后端需特别处理
+        orderInfo.custCode = $("#custId").val();//后端需特别处理
         orderInfo.warehouseCode = $("#warehouseCode").val();
         orderInfo.warehouseName = $("#warehouseCode option:selected").text();
         orderInfo.notes = $("#notes").val();
@@ -1426,26 +1426,27 @@
         orderInfo.consignorName = $("#consignorName").val();
         orderInfo.consignorContactName = $("#consignorContactName").val();
         orderInfo.consignorContactPhone = $("#consignorContactPhone").val();
-        orderInfo.address = $("#consignorContactAddress").val();
-        orderInfo.type = $("#consignorType").val();
-        orderInfo.contactCompanyId = $("#consignorContactCompanyId").val();
-        orderInfo.contactCode = $("#consignorContactCode").val();
-        orderInfo.phone = $("#consignorPhone").val();
-        orderInfo.province = $("#consignorProvince").val();
-        orderInfo.provinceName = $("#consignorProvinceName").val();
-        orderInfo.city = $("#consignorCity").val();
-        orderInfo.cityName = $("#consignorCityName").val();
-        orderInfo.area = $("#consignorArea").val();
-        orderInfo.areaName = $("#consignorAreaName").val();
-        orderInfo.street = $("#consignorStreet").val();
-        orderInfo.streetName = $("#consignorStreetName").val();
-        orderInfo.address = $("#consignorAddress").val();
+        orderInfo.departurePlace = $("#consignorAddress").val();//出发地门牌号
+        orderInfo.consignorType = $("#consignorType").val();
+        orderInfo.consignorCode = $("#consignorContactCompanyId").val();
+        orderInfo.consignorContactCode = $("#consignorContactCode").val();
+        orderInfo.consignorContactPhone = $("#consignorPhone").val();
+        var provinceCode = $("#consignorProvince").val();
+        orderInfo.departureProvince = $("#consignorProvinceName").val();
+        var cityCode = $("#consignorCity").val();
+        orderInfo.departureCity = $("#consignorCityName").val();
+        var areaCode = $("#consignorArea").val();
+        orderInfo.departureDistrict = $("#consignorAreaName").val();
+        var streetCode = $("#consignorStreet").val();
+        orderInfo.departureTowns = $("#consignorStreetName").val();
+        orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
+        //orderInfo.departurePlace = $("#consignorAddress").val();
         //货品信息
 
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
-            //添加基本信息
-            //添加货品信息
+            //添加当前收货方的信息
+            //添加当前收货方的货品信息, 遍历Map
         })
 
 
