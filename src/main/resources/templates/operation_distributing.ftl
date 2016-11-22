@@ -640,7 +640,9 @@
         $("#merchandiser").editableSelect();
         $("#store").editableSelect();
     }
+    var goodsAndConsigneeMap = new HashMap();
     $(function () {
+
 
         $(".goodsLi").click(function () {
             /*var consigneeChosen = "";
@@ -709,6 +711,7 @@
         });
         $("#goodsEnter").click(function () {
             var goodsInfoListDiv = "";
+            var preIndex = "0";
             $("#goodsInfoListDiv").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 var index = tdArr.eq(1).text();//序号
@@ -728,12 +731,15 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+                preIndex = index;
             });
             $("#goodsInfoListDiv").html("");
             var str = "";
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
+                    var numIndex = parseInt(preIndex);
+                    preIndex = numIndex + 1;
                     var goodsCode = tdArr.eq(4).text();//货品编码
                     var goodsName = tdArr.eq(5).text();//货品名称
                     var specification = tdArr.eq(6).text();//规格
@@ -743,7 +749,7 @@
                             "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
                             "</td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+(index+1)+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
@@ -784,15 +790,15 @@
         $("#unitDiv").val(unit);
         //显示收货人信息
         //goodsAndConsigneeTbody
-        var consignorout = ""
+        var consignorout = "";
         $("#consigneeInfoListDiv").find("tr").each(function(index){
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//
-            var consigneeCustOrderCode = tdArr.eq(2).children().val();//
+            var consigneeCode = tdArr.eq(7).text();//
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
             consignorout =consignorout + "<td><input value='0' /></td>";
-            consignorout =consignorout + "<td style='display:none'>"+consigneeCustOrderCode+"</td>";
+            consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
             consignorout =consignorout + "</tr>";
         });
         $("#goodsAndConsigneeTbody").html(consignorout);
@@ -801,9 +807,18 @@
     //统计货品发货数量
     $("#goodsAndConsigneeEnter").click(function(){
         var sendNum = 0;//统计某个货品的总的发货数量
+
+        var mapValue = [];
+        var mapKey = "";
+        var goodsJson = {};
+        var consigneeAndGoodsJson = {};
+
         $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
+            debugger
             var tdArr = $(this).children();
-            var num = tdArr.eq(1).children().val();
+            var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
+            var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
+            consigneeAndGoodsJson[consigneeCode] = num;
             sendNum += parseInt(num);
         })
         var goodsInfoListDiv = "";
@@ -813,16 +828,34 @@
             var goodsCodeDiv = $("#goodsCodeDiv").val();
             if(goodsCode == goodsCodeDiv){
                 tdArr.eq(6).text(sendNum);
+                var indexIn = tdArr.eq(1).text();
+                var goodsCodeIn = tdArr.eq(2).text();
+                var goodsNameIn = tdArr.eq(3).text();
+                var goodsSpecIn = tdArr.eq(4).text();
+                var goodsUnitIn = tdArr.eq(5).text();
+                var goodsAmountIn = tdArr.eq(6).text();
+                goodsJson.indexIn = indexIn;
+                goodsJson.goodsCodeIn = goodsCodeIn;
+                goodsJson.goodsNameIn = goodsNameIn;
+                goodsJson.goodsSpecIn = goodsSpecIn;
+                goodsJson.goodsUnitIn = goodsUnitIn;
+                goodsJson.goodsAmountIn = goodsAmountIn;
+                mapKey = goodsCodeIn + "@" + indexIn;
             }
         });
         //000
-
         /*
         往Map里放的数据结构应该是
-        key(货品编码@货品行号用来表示唯一一行):  value(json数组)
-
-
+        key(货品编码@货品行号用来表示唯一一行):  value(json数组):[{"货品编码":xxx,"货品名称":xxx,...},{"收货人1code":20,"收货人2code":30}]
         */
+        mapValue[0] = goodsJson;
+        mapValue[1] = consigneeAndGoodsJson;
+        goodsAndConsigneeMap.put(mapKey,mapValue);
+
+        console.log("mapKey:"+mapKey);
+        console.log("mapValue:" + JSON.stringify(mapValue));
+
+        console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[0]))
 
         /*!//11.21晚上添加的重要逻辑, 早晨看看对不对//000
 
@@ -1084,6 +1117,21 @@
             var consigneeContactName = tdArr.eq(3).text();//
             var consigneeContactPhone = tdArr.eq(4).text();//
             var consigneeContactAddress = tdArr.eq(5).text();//
+            var type = tdArr.eq(6).text();
+            var contactCompanyId = tdArr.eq(7).text();
+            var contactCode = tdArr.eq(8).text();
+            var phone = tdArr.eq(9).text();
+            var province = tdArr.eq(10).text();
+            var provinceName = tdArr.eq(11).text();
+            var city = tdArr.eq(12).text();
+            var cityName = tdArr.eq(13).text();
+            var area = tdArr.eq(14).text();
+            var areaName = tdArr.eq(15).text();
+            var street = tdArr.eq(16).text();
+            var streetName = tdArr.eq(17).text();
+            var address = tdArr.eq(18).text();
+
+
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
@@ -1091,8 +1139,22 @@
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
+            consignorout =consignorout + "<td style='display: none'>" + type + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + contactCompanyId + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + contactCode + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + phone + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + province + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + provinceName + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + city + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + cityName + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + area + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + areaName + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + street + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + streetName + "</td>";
+            consignorout =consignorout + "<td style='display: none'>" + address + "</td>";
             consignorout =consignorout + "</tr>";
         });
+
         $("#consigneeInfoListDiv").html("");
 
         $("#contactSelectListTbody1").find("tr").each(function(index){
@@ -1104,6 +1166,20 @@
                 var consigneeContactName = tdArr.eq(3).text();//联系人
                 var consigneeContactPhone = tdArr.eq(4).text();//    联系电话
                 var consigneeContactAddress = tdArr.eq(5).text();//    地址
+                var type = tdArr.eq(6).text();
+                var contactCompanyId = tdArr.eq(7).text();
+                var contactCode = tdArr.eq(8).text();
+                var phone = tdArr.eq(9).text();
+                var province = tdArr.eq(10).text();
+                var provinceName = tdArr.eq(11).text();
+                var city = tdArr.eq(12).text();
+                var cityName = tdArr.eq(13).text();
+                var area = tdArr.eq(14).text();
+                var areaName = tdArr.eq(15).text();
+                var street = tdArr.eq(16).text();
+                var streetName = tdArr.eq(17).text();
+                var address = tdArr.eq(18).text();
+
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
                 consignorout =consignorout + "<td><button type='button'  onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
@@ -1111,7 +1187,20 @@
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
-                consignorout =consignorout + "<td style='display: none'></td>";
+                consignorout =consignorout + "<td style='display: none'>" + type + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + contactCompanyId + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + contactCode + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + phone + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + province + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + provinceName + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + city + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + cityName + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + area + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + areaName + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + street + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + streetName + "</td>";
+                consignorout =consignorout + "<td style='display: none'>" + address + "</td>";
+
                 consignorout =consignorout + "</tr>";
             }
         });
@@ -1328,14 +1417,8 @@
 
 
 
-
-
-
-
     })
 
-</script>
-<script type="text/javascript">
     function HashMap() {
         /** Map 大小 **/
         var size = 0;
@@ -1422,5 +1505,6 @@
         }
     }
 </script>
+
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
