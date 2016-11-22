@@ -284,19 +284,19 @@
                                 <label class="control-label col-sm-1 no-padding-right" for="name">费用支付</label>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="expensePaymentPartyV1" type="radio" name="expensePaymentPartyV" checked="checked" value="10"/>发货方
+                                        <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked"/>发货方
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
                                     <div class="clearfix control-label">
-                                        <input id="expensePaymentPartyV2" type="radio" name="expensePaymentPartyV" value="20"/>收货方
+                                        <input id="transportTypeV2" type="radio" name="transportTypeV"/>收货方
                                     </div>
                                 </div>
-                                <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
+                                <input id="transportType" type="hidden" name="transportType"/>
                                 <label class="control-label col-label no-padding-right" for="name">支付方式</label>
                                 <div class="col-sm-3">
                                     <div class="clearfix">
-                                        <select  id="payment" name="payment">
+                                        <select  id="businessType" name="businessType">
                                             <option value="01">现金</option>
                                             <option value="02">POS刷卡</option>
                                             <option value="03">微信</option>

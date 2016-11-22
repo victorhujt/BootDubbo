@@ -16,8 +16,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,8 +112,12 @@ public class OfcJumpontroller extends BaseController{
         return "operation_distributing";
     }
 
-    @RequestMapping(value = "/ofc/operationDistributingExcel")
-    public String operationDistributingExcel(Model model){
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl, Map<String,Object> map){
+        if("operation_distributing".equals(historyUrl)){
+            historyUrl = "/ofc/operationDistributing";
+        }
+        map.put("historyUrl",historyUrl);
         return "operation_distributing_excel";
     }
 

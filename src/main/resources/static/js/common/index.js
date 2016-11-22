@@ -68,7 +68,7 @@ var xescm = {
 
 			});
 		},
-		submit : function(submitUrl,param, successFunction) {
+			submit : function(submitUrl,param, successFunction) {
 			layer.confirm('您确认吗?', {
 				skin : 'layui-layer-molv',
 				icon : 3,

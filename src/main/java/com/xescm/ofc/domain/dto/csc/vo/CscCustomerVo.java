@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public class CscCustomerVo implements Serializable {
 
+
+    private String id;
     /**
      * 客户编码
      */
@@ -41,6 +43,11 @@ public class CscCustomerVo implements Serializable {
      * 产品类型
      */
     private String productType;
+
+    /**
+     * 组织id
+     */
+    private String groupId;
 
     public String getCustomerCode() {
         return customerCode;
@@ -96,5 +103,21 @@ public class CscCustomerVo implements Serializable {
 
     public void setProductType(String productType) {
         this.productType = productType;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

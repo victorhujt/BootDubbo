@@ -345,15 +345,6 @@
                     </tr>
                     </thead>
                     <tbody id="goodsAndConsigneeTbody">
-                        <tr>
-                            <td>五道口1</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>六道口</td>
-                            <td>30</td>
-                        </tr>
-
                     </tbody>
                 </table>
             </form>
@@ -418,7 +409,7 @@
             <label class="control-label col-label no-padding-right" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12" name="" value="假的"  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <span style="cursor:pointer" id="custListDivBlock">
                     <button type="button" class="btn btn-minier btn-inverse no-padding-right"
                             id="">选择
@@ -541,13 +532,17 @@
                             aria-label="Clicks: activate to sort column ascending">数量
                         </th>
                     </thead>
-                    <tbody id="goodsInfoListDiv"></tbody>
+                    <tbody id="goodsInfoListDiv">
+                    </tbody>
 
                 </table>
             </div>
             <div id="profile4" class="tab-pane active">
-                <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">添加收货方</button></span>
-                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
+                <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="consigneeListDivBlockBtn">添加收货方</button></span>
+
+                <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info" id="consigneeListConfirmDivBlockBtn">确认收货方</button></span>
+
+                <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
                        aria-describedby="dynamic-table_info">
                     <thead>
                     <tr role="row">
@@ -644,11 +639,8 @@
         })
 
         $("#goodsListDivBlock").click(function () {
-            var consigneeChosen = "";
-            $("#consigneeInfoListDiv").find("tr").each(function () {
-                consigneeChosen = "param";
-            })
-            if(""==consigneeChosen){
+            var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
+            if(consigneeChosen < 1){
                 alert("请先添加收货方")
             }else{
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
@@ -736,7 +728,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>20</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
 
                     str="str";
@@ -761,9 +753,7 @@
     });
     function goodsAndConsignee(obj){
         $("#goodsAndConsigneeDiv").fadeIn("slow");
-        console.log($(obj).html())
-        console.log($(obj).find('td')[1].innerText)
-
+        //显示货品信息
         var goodsCode = $(obj).find('td')[1].innerText;
         var goodsName = $(obj).find('td')[2].innerText;
         var specification = $(obj).find('td')[3].innerText;
@@ -772,7 +762,47 @@
         $("#goodsNameDiv").val(goodsName);
         $("#specificationDiv").val(specification);
         $("#unitDiv").val(unit);
-    }
+        //显示收货人信息
+        //goodsAndConsigneeTbody
+        var consignorout = ""
+        $("#consigneeInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            var consigneeName = tdArr.eq(1).text();//
+            var consigneeCustOrderCode = tdArr.eq(2).children().val();//
+            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+            consignorout =consignorout + "<td>"+consigneeName+"</td>";
+            consignorout =consignorout + "<td><input value='0' /></td>";
+            consignorout =consignorout + "<td style='display:none'>"+consigneeCustOrderCode+"</td>";
+            consignorout =consignorout + "</tr>";
+        });
+        $("#goodsAndConsigneeTbody").html(consignorout);
+    }//
+
+    //统计货品发货数量
+    $("#goodsAndConsigneeEnter").click(function(){
+        var sendNum = 0;//统计某个货品的总的发货数量
+        $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
+            var tdArr = $(this).children();
+            var num = tdArr.eq(1).children().val();
+            sendNum += parseInt(num);
+        })
+        var goodsInfoListDiv = "";
+        $("#goodsInfoListDiv").find("tr").each(function(index) {
+            var tdArr = $(this).children();
+            var goodsCode = tdArr.eq(1).text();//货品编码
+            var goodsCodeDiv = $("#goodsCodeDiv").val();
+            if(goodsCode == goodsCodeDiv){
+                tdArr.eq(5).text(sendNum);
+            }
+        });
+        $("#goodsAndConsigneeDiv").fadeOut("slow");
+    })
+
+
+
+
+
+
 
     //校验是否选了客户
     function validateCustChosen() {
@@ -940,9 +970,7 @@
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input />" +
-                    "<button type='button' class='btn btn-minier btn-inverse no-padding-right'  id=''>保存</button>" +
-                    "</td>";
+            consignorout =consignorout + "<td><input /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -960,11 +988,9 @@
                 var consigneeContactPhone = tdArr.eq(4).text();//    联系电话
                 var consigneeContactAddress = tdArr.eq(5).text();//    地址
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-                consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                consignorout =consignorout + "<td><button type='button'  onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
-                consignorout =consignorout + "<td><input />" +
-                        "<button type='button' class='btn btn-minier btn-inverse no-padding-right'  id=''>保存</button>" +
-                        "</td>";
+                consignorout =consignorout + "<td><input /></td>";
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -988,9 +1014,43 @@
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
     });
 
-    $("#to_operation_distributing_excel").click(function () {
 
-    });
+    //确定收货方列表
+    $("#consigneeListConfirmDivBlock").click(function () {
+        var consignorout = $("#consigneeInfoListDiv").find("tr").size();
+        if(consignorout < 1){
+            alert("请先添加收货方");
+            return;
+        }
+
+        //校验收货方列表中是否所有的客户订单编号都填写了
+
+        //统计收货方列表数据传给后台
+        //然后将添加收货人按钮禁掉,提示用户暂时不能在添加了货品后选择收货方, 让客户订单编号的输入框变为只读的
+        layer.confirm('您即将确认收货方列表,您如果添加货品将无法再添加收货方!', {
+            skin : 'layui-layer-molv',
+            icon : 3,
+            title : '确认操作'
+        }, function(){
+            //如果确认的话,
+            /*$("#consigneeInfoListDiv").find("tr").each(function(index) {
+                var tdArr = $(this).children();//.children()
+                //tdArr.eq(1).children().attr("readonly","readonly");
+            }*/
+            $("#consigneeInfoListDiv").find("tr").each(function(index) {
+                var tdArr = $(this).children();
+                tdArr.eq(2).children().attr("readonly","readonly");
+                //禁用添加收货人和确认收货人
+                layer.close(index);
+            })
+
+
+        }, function(index){
+            layer.close(index);
+        });
+
+
+    })
 
     $("#custSelectFormBtn").click(function () {
         var custName = $("#custNameDiv").val();
@@ -998,12 +1058,16 @@
             data=eval(data);
             var custList = "";
             $.each(data,function (index,cscCustomerVo) {
+                var channel = cscCustomerVo.channel;
+                if(null == channel){
+                    channel = "";
+                }
                 custList =custList + "<tr role='row' class='odd'>";
                 custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 custList =custList + "<td>"+(index+1)+"</td>";
                 custList =custList + "<td>"+cscCustomerVo.type+"</td>";
                 custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.channel+"</td>";
+                custList =custList + "<td>"+channel+"</td>";
                 custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
                 custList =custList + "</tr>";
                 $("#custListDivTbody").html(custList);
@@ -1032,6 +1096,12 @@
         }
     });
 
+    $("#to_operation_distributing_excel").click(function () {
+        var historyUrl = "operation_distributing";
+        var url = "/ofc/operationDistributingExcel" + "/" + historyUrl;
+        xescm.common.loadPage(url);
+    })
+    
 
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>

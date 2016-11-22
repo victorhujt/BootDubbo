@@ -18,11 +18,13 @@ package com.xescm.ofc.config;
 
 import com.aliyun.openservices.ons.api.Consumer;
 import com.aliyun.openservices.ons.api.ONSFactory;
+import com.aliyun.openservices.ons.api.Producer;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 //import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
+import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
 import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
-//import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xescm.ofc.utils.MQUtil;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,11 +70,14 @@ public class MqConfig {
 
     private String EPCToTag;
 
+    public Producer producer;
+
+
     @Resource
     SchedulingSingleFedbackImpl schedulingSingleFedback;
 
-    /*@Resource
-    CreateOrderApiConsumer createOrderApiConsumer;*/
+    @Resource
+    CreateOrderApiConsumer createOrderApiConsumer;
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumer(){
@@ -81,14 +86,15 @@ public class MqConfig {
         consumer.subscribe(topic, null, schedulingSingleFedback);
         return consumer;
     }
-/*
+
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
         System.out.println("createOrderApi消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
         consumer.subscribe(TFCTopic, null, createOrderApiConsumer);
+        initProducer();
         return consumer;
-    }*/
+    }
 
 
     private Properties consumerProperties(){
@@ -99,6 +105,21 @@ public class MqConfig {
         consumerProperties.setProperty(PropertyKeyConst.ONSAddr, onsAddr);
         return consumerProperties;
     }
+
+    private void initProducer() {
+        Properties producerProperties = new Properties();
+        producerProperties.setProperty(PropertyKeyConst.ProducerId, this.getProducerId());
+        producerProperties.setProperty(PropertyKeyConst.AccessKey, this.getAccessKey());
+        producerProperties.setProperty(PropertyKeyConst.SecretKey, this.getSecretKey());
+        producerProperties.setProperty(PropertyKeyConst.ONSAddr, this.getOnsAddr());
+
+        MQUtil.propertiesUtil(producerProperties);
+        Producer producer = ONSFactory.createProducer(producerProperties);
+        producer.start();
+        this.producer = producer;
+    }
+
+
 
     public String getTfcTransPlanTopic() {
         return TfcTransPlanTopic;
@@ -267,4 +288,5 @@ public class MqConfig {
     public void setEPCToTag(String EPCToTag) {
         this.EPCToTag = EPCToTag;
     }
+
 }
