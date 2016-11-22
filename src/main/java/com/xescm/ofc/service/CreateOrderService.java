@@ -3,6 +3,8 @@ package com.xescm.ofc.service;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.domain.dto.epc.CannelOrderVo;
+import com.xescm.uam.utils.wrap.Wrapper;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public interface CreateOrderService {
      */
     boolean CreateOrders(List<CreateOrderEntity> list);
 
-    ResultModel cancelOrderStateByOrderCode(String custOrderCode, String custCode);
+    Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode, String orderCode, String custCode);
 
     String createOrder(String data) throws Exception;
 

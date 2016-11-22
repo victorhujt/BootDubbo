@@ -11,5 +11,4 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
 
     String getOrderCodeByCustOrderCodeAndCustCode(@Param("custOrderCode") String custOrderCode, @Param("custCode") String custCode);
 
-
 }

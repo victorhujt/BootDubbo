@@ -20,11 +20,12 @@ import com.aliyun.openservices.ons.api.Consumer;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.Producer;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
-//import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
 import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
 import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
 import com.xescm.ofc.utils.MQUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,9 @@ import java.util.Properties;
 @Configuration
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public final static String MQ_PREFIX="mq";
 
     private String accessKey;  //阿里云公钥
@@ -89,7 +93,7 @@ public class MqConfig {
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
-        System.out.println("createOrderApi消费开始---:");
+        logger.debug("createOrderApi消费开始---");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
         consumer.subscribe(TFCTopic, null, createOrderApiConsumer);
         initProducer();

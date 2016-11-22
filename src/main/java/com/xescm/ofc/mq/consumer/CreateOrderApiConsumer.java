@@ -44,12 +44,14 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
+        logger.debug("创单api消费MQ开始。。。");
         String topicName = message.getTopic();
         String key = message.getKey();
         String messageBody = new String(message.getBody());
         //TFCTopic
         if (StringUtils.equals(topicName, mqConfig.getTFCTopic()) && !keyList.contains(key)) {
             if(StringUtils.equals(message.getTag(),mqConfig.getEPCToTag())){
+                logger.debug("创单api消费MQ:Tag:{},topic:{}"+message.getTag(),mqConfig.getEPCToTag());
                 keyList.add(key);
                 String result = null;
                 try {
