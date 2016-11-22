@@ -661,6 +661,8 @@
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
             if(consigneeChosen < 1){
                 alert("请先添加收货方")
+            }else if(!ifConsigneeConfirm){
+                alert("请先确认收货方");
             }else{
                 //$("#goodsSelectListTbody").html("");
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
@@ -819,8 +821,13 @@
 
         });
     })
-    function deleteGood(obj) {
-        $(obj).parent().parent().remove();
+    function deleteGood(obj) {//000
+        if(ifConsigneeConfirm){
+            alert('您已确认收货方,无法删除!');
+        }else{
+            $(obj).parent().parent().remove();
+        }
+
     }
 
     $("#goodsAndConsigneeDivNoneBottom").click(function () {
@@ -1297,6 +1304,7 @@
 
             $("#consigneeInfoListDiv").find("tr").each(function(index) {
                 var tdArr = $(this).children();
+
                 tdArr.eq(2).children().attr("readonly","readonly");
                 ifConsigneeConfirm = true;
                 //禁用添加收货人和确认收货人
@@ -1314,12 +1322,15 @@
     $("#consigneeListClearDivBlock").click(function () {
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout > 1){
-            layer.confirm('您即将清空收货方列表,您之前输入的收货方的货品需求信息将被清空!', {
+            layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
                 skin : 'layui-layer-molv',
                 icon : 3,
                 title : '确认操作'
             }, function(index){
                 $("#consigneeInfoListDiv").html("");
+                ifConsigneeConfirm = false;
+                goodsAndConsigneeMap = new HashMap();
+                $("#TfcOrderTopicTransOrder").html("");
                 layer.close(index);
             }, function(index){
                 layer.close(index);
