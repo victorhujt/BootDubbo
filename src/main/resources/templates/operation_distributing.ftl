@@ -662,7 +662,7 @@
             if(consigneeChosen < 1){
                 alert("请先添加收货方")
             }else{
-                $("#goodsSelectListTbody").html("");
+                //$("#goodsSelectListTbody").html("");
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
         })
@@ -839,7 +839,7 @@
         $("#specificationDiv").val(specification);
         $("#unitDiv").val(unit);
 
-debugger;
+
         //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
         //显示收货人信息
         //goodsAndConsigneeTbody
@@ -850,7 +850,7 @@ debugger;
             var consigneeCode = tdArr.eq(7).text();//
             var mapKey = goodsCode + "@" + goodsIndex;
             var num = 0;
-            debugger;
+
             if(undefined != goodsAndConsigneeMap.get(mapKey)){
                 console.log("可以!"+JSON.stringify(goodsAndConsigneeMap.get(mapKey)[1]));
                 var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
@@ -1070,6 +1070,7 @@ debugger;
             alert("您已确认过一次,无法再次添加新客户!");
             return;
         }else{
+            //$("#contactSelectListTbody1").html("");
             $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
         }
     });
@@ -1147,9 +1148,13 @@ debugger;
     });
     $("#contactoutEnter").click(function () {
         var consignorout = "";
+
+        var contactCodeOut = {};
+
         $("#consigneeInfoListDiv").find("tr").each(function(index){
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//
+            var consigneeCustOrderCode =  tdArr.eq(2).children().val();
             var consigneeContactName = tdArr.eq(3).text();//
             var consigneeContactPhone = tdArr.eq(4).text();//
             var consigneeContactAddress = tdArr.eq(5).text();//
@@ -1167,11 +1172,13 @@ debugger;
             var streetName = tdArr.eq(17).text();
             var address = tdArr.eq(18).text();
 
+            contactCodeOut[contactCompanyId] = 1;
+
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input /></td>";
+            consignorout =consignorout + "<td><input value='" + consigneeCustOrderCode + "' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1216,6 +1223,9 @@ debugger;
                 var streetName = tdArr.eq(17).text();
                 var address = tdArr.eq(18).text();
 
+                if(undefined != contactCodeOut[contactCompanyId] && contactCodeOut[contactCompanyId] == 1){
+                    return true;
+                }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
                 consignorout =consignorout + "<td><button type='button'  onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
