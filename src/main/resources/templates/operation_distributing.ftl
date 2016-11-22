@@ -662,6 +662,7 @@
             if(consigneeChosen < 1){
                 alert("请先添加收货方")
             }else{
+                $("#goodsSelectListTbody").html("");
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
         })
@@ -676,13 +677,31 @@
 
         });
         $("#goodsSelectFormBtn").click(function () {
+
             CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
+
                     goodsList =goodsList + "<tr role='row' class='odd'>";
-                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    ///遍历已经选好的货品列表, 如果已存在就将复选框禁掉
+                    /*if($("#goodsInfoListDiv").find("tr").size() < 1){
+                        $("#goodsInfoListDiv").find("tr").each(function(index) {
+                            var tdArr = $(this).children();
+                            var goodsCodeIn = tdArr.eq(2).text();//货品编码
+                            if(cscGoodsVo.goodsCode == goodsCodeIn){
+                                goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' disabled='disabled' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                            }else{
+                                
+                            }
+                        })
+                    }else{
+                           
+                    }*/
+
+                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
+
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//品牌
@@ -696,6 +715,24 @@
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
+                /*debugger
+                if($("#goodsInfoListDiv").find("tr").size() > 1){//页面
+                    var goodsCodeForCheck = {};
+                    $("#goodsInfoListDiv").find("tr").each(function () {//页面
+                        var tdArr = $(this).children();
+                        var goodsCodeForCheckBox = tdArr.eq(2).text();//货品编码
+                        goodsCodeForCheck[goodsCodeForCheckBox] = 1;
+                    })
+                    $("#goodsSelectListTbody").find("tr").each(function () {//弹框
+                        var tdArr = $(this).children();
+                        var goodsCodeForCheckBoxDiv = tdArr.eq(4).text();//货品编码
+                        //var checkBox = tdArr.eq(0).children('');
+                        if(undefined != goodsCodeForCheck[goodsCodeForCheckBoxDiv] && 1 == goodsCodeForCheck[goodsCodeForCheckBoxDiv]){
+                            debugger
+                            tdArr.eq(0).children('input').css('disabled','disabled');
+                        }
+                    })
+                }*/
             },"json");
         });
         $("#goodcheck").change(function () {
@@ -712,17 +749,22 @@
         $("#goodsEnter").click(function () {
             var goodsInfoListDiv = "";
             var preIndex = "0";
+            var goodsCodeOut = {};
             $("#goodsInfoListDiv").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 var index = tdArr.eq(1).text();//序号
                 var goodsCode = tdArr.eq(2).text();//货品编码
+
+                debugger
+                goodsCodeOut[goodsCode] = 1;
+
                 var goodsName = tdArr.eq(3).text();//货品名称
                 var specification = tdArr.eq(4).text();//    货品规格
                 var unit = tdArr.eq(5).text();//    单位
                 var sendGoods = tdArr.eq(6).text();//发货数量
 
 
-                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
@@ -738,12 +780,19 @@
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
+
                     var numIndex = parseInt(preIndex);
                     preIndex = numIndex + 1;
                     var goodsCode = tdArr.eq(4).text();//货品编码
                     var goodsName = tdArr.eq(5).text();//货品名称
                     var specification = tdArr.eq(6).text();//规格
                     var unit = tdArr.eq(7).text();//单位
+
+                    debugger;
+                    if(undefined != goodsCodeOut[goodsCode] && goodsCodeOut[goodsCode] == 1){
+                        return true;
+                    }
+
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";//class=\"btn btn-minier btn-yellow\"
                     goodsInfoListDiv =goodsInfoListDiv + "<td>" +
                             "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
