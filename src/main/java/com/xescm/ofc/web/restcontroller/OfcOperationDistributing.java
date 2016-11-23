@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.dto.csc.*;
+import com.xescm.ofc.domain.dto.csc.domain.CscContact;
+import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsTypeVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
@@ -21,6 +23,7 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,15 +78,15 @@ public class OfcOperationDistributing extends BaseController{
                 if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
                     ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
                 }
+                CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
+                CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
                 resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
-                        ,new CscContantAndCompanyDto(),new CscContantAndCompanyDto(),new CscSupplierInfoDto());
+                        ,consignor,consignee,new CscSupplierInfoDto());
             }
         }catch (Exception ex){
             logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
-
-
     }
 
     //根据选择的客户查询仓库
@@ -98,6 +101,7 @@ public class OfcOperationDistributing extends BaseController{
             logger.error("城配下单查询仓库列表失败!",ex.getMessage());
         }
     }
+
     //根据选择的客户查询货品种类和货品小类
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
@@ -144,5 +148,57 @@ public class OfcOperationDistributing extends BaseController{
 
     }
 
+    private CscContantAndCompanyDto switchOrderDtoToCscCAndCDto(OfcOrderDTO ofcOrderDTO,String purpose) {
+        CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
+        cscContantAndCompanyDto.setCscContact(new CscContact());
+        if(StringUtils.equals("2",purpose)){
+            cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
+//            cscContantAndCompanyDto.getCscContactCompany().setType();//暂缺
+            cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
+            cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsignorContactName());
+            cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsignorContactPhone());
+            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsignorCode());
+            cscContantAndCompanyDto.getCscContact().setContactCode(ofcOrderDTO.getConsignorContactCode());
+            cscContantAndCompanyDto.getCscContact().setProvinceName(ofcOrderDTO.getDepartureProvince());
+            cscContantAndCompanyDto.getCscContact().setCityName(ofcOrderDTO.getDepartureCity());
+            cscContantAndCompanyDto.getCscContact().setAreaName(ofcOrderDTO.getDepartureDistrict());
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDepartureTowns());
+            }
+            String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
+            cscContantAndCompanyDto.getCscContact().setProvince(departureCode[0]);
+            cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
+            cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreet(departureCode[3]);
+            }
+            cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDeparturePlace());
+        }else if(StringUtils.equals("1",purpose)){
+            cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
+//            cscContantAndCompanyDto.getCscContactCompany().setType();//暂缺
+            cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
+            cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsigneeContactName());
+            cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsigneeContactPhone());
+            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsigneeCode());
+            cscContantAndCompanyDto.getCscContact().setContactCode(ofcOrderDTO.getConsigneeContactCode());
+            cscContantAndCompanyDto.getCscContact().setProvinceName(ofcOrderDTO.getDestinationProvince());
+            cscContantAndCompanyDto.getCscContact().setCityName(ofcOrderDTO.getDestinationCity());
+            cscContantAndCompanyDto.getCscContact().setAreaName(ofcOrderDTO.getDestinationDistrict());
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDestinationTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDestinationTowns());
+            }
+            String[] destinationCode = ofcOrderDTO.getDestinationCode().split(",");
+            cscContantAndCompanyDto.getCscContact().setProvince(destinationCode[0]);
+            cscContantAndCompanyDto.getCscContact().setCity(destinationCode[1]);
+            cscContantAndCompanyDto.getCscContact().setArea(destinationCode[2]);
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreet(destinationCode[3]);
+            }
+            cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDestination());
+        }
 
+
+        return cscContantAndCompanyDto;
+    }
 }

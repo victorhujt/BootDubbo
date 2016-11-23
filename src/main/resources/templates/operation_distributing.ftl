@@ -425,7 +425,7 @@
             <label class="control-label col-label no-padding-right" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" value="假的"  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12" name="" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                     <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
                     <span style="cursor:pointer" id="custListDivBlock">
@@ -437,9 +437,9 @@
             <label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="warehouseCode" name="store">
-                        <option value="00001">北京仓库</option>
-                        <option value="00002">天津仓库</option>
+                    <select  id="warehouseCode" name="store" onclick="warehouseByCust()">
+                        <#--<option value="00001">北京仓库</option>
+                        <option value="00002">天津仓库</option>-->
                     </select>
                 </div>
             </div>
@@ -715,14 +715,11 @@
                             }
                         })
                     }else{
-                           
                     }*/
-
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//品牌
+                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
@@ -837,6 +834,24 @@
 
         });
     })
+
+
+    function warehouseByCust(){
+        if(!validateCustChosen()){//如果没选客户
+            alert("请先选择客户");
+        }else{
+            var custId = $("#custId").val();
+            $("#warehouseCode option").remove();
+            CommonClient.post("/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {//0000
+                data=eval(data);
+                $.each(data,function (index,warehouse) {
+                    $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
+                });
+            })
+
+        }
+    }
+
     function deleteGood(obj) {//000
         if(ifConsigneeConfirm){
             alert('您已确认收货方,无法删除!');
@@ -1031,9 +1046,28 @@
                     title : '确认操作'
                 }, function(index){
                     //自动加载
+                    $("#consignorName").val(contactCompanyNameAuto);
+                    $("#consignorContactName").val(contactNameAuto);
+                    $("#consignorContactPhone").val(phoneAuto);
+                    $("#consignorContactAddress").val(detailAddressAuto);
+                    $("#consignorType").val(typeAuto);
+                    $("#consignorContactCompanyId").val(contactCompanyIdAuto);
+                    $("#consignorContactCode").val(contactCodeAuto);
+                    $("#consignorPhone").val(phoneAuto);
+                    $("#consignorProvince").val(provinceAuto);
+                    $("#consignorProvinceName").val(provinceNameAuto);
+                    $("#consignorCity").val(cityAuto);
+                    $("#consignorCityName").val(cityNameAuto);
+                    $("#consignorArea").val(areaAuto);
+                    $("#consignorAreaName").val(areaNameAuto);
+                    $("#consignorStreet").val(streetAuto);
+                    $("#consignorStreetName").val(streetNameAuto);
+                    $("#consignorAddress").val(addressAuto);
+
+                    $("#showDepaturePlace").html(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
 
 
-
+                    layer.close(index);
                 }, function(index){
                     layer.close(index);
                 });
