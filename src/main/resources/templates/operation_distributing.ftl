@@ -74,7 +74,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品小类</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <select id="goodsSecTypeId" name="goodsSecTypeId"></select>
+                            <select id="goodsSecTypeId" name="goodsTypeSonId"></select>
                         </div>
                     </div>
                 </div>
