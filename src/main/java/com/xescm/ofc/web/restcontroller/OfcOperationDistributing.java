@@ -102,7 +102,7 @@ public class OfcOperationDistributing extends BaseController{
         }
     }
 
-    //根据选择的客户查询货品种类和货品小类
+    //根据选择的客户查询货品种类
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
     public void queryGoodsTypeByCustId(String custId,Model model,HttpServletResponse response){
@@ -110,10 +110,25 @@ public class OfcOperationDistributing extends BaseController{
         try{
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
-            ///0000
+            cscGoodsType.setCustomerId(custId);
+            Wrapper<List<CscGoodsTypeVo>> wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+        }catch (Exception ex){
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
+        }
+    }
 
-
-
+    //根据选择的客户和货品种类查询货品小类
+    @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
+    @ResponseBody
+    public void queryGoodsSecTypeByCAndT(String custId, String goodsType,Model model,HttpServletResponse response){
+        logger.info("==> custId={}", custId);
+        logger.info("==> goodsType={}", goodsType);
+        try{
+            //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            CscGoodsType cscGoodsType = new CscGoodsType();
+            cscGoodsType.setCustomerId(custId);
+            cscGoodsType.setPid(goodsType);
             Wrapper<List<CscGoodsTypeVo>> wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             response.getWriter().print(JSONUtils.objectToJson(wrapper));
         }catch (Exception ex){

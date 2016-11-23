@@ -10,11 +10,12 @@ Target Server Type    : MYSQL
 Target Server Version : 50619
 File Encoding         : 65001
 
-Date: 2016-11-19 16:57:07
+Date: 2016-11-23 20:17:59
 */
 DROP DATABASE IF EXISTS xescm_ofc_test;
 CREATE DATABASE xescm_ofc_test DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE xescm_ofc_test;
+SET FOREIGN_KEY_CHECKS=0;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -28,7 +29,7 @@ CREATE TABLE `ofc_create_order_error_log` (
   `cust_code` varchar(255) DEFAULT '' COMMENT '货主编码',
   `error_log` varchar(1000) DEFAULT '' COMMENT '错误信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
 
 -- ----------------------------
 -- Table structure for ofc_distribution_basic_info
@@ -102,7 +103,7 @@ CREATE TABLE `ofc_finance_information` (
   `print_invoice` varchar(10) DEFAULT NULL COMMENT '是否打印发票(电商)',
   `buyer_payment_method` varchar(100) DEFAULT NULL COMMENT '买家支付方式(电商)',
   `insure` varchar(10) DEFAULT NULL COMMENT '是否保价(电商)',
-  `insure_value` varchar(100) DEFAULT NULL COMMENT '保价金额(电商)',
+  `insure_value` decimal(18,2) DEFAULT NULL COMMENT '保价金额(电商)',
   `pick_up_goods` varchar(10) DEFAULT NULL COMMENT '是否上门提货',
   `home_delivery_fee` decimal(18,2) DEFAULT NULL COMMENT '上门提货费用',
   `cargo_insurance_fee` decimal(18,2) DEFAULT NULL COMMENT '货物保险费用',
@@ -193,6 +194,15 @@ CREATE TABLE `ofc_goods_details_info` (
   `weight_unit_price` decimal(18,2) DEFAULT NULL COMMENT '重量单价 ',
   `volume_unit_price` decimal(18,2) DEFAULT NULL COMMENT '体积单价 '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货品明细信息';
+
+-- ----------------------------
+-- Table structure for ofc_merchandiser
+-- ----------------------------
+DROP TABLE IF EXISTS `ofc_merchandiser`;
+CREATE TABLE `ofc_merchandiser` (
+  `merchandiser` varchar(20) NOT NULL COMMENT '开单员',
+  PRIMARY KEY (`merchandiser`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for ofc_order_status

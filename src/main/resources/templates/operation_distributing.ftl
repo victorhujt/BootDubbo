@@ -66,7 +66,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品种类</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <select name="goodsTypeId"></select>
+                            <select id="goodsTypeId" name="goodsTypeId" onclick="loadSecGoodsType()"></select>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品小类</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <select name="goodsTypeId"></select>
+                            <select id="goodsSecTypeId" name="goodsSecTypeId"></select>
                         </div>
                     </div>
                 </div>
@@ -839,20 +839,25 @@
     function warehouseByCust(){
         if(!validateCustChosen()){//如果没选客户
             alert("请先选择客户");
-        }else{
-            var custId = $("#custId").val();
-            $("#warehouseCode option").remove();
-            CommonClient.post("/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {//0000
-                data=eval(data);
-                $.each(data,function (index,warehouse) {
-                    $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
-                });
-            })
-
         }
     }
 
-    function deleteGood(obj) {//000
+    function loadSecGoodsType() {
+        var custId = $("#custId").val();
+        var goodsType = $("#goodsTypeId").val();
+        $("#goodsTypeId option").remove();
+        $("#goodsSecTypeId option").remove();
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":goodsType},function(data) {
+            data=eval(data);
+            $.each(data,function (index,secGoodsType) {
+                $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
+            });
+        })
+    }
+
+
+
+    function deleteGood(obj) {
         if(ifConsigneeConfirm){
             alert('您已确认收货方,无法删除!');
         }else{
@@ -1506,6 +1511,29 @@
         }else{
             $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
         }
+
+        //加载完客户后自动加载仓库列表, 和货品种类
+        //加载仓库列表
+        var custId = $("#custId").val();
+        $("#warehouseCode option").remove();
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
+            data=eval(data);
+            $.each(data,function (index,warehouse) {
+                $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
+            });
+        })
+        //加载货品一级种类
+        //goodsTypeId  goodsSecTypeId
+        $("#goodsTypeId option").remove();
+        $("#goodsSecTypeId option").remove();
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
+            data=eval(data);
+            $.each(data,function (index,goodsType) {
+                $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
+            });
+        })
+
+
     });
 
     $("#to_operation_distributing_excel").click(function () {
