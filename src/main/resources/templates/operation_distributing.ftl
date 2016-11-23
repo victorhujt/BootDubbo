@@ -1545,7 +1545,7 @@
 
 
 
-    $("#orderPlaceConTableBtn").click(function () {
+    $("#orderPlaceConTableBtn").click(function () {//000
 
         if(!validateForm()){
             return;
@@ -1601,15 +1601,7 @@
             var streetCode = $("#consignorStreet").val();
             orderInfo.departureTowns = $("#consignorStreetName").val();
             orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
-            //orderInfo.departurePlace = $("#consignorAddress").val();
-
-
-
-
-
-
-
-
+                 //orderInfo.departurePlace = $("#consignorAddress").val();
 
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
@@ -1672,22 +1664,55 @@
         })
 
         var param = JSON.stringify(orderLists);
+        if(StringUtil.isEmpty(param)){
+            return;
+        }
         xescm.common.submit("/ofc/distributing/placeOrdersListCon"
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
-                    //xescm.common.goBack("/ofc/orderPlace");
                 })
     })
 
-    function validateForm() {
-        //校验是否有某个收货人下没有货品
-        //校验货品某一行的需求数量不是0
+    function validateForm() {//000
+        //校验是否有某个收货人下所有货品的数量都是0//能不能直接从HashMap下手//000
+        //校验货品某一行的需求数量不是//000
         //还有页面所有的校验都还没有做
         //客户订单编号的校验也不好做
+        //添加批次号
 
-
-        goodsAndConsigneeMap
+        $("#consigneeInfoListDiv").find("tr").each(function (index) {
+            var goodsList = [];
+            var goods = null;
+            var tdArr = $(this).children();
+            var consigneeName = tdArr.eq(1).text();//名称
+            var contactCompanyId = tdArr.eq(7).text();
+            debugger
+            //遍历货品信息
+            var goodsIsEmpty = false;
+            $("#goodsInfoListDiv").find("tr").each(function(index) {
+                goods = {};
+                var tdArr = $(this).children();
+                var goodsIndex = tdArr.eq(1).text();//货品序号
+                var goodsCode = tdArr.eq(2).text();//货品编码
+                var goodsName = tdArr.eq(3).text();//货品名称
+                var goodsTotalAmount = tdArr.eq(6).text();//总数量
+                if(goodsTotalAmount == 0){
+                    alert("货品列表中【"+goodsName+"】的数量为空,请检查!");
+                    return false;
+                }
+                var mapKey = goodsCode + "@" + goodsIndex;
+                var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                var goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                if(goodsAmount == 0){
+                    goodsIsEmpty = true;
+                }
+            })
+            if(true == goodsIsEmpty){
+                alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                return false;
+            }
+        })
     }
 
 
