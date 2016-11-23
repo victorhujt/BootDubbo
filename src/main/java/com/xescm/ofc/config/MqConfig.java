@@ -83,7 +83,7 @@ public class MqConfig {
     @Resource
     CreateOrderApiConsumer createOrderApiConsumer;
 
-    /*@Bean(initMethod = "start", destroyMethod = "shutdown")
+//    @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumer(){
         System.out.println("yyyyyyyyy消费开始---:");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
@@ -91,7 +91,7 @@ public class MqConfig {
         return consumer;
     }
 
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
+//    @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
         logger.debug("createOrderApi消费开始---");
         Consumer consumer = ONSFactory.createConsumer(consumerProperties());
@@ -99,7 +99,7 @@ public class MqConfig {
         initProducer();
         return consumer;
     }
-*/
+
 
     private Properties consumerProperties(){
         Properties consumerProperties = new Properties();

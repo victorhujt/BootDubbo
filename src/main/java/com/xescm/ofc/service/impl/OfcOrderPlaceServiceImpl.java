@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -326,6 +327,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         +" "+"订单已创建");
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 //添加该订单的货品信息
+                List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<OfcGoodsDetailsInfo>();
                 for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
                     String orderCode = ofcFundamentalInformation.getOrderCode();
                     ofcGoodsDetails.setOrderCode(orderCode);
@@ -334,10 +336,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
                     ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
                     ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+                    goodsDetailsList.add(ofcGoodsDetails);
                 }
                 //添加基本信息
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
-                ofcOrderManageService.orderAudit(ofcFundamentalInformation.getOrderCode(),ofcOrderStatus.getOrderStatus(),
+                ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
                         "review",authResDtoByToken);
             }else {
                 throw new BusinessException("未知操作!系统无法识别!");

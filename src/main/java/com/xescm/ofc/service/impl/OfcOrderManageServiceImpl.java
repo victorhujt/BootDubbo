@@ -285,21 +285,41 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else{
                 ofcTransplanInfo.setSingleSourceOfTransport("6003");
             }
-
-            ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
-            ofcTransplanInfo.setShippinCustomerName(ofcDistributionBasicInfo.getConsignorName());
-            ofcTransplanInfo.setShippingCustomerContact(ofcDistributionBasicInfo.getConsignorContactName());
-            ofcTransplanInfo.setCustomerContactPhone(ofcDistributionBasicInfo.getConsignorContactPhone());
-            ofcTransplanInfo.setReceivingCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());
-            ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
-            ofcTransplanInfo.setReceivingCustomerContact(ofcDistributionBasicInfo.getConsigneeContactName());
-            ofcTransplanInfo.setReceivingCustomerContactPhone(ofcDistributionBasicInfo.getConsigneeContactPhone());
-            ofcTransplanInfo.setShippingAddress(ofcDistributionBasicInfo.getDeparturePlace());
-            ofcTransplanInfo.setReceivingCustomerAddress(ofcDistributionBasicInfo.getDestination());
-            ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
-            String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-            BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2]))).divide(BigDecimal.valueOf(1000000));
-            ofcTransplanInfo.setVolume(volume);
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()).equals("")){
+                ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorName()).equals("")){
+                ofcTransplanInfo.setShippinCustomerName(ofcDistributionBasicInfo.getConsignorName());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactName()).equals("")){
+                ofcTransplanInfo.setShippingCustomerContact(ofcDistributionBasicInfo.getConsignorContactName());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactPhone()).equals("")){
+                ofcTransplanInfo.setCustomerContactPhone(ofcDistributionBasicInfo.getConsignorContactPhone());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()).equals("")){
+                ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()).equals("")){
+                ofcTransplanInfo.setReceivingCustomerContact(ofcDistributionBasicInfo.getConsigneeContactName());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()).equals("")){
+                ofcTransplanInfo.setReceivingCustomerContactPhone(ofcDistributionBasicInfo.getConsigneeContactPhone());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace()).equals("")){
+                ofcTransplanInfo.setShippingAddress(ofcDistributionBasicInfo.getDeparturePlace());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()).equals("")){
+                ofcTransplanInfo.setReceivingCustomerAddress(ofcDistributionBasicInfo.getDestination());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()).equals("")){
+                ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
+                String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
+                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2]))).divide(BigDecimal.valueOf(1000000));
+                ofcTransplanInfo.setVolume(volume);
+            }
             ofcTransplanInfoService.save(ofcTransplanInfo);
             logger.debug("计划单信息保存成功");
             ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -782,4 +802,49 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage(),ex);
         }
     }
+
+    @Override
+    public String orderAuditByTrans(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,
+                                    OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFinanceInformation ofcFinanceInformation,
+                                    String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(ofcDistributionBasicInfo.getOrderCode());
+        ofcOrderStatus.setOrderStatus(orderStatus);
+        logger.debug(ofcOrderStatus.toString());
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
+            if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
+                ofcOrderStatus.setOrderStatus(ALREADYEXAMINE);
+                ofcOrderStatus.setStatusDesc("已审核");
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单审核完成");
+                ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcOrderStatus.setLastedOperTime(new Date());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperTime(new Date());
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.TRANSPORTORDER)){
+                    //运输订单
+                    OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                    ofcTransplanInfo.setProgramSerialNumber("1");
+                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    }
+                }else {
+                    throw new BusinessException("订单类型有误");
+                }
+                logger.debug("计划单创建成功");
+            }else {
+                throw new BusinessException("缺少标志位");
+            }
+            ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+            ofcOrderStatus.setLastedOperTime(new Date());
+            ofcOrderStatusService.save(ofcOrderStatus);
+            return String.valueOf(Wrapper.SUCCESS_CODE);
+        }else {
+            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+        }
+    }
+
 }
