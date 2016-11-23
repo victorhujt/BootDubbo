@@ -782,6 +782,8 @@
 
     function main(){
         validateForm();
+        $("#weightCount").html("0");
+        $("#quantityCount").html("0");
     }
     /**
      *表单验证
@@ -1645,7 +1647,7 @@
                         channel = "";
                     }
                     custList =custList + "<tr role='row' class='odd'>";
-                    custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                    custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     custList =custList + "<td>"+(index+1)+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.type+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
@@ -1693,7 +1695,16 @@
         });
 
         $("#goodsSelectFormBtn").click(function () {
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
+            var cscGoodes = {};
+            var groupId = $("#custGroupId").val();
+            var custId = $("#custId").val();
+            var goodsCode = $("#goodsCodeCondition").val();
+            var goodsName = $("#goodsNameCondition").val();
+            cscGoodes.goodsCode = goodsCode;
+            cscGoodes.goodsName = goodsName;
+            var param = JSON.stringify(cscGoodes);
+            debugger;
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", {"cscGoodes":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
 
                 var goodsList = "";
@@ -1818,10 +1829,10 @@
                     cscContantAndCompanyDto.cscContact = cscContact;
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
-
+                    var groupId = $("#custGroupId").val();
+                    var custId = $("#custId").val();
                     
-                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        
+                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
@@ -1880,7 +1891,9 @@
                     cscContantAndCompanyDto.cscContact = cscContact;
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
-                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
+                    var groupId = $("#custGroupId").val();
+                    var custId = $("#custId").val();
+                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId},function (data) {
                         data = eval(data);
                         console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
                         $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1979,12 +1992,14 @@
 
         $("#addGoods").click(function () {
             var goodsInfoListDiv = "";
+            var groupId = $("#custGroupId").val();
+            var custId = $("#custId").val();
             goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
             goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                     "<select  id='goodsCategory' name='goodsCategory'>";
             if($("#goodsInfoListDiv").find("tr").length<1){
-                    CommonClient.post(sys.rootPath + "/ofc/goodsSelect", null, function(data) {
+                    CommonClient.post(sys.rootPath + "/ofc/goodsSelect", {"groupId":groupId,"custId":custId}, function(data) {
                         data=eval(data);
                         $.each(data,function (index,cscGoodsVo) {
                             goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeName + "'>" + cscGoodsVo.goodsTypeName + "</option>";
