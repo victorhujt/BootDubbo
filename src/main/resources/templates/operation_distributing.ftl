@@ -1546,6 +1546,12 @@
 
 
     $("#orderPlaceConTableBtn").click(function () {
+
+        if(!validateForm()){
+            return;
+        }
+
+
         //如果没有仓库信息就是城配运输订单
         //如果有仓库信息就是仓配订单, 销售出库,
         var orderLists = [];
@@ -1674,6 +1680,17 @@
                 })
     })
 
+    function validateForm() {
+        //校验是否有某个收货人下没有货品
+        //校验货品某一行的需求数量不是0
+        //还有页面所有的校验都还没有做
+        //客户订单编号的校验也不好做
+
+
+        goodsAndConsigneeMap
+    }
+
+
     function HashMap() {
         /** Map 大小 **/
         var size = 0;
@@ -1759,6 +1776,8 @@
             return size;
         }
     }
+
+
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
