@@ -55,11 +55,7 @@ public class OfcJumpontroller extends BaseController{
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);
         try{
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
+            String custId = getCustId();
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerId(custId);
             Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
@@ -116,6 +112,7 @@ public class OfcJumpontroller extends BaseController{
 
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model){
+
         return "operation_distributing";
     }
 
@@ -168,5 +165,14 @@ public class OfcJumpontroller extends BaseController{
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
         modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
         return modelAndView;
+    }
+
+    public String getCustId() {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
+        return custId;
     }
 }

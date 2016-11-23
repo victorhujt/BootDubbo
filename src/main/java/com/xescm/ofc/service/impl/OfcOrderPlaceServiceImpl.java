@@ -139,6 +139,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         }else{
                             throw new BusinessException("四级地址编码为空!");
                         }
+                       // ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHEKABAN);
 
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
@@ -415,12 +416,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
 
         //如果订单类型是卡班订单, 则向DMS推送该订单
-        if(OrderConstEnum.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
+       /* if(OrderConstEnum.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
             Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
+
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException("向分拣中心推送卡班订单失败");
             }
-        }
+        }*/
         return ofcDistributionBasicInfo;
     }
 

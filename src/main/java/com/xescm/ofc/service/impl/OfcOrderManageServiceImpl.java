@@ -138,6 +138,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                     }
+                    if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
+                        //如果订单类型是卡班订单, 则向DMS推送该运输计划单
+                        //这里需要调整
+                        ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
+                        OfcDistributionBasicInfo distributionBasicInfo = new OfcDistributionBasicInfo();
+                        Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
+                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                            throw new BusinessException("向分拣中心推送卡班订单失败");
+                        }
+                    }
+
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
@@ -298,16 +309,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
             logger.debug("计划单资源状态保存成功");
 
-            //如果订单类型是卡班订单, 则向DMS推送该运输计划单
-            //这里需要调整
-            if(OrderConstEnum.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
-                ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                OfcDistributionBasicInfo distributionBasicInfo = new OfcDistributionBasicInfo();
-                Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
-                if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                    throw new BusinessException("向分拣中心推送卡班订单失败");
-                }
-            }
+
         } catch (IllegalAccessException e) {
             throw new BusinessException(e.getMessage());
         } catch (InvocationTargetException e) {

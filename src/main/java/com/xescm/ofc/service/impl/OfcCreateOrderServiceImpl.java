@@ -258,7 +258,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         cscContantAndCompanyVo.setCustomerId(custId);
         cscContantAndCompanyVo.setUserId(CreateOrderApiConstant.USERID);
         cscContantAndCompanyVo.setUserName(CreateOrderApiConstant.USERNAME);
-        if (StringUtils.equals("1", purpose)) {
+        if (StringUtils.equals("1", purpose)) {//收
             CscContact cscContact = new CscContact();
             cscContact.setPurpose("1");
             cscContact.setContactCode(createOrderEntity.getConsignorName());
@@ -270,6 +270,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             cscContact.setStreetName(createOrderEntity.getConsignorTown());
             cscContact.setDetailAddress(createOrderEntity.getConsignorAddress());
             cscContantAndCompanyVo.setCscContact(cscContact);
+            cscContantAndCompanyVo.getCscContactCompany().setContactCompanyName(createOrderEntity.getConsigneeName());
         } else if (StringUtils.equals("2", purpose)) {
             CscContact cscContact = new CscContact();
             cscContact.setPurpose("2");

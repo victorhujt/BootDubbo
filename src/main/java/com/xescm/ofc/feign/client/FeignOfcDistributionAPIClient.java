@@ -33,7 +33,7 @@ public class FeignOfcDistributionAPIClient {
     }
 
     public Wrapper<?> addDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo){
-        logger.debug("==>通过客户编码取仓库 ofcDistributionBasicInfo={}", ofcDistributionBasicInfo);
+        logger.debug("==>推送卡班订单 ofcDistributionBasicInfo={}", ofcDistributionBasicInfo);
         if(null == ofcDistributionBasicInfo){
             throw new BusinessException("参数为空");
         }

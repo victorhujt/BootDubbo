@@ -16,11 +16,11 @@ public class CscGoodsApiVo implements Serializable {
     private Long version;
 
     /**
-     * 货品类型
+     * 货品小类id
      */
     private String goodsType;
     /**
-     * 货品类型id
+     * 货品大类id
      */
     private String goodsTypeId;
 
@@ -371,4 +371,5 @@ public class CscGoodsApiVo implements Serializable {
     public void setGoodsTypeId(String goodsTypeId) {
         this.goodsTypeId = goodsTypeId;
     }
+
 }
