@@ -12,10 +12,7 @@ File Encoding         : 65001
 
 Date: 2016-11-23 20:17:59
 */
-DROP DATABASE IF EXISTS xescm_ofc_test;
-CREATE DATABASE xescm_ofc_test DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE xescm_ofc_test;
-SET FOREIGN_KEY_CHECKS=0;
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
