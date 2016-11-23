@@ -234,7 +234,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="departurePlace" value = "${(consignorMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="departurePlace" value = "${((ofcOrderDTO.departureProvince)?replace('null',''))!""}${((ofcOrderDTO.departureCity)?replace('null',''))!""}${((ofcOrderDTO.departureDistrict)!"")?replace('null','')}${((ofcOrderDTO.departureTowns)?replace('null',''))!""}${((ofcOrderDTO.departurePlace)?replace('null',''))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -242,7 +242,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="destination" value = "${(consigneeMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="destination" value = "${((ofcOrderDTO.destinationProvince)?replace('null',''))!""}${((ofcOrderDTO.destinationCity)?replace('null',''))!""}${(ofcOrderDTO.destinationDistrict)!""}${((ofcOrderDTO.destinationTowns)?replace('null',''))!""}${((ofcOrderDTO.destination)?replace('null',''))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -344,7 +344,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.consignorName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -352,7 +352,23 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.contactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.consignorContactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.consignorContactPhone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${((ofcOrderDTO.departureProvince)?replace('null',''))!""}${((ofcOrderDTO.departureCity)?replace('null',''))!""}${((ofcOrderDTO.departureDistrict)!"")?replace('null','')}${((ofcOrderDTO.departureTowns)?replace('null',''))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -364,14 +380,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                                            <div class="col-sm-3">
-                                                <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.phone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                </div>
-                                            </div>
-                                        </div>
+
 
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
@@ -381,14 +390,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
-                                            <div class="col-sm-3">
-                                                <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consignorMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
@@ -407,7 +409,7 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.contactCompanyName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.consigneeName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -415,7 +417,23 @@
                                             <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                             <div class="col-sm-3">
                                                 <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.contactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.consigneeContactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${(ofcOrderDTO.consigneeContactPhone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                            <div class="col-sm-3">
+                                                <div class="clearfix">
+                                                    <input id="orderTime" value = "${((ofcOrderDTO.destinationProvince)?replace('null',''))!""}${((ofcOrderDTO.destinationCity)?replace('null',''))!""}${(ofcOrderDTO.destinationDistrict)!""}${((ofcOrderDTO.destinationTowns)?replace('null',''))!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
                                         </div>
@@ -427,14 +445,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                                            <div class="col-sm-3">
-                                                <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.phone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                </div>
-                                            </div>
-                                        </div>
+
 
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
@@ -444,14 +455,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
-                                            <div class="col-sm-3">
-                                                <div class="clearfix">
-                                                    <input id="orderTime" value = "${(consigneeMessage.detailAddress)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div class="form-group">
                                             <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                             <div class="col-sm-3">
