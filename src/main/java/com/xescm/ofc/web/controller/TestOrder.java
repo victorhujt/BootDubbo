@@ -1,7 +1,10 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.dto.wms.AddressDto;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.client.FeignAddressCodeClient;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,9 +25,8 @@ public class TestOrder extends BaseController {
     @RequestMapping(value = "/order", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String test() throws Exception {
-        createOrderService.createOrder(queryJson());
+        return createOrderService.createOrder(queryJson());
 //        createOrderService.createOrder(queryJ());
-        return "";
     }
 
     public String queryJson() {
@@ -76,7 +78,7 @@ public class TestOrder extends BaseController {
                 "        \"consigneeAddress\": \"泰鹏大厦\",\n" +
                 "        \"warehouseCode\": null,\n" +
                 "        \"warehouseName\": null,\n" +
-                "        \"provideTransport\": null,\n" +
+                "        \"provideTransport\": \"1\",\n" +
                 "        \"supportName\": null,\n" +
                 "        \"supportContact\": null,\n" +
                 "        \"supportPhone\": null,\n" +
@@ -210,6 +212,23 @@ public class TestOrder extends BaseController {
                 "        }\n" +
                 "    ]\n" +
                 "}";
+    }
+
+    @Autowired
+    private FeignAddressCodeClient feignAddressCodeClient;
+
+    @RequestMapping(value = "address")
+    public String testAddress(){
+        String provi = "北京";
+        String city = "北京";
+        String coun = "海淀区";
+        AddressDto addressDto = new AddressDto();
+        addressDto.setProvinceName(provi);
+        addressDto.setCityName(city);
+        addressDto.setDistrictName(coun);
+        String result = feignAddressCodeClient.findCodeByName(addressDto);
+        System.out.println(result);
+        return result;
     }
 
 }
