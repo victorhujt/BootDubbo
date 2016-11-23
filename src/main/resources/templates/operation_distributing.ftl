@@ -392,7 +392,7 @@
 <br/>
 <br/>
 <br/>
-<form id="" method="post" class="form-horizontal" role="form">
+<form id="operationDistributingFormValidate" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="">订单日期</label>
@@ -425,7 +425,7 @@
             <label class="control-label col-label no-padding-right" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                     <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
                     <span style="cursor:pointer" id="custListDivBlock">
@@ -437,7 +437,7 @@
             <label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="warehouseCode" name="store" onclick="warehouseByCust()">
+                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()">
                         <#--<option value="00001">北京仓库</option>
                         <option value="00002">天津仓库</option>-->
                     </select>
@@ -446,7 +446,7 @@
             <label class="control-label col-label no-padding-right" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="" id="notes" type="text" placeholder="备注"/>
+                    <input class="col-xs-10 col-xs-12" name="notes" id="notes" type="text" placeholder="备注"/>
                 </div>
             </div>
         </div>
@@ -652,7 +652,7 @@
     });
 
     function main() {
-        //validateForm();
+        validateFormData();
         $("#merchandiser").editableSelect();
         $("#store").editableSelect();
     }
@@ -1803,6 +1803,90 @@
     }
 
 
+
+
+
+    /**
+     *表单验证
+     */
+
+    function validateFormData() {
+        var ofc_url = $("#ofc_url").html();
+        $('#operationDistributingFormValidate').validate({
+            errorElement : 'div',
+            errorClass : 'help-block',
+            focusInvalid : false,
+            ignore : "",
+            rules : {
+                orderTime:{
+                    required:true
+                },
+                merchandiser:{
+                    required:true
+                },
+                custName: {
+                    required:true,
+                    maxlength:100
+                },
+                warehouseCode : {
+                    required:true
+                },
+                notes:{
+                    maxlength:300
+                },
+                custOrderCode:{
+                    maxlength:30,
+                    remote:{
+                        url : ofc_url + "/ofc/checkCustOrderCode",
+                        type : "POST",
+                        dataType : "json",
+                        data : {
+                            custOrderCode : function() {
+                                return $("#custOrderCode").val();
+                            }
+                        }
+                    }
+                }
+            },
+            messages : {
+                orderTime:{
+                    required:"请输入订单日期"
+                },
+                merchandiser:{
+                    required:"请选择开单员"
+                },
+                custName: {
+                    required:"请选择客户",
+                    maxlength:"超过最大长度"
+                },
+                warehouseCode : {
+                    required:"请选择仓库"
+                },
+                notes:{
+                    maxlength:"超过最大长度"
+                },
+                custOrderCode:{
+
+                    maxlength: "超过最大长度",
+                    remote: "该客户订单编号已经存在"
+                }
+
+            },
+            highlight : function(e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+            success : function(e) {
+                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(e).remove();
+            },
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
+            },
+            invalidHandler : function(form) {
+            }
+        });
+
+    }
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
