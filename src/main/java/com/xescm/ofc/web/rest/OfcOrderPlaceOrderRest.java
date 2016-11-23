@@ -196,14 +196,20 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
-    public void goodsSelectByCscApi(Model model, CscGoodsApiDto cscGoods, HttpServletResponse response){
+    public void goodsSelectByCscApi(Model model, CscGoodsApiDto cscGoods,String groupId, String custId, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
+            if(PubUtils.isSEmptyOrNull(groupId)){
+                queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+            }else{
+                queryCustomerIdDto.setGroupId(groupId);
+            }
+            if(PubUtils.isSEmptyOrNull(custId)){
+                Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+                custId = (String) wrapper.getResult();
+            }
             cscGoods.setCustomerId(custId);
             cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
             cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));

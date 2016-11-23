@@ -25,6 +25,15 @@ public class CscGoodsApiVo implements Serializable {
     private String goodsTypeId;
 
     /**
+     * 一级货品类型id
+     */
+    private String parentGoodsTypeId;
+    /**
+     * 一级货品类型名称
+     */
+    private String parentGoodsType;
+
+    /**
      * 货品编码
      */
     private String goodsCode;
@@ -370,5 +379,21 @@ public class CscGoodsApiVo implements Serializable {
 
     public void setGoodsTypeId(String goodsTypeId) {
         this.goodsTypeId = goodsTypeId;
+    }
+
+    public String getParentGoodsTypeId() {
+        return parentGoodsTypeId;
+    }
+
+    public void setParentGoodsTypeId(String parentGoodsTypeId) {
+        this.parentGoodsTypeId = parentGoodsTypeId;
+    }
+
+    public String getParentGoodsType() {
+        return parentGoodsType;
+    }
+
+    public void setParentGoodsType(String parentGoodsType) {
+        this.parentGoodsType = parentGoodsType;
     }
 }

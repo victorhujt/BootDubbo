@@ -366,6 +366,8 @@
                                <div class="col-xs-3">
                                    <div class="clearfix">
                                        <input class="col-xs-10 col-xs-12" readonly name="custName" id="custName" type="text" placeholder="客户名称" />
+                                       <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
+                                       <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
                                        <span style="cursor:pointer" id="custListDivBlock"><button type="button" class="btn btn-minier btn-inverse no-padding-right" id="custNameSel">选择</button></span>
                                    </div>
                                </div></div>
@@ -1450,6 +1452,50 @@
         }
     }
 
+    //出发地
+    function departurePlace() {
+        var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
+        var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
+        var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
+        var departure_place="";
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[0])){
+            departure_place =departure_place + consignorAddressNameMessage[0];
+        }
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[1])){
+            departure_place =departure_place + consignorAddressNameMessage[1];
+        }
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[2])){
+            departure_place =departure_place + consignorAddressNameMessage[2];
+        }
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
+            departure_place =departure_place + consignorAddressNameMessage[3];
+        }
+        $("#departure_place").html(departure_place);
+    }
+
+    //目的地
+    function destination() {
+        var consignorAddressMessage = $("#city-picker3-consignee").val().split('~');
+        var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
+        var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
+        var destination="";
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[0])){
+            destination =destination + consignorAddressNameMessage[0];
+        }
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[1])){
+            destination =destination + consignorAddressNameMessage[1];
+        }
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[2])){
+            destination =destination + consignorAddressNameMessage[2];
+        }
+        if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
+            destination =destination + consignorAddressNameMessage[3];
+        }
+        $("#destination").html(destination);
+    }
+
+
+
     $(function(){
 
         $("#pickUpGoodsV").change(function(){
@@ -1594,13 +1640,19 @@
                 data=eval(data);
                 var custList = "";
                 $.each(data,function (index,cscCustomerVo) {
+                    var channel = cscCustomerVo.channel;
+                    if(null == channel){
+                        channel = "";
+                    }
                     custList =custList + "<tr role='row' class='odd'>";
                     custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     custList =custList + "<td>"+(index+1)+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.type+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
-                    custList =custList + "<td>"+cscCustomerVo.channel+"</td>";
+                    custList =custList + "<td>"+channel+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+                    custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
+                    custList =custList + "<td style='display: none'>"+cscCustomerVo.id+"</td>";
                     custList =custList + "</tr>";
                     $("#custListDivTbody").html(custList);
                 });
@@ -1618,7 +1670,11 @@
                     var customerName = tdArr.eq(3).text();//公司名称
                     var channel = tdArr.eq(4).text();//    渠道
                     var productType = tdArr.eq(5).text();//    产品类别
+                    var groupId = tdArr.eq(6).text();//    产品类别
+                    var custId = tdArr.eq(7).text();//    产品类别
                     $("#custName").val(customerName);
+                    $("#custGroupId").val(groupId);
+                    $("#custId").val(custId);
                 }
             });
             if(custEnterTag==""){
@@ -1629,43 +1685,11 @@
         });
 
         $("#city-picker-consignor").click(function () {
-            var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-            var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
-            var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
-            var departure_place="";
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[0])){
-                departure_place =departure_place + consignorAddressNameMessage[0];
-            }
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[1])){
-                departure_place =departure_place + consignorAddressNameMessage[1];
-            }
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[2])){
-                departure_place =departure_place + consignorAddressNameMessage[2];
-            }
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-                departure_place =departure_place + consignorAddressNameMessage[3];
-            }
-            $("#departure_place").html(departure_place);
+            departurePlace();
         });
 
         $("#city-picker-consignee").click(function () {
-            var consignorAddressMessage = $("#city-picker3-consignee").val().split('~');
-            var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
-            var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
-            var destination="";
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[0])){
-                destination =destination + consignorAddressNameMessage[0];
-            }
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[1])){
-                destination =destination + consignorAddressNameMessage[1];
-            }
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[2])){
-                destination =destination + consignorAddressNameMessage[2];
-            }
-            if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-                destination =destination + consignorAddressNameMessage[3];
-            }
-            $("#destination").html(destination);
+            destination();
         });
 
         $("#goodsSelectFormBtn").click(function () {
@@ -1676,8 +1700,8 @@
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeSonId+"</td>";//货品小类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.parentGoodsType+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
                     goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
@@ -1703,8 +1727,13 @@
             cscContact.phone = $("#consignorPhoneNumber2").val();
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+
+
+            var groupId = $("#custGroupId").val();
+            var custId = $("#custId").val();
+
             var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1717,9 +1746,6 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                     contactList =contactList + "</tr>";
                 });
@@ -1737,8 +1763,12 @@
             cscContact.phone = $("#consignorPhoneNumber1").val();
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+
+            var groupId = $("#custGroupId").val();
+            var custId = $("#custId").val();
+
             var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1751,9 +1781,6 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                     contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
@@ -1771,17 +1798,11 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var fax = tdArr.eq(5).text();//    传真
-                    var email = tdArr.eq(6).text();//    email
-                    var address = tdArr.eq(8).text();//    地址
-                    var code = tdArr.eq(7).text();//    邮编
+                    var address = tdArr.eq(5).text();//    邮编
 
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
-                    $("#consignorFax").val(fax);
-                    $("#consignorEmail").val(email);
-                    $("#consignorPostCode").val(code);
                     $("#consignorAddress").val(address);
 
                     //在这里将所有的信息补全!!
@@ -1818,6 +1839,7 @@
                                     + "/" + streetName;
                             $("#city-picker3-consignor").val(paramAddressNameToPage);
                             $("#city-picker3-consignor").citypicker('refresh');
+                            departurePlace();
                         });
                     });
 
@@ -1839,19 +1861,13 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var fax = tdArr.eq(5).text();//    传真
-                    var email = tdArr.eq(6).text();//    email
-                    var code = tdArr.eq(7).text();//    邮编
-                    var address = tdArr.eq(8).text();//    地址
+                    var address = tdArr.eq(5).text();//    地址
                     $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
-                    $("#consigneeFax").val(fax);
-                    $("#consigneeEmail").val(email);
-                    $("#consigneePostCode").val(code);
                     $("#consigneeAddress").val(address);
 
-
+                    debugger;
                     var paramConsignor = {};
                     var paramConsignee = {};
                     var cscContact = {};
@@ -1872,6 +1888,7 @@
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
+                            debugger;
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -1882,7 +1899,7 @@
                                     + "/" + streetName;
                             $("#city-picker3-consignee").val(paramAddressNameToPage);
                             $("#city-picker3-consignee").citypicker('refresh');
-
+                            destination();
                         });
                     });
                 }
