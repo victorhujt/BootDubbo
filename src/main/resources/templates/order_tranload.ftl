@@ -1677,8 +1677,8 @@
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//品牌
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeSonId+"</td>";//货品小类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
