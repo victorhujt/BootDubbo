@@ -1,19 +1,4 @@
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : mysqldb
-Source Server Version : 50619
-Source Host           : 192.168.26.230:3306
-Source Database       : xescm_ofc
-
-Target Server Type    : MYSQL
-Target Server Version : 50619
-File Encoding         : 65001
-
-Date: 2016-11-23 20:17:59
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
 -- Table structure for ofc_create_order_error_log
