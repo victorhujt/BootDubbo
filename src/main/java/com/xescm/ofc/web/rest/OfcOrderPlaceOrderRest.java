@@ -215,6 +215,32 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
+     * 货品筛选(调用客户中心API)
+     */
+    @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
+    @ApiImplicitParams({
+            //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
+    })
+    @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
+    public void goodsSelectByCsc(Model model,String  cscGoods,String groupId, String custId, HttpServletResponse response){
+        //调用外部接口,最低传CustomerCode
+        try{
+            CscGoodsApiDto cscGood=new CscGoodsApiDto();
+            if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
+                cscGood= JSONUtils.jsonToPojo(cscGoods, CscGoodsApiDto.class);
+            }
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            cscGood.setCustomerId("e1814c55e1c547dea95211ba2213c6d8");
+            cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
+            cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
+            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGood);
+            response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
+        }catch (Exception ex){
+            logger.error("订单中心筛选货品出现异常:{},{}", ex.getMessage(), ex);
+        }
+    }
+
+    /**
      * 收货方发货方筛选(调用客户中心API)
      */
     @ApiOperation(value="下单收发货方筛选", notes="根据查询条件筛选收发货方")

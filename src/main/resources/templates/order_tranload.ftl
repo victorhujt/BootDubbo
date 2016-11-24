@@ -1695,16 +1695,16 @@
         });
 
         $("#goodsSelectFormBtn").click(function () {
-            var cscGoodes = {};
+            var cscGoods = {};
             var groupId = $("#custGroupId").val();
             var custId = $("#custId").val();
             var goodsCode = $("#goodsCodeCondition").val();
             var goodsName = $("#goodsNameCondition").val();
-            cscGoodes.goodsCode = goodsCode;
-            cscGoodes.goodsName = goodsName;
-            var param = JSON.stringify(cscGoodes);
+            cscGoods.goodsCode = goodsCode;
+            cscGoods.goodsName = goodsName;
+            var param = JSON.stringify(cscGoods);
             debugger;
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", {"cscGoodes":param,"groupId":groupId,"custId":custId}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
 
                 var goodsList = "";
@@ -1999,7 +1999,7 @@
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                     "<select  id='goodsCategory' name='goodsCategory'>";
             if($("#goodsInfoListDiv").find("tr").length<1){
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelect", {"groupId":groupId,"custId":custId}, function(data) {
+                CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"groupId":groupId,"custId":custId}, function(data) {
                     data=eval(data);
                     $.each(data,function (index,cscGoodsVo) {
                         goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeName + "'>" + cscGoodsVo.goodsTypeName + "</option>";
