@@ -301,19 +301,22 @@
         <div class="modal-footer"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
-<div class="page-header">
-    <p>
-        基本信息
-        <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
-    <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
-    <#--<#import "address.ftl" as apiAddrFtl>-->
-    </p>
-</div>
-<!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
+<div class="row">
 
-    <div class="row">
+<!-- /section:basics/content.breadcrumbs -->
+<div class="page-content no-padding-top" >
+
+
         <div class="col-xs-12">
+            <div class="page-header">
+                <p>
+                    基本信息
+                    <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
+                <#--<#import "address.ftl" as apiAddrFtl>-->
+                </p>
+            </div>
+
             <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
                 <div class="form-group" id="transBusinessTypeDiv">
                     <div><label class="control-label col-label no-padding-right" for="name">业务类型</label>
@@ -339,12 +342,12 @@
                         </div></div>
                     <div><label class="control-label col-label no-padding-right" for="name">运输类型</label>
 
-                        <div class="col-width-80">
+                        <div class="col-width-50" style="margin-right:10px;">
                             <div class="clearfix control-label">
                                 <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" value="10"/>零担
                             </div>
                         </div>
-                        <div class="col-width-80">
+                        <div class="col-width-50">
                             <div class="clearfix control-label">
                                 <input id="transportTypeV2" type="radio" name="transportTypeV" value="20"/>整车
                             </div>
@@ -355,7 +358,7 @@
                     <div><label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
-                                <div class="col-width-168 position-relative">
+                                <div class="col-width-168 position-relative" style="height:34px;">
                                 <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
                                 <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
@@ -367,16 +370,20 @@
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
                             </div>
                         </div></div>
+                </div>
+                <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode">客户名称</label>
                         <div class="col-xs-2">
-                            <div class="col-width-100 position-relative">
-                                <input class="col-width-100" readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;" />
+                            <div class="position-relative" style="width:430px;">
+                                <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
                                 <span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>
                             </div>
                         </div></div>
+
                 </div>
+
             </form>
             <div class="page-header">
                 <p>
@@ -385,87 +392,87 @@
             </div>
             <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
                 <div class="form-group">
-                    <div class="col-width-376" style="margin:0 0 0 15px;">
-                        <div class="clearfix col-xs-1">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
                             <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                             <input id="pickUpGoods" type="hidden" name="pickUpGoods"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0;">上门提货:费用</label>
-                        <div class="col-width-168 margin-right-15">
-                            <input class="col-width-168" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">上门提货:费用</label>
+                        <div class="col-width-100 margin-right-15">
+                            <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-width-376" style="margin:0 0 0 15px;">
-                        <div class="clearfix col-xs-1">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
                             <input id="insureV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="insure" type="hidden" name="insure"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0;">货物保险:费用</label>
-                        <div  class="col-width-168 margin-right-15" >
-                            <input class="col-width-168"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">货物保险:费用</label>
+                        <div  class="col-width-100 margin-right-15" >
+                            <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                     <div class="col-xs-6 no-padding-left">
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">声明价值</label>
-                        <div  class="col-width-168 margin-right-15">
-                            <input class="col-width-168" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <div  class="col-width-100 margin-right-15">
+                            <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-width-376" style="margin:0 0 0 15px;">
-                        <div class="clearfix col-xs-1">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
                             <input id="twoDistributionV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="twoDistribution" type="hidden" name="twoDistribution"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0;">二次配送:费用</label>
-                        <div  class="col-width-168 margin-right-15">
-                            <input class="col-width-168" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">二次配送:费用</label>
+                        <div  class="col-width-100 margin-right-15">
+                            <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-width-376" style="margin:0 0 0 15px;">
-                        <div class="clearfix col-xs-1">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
                             <input id="collectFlagV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="collectFlag" type="hidden" name="collectFlag"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0;">代收货款:费用</label>
-                        <div  class="col-width-168 margin-right-15" >
-                            <input class="col-width-168" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">代收货款:费用</label>
+                        <div  class="col-width-100 margin-right-15" >
+                            <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                     <div class="col-xs-6 no-padding-left">
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">代收金额</label>
-                        <div  class="col-width-168 margin-right-15">
-                            <input class="col-width-168" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <div  class="col-width-100 margin-right-15">
+                            <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-width-376" style="margin:0 0 0 15px;">
-                        <div class="clearfix col-xs-1">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
                             <input id="returnListV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="returnList" type="hidden" name="returnList"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0;">签单返回:费用</label>
-                        <div  class="col-width-168 margin-right-15">
-                            <input class="col-width-168" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">签单返回:费用</label>
+                        <div  class="col-width-100 margin-right-15">
+                            <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
                     <div class="col-xs-6 no-padding-left">
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">运费</label>
-                        <div  class="col-width-168 margin-right-15">
-                            <input class="col-width-168" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                        <div  class="col-width-100 margin-right-15">
+                            <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
                         </div>
                         <label class="control-label" for="name">元</label>
                     </div>
@@ -475,29 +482,29 @@
             </div>
             <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form" >
                 <div class="form-group" id="transBusinessTypeDiv">
-                    <div class="col-xs-4">
-                        <label class="control-label col-xs-3" for="name">费用总计</label>
-                        <div class="clearfix col-xs-6">
-                            <input id="serviceCharge" value="0" disabled="true" style="color: #000" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                    <div style="width:306px;float:left;" >
+                        <label class="control-label col-label" for="name" style="float:left;">费用总计</label>
+                        <div class="col-width-168 padding-15" style="width:198px">
+                            <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
-                        <label class="control-label" for="name">元</label>
+                        <label class="control-label" for="name" >元</label>
                     </div>
-                    <label class="control-label col-xs-1 no-padding-right" for="name">费用支付</label>
-                    <div class="col-xs-1">
+                    <label class="control-label no-padding-right" style="float:left; margin-left:30px;" for="name">费用支付</label>
+                    <div class="col-width-60" style="margin-right:10px;float:left">
                         <div class="clearfix control-label">
                             <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked"/>发货方
                         </div>
                     </div>
-                    <div class="col-xs-1">
+                    <div class="col-width-60" style="float:left;">
                         <div class="clearfix control-label">
                             <input id="transportTypeV2" type="radio" name="transportTypeV"/>收货方
                         </div>
                     </div>
                     <input id="transportType" type="hidden" name="transportType"/>
-                    <label class="control-label col-label no-padding-right" for="name">支付方式</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <select  id="businessType" name="businessType">
+                    <label class="control-label no-padding-right" for="name" style="margin-left:30px;float:left;">支付方式</label>
+                    <div class="col-width-168 padding-15">
+                        <div class="clearfix col-width-100">
+                            <select class="chosen-select form-control " id="businessType" name="businessType">
                                 <option value="01">现金</option>
                                 <option value="02">POS刷卡</option>
                                 <option value="03">微信</option>
@@ -509,34 +516,35 @@
                     </div>
                 </div>
                 <div class="form-group" id="transBusinessTypeDiv">
-                    <label class="control-label col-xs-1" for="name">结算方式</label>
-                    <div class="col-xs-2">
-                        <label class="control-label col-xs-5" for="name">现结</label>
-                        <div class="clearfix col-xs-6">
-                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+
+                    <div style="width:400px;">
+                        <label class="control-label col-label col-float" for="name" >结算方式</label>
+                        <label class="control-label col-label-50 col-float" for="name">现结</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
-                        <label class="control-label" for="name">元</label>
+                        <label class="control-label col-float" for="name">元</label>
                     </div>
-                    <div class="col-xs-2">
-                        <label class="control-label col-xs-5" for="name">到付</label>
-                        <div class="clearfix col-xs-6">
-                            <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                    <div >
+                        <label class="control-label col-label-50 col-float" for="name" style="margin-left:10px;">到付</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
-                        <label class="control-label" for="name">元</label>
+                        <label class="control-label col-float" for="name">元</label>
                     </div>
-                    <div class="col-xs-2">
-                        <label class="control-label col-xs-5" for="name">回付</label>
-                        <div class="clearfix col-xs-6">
-                            <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                    <div>
+                        <label class="control-label col-label-50 col-float" for="name">回付</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
-                        <label class="control-label" for="name">元</label>
+                        <label class="control-label col-float" for="name">元</label>
                     </div>
-                    <div class="col-xs-2">
-                        <label class="control-label col-xs-5" for="name">月结</label>
-                        <div class="clearfix col-xs-6">
-                            <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                    <div>
+                        <label class="control-label col-label-50" for="name">月结</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
-                        <label class="control-label" for="name">元</label>
+                        <label class="control-label col-float" for="name">元</label>
                     </div>
                 </div>
                 <div class="page-header">
@@ -652,64 +660,6 @@
                     </div>
                 </div>
             <form name="" id=""  class="form-horizontal" role="form" >
-                <div class="col-xs-12">
-                    <!-- #section:elements.tab.option -->
-                    <div class="tabbable" style="width:1000px;" >
-                        <ul class="nav nav-tabs" id="myTab4">
-                            <li class="active">
-                                <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div id="home4" class="tab-pane active">
-
-                                <!--货品明细-->
-                                <button type="button" style="float:right;" class="btn btn-minier btn-inverse"
-                                        id="addGoods">添加一行</button>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label class="control-label" style="float:right;" for="name">kg</label>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label class="control-label" style="float:right;" for="name">重量合计：</label>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label class="control-label" style="float:right;" for="name">数量合计：</label>
-
-                            <#--dynamic-table-->
-                                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                                    <thead>
-                                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                                        操作
-                                    </th>
-                                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品类别</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量单价</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量单价</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积</th>
-                                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积单价</th>
-                                    </thead>
-                                <#--货品明细-->
-
-                                    <tbody id="goodsInfoListDiv"></tbody>
-
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- /section:elements.tab.option -->
         </div>
@@ -729,6 +679,66 @@
 
     </div>
 </div>
+
+<div class="col-xs-12">
+    <!-- #section:elements.tab.option -->
+    <div class="tabbable" style="width:1000px;" >
+        <ul class="nav nav-tabs" id="myTab4">
+            <li class="active">
+                <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home4" class="tab-pane active">
+
+                <!--货品明细-->
+                <button type="button" style="float:right;" class="btn btn-minier btn-inverse"
+                        id="addGoods">添加一行</button>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label class="control-label" style="float:right;" for="name">kg</label>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label class="control-label" style="float:right;" for="name">重量合计：</label>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label class="control-label" style="float:right;" for="name">数量合计：</label>
+
+            <#--dynamic-table-->
+                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                        操作
+                    </th>
+                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品类别</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量单价</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量单价</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积单价</th>
+                    </thead>
+                <#--货品明细-->
+
+                    <tbody id="goodsInfoListDiv"></tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <#--
         </div>
     </div><!-- /.main-content &ndash;&gt;
