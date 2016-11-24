@@ -131,11 +131,11 @@ public class OfcJumpontroller extends BaseController{
         List<CscGoodsVo> cscGoodsVoList = null;
         setDefaultModel(model);
         try{
-            /*AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
             queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();*/
+            String custId = (String) wrapper.getResult();
             /*CscGoods cscGoods=new CscGoods();
             cscGoods.setCustomerId(custId);
             cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
@@ -175,4 +175,7 @@ public class OfcJumpontroller extends BaseController{
         String custId = (String) wrapper.getResult();
         return custId;
     }
+
+
+
 }

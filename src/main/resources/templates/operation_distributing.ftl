@@ -718,7 +718,7 @@
                     }else{
                     }*/
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品种类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
                     goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
@@ -858,18 +858,32 @@
 
 
 
-    function deleteGood(obj) {
-        if(ifConsigneeConfirm){
-            alert('您已确认收货方,无法删除!');
-        }else{
-            $(obj).parent().parent().remove();
-        }
 
-    }
 
     $("#goodsAndConsigneeDivNoneBottom").click(function () {
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     });
+
+
+    function deleteGood(obj) {
+        //$(obj).off('click');
+        /*if(ifConsigneeConfirm){
+            alert('您已确认收货方,无法删除!');
+        }else{*/
+        $(obj).parent().parent().remove();
+        //删除Map中对应的数据
+        //$(obj).preventDefault();//.stopPropagation();
+        //$(obj).stopPropagation();
+
+        debugger
+        var goodsIndex = $(obj).parent().parent().children().eq(1).text();
+        var goodsCode = $(obj).parent().parent().children().eq(2).text();
+        var mapKey =  goodsCode + "@" + goodsIndex;
+        if(null != goodsAndConsigneeMap.get(mapKey) || undefined != goodsAndConsigneeMap.get(mapKey)){
+            goodsAndConsigneeMap.remove(mapKey);
+        }
+    }
+
     function goodsAndConsignee(obj){
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
@@ -903,7 +917,7 @@
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='' onkeyup='value=value.replace(/[^\d]/g,'')'/></td>";
+            consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
             consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
             consignorout =consignorout + "</tr>";
         });
@@ -1455,7 +1469,7 @@
                 $("#consigneeInfoListDiv").html("");
                 ifConsigneeConfirm = false;
                 goodsAndConsigneeMap = new HashMap();
-                $("#TfcOrderTopicTransOrder").html("");
+                $("#goodsInfoListDiv").html("");
                 layer.close(index);
             }, function(index){
                 layer.close(index);
@@ -1548,19 +1562,14 @@
 
     function distributingOrderPlaceCon() {
 
-        console.log("0--------------");
         if(!validateForm()){
             return;
         }
-
-
         //如果没有仓库信息就是城配运输订单
         //如果有仓库信息就是仓配订单, 销售出库,
         var orderLists = [];
         //堆齐基本信息
         var orderInfo = null;
-
-
 
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
@@ -1639,8 +1648,9 @@
             var goodsList = [];
             var goods = null;
             //遍历货品信息
-            debugger
+
             $("#goodsInfoListDiv").find("tr").each(function(index) {
+
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1679,20 +1689,30 @@
     function validateForm() {//000
         //校验是否有某个收货人下所有货品的数量都是0//能不能直接从HashMap下手//000
         //校验货品某一行的需求数量不是//000
+        //校验必须有货品
+        //校验必须有收货方
         //还有页面所有的校验都还没有做
         //客户订单编号的校验也不好做
         //添加批次号
 
+        var consigneeNum = 0;//收货方数量一级校验标记
+        var goodsNumTag = true;//货品明细数量一级校验标记
+        var consigneeGoodsIsEmptyOut = true;//收房方所有货品的数量是否都是0一级校验标记
+        var goodsIsEmptyOut = false;//货品列表中货品最后一列的货品数量一级校验标记
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
-            var goodsList = [];
+            consigneeNum += 1;
             var goods = null;
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
             var contactCompanyId = tdArr.eq(7).text();
             debugger
             //遍历货品信息
-            var goodsIsEmpty = false;
+            var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
+            var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
+            var goodsNum = 0;//货品列表数量
             $("#goodsInfoListDiv").find("tr").each(function(index) {
+                goodsNum += 1;
+                debugger
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1701,20 +1721,55 @@
                 var goodsTotalAmount = tdArr.eq(6).text();//总数量
                 if(goodsTotalAmount == 0){
                     alert("货品列表中【"+goodsName+"】的数量为空,请检查!");
+                    //return false;
+                    goodsIsEmpty = true;
                     return false;
                 }
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                var goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
-                if(goodsAmount == 0){
-                    goodsIsEmpty = true;
+                var consigneeAndGoodsMsgJson = null;
+                if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                    consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                }
+                var goodsAmount = 0;
+                if(null != consigneeAndGoodsMsgJson){
+                    goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                }
+
+                if(goodsAmount != 0){
+
+                    consigneeGoodsIsEmpty = false;
+                    //return false;
                 }
             })
-            if(true == goodsIsEmpty){
+            if(0 == goodsNum){
+                goodsNumTag = false;
+                alert("请至少添加一个货品明细!");
+                return false;
+            }
+            if(goodsIsEmpty){
+                goodsIsEmptyOut = true;
+                return false;
+            }
+            if(consigneeGoodsIsEmpty){
                 alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                consigneeGoodsIsEmptyOut = false;
                 return false;
             }
         })
+        if(0 == consigneeNum){//如果收货人数量是0
+            alert("请至少添加一个货品明细以及对应的收货方！");
+            return false;
+        }
+        if(!goodsNumTag){//如果货品数量是0
+            return false;
+        }
+        if(!consigneeGoodsIsEmptyOut){//收货方所有货品的数量都是0
+            return false;
+        }
+        if(goodsIsEmptyOut){
+            return false;
+        }
+        return true;
     }
 
 
@@ -1896,6 +1951,30 @@
             invalidHandler : function(form) {
             }
         });
+
+    }
+
+    function onlyNumber(obj){
+
+        //得到第一个字符是否为负号
+        // var t = obj.value.charAt(0);
+        //先把非数字的都替换掉，除了数字和.
+        obj.value = obj.value.replace(/[^\d\.]/g,'');
+        //obj.value = obj.value.replace(/[^\d{1,6}]/,'');
+        //必须保证第一个为数字而不是.
+        obj.value = obj.value.replace(/^\./g,'');
+        //保证只有出现一个.而没有多个.
+        obj.value = obj.value.replace(/\.{2,}/g,'.');
+        //保证.只出现一次，而不能出现两次以上
+        obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+        //限制连续数字不能超过6个
+        if(/\d{7}/.test(obj.value)){
+            obj.value = obj.value.replace(/\d$/gi,'');
+        }
+        //限制小数点后3位
+        if(/\.\d{4}/.test(obj.value)){
+            obj.value = obj.value.replace(/\d$/gi,'');
+        }
 
     }
 </script>
