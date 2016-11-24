@@ -13,8 +13,9 @@
         }
         #consignorListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
+            margin-left:-395px;
             width:946px;
             height:500px;
             z-index:3;
@@ -23,8 +24,9 @@
         }
         #consigneeListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
+            margin-left:-395px;
             width:946px;
             height:500px;
             z-index:3;
