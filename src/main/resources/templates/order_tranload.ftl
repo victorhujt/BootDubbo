@@ -543,18 +543,121 @@
                 </div>
             </form>
             <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
+                <div class="page-header">
+                    <h4>发货方信息</h4>
+                </div>
+                <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
+                <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label class="control-label" style="float:right;" for="name">出发地：</label>
+                <div id="consignorin">
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consignorCode" name="consignorCode" type="hidden">
+                                <input id="consignorType" name="consignorType" type="hidden">
+                                <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consignorContactCode"   name="consignorContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">地址选择</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <span style="cursor:pointer" id="city-picker-consignor"><input id="city-picker3-consignor" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">详细地址</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consignorAddress" name="consignorAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="page-header">
+                    <h4>收货方信息</h4>
+                </div>
+                <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
+                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label id="destination" class="control-label" style="float:right;" for="name"></label>
+                <label class="control-label" style="float:right;" for="name">目的地：</label>
+                <div id="consignorout">
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consigneeCode" name="consigneeCode" type="hidden">
+                                <input id="consigneeType" name="consigneeType" type="hidden">
+                                <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consigneeContactCode" name="consigneeContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                <input id="consigneeContactName" name="consigneeContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">地址选择</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <span style="cursor:pointer" id="city-picker-consignee"><input id="city-picker3-consignee" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label class="control-label col-xs-1 no-padding-right" for="name">详细地址</label>
+                        <div class="col-xs-6">
+                            <div class="clearfix">
+                                <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <form name="" id=""  class="form-horizontal" role="form" >
                 <div class="col-xs-12">
                     <!-- #section:elements.tab.option -->
                     <div class="tabbable" style="width:1000px;" >
                         <ul class="nav nav-tabs" id="myTab4">
                             <li class="active">
                                 <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-                            </li>
-                            <li class="transLi">
-                                <a data-toggle="tab" href="#consignor14" aria-expanded="true">发货方</a>
-                            </li>
-                            <li class="transLi">
-                                <a data-toggle="tab" href="#consignee14" aria-expanded="true">收货方</a>
                             </li>
                         </ul>
 
@@ -603,119 +706,6 @@
                                     <tbody id="goodsInfoListDiv"></tbody>
 
                                 </table>
-                            </div>
-
-                            <div id="consignor14" class="tab-pane">
-                                <div class="page-header">
-                                    <h4>发货方信息</h4>
-                                </div>
-                                <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
-                                <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label class="control-label" style="float:right;" for="name">出发地：</label>
-                                <div id="consignorin">
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consignorCode" name="consignorCode" type="hidden">
-                                                <input id="consignorType" name="consignorType" type="hidden">
-                                                <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consignorContactCode"   name="consignorContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">地址选择</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <span style="cursor:pointer" id="city-picker-consignor"><input id="city-picker3-consignor" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">详细地址</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consignorAddress" name="consignorAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div id="consignee14" class="tab-pane">
-                                <div class="page-header">
-                                    <h4>收货方信息</h4>
-                                </div>
-                                <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
-                                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <label id="destination" class="control-label" style="float:right;" for="name"></label>
-                                <label class="control-label" style="float:right;" for="name">目的地：</label>
-                                <div id="consignorout">
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consigneeCode" name="consigneeCode" type="hidden">
-                                                <input id="consigneeType" name="consigneeType" type="hidden">
-                                                <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consigneeContactCode" name="consigneeContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                <input id="consigneeContactName" name="consigneeContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">地址选择</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <span style="cursor:pointer" id="city-picker-consignee"><input id="city-picker3-consignee" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="control-label col-xs-1 no-padding-right" for="name">详细地址</label>
-                                        <div class="col-xs-6">
-                                            <div class="clearfix">
-                                                <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1718,7 +1708,7 @@
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.parentGoodsType+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品种类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
                     goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
@@ -2186,7 +2176,7 @@
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
-                    var goodsGate = tdArr.eq(1).text();//货品类别
+                    var goodsGate = tdArr.eq(2).text();//货品类别
                     var goodsCode = tdArr.eq(4).text();//货品编码
                     var goodsName = tdArr.eq(5).text();//货品名称
                     var specification = tdArr.eq(6).text();//规格
@@ -2207,7 +2197,7 @@
             }
         });
 
-        /*    $('#merchandiser').editableSelect();*/
+        $('#merchandiser').editableSelect();
     })
 
 </script>

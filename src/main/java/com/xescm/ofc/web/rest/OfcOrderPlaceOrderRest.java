@@ -306,7 +306,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /*
-    校验客户订单编号
+    校验运输单号
      */
     @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
     @ResponseBody
