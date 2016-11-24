@@ -288,6 +288,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 ofcFundamentalInformationService.update(ofcFundamentalInformation);
             }else if(PubUtils.trimAndNullAsEmpty(tag).equals("tranplace")){
+                if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getMerchandiser()).equals("")){
+                    throw new BusinessException("请输入开单员!");
+                }
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                     int orderCodeByTransCode = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
                     if(orderCodeByTransCode>=1){

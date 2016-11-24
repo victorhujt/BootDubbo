@@ -195,6 +195,22 @@ public class OfcFundamentalInformation {
      */
     private String merchandiser;
 
+    public String getMerchandiser() {
+        return merchandiser;
+    }
+
+    public void setMerchandiser(String merchandiser) {
+        this.merchandiser = merchandiser;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
+    }
+
     /**
      * 运输类型
      */
