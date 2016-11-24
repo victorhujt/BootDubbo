@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by hiyond on 2016/11/15.
  */
 @Controller
-public class OfccancelOrderRest extends BaseController {
+public class OfcCancelOrderRest extends BaseController {
 
     @Autowired
     private CreateOrderService createOrderService;
