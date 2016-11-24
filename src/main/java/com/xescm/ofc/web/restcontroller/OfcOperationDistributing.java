@@ -3,6 +3,7 @@ package com.xescm.ofc.web.restcontroller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.dto.csc.*;
@@ -15,6 +16,7 @@ import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
+import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.*;
@@ -47,6 +49,8 @@ public class OfcOperationDistributing extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
@@ -67,9 +71,15 @@ public class OfcOperationDistributing extends BaseController{
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"您没有添加任何信息,请检查!");
             }
             JSONArray jsonArray = JSON.parseArray(orderLists);
+            String batchNumber = codeGenUtils.getNewWaterCode("BN",4);//生成订单批次号,保证一批单子属于一个批次
+            Wrapper<?> validateCustOrderCodeResult =  validateCustOrderCode(jsonArray);
+            if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
+                return validateCustOrderCodeResult;
+            }
             for(int i = 0; i < jsonArray.size(); i ++){
                 String json = jsonArray.get(i).toString();
                 OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+
                 String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
                 //orderGoodsListStr = orderGoodsListStr.replace("~`","");
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -84,9 +94,9 @@ public class OfcOperationDistributing extends BaseController{
                 }
                 CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
                 CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
-                String batchNumber = codeGenUtils.getNewWaterCode("BN",4);
+
                 ofcOrderDTO.setBatchNumber(batchNumber);
-                System.out.println(ofcOrderDTO.getBatchNumber());
+
                 resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
                         ,consignor,consignee,new CscSupplierInfoDto());
             }
@@ -94,6 +104,22 @@ public class OfcOperationDistributing extends BaseController{
             logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
+    }
+
+    private Wrapper<?> validateCustOrderCode(JSONArray jsonArray) throws Exception {
+        for(int i = 0; i < jsonArray.size(); i ++) {
+            String json = jsonArray.get(i).toString();
+            OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+            String custOrderCode = ofcOrderDTO.getCustOrderCode();
+            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+            ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+            int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+            if (checkCustOrderCodeResult > 0) {
+                logger.error("城配下单批量下单,客户订单编号重复");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+            }
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
     //根据选择的客户查询仓库

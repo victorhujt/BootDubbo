@@ -813,8 +813,11 @@
                 var sendGoods = tdArr.eq(6).text();//发货数量
 
 
-                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>" +
+                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
@@ -842,9 +845,10 @@
                         return true;
                     }
 
-                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";//class=\"btn btn-minier btn-yellow\"
+                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
                     goodsInfoListDiv =goodsInfoListDiv + "<td>" +
                             "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                            "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                             "</td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
@@ -901,12 +905,15 @@
 
     var deleteGoodsTag = false;
 
+    function deleteConsignee(obj) {
+        $(obj).parent().parent().remove();
+    }
     function deleteGood(obj) {
         deleteGoodsTag = true;
         debugger
-        $(obj).parent().parent().off('click')
+        ///$(obj).parent().parent().off('click')
         $(obj).parent().parent().remove();
-        $("#goodsAndConsigneeDiv").fadeIn("slow");
+        //$("#goodsAndConsigneeDiv").fadeIn("slow");
         //删除Map中对应的数据
 
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();
@@ -922,20 +929,25 @@
 
         console.log("---"+obj)
         if(deleteGoodsTag){
-            console.log("这儿走了几次?")
             deleteGoodsTag = false;
-            debugger
             return;
         }else{
-            console.log("走这儿了了?")
             $("#goodsAndConsigneeDiv").fadeIn("slow");
-            console.log("走这儿了了???")
             //显示货品信息
-            var goodsIndex = $(obj).find('td')[1].innerText;
+            /**
+             * var goodsIndex = $(obj).parent().parent().children().eq(1).text();
+             var goodsCode = $(obj).parent().parent().children().eq(2).text();
+             */
+            /*var goodsIndex = $(obj).find('td')[1].innerText;//000
             var goodsCode = $(obj).find('td')[2].innerText;
             var goodsName = $(obj).find('td')[3].innerText;
             var specification = $(obj).find('td')[4].innerText;
-            var unit = $(obj).find('td')[5].innerText;
+            var unit = $(obj).find('td')[5].innerText;*/
+            var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
+            var goodsCode = $(obj).parent().parent().children().eq(2).text();
+            var goodsName = $(obj).parent().parent().children().eq(3).text();
+            var specification = $(obj).parent().parent().children().eq(4).text();
+            var unit = $(obj).parent().parent().children().eq(5).text();
             $("#goodsCodeDiv").val(goodsCode);
             $("#goodsNameDiv").val(goodsName);
             $("#specificationDiv").val(specification);
@@ -1377,7 +1389,7 @@
 
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-            consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+            consignorout =consignorout + "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
             consignorout =consignorout + "<td><input value='" + consigneeCustOrderCode + "' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
@@ -1428,7 +1440,7 @@
                     return true;
                 }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-                consignorout =consignorout + "<td><button type='button'  onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input /></td>";
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
@@ -1654,6 +1666,7 @@
 
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
+            var custOrderCode = tdArr.eq(2).children().val();
             var consigneeContactName = tdArr.eq(3).text();//联系人
             var consigneeContactPhone = tdArr.eq(4).text();//    联系电话
             var consigneeContactAddress = tdArr.eq(5).text();//    完整地址
@@ -1671,8 +1684,9 @@
             var streetName = tdArr.eq(17).text();
             var address = tdArr.eq(18).text();
             orderInfo.consigneeName = consigneeName;
+            orderInfo.custOrderCode = custOrderCode;
             orderInfo.consigneeType = type;
-            orderInfo.consigneeContactName = consigneeContactName;
+            orderInfo.consigneeContactName = consigneeContactName;//000
             orderInfo.consigneeCode = contactCompanyId;
             orderInfo.consigneeContactCode = contactCode;
             orderInfo.consigneeContactPhone = consigneeContactPhone;
@@ -1928,19 +1942,6 @@
                 },
                 notes:{
                     maxlength:300
-                },
-                custOrderCode:{
-                    maxlength:30,
-                    remote:{
-                        url : ofc_url + "/ofc/checkCustOrderCode",
-                        type : "POST",
-                        dataType : "json",
-                        data : {
-                            custOrderCode : function() {
-                                return $("#custOrderCode").val();
-                            }
-                        }
-                    }
                 }
             },
             messages : {
@@ -1959,11 +1960,6 @@
                 },
                 notes:{
                     maxlength:"超过最大长度"
-                },
-                custOrderCode:{
-
-                    maxlength: "超过最大长度",
-                    remote: "该客户订单编号已经存在"
                 }
 
             },
