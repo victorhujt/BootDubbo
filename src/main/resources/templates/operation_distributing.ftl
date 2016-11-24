@@ -398,7 +398,7 @@
             <div><label class="control-label col-label no-padding-right" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="订单日期"
+                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd HH:mm:ss"))!""}" type="text" placeholder="订单日期"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
                 </div>
             </div></div>
@@ -653,7 +653,7 @@
     });
 
     function main() {
-        $("#orderTime").val(new Date().toLocaleDateString());
+        //$("#orderTime").val(new Date().toLocaleDateString());
         validateFormData();
         $("#merchandiser").editableSelect();
         $("#store").editableSelect();
