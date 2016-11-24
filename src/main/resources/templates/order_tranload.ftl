@@ -803,6 +803,7 @@
                 },
                 transCode:{
                     maxlength:50,
+                    pattern:/(^[A-Za-z0-9]+$)/,
                     remote:{
                         url : ofc_url + "/ofc/checkTransCode",
                         type : "POST",
@@ -835,6 +836,7 @@
                 },
                 transCode:{
                     maxlength: "超过最大长度50",
+                    pattern:"只能输入数字和字母",
                     remote: "运输单号已存在"
                 },
                 custName:{
