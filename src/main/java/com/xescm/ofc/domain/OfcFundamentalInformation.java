@@ -217,6 +217,21 @@ public class OfcFundamentalInformation {
     @Column(name = "transport_type")
     private String transportType;
 
+    /**
+     * 订单批次号
+     * @return
+     */
+    @Column(name = "batch_number")
+    private String batchNumber;
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
+    }
+
     public String getSelfCustOrderCode() {
         return selfCustOrderCode;
     }

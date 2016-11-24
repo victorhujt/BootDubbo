@@ -977,6 +977,7 @@
 
     function main(){
         validateForm();
+
     }
     /**
      *表单验证

@@ -34,6 +34,7 @@
     <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
     <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
     <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+    <result column="batch_number" property="batchNumber" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
