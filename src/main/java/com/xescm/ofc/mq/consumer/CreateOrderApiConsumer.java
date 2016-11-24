@@ -51,7 +51,7 @@ public class CreateOrderApiConsumer implements MessageListener {
         //TFCTopic
         if (StringUtils.equals(topicName, mqConfig.getTFCTopic()) && !keyList.contains(key)) {
             if(StringUtils.equals(message.getTag(),mqConfig.getEPCToTag())){
-                logger.debug("创单api消费MQ:Tag:{},topic:{}"+message.getTag(),mqConfig.getEPCToTag());
+                logger.debug("创单api消费MQ:Tag:{},topic:{}"+message.getTag(),topicName);
                 keyList.add(key);
                 String result = null;
                 try {
