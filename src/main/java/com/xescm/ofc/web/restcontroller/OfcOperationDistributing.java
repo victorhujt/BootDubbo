@@ -1,14 +1,34 @@
 package com.xescm.ofc.web.restcontroller;
 
-import com.xescm.ofc.domain.dto.csc.QueryCustomerNameDto;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.domain.dto.csc.*;
+import com.xescm.ofc.domain.dto.csc.domain.CscContact;
+import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsTypeVo;
+import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
+import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
+import com.xescm.ofc.service.OfcOrderPlaceService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.JacksonUtil;
+import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,12 +45,131 @@ import java.util.List;
 @Controller
 public class OfcOperationDistributing extends BaseController{
     @Autowired
+    private OfcOrderPlaceService ofcOrderPlaceService;
+    @Autowired
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
+    @Autowired
+    private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
+    @Autowired
+    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
 
 
+    @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
+        logger.info("==> orderLists={}", orderLists);
+        String resultMessage = null;
+        try{
+            if(PubUtils.isSEmptyOrNull(orderLists)){
+                logger.error("城配开单批量下单入参为空");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"您没有添加任何信息,请检查!");
+            }
+            JSONArray jsonArray = JSON.parseArray(orderLists);
+            for(int i = 0; i < jsonArray.size(); i ++){
+                String json = jsonArray.get(i).toString();
+                OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+                String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
+                //orderGoodsListStr = orderGoodsListStr.replace("~`","");
+                AuthResDto authResDtoByToken = getAuthResDtoByToken();
+                QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+                queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+                Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+                String custId = (String) wrapper.getResult();
 
+                List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
+                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                    ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
+                }
+                CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
+                CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
+                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
+                        ,consignor,consignee,new CscSupplierInfoDto());
+            }
+        }catch (Exception ex){
+            logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
+    }
 
+    //根据选择的客户查询仓库
+    @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
+    @ResponseBody
+    public void queryCustomerByName(String custId,Model model,HttpServletResponse response){
+        logger.info("==> custId={}", custId);
+        try{
+            if(PubUtils.isSEmptyOrNull(custId)){
+                logger.error("城配下单筛选仓库入参有误");
+                return;
+            }
+            List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
+        }catch (Exception ex){
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
+        }
+    }
 
+    //根据选择的客户查询货品种类
+    @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
+    @ResponseBody
+    public void queryGoodsTypeByCustId(String custId,Model model,HttpServletResponse response){
+        logger.info("==> custId={}", custId);
+        Wrapper<List<CscGoodsTypeVo>> wrapper = null;
+        try{
+            if(PubUtils.isSEmptyOrNull(custId)){
+                logger.error("城配下单筛选货品一级种类入参有误");
+                return;
+            }
+            //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            CscGoodsType cscGoodsType = new CscGoodsType();
+            cscGoodsType.setCustomerId(custId);
+            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+        }catch (Exception ex){
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage(),wrapper.getMessage());
+        }
+    }
+
+    //根据选择的客户和货品种类查询货品小类
+    @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
+    @ResponseBody
+    public void queryGoodsSecTypeByCAndT(String custId, String goodsType,Model model,HttpServletResponse response){
+        logger.info("==> custId={}", custId);
+        logger.info("==> goodsType={}", goodsType);
+        Wrapper<List<CscGoodsTypeVo>> wrapper = null;
+        try{
+            if(PubUtils.isSEmptyOrNull(custId) || PubUtils.isSEmptyOrNull(goodsType)){
+                logger.error("城配下单筛选货品二级种类入参有误");
+                return;
+            }
+            //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            CscGoodsType cscGoodsType = new CscGoodsType();
+            cscGoodsType.setCustomerId(custId);
+            cscGoodsType.setPid(goodsType);
+            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+        }catch (Exception ex){
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage(),wrapper.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
+    @ResponseBody
+    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
+        logger.info("==> cscGoodsApiDto={}", cscGoodsApiDto);
+        Wrapper<List<CscGoodsApiVo>> wrapper = null;
+        try{
+            if(null == cscGoodsApiDto){
+                logger.error("城配下单筛选货品入参为null");
+                return;
+            }
+            wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+        }catch (Exception ex){
+            logger.error("城配下单查询货品列表失败!",ex.getMessage(),wrapper.getMessage());
+        }
+    }
 
 
     @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
@@ -41,6 +180,7 @@ public class OfcOperationDistributing extends BaseController{
         try{
             if(PubUtils.isSEmptyOrNull(queryCustomerName)){
                 logger.error("查询客户列表参数为空!");
+                return;
             }
             QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
             if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
@@ -57,5 +197,59 @@ public class OfcOperationDistributing extends BaseController{
             logger.error("查询客户列表失败!",ex.getMessage());
         }
 
+    }
+
+    private CscContantAndCompanyDto switchOrderDtoToCscCAndCDto(OfcOrderDTO ofcOrderDTO,String purpose) {
+        CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
+        cscContantAndCompanyDto.setCscContact(new CscContact());
+        if(StringUtils.equals("2",purpose)){
+            cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
+//            cscContantAndCompanyDto.getCscContactCompany().setType();//暂缺
+            cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
+            cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsignorContactName());
+            cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsignorContactPhone());
+            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsignorCode());
+            cscContantAndCompanyDto.getCscContact().setContactCode(ofcOrderDTO.getConsignorContactCode());
+            cscContantAndCompanyDto.getCscContact().setProvinceName(ofcOrderDTO.getDepartureProvince());
+            cscContantAndCompanyDto.getCscContact().setCityName(ofcOrderDTO.getDepartureCity());
+            cscContantAndCompanyDto.getCscContact().setAreaName(ofcOrderDTO.getDepartureDistrict());
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDepartureTowns());
+            }
+            String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
+            cscContantAndCompanyDto.getCscContact().setProvince(departureCode[0]);
+            cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
+            cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreet(departureCode[3]);
+            }
+            cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDeparturePlace());
+        }else if(StringUtils.equals("1",purpose)){
+            cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
+//            cscContantAndCompanyDto.getCscContactCompany().setType();//暂缺
+            cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
+            cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsigneeContactName());
+            cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsigneeContactPhone());
+            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsigneeCode());
+            cscContantAndCompanyDto.getCscContact().setContactCode(ofcOrderDTO.getConsigneeContactCode());
+            cscContantAndCompanyDto.getCscContact().setProvinceName(ofcOrderDTO.getDestinationProvince());
+            cscContantAndCompanyDto.getCscContact().setCityName(ofcOrderDTO.getDestinationCity());
+            cscContantAndCompanyDto.getCscContact().setAreaName(ofcOrderDTO.getDestinationDistrict());
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDestinationTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDestinationTowns());
+            }
+            String[] destinationCode = ofcOrderDTO.getDestinationCode().split(",");
+            cscContantAndCompanyDto.getCscContact().setProvince(destinationCode[0]);
+            cscContantAndCompanyDto.getCscContact().setCity(destinationCode[1]);
+            cscContantAndCompanyDto.getCscContact().setArea(destinationCode[2]);
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+                cscContantAndCompanyDto.getCscContact().setStreet(destinationCode[3]);
+            }
+            cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDestination());
+        }
+
+
+        return cscContantAndCompanyDto;
     }
 }

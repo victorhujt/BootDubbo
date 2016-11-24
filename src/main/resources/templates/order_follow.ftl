@@ -4,203 +4,214 @@
 </head>
 <body class="no-skin">
 
-                    <div class="col-xs-12">
-                        <div class="page-header">
-                            <p>
-                                筛选条件
-                            </p>
-                        </div>
-                        <div class=" form-group">
-                            <div class="col-sm-3 ">
-                                <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
-                                    <option value="orderCode">订单编号</option>
-                                    <option value="custOrderCode">客户订单编号</option>
-                                    <option value="transCode">运输单号</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-3 ">
-                                <div class="clearfix">
-                                    <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
-                            筛选
-                        </button>
-                        <div class="page-header">
-                            <p>
-                                订单跟踪记录
-                            </p>
-                        </div>
-                        <form id="" method="post" class="form-horizontal" role="form" >
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="orderTime" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="orderCode"  readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="custOrderCode" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="orderStatus" readonly="readonly" style="color: #000"  type="text" >
-                                    </div>
-                                </div>
-                            </div>
+<div class="col-xs-12">
+    <div class="page-header">
+        <p>
+            筛选条件
+        </p>
+    </div>
+    <div class=" form-group">
+        <div class="col-sm-3  no-padding-right">
+            <select class="chosen-select col-xs-2 col-sm-12 " id="followTag" name="followTag">
+                <option value="orderCode">订单编号</option>
+                <option value="custOrderCode">客户订单编号</option>
+                <option value="transCode">运输单号</option>
+            </select>
+        </div>
+        <div class="col-sm-3 ">
+            <div class="clearfix">
+                <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
+        筛选
+    </button>
+    <div class="page-header" style="margin-top:30px;">
+        <p>
+            订单跟踪记录
+        </p>
+    </div>
+    <form id="" method="post" class="form-horizontal" role="form" >
+        <div class="row">
+            <div class="form-group col-xs-4 ">
+                <label class="control-label col-label no-padding-right" for="name">订单日期</label>
+                <div class="col-xs-7">
+                    <div class="clearfix" style="position:relative;">
+                        <input id="orderTime" readonly="readonly" style="color: #000" name="orderTime" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                        <i class="ace-icon fa fa-calendar icon-pic bigger-130"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">订单编号</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="orderCode"  readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="orderCode"  readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="custOrderCode" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">订单状态</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="orderStatus" readonly="readonly" style="color: #000"  type="text" class="form-control input-sm no-padding-right" >
+                    </div>
+                </div>
+            </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="orderType" readonly="readonly" style="color: #000"  type="text" >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="businessType" readonly="readonly" style="color: #000"  type="text" >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="notes" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <#--<div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">货品类型</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="goodsType" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>-->
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">出发地</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="departurePlace"  readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">目的地</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="destination" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="quantity" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="weight" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="cubage" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="transRequire" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">运输单号</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="transCode" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="plateNumber" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="driverName" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="contactNumber" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">收货地址</label>
-                                <div class="col-sm-3">
-                                    <div class="clearfix">
-                                        <input id="destinationPlace" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">订单类型</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="orderType" readonly="readonly" style="color: #000"  type="text" class="form-control input-sm no-padding-right">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="businessType" readonly="readonly" style="color: #000"  type="text"  class="form-control input-sm no-padding-right">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">备注</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="notes" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+        <#--<div class="form-group col-xs-4">
+            <label class="control-label col-label no-padding-right" for="name">货品类型</label>
+            <div class="col-xs-7">
+                <div class="clearfix">
+                    <input id="goodsType" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                </div>
+            </div>
+        </div>-->
+            <div class="form-group col-xs-12">
+                <label class="control-label col-label no-padding-right" for="name">出发地</label>
+                <div class="col-xs-6">
+                    <div class="col-fixed-width">
+                        <input id="departurePlace"  readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12">
+                <label class="control-label col-label no-padding-right" for="name">目的地</label>
+                <div class="col-xs-6">
+                    <div class="col-fixed-width">
+                        <input id="destination" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">数量</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="quantity" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">重量</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="weight" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">体积</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="cubage" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">运输要求</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="transRequire" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="transCode" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">车牌号</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="plateNumber" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="driverName" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-4">
+                <label class="control-label col-label no-padding-right" for="name">联系电话</label>
+                <div class="col-xs-7">
+                    <div class="clearfix">
+                        <input id="contactNumber" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12">
+                <label class="control-label col-label no-padding-right" for="name">收货地址</label>
+                <div class="col-xs-6">
+                    <div class="col-fixed-width">
+                        <input id="destinationPlace" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </form>
 
+    <div class="hr-plus" style="margin-left:100px;"></div>
+    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:375px;margin-left:100px;" role="grid" aria-describedby="dynamic-table_info">
+        <thead>
+        <tr role="row">
+            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
+        </thead>
+        <tbody id="orderFollowStatusListTBody">
 
-                        </form>
-                        <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                            <thead>
-                            <tr role="row">
-                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
-                            </thead>
-                            <tbody id="orderFollowStatusListTBody">
+        </tbody>
+    </table>
 
-                            </tbody>
-                        </table>
-
-                    </div><!-- /.col -->
+</div><!-- /.col -->
 
 
 
@@ -325,7 +336,7 @@
         $("#plateNumber").val(orderDTO.plateNumber);
         $("#driverName").val(orderDTO.driverName);
         $("#contactNumber").val(orderDTO.contactNumber);
-       /* $("#destination").val(orderDTO.destination);*/
+        /* $("#destination").val(orderDTO.destination);*/
     }
 
     function getOrderStatus(status) {

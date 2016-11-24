@@ -10,20 +10,25 @@ import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.*;
+import com.xescm.ofc.domain.dto.wms.AddressDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -31,12 +36,13 @@ import java.util.List;
 import static com.xescm.ofc.enums.OrderConstEnum.ALREADYEXAMINE;
 import static com.xescm.ofc.enums.OrderConstEnum.CREATE_ORDER_BYAPI;
 import static com.xescm.ofc.enums.OrderConstEnum.PENDINGAUDIT;
+import static org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW;
+import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 /**
  * Created by hiyond on 2016/11/18.
  */
 
-@Transactional
 @Service
 public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
@@ -70,6 +76,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private OfcCreateOrderErrorLogService ofcCreateOrderErrorLogService;
+    @Autowired
+    private FeignAddressCodeClient feignAddressCodeClient;
+
 
     @Autowired
     private OfcCreateOrderMapper createOrdersMapper;
@@ -79,6 +88,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return createOrdersMapper.queryCountByOrderStatus(orderCode, orderStatus);
     }
 
+    @Transactional
     public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
         ResultModel resultModel = null;
         //校验数据：货主编码 对应客户中心的custId
@@ -101,6 +111,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         queryCustomerCodeDto.setId(custId);
         Wrapper<CscCustomerVo> customerVoWrapper = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
         if (customerVoWrapper.getResult() == null) {
+            logger.debug("获取货主信息失败：custId:{}，{}", custId, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
         }
         CscCustomerVo cscCustomerVo = customerVoWrapper.getResult();
@@ -111,14 +122,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String orderType = createOrderEntity.getOrderType();
         resultModel = CheckUtils.checkOrderType(orderType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "订单类型", resultModel.getCode());
+            logger.info("校验数据{}失败：{},订单类型：{}", "订单类型", resultModel.getCode(), orderType);
             return resultModel;
         }
         //校验：业务类型
         String businessType = createOrderEntity.getBusinessType();
         resultModel = CheckUtils.checkBusinessType(orderType, businessType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "业务类型", resultModel.getCode());
+            logger.info("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
             return resultModel;
         }
         //check 数量、重量、体积 三选一不能为空
@@ -135,7 +146,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         Wrapper<List<CscStorevo>> cscWarehouseList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
         resultModel = CheckUtils.checkStoreCode(cscWarehouseList, storeCode);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "店铺编码", resultModel.getCode());
+            logger.info("校验数据{}失败：{},店铺编码:{}", "店铺编码", resultModel.getCode(), storeCode);
             return resultModel;
         }
         //校验：【发货方】与【收货方】
@@ -149,36 +160,42 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //收发货方的保存规则
-        CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-        cscContantAndCompanyDto.setCustomerId(custId);
-        cscContantAndCompanyDto.setUserId(CreateOrderApiConstant.USERID);
-        cscContantAndCompanyDto.setUserName(CreateOrderApiConstant.USERNAME);
-        cscContantAndCompanyDto.setCscContact(new CscContact());
-        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
-        cscContantAndCompanyDto.getCscContact().setPurpose("1");
-        cscContantAndCompanyDto.getCscContact().setContactName(createOrderEntity.getConsignorName());
-        cscContantAndCompanyDto.setCustomerId(custId);
-        cscContantAndCompanyDto.setGroupId(groupId);
-        Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
-        if (cscReceivingInfoList.getResult() == null || cscReceivingInfoList.getResult().isEmpty()) {
-            addCscContantAndCompanyDto("1", custId, createOrderEntity, groupId);
-        }
+//        CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+//        cscContantAndCompanyDto.setCustomerId(custId);
+//        cscContantAndCompanyDto.setUserId(CreateOrderApiConstant.USERID);
+//        cscContantAndCompanyDto.setUserName(CreateOrderApiConstant.USERNAME);
+//        cscContantAndCompanyDto.setCscContact(new CscContact());
+//        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
+//        cscContantAndCompanyDto.getCscContact().setPurpose("1");
+//        cscContantAndCompanyDto.getCscContact().setContactName(createOrderEntity.getConsignorName());
+//        cscContantAndCompanyDto.setCustomerId(custId);
+//        cscContantAndCompanyDto.setGroupId(groupId);
+//        CscContactCompany cscContactCompany = new CscContactCompany();
+//        cscContactCompany.setContactCompanyName(createOrderEntity.getConsignorName());
+//        cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
+//        Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+//        if (cscReceivingInfoList.getResult() == null || cscReceivingInfoList.getResult().isEmpty()) {
+//            addCscContantAndCompanyDto("1", custId, createOrderEntity, groupId);
+//        }
 
         //收发货方的保存规则
-        cscContantAndCompanyDto = new CscContantAndCompanyDto();
-        cscContantAndCompanyDto.setCustomerId(custId);
-        cscContantAndCompanyDto.setUserId(CreateOrderApiConstant.USERID);
-        cscContantAndCompanyDto.setUserName(CreateOrderApiConstant.USERNAME);
-        cscContantAndCompanyDto.setCscContact(new CscContact());
-        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
-        cscContantAndCompanyDto.getCscContact().setPurpose("2");
-        cscContantAndCompanyDto.getCscContact().setContactName(createOrderEntity.getConsigneeName());
-        cscContantAndCompanyDto.setCustomerId(custId);
-        cscContantAndCompanyDto.setGroupId(groupId);
-        cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
-        if (cscReceivingInfoList.getResult() == null || cscReceivingInfoList.getResult().isEmpty()) {
-            addCscContantAndCompanyDto("2", custId, createOrderEntity, groupId);
-        }
+//        cscContantAndCompanyDto = new CscContantAndCompanyDto();
+//        cscContantAndCompanyDto.setCustomerId(custId);
+//        cscContantAndCompanyDto.setUserId(CreateOrderApiConstant.USERID);
+//        cscContantAndCompanyDto.setUserName(CreateOrderApiConstant.USERNAME);
+//        cscContantAndCompanyDto.setCscContact(new CscContact());
+//        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
+//        cscContantAndCompanyDto.getCscContact().setPurpose("2");
+//        cscContantAndCompanyDto.getCscContact().setContactName(createOrderEntity.getConsigneeName());
+//        cscContantAndCompanyDto.setCustomerId(custId);
+//        cscContantAndCompanyDto.setGroupId(groupId);
+//        cscContactCompany = new CscContactCompany();
+//        cscContactCompany.setContactCompanyName(createOrderEntity.getConsigneeName());
+//        cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
+//        cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+//        if (cscReceivingInfoList.getResult() == null || cscReceivingInfoList.getResult().isEmpty()) {
+//            addCscContantAndCompanyDto("2", custId, createOrderEntity, groupId);
+//        }
 
         //仓库编码
         String warehouseCode = createOrderEntity.getWarehouseCode();
@@ -211,7 +228,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             cscSupplierInfoDto.setEmail(createOrderEntity.getSupportEmail());
             cscSupplierInfoDto.setContactName(createOrderEntity.getSupportContact());
             cscSupplierInfoDto.setContactPhone(createOrderEntity.getSupportPhone());
-            feignCscSupplierAPIClient.addSupplierBySupplierCode(cscSupplierInfoDto);
+            Wrapper<?> wrapper = feignCscSupplierAPIClient.addSupplierBySupplierCode(cscSupplierInfoDto);
+
         }
 
         //校验：货品档案信息
@@ -223,7 +241,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                 logger.info("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
-                return resultModel;
+//                return resultModel;
             }
         }
 
@@ -234,16 +252,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
         OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
         OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
+        OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
 
-        resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+        resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
         if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             //操作成功
             logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
         }
         return resultModel;
     }
-
 
     /**
      * 保存收货信息
@@ -259,40 +277,81 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         cscContantAndCompanyVo.setUserId(CreateOrderApiConstant.USERID);
         cscContantAndCompanyVo.setUserName(CreateOrderApiConstant.USERNAME);
         if (StringUtils.equals("1", purpose)) {
+            if (StringUtils.isBlank(createOrderEntity.getConsignorProvince()) || StringUtils.isBlank(createOrderEntity.getConsignorCity())
+                    || StringUtils.isBlank(createOrderEntity.getConsignorCounty())) {
+                throw new BusinessException("收货方省市区地址不全");
+            }
+            AddressDto addressDto = new AddressDto();
+            addressDto.setProvinceName(createOrderEntity.getConsignorProvince());
+            addressDto.setCityName(createOrderEntity.getConsignorCity());
+            addressDto.setDistrictName(createOrderEntity.getConsignorCounty());
+            String result = feignAddressCodeClient.findCodeByName(addressDto);
+            if (StringUtils.isBlank(result)) {
+                throw new BusinessException("无法获取收货方省市区地址编码");
+            }
+            JSONObject jsonObject = JSONObject.fromObject(JSONObject.fromObject(result).getString("result"));
+            String provinceCode = jsonObject.getString("provinceCode");
+            String cityCode = jsonObject.getString("cityCode");
+            String districtCode = jsonObject.getString("districtCode");
             CscContact cscContact = new CscContact();
             cscContact.setPurpose("1");
             cscContact.setContactCode(createOrderEntity.getConsignorName());
             cscContact.setContactName(createOrderEntity.getConsignorContact());
             cscContact.setPhone(createOrderEntity.getConsignorPhone());
             cscContact.setProvinceName(createOrderEntity.getConsignorProvince());
+            cscContact.setProvince(provinceCode);
             cscContact.setCityName(createOrderEntity.getConsignorCity());
+            cscContact.setCity(cityCode);
             cscContact.setAreaName(createOrderEntity.getConsignorCounty());
+            cscContact.setArea(districtCode);
             cscContact.setStreetName(createOrderEntity.getConsignorTown());
             cscContact.setDetailAddress(createOrderEntity.getConsignorAddress());
             cscContantAndCompanyVo.setCscContact(cscContact);
+            CscContactCompany cscContactCompany = new CscContactCompany();
+            cscContactCompany.setContactCompanyName(createOrderEntity.getConsignorName());
+            cscContantAndCompanyVo.setCscContactCompany(cscContactCompany);
         } else if (StringUtils.equals("2", purpose)) {
+            AddressDto addressDto = new AddressDto();
+            addressDto.setProvinceName(createOrderEntity.getConsignorProvince());
+            addressDto.setCityName(createOrderEntity.getConsignorCity());
+            addressDto.setDistrictName(createOrderEntity.getConsignorCounty());
+            String result = feignAddressCodeClient.findCodeByName(addressDto);
+            if (StringUtils.isBlank(result)) {
+                throw new BusinessException("无法获取收货方省市区地址编码");
+            }
+            JSONObject jsonObject = JSONObject.fromObject(JSONObject.fromObject(result).getString("result"));
+            String provinceCode = jsonObject.getString("provinceCode");
+            String cityCode = jsonObject.getString("cityCode");
+            String districtCode = jsonObject.getString("districtCode");
             CscContact cscContact = new CscContact();
             cscContact.setPurpose("2");
             cscContact.setContactCode(createOrderEntity.getConsigneeName());
             cscContact.setContactName(createOrderEntity.getConsigneeContact());
             cscContact.setPhone(createOrderEntity.getConsigneePhone());
             cscContact.setProvinceName(createOrderEntity.getConsigneeProvince());
+            cscContact.setProvince(provinceCode);
             cscContact.setCityName(createOrderEntity.getConsigneeCity());
+            cscContact.setCity(cityCode);
             cscContact.setAreaName(createOrderEntity.getConsigneeCounty());
+            cscContact.setArea(districtCode);
             cscContact.setStreetName(createOrderEntity.getConsigneeTown());
             cscContact.setDetailAddress(createOrderEntity.getConsigneeAddress());
             cscContantAndCompanyVo.setCscContact(cscContact);
+            CscContactCompany cscContactCompany = new CscContactCompany();
+            cscContactCompany.setContactCompanyName(createOrderEntity.getConsigneeName());
+            cscContantAndCompanyVo.setCscContactCompany(cscContactCompany);
         }
-        feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyVo);
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyVo);
     }
 
+    @Transactional
     public ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
                                     OfcDistributionBasicInfo ofcDistributionBasicInfo,
                                     OfcFinanceInformation ofcFinanceInformation,
                                     OfcWarehouseInformation ofcWarehouseInformation,
-                                    List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList) throws BusinessException {
+                                    List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList, OfcOrderStatus ofcOrderStatus) throws BusinessException {
         String orderCode = ofcFundamentalInformation.getOrderCode();
-
+        //订单记录表只添加不修改
         //订单状态更改为已审核
         String orderStatus = ALREADYEXAMINE;
         //插入或更新订单中心基本信息
@@ -313,6 +372,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
+            ofcOrderStatusService.save(ofcOrderStatus);
         } else if (existResult == 0) {
             //新增订单中心基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
@@ -327,14 +387,24 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
+            ofcOrderStatusService.save(ofcOrderStatus);
         }
+        //自动审核通过 review:审核；rereview:反审核
+        try {
+            orderApply(orderCode);
+        } catch (RuntimeException ex) {
+            logger.error("自动审核异常，{}", ex);
+        }
+        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
+
+    public void orderApply(String orderCode) {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         UamUser uamUser = new UamUser();
         uamUser.setUserName(CREATE_ORDER_BYAPI);
         authResDto.setUamUser(uamUser);
-//        ofcOrderManageService.orderAudit(orderCode, PENDINGAUDIT, "review", authResDto);
-        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        ofcOrderManageService.orderAudit(orderCode, PENDINGAUDIT, "review", authResDto);
     }
 
 }

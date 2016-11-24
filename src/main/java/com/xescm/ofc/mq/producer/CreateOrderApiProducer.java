@@ -26,7 +26,7 @@ public class CreateOrderApiProducer {
             message.setKey(code);
             SendResult sendResult = mqConfig.producer.send(message);
             if (sendResult != null) {
-                logger.info(new Date() + " 发送 mq message success! Topic is:" + mqConfig.getTopic() + "  msgId is: " + sendResult.getMessageId());
+                logger.info(new Date() + " 发送 mq message 成功! Topic：{},tag:{},message:{}",mqConfig.getOFCTopic() ,mqConfig.getTag(),sendResult.getMessageId());
             }
         }
     }

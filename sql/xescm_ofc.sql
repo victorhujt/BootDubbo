@@ -1,26 +1,9 @@
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : mysqldb
-Source Server Version : 50619
-Source Host           : 192.168.26.230:3306
-Source Database       : xescm_ofc
-
-Target Server Type    : MYSQL
-Target Server Version : 50619
-File Encoding         : 65001
-
-Date: 2016-11-19 16:57:07
-*/
-DROP DATABASE IF EXISTS xescm_ofc_test;
-CREATE DATABASE xescm_ofc_test DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE xescm_ofc_test;
-SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
 -- Table structure for ofc_create_order_error_log
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_create_order_error_log`;
+-- DROP TABLE IF EXISTS `ofc_create_order_error_log`;
 CREATE TABLE `ofc_create_order_error_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cust_order_code` varchar(255) DEFAULT '' COMMENT '客户订单编号',
@@ -28,12 +11,12 @@ CREATE TABLE `ofc_create_order_error_log` (
   `cust_code` varchar(255) DEFAULT '' COMMENT '货主编码',
   `error_log` varchar(1000) DEFAULT '' COMMENT '错误信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
 
 -- ----------------------------
 -- Table structure for ofc_distribution_basic_info
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_distribution_basic_info`;
+-- DROP TABLE IF EXISTS `ofc_distribution_basic_info`;
 CREATE TABLE `ofc_distribution_basic_info` (
   `trans_code` varchar(50) DEFAULT NULL COMMENT '运输单号',
   `urgent` int(1) DEFAULT NULL COMMENT '是否加急',
@@ -84,7 +67,7 @@ CREATE TABLE `ofc_distribution_basic_info` (
 -- ----------------------------
 -- Table structure for ofc_finance_information
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_finance_information`;
+-- DROP TABLE IF EXISTS `ofc_finance_information`;
 CREATE TABLE `ofc_finance_information` (
   `service_charge` decimal(18,2) DEFAULT NULL COMMENT '服务费',
   `order_amount` decimal(18,2) DEFAULT NULL COMMENT '订单金额',
@@ -102,7 +85,7 @@ CREATE TABLE `ofc_finance_information` (
   `print_invoice` varchar(10) DEFAULT NULL COMMENT '是否打印发票(电商)',
   `buyer_payment_method` varchar(100) DEFAULT NULL COMMENT '买家支付方式(电商)',
   `insure` varchar(10) DEFAULT NULL COMMENT '是否保价(电商)',
-  `insure_value` varchar(100) DEFAULT NULL COMMENT '保价金额(电商)',
+  `insure_value` decimal(18,2) DEFAULT NULL COMMENT '保价金额(电商)',
   `pick_up_goods` varchar(10) DEFAULT NULL COMMENT '是否上门提货',
   `home_delivery_fee` decimal(18,2) DEFAULT NULL COMMENT '上门提货费用',
   `cargo_insurance_fee` decimal(18,2) DEFAULT NULL COMMENT '货物保险费用',
@@ -123,7 +106,7 @@ CREATE TABLE `ofc_finance_information` (
 -- ----------------------------
 -- Table structure for ofc_fundamental_information
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_fundamental_information`;
+-- DROP TABLE IF EXISTS `ofc_fundamental_information`;
 CREATE TABLE `ofc_fundamental_information` (
   `order_code` varchar(30) NOT NULL COMMENT '订单编号',
   `order_batch_number` varchar(30) DEFAULT NULL COMMENT '订单批次号',
@@ -167,7 +150,7 @@ CREATE TABLE `ofc_fundamental_information` (
 -- ----------------------------
 -- Table structure for ofc_goods_details_info
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_goods_details_info`;
+-- DROP TABLE IF EXISTS `ofc_goods_details_info`;
 CREATE TABLE `ofc_goods_details_info` (
   `goods_code` varchar(30) DEFAULT NULL COMMENT '货品代码',
   `goods_name` varchar(30) DEFAULT NULL COMMENT '货品名称',
@@ -195,9 +178,18 @@ CREATE TABLE `ofc_goods_details_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货品明细信息';
 
 -- ----------------------------
+-- Table structure for ofc_merchandiser
+-- ----------------------------
+-- DROP TABLE IF EXISTS `ofc_merchandiser`;
+CREATE TABLE `ofc_merchandiser` (
+  `merchandiser` varchar(20) NOT NULL COMMENT '开单员',
+  PRIMARY KEY (`merchandiser`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for ofc_order_status
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_order_status`;
+-- DROP TABLE IF EXISTS `ofc_order_status`;
 CREATE TABLE `ofc_order_status` (
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
   `order_status` varchar(20) DEFAULT NULL COMMENT '订单状态',
@@ -210,7 +202,7 @@ CREATE TABLE `ofc_order_status` (
 -- ----------------------------
 -- Table structure for ofc_planned_detail
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_planned_detail`;
+-- DROP TABLE IF EXISTS `ofc_planned_detail`;
 CREATE TABLE `ofc_planned_detail` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `goods_code` varchar(30) DEFAULT NULL COMMENT '货品代码',
@@ -231,7 +223,7 @@ CREATE TABLE `ofc_planned_detail` (
 -- ----------------------------
 -- Table structure for ofc_silopro_newstatus
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_silopro_newstatus`;
+-- DROP TABLE IF EXISTS `ofc_silopro_newstatus`;
 CREATE TABLE `ofc_silopro_newstatus` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
@@ -242,7 +234,7 @@ CREATE TABLE `ofc_silopro_newstatus` (
 -- ----------------------------
 -- Table structure for ofc_silopro_source_status
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_silopro_source_status`;
+-- DROP TABLE IF EXISTS `ofc_silopro_source_status`;
 CREATE TABLE `ofc_silopro_source_status` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
@@ -262,7 +254,7 @@ CREATE TABLE `ofc_silopro_source_status` (
 -- ----------------------------
 -- Table structure for ofc_silopro_status
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_silopro_status`;
+-- DROP TABLE IF EXISTS `ofc_silopro_status`;
 CREATE TABLE `ofc_silopro_status` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
@@ -276,7 +268,7 @@ CREATE TABLE `ofc_silopro_status` (
 -- ----------------------------
 -- Table structure for ofc_siloprogram_info
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_siloprogram_info`;
+-- DROP TABLE IF EXISTS `ofc_siloprogram_info`;
 CREATE TABLE `ofc_siloprogram_info` (
   `plan_code` varchar(30) NOT NULL DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) NOT NULL DEFAULT '' COMMENT '订单编号',
@@ -329,7 +321,7 @@ CREATE TABLE `ofc_siloprogram_info` (
 -- ----------------------------
 -- Table structure for ofc_transplan_info
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_transplan_info`;
+-- DROP TABLE IF EXISTS `ofc_transplan_info`;
 CREATE TABLE `ofc_transplan_info` (
   `plan_code` varchar(30) NOT NULL DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) NOT NULL DEFAULT '' COMMENT '订单编号',
@@ -388,7 +380,7 @@ CREATE TABLE `ofc_transplan_info` (
 -- ----------------------------
 -- Table structure for ofc_transplan_newstatus
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_transplan_newstatus`;
+-- DROP TABLE IF EXISTS `ofc_transplan_newstatus`;
 CREATE TABLE `ofc_transplan_newstatus` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
@@ -399,7 +391,7 @@ CREATE TABLE `ofc_transplan_newstatus` (
 -- ----------------------------
 -- Table structure for ofc_transplan_status
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_transplan_status`;
+-- DROP TABLE IF EXISTS `ofc_transplan_status`;
 CREATE TABLE `ofc_transplan_status` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
@@ -413,7 +405,7 @@ CREATE TABLE `ofc_transplan_status` (
 -- ----------------------------
 -- Table structure for ofc_traplan_source_status
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_traplan_source_status`;
+-- DROP TABLE IF EXISTS `ofc_traplan_source_status`;
 CREATE TABLE `ofc_traplan_source_status` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
   `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
@@ -433,7 +425,7 @@ CREATE TABLE `ofc_traplan_source_status` (
 -- ----------------------------
 -- Table structure for ofc_warehouse_information
 -- ----------------------------
-DROP TABLE IF EXISTS `ofc_warehouse_information`;
+-- DROP TABLE IF EXISTS `ofc_warehouse_information`;
 CREATE TABLE `ofc_warehouse_information` (
   `support_name` varchar(30) DEFAULT '' COMMENT '供应商名称',
   `support_code` varchar(30) DEFAULT NULL COMMENT '供应商编码',

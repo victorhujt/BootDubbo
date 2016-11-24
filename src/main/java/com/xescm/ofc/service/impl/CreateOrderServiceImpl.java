@@ -163,6 +163,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     }
 
 
+    @Transactional
     @Override
     public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode, String orderCode, String custCode) {
         CannelOrderVo cannelOrderVo = new CannelOrderVo();
