@@ -395,14 +395,15 @@
 <form id="operationDistributingFormValidate" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
         <div class="form-group">
-            <label class="control-label col-label no-padding-right" for="">订单日期</label>
+            <div><label class="control-label col-label no-padding-right" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="订单日期"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right" for="">开单员</label>
+            </div></div>
+
+            <div><label class="control-label col-label no-padding-right" for="">开单员</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="merchandiser" name="merchandiser">
@@ -410,19 +411,19 @@
                         <option value="00002">杨过</option>
                     </select>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right" for="">预发货时间</label>
+            </div></div>
+            <div><label class="control-label col-label no-padding-right" for="">预发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
-            </div>
+            </div></div>
         </div>
     </div>
     <div class="col-xs-12">
         <div class="form-group">
-            <label class="control-label col-label no-padding-right" for="">客户名称</label>
+            <div><label class="control-label col-label no-padding-right" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
@@ -433,8 +434,8 @@
                             id="">选择
                     </button></span>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right" for="">配送仓库</label>
+            </div></div>
+            <div><label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()">
@@ -442,13 +443,13 @@
                         <option value="00002">天津仓库</option>-->
                     </select>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right" for="">备注</label>
+            </div></div>
+            <div><label class="control-label col-label no-padding-right" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="notes" id="notes" type="text" placeholder="备注"/>
                 </div>
-            </div>
+            </div></div>
         </div>
     </div>
     <br/>
@@ -609,7 +610,7 @@
 </form>
 
 <div class="col-xs-12">
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
+    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn" onclick="javascript:$('#operationDistributingFormValidate').submit();">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         确认下单
     </button>
@@ -1545,8 +1546,9 @@
 
 
 
-    $("#orderPlaceConTableBtn").click(function () {//000
+    function distributingOrderPlaceCon() {
 
+        console.log("0--------------");
         if(!validateForm()){
             return;
         }
@@ -1672,7 +1674,7 @@
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
                 })
-    })
+    }
 
     function validateForm() {//000
         //校验是否有某个收货人下所有货品的数量都是0//能不能直接从HashMap下手//000
@@ -1873,14 +1875,23 @@
 
             },
             highlight : function(e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
             },
             success : function(e) {
-                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(e).parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
             },
             errorPlacement : function(error, element) {
+                //error.insertAfter(element.parent());
                 error.insertAfter(element.parent());
+            },
+            submitHandler : function(form) {
+                /*xescm.common.commit('addSupplierContactForm', '/csc/supplier/addCscSupplierContact', function(){
+                    var supplierId = $("#supplierId").val();
+                    var url = "/csc/supplier/toMaintainCscSupplierContactListPage/" + supplierId;
+                    xescm.common.loadPage(url);
+                });*/
+                distributingOrderPlaceCon();
             },
             invalidHandler : function(form) {
             }
