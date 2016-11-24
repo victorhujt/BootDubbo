@@ -230,7 +230,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 cscGood= JSONUtils.jsonToPojo(cscGoods, CscGoodsApiDto.class);
             }
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            cscGood.setCustomerId("e1814c55e1c547dea95211ba2213c6d8");
+            cscGood.setCustomerId(custId);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
             Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGood);
