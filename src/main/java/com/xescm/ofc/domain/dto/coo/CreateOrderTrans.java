@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.xescm.ofc.enums.OrderConstEnum.CREATE_ORDER_BYAPI;
+import static com.xescm.ofc.enums.OrderConstEnum.PENDINGAUDIT;
 
 /**
  * 订单中心创建订单（鲜易网） 转换为数据库DO
@@ -54,6 +55,20 @@ public class CreateOrderTrans {
      */
     private OfcWarehouseInformation ofcWarehouseInformation;
 
+    private OfcOrderStatus ofcOrderStatus;
+
+    public OfcOrderStatus getOfcOrderStatus() throws BusinessException{
+        if (createOrderEntity != null) {
+            ofcOrderStatus = new OfcOrderStatus();
+            ofcOrderStatus.setOrderCode(orderCode);
+            ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
+            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);
+            ofcOrderStatus.setLastedOperTime(nowDate);
+        }
+        return this.ofcOrderStatus;
+    }
+
     /**
      * 获取货品明细信息
      *
@@ -64,12 +79,9 @@ public class CreateOrderTrans {
             List<CreateOrderGoodsInfo> list = createOrderEntity.getCreateOrderGoodsInfos();
             if (null != list && !list.isEmpty()) {
                 this.ofcGoodsDetailsInfoList = new ArrayList<>();
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = null;
                 for (CreateOrderGoodsInfo goodsInfo : list) {
-                    ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                    OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
                     ofcGoodsDetailsInfo.setOrderCode(this.orderCode);
-
-                    ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
                     String goodsCode = goodsInfo.getGoodsCode();
                     String goodsName = goodsInfo.getGoodsName();
                     String goodsSpec = goodsInfo.getGoodsSpec();
@@ -246,7 +258,9 @@ public class CreateOrderTrans {
             ofcWarehouseInformation.setWarehouseCode(createOrderEntity.getWarehouseCode());
             ofcWarehouseInformation.setWarehouseName(createOrderEntity.getWarehouseName());
             ofcWarehouseInformation.setSupportName(createOrderEntity.getSupportName());
-            ofcWarehouseInformation.setProvideTransport(NumberUtils.createInteger(createOrderEntity.getProvideTransport()));
+            String provideTransport = createOrderEntity.getProvideTransport();
+            Integer provideTransportInt = NumberUtils.isNumber(provideTransport) ? Integer.valueOf(provideTransport) : null;
+            ofcWarehouseInformation.setProvideTransport(provideTransportInt);
             ofcWarehouseInformation.setArriveTime(DateUtils.String2Date(createOrderEntity.getArriveTime(), DateUtils.DateFormatType.TYPE1));
             ofcWarehouseInformation.setPlateNumber(createOrderEntity.getPlateNumber());
             ofcWarehouseInformation.setDriverName(createOrderEntity.getDriverName());

@@ -166,7 +166,7 @@
         });
 
         $(function () {
-            $("#operate").append(operateEle("10"));
+            $("#operate").empty().append(operateEle("10"));
         });
 
         /**
@@ -188,7 +188,7 @@
             } else if (flag == "20") {
                 return ( rereviewObj + "&nbsp;&nbsp;" + deleteObj);
             } else if (flag == "30") {
-                return append(cannelObj);
+                return (cannelObj);
             }
         }
 
@@ -214,11 +214,15 @@
         }
 
         function jumpUrlByOrderCode(orderCode){
-            location.href="";
+            var historyUrlTag = "orderManageOpera";
+            var url = "/ofc/orderDetailPageByCode/" + orderCode + "/" + historyUrlTag;
+            xescm.common.loadPage(url);
         }
 
         function jumpUrlByOrderBatchCode(orderBatchNumber){
-            location.href="";
+            var historyUrlTag = "orderManageOpera";
+            var url = "/ofc/orderDetailBatchOpera/" + orderBatchNumber + "/" + historyUrlTag;
+            xescm.common.loadPage(url);
         }
 
     </script>
