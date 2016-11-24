@@ -359,7 +359,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" />
                                 <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -791,6 +791,7 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
+        $("#orderTime").val(new Date().toLocaleDateString());
     }
     /**
      *表单验证
@@ -812,6 +813,7 @@
                 },
                 transCode:{
                     maxlength:50,
+                    pattern:/(^[A-Za-z0-9]+$)/,
                     remote:{
                         url : ofc_url + "/ofc/checkTransCode",
                         type : "POST",
@@ -844,6 +846,7 @@
                 },
                 transCode:{
                     maxlength: "超过最大长度50",
+                    pattern:"只能输入数字和字母",
                     remote: "运输单号已存在"
                 },
                 custName:{
@@ -1702,16 +1705,16 @@
         });
 
         $("#goodsSelectFormBtn").click(function () {
-            var cscGoodes = {};
+            var cscGoods = {};
             var groupId = $("#custGroupId").val();
             var custId = $("#custId").val();
             var goodsCode = $("#goodsCodeCondition").val();
             var goodsName = $("#goodsNameCondition").val();
-            cscGoodes.goodsCode = goodsCode;
-            cscGoodes.goodsName = goodsName;
-            var param = JSON.stringify(cscGoodes);
+            cscGoods.goodsCode = goodsCode;
+            cscGoods.goodsName = goodsName;
+            var param = JSON.stringify(cscGoods);
             debugger;
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", {"cscGoodes":param,"groupId":groupId,"custId":custId}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
 
                 var goodsList = "";
@@ -2006,7 +2009,7 @@
             goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                     "<select  id='goodsCategory' name='goodsCategory'>";
             if($("#goodsInfoListDiv").find("tr").length<1){
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelect", {"groupId":groupId,"custId":custId}, function(data) {
+                CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"groupId":groupId,"custId":custId}, function(data) {
                     data=eval(data);
                     $.each(data,function (index,cscGoodsVo) {
                         goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeName + "'>" + cscGoodsVo.goodsTypeName + "</option>";
