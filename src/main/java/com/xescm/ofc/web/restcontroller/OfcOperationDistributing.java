@@ -120,9 +120,11 @@ public class OfcOperationDistributing extends BaseController{
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
             wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
-            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+            if(null != wrapper.getResult()){
+                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+            }
         }catch (Exception ex){
-            logger.error("城配下单查询仓库列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品种类失败!",ex.getMessage(),wrapper.getMessage());
         }
     }
 
@@ -139,9 +141,11 @@ public class OfcOperationDistributing extends BaseController{
             cscGoodsType.setCustomerId(custId);
             cscGoodsType.setPid(goodsType);
             wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
-            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+            if(null != wrapper.getResult()){
+                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+            }
         }catch (Exception ex){
-            logger.error("城配下单查询仓库列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品小类失败!",ex.getMessage(),wrapper.getMessage());
         }
     }
 
@@ -175,7 +179,11 @@ public class OfcOperationDistributing extends BaseController{
                 logger.error("查询客户列表失败,查询结果有误!");
             }
             List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
-            response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
+            if(null == cscCustomerVoList){
+                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
+            }else{
+                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
+            }
         }catch (Exception ex){
             logger.error("查询客户列表失败!",ex.getMessage());
         }
