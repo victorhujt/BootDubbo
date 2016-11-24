@@ -903,7 +903,7 @@
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='"+num+"' /></td>";
+            consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='' onkeyup='value=value.replace(/[^\d]/g,'')'/></td>";
             consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
             consignorout =consignorout + "</tr>";
         });
