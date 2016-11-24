@@ -99,10 +99,6 @@ public class OfcOperationDistributing extends BaseController{
     public void queryCustomerByName(String custId,Model model,HttpServletResponse response){
         logger.info("==> custId={}", custId);
         try{
-            if(PubUtils.isSEmptyOrNull(custId)){
-                logger.error("城配下单筛选仓库入参有误");
-                return;
-            }
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
         }catch (Exception ex){
@@ -117,10 +113,6 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("==> custId={}", custId);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
-            if(PubUtils.isSEmptyOrNull(custId)){
-                logger.error("城配下单筛选货品一级种类入参有误");
-                return;
-            }
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
@@ -139,10 +131,6 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
-            if(PubUtils.isSEmptyOrNull(custId) || PubUtils.isSEmptyOrNull(goodsType)){
-                logger.error("城配下单筛选货品二级种类入参有误");
-                return;
-            }
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
@@ -160,10 +148,6 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("==> cscGoodsApiDto={}", cscGoodsApiDto);
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
-            if(null == cscGoodsApiDto){
-                logger.error("城配下单筛选货品入参为null");
-                return;
-            }
             wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
             response.getWriter().print(JSONUtils.objectToJson(wrapper));
         }catch (Exception ex){
@@ -178,10 +162,6 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("==> queryCustomerName={}", queryCustomerName);
         logger.info("==> currPage={}", currPage);
         try{
-            if(PubUtils.isSEmptyOrNull(queryCustomerName)){
-                logger.error("查询客户列表参数为空!");
-                return;
-            }
             QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
             if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
                 queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
