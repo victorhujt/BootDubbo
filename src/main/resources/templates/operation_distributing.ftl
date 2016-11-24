@@ -656,6 +656,7 @@
         validateFormData();
         $("#merchandiser").editableSelect();
         $("#store").editableSelect();
+        $("#orderTime").val(new Date().toLocaleDateString());
     }
     var goodsAndConsigneeMap = new HashMap();
     $(function () {
@@ -682,6 +683,17 @@
                 alert("请先确认收货方");
             }else{
                 //$("#goodsSelectListTbody").html("");
+                //加载货品一级种类
+                //goodsTypeId  goodsSecTypeId
+                var custId = $("#custId").val();
+                $("#goodsTypeId option").remove();
+                $("#goodsSecTypeId option").remove();
+                CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
+                    data=eval(data);
+                    $.each(data,function (index,goodsType) {
+                        $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
+                    });
+                })
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
         })
@@ -865,17 +877,16 @@
     });
 
 
-    function deleteGood(obj) {
-        //$(obj).off('click');
-        /*if(ifConsigneeConfirm){
-            alert('您已确认收货方,无法删除!');
-        }else{*/
-        $(obj).parent().parent().remove();
-        //删除Map中对应的数据
-        //$(obj).preventDefault();//.stopPropagation();
-        //$(obj).stopPropagation();
+    var deleteGoodsTag = false;
 
+    function deleteGood(obj) {
+        deleteGoodsTag = true;
         debugger
+        $(obj).parent().parent().off('click')
+        $(obj).parent().parent().remove();
+        $("#goodsAndConsigneeDiv").fadeIn("slow");
+        //删除Map中对应的数据
+
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
         var mapKey =  goodsCode + "@" + goodsIndex;
@@ -885,43 +896,56 @@
     }
 
     function goodsAndConsignee(obj){
-        $("#goodsAndConsigneeDiv").fadeIn("slow");
-        //显示货品信息
-        var goodsIndex = $(obj).find('td')[1].innerText;
-        var goodsCode = $(obj).find('td')[2].innerText;
-        var goodsName = $(obj).find('td')[3].innerText;
-        var specification = $(obj).find('td')[4].innerText;
-        var unit = $(obj).find('td')[5].innerText;
-        $("#goodsCodeDiv").val(goodsCode);
-        $("#goodsNameDiv").val(goodsName);
-        $("#specificationDiv").val(specification);
-        $("#unitDiv").val(unit);
+        $(obj).not($(obj).find('td')[0])
+
+        console.log("---"+obj)
+        if(deleteGoodsTag){
+            console.log("这儿走了几次?")
+            deleteGoodsTag = false;
+            debugger
+            return;
+        }else{
+            console.log("走这儿了了?")
+            $("#goodsAndConsigneeDiv").fadeIn("slow");
+            console.log("走这儿了了???")
+            //显示货品信息
+            var goodsIndex = $(obj).find('td')[1].innerText;
+            var goodsCode = $(obj).find('td')[2].innerText;
+            var goodsName = $(obj).find('td')[3].innerText;
+            var specification = $(obj).find('td')[4].innerText;
+            var unit = $(obj).find('td')[5].innerText;
+            $("#goodsCodeDiv").val(goodsCode);
+            $("#goodsNameDiv").val(goodsName);
+            $("#specificationDiv").val(specification);
+            $("#unitDiv").val(unit);
 
 
-        //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
-        //显示收货人信息
-        //goodsAndConsigneeTbody
-        var consignorout = "";
-        $("#consigneeInfoListDiv").find("tr").each(function(index){
-            var tdArr = $(this).children();
-            var consigneeName = tdArr.eq(1).text();//
-            var consigneeCode = tdArr.eq(7).text();//
-            var mapKey = goodsCode + "@" + goodsIndex;
-            var num = 0;
+            //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
+            //显示收货人信息
+            //goodsAndConsigneeTbody
+            var consignorout = "";
+            $("#consigneeInfoListDiv").find("tr").each(function(index){
+                var tdArr = $(this).children();
+                var consigneeName = tdArr.eq(1).text();//
+                var consigneeCode = tdArr.eq(7).text();//
+                var mapKey = goodsCode + "@" + goodsIndex;
+                var num = 0;
 
-            if(undefined != goodsAndConsigneeMap.get(mapKey)){
-                var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
-                //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
-                num = preGoodsAndConsigneeJsonMsg[consigneeCode];
-            }
+                if(undefined != goodsAndConsigneeMap.get(mapKey)){
+                    var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
+                    //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
+                    num = preGoodsAndConsigneeJsonMsg[consigneeCode];
+                }
 
-            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-            consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
-            consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
-            consignorout =consignorout + "</tr>";
-        });
-        $("#goodsAndConsigneeTbody").html(consignorout);
+                consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+                consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
+                consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
+                consignorout =consignorout + "</tr>";
+            });
+            $("#goodsAndConsigneeTbody").html(consignorout);
+        }
+
     }//
 
     //统计货品发货数量
@@ -1537,16 +1561,7 @@
                 $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
             });
         })
-        //加载货品一级种类
-        //goodsTypeId  goodsSecTypeId
-        $("#goodsTypeId option").remove();
-        $("#goodsSecTypeId option").remove();
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
-            data=eval(data);
-            $.each(data,function (index,goodsType) {
-                $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
-            });
-        })
+
 
 
     });
@@ -1573,6 +1588,7 @@
 
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
+
 
             orderInfo = {};
 

@@ -17,10 +17,7 @@ import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.JacksonUtil;
-import com.xescm.ofc.utils.JsonUtil;
-import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.utils.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -33,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +52,8 @@ public class OfcOperationDistributing extends BaseController{
     private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    @Resource
+    private CodeGenUtils codeGenUtils;
 
 
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
@@ -84,6 +84,9 @@ public class OfcOperationDistributing extends BaseController{
                 }
                 CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
                 CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
+                String batchNumber = codeGenUtils.getNewWaterCode("BN",4);
+                ofcOrderDTO.setBatchNumber(batchNumber);
+                System.out.println(ofcOrderDTO.getBatchNumber());
                 resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
                         ,consignor,consignee,new CscSupplierInfoDto());
             }
