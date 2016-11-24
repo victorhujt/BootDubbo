@@ -166,4 +166,12 @@ public class OfcJumpontroller extends BaseController{
         modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
         return modelAndView;
     }
+    public String getCustId() {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
+        return custId;
+    }
 }
