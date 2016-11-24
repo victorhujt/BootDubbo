@@ -293,42 +293,42 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             ofcFundamentalInformation.setCustOrderCode(custOrderCode);
             ofcFundamentalInformation.setSelfCustOrderCode(selfCustOrderCode);
             boolean flag = false;
-        try {
-            int count = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
-            if (count < 1){
-                flag = true;
-            }
+            try {
+                int count = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+                if (count < 1){
+                    flag = true;
+                }
 
-        } catch (Exception e) {
-            logger.error("校验客户订单编号出错:　", e.getMessage());
+            } catch (Exception e) {
+                logger.error("校验客户订单编号出错:　", e.getMessage());
+            }
+            return flag;
         }
-        return flag;
-    }
 
     /*
     校验运输单号
      */
-    @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
-    @ResponseBody
-    public boolean checkTransCode(Model model, String transCode, String selfTransCode){
-        logger.info("==> custOrderCode={}", transCode);
-        logger.info("==> selfCustOrderCode={}", selfTransCode);
+        @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
+        @ResponseBody
+        public boolean checkTransCode(Model model, String transCode, String selfTransCode){
+            logger.info("==> custOrderCode={}", transCode);
+            logger.info("==> selfCustOrderCode={}", selfTransCode);
 
-        OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
-        ofcDistributionBasicInfo.setTransCode(transCode);
-        ofcDistributionBasicInfo.setSelfTransCode(selfTransCode);
-        boolean flag = false;
-        try {
-            int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (count < 1){
-                flag = true;
+            OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
+            ofcDistributionBasicInfo.setTransCode(transCode);
+            ofcDistributionBasicInfo.setSelfTransCode(selfTransCode);
+            boolean flag = false;
+            try {
+                int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+                if (count < 1){
+                    flag = true;
+                }
+
+            } catch (Exception e) {
+                logger.error("校验运输单号出错:　", e.getMessage());
             }
-
-        } catch (Exception e) {
-            logger.error("校验运输单号出错:　", e.getMessage());
+            return flag;
         }
-        return flag;
-    }
 
 
 }

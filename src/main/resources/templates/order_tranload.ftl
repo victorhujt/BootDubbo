@@ -356,7 +356,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative">
-                                <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" />
                                 <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -781,6 +781,7 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
+        $("#orderTime").val(new Date().toLocaleDateString());
     }
     /**
      *表单验证
