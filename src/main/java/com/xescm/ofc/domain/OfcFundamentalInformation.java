@@ -18,6 +18,10 @@ public class OfcFundamentalInformation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String orderCode;
 
+
+    @Column(name = "order_batch_number")
+    private String orderBatchNumber;
+
     /**
      * 订单日期
      */
@@ -200,6 +204,14 @@ public class OfcFundamentalInformation {
      */
     @Column(name = "transport_type")
     private String transportType;
+
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
+
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
+    }
 
     public String getSelfCustOrderCode() {
         return selfCustOrderCode;
@@ -676,26 +688,37 @@ public class OfcFundamentalInformation {
 //    ofd.destination_district,
 //    ofd.destination_towns
 
+    @Transient
     private String departurePlace;
 
+    @Transient
     private String destination;
 
+    @Transient
     private String transCode;
 
+    @Transient
     private String plateNumber;
 
+    @Transient
     private String driverName;
 
+    @Transient
     private String contactNumber;
 
+    @Transient
     private String destinationProvince;
 
+    @Transient
     private String destinationCity;
 
+    @Transient
     private String destinationDistrict;
 
+    @Transient
     private String destinationTowns;
 
+    @Transient
     private String orderStatus;
 
     public String getDestinationTowns() {

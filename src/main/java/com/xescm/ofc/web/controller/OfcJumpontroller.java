@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,11 @@ public class OfcJumpontroller extends BaseController{
         return "order_follow";
     }
 
+    /**
+     * 进入主页
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/index")
     public String toIndex(Model model){
 
@@ -120,11 +126,24 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
+    /**
+     * 城配开单
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/ofc/operationDistributing")
-    public String operationDistributing(Model model){
+    public String operationDistributing(Model model,Map<String,Object> map){
+        map.put("currentTime",new Date());
         return "operation_distributing";
     }
 
+    /**
+     * 城配开单Excel导入
+     * @param model
+     * @param historyUrl
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}")
     public String operationDistributingExcel(Model model, @PathVariable String historyUrl, Map<String,Object> map){
         if("operation_distributing".equals(historyUrl)){
@@ -134,45 +153,26 @@ public class OfcJumpontroller extends BaseController{
         return "operation_distributing_excel";
     }
 
+    /**
+     * 运输开单
+     * @param model
+     * @param map
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
-        List<RmcWarehouse> rmcWarehouseByCustCode = null;
-        List<CscGoodsVo> cscGoodsVoList = null;
-        setDefaultModel(model);
         try{
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
-            /*CscGoods cscGoods=new CscGoods();
-            cscGoods.setCustomerId(custId);
-            cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
-            cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));
-            Wrapper<List<CscGoodsVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
-            cscGoodsVoList = cscGoodsLists.getResult();*/
+            map.put("currentTime",new Date());
         }catch (BusinessException ex){
-            logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
-            rmcWarehouseByCustCode = new ArrayList<>();
         }
         //map.put("cscGoodsVoList",cscGoodsVoList);
         return new ModelAndView("order_tranload");
 
     }
 
-    /**
-     * 运营→订单管理 orderManageOpera
-     * @return modelAndView
-     */
-    @RequestMapping("ofc/orderManageOpera")
-    public ModelAndView orderManageOpera() {
-        ModelAndView modelAndView = new ModelAndView("order_manage_opera");
-        modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
-        return modelAndView;
-    }
+
 }

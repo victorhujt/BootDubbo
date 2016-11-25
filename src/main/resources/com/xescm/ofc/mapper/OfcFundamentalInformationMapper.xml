@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <id column="order_batch_number" property="orderBatchBumber" jdbcType="VARCHAR" />
     <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
     <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
     <result column="cust_name" property="custName" jdbcType="VARCHAR" />
