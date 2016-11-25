@@ -15,7 +15,6 @@ public class OfcFundamentalInformation {
      */
     @Id
     @Column(name = "order_code")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String orderCode;
 
 

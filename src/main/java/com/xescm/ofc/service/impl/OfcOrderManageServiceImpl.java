@@ -20,6 +20,7 @@ import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.*;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -265,7 +266,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             rmcCompanyLineQO.setBeginCityName(ofcTransplanInfo.getDepartureCity());
             rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
-            Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
+            Wrapper<List<RmcCompanyLineVo>> companyList = null;
+            try{
+                companyList = companySelByApi(rmcCompanyLineQO);
+
+            }catch (Exception ex){
+                throw new BusinessException(companyList.getMessage());
+            }
+
             if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
                     && !CollectionUtils.isEmpty(companyList.getResult())){
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
@@ -679,6 +687,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return rmcCompanyLists;
     }
 
+
+
     public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList,String userName) {
         List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
@@ -845,5 +855,76 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
         }
     }
+
+    /**
+     * 城配下单自动审核
+     * @param ofcFundamentalInformation
+     * @param goodsDetailsList
+     * @param ofcDistributionBasicInfo
+     * @param ofcWarehouseInformation
+     * @param ofcFinanceInformation
+     * @param orderStatus
+     * @param reviewTag
+     * @param authResDtoByToken
+     * @return
+     */
+    @Override
+    public Wrapper<?> orderAutoAuditFromDistributing(OfcFundamentalInformation ofcFundamentalInformation,
+                                                 List<OfcGoodsDetailsInfo> goodsDetailsList,
+                                                 OfcDistributionBasicInfo ofcDistributionBasicInfo,
+                                                 OfcWarehouseInformation ofcWarehouseInformation,
+                                                 OfcFinanceInformation ofcFinanceInformation,
+                                                 String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        ofcOrderStatus.setOrderStatus(orderStatus);
+        logger.debug(ofcOrderStatus.toString());
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
+            if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
+                ofcOrderStatus.setOrderStatus(ALREADYEXAMINE);
+                ofcOrderStatus.setStatusDesc("已审核");
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单审核完成");
+                ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcOrderStatus.setLastedOperTime(new Date());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperTime(new Date());
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.TRANSPORTORDER)){
+                    //运输订单
+                    OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                    ofcTransplanInfo.setProgramSerialNumber("1");
+                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){//在城配下单这边没有卡班
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    }
+                }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)
+                        && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
+                        && ofcWarehouseInformation.getProvideTransport() == OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                    //000创建仓储计划单
+                    OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
+                    ofcSiloprogramInfo.setProgramSerialNumber("1");
+                    siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                }
+                else {
+                    throw new BusinessException("订单类型有误");
+                }
+                logger.debug("计划单创建成功");
+            }else {
+                throw new BusinessException("缺少标志位");
+            }
+            ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+            ofcOrderStatus.setLastedOperTime(new Date());
+           // ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            ofcOrderStatusService.save(ofcOrderStatus);
+            //return String.valueOf(Wrapper.SUCCESS_CODE);
+        }else {
+            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+        }
+
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
 
 }

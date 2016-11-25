@@ -1652,8 +1652,8 @@
 
             orderInfo = {};
 
-            var storeMessage = $("#store").val();
-            if("" == storeMessage){
+            var warehouseCodeMessage = $("#warehouseCode").val();
+            if("" == warehouseCodeMessage){
                 orderInfo.orderType = "60";//运输
                 orderInfo.businessType = "600";//城配
                 orderInfo.provideTransport = "0";//不需要运输
