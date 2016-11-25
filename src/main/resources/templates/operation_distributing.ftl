@@ -690,6 +690,9 @@
                 var custId = $("#custId").val();
                 $("#goodsTypeId option").remove();
                 $("#goodsSecTypeId option").remove();
+                $("#goodsTypeId").append("<option value = ''>全部</option>");//123//$("#warehouseCode").append("<option value = ''>无</option>");
+                $("#goodsSecTypeId").append("<option value = ''>全部</option>");
+
                 var firstGoodsType = null;
                 CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
                     data=eval(data);
@@ -704,6 +707,7 @@
                 });
                 //加载第一个一级货品的二级种类//000
                 $("#goodsSecTypeId option").remove();
+                $("#goodsSecTypeId").append("<option value = ''>全部</option>");
                 console.log('----------'+firstGoodsType)
                 if(null != firstGoodsType){
                     console.log("sdfsdf")
@@ -731,12 +735,9 @@
         });
         $("#goodsSelectFormBtn").click(function () {
             debugger
-            console.log("筛选货品有问题")
-            console.log("==="+JSON.stringify( $("#goodsSelConditionForm").serialize()))
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
-                console.log("====================="+JSON.stringify(data))
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
 
@@ -973,7 +974,7 @@
                 var consigneeType = tdArr.eq(6).text();//
                 var consigneeCode = tdArr.eq(7).text();//
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var num = "";
+                var num = "0";
 
                 if(undefined != goodsAndConsigneeMap.get(mapKey)){
                     var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
@@ -1655,7 +1656,7 @@
             if("" == storeMessage){
                 orderInfo.orderType = "60";//运输
                 orderInfo.businessType = "600";//城配
-                orderInfo.provideTransport = "0";//需要运输
+                orderInfo.provideTransport = "0";//不需要运输
             }else{
                 orderInfo.orderType = "61";//仓储
                 orderInfo.businessType = "610";//销售出库
