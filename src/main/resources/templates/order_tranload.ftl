@@ -59,7 +59,7 @@
 <body class="no-skin">
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">货品列表</h4></div>
+        <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
@@ -116,12 +116,12 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    <div class="modal-footer" style="background-color:#fff;"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
 </div>
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
     <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">发货方联系人</h4></div>
+        <h4 class="modal-title"  style="font-size: 14px;font-family:'微软雅黑'">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
@@ -182,13 +182,13 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    <div class="modal-footer" style="background-color:#fff;"><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
 </div>
 
 <!--consigneeListDiv-->
 <div class="modal-content" id="consigneeListDiv" style="display: none;">
     <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">收货方联系人</h4></div>
+        <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
@@ -248,13 +248,13 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    <div class="modal-footer" style="background-color:#fff;"><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
 </div>
 
 <!--custListDiv-->
 <div class="modal-content" id="custListDiv" style="display: none;">
     <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">选择客户</h4></div>
+        <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">选择客户</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
@@ -298,7 +298,7 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <div class="row">
@@ -332,7 +332,7 @@
                     <div><label class="control-label col-label no-padding-right" for="name">开单员</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-100">
-                                <select id="merchandiser" name="merchandiser"  class="chosen-select form-control ">
+                                <select id="merchandiser" name="merchandiser" class="col-width-100">
                                     <option>中国人民</option>
                                     <option>人民中国</option>
                                     <option>民中国人</option>
@@ -387,179 +387,8 @@
                 </div>
 
             </form>
-            <div class="page-header">
-                <p style="font-size: 14px;font-family:'微软雅黑'">
-                    服务项目及费用
-                </p>
-            </div>
-            <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
-                <div class="form-group">
-                    <div style="width:280px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
-                            <input id="pickUpGoods" type="hidden" name="pickUpGoods"  value="0" />
-                        </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">上门提货:费用</label>
-                        <div class="col-width-100 margin-right-15">
-                            <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div style="width:280px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="insureV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
-                            <input id="insure" type="hidden" name="insure"  value="0" />
-                        </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">货物保险:费用</label>
-                        <div  class="col-width-100 margin-right-15" >
-                            <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                    <div class="col-xs-6 no-padding-left">
-                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">声明价值</label>
-                        <div  class="col-width-100 margin-right-15">
-                            <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div style="width:280px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="twoDistributionV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
-                            <input id="twoDistribution" type="hidden" name="twoDistribution"  value="0" />
-                        </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">二次配送:费用</label>
-                        <div  class="col-width-100 margin-right-15">
-                            <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div style="width:280px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="collectFlagV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
-                            <input id="collectFlag" type="hidden" name="collectFlag"  value="0" />
-                        </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">代收货款:费用</label>
-                        <div  class="col-width-100 margin-right-15" >
-                            <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                    <div class="col-xs-6 no-padding-left">
-                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">代收金额</label>
-                        <div  class="col-width-100 margin-right-15">
-                            <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div style="width:280px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="returnListV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
-                            <input id="returnList" type="hidden" name="returnList"  value="0" />
-                        </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">签单返回:费用</label>
-                        <div  class="col-width-100 margin-right-15">
-                            <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                    <div class="col-xs-6 no-padding-left">
-                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">运费</label>
-                        <div  class="col-width-100 margin-right-15">
-                            <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
-                        </div>
-                        <label class="control-label" for="name">元</label>
-                    </div>
-                </div>
-            </form>
-            <div class="page-header">
-            </div>
-            <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form"  style="line-height:34px;">
-                <div class="form-group" id="transBusinessTypeDiv">
-                    <div style="width:242px;float:left;margin-left:71px;" >
-                        <label class="control-label col-label" for="name" style="float:left;">费用总计</label>
-                        <div class="col-width-100 padding-15" style="width:130px">
-                            <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                        <label class="control-label" for="name" >元</label>
-                    </div>
-                    <div >
-                        <label class="control-label no-padding-right" style="float:left; margin:0 15px 0 30px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;">
-                            <div class="clearfix control-label">
-                                <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
-                                <div style="float:left;margin-right:5px;">发货方</div>
-                            </div>
-                        </div></div>
-                    <div>
-                        <div class="col-width-70" style="float:left;background:#eaedf1;">
-                            <div class="clearfix control-label">
-                                <input id="transportTypeV2" type="radio" name="transportTypeV" style="margin:5px;float:left;margin-top:11px;"/>
-                                <div style="float:left;margin-right:5px;">收货方</div>
-                            </div></div>
-                    </div>
-                    <input id="transportType" type="hidden" name="transportType"/>
-                    <div>
-                        <label class="control-label no-padding-right" for="name" style="margin-left:30px;float:left;">支付方式</label>
-                        <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
-                                <select class="chosen-select form-control " id="businessType" name="businessType">
-                                    <option value="01">现金</option>
-                                    <option value="02">POS刷卡</option>
-                                    <option value="03">微信</option>
-                                    <option value="04">支付宝</option>
-                                    <option value="05">银行支付</option>
-                                    <option value="06">账户结算</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
-
-                    <div style="width:400px;">
-                        <label class="control-label col-label col-float" for="name" >结算方式</label>
-                        <label class="control-label col-label-50 col-float" for="name">现结</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
-                        </div>
-                        <label class="control-label col-float" for="name">元</label>
-                    </div>
-                    <div >
-                        <label class="control-label col-label-50 col-float" for="name" style="margin-left:35px;">到付</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
-                        </div>
-                        <label class="control-label col-float" for="name">元</label>
-                    </div>
-                    <div>
-                        <label class="control-label col-label-50 col-float" for="name" style="margin-left:51px;">回付</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
-                        </div>
-                        <label class="control-label col-float" for="name">元</label>
-                    </div>
-                    <div>
-                        <label class="control-label col-label-50" for="name">月结</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
-                        </div>
-                        <label class="control-label col-float" for="name">元</label>
-                    </div>
-                </div>
-                <div class="page-header">
-                </div>
-            </form>
-            <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
+            <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="height:360px;">
                 <div style="width:45%;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
@@ -678,6 +507,196 @@
                 </div>
             </form>
 
+            <div class="page-header">
+                <p style="font-size: 14px;font-family:'微软雅黑'">
+                    服务项目及费用
+                </p>
+            </div>
+            <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
+                <div class="form-group">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
+                            <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
+                            <input id="pickUpGoods" type="hidden" name="pickUpGoods"  value="0" />
+                        </div>
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">上门提货:费用</label>
+                        <div style="width:140px;float:left;">
+                            <div class="col-width-100 margin-right-15">
+                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
+                            <input id="insureV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
+                            <input id="insure" type="hidden" name="insure"  value="0" />
+                        </div>
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">货物保险:费用</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15" >
+                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 no-padding-left">
+                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">声明价值</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15">
+                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
+                            <input id="twoDistributionV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
+                            <input id="twoDistribution" type="hidden" name="twoDistribution"  value="0" />
+                        </div>
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">二次配送:费用</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15">
+                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
+                            <input id="collectFlagV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
+                            <input id="collectFlag" type="hidden" name="collectFlag"  value="0" />
+                        </div>
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">代收货款:费用</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15" >
+                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 no-padding-left">
+                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">代收金额</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15">
+                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                        <div class="clearfix col-xs-1" style="margin-top:4px;">
+                            <input id="returnListV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
+                            <input id="returnList" type="hidden" name="returnList"  value="0" />
+                        </div>
+                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">签单返回:费用</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15">
+                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 no-padding-left">
+                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">运费</label>
+                        <div style="width:140px;float:left;">
+                            <div  class="col-width-100 margin-right-15">
+                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                            </div>
+                            <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="page-header">
+            </div>
+            <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form">
+                <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
+                    <div style="width:242px;float:left;margin-left:71px;" >
+                        <label class="col-label" for="name" style="float:left;">费用总计</label>
+                        <div class="col-width-100 padding-15" style="width:130px">
+                            <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                        <label class="" for="name" >元</label>
+                    </div>
+                    <div >
+                        <label class=" no-padding-right" style="float:left; margin:0 15px 0 30px;" for="name">费用支付</label>
+                        <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;">
+                            <div class="clearfix">
+                                <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <div style="float:left;margin-right:5px;">发货方</div>
+                            </div>
+                        </div></div>
+                    <div>
+                        <div class="col-width-70" style="float:left;background:#eaedf1;">
+                            <div class="clearfix">
+                                <input id="transportTypeV2" type="radio" name="transportTypeV" style="margin:5px;float:left;margin-top:11px;"/>
+                                <div style="float:left;margin-right:5px;">收货方</div>
+                            </div></div>
+                    </div>
+                    <input id="transportType" type="hidden" name="transportType"/>
+                    <div>
+                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;">支付方式</label>
+                        <div class="col-width-168 padding-15">
+                            <div class="clearfix col-width-100">
+                                <select class="chosen-select form-control" id="businessType" name="businessType">
+                                    <option value="01">现金</option>
+                                    <option value="02">POS刷卡</option>
+                                    <option value="03">微信</option>
+                                    <option value="04">支付宝</option>
+                                    <option value="05">银行支付</option>
+                                    <option value="06">账户结算</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
+
+                    <div style="width:400px;">
+                        <label class=" col-label col-float" for="name" >结算方式</label>
+                        <label class=" col-label-50 col-float" for="name">现结</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        </div>
+                        <label class=" col-float" for="name">元</label>
+                    </div>
+                    <div >
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:35px;">到付</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        </div>
+                        <label class=" col-float" for="name">元</label>
+                    </div>
+                    <div>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:51px;">回付</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        </div>
+                        <label class=" col-float" for="name">元</label>
+                    </div>
+                    <div>
+                        <label class=" col-label-50" for="name">月结</label>
+                        <div class="padding-15 col-float" style="width:130px;">
+                            <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        </div>
+                        <label class=" col-float" for="name">元</label>
+                    </div>
+                </div>
+                <div class="page-header">
+                </div>
+            </form>
+
+
                     <!-- /section:elements.tab.option -->
         </div>
         <!-- PAGE CONTENT ENDS -->
@@ -687,11 +706,11 @@
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
-
+<#--
             <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
                 <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
                 确认下单
-            </button>
+            </button>-->
         </div>
 
     </div>
@@ -754,6 +773,13 @@
             </div>
         </div>
     </div>
+</div>
+<div class="col-xs-12" style="margin-top:20px;">
+
+    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
+        <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
+        确认下单
+    </button>
 </div>
 
 <#--
@@ -967,16 +993,16 @@
                 }
             },
             highlight : function(e) {
-                $(e).parent().parent().removeClass('has-info').addClass('has-error');
+                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
             },
             success : function(e) {
-                $(e).parent().removeClass('has-error').addClass('has-success');
+                $(e).parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
                 countCostCheck();
             },
             errorPlacement : function(error, element) {
                 error.insertAfter(element.parent().next());
-                $(error).attr("align","center");
+                $(error).attr("align","left");
             },
             invalidHandler : function(form) {
             }
@@ -2068,7 +2094,7 @@
                 var groupId = $("#custGroupId").val();
                 var custId = $("#custId").val();
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger' style='margin-top:5px;'>删除</button></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                         "<select  id='goodsCategory' name='goodsCategory'>";
                 if($("#goodsInfoListDiv").find("tr").length<1){
@@ -2080,7 +2106,7 @@
                         goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
                         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                                 "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
-                                "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block' id='goodCodeSel' onclick='seleGoods(this)'>选择</button>"
+                                "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</button>"
                                 +"</td>";
                         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                                 "<input class='col-xs-10 col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
