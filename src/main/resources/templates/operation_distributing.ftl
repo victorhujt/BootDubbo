@@ -439,8 +439,8 @@
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()">
-                        <#--<option value="00001">北京仓库</option>
-                        <option value="00002">天津仓库</option>-->
+                        <option value="">无</option>
+                    <#-- <option value="00002">天津仓库</option>-->
                     </select>
                 </div>
             </div></div>
@@ -856,7 +856,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -957,9 +957,11 @@
             //显示收货人信息
             //goodsAndConsigneeTbody
             var consignorout = "";
-            $("#consigneeInfoListDiv").find("tr").each(function(index){
+            $("#consigneeInfoListDiv").find("tr").each(function(index){//00000
                 var tdArr = $(this).children();
                 var consigneeName = tdArr.eq(1).text();//
+                var consigneeContactName = tdArr.eq(3).text();//
+                var consigneeType = tdArr.eq(6).text();//
                 var consigneeCode = tdArr.eq(7).text();//
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var num = 0;
@@ -971,7 +973,14 @@
                 }
 
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-                consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                if("1" == consigneeType){
+                    consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                }else if("2" == consigneeType){
+                    consignorout =consignorout + "<td>"+consigneeName+"-"+consigneeContactName+"</td>";
+                }else{
+                    consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                }
+               // consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
                 consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
                 consignorout =consignorout + "</tr>";
@@ -1591,6 +1600,8 @@
         //加载仓库列表
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
+        //<option value="">无</option>
+        $("#warehouseCode").append("<option value="">无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {

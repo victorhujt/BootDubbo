@@ -60,6 +60,12 @@ public class OfcOperationDistributing extends BaseController{
     private CodeGenUtils codeGenUtils;
 
 
+    /**
+     * 城配开单确认下单
+     * @param orderLists
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
@@ -106,6 +112,12 @@ public class OfcOperationDistributing extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
 
+    /**
+     * 校验客户订单编号
+     * @param jsonArray
+     * @return
+     * @throws Exception
+     */
     private Wrapper<?> validateCustOrderCode(JSONArray jsonArray) throws Exception {
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
@@ -122,7 +134,12 @@ public class OfcOperationDistributing extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
-    //根据选择的客户查询仓库
+    /**
+     * 根据选择的客户查询仓库
+     * @param custId
+     * @param model
+     * @param response
+     */
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
     @ResponseBody
     public void queryCustomerByName(String custId,Model model,HttpServletResponse response){
@@ -135,7 +152,12 @@ public class OfcOperationDistributing extends BaseController{
         }
     }
 
-    //根据选择的客户查询货品种类
+    /**
+     * 根据选择的客户查询货品一级种类
+     * @param custId
+     * @param model
+     * @param response
+     */
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
     public void queryGoodsTypeByCustId(String custId,Model model,HttpServletResponse response){
@@ -154,7 +176,13 @@ public class OfcOperationDistributing extends BaseController{
         }
     }
 
-    //根据选择的客户和货品种类查询货品小类
+    /**
+     * 根据选择的客户和货品一级种类查询货品小类
+     * @param custId
+     * @param goodsType
+     * @param model
+     * @param response
+     */
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
     @ResponseBody
     public void queryGoodsSecTypeByCAndT(String custId, String goodsType,Model model,HttpServletResponse response){
@@ -175,6 +203,11 @@ public class OfcOperationDistributing extends BaseController{
         }
     }
 
+    /**
+     * 查询货品列表
+     * @param cscGoodsApiDto
+     * @param response
+     */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
     public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
@@ -189,6 +222,12 @@ public class OfcOperationDistributing extends BaseController{
     }
 
 
+    /**
+     * 根据客户名称查询客户
+     * @param queryCustomerName
+     * @param currPage
+     * @param response
+     */
     @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
     @ResponseBody
     public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
@@ -216,13 +255,19 @@ public class OfcOperationDistributing extends BaseController{
 
     }
 
+    /**
+     * 转换页面DTO为CSCDTO以便复用
+     * @param ofcOrderDTO
+     * @param purpose
+     * @return
+     */
     private CscContantAndCompanyDto switchOrderDtoToCscCAndCDto(OfcOrderDTO ofcOrderDTO,String purpose) {
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
         cscContantAndCompanyDto.setCscContact(new CscContact());
         if(StringUtils.equals("2",purpose)){
             cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
-//            cscContantAndCompanyDto.getCscContactCompany().setType();//暂缺
+            cscContantAndCompanyDto.getCscContactCompany().setType(ofcOrderDTO.getConsignorType());
             cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
             cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsignorContactName());
             cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsignorContactPhone());
@@ -243,8 +288,8 @@ public class OfcOperationDistributing extends BaseController{
             }
             cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDeparturePlace());
         }else if(StringUtils.equals("1",purpose)){
-            cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
-//            cscContantAndCompanyDto.getCscContactCompany().setType();//暂缺
+            cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsigneeName());
+            cscContantAndCompanyDto.getCscContactCompany().setType(ofcOrderDTO.getConsigneeType());
             cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
             cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsigneeContactName());
             cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsigneeContactPhone());
