@@ -399,7 +399,7 @@
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd HH:mm:ss"))!""}" type="text" placeholder="订单日期"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
                 </div>
             </div></div>
 
@@ -412,11 +412,11 @@
                     </select>
                 </div>
             </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">预发货时间</label>
+            <div><label class="control-label col-label no-padding-right" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm',minDate:'%y-%M-%d'})"/>
                 </div>
             </div></div>
         </div>
@@ -674,7 +674,7 @@
                     alert("请先添加收货方")
                 });
             }*/
-        })
+        });
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
@@ -700,7 +700,7 @@
                         }
                         $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
                     });
-                })
+                });
                 //加载第一个一级货品的二级种类//000
                 $("#goodsSecTypeId option").remove();
                 console.log('----------'+firstGoodsType)
@@ -717,7 +717,7 @@
 
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
-        })
+        });
         $("#goodsListDivNoneTop").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
@@ -856,7 +856,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -964,7 +964,7 @@
                 var consigneeType = tdArr.eq(6).text();//
                 var consigneeCode = tdArr.eq(7).text();//
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var num = 0;
+                var num = "";
 
                 if(undefined != goodsAndConsigneeMap.get(mapKey)){
                     var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
@@ -1601,7 +1601,8 @@
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
         //<option value="">无</option>
-        $("#warehouseCode").append("<option value="">无</option>");
+       /* $("#warehouseCode").append("<option value="">无</option>");*/
+       $("#warehouseCode").append("<option value = ''>无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {
@@ -1769,6 +1770,8 @@
             var goods = null;
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
+            var consigneeContactName = tdArr.eq(3).text();//联系人
+            var consigneeType = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             debugger
             //遍历货品信息
@@ -1816,7 +1819,14 @@
                 return false;
             }
             if(consigneeGoodsIsEmpty){
-                alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                if("1" == consigneeType) {
+                    alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                }else if("2" == consigneeType){
+                    alert("收货方【"+consigneeName+"-"+consigneeContactName+"】未有发货数量,请检查!");
+                }else{
+                    alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                }
+
                 consigneeGoodsIsEmptyOut = false;
                 return false;
             }
@@ -1950,9 +1960,9 @@
                     required:true,
                     maxlength:100
                 },
-                warehouseCode : {
+                /*warehouseCode : {
                     required:true
-                },
+                },*/
                 notes:{
                     maxlength:300
                 },
@@ -1971,9 +1981,9 @@
                     required:"请选择客户",
                     maxlength:"超过最大长度"
                 },
-                warehouseCode : {
+               /* warehouseCode : {
                     required:"请选择仓库"
-                },
+                },*/
                 notes:{
                     maxlength:"超过最大长度"
                 },
