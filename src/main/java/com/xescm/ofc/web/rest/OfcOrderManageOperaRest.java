@@ -41,6 +41,17 @@ public class OfcOrderManageOperaRest extends BaseController {
     private OfcOrderManageService ofcOrderManageService;
 
     /**
+     * 运营→订单管理 orderManageOpera
+     * @return modelAndView
+     */
+    @RequestMapping("/orderManageOpera")
+    public ModelAndView orderManageOpera() {
+        ModelAndView modelAndView = new ModelAndView("order_manage_opera");
+        modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
+        return modelAndView;
+    }
+
+    /**
      * 查询订单
      * @param page
      * @param form
@@ -116,12 +127,24 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
+    /**
+     * 订单详情
+     * @param orderCode
+     * @param dtotag
+     * @return
+     */
     @RequestMapping(value = "/orderDetailPageByCode/{orderCode}/{dtotag}")
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode, @PathVariable String dtotag) {
         ModelAndView modelAndView = new ModelAndView("order_detail_opera");
         return modelAndView;
     }
 
+    /**
+     * 订单批次
+     * @param orderBatchCode
+     * @param dtotag
+     * @return
+     */
     @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}/{dtotag}")
     public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode, @PathVariable String dtotag) {
         ModelAndView modelAndView = new ModelAndView("order_detail_batch_opera");

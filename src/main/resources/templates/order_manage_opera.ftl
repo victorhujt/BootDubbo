@@ -250,10 +250,10 @@
                 }
                 htmlText +="<tr role=\"row\" class=\"odd\">"
                         +"<td>"+[index+1]+"</td>"
-                        + "<td class=\"center\">" + getOperatorByStatus(order,index) + "</td>"
+                        + "<td class=\"center\">" + getOperatorByStatusOper(order,index) + "</td>"
                         + "<td class=\"center\">" + order.custName + "</td>"
                         +"<td>"
-                        +"<a onclick=\"orderDetail('" + order.orderCode+ "')\">"+StringUtil.nullToEmpty(order.orderCode)+"</a>"
+                        +"<a onclick=\"orderDetailOper('" + order.orderCode+ "')\">"+StringUtil.nullToEmpty(order.orderCode)+"</a>"
                         +"</td>"
                         +"<td>"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
                         +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.custOrderCode)+"</td>"
@@ -321,14 +321,14 @@
 
         }
 
-        function getOperatorByStatus(order,index) {
+        function getOperatorByStatusOper(order,index) {
             var value = "";
 
-            var newStatus = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"btn btn-minier btn-yellow\">审核</button>"
+            var newStatus = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"reviewOrderOper('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"btn btn-minier btn-yellow\">审核</button>"
                     +"<button type=\"button\" id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-danger\">删除</button>";
 
-            var unApproveStatus = "<button type=\"button\" id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
-            var cancelStatus = "<button type=\"button\" id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-default\">取消</button>";
+            var unApproveStatus = "<button type=\"button\" id=\"rereview\" "+index+ " onclick=\"reReviewOrderOper('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
+            var cancelStatus = "<button type=\"button\" id=\"cancel\" "+index+ " onclick=\"cancelOrderOper('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-default\">取消</button>";
 
             if (order.orderStatus == "10") {
                 value = newStatus;
@@ -349,32 +349,36 @@
 //            xescm.common.loadPage(url);
 //        }
 
+        //删除订单
         function deleteOrder(ordercode,orderStatus) {
             xescm.common.submit("/ofc/orderDeleteOper",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要删除此订单?",function () {
                 xescm.common.loadPage("/ofc/orderManageOpera");
             });
         }
-        function orderDetail(orderCode) {
+        //订单详情
+        function orderDetailOper(orderCode) {
             var followTag = "orderCode";
             var historyUrlTag = "orderManageOpera";
-            var url = "/ofc/orderDetails/" + orderCode + "/" + followTag + "/" + historyUrlTag;
+            var url = "/ofc/orderDetailPageByCode/" + orderCode + "/" + followTag + "/" + historyUrlTag;
             xescm.common.loadPage(url);
         }
 
-        function reviewOrder(ordercode,orderStatus) {
-            xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},"您确定要审核此订单?",function () {
+        //订单审核、反审核
+        function reviewOrderOper(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderOrNotAuditOper",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},"您确定要审核此订单?",function () {
 
-                xescm.common.loadPage("/ofc/orderManage");
+                xescm.common.loadPage("/ofc/orderManageOpera");
             });
         }
-        function reReviewOrder(ordercode,orderStatus) {
-            xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},"您确定要反审核此订单?",function () {
-                xescm.common.loadPage("/ofc/orderManage");
+        function reReviewOrderOper(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderOrNotAuditOper",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},"您确定要反审核此订单?",function () {
+                xescm.common.loadPage("/ofc/orderManageOpera");
             });
         }
-        function cancelOrder(ordercode,orderStatus) {
-            xescm.common.submit("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要取消此订单?",function () {
-                xescm.common.loadPage("/ofc/orderManage");
+        //订单取消
+        function cancelOrderOper(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderCancelOper",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要取消此订单?",function () {
+                xescm.common.loadPage("/ofc/orderManageOpera");
             });
         }
 

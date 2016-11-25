@@ -679,24 +679,34 @@ public class OfcFundamentalInformation {
     @Transient
     private String departurePlace;
 
+    @Transient
     private String destination;
 
+    @Transient
     private String transCode;
 
+    @Transient
     private String plateNumber;
 
+    @Transient
     private String driverName;
 
+    @Transient
     private String contactNumber;
 
+    @Transient
     private String destinationProvince;
 
+    @Transient
     private String destinationCity;
 
+    @Transient
     private String destinationDistrict;
 
+    @Transient
     private String destinationTowns;
 
+    @Transient
     private String orderStatus;
 
     public String getDestinationTowns() {
