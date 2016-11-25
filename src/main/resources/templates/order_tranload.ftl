@@ -361,7 +361,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" />
+                                <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})" />
                                 <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
