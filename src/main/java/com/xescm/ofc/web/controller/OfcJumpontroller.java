@@ -133,7 +133,6 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
-
         map.put("currentTime",new Date());
         return "operation_distributing";
     }
