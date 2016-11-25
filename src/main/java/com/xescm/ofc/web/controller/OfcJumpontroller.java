@@ -29,9 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +48,15 @@ public class OfcJumpontroller extends BaseController{
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+
+    public String getCustId() {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
+        return custId;
+    }
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
@@ -102,11 +109,6 @@ public class OfcJumpontroller extends BaseController{
         return "order_follow";
     }
 
-    /**
-     * 进入主页
-     * @param model
-     * @return
-     */
     @RequestMapping(value = "/index")
     public String toIndex(Model model){
 
@@ -118,25 +120,11 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
-    /**
-     * 城配开单
-     * @param model
-     * @return
-     */
     @RequestMapping(value = "/ofc/operationDistributing")
-    public String operationDistributing(Model model,Map<String,Object> map){
-
-        map.put("currentTime",new Date());
+    public String operationDistributing(Model model){
         return "operation_distributing";
     }
 
-    /**
-     * 城配开单Excel导入
-     * @param model
-     * @param historyUrl
-     * @param map
-     * @return
-     */
     @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}")
     public String operationDistributingExcel(Model model, @PathVariable String historyUrl, Map<String,Object> map){
         if("operation_distributing".equals(historyUrl)){
@@ -146,14 +134,6 @@ public class OfcJumpontroller extends BaseController{
         return "operation_distributing_excel";
     }
 
-    /**
-     * 运输开单
-     * @param model
-     * @param map
-     * @param request
-     * @param response
-     * @return
-     */
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
@@ -195,16 +175,4 @@ public class OfcJumpontroller extends BaseController{
         modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
         return modelAndView;
     }
-
-    public String getCustId() {
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
-        return custId;
-    }
-
-
-
 }

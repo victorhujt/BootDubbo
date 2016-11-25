@@ -3,23 +3,22 @@ package com.xescm.ofc.web.restcontroller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsTypeVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.ofc.utils.*;
+import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.JacksonUtil;
+import com.xescm.ofc.utils.JsonUtil;
+import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,15 +47,9 @@ public class OfcOperationDistributing extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
-    private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
-    @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
-    @Resource
-    private CodeGenUtils codeGenUtils;
+    private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient; //000
 
 
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
@@ -71,15 +63,9 @@ public class OfcOperationDistributing extends BaseController{
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"您没有添加任何信息,请检查!");
             }
             JSONArray jsonArray = JSON.parseArray(orderLists);
-            String batchNumber = codeGenUtils.getNewWaterCode("BN",4);//生成订单批次号,保证一批单子属于一个批次
-            Wrapper<?> validateCustOrderCodeResult =  validateCustOrderCode(jsonArray);
-            if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
-                return validateCustOrderCodeResult;
-            }
             for(int i = 0; i < jsonArray.size(); i ++){
                 String json = jsonArray.get(i).toString();
                 OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
-
                 String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
                 //orderGoodsListStr = orderGoodsListStr.replace("~`","");
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -94,9 +80,6 @@ public class OfcOperationDistributing extends BaseController{
                 }
                 CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
                 CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
-
-                ofcOrderDTO.setBatchNumber(batchNumber);
-
                 resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
                         ,consignor,consignee,new CscSupplierInfoDto());
             }
@@ -104,22 +87,6 @@ public class OfcOperationDistributing extends BaseController{
             logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
-    }
-
-    private Wrapper<?> validateCustOrderCode(JSONArray jsonArray) throws Exception {
-        for(int i = 0; i < jsonArray.size(); i ++) {
-            String json = jsonArray.get(i).toString();
-            OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
-            String custOrderCode = ofcOrderDTO.getCustOrderCode();
-            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-            ofcFundamentalInformation.setCustOrderCode(custOrderCode);
-            int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
-            if (checkCustOrderCodeResult > 0) {
-                logger.error("城配下单批量下单,客户订单编号重复");
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
-            }
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
     //根据选择的客户查询仓库
@@ -140,17 +107,14 @@ public class OfcOperationDistributing extends BaseController{
     @ResponseBody
     public void queryGoodsTypeByCustId(String custId,Model model,HttpServletResponse response){
         logger.info("==> custId={}", custId);
-        Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
-            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
-            if(null != wrapper.getResult()){
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
-            }
+            Wrapper<List<CscGoodsTypeVo>> wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            response.getWriter().print(JSONUtils.objectToJson(wrapper));
         }catch (Exception ex){
-            logger.error("城配下单查询货品种类失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
         }
     }
 
@@ -160,31 +124,15 @@ public class OfcOperationDistributing extends BaseController{
     public void queryGoodsSecTypeByCAndT(String custId, String goodsType,Model model,HttpServletResponse response){
         logger.info("==> custId={}", custId);
         logger.info("==> goodsType={}", goodsType);
-        Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
             cscGoodsType.setPid(goodsType);
-            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
-            if(null != wrapper.getResult()){
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
-            }
-        }catch (Exception ex){
-            logger.error("城配下单查询货品小类失败!",ex.getMessage(),wrapper.getMessage());
-        }
-    }
-
-    @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
-    @ResponseBody
-    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
-        logger.info("==> cscGoodsApiDto={}", cscGoodsApiDto);
-        Wrapper<List<CscGoodsApiVo>> wrapper = null;
-        try{
-            wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+            Wrapper<List<CscGoodsTypeVo>> wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             response.getWriter().print(JSONUtils.objectToJson(wrapper));
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
         }
     }
 
@@ -195,6 +143,9 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("==> queryCustomerName={}", queryCustomerName);
         logger.info("==> currPage={}", currPage);
         try{
+            if(PubUtils.isSEmptyOrNull(queryCustomerName)){
+                logger.error("查询客户列表参数为空!");
+            }
             QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
             if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
                 queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
@@ -205,11 +156,7 @@ public class OfcOperationDistributing extends BaseController{
                 logger.error("查询客户列表失败,查询结果有误!");
             }
             List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
-            if(null == cscCustomerVoList){
-                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
-            }else{
-                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
-            }
+            response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
         }catch (Exception ex){
             logger.error("查询客户列表失败!",ex.getMessage());
         }

@@ -15,8 +15,9 @@
         <form class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
-                <div class="col-xs-4">
-                    <input id="custName" name="custName" type="search" placeholder="" aria-controls="dynamic-table">
+                <div class="col-xs-3">
+                    <input readonly="readonly" id="custName" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table">
                     <button type="button">
                         <span class="glyphicon glyphicon-search" style="color: #0f5f9f"></span>
                     </button>
@@ -39,12 +40,14 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                <div class="col-xs-4">
-                    <input id="orderDateBegin" name="orderDateBegin" type="search" placeholder=""
+                <div class="col-xs-3">
+                    <input readonly="readonly" style="width: 110px;" id="startDate" name="startDate" type="search"
+                           placeholder=""
                            aria-controls="dynamic-table"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                     -
-                    <input id="orderDateEnd" name="orderDateEnd" type="search" placeholder=""
+                    <input readonly="readonly" style="width: 110px;" id="endDate" name="endDate" type="search"
+                           placeholder=""
                            aria-controls="dynamic-table"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                 </div>
@@ -63,7 +66,7 @@
                         <option value="600">城配</option>
                         <option value="601">干线</option>
                     </select>
-                    <span>&nbsp;<button class="btn btn-primary btn-xs">筛选</button></span>
+                    <span>&nbsp;<button class="btn btn-primary btn-xs" onclick="doSearch();">筛选</button></span>
                 </div>
             </div>
         </form>
@@ -114,18 +117,18 @@
         </thead>
         <tbody id="dataTbody">
         <tr>
-            <td>1</td>
-            <td id="operate"></td>
-            <td><a onclick="jumpUrlByOrderCode('111111')">111111</a></td>
-            <td><a onclick="jumpUrlByOrderBatchCode('111111')">111111</a></td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
+        <#--<td>1</td>-->
+            <#--<td id="operate"></td>-->
+            <#--<td><a onclick="jumpUrlByOrderCode('111111')">111111</a></td>-->
+            <#--<td><a onclick="jumpUrlByOrderBatchCode('111111')">111111</a></td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
+            <#--<td>111111</td>-->
         </tr>
 
         </tbody>
@@ -137,6 +140,146 @@
 
     <link rel="stylesheet" href="../components/chosen/chosen.css"/>
     <script src="../components/chosen/chosen.jquery.js"></script>
+
+    <script type="text/javascript">
+        var scripts = [null, "../components/chosen/chosen.jquery.js", null]
+
+
+        function queryData(pageNum) {
+            var param = {};
+            param.pageNum = pageNum;
+            param.pageSize = 10;
+            var startDate = $dp.$('startDate').value;
+            var endDate = $dp.$('endDate').value;
+            param.startDate = startDate;
+            param.endDate = endDate;
+            param.custName = $("#custName");
+            param.orderCode = $("#orderCode").val();
+            param.orderStatus = $("#orderStatus").val();
+            param.orderType = $("#orderType").val();
+            param.businessType = $("#businessType").val();
+            CommonClient.post(sys.rootPath + "/ofc/queryOrderOper", param, function (result) {
+                alert("1234");
+                if (result == undefined || result == null) {
+                    alert("HTTP请求无数据返回！");
+                } else if (result.code == 200) {// 1:normal
+                    reloadHtml(result);// 刷新页面数据
+                    laypage({
+                        cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                        pages: result.result.pages, // 总页数
+                        skip: true, // 是否开启跳页
+                        skin: "molv",
+                        groups: 3, // 连续显示分页数
+                        curr: result.result.pageNum, // 当前页
+                        jump: function (obj, first) { // 触发分页后的回调
+                            if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                                queryData(obj.curr);
+                            }
+                        }
+                    });
+                } else if (result.code == 403) {
+                    alert("没有权限")
+                } else {
+                    $("#dataTbody").html("");
+                }
+            });
+        }
+
+        function reloadHtml(data) {
+            if(data == null || data == undefined || data == ""){
+                $("#dataTbody").html("");
+                return;
+            }
+            var htmlText = "";
+            $.each(data, function(index,order){
+                var consigneeName = "";
+                if ("2" == StringUtil.nullToEmpty(order.consigneeType)) {
+                    consigneeName = "个人-" + order.consigneeContactName;
+                } else {
+                    consigneeName = order.consigneeName;
+                }
+                htmlText += "<tr role='row' class='odd'>"
+                + "<td>" + "</td>"
+                + "<td class='center'>" + "</td>"
+                + "<td class='center'>" + "</td>"
+                + "<td>"
+                + "<a >" + "</a>"
+                + "</td>"
+                + "<td>" + "</td>"
+                + "<td class='hidden-480'>" + "</td>"
+                + "<td class='hidden-480'>" + "</td>"
+                + "<td class='hidden-480'>" + "</td>"
+                + "<td class='hidden-480'>" + "</td>"
+                + "<td class='hidden-480'>" + "</td>"
+                + "<td class='hidden-480'>"  + "</td>"
+                + "<td class='hidden-480'>" + "</td>"
+                + "</tr>";
+            });
+            $("#dataTbody").html(htmlText);
+        }
+
+//        htmlText += "<tr role='row' class='odd'>"
+//        + "<td>" + Number(index + 1) + "</td>"
+//        + "<td class='center'>" + operateEle(order.orderStatus, order.orderCode) + "</td>"
+//        + "<td class='center'>" + StringUtil.nullToEmpty(order.custName) + "</td>"
+//        + "<td>"
+//        + "<a onclick=\"jumpUrlByOrderCode('" + order.orderCode + "')\">" + StringUtil.nullToEmpty(order.orderCode) + "</a>"
+//        + "</td>"
+//        + "<td>" + StringUtil.nullToEmpty(order.orderBatchNumber) + "</td>"
+//        + "<td class='hidden-480'>" + StringUtil.nullToEmpty(order.custOrderCode) + "</td>"
+//        + "<td class='hidden-480'>" + StringUtil.nullToEmpty(order.orderTime) + "</td>"
+//        + "<td class='hidden-480'>" + order.orderType == "60" ? "运输订单" : (order.orderType == "61" ? "仓配订单" : "" + "</td>"
+//        + "<td class='hidden-480'>" + getBusiType(order) + "</td>"
+//        + "<td class='hidden-480'>" + getOrderStatus(order.orderStatus) + "</td>"
+//        + "<td class='hidden-480'>" + StringUtil.nullToEmpty(consigneeName) + "</td>"
+//        + "<td class='hidden-480'>" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
+//        + "</tr>";
+
+
+
+        function getBusiType(order) {
+            var value = "";
+            if (order.businessType == '600') {
+                value = "城配"
+            } else if (order.businessType == "601") {
+                value = "干线";
+            } else if (order.businessType == "610") {
+                value = "销售出库";
+            } else if (order.businessType == "611") {
+                value = "调拨出库";
+            } else if (order.businessType == "612") {
+                value = "报损出库";
+            } else if (order.businessType == "613") {
+                value = "其他出库";
+            } else if (order.businessType == "620") {
+                value = "采购入库";
+            } else if (order.businessType == "621") {
+                value = "调拨入库";
+            } else if (order.businessType == "622") {
+                value = "退货入库";
+            } else if (order.businessType == "623") {
+                value = "加工入库";
+            }
+            return value;
+        }
+
+        function getOrderStatus(status) {
+            var value = "";
+            if (status == '10') {
+                value = "<span class=\"label label-sm label-yellow\">待审核</span>"
+            } else if (status == '20') {
+                value = "<span class=\"label label-sm label-warning\">已审核</span>"
+            } else if (status == '30') {
+                value = "<span class=\"label label-sm label-info\">执行中</span>"
+            } else if (status == '40') {
+                value = "<span class=\"label label-sm label-success\">已完成</span>"
+            } else if (status == '50') {
+                value = "<span class=\"label label-sm label-default\">已取消</span>"
+            }
+            return value;
+        }
+
+    </script>
 
     <script type="text/javascript">
 
@@ -166,7 +309,7 @@
         });
 
         $(function () {
-            $("#operate").empty().append(operateEle("10"));
+            $("#operate").empty().append(operateEle("10", "111111"));
         });
 
         /**
@@ -178,53 +321,57 @@
          * @param flag
          * @returns {*}
          */
-        function operateEle(flag) {
-            var cannelObj = "<button class='btn btn-danger btn-xs' onclick='"+cancelOperate('a')+"'>取消</button>";
-            var applyObj = "<button class='btn btn-info btn-xs' onclick='"+applyOperate('a')+"'>审核</button>";
-            var deleteObj = "<button class='btn btn-warning btn-xs' onclick='"+deleteObjOperate('a')+"'>删除</button>";
-            var rereviewObj = "<button class='btn btn-info btn-xs' onclick='"+rereviewOperate('a')+"'>反审核</button>";
+        function operateEle(flag, a) {
+            var cannelObj = "<button class='btn btn-danger btn-xs' onclick='" + cancelOperate('a') + "'>取消</button>";
+            var applyObj = "<button class='btn btn-info btn-xs' onclick='" + applyOperate('a') + "'>审核</button>";
+            var deleteObj = "<button class='btn btn-warning btn-xs' onclick='" + deleteOperate('a') + "'>删除</button>";
+            var rereviewObj = "<button class='btn btn-info btn-xs' onclick='" + rereviewOperate('a') + "'>反审核</button>";
             if (flag == "10") {
-                return ( applyObj + "&nbsp;&nbsp;" + deleteObj);
+                return applyObj + "&nbsp;&nbsp;" + deleteObj;
             } else if (flag == "20") {
-                return ( rereviewObj + "&nbsp;&nbsp;" + deleteObj);
+                return rereviewObj + "&nbsp;&nbsp;" + deleteObj;
             } else if (flag == "30") {
-                return (cannelObj);
+                return cannelObj;
             }
         }
 
-        function cancelOperate(a){
-            if (confirm("确定取消订单？")) {
-                alert("取消订单");
-            }
-        }
-        function deleteOpera(a){
-            if (confirm("确定删除订单？")) {
-                alert("删除订单");
-            }
-        }
-        function applyOperate(a){
-            if (confirm("确定审核订单？")) {
-                alert("审核订单");
-            }
-        }
-        function rereviewOperate(a){
-            if (confirm("确定反审核订单？")) {
-                alert("反审核订单");
-            }
-        }
 
-        function jumpUrlByOrderCode(orderCode){
+
+        function jumpUrlByOrderCode(orderCode) {
             var historyUrlTag = "orderManageOpera";
             var url = "/ofc/orderDetailPageByCode/" + orderCode + "/" + historyUrlTag;
             xescm.common.loadPage(url);
         }
 
-        function jumpUrlByOrderBatchCode(orderBatchNumber){
+        function jumpUrlByOrderBatchCode(orderBatchNumber) {
             var historyUrlTag = "orderManageOpera";
             var url = "/ofc/orderDetailBatchOpera/" + orderBatchNumber + "/" + historyUrlTag;
             xescm.common.loadPage(url);
         }
 
+    </script>
+
+    <script>
+        function cancelOperate(a) {
+            if (confirm("确定取消订单？")) {
+                alert("取消订单");
+            }
+        }
+        function deleteOperate(a) {
+            if (confirm("确定删除订单？")) {
+                alert("删除订单");
+            }
+        }
+        function applyOperate(a) {
+            if (confirm("确定审核订单？")) {
+                alert("审核订单");
+            }
+        }
+        function rereviewOperate(a) {
+            if (confirm("确定反审核订单？")) {
+                alert("反审核订单");
+            }
+        }
     </script>
 
 </body>

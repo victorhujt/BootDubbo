@@ -60,8 +60,6 @@ public class OfcOrderDTO {
 
     private String transportType;
 
-    private String batchNumber;
-
     /*订单状态表*/
 
 //    private String orderCode;
@@ -192,14 +190,6 @@ public class OfcOrderDTO {
 
 
     private String selfCustOrderCode;
-
-    public String getBatchNumber() {
-        return batchNumber;
-    }
-
-    public void setBatchNumber(String batchNumber) {
-        this.batchNumber = batchNumber;
-    }
 
     public List<OfcGoodsDetailsInfo> getGoodsList() {
         return goodsList;

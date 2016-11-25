@@ -7,7 +7,7 @@
 <div class="col-xs-12">
     <div class="page-header">
         <p>
-            筛选条件
+            查询条件
         </p>
     </div>
     <div class=" form-group">
@@ -26,7 +26,7 @@
         </div>
     </div>
     <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
-        筛选
+        查询
     </button>
     <div class="page-header">
         <p>
@@ -40,21 +40,23 @@
                     <label class="control-label col-label no-padding-right" for="name">订单编号</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="orderTime" readonly="readonly" style="color: #000" name="orderTime" type="text"
+                            <input id="orderCode" readonly="readonly" style="color: #000" name="orderTime" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="orderTime" readonly="readonly" style="color: #000" name="orderTime" type="text"
+                            <input id="custOrderCode" readonly="readonly" style="color: #000" name="orderTime"
+                                   type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <div class="clearfix">
-                            <input id="orderTime" readonly="readonly" style="color: #000" name="orderTime" type="text"
+                            <input id="order_cust_code" readonly="readonly" style="color: #000" name="orderTime"
+                                   type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -63,21 +65,21 @@
                     <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="orderCode" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="orderTime" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="orderCode" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="custName" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">订单状态</label>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <div class="clearfix">
-                            <input id="orderCode" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="orderStatus" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -86,21 +88,21 @@
                     <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="custOrderCode" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="orderType" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="custOrderCode" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="businessType" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">运输类型</label>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <div class="clearfix">
-                            <input id="custOrderCode" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="transportType" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -109,19 +111,21 @@
                     <label class="control-label col-label no-padding-right" for="name">出发地</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input class="form-control input-sm" id="orderStatus" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-sm" id="departurePlace" readonly="readonly"
+                                   style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">目的地</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input class="form-control input-xl" id="orderStatus" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="destination" readonly="readonly"
+                                   style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">运输单号</label>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <div class="clearfix">
-                            <input id="orderStatus" readonly="readonly" style="color: #000" type="text">
+                            <input id="transCode" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                 </div>
@@ -130,19 +134,19 @@
                     <label class="control-label col-label no-padding-right" for="name">车牌号</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="orderType" readonly="readonly" style="color: #000" type="text">
+                            <input id="plateNumber" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input id="orderType" readonly="readonly" style="color: #000" type="text">
+                            <input id="driverName" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <div class="clearfix">
-                            <input id="orderType" readonly="readonly" style="color: #000" type="text">
+                            <input id="contactNumber" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                 </div>
@@ -150,7 +154,7 @@
                     <label class="control-label col-label no-padding-right" for="name">收货地址</label>
                     <div class="col-xs-6">
                         <div class="clearfix">
-                            <input id="businessType" readonly="readonly" style="color: #000" type="text">
+                            <input id="destinationPlace" readonly="readonly" style="color: #000" type="text" class="form-control input-sm">
                         </div>
                     </div>
                 </div>
@@ -171,7 +175,8 @@
     </table>
 
 </div><!-- /.col -->
-
+<div id="ofcOrderDTOData"></div>
+<div id="ofcOrderStatusData"></div>
 
 <link rel="stylesheet" href="../components/chosen/chosen.css"/>
 <script src="../components/chosen/chosen.jquery.js"></script>
@@ -224,6 +229,7 @@
         //xxxx();
     }
 
+
     $("#followOrderFormBtn").click(function () {
         var code = $("#code").val();
         var followTag = $("#followTag").val();
@@ -237,9 +243,9 @@
 
 
     function queryData(code, followTag) {
-        CommonClient.post(sys.rootPath + "/ofc/orderFollowCon", {
+        CommonClient.post(sys.rootPath + "/ofc/orderFollowOperSearch", {
             "code": code,
-            "followTag": followTag
+            "searchType": followTag
         }, function (result) {
 
             if (result == undefined || result == null) {
@@ -254,50 +260,102 @@
         });
     }
     function reloadGrid(data) {
-        var htmlText = "";
-        var orderDTO = data.result.ofcOrderDTO;
-        var orderStatusList = data.result.ofcOrderStatus;
-        $.each(orderStatusList, function (index, orderStatus) {
-            htmlText += "<tr role=\"row\" class=\"odd\">"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(orderStatus.notes) + "</td>"
-                    + "</tr>";
+        var size = data.result.size;
+        if (size == null || size == "" || size == undefined) {
+            size = 1;
+        }
+        if (size == 1) {
+            appendOrderState(data.result);
+            appendInput(data.result.ofcOrderDTO);
+        } else if (size > 1) {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: ['500px', '200px'],
+                shadeClose: true,
+                skin: 'yourclass',
+                content: appendSearchResult(data.result.ofcOrderDTO)
+            });
+        }
+    }
+
+    function appendSearchResult(data) {
+        var html = "";
+        html += "<table class='table table-striped table-bordered table-hover dataTable no-footer'>";
+        html += "<tr><th>订单编号</th><th>客户订单编号</th><th>运输单号</th><th>客户名称</th></tr>";
+        $.each(data, function (index, item) {
+            html += "<tr onclick=\"selectOrderCode('"+item.orderCode+"')\">"+
+                    "<td>" + item.orderCode + "</td>" +
+                    "<td>" + item.custOrderCode + "</td>" +
+                    "<td>" + item.transCode + "</td>" +
+                    "<td>" + item.custName + "</td></tr>";
         })
+        html += "</table>";
+        return html;
+    }
+
+    function selectOrderCode(code) {
+        layer.closeAll();
+        CommonClient.post(sys.rootPath + "/ofc/queryOrderFollowByCode", {
+            "code": code
+        }, function (result) {
+            if (result == undefined || result == null) {
+                alert("HTTP请求无数据返回！");
+            } else if (result.code == 200) {// 1:normal
+//                reloadGrid(result);// 刷新页面数据
+                appendOrderState(result.result.ofcOrderStatus);
+                appendInput(result.result.ofcOrderDTO);
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#followBody").html("");
+            }
+        });
+    }
+
+    function appendOrderState(data) {
+        if (data == null || data == "" || data == undefined) {
+            return;
+        }
+        var htmlText = "";
+        var orderStatusList = data.ofcOrderStatus;
+        if (orderStatusList != null && orderStatusList != "" && orderStatusList != undefined) {
+            $.each(orderStatusList, function (index, orderStatus) {
+                htmlText += "<tr role=\"row\" class=\"odd\">"
+                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(orderStatus.notes) + "</td>"
+                        + "</tr>";
+            })
+        }
         $("#orderFollowStatusListTBody").html(htmlText);
-        $("#orderTime").val(orderDTO.orderTime);
+    }
+
+    function appendInput(orderDTO) {
+        if (orderDTO == null || orderDTO == "" || orderDTO == undefined) {
+            return;
+        }
+        var orderCode = orderDTO.orderCode;
         $("#orderCode").val(orderDTO.orderCode);
         $("#custOrderCode").val(orderDTO.custOrderCode);
+        $("#orderBatchCode").val(orderDTO.orderBatchCode);
         var orderStatus = getOrderStatus(orderDTO.orderStatus);
+        $("#orderTime").val(orderDTO.orderTime)
+        $("#custName").val(orderDTO.custName)
         $("#orderStatus").val(orderStatus);
         var orderType = getOrderType(orderDTO.orderType);
         $("#orderType").val(orderType);
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
-        $("#notes").val(orderDTO.notes);
-        var departurePlace = (orderDTO.departureProvince
-        + orderDTO.departureCity
-        + orderDTO.departureDistrict
-        + orderDTO.departureTowns).replace(/null/, "");
-        $("#departurePlace").val(departurePlace);
-        var destination = (orderDTO.destinationProvince
-        + orderDTO.destinationCity
-        + orderDTO.destinationDistrict
-        + orderDTO.destinationTowns).replace(/null/, "");
-        $("#destination").val(destination);
-        var destinationPlace = (orderDTO.destinationProvince
-        + orderDTO.destinationCity
-        + orderDTO.destinationDistrict
-        + orderDTO.destinationTowns
-        + orderDTO.destination).replace(/null/, "");
-        $("#destinationPlace").val(destinationPlace);
-        $("#quantity").val(orderDTO.quantity);
-        $("#weight").val(orderDTO.weight);
-        $("#cubage").val(orderDTO.cubage);
-        $("#transRequire").val(orderDTO.transRequire);
+        $("#transportType").val(orderDTO.transportType);
+        $("#departurePlace").val(orderDTO.departurePlace);
+        $("#destination").val(orderDTO.destination);
+        $("#transCode").val(orderDTO.transCode);
         $("#transCode").val(orderDTO.transCode);
         $("#plateNumber").val(orderDTO.plateNumber);
         $("#driverName").val(orderDTO.driverName);
         $("#contactNumber").val(orderDTO.contactNumber);
-        /* $("#destination").val(orderDTO.destination);*/
+        var destinationPlace = (orderDTO.destinationProvince + orderDTO.destinationCity + orderDTO.destinationDistrict + orderDTO.destinationTowns + orderDTO.destination).replace(/null/, "");
+        $("#destinationPlace").val(destinationPlace);
     }
 
     function getOrderStatus(status) {

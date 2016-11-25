@@ -1,9 +1,15 @@
 package com.xescm.ofc;
 
+import com.xescm.ofc.domain.OrderScreenResult;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.List;
 
 /**
  * Created by hiyond on 2016/11/18.
@@ -123,5 +129,14 @@ public class CreateOrderApiTest {
             e.printStackTrace();
         }
     }*/
+
+@Autowired
+private OfcOrderManageOperService ofcOrderManageOperService;
+
+    @Test
+    public void test() {
+        List<OrderScreenResult> dataList = ofcOrderManageOperService.queryOrderOper(null);
+        System.out.println(dataList);
+    }
 
 }
