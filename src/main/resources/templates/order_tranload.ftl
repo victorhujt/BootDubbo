@@ -1695,6 +1695,60 @@
                     $("#custName").val(customerName);
                     $("#custGroupId").val(groupId);
                     $("#custId").val(custId);
+
+                    var cscContantAndCompanyDto = {};
+                    var cscContact = {};
+                    var cscContactCompany = {};
+                    cscContact.purpose = "1";
+                    cscContantAndCompanyDto.cscContact = cscContact;
+                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    var groupId = $("#custGroupId").val();
+                    var custId = $("#custId").val();
+                    var param = JSON.stringify(cscContantAndCompanyDto);
+                    CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+                        data=eval(data);
+                        if(data.length==1){
+                            var contactList = "";
+                            $.each(data,function (index,CscContantAndCompanyDto) {
+                                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                                consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                                consigneeTypeHide = CscContantAndCompanyDto.type;*/
+                                contactList =contactList + "<tr role='row' class='odd'>";
+                                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                                contactList =contactList + "<td>"+(index+1)+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                                contactList =contactList + "</tr>";
+                                $("#contactSelectListTbody1").html(contactList);
+                            });
+                        }
+                    },"json");
+                    cscContact.purpose = "2";
+                    cscContantAndCompanyDto.cscContact = cscContact;
+                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    param = JSON.stringify(cscContantAndCompanyDto);
+                    CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+                        data=eval(data);
+                        if(data.length==1){
+                            var contactList = "";
+                            $.each(data,function (index,CscContantAndCompanyDto) {
+                                /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                                consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                                consignorTypeHide = CscContantAndCompanyDto.type;*/
+                                contactList =contactList + "<tr role='row' class='odd'>";
+                                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                                contactList =contactList + "<td>"+(index+1)+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                                contactList =contactList + "</tr>";
+                            });
+                            $("#contactSelectListTbody2").html(contactList);
+                        }
+                    },"json");
                 }
             });
             if(custEnterTag==""){
