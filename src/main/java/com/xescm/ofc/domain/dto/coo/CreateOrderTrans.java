@@ -161,9 +161,9 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setExpectedArrivedTime(DateUtils.String2Date(createOrderEntity.getExpectedArrivedTime(), DateUtils.DateFormatType.TYPE1));
             ofcDistributionBasicInfo.setConsignorName(createOrderEntity.getConsignorName());
             ofcDistributionBasicInfo.setConsignorContactName(createOrderEntity.getConsignorName());
-
+            ofcDistributionBasicInfo.setConsignorContactPhone(createOrderEntity.getConsignorPhone());
+            ofcDistributionBasicInfo.setConsignorType("2");
             // FIXME: 2016/11/15 注释字段没有
-            //发货方联系电话
             //发货方传真
             //发货方Email
             //发货方邮编
@@ -179,9 +179,9 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setConsigneeName(createOrderEntity.getConsigneeName());
             ofcDistributionBasicInfo.setConsigneeContactName(createOrderEntity.getConsigneeContact());
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
-
+            ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsignorPhone());
+            ofcDistributionBasicInfo.setConsigneeType("2");
             // FIXME: 2016/11/15 注释字段没有
-            //收货方联系电话
             //收货方传真
             //收货方Email
             //收货方邮编

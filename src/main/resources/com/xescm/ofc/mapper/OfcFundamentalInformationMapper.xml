@@ -34,7 +34,21 @@
     <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
     <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
     <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
-    <result column="batch_number" property="batchNumber" jdbcType="VARCHAR" />
+
+
+
+    <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
+    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
+    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
+    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="trans_code" property="trans_code" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
@@ -69,6 +83,47 @@
     ofc_fundamental_information ofi
     WHERE ofi.cust_order_code =#{custOrderCode}
     AND ofi.cust_code = #{custCode}
+  </select>
+
+  <select id="queryOrder" resultMap="BaseResultMap">
+    SELECT
+    ofi.order_code,
+    ofi.cust_order_code,
+    ofi.order_batch_number,
+    ofi.order_time,
+    ofi.cust_name,
+    oos.order_status,
+    ofi.order_type,
+    ofi.business_type,
+    ofi.transport_type,
+    ofd.departure_place,
+    ofd.destination,
+    ofd.trans_code,
+    ofd.plate_number,
+    ofd.driver_name,
+    ofd.contact_number,
+    ofd.destination_province,
+    ofd.destination_city,
+    ofd.destination_district,
+    ofd.destination_towns
+    FROM
+    ofc_fundamental_information ofi,
+    ofc_distribution_basic_info ofd,
+    ofc_order_status oos
+    WHERE ofi.order_code = ofd.order_code
+    AND ofi.order_code = oos.order_code
+    <choose>
+      <when test=" 'orderCode'.toString() == searchType ">
+        AND ofi.order_code = #{code}
+      </when>
+      <when test="'custOrderCode'.toString() == searchType">
+        AND ofi.cust_order_code = #{code}
+      </when>
+      <when test="'transCode'.toString() == searchType">
+        AND ofd.trans_code = #{code}
+      </when>
+      <otherwise></otherwise>
+    </choose>
   </select>
 
 </mapper>
