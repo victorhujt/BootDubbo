@@ -858,7 +858,6 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
-
                     str="str";
                 }
             });
@@ -996,6 +995,9 @@
             var tdArr = $(this).children();
             var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
             var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
+            if(StringUtil.isEmpty(num)){
+                num = 0;
+            }
             consigneeAndGoodsJson[consigneeCode] = num;
             sendNum += parseInt(num);
         })
@@ -1942,6 +1944,9 @@
                 },
                 notes:{
                     maxlength:300
+                },
+                consignorName:{
+                    required:true
                 }
             },
             messages : {
@@ -1960,6 +1965,9 @@
                 },
                 notes:{
                     maxlength:"超过最大长度"
+                },
+                consignorName:{
+                    required:"请选择发货方"
                 }
 
             },
