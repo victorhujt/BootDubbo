@@ -15,6 +15,7 @@ import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
+import com.xescm.ofc.model.dto.wms.WarehouseOrderDTO;
 import com.xescm.ofc.mq.consumer.DefaultMqConsumer;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
@@ -143,7 +144,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         //如果订单类型是卡班订单, 则向DMS推送该运输计划单
                         //这里需要调整
                         ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                        OfcDistributionBasicInfo distributionBasicInfo = new OfcDistributionBasicInfo();
                         Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException("向分拣中心推送卡班订单失败");
@@ -179,7 +179,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
-                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                        String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                        //计划单生成以后通过MQ推送到仓储中心
+                        OfcSiloprogramInfo idCondition=new OfcSiloprogramInfo();
+                        idCondition.setPlanCode(planCode);
+                        OfcSiloprogramInfo info= ofcSiloprogramInfoService.selectByKey(idCondition);
+                        WarehouseOrderDTO wareHouseOrder=new WarehouseOrderDTO();
+                        try {
+							BeanUtils.copyProperties(info, wareHouseOrder);
+						} catch (IllegalAccessException e) {
+							throw new BusinessException(e.getMessage());
+						} catch (InvocationTargetException e) {
+							throw new BusinessException(e.getMessage());
+						}
+                        String jsonStr=JSONUtils.objectToJson(wareHouseOrder);
+                        defaultMqProducer.toSendWhc(jsonStr, wareHouseOrder.getPlanCode(), wareHouseOrder.getDocumentType());
                     }else {
                         throw new BusinessException("无法确定是否需要运输");
                     }
@@ -354,7 +368,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcWarehouseInformation
      * @param ofcFinanceInformation
      */
-    public void siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,String userId){
+    public String siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,String userId){
+        String planCode="";
         OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
         OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
         OfcSiloproSourceStatus ofcSiloproSourceStatus=new OfcSiloproSourceStatus();
@@ -364,6 +379,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
+            planCode=ofcSiloprogramInfo.getPlanCode();
             ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
             if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
                     || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.TRANSFEROUTOFTHELIBRARY)
@@ -414,6 +430,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (InvocationTargetException e) {
             throw new BusinessException(e.getMessage());
         }
+        return planCode;
     }
 
     public void planCancle(String orderCode,String userId){

@@ -66,7 +66,7 @@
                         <option value="600">城配</option>
                         <option value="601">干线</option>
                     </select>
-                    <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">筛选</button></span>
+                    <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">查询</button></span>
                 </div>
             </div>
         </form>
@@ -257,7 +257,7 @@
                         +"</td>"
                         +"<td>"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
                         +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.custOrderCode)+"</td>"
-                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderTime)+"</td>"
+                        +"<td class=\"hidden-480\">"+subTimeString(StringUtil.nullToEmpty(order.orderTime))+"</td>"
                         +"<td class=\"hidden-480\">"+getOrderType(order)+"</td>"
                         +"<td class=\"hidden-480\">"+getBusiType(order)+"</td>"
                         +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
@@ -310,6 +310,14 @@
             return value;
         }
 
+        function subTimeString(s){
+            try{
+                return s.substring(0,11);
+            }catch (e){
+                return s;
+            }
+        }
+
         function getOrderType(order) {
             var value = "";
             if(order.orderType == "60"){
@@ -342,13 +350,6 @@
             return value;
         }
 
-
-//        function editOrder(orderCode) {
-//            /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-//            var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
-//            xescm.common.loadPage(url);
-//        }
-
         //删除订单
         function deleteOrder(ordercode,orderStatus) {
             xescm.common.submit("/ofc/orderDeleteOper",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要删除此订单?",function () {
@@ -357,10 +358,9 @@
         }
         //订单详情
         function orderDetailOper(orderCode) {
-            var followTag = "orderCode";
-            var historyUrlTag = "orderManageOpera";
-            var url = "/ofc/orderDetailPageByCode/" + orderCode + "/" + followTag + "/" + historyUrlTag;
-            xescm.common.loadPage(url);
+//            var url = "/ofc/orderDetailPageByCode/" + orderCode ;
+//            $.get("/ofc/orderDetailPageByCode",{"orderCode":orderCode});
+            xescm.common.loadPage("/ofc/orderDetailPageByCode/"+orderCode);
         }
 
         //订单审核、反审核
