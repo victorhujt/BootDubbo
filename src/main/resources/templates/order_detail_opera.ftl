@@ -533,7 +533,7 @@
                     ${stroage.warehouseName!""}
                     </td>
                     <td>
-                    ${stroage.finishedTime?string("yyyy-MM-dd HH:mm:ss")!""}
+                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
                     </td>
                 </tr>
                 </#list>
