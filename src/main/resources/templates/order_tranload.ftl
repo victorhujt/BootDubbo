@@ -2275,6 +2275,11 @@
         });
 
         $('#merchandiser').editableSelect();
+
+        $("#createCustBtn").click(function () {
+            var url = "/csc/customer/toAddCustomerPage";
+            xescm.common.loadPage(url);
+        });
     })
 
 </script>
