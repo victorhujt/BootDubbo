@@ -59,6 +59,22 @@ public class DefaultMqProducer {
             System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
         }
     }
+    
+    /**
+     * 仓储计划单推送到仓储中心
+     * @param jsonStr
+     * @param code
+     * @param tag
+     */
+    public void toSendWhc(String jsonStr,String code,String tag) {
+        System.out.println("Producer Started");
+        Message message = new Message(mqConfig.getWHOTopic(), tag,jsonStr.getBytes());
+        message.setKey(code);
+        SendResult sendResult = producer().send(message);
+        if (sendResult != null) {
+            System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
+        }
+    }
 
     public void toSendMQTest(String jsonStr,String code) {
         System.out.println("Producer Started");

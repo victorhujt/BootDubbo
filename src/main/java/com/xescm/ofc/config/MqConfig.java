@@ -63,8 +63,18 @@ public class MqConfig {
     private String deliveryTag;
     private String TfcTransPlanTopic;
     private String TfcTransPlanTag;
+    
+    private String WHOTopic;//仓储计划单
 
-    private String EPCTopic;
+    public String getWHOTopic() {
+		return WHOTopic;
+	}
+
+	public void setWHOTopic(String wHOTopic) {
+		WHOTopic = wHOTopic;
+	}
+
+	private String EPCTopic;
 
     private String EPCTag;
 
