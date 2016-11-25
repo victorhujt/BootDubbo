@@ -195,22 +195,6 @@ public class OfcFundamentalInformation {
      */
     private String merchandiser;
 
-    public String getMerchandiser() {
-        return merchandiser;
-    }
-
-    public void setMerchandiser(String merchandiser) {
-        this.merchandiser = merchandiser;
-    }
-
-    public String getTransportType() {
-        return transportType;
-    }
-
-    public void setTransportType(String transportType) {
-        this.transportType = transportType;
-    }
-
     /**
      * 运输类型
      */
@@ -679,6 +663,143 @@ public class OfcFundamentalInformation {
      */
     public void setOperTime(Date opertime) {
         this.operTime = opertime;
+    }
+
+//    ofd.departure_place,
+//    ofd.destination,
+//    ofd.trans_code,
+//    ofd.plate_number,
+//    ofd.driver_name,
+//    ofd.contact_number,
+//    ofd.destination_province,
+//    ofd.destination_city,
+//    ofd.destination_district,
+//    ofd.destination_towns
+
+    private String departurePlace;
+
+    private String destination;
+
+    private String transCode;
+
+    private String plateNumber;
+
+    private String driverName;
+
+    private String contactNumber;
+
+    private String destinationProvince;
+
+    private String destinationCity;
+
+    private String destinationDistrict;
+
+    private String destinationTowns;
+
+    private String orderStatus;
+
+    public String getDestinationTowns() {
+        return destinationTowns;
+    }
+
+    public void setDestinationTowns(String destinationTowns) {
+        this.destinationTowns = destinationTowns;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getMerchandiser() {
+        return merchandiser;
+    }
+
+    public void setMerchandiser(String merchandiser) {
+        this.merchandiser = merchandiser;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
+    }
+
+    public String getDeparturePlace() {
+        return departurePlace;
+    }
+
+    public void setDeparturePlace(String departurePlace) {
+        this.departurePlace = departurePlace;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getTransCode() {
+        return transCode;
+    }
+
+    public void setTransCode(String transCode) {
+        this.transCode = transCode;
+    }
+
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public String getDestinationProvince() {
+        return destinationProvince;
+    }
+
+    public void setDestinationProvince(String destinationProvince) {
+        this.destinationProvince = destinationProvince;
+    }
+
+    public String getDestinationCity() {
+        return destinationCity;
+    }
+
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
+    }
+
+    public String getDestinationDistrict() {
+        return destinationDistrict;
+    }
+
+    public void setDestinationDistrict(String destinationDistrict) {
+        this.destinationDistrict = destinationDistrict;
     }
 
 }

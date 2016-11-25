@@ -49,6 +49,15 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
 
+    public String getCustId() {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
+        return custId;
+    }
+
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
@@ -166,16 +175,4 @@ public class OfcJumpontroller extends BaseController{
         modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
         return modelAndView;
     }
-
-    public String getCustId() {
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
-        return custId;
-    }
-
-
-
 }

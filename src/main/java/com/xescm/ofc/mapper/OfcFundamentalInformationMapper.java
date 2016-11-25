@@ -1,8 +1,11 @@
 package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamentalInformation> {
     String getOrderCodeByCustOrderCode(Object key);
@@ -10,5 +13,7 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
     int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation);
 
     String getOrderCodeByCustOrderCodeAndCustCode(@Param("custOrderCode") String custOrderCode, @Param("custCode") String custCode);
+
+    List<OfcFundamentalInformation> queryOrder(@Param("code") String code, @Param("searchType") String searchType);
 
 }

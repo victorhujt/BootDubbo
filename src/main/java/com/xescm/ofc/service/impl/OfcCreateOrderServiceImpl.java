@@ -22,6 +22,7 @@ import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,15 +141,27 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         //校验：店铺编码
         String storeCode = createOrderEntity.getStoreCode();
-        storeCode = StringUtils.isBlank(storeCode) ? "20161122000001" : storeCode;
+        //店铺名称
+        String storeName = null;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerId(custId);
-        Wrapper<List<CscStorevo>> cscWarehouseList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
-        resultModel = CheckUtils.checkStoreCode(cscWarehouseList, storeCode);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{},店铺编码:{}", "店铺编码", resultModel.getCode(), storeCode);
+        Wrapper<List<CscStorevo>> cscStoreVoList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
+        if(!CollectionUtils.isEmpty(cscStoreVoList.getResult())){
+            CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
+            storeCode = cscStorevo.getStoreCode();
+            storeName = cscStorevo.getStoreName();
+        } else {
+            resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
             return resultModel;
         }
+        createOrderEntity.setStoreCode(storeCode);
+//
+//        resultModel = CheckUtils.checkStoreCode(cscStoreVoList, storeCode);
+//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//            logger.info("校验数据{}失败：{},店铺编码:{}", "店铺编码", resultModel.getCode(), storeCode);
+//            return resultModel;
+//        }
+
         //校验：【发货方】与【收货方】
         resultModel = CheckUtils.checkWaresDist(orderType, createOrderEntity.getConsignorName(), createOrderEntity.getConsignorContact(),
                 createOrderEntity.getConsignorPhone(), createOrderEntity.getConsignorAddress(), createOrderEntity.getConsigneeName(),
@@ -158,44 +171,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             logger.info("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
             return resultModel;
         }
-
-        //收发货方的保存规则
-//        CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-//        cscContantAndCompanyDto.setCustomerId(custId);
-//        cscContantAndCompanyDto.setUserId(CreateOrderApiConstant.USERID);
-//        cscContantAndCompanyDto.setUserName(CreateOrderApiConstant.USERNAME);
-//        cscContantAndCompanyDto.setCscContact(new CscContact());
-//        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
-//        cscContantAndCompanyDto.getCscContact().setPurpose("1");
-//        cscContantAndCompanyDto.getCscContact().setContactName(createOrderEntity.getConsignorName());
-//        cscContantAndCompanyDto.setCustomerId(custId);
-//        cscContantAndCompanyDto.setGroupId(groupId);
-//        CscContactCompany cscContactCompany = new CscContactCompany();
-//        cscContactCompany.setContactCompanyName(createOrderEntity.getConsignorName());
-//        cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
-//        Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
-//        if (cscReceivingInfoList.getResult() == null || cscReceivingInfoList.getResult().isEmpty()) {
-//            addCscContantAndCompanyDto("1", custId, createOrderEntity, groupId);
-//        }
-
-        //收发货方的保存规则
-//        cscContantAndCompanyDto = new CscContantAndCompanyDto();
-//        cscContantAndCompanyDto.setCustomerId(custId);
-//        cscContantAndCompanyDto.setUserId(CreateOrderApiConstant.USERID);
-//        cscContantAndCompanyDto.setUserName(CreateOrderApiConstant.USERNAME);
-//        cscContantAndCompanyDto.setCscContact(new CscContact());
-//        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
-//        cscContantAndCompanyDto.getCscContact().setPurpose("2");
-//        cscContantAndCompanyDto.getCscContact().setContactName(createOrderEntity.getConsigneeName());
-//        cscContantAndCompanyDto.setCustomerId(custId);
-//        cscContantAndCompanyDto.setGroupId(groupId);
-//        cscContactCompany = new CscContactCompany();
-//        cscContactCompany.setContactCompanyName(createOrderEntity.getConsigneeName());
-//        cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
-//        cscReceivingInfoList = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
-//        if (cscReceivingInfoList.getResult() == null || cscReceivingInfoList.getResult().isEmpty()) {
-//            addCscContantAndCompanyDto("2", custId, createOrderEntity, groupId);
-//        }
 
         //仓库编码
         String warehouseCode = createOrderEntity.getWarehouseCode();
@@ -232,16 +207,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         }
 
-        //校验：货品档案信息
-        List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
-        for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
-            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-            cscGoods.setCustomerId(custId);
-            Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
-            resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
-            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                logger.info("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
-//                return resultModel;
+        //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
+        if (!StringUtils.equals("60", orderType)) {
+            List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+            for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
+                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                cscGoods.setCustomerId(custId);
+                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+                resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
+                if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                    logger.info("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
+                    return resultModel;
+                }
             }
         }
 
@@ -249,12 +226,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
+        ofcFundamentalInformation.setStoreName(storeName);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
         OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
         OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
         OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
-
         resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
         if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             //操作成功
@@ -404,7 +381,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         UamUser uamUser = new UamUser();
         uamUser.setUserName(CREATE_ORDER_BYAPI);
         authResDto.setUamUser(uamUser);
-        ofcOrderManageService.orderAudit(orderCode, PENDINGAUDIT, "review", authResDto);
+//        ofcOrderManageService.orderAudit(orderCode, PENDINGAUDIT, "review", authResDto);
     }
 
 }

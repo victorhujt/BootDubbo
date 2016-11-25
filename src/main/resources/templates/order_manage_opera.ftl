@@ -15,8 +15,9 @@
         <form class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
-                <div class="col-xs-4">
-                    <input id="custName" name="custName" type="search" placeholder="" aria-controls="dynamic-table">
+                <div class="col-xs-3">
+                    <input readonly="readonly" id="custName" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table">
                     <button type="button">
                         <span class="glyphicon glyphicon-search" style="color: #0f5f9f"></span>
                     </button>
@@ -39,12 +40,14 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                <div class="col-xs-4">
-                    <input id="orderDateBegin" name="orderDateBegin" type="search" placeholder=""
+                <div class="col-xs-3">
+                    <input readonly="readonly" style="width: 110px;" id="startDate" name="startDate" type="search"
+                           placeholder=""
                            aria-controls="dynamic-table"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                     -
-                    <input id="orderDateEnd" name="orderDateEnd" type="search" placeholder=""
+                    <input readonly="readonly" style="width: 110px;" id="endDate" name="endDate" type="search"
+                           placeholder=""
                            aria-controls="dynamic-table"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                 </div>
@@ -63,7 +66,7 @@
                         <option value="600">城配</option>
                         <option value="601">干线</option>
                     </select>
-                    <span>&nbsp;<button class="btn btn-primary btn-xs">筛选</button></span>
+                    <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">筛选</button></span>
                 </div>
             </div>
         </form>
@@ -113,21 +116,6 @@
 
         </thead>
         <tbody id="dataTbody">
-        <tr>
-            <td>1</td>
-            <td id="operate"></td>
-            <td><a onclick="jumpUrlByOrderCode('111111')">111111</a></td>
-            <td><a onclick="jumpUrlByOrderBatchCode('111111')">111111</a></td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-            <td>111111</td>
-        </tr>
-
         </tbody>
     </table>
     <div class="row">
@@ -139,91 +127,257 @@
     <script src="../components/chosen/chosen.jquery.js"></script>
 
     <script type="text/javascript">
+        var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
+        $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
+            $(document).ready(main);
+            $('.chosen-select').chosen({allow_single_deselect:true});
+            //resize the chosen on window resize
 
-        function appendSelect(type) {
-            if (type == "60") {
-                return "<option value=''>----</option><option value='600'>城配</option><option value='601'>干线</option>";
-            } else if (type == "61") {
-                var html = "";
-                html += "<option value='----------'>----------</option>";
-                html += "<option value='610'>销售出库</option>";
-                html += "<option value='611'>调拨出库</option>";
-                html += "<option value='612'>报损出库</option>";
-                html += "<option value='613'>其他出库</option>";
-                html += "<option value='620'>采购入库</option>";
-                html += "<option value='621'>调拨入库</option>";
-                html += "<option value='622'>退货入库</option>";
-                html += "<option value='623'>加工入库</option>";
-                return html;
-            }
-            return null;
-        }
-        $("#orderType").on("change", function () {
-            var type = $(this).val();
-            if (type == "60" || type == "61") {
-                $("#businessType").empty().append(appendSelect(type));
-            }
+            $(window)
+                    .off('resize.chosen')
+                    .on('resize.chosen', function() {
+                        $('.chosen-select').each(function() {
+                            var $this = $(this);
+                            $this.next().css({'width': $this.parent().width()});
+                        })
+                    }).trigger('resize.chosen');
+            //resize chosen on sidebar collapse/expand
+            $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                if(event_name != 'sidebar_collapsed') return;
+                $('.chosen-select').each(function() {
+                    var $this = $(this);
+                    $this.next().css({'width': $this.parent().width()});
+                })
+            });
         });
 
-        $(function () {
-            $("#operate").empty().append(operateEle("10"));
-        });
+        function main(){
+            //初始化页面数据
+            initPageData();
+            // 查询
+            queryData(1);
 
-        /**
-         * 订单状态【待审核】，显示【审核】、【删除】三个按钮。
-         订单状态【已审核】，显示【反审核】、【取消】两个按钮。
-         订单状态【执行中】，显示【取消】一个按钮。
-         订单状态【已完成】或【已取消】，不显示按钮。
-         * 显示操作按钮
-         * @param flag
-         * @returns {*}
-         */
-        function operateEle(flag) {
-            var cannelObj = "<button class='btn btn-danger btn-xs' onclick='"+cancelOperate('a')+"'>取消</button>";
-            var applyObj = "<button class='btn btn-info btn-xs' onclick='"+applyOperate('a')+"'>审核</button>";
-            var deleteObj = "<button class='btn btn-warning btn-xs' onclick='"+deleteObjOperate('a')+"'>删除</button>";
-            var rereviewObj = "<button class='btn btn-info btn-xs' onclick='"+rereviewOperate('a')+"'>反审核</button>";
-            if (flag == "10") {
-                return ( applyObj + "&nbsp;&nbsp;" + deleteObj);
-            } else if (flag == "20") {
-                return ( rereviewObj + "&nbsp;&nbsp;" + deleteObj);
-            } else if (flag == "30") {
-                return (cannelObj);
-            }
+            $("#doSearch").click(function () {
+                queryData(1);
+            });
         }
 
-        function cancelOperate(a){
-            if (confirm("确定取消订单？")) {
-                alert("取消订单");
-            }
+
+
+        //页面数据初始化
+        function initPageData(){
+            var active_class = "active";
+            $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
+                var th_checked = this.checked;//checkbox inside "TH" table header
+
+                $(this).closest("table").find("tbody > tr").each(function(){
+                    var row = this;
+                    if(th_checked) $(row).addClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", true);
+                    else $(row).removeClass(active_class).find("input[type=checkbox]").eq(0).prop("checked", false);
+                });
+            });
+            $("#simple-table").on("click", "td input[type=checkbox]" , function(){
+                var $row = $(this).closest("tr");
+                if($row.is(".detail-row ")) return;
+                if(this.checked) $row.addClass(active_class);
+                else $row.removeClass(active_class);
+            });
         }
-        function deleteOpera(a){
-            if (confirm("确定删除订单？")) {
-                alert("删除订单");
-            }
-        }
-        function applyOperate(a){
-            if (confirm("确定审核订单？")) {
-                alert("审核订单");
-            }
-        }
-        function rereviewOperate(a){
-            if (confirm("确定反审核订单？")) {
-                alert("反审核订单");
-            }
+    </script>
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+
+        function queryData(pageNum) {
+            var param = {};
+            param.pageNum = pageNum;
+            param.pageSize = 10;
+            param.custName = $("#custName").val();
+            var startDate = $dp.$('startDate').value;
+            var endDate = $dp.$('endDate').value;
+            param.startDate = startDate;
+            param.endDate = endDate;
+            param.orderCode = $("#orderCode").val();
+            param.orderStatus = $("#orderStatus").val();
+            param.orderType = $("#orderType").val();
+            param.businessType = $("#businessType").val();
+            CommonClient.post(sys.rootPath + "/ofc/queryOrderOper", param, function(result) {
+
+                if (result == undefined || result == null) {
+                    alert("HTTP请求无数据返回！");
+                } else if (result.code == 200) {// 1:normal
+                    reloadGrid(result);// 刷新页面数据
+                    laypage({
+                        cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                        pages: result.result.pages, // 总页数
+                        skip: true, // 是否开启跳页
+                        skin: "molv",
+                        groups: 3, // 连续显示分页数
+                        curr: result.result.pageNum, // 当前页
+                        jump: function(obj, first){ // 触发分页后的回调
+                            if(!first){ // 点击跳页触发函数自身，并传递当前页：obj.curr
+                                queryData(obj.curr);
+                            }
+                        }
+                    });
+                } else if (result.code == 403){
+                    alert("没有权限")
+                } else {
+                    $("#dataTbody").html("");
+                }
+            });
         }
 
-        function jumpUrlByOrderCode(orderCode){
+        function reloadGrid(data) {
+            var htmlText = "";
+
+            if(data == null || data == "" || data == undefined){
+                $("#dataTbody").html("");
+                return;
+            }
+
+            var length = data.result.list.length;
+            if(length < 1){
+                $("#dataTbody").html("");
+                return;
+            }
+            $.each(data.result.list, function(index,item){
+                var order = item;
+                var consigneeName = "";
+                if("2"==StringUtil.nullToEmpty(order.consigneeType)){
+                    consigneeName = "个人-"+order.consigneeContactName;
+                }else{
+                    consigneeName = order.consigneeName;
+                }
+                htmlText +="<tr role=\"row\" class=\"odd\">"
+                        +"<td>"+[index+1]+"</td>"
+                        + "<td class=\"center\">" + getOperatorByStatus(order,index) + "</td>"
+                        + "<td class=\"center\">" + order.custName + "</td>"
+                        +"<td>"
+                        +"<a onclick=\"orderDetail('" + order.orderCode+ "')\">"+StringUtil.nullToEmpty(order.orderCode)+"</a>"
+                        +"</td>"
+                        +"<td>"+StringUtil.nullToEmpty(order.orderBatchNumber)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.custOrderCode)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.orderTime)+"</td>"
+                        +"<td class=\"hidden-480\">"+getOrderType(order)+"</td>"
+                        +"<td class=\"hidden-480\">"+getBusiType(order)+"</td>"
+                        +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(consigneeName)+"</td>"
+                        +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.warehouseName)+"</td>"
+                        + "</tr>";
+            })
+            $("#dataTbody").html(htmlText);
+        }
+
+        function getOrderStatus(status) {
+            var value ="";
+            if(status == '10'){
+                value = "<span class=\"label label-sm label-yellow\">待审核</span>"
+            }else if(status == '20'){
+                value = "<span class=\"label label-sm label-warning\">已审核</span>"
+            }else if(status == '30'){
+                value = "<span class=\"label label-sm label-info\">执行中</span>"
+            }else if(status == '40'){
+                value = "<span class=\"label label-sm label-success\">已完成</span>"
+            }else if(status == '50'){
+                value = "<span class=\"label label-sm label-default\">已取消</span>"
+            }
+            return value;
+        }
+
+        function getBusiType(order) {
+            var value = "";
+            if(order.businessType == '600'){
+                value = "城配"
+            }else if(order.businessType == "601"){
+                value = "干线";
+            }else if(order.businessType == "610"){
+                value = "销售出库";
+            }else if(order.businessType == "611"){
+                value = "调拨出库";
+            }else if(order.businessType == "612"){
+                value = "报损出库";
+            }else if(order.businessType == "613"){
+                value = "其他出库";
+            }else if(order.businessType == "620"){
+                value = "采购入库";
+            }else if(order.businessType == "621"){
+                value = "调拨入库";
+            }else if(order.businessType == "622"){
+                value = "退货入库";
+            }else if(order.businessType == "623"){
+                value = "加工入库";
+            }
+            return value;
+        }
+
+        function getOrderType(order) {
+            var value = "";
+            if(order.orderType == "60"){
+                value = "运输订单";
+            }else if(order.orderType == "61"){
+                value = "仓配订单";
+            }
+            return value;
+
+        }
+
+        function getOperatorByStatus(order,index) {
+            var value = "";
+
+            var newStatus = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"btn btn-minier btn-yellow\">审核</button>"
+                    +"<button type=\"button\" id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-danger\">删除</button>";
+
+            var unApproveStatus = "<button type=\"button\" id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
+            var cancelStatus = "<button type=\"button\" id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-default\">取消</button>";
+
+            if (order.orderStatus == "10") {
+                value = newStatus;
+            }
+            if (order.orderStatus == "20" || order.orderStatus == "30") {
+                value = unApproveStatus + cancelStatus;
+            }
+            if (order.orderStatus == "30") {
+                value = cancelStatus;
+            }
+            return value;
+        }
+
+
+//        function editOrder(orderCode) {
+//            /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
+//            var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
+//            xescm.common.loadPage(url);
+//        }
+
+        function deleteOrder(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderDeleteOper",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要删除此订单?",function () {
+                xescm.common.loadPage("/ofc/orderManageOpera");
+            });
+        }
+        function orderDetail(orderCode) {
+            var followTag = "orderCode";
             var historyUrlTag = "orderManageOpera";
-            var url = "/ofc/orderDetailPageByCode/" + orderCode + "/" + historyUrlTag;
+            var url = "/ofc/orderDetails/" + orderCode + "/" + followTag + "/" + historyUrlTag;
             xescm.common.loadPage(url);
         }
 
-        function jumpUrlByOrderBatchCode(orderBatchNumber){
-            var historyUrlTag = "orderManageOpera";
-            var url = "/ofc/orderDetailBatchOpera/" + orderBatchNumber + "/" + historyUrlTag;
-            xescm.common.loadPage(url);
+        function reviewOrder(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"review"},"您确定要审核此订单?",function () {
+
+                xescm.common.loadPage("/ofc/orderManage");
+            });
         }
+        function reReviewOrder(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderOrNotAudit",{"orderCode":ordercode,"orderStatus":orderStatus,"reviewTag":"rereview"},"您确定要反审核此订单?",function () {
+                xescm.common.loadPage("/ofc/orderManage");
+            });
+        }
+        function cancelOrder(ordercode,orderStatus) {
+            xescm.common.submit("/ofc/orderCancel",{"orderCode":ordercode,"orderStatus":orderStatus},"您确定要取消此订单?",function () {
+                xescm.common.loadPage("/ofc/orderManage");
+            });
+        }
+
 
     </script>
 
