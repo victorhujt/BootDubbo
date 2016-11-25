@@ -15,6 +15,7 @@ import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
+import com.xescm.ofc.model.dto.wms.WarehouseOrderDTO;
 import com.xescm.ofc.mq.consumer.DefaultMqConsumer;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
@@ -142,7 +143,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         //如果订单类型是卡班订单, 则向DMS推送该运输计划单
                         //这里需要调整
                         ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                        OfcDistributionBasicInfo distributionBasicInfo = new OfcDistributionBasicInfo();
                         Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException("向分拣中心推送卡班订单失败");
@@ -175,10 +175,27 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                        
+                        
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                        //计划单生成以后通过MQ推送到仓储中心
+                        OfcSiloprogramInfo idCondition=new OfcSiloprogramInfo();
+                        idCondition.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+                        OfcSiloprogramInfo info= ofcSiloprogramInfoService.selectByKey(idCondition);
+                        WarehouseOrderDTO wareHouseOrder=new WarehouseOrderDTO();
+                        try {
+							BeanUtils.copyProperties(info, wareHouseOrder);
+						} catch (IllegalAccessException e) {
+							throw new BusinessException(e.getMessage());
+						} catch (InvocationTargetException e) {
+							throw new BusinessException(e.getMessage());
+						}
+                        String jsonStr=JSONUtils.objectToJson(wareHouseOrder);
+                        defaultMqProducer.toSendWhc(jsonStr, wareHouseOrder.getPlanCode(), wareHouseOrder.getDocumentType());
+                        
                     }else {
                         throw new BusinessException("无法确定是否需要运输");
                     }

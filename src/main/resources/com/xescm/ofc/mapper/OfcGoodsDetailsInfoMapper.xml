@@ -57,4 +57,10 @@
     delete from ofc_goods_details_info
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </delete>
+
+  <select id="queryByOrderCode" resultMap="BaseResultMap">
+    SELECT gdi.*
+    FROM ofc_goods_details_info gdi,ofc_fundamental_information ofi
+    WHERE ofi.order_code = gdi.order_code AND gdi.order_code = #{orderCode}
+  </select>
 </mapper>

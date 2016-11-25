@@ -21,52 +21,56 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">订单编号</label>
                         <div class="col-xs-3">
-                            <input id="custName" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderCode" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.orderCode)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="custOrderCode" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.custOrderCode)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderBatchNumber" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.orderBatchNumber)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderCode" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.orderTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderCode" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.custName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单状态</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderStatus" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.orderStatus)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.orderType)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="businessType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.businessType)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">运输类型</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="transportType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.transportType)!""}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -77,49 +81,51 @@
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">平台类型</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="platformType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.platformType)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单来源</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="orderSource" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.orderSource)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">服务产品</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="productName" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.productName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">开单员</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="merchandiser" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.merchandiser)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">备注</label>
                         <div class="col-xs-6">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="notes" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.notes)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">创建日期</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="creationTime" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.creationTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">创建人员</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="creator" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.creator)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">完成日期</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="finishedTime" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
                         </div>
                     </div>
                 </form>
@@ -137,59 +143,60 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">运输单号</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="transCode" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.transCode)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">出发地</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="departurePlace" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.departurePlace)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">目的地</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="destination" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destination)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">车牌号</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="plateNumber" name="plateNumber" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.plateNumber)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="driverName" name="driverName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.driverName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="contactNumber" name="contactNumber" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.contactNumber)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">数量</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="quantity" name="quantity" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.quantity)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">重量</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">KG
+                            <input id="weight" name="weight" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.weight)!""}">KG
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">体积</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="cubage" name="cubage" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">运输要求</label>
                         <div class="col-xs-6">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="transRequire" name="transRequire" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.transRequire)!""}">
                         </div>
                     </div>
                 </form>
@@ -206,34 +213,36 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">名称</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="consignorName" name="consignorName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.consignorName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系人</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="consignorContactName" name="consignorContactName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.consigneeContactName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="consignorContactPhone" name="consignorContactPhone" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.consignorContactPhone)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">传真</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
+                            <input id="" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">Email</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
+                            <input id="" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">邮编</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
+                            <input id="" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -241,7 +250,8 @@
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
                             <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.departureProvince)!""+(ofcDistributionBasicInfo.departureCity)!""+(ofcDistributionBasicInfo.departureDistrict)!""+(ofcDistributionBasicInfo.departureTowns)!""+(ofcDistributionBasicInfo.departurePlace)!"" }">
                         </div>
                     </div>
                 </form>
@@ -260,17 +270,19 @@
                         <label class="control-label col-label no-padding-right" for="name">名称</label>
                         <div class="col-xs-3">
                             <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.consigneeName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系人</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="consigneeContactName" name="consigneeContactName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.consigneeContactName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="consigneeContactPhone" name="consigneeContactPhone" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.consigneeContactPhone)!""}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -293,8 +305,9 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="address" name="address" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.destinationProvince)!""+(ofcDistributionBasicInfo.destinationCity)!""+(ofcDistributionBasicInfo.destinationDistrict)!""+(ofcDistributionBasicInfo.destinationTowns)!""+(ofcDistributionBasicInfo.destinationPlace)!"" }">
                         </div>
                     </div>
                 </form>
@@ -412,17 +425,18 @@
                         <label class="control-label col-label no-padding-right" for="name">是否代收货款</label>
                         <div class="col-xs-3">
                             <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                                   aria-controls="dynamic-table" value="">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">代收费用</label>
                         <div class="col-xs-3">
                             <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                                   aria-controls="dynamic-table" value="0.00">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">代收金额</label>
                         <div class="col-xs-3">
                             <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFinanceInformation.collectLoanAmount)!""}">
                         </div>
                     </div>
                 </form>
@@ -479,6 +493,51 @@
                 </th>
             </thead>
             <tbody>
+            <#if storageList ?? && (storageList?size > 0) >
+                <#list storageList as stroage>
+                <tr>
+                    <td>
+                    ${stroage_index+1}
+                    </td>
+                    <td>
+                    ${stroage.planCode!""}
+                    </td>
+                    <td>
+                    ${stroage.type!""}
+                    </td>
+                    <td>
+                    ${stroage.businessType!""}
+                    </td>
+                    <td>
+                    ${stroage.resourceAllocationStatus!""}
+                    </td>
+                    <td>
+                    ${stroage.serviceProviderName!""}
+                    </td>
+                    <td>
+                    ${stroage.serviceProviderContact!""}
+                    </td>
+                    <td>
+                    ${stroage.serviceProviderContactPhone!""}
+                    </td>
+                    <td>
+                    ${stroage.plannedSingleState!""}
+                    </td>
+                    <td>
+                    ${stroage.departure!""}
+                    </td>
+                    <td>
+                    ${stroage.destination!""}
+                    </td>
+                    <td>
+                    ${stroage.warehouseName!""}
+                    </td>
+                    <td>
+                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
+                    </td>
+                </tr>
+                </#list>
+            </#if>
             </tbody>
         </table>
 
@@ -520,6 +579,21 @@
                 </th>
             </thead>
             <tbody>
+            <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
+                <#list ofcGoodsDetailsInfoList as goods>
+                <tr>
+                    <td>${(goods_index + 1)!"" }</td>
+                    <td>${(goods.goodsCode)!"" }</td>
+                    <td>${(goods.goodsName)!"" }</td>
+                    <td>${(goods.goodsSpec)!"" }</td>
+                    <td>${goods.unit!"" }</td>
+                    <td>${goods.productionBatch!"" }</td>
+                    <td>${(goods.productionTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
+                    <td>${(goods.invalidTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
+                    <td>${goods.quantity!"" }</td>
+                </tr>
+                </#list>
+            </#if>
             </tbody>
         </table>
         <div class="page-header">
@@ -538,7 +612,15 @@
                 </th>
             </thead>
             <tbody>
-
+            <#if ofcOrderStatusList ?? && (ofcOrderStatusList?size > 0) >
+                <#list ofcOrderStatusList as status>
+                <tr>
+                    <td>
+                    ${status.notes!""}
+                    </td>
+                </tr>
+                </#list>
+            </#if>
             </tbody>
         </table>
     </form>
@@ -546,9 +628,7 @@
 
 <script type="text/javascript">
     function detailBackToHistory() {
-        if ("orderManageOpera" == tag) {
             xescm.common.loadPage("/ofc/orderManageOpera");
-        }
     }
 </script>
 </body>

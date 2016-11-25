@@ -13,4 +13,6 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
     int deleteByOrderCode(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
 
     void deleteAllByOrderCode(@Param(value = "orderCode") String orderCode);
+
+    List<OfcGoodsDetailsInfo> queryByOrderCode(@Param(value = "orderCode") String orderCode);
 }

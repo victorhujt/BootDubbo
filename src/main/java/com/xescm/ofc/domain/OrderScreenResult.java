@@ -132,4 +132,14 @@ public class OrderScreenResult {
     public void setStoreName(String storeName) {
         this.storeName = storeName;
     }
+
+    private String orderBatchNumber;
+
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
+
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
+    }
 }

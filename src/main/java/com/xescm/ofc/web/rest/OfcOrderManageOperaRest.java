@@ -3,7 +3,7 @@ package com.xescm.ofc.web.rest;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xescm.ofc.domain.OrderScreenResult;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.form.OrderOperForm;
 import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -14,6 +14,7 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,24 +41,41 @@ public class OfcOrderManageOperaRest extends BaseController {
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
 
+    @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+
+    @Autowired
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+
+    @Autowired
+    private OfcFinanceInformationService ofcFinanceInformationService;
+
+    @Autowired
+    private OfcOrderStatusService ofcOrderStatusService;
+    @Autowired
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Autowired
+    private PlanAndStorageService planAndStorageService;
+
     /**
      * 运营→订单管理 orderManageOpera
+     *
      * @return modelAndView
      */
-    @RequestMapping("/orderManageOpera")
+    @RequestMapping(value = "/orderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView orderManageOpera() {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
-        modelAndView.addObject("orderStatus",OrderStatusEnum.queryList());
         return modelAndView;
     }
 
     /**
      * 查询订单
+     *
      * @param page
      * @param form
      * @return
      */
-    @RequestMapping("/queryOrderOper")
+    @RequestMapping(value = "/queryOrderOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
         try {
@@ -73,6 +91,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
     /**
      * 审核与反审核订单
+     *
      * @param orderCode
      * @param orderStatus
      * @param reviewTag
@@ -93,6 +112,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
     /**
      * 订单删除
+     *
      * @param orderCode
      * @return
      */
@@ -111,6 +131,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
     /**
      * 订单取消
+     *
      * @param orderCode
      * @return
      */
@@ -122,25 +143,62 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常:{},{}", "", null);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
 
     /**
      * 订单详情
+     *
      * @param orderCode
-     * @param dtotag
      * @return
      */
-    @RequestMapping(value = "/orderDetailPageByCode/{orderCode}/{dtotag}")
-    public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode, @PathVariable String dtotag) {
-        ModelAndView modelAndView = new ModelAndView("order_detail_opera");
-        return modelAndView;
+    @RequestMapping(value = "/orderDetailPageByCode/{orderCode}")
+    public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode) {
+        try {
+            ModelAndView modelAndView = new ModelAndView("order_detail_opera");
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号为空");
+            }
+            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+            ofcFundamentalInformation.setOrderCode(orderCode);
+            ofcFundamentalInformation = ofcFundamentalInformationService.selectOne(ofcFundamentalInformation);
+
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
+            ofcDistributionBasicInfo.setOrderCode(orderCode);
+            ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
+
+            OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+
+            OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+            ofcOrderStatus.setOrderCode(orderCode);
+            List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
+
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+            List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
+            List<PlanAndStorage> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
+            storageList.addAll(planList);
+            modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
+            modelAndView.addObject("ofcDistributionBasicInfo", ofcDistributionBasicInfo);
+            modelAndView.addObject("ofcFinanceInformation", ofcFinanceInformation);
+            modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
+            modelAndView.addObject("ofcGoodsDetailsInfoList", ofcGoodsDetailsInfoList);
+            modelAndView.addObject("ofcOrderStatusList", ofcOrderStatusList);
+
+            modelAndView.addObject("storageList", storageList);
+//            modelAndView.addObject("planList", planList);
+
+            return modelAndView;
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex);
+        }
+        return null;
     }
 
     /**
      * 订单批次
+     *
      * @param orderBatchCode
      * @param dtotag
      * @return
