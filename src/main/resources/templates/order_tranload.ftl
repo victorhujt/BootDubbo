@@ -834,7 +834,7 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
-        $("#orderTime").val(new Date().toLocaleDateString());
+        /*//$("#orderTime").val(new Date().toLocaleDateString());*/
     }
     /**
      *表单验证
@@ -1618,7 +1618,9 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("input[name=transportTypeV]:checked").val();
-            jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
+            if($dp.$('orderTime').value!=""){
+                jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
+            }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();
             jsonStr=orderFinanceInfo(jsonStr);
@@ -2116,7 +2118,7 @@
                                 "<input class='col-xs-10 col-xs-12'  name='unit' id='unit' type='text'/>"
                                 +"</td>";
                         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                                "<select  id='pack' name='pack' class='chosen-select form-control'>"+
+                                "<select  id='pack' name='pack'>"+
                                 "<option value='01'>纸箱</option>"+
                                 "<option value='02'>木箱</option>"+
                                 "<option value='03'>桶</option>"+

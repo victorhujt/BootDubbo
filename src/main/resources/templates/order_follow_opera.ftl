@@ -286,13 +286,17 @@
         html += "<tr><th>订单编号</th><th>客户订单编号</th><th>运输单号</th><th>客户名称</th></tr>";
         $.each(data, function (index, item) {
             html += "<tr onclick=\"selectOrderCode('"+item.orderCode+"')\">"+
-                    "<td>" + item.orderCode + "</td>" +
-                    "<td>" + item.custOrderCode + "</td>" +
-                    "<td>" + item.transCode + "</td>" +
-                    "<td>" + item.custName + "</td></tr>";
+                    "<td>" + stringToEmpty(item.orderCode) + "</td>" +
+                    "<td>" + stringToEmpty(item.custOrderCode) + "</td>" +
+                    "<td>" + stringToEmpty(item.transCode) + "</td>" +
+                    "<td>" + stringToEmpty(item.custName) + "</td></tr>";
         })
         html += "</table>";
         return html;
+    }
+
+    function stringToEmpty(e){
+        return (e == null || e == "null" || e == undefined) ? "" : e;
     }
 
     function selectOrderCode(code) {
