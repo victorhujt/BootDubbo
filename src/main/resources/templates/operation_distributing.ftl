@@ -82,7 +82,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,8 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">条形码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "barCodeCondition" name="barCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "barCode" name="barCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input id="customerId" name ="customerId" type="hidden"/>
                         </div>
                     </div>
                 </div>
@@ -398,8 +399,8 @@
             <div><label class="control-label col-label no-padding-right" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd HH:mm:ss"))!""}" type="text" placeholder="订单日期"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
+                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期"
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
                 </div>
             </div></div>
 
@@ -416,7 +417,7 @@
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm',minDate:'%y-%M-%d'})"/>
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
             </div></div>
         </div>
@@ -729,10 +730,13 @@
 
         });
         $("#goodsSelectFormBtn").click(function () {
-
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
+            debugger
+            console.log("筛选货品有问题")
+            console.log("==="+JSON.stringify( $("#goodsSelConditionForm").serialize()))
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
+                console.log("====================="+JSON.stringify(data))
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
 
@@ -905,7 +909,12 @@
     var deleteGoodsTag = false;
 
     function deleteConsignee(obj) {
-        $(obj).parent().parent().remove();
+        if(ifConsigneeConfirm){//000
+            alert("您已确认,无法删除收货方")
+        }else{
+            $(obj).parent().parent().remove();
+
+        }
     }
     function deleteGood(obj) {
         deleteGoodsTag = true;
@@ -1162,6 +1171,7 @@
                 });
             }else if(contactList == 0){
                 alert("您还未添加任何联系人,请在收发货档案中进行添加操作！");
+                return;
             }else {
                 $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
@@ -1518,8 +1528,8 @@
                 ifConsigneeConfirm = true;
                 //禁用添加收货人和确认收货人
                 debugger;
-                layer.close(index);
             })
+            layer.close(index);
         }, function(index){
             layer.close(index);
         });
@@ -1588,6 +1598,7 @@
                 $("#custName").val(customerName);
                 $("#custGroupId").val(groupId);
                 $("#custId").val(custId);
+                $("#customerId").val(custId);
             }
         });
         if(custEnterTag==""){
@@ -1650,7 +1661,7 @@
                 orderInfo.businessType = "610";//销售出库
                 orderInfo.provideTransport = "1";//需要运输
             }
-            orderInfo.orderTime = $dp.$('orderTime').value;//000
+            orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
             orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
             orderInfo.custName = $("#custName").val();//后端需特别处理

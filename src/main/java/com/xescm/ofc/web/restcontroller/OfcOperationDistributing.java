@@ -125,8 +125,7 @@ public class OfcOperationDistributing extends BaseController{
             OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
             if(pageCustOrderCode == custOrderCode){
-                logger.error("城配下单批量下单,客户订单编号重复");
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+
             }
             pageCustOrderCode = custOrderCode;
             OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
@@ -221,7 +220,9 @@ public class OfcOperationDistributing extends BaseController{
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
             wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
-            response.getWriter().print(JSONUtils.objectToJson(wrapper));
+            if(null != wrapper.getResult()){
+                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+            }
         }catch (Exception ex){
             logger.error("城配下单查询货品列表失败!",ex.getMessage(),wrapper.getMessage());
         }
