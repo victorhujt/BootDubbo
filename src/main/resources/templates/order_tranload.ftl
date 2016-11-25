@@ -918,35 +918,35 @@
                 luggage:{
                     maxlength: "最大999999.99元",
                     required:"请填写运费",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 homeDeliveryFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 cargoInsuranceFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 insureValue:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 twoDistributionFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 collectServiceCharge:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 collectLoanAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 returnListFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -990,32 +990,24 @@
                     maxlength: 9,
                     required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
-                },
-                serviceCharge:{
-                    required:true,
-                    pattern:/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/
                 }
             },
             messages : {
                 currentAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 toPayAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 returnAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 monthlyAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
-                },
-                serviceCharge:{
-                    required:"缺少费用总计",
-                    pattern:"金额格式错误"
+                    pattern:"金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1583,7 +1575,7 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("input[name=transportTypeV]:checked").val();
-            jsonStr.orderTime = $dp.$('orderTime').value;
+            jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();
             jsonStr=orderFinanceInfo(jsonStr);
@@ -1620,7 +1612,6 @@
             console.log("======orderGoodsListStr======"+orderGoodsListStr)
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
-            debugger;
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
@@ -1713,7 +1704,6 @@
             cscGoods.goodsCode = goodsCode;
             cscGoods.goodsName = goodsName;
             var param = JSON.stringify(cscGoods);
-            debugger;
             CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
 
@@ -1887,8 +1877,6 @@
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
                     $("#consigneeAddress").val(address);
-
-                    debugger;
                     var paramConsignor = {};
                     var paramConsignee = {};
                     var cscContact = {};
@@ -1911,7 +1899,6 @@
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
-                            debugger;
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -2176,12 +2163,14 @@
         $("#goodsListDivNoneTop").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
 
         });
 
         $("#goodsListDivNoneBottom").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
 
         });
 
@@ -2200,7 +2189,6 @@
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsName);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(specification);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(unit);
-                    $("#yangdongxushinanshen").attr("id","goodCodeSel");
                     goodsInfoListDiv="true";
                 }
             });
@@ -2208,6 +2196,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#goodsListDiv").fadeOut("slow");
+                $("#yangdongxushinanshen").attr("id","goodCodeSel");
             }
         });
 
