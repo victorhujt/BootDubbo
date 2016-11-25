@@ -325,6 +325,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
+                            <input id="goodsIndexDivHidden" type="hidden"/>
                             <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -934,7 +935,7 @@
     }
 
     function goodsAndConsignee(obj){
-        $(obj).not($(obj).find('td')[0])
+        //$(obj).not($(obj).find('td')[0])
 
         console.log("---"+obj)
         if(deleteGoodsTag){
@@ -957,6 +958,7 @@
             var goodsName = $(obj).parent().parent().children().eq(3).text();
             var specification = $(obj).parent().parent().children().eq(4).text();
             var unit = $(obj).parent().parent().children().eq(5).text();
+            $("#goodsIndexDivHidden").val(goodsIndex);
             $("#goodsCodeDiv").val(goodsCode);
             $("#goodsNameDiv").val(goodsName);
             $("#specificationDiv").val(specification);
@@ -972,14 +974,16 @@
                 var consigneeName = tdArr.eq(1).text();//
                 var consigneeContactName = tdArr.eq(3).text();//
                 var consigneeType = tdArr.eq(6).text();//
-                var consigneeCode = tdArr.eq(7).text();//
+                var consigneeCode = tdArr.eq(7).text();
+                var consigneeContactCode = tdArr.eq(8).text();
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var num = "0";
 
                 if(undefined != goodsAndConsigneeMap.get(mapKey)){
                     var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
                     //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
-                    num = preGoodsAndConsigneeJsonMsg[consigneeCode];
+                    var cadj = consigneeCode + "@" + consigneeContactCode;
+                    num = preGoodsAndConsigneeJsonMsg[cadj];
                 }
 
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -993,6 +997,7 @@
                // consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
                 consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
+                consignorout =consignorout + "<td style='display:none'>"+consigneeContactCode+"</td>";
                 consignorout =consignorout + "</tr>";
             });
             $("#goodsAndConsigneeTbody").html(consignorout);
@@ -1014,18 +1019,23 @@
             var tdArr = $(this).children();
             var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
             var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
+            var consigneeContactCode = tdArr.eq(3).text();
+            //某个收货方联系人的编码
             if(StringUtil.isEmpty(num)){
                 num = 0;
             }
-            consigneeAndGoodsJson[consigneeCode] = num;
+            var cadj = consigneeCode + "@" + consigneeContactCode;
+            consigneeAndGoodsJson[cadj] = num;
             sendNum += parseInt(num);
         })
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
+            var goodsIndex = tdArr.eq(1).text();//货品索引
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsCodeDiv = $("#goodsCodeDiv").val();
-            if(goodsCode == goodsCodeDiv){
+            var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
+            if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
                 tdArr.eq(6).text(sendNum);
                 var indexIn = tdArr.eq(1).text();
                 var goodsCodeIn = tdArr.eq(2).text();
@@ -1408,6 +1418,7 @@
             var address = tdArr.eq(18).text();
 
             contactCodeOut[contactCompanyId] = 1;
+            contactCodeOut[contactCode] = 1;
 
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -1458,7 +1469,9 @@
                 var streetName = tdArr.eq(17).text();
                 var address = tdArr.eq(18).text();
 
-                if(undefined != contactCodeOut[contactCompanyId] && contactCodeOut[contactCompanyId] == 1){
+                if(undefined != contactCodeOut[contactCompanyId]
+                        && contactCodeOut[contactCompanyId] == 1
+                        && undefined != contactCodeOut[contactCode]&& contactCodeOut[contactCode] == 1){
                     return true;
                 }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
