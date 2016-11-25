@@ -674,7 +674,7 @@
                     alert("请先添加收货方")
                 });
             }*/
-        })
+        });
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
@@ -700,7 +700,7 @@
                         }
                         $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
                     });
-                })
+                });
                 //加载第一个一级货品的二级种类//000
                 $("#goodsSecTypeId option").remove();
                 console.log('----------'+firstGoodsType)
@@ -717,7 +717,7 @@
 
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
-        })
+        });
         $("#goodsListDivNoneTop").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
@@ -1601,7 +1601,8 @@
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
         //<option value="">无</option>
-        $("#warehouseCode").append("<option value="">无</option>");
+       /* $("#warehouseCode").append("<option value="">无</option>");*/
+       $("#warehouseCode").append("<option value = ''>无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {

@@ -16,13 +16,21 @@ public class CscGoodsApiVo implements Serializable {
     private Long version;
 
     /**
-     * 货品类型
+     * 货品小类id
      */
     private String goodsType;
     /**
-     * 货品类型id
+     * 货品大类id
      */
     private String goodsTypeId;
+    /**
+     * 货品大类名称
+     */
+    private String goodsTypeParentName;
+    /**
+     * 货品小类名称
+     */
+    private String goodsTypeName;
 
     /**
      * 货品编码
