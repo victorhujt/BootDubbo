@@ -9,11 +9,9 @@ import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.domain.CscContact;
 import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscGoodsTypeVo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
@@ -51,9 +49,7 @@ public class OfcOperationDistributing extends BaseController{
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
-    private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
-    @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient; //000
 
 
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
@@ -111,15 +107,14 @@ public class OfcOperationDistributing extends BaseController{
     @ResponseBody
     public void queryGoodsTypeByCustId(String custId,Model model,HttpServletResponse response){
         logger.info("==> custId={}", custId);
-        Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
-            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            Wrapper<List<CscGoodsTypeVo>> wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             response.getWriter().print(JSONUtils.objectToJson(wrapper));
         }catch (Exception ex){
-            logger.error("城配下单查询仓库列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
         }
     }
 
@@ -129,29 +124,15 @@ public class OfcOperationDistributing extends BaseController{
     public void queryGoodsSecTypeByCAndT(String custId, String goodsType,Model model,HttpServletResponse response){
         logger.info("==> custId={}", custId);
         logger.info("==> goodsType={}", goodsType);
-        Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             //List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             CscGoodsType cscGoodsType = new CscGoodsType();
             cscGoodsType.setCustomerId(custId);
             cscGoodsType.setPid(goodsType);
-            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            Wrapper<List<CscGoodsTypeVo>> wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             response.getWriter().print(JSONUtils.objectToJson(wrapper));
         }catch (Exception ex){
-            logger.error("城配下单查询仓库列表失败!",ex.getMessage(),wrapper.getMessage());
-        }
-    }
-
-    @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
-    @ResponseBody
-    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
-        logger.info("==> cscGoodsApiDto={}", cscGoodsApiDto);
-        Wrapper<List<CscGoodsApiVo>> wrapper = null;
-        try{
-            wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
-            response.getWriter().print(JSONUtils.objectToJson(wrapper));
-        }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
         }
     }
 
@@ -162,6 +143,9 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("==> queryCustomerName={}", queryCustomerName);
         logger.info("==> currPage={}", currPage);
         try{
+            if(PubUtils.isSEmptyOrNull(queryCustomerName)){
+                logger.error("查询客户列表参数为空!");
+            }
             QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
             if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
                 queryCustomerNameDto.setCustomerNames(new ArrayList<String>());

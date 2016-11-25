@@ -1,15 +1,23 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.domain.dto.wms.AddressDto;
+import com.xescm.ofc.domain.form.OrderOperForm;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignAddressCodeClient;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.OfcOrderDtoService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by hiyond on 2016/11/19.
@@ -22,10 +30,25 @@ public class TestOrder extends BaseController {
     @Autowired
     private CreateOrderService createOrderService;
 
+    @Autowired
+    private OfcOrderManageOperService ofcOrderManageOperService;
+
+    @Autowired
+    private OfcOrderDtoService ofcOrderDtoService;
+    @Autowired
+    private OfcOrderStatusService ofcOrderStatusService;
+
     @RequestMapping(value = "/order", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String test() throws Exception {
-        return createOrderService.createOrder(queryJson());
+//        OrderOperForm orderOperForm = new OrderOperForm();
+//        System.out.println(ofcOrderManageOperService.queryOrderOper(orderOperForm));
+        OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect("SO161124000237", "orderCode");
+        List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen("SO161124000237", "orderCode");
+        System.out.println(ofcOrderDTO);
+        System.out.println(ofcOrderStatuses);
+        return null;
+//        return createOrderService.createOrder(queryJson());
 //        createOrderService.createOrder(queryJ());
     }
 

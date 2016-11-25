@@ -74,7 +74,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品小类</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <select id="goodsSecTypeId" name="goodsTypeSonId"></select>
+                            <select id="goodsSecTypeId" name="goodsSecTypeId"></select>
                         </div>
                     </div>
                 </div>
@@ -392,18 +392,17 @@
 <br/>
 <br/>
 <br/>
-<form id="operationDistributingFormValidate" method="post" class="form-horizontal" role="form">
+<form id="" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
         <div class="form-group">
-            <div><label class="control-label col-label no-padding-right" for="">订单日期</label>
+            <label class="control-label col-label no-padding-right" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" type="text" placeholder="订单日期"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
                 </div>
-            </div></div>
-
-            <div><label class="control-label col-label no-padding-right" for="">开单员</label>
+            </div>
+            <label class="control-label col-label no-padding-right" for="">开单员</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="merchandiser" name="merchandiser">
@@ -411,22 +410,22 @@
                         <option value="00002">杨过</option>
                     </select>
                 </div>
-            </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">预发货时间</label>
+            </div>
+            <label class="control-label col-label no-padding-right" for="">预发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
-            </div></div>
+            </div>
         </div>
     </div>
     <div class="col-xs-12">
         <div class="form-group">
-            <div><label class="control-label col-label no-padding-right" for="">客户名称</label>
+            <label class="control-label col-label no-padding-right" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12" name="" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                     <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
                     <span style="cursor:pointer" id="custListDivBlock">
@@ -434,22 +433,22 @@
                             id="">选择
                     </button></span>
                 </div>
-            </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">配送仓库</label>
+            </div>
+            <label class="control-label col-label no-padding-right" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()">
+                    <select  id="warehouseCode" name="store" onclick="warehouseByCust()">
                         <#--<option value="00001">北京仓库</option>
                         <option value="00002">天津仓库</option>-->
                     </select>
                 </div>
-            </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">备注</label>
+            </div>
+            <label class="control-label col-label no-padding-right" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="notes" id="notes" type="text" placeholder="备注"/>
+                    <input class="col-xs-10 col-xs-12" name="" id="notes" type="text" placeholder="备注"/>
                 </div>
-            </div></div>
+            </div>
         </div>
     </div>
     <br/>
@@ -610,7 +609,7 @@
 </form>
 
 <div class="col-xs-12">
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn" onclick="javascript:$('#operationDistributingFormValidate').submit();">
+    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         确认下单
     </button>
@@ -653,7 +652,7 @@
     });
 
     function main() {
-        validateFormData();
+        //validateForm();
         $("#merchandiser").editableSelect();
         $("#store").editableSelect();
     }
@@ -718,7 +717,7 @@
                     }else{
                     }*/
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
                     goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
@@ -858,32 +857,18 @@
 
 
 
+    function deleteGood(obj) {
+        if(ifConsigneeConfirm){
+            alert('您已确认收货方,无法删除!');
+        }else{
+            $(obj).parent().parent().remove();
+        }
 
+    }
 
     $("#goodsAndConsigneeDivNoneBottom").click(function () {
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     });
-
-
-    function deleteGood(obj) {
-        //$(obj).off('click');
-        /*if(ifConsigneeConfirm){
-            alert('您已确认收货方,无法删除!');
-        }else{*/
-        $(obj).parent().parent().remove();
-        //删除Map中对应的数据
-        //$(obj).preventDefault();//.stopPropagation();
-        //$(obj).stopPropagation();
-
-        debugger
-        var goodsIndex = $(obj).parent().parent().children().eq(1).text();
-        var goodsCode = $(obj).parent().parent().children().eq(2).text();
-        var mapKey =  goodsCode + "@" + goodsIndex;
-        if(null != goodsAndConsigneeMap.get(mapKey) || undefined != goodsAndConsigneeMap.get(mapKey)){
-            goodsAndConsigneeMap.remove(mapKey);
-        }
-    }
-
     function goodsAndConsignee(obj){
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
@@ -917,7 +902,7 @@
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
+            consignorout =consignorout + "<td><input value='"+num+"' /></td>";
             consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
             consignorout =consignorout + "</tr>";
         });
@@ -1469,7 +1454,7 @@
                 $("#consigneeInfoListDiv").html("");
                 ifConsigneeConfirm = false;
                 goodsAndConsigneeMap = new HashMap();
-                $("#goodsInfoListDiv").html("");
+                $("#TfcOrderTopicTransOrder").html("");
                 layer.close(index);
             }, function(index){
                 layer.close(index);
@@ -1560,16 +1545,14 @@
 
 
 
-    function distributingOrderPlaceCon() {
-
-        if(!validateForm()){
-            return;
-        }
+    $("#orderPlaceConTableBtn").click(function () {
         //如果没有仓库信息就是城配运输订单
         //如果有仓库信息就是仓配订单, 销售出库,
         var orderLists = [];
         //堆齐基本信息
         var orderInfo = null;
+
+
 
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
@@ -1612,7 +1595,15 @@
             var streetCode = $("#consignorStreet").val();
             orderInfo.departureTowns = $("#consignorStreetName").val();
             orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
-                 //orderInfo.departurePlace = $("#consignorAddress").val();
+            //orderInfo.departurePlace = $("#consignorAddress").val();
+
+
+
+
+
+
+
+
 
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
@@ -1648,9 +1639,8 @@
             var goodsList = [];
             var goods = null;
             //遍历货品信息
-
+            debugger
             $("#goodsInfoListDiv").find("tr").each(function(index) {
-
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1676,102 +1666,13 @@
         })
 
         var param = JSON.stringify(orderLists);
-        if(StringUtil.isEmpty(param)){
-            return;
-        }
         xescm.common.submit("/ofc/distributing/placeOrdersListCon"
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
+                    //xescm.common.goBack("/ofc/orderPlace");
                 })
-    }
-
-    function validateForm() {//000
-        //校验是否有某个收货人下所有货品的数量都是0//能不能直接从HashMap下手//000
-        //校验货品某一行的需求数量不是//000
-        //校验必须有货品
-        //校验必须有收货方
-        //还有页面所有的校验都还没有做
-        //客户订单编号的校验也不好做
-        //添加批次号
-
-        var consigneeNum = 0;//收货方数量一级校验标记
-        var goodsNumTag = true;//货品明细数量一级校验标记
-        var consigneeGoodsIsEmptyOut = true;//收房方所有货品的数量是否都是0一级校验标记
-        var goodsIsEmptyOut = false;//货品列表中货品最后一列的货品数量一级校验标记
-        $("#consigneeInfoListDiv").find("tr").each(function (index) {
-            consigneeNum += 1;
-            var goods = null;
-            var tdArr = $(this).children();
-            var consigneeName = tdArr.eq(1).text();//名称
-            var contactCompanyId = tdArr.eq(7).text();
-            debugger
-            //遍历货品信息
-            var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
-            var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
-            var goodsNum = 0;//货品列表数量
-            $("#goodsInfoListDiv").find("tr").each(function(index) {
-                goodsNum += 1;
-                debugger
-                goods = {};
-                var tdArr = $(this).children();
-                var goodsIndex = tdArr.eq(1).text();//货品序号
-                var goodsCode = tdArr.eq(2).text();//货品编码
-                var goodsName = tdArr.eq(3).text();//货品名称
-                var goodsTotalAmount = tdArr.eq(6).text();//总数量
-                if(goodsTotalAmount == 0){
-                    alert("货品列表中【"+goodsName+"】的数量为空,请检查!");
-                    //return false;
-                    goodsIsEmpty = true;
-                    return false;
-                }
-                var mapKey = goodsCode + "@" + goodsIndex;
-                var consigneeAndGoodsMsgJson = null;
-                if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
-                    consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                }
-                var goodsAmount = 0;
-                if(null != consigneeAndGoodsMsgJson){
-                    goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
-                }
-
-                if(goodsAmount != 0){
-
-                    consigneeGoodsIsEmpty = false;
-                    //return false;
-                }
-            })
-            if(0 == goodsNum){
-                goodsNumTag = false;
-                alert("请至少添加一个货品明细!");
-                return false;
-            }
-            if(goodsIsEmpty){
-                goodsIsEmptyOut = true;
-                return false;
-            }
-            if(consigneeGoodsIsEmpty){
-                alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
-                consigneeGoodsIsEmptyOut = false;
-                return false;
-            }
-        })
-        if(0 == consigneeNum){//如果收货人数量是0
-            alert("请至少添加一个货品明细以及对应的收货方！");
-            return false;
-        }
-        if(!goodsNumTag){//如果货品数量是0
-            return false;
-        }
-        if(!consigneeGoodsIsEmptyOut){//收货方所有货品的数量都是0
-            return false;
-        }
-        if(goodsIsEmptyOut){
-            return false;
-        }
-        return true;
-    }
-
+    })
 
     function HashMap() {
         /** Map 大小 **/
@@ -1857,125 +1758,6 @@
         {
             return size;
         }
-    }
-
-
-
-
-
-    /**
-     *表单验证
-     */
-
-    function validateFormData() {
-        var ofc_url = $("#ofc_url").html();
-        $('#operationDistributingFormValidate').validate({
-            errorElement : 'div',
-            errorClass : 'help-block',
-            focusInvalid : false,
-            ignore : "",
-            rules : {
-                orderTime:{
-                    required:true
-                },
-                merchandiser:{
-                    required:true
-                },
-                custName: {
-                    required:true,
-                    maxlength:100
-                },
-                warehouseCode : {
-                    required:true
-                },
-                notes:{
-                    maxlength:300
-                },
-                custOrderCode:{
-                    maxlength:30,
-                    remote:{
-                        url : ofc_url + "/ofc/checkCustOrderCode",
-                        type : "POST",
-                        dataType : "json",
-                        data : {
-                            custOrderCode : function() {
-                                return $("#custOrderCode").val();
-                            }
-                        }
-                    }
-                }
-            },
-            messages : {
-                orderTime:{
-                    required:"请输入订单日期"
-                },
-                merchandiser:{
-                    required:"请选择开单员"
-                },
-                custName: {
-                    required:"请选择客户",
-                    maxlength:"超过最大长度"
-                },
-                warehouseCode : {
-                    required:"请选择仓库"
-                },
-                notes:{
-                    maxlength:"超过最大长度"
-                },
-                custOrderCode:{
-
-                    maxlength: "超过最大长度",
-                    remote: "该客户订单编号已经存在"
-                }
-
-            },
-            highlight : function(e) {
-                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
-            },
-            success : function(e) {
-                $(e).parent().parent().removeClass('has-error').addClass('has-success');
-                $(e).remove();
-            },
-            errorPlacement : function(error, element) {
-                //error.insertAfter(element.parent());
-                error.insertAfter(element.parent());
-            },
-            submitHandler : function(form) {
-                /*xescm.common.commit('addSupplierContactForm', '/csc/supplier/addCscSupplierContact', function(){
-                    var supplierId = $("#supplierId").val();
-                    var url = "/csc/supplier/toMaintainCscSupplierContactListPage/" + supplierId;
-                    xescm.common.loadPage(url);
-                });*/
-                distributingOrderPlaceCon();
-            },
-            invalidHandler : function(form) {
-            }
-        });
-
-    }
-
-    function onlyNumber(obj){
-
-        //得到第一个字符是否为负号
-        // var t = obj.value.charAt(0);
-        //先把非数字的都替换掉，除了数字和.
-        obj.value = obj.value.replace(/[^\d\.]/g,'');
-        //obj.value = obj.value.replace(/[^\d{1,6}]/,'');
-        //必须保证第一个为数字而不是.
-        obj.value = obj.value.replace(/^\./g,'');
-        //保证只有出现一个.而没有多个.
-        obj.value = obj.value.replace(/\.{2,}/g,'.');
-        //保证.只出现一次，而不能出现两次以上
-        obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
-        //限制连续数字不能超过6个
-        if(/\d{7}/.test(obj.value)){
-            obj.value = obj.value.replace(/\d$/gi,'');
-        }
-        //限制小数点后3位
-        if(/\.\d{4}/.test(obj.value)){
-            obj.value = obj.value.replace(/\d$/gi,'');
-        }
-
     }
 </script>
 
