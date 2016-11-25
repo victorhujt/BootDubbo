@@ -361,7 +361,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})" />
+                                    <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})" value="${(currentTime?string("yyyy-MM-dd"))!""}"/>
                                     <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -935,35 +935,35 @@
                 luggage:{
                     maxlength: "最大999999.99元",
                     required:"请填写运费",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 homeDeliveryFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 cargoInsuranceFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 insureValue:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 twoDistributionFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 collectServiceCharge:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 collectLoanAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 returnListFee:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1007,32 +1007,24 @@
                     maxlength: 9,
                     required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
-                },
-                serviceCharge:{
-                    required:true,
-                    pattern:/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/
                 }
             },
             messages : {
                 currentAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 toPayAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 returnAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
+                    pattern:"金额大小有误"
                 },
                 monthlyAmount:{
                     maxlength: "最大999999.99元",
-                    pattern:"只能输入金额"
-                },
-                serviceCharge:{
-                    required:"缺少费用总计",
-                    pattern:"金额格式错误"
+                    pattern:"金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1600,7 +1592,7 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("input[name=transportTypeV]:checked").val();
-            jsonStr.orderTime = $dp.$('orderTime').value;
+            jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();
             jsonStr=orderFinanceInfo(jsonStr);
@@ -1637,7 +1629,6 @@
             console.log("======orderGoodsListStr======"+orderGoodsListStr)
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
-            debugger;
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
@@ -1704,6 +1695,60 @@
                     $("#custName").val(customerName);
                     $("#custGroupId").val(groupId);
                     $("#custId").val(custId);
+
+                    var cscContantAndCompanyDto = {};
+                    var cscContact = {};
+                    var cscContactCompany = {};
+                    cscContact.purpose = "1";
+                    cscContantAndCompanyDto.cscContact = cscContact;
+                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    var groupId = $("#custGroupId").val();
+                    var custId = $("#custId").val();
+                    var param = JSON.stringify(cscContantAndCompanyDto);
+                    CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+                        data=eval(data);
+                        if(data.length==1){
+                            var contactList = "";
+                            $.each(data,function (index,CscContantAndCompanyDto) {
+                                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                                consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                                consigneeTypeHide = CscContantAndCompanyDto.type;*/
+                                contactList =contactList + "<tr role='row' class='odd'>";
+                                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                                contactList =contactList + "<td>"+(index+1)+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                                contactList =contactList + "</tr>";
+                                $("#contactSelectListTbody1").html(contactList);
+                            });
+                        }
+                    },"json");
+                    cscContact.purpose = "2";
+                    cscContantAndCompanyDto.cscContact = cscContact;
+                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    param = JSON.stringify(cscContantAndCompanyDto);
+                    CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+                        data=eval(data);
+                        if(data.length==1){
+                            var contactList = "";
+                            $.each(data,function (index,CscContantAndCompanyDto) {
+                                /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                                consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                                consignorTypeHide = CscContantAndCompanyDto.type;*/
+                                contactList =contactList + "<tr role='row' class='odd'>";
+                                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+                                contactList =contactList + "<td>"+(index+1)+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+                                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                                contactList =contactList + "</tr>";
+                            });
+                            $("#contactSelectListTbody2").html(contactList);
+                        }
+                    },"json");
                 }
             });
             if(custEnterTag==""){
@@ -2014,18 +2059,84 @@
         });
 
         $("#addGoods").click(function () {
-            var goodsInfoListDiv = "";
-            var groupId = $("#custGroupId").val();
-            var custId = $("#custId").val();
-            goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
-            goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                    "<select  id='goodsCategory' name='goodsCategory'>";
-            if($("#goodsInfoListDiv").find("tr").length<1){
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"groupId":groupId,"custId":custId}, function(data) {
-                    data=eval(data);
-                    $.each(data,function (index,cscGoodsVo) {
-                        goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeName + "'>" + cscGoodsVo.goodsTypeName + "</option>";
+            if(!validateCustChosen()){
+                alert("请先选择客户")
+            }else{
+                var goodsInfoListDiv = "";
+                var groupId = $("#custGroupId").val();
+                var custId = $("#custId").val();
+                goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                        "<select  id='goodsCategory' name='goodsCategory'>";
+                if($("#goodsInfoListDiv").find("tr").length<1){
+                    CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"groupId":groupId,"custId":custId}, function(data) {
+                        data=eval(data);
+                        $.each(data,function (index,cscGoodsVo) {
+                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeName + "'>" + cscGoodsVo.goodsTypeName + "</option>";
+                        });
+                        goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
+                                "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block' id='goodCodeSel' onclick='seleGoods(this)'>选择</button>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='unit' id='unit' type='text'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<select  id='pack' name='pack'>"+
+                                "<option value='01'>纸箱</option>"+
+                                "<option value='02'>木箱</option>"+
+                                "<option value='03'>桶</option>"+
+                                "<option value='04'>混包</option>"+
+                                "<option value='05'>裸装</option>"+
+                                "<option value='06'>编袋</option>"+
+                                "<option value='07'>托盘</option>"+
+                                "<option value='08'>木框架</option>"+
+                                "<option value='09'>泡沫箱</option>"+
+                                "<option value='10'>缠绕膜</option>"+
+                                "<option value='11'>盘</option>"+
+                                "<option value='12'>铁框</option>"+
+                                "<option value='13'>布袋</option></select>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='quantityUnitPrice' id='quantityUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
+                                "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td id='2'>"+
+                                "<input class='col-xs-10 col-xs-12'  name='weightUnitPrice' id='weightUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='cubage' id='cubage' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                                "<input class='col-xs-10 col-xs-12'  name='volumeUnitPrice' id='volumeUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
+                                +"</td>";
+                        goodsInfoListDiv = goodsInfoListDiv + "</tr>";
+                        $("#goodsInfoListDiv").append(goodsInfoListDiv);
+                        if($("#goodsInfoListDiv").find("tr").length==1){
+                            $("select option").each(function() {
+                                text = $(this).text();
+                                if($("select option:contains("+text+")").length > 1)
+                                    $("select option:contains("+text+"):gt(0)").remove();
+                            });
+                        }
+                    });
+                }else{
+                    $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
+                        text = $(this).text();
+                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
                     });
                     goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
                     goodsInfoListDiv = goodsInfoListDiv + "<td>"+
@@ -2077,69 +2188,7 @@
                             +"</td>";
                     goodsInfoListDiv = goodsInfoListDiv + "</tr>";
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
-                    if($("#goodsInfoListDiv").find("tr").length==1){
-                        $("select option").each(function() {
-                            text = $(this).text();
-                            if($("select option:contains("+text+")").length > 1)
-                                $("select option:contains("+text+"):gt(0)").remove();
-                        });
-                    }
-                });
-            }else{
-                $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
-                    text = $(this).text();
-                    goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
-                });
-                goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
-                        "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block' id='goodCodeSel' onclick='seleGoods(this)'>选择</button>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='unit' id='unit' type='text'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<select  id='pack' name='pack'>"+
-                        "<option value='01'>纸箱</option>"+
-                        "<option value='02'>木箱</option>"+
-                        "<option value='03'>桶</option>"+
-                        "<option value='04'>混包</option>"+
-                        "<option value='05'>裸装</option>"+
-                        "<option value='06'>编袋</option>"+
-                        "<option value='07'>托盘</option>"+
-                        "<option value='08'>木框架</option>"+
-                        "<option value='09'>泡沫箱</option>"+
-                        "<option value='10'>缠绕膜</option>"+
-                        "<option value='11'>盘</option>"+
-                        "<option value='12'>铁框</option>"+
-                        "<option value='13'>布袋</option></select>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='quantity' id='quantity' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='quantityUnitPrice' id='quantityUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                        "<input class='col-xs-10 col-xs-12'  name='weight' id='weight' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td id='2'>"+
-                        "<input class='col-xs-10 col-xs-12'  name='weightUnitPrice' id='weightUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='cubage' id='cubage' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<input class='col-xs-10 col-xs-12'  name='volumeUnitPrice' id='volumeUnitPrice' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
-                        +"</td>";
-                goodsInfoListDiv = goodsInfoListDiv + "</tr>";
-                $("#goodsInfoListDiv").append(goodsInfoListDiv);
+                }
             }
         });
 
@@ -2185,12 +2234,14 @@
         $("#goodsListDivNoneTop").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
 
         });
 
         $("#goodsListDivNoneBottom").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
 
         });
 
@@ -2217,6 +2268,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#goodsListDiv").fadeOut("slow");
+                $("#yangdongxushinanshen").attr("id","goodCodeSel");
             }
         });
 
