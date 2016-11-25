@@ -676,7 +676,7 @@
                         </div>
                     </div>
                 </div>
-                <form name="" id=""  class="form-horizontal" role="form" >
+            </form>
 
                     <!-- /section:elements.tab.option -->
         </div>
@@ -808,7 +808,7 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
-        $("#orderTime").val(new Date().toLocaleDateString());
+        /*//$("#orderTime").val(new Date().toLocaleDateString());*/
     }
     /**
      *表单验证
@@ -1592,7 +1592,9 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("input[name=transportTypeV]:checked").val();
-            jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
+            if($dp.$('orderTime').value!=""){
+                jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
+            }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();
             jsonStr=orderFinanceInfo(jsonStr);
