@@ -101,7 +101,7 @@ public class OfcOperationDistributing extends BaseController{
                 CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
                 CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
 
-                ofcOrderDTO.setBatchNumber(batchNumber);
+                ofcOrderDTO.setOrderBatchNumber(batchNumber);
 
                 resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
                         ,consignor,consignee,new CscSupplierInfoDto());
@@ -119,10 +119,16 @@ public class OfcOperationDistributing extends BaseController{
      * @throws Exception
      */
     private Wrapper<?> validateCustOrderCode(JSONArray jsonArray) throws Exception {
+        String pageCustOrderCode = null;
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
+            if(pageCustOrderCode == custOrderCode){
+                logger.error("城配下单批量下单,客户订单编号重复");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+            }
+            pageCustOrderCode = custOrderCode;
             OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
             ofcFundamentalInformation.setCustOrderCode(custOrderCode);
             int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);

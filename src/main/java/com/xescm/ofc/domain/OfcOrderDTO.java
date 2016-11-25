@@ -62,6 +62,8 @@ public class OfcOrderDTO {
 
     private String batchNumber;
 
+    private String orderBatchNumber;
+
     /*订单状态表*/
 
 //    private String orderCode;
@@ -192,6 +194,14 @@ public class OfcOrderDTO {
 
 
     private String selfCustOrderCode;
+
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
+
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
+    }
 
     public String getBatchNumber() {
         return batchNumber;

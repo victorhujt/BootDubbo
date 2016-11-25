@@ -399,7 +399,7 @@
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd HH:mm:ss"))!""}" type="text" placeholder="订单日期"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
                 </div>
             </div></div>
 
@@ -412,11 +412,11 @@
                     </select>
                 </div>
             </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">预发货时间</label>
+            <div><label class="control-label col-label no-padding-right" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm',minDate:'%y-%M-%d'})"/>
                 </div>
             </div></div>
         </div>
@@ -1770,6 +1770,8 @@
             var goods = null;
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
+            var consigneeContactName = tdArr.eq(3).text();//联系人
+            var consigneeType = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             debugger
             //遍历货品信息
@@ -1817,7 +1819,14 @@
                 return false;
             }
             if(consigneeGoodsIsEmpty){
-                alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                if("1" == consigneeType) {
+                    alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                }else if("2" == consigneeType){
+                    alert("收货方【"+consigneeName+"-"+consigneeContactName+"】未有发货数量,请检查!");
+                }else{
+                    alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                }
+
                 consigneeGoodsIsEmptyOut = false;
                 return false;
             }
