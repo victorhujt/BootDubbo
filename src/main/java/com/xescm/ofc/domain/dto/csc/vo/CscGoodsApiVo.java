@@ -379,4 +379,20 @@ public class CscGoodsApiVo implements Serializable {
     public void setGoodsTypeId(String goodsTypeId) {
         this.goodsTypeId = goodsTypeId;
     }
+
+    public String getGoodsTypeParentName() {
+        return goodsTypeParentName;
+    }
+
+    public void setGoodsTypeParentName(String goodsTypeParentName) {
+        this.goodsTypeParentName = goodsTypeParentName;
+    }
+
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
+    }
 }

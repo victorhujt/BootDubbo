@@ -856,7 +856,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -964,7 +964,7 @@
                 var consigneeType = tdArr.eq(6).text();//
                 var consigneeCode = tdArr.eq(7).text();//
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var num = 0;
+                var num = "";
 
                 if(undefined != goodsAndConsigneeMap.get(mapKey)){
                     var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
@@ -1951,9 +1951,9 @@
                     required:true,
                     maxlength:100
                 },
-                warehouseCode : {
+                /*warehouseCode : {
                     required:true
-                },
+                },*/
                 notes:{
                     maxlength:300
                 },
@@ -1972,9 +1972,9 @@
                     required:"请选择客户",
                     maxlength:"超过最大长度"
                 },
-                warehouseCode : {
+               /* warehouseCode : {
                     required:"请选择仓库"
-                },
+                },*/
                 notes:{
                     maxlength:"超过最大长度"
                 },

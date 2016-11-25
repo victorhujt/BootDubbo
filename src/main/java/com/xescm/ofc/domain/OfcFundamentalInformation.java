@@ -676,6 +676,7 @@ public class OfcFundamentalInformation {
 //    ofd.destination_district,
 //    ofd.destination_towns
 
+    @Transient
     private String departurePlace;
 
     private String destination;
