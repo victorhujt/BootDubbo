@@ -312,7 +312,7 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer"><button style="float: left" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <!--goods&Consigee-->
@@ -386,7 +386,7 @@
         Excel导入
     </button>
 
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="">
+    <button class="btn btn-white btn-info btn-bold btn-interval" id="to_operation_csc_contact_manage">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         收发货方档案
     </button>
@@ -661,8 +661,20 @@
         $("#store").editableSelect();
 
     }
+    //链接到收发货方联系人档案
+    $("#to_operation_csc_contact_manage").click(function () {
+        console.log("====++++")
+        xescm.common.loadPage("/csc/receive/toMainReceivAndDispatchFilePage");
+    })
+    //createCustBtn
+    $("#to_csc_createCustBtn").click(function () {
+        console.log("====++++==========")
+        xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+    })
     var goodsAndConsigneeMap = new HashMap();
     $(function () {
+
+
 
 
         $(".goodsLi").click(function () {
