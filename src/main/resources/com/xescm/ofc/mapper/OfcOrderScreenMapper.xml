@@ -15,6 +15,7 @@
         <result property="notes" column="notes"></result>
         <result property="storeName" column="store_name"></result>
         <result property="custName" column="cust_name"></result>
+        <result property="orderBatchNumber" column="order_batch_number"></result>
     </resultMap>
 
     <!--
@@ -109,6 +110,7 @@
         ofi.cust_name custName,
         ofi.order_code orderCode,
         ofi.cust_order_code custOrderCode,
+        ofi.order_batch_number,
         ofi.order_time orderTime,
         ofi.order_type orderType,
         ofi.business_type businessType,

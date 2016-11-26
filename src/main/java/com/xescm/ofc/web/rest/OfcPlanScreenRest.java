@@ -40,6 +40,7 @@ public class OfcPlanScreenRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OfcPlanScreenResult> orderScreenResults = ofcPlanScreenService.planScreen(ofcPlanScreenCondition);
+           // pageInfo = new PageInfo<OfcPlanScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (Exception ex){

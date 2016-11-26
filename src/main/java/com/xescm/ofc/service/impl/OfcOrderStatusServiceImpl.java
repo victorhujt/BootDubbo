@@ -44,6 +44,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }else if(followTag.equals("transCode")){
                 transCode = code;
             }
+           // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String,String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode",orderCode);
             mapperMap.put("custOrderCode",custOrderCode);
@@ -71,6 +72,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             logger.debug("`````````````"+orderCode);
             logger.debug("`````````````"+custOrderCode);
             logger.debug("`````````````"+transCode);
+           // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String,String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode",orderCode);
             mapperMap.put("custOrderCode",custOrderCode);

@@ -48,6 +48,7 @@ public class OfcOrderScreenRest extends BaseController {
         int currPage = Integer.parseInt(currPagePath);
         PageHelper.startPage(currPage,pageSize);
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
+       // PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
         PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(orderScreenResults);
         pageInfo.setPageSize(pageSize);
         map.put("orderList", pageInfo.getList());
@@ -73,6 +74,7 @@ public class OfcOrderScreenRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
+           // pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (Exception ex){

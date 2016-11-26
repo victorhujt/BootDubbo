@@ -38,4 +38,12 @@
         <result column="monthly_amount" property="monthlyAmount" jdbcType="DECIMAL" />
         <result column="luggage" property="luggage" jdbcType="DECIMAL" />
     </resultMap>
+    
+    <select id="queryByOrderCode" resultMap="BaseResultMap">
+        SELECT *
+        FROM ofc_finance_information
+        WHERE order_code = #{orderCode}
+    </select>
+
+
 </mapper>

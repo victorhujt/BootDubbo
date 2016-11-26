@@ -15,11 +15,13 @@ import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
+import com.xescm.ofc.model.dto.wms.WarehouseOrderDTO;
 import com.xescm.ofc.mq.consumer.DefaultMqConsumer;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.*;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -138,16 +140,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                     }
-                    if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
-                        //如果订单类型是卡班订单, 则向DMS推送该运输计划单
-                        //这里需要调整
-                        ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                        OfcDistributionBasicInfo distributionBasicInfo = new OfcDistributionBasicInfo();
-                        Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
-                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                            throw new BusinessException("向分拣中心推送卡班订单失败");
-                        }
-                    }
+
 
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
                     //仓储订单
@@ -178,7 +171,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
-                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                        String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                        //计划单生成以后通过MQ推送到仓储中心
+                        OfcSiloprogramInfo idCondition=new OfcSiloprogramInfo();
+                        idCondition.setPlanCode(planCode);
+                        OfcSiloprogramInfo info= ofcSiloprogramInfoService.selectByKey(idCondition);
+                        WarehouseOrderDTO wareHouseOrder=new WarehouseOrderDTO();
+                        try {
+							BeanUtils.copyProperties(info, wareHouseOrder);
+						} catch (IllegalAccessException e) {
+							throw new BusinessException(e.getMessage());
+						} catch (InvocationTargetException e) {
+							throw new BusinessException(e.getMessage());
+						}
+                        String jsonStr=JSONUtils.objectToJson(wareHouseOrder);
+                        defaultMqProducer.toSendWhc(jsonStr, wareHouseOrder.getPlanCode(), wareHouseOrder.getDocumentType());
                     }else {
                         throw new BusinessException("无法确定是否需要运输");
                     }
@@ -230,13 +237,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             //ofcTransplanNewstatus.setTransportSingleUpdateTime(ofcTransplanInfo.getCreationTime());
             ofcTraplanSourceStatus.setResourceAllocationStatus(OrderConstEnum.DAIFENPEI);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
+            Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             while(iter.hasNext())
             {
+                List<OfcPlannedDetail> ofcPlannedDetailList = new ArrayList<>();
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                ofcPlannedDetailList.add(ofcPlannedDetail);
+                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
             }
@@ -265,14 +276,49 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             rmcCompanyLineQO.setBeginCityName(ofcTransplanInfo.getDepartureCity());
             rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
-            Wrapper<List<RmcCompanyLineVo>> companyList = companySelByApi(rmcCompanyLineQO);
+            Wrapper<List<RmcCompanyLineVo>> companyList = null;
+            try{
+                companyList = companySelByApi(rmcCompanyLineQO);
+
+            }catch (Exception ex){
+                throw new BusinessException(companyList.getMessage());
+            }
+
             if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
                     && !CollectionUtils.isEmpty(companyList.getResult())){
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
-                ofcTraplanSourceStatus.setResourceAllocationStatus("30");
+                ofcTraplanSourceStatus.setResourceAllocationStatus("40");
+                List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
+                ofcTransplanInfoList.add(ofcTransplanInfo);
+                String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
+                if(businessType.equals("600") || businessType.equals("601")){
+                    OrderScreenCondition condition=new OrderScreenCondition();
+                    condition.setOrderCode(ofcTransplanInfo.getOrderCode());
+                    String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
+                    OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+                    ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
+                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
+                    ofcOrderStatus.setStatusDesc("执行中");
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            +" "+"订单开始执行");
+                    ofcOrderStatus.setOperator(userId);
+                    ofcOrderStatus.setLastedOperTime(new Date());
+                    ofcOrderStatusService.save(ofcOrderStatus);
+                }
+                if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)){
+                    //向TFC推送
+                    ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userId);
+                }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)){
+                    //如果是卡班订单,则应该向DMS推送卡班订单
+                    ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
+                    Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
+                    if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                        throw new BusinessException("向分拣中心推送卡班订单失败");
+                    }
+                }
             }
             /**
              * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
@@ -346,7 +392,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcWarehouseInformation
      * @param ofcFinanceInformation
      */
-    public void siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,String userId){
+    public String siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,String userId){
+        String planCode="";
         OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
         OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
         OfcSiloproSourceStatus ofcSiloproSourceStatus=new OfcSiloproSourceStatus();
@@ -356,6 +403,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
+            planCode=ofcSiloprogramInfo.getPlanCode();
             ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
             if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
                     || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstEnum.TRANSFEROUTOFTHELIBRARY)
@@ -406,6 +454,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (InvocationTargetException e) {
             throw new BusinessException(e.getMessage());
         }
+        return planCode;
     }
 
     public void planCancle(String orderCode,String userId){
@@ -525,6 +574,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId,AuthResDto authResDtoByToken) {
+        //Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContact(new CscContact());
@@ -612,10 +662,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
             String[] planCodeList=planCode.split("@");
+            //List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
             List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
+            Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             try {
                 for(int i=0;i<planCodeList.length;i++){
                     ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
+
+                    OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
+                    ofcPlannedDetail.setPlanCode(ofcTraplanSourceStatus.getPlanCode());
+                    List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
+                    ofcPlannedDetailMap.put(ofcTraplanSourceStatus.getPlanCode(),ofcPlannedDetailList);
                     ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
                     if(planStatus.equals("40")){
                         OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(planCodeList[i]);
@@ -658,7 +715,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
                 }
                 //向TFC推送
-                ofcTransplanInfoToTfc(ofcTransplanInfoList,userName);
+
+                ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
             } catch (Exception ex) {
                 throw new BusinessException("计划单状态更新异常！"+ex.getMessage());
             }
@@ -679,7 +737,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return rmcCompanyLists;
     }
 
-    public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList,String userName) {
+
+    /**
+     * OFC向TFC推送运输计划单(卡班除外)
+     * @param ofcTransplanInfoList
+     * @param ofcPlannedDetailMap
+     * @param userName
+     */
+    public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList, Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap,String userName) {
+       // List<TransportDTO> transportDTOList = new ArrayList<TransportDTO>();
         List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
@@ -692,8 +758,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTO.setCustomerName(PubUtils.trimAndNullAsEmpty(userName));//客户名称（委托方名称）
                 transportDTO.setCustomerTel(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//客户联系方式
                 transportDTO.setFromTransportName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()));//运输单产生机构
-                transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getPickupTime())));//预计发货时间
-                transportDTO.setExpectedArriveTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getExpectedArrivedTime())));//预计到达时间
+                if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getPickupTime())){
+                    simpleDateFormat.format(ofcTransplanInfo.getPickupTime());
+                    transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getPickupTime())));//预计发货时间
+                }
+                if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getExpectedArrivedTime())){
+                    transportDTO.setExpectedArriveTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getExpectedArrivedTime())));//预计到达时间//$$$
+                }
                 if(!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getWeight())){
                     transportDTO.setWeight(ofcTransplanInfo.getWeight().doubleValue());//重量
                 }else {
@@ -748,9 +819,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTO.setMarketDepDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleDepartmentDesc()));//销售部门描述
                 transportDTO.setMarketTeamDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleGroupDesc()));//销售组描述
                 transportDTO.setTransportSource(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSingleSourceOfTransport()));//运输单来源
-                OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
-                ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
-                List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
+                //OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
+                //ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+                List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode());
                 for(OfcPlannedDetail detail : ofcPlannedDetailList){
                     TransportDetailDTO transportDetailDTO = new TransportDetailDTO();
                     transportDetailDTO.setTransportNo(detail.getPlanCode());
@@ -790,7 +861,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
                 System.out.println("订单中心向运输中心开始推送运输订单");
-                defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
+                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 System.out.println("订单中心向运输中心推送运输订单成功");
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
@@ -827,9 +898,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
-                    }
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
@@ -845,5 +914,83 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
         }
     }
+
+    /**
+     * 自动审核
+     * @param ofcFundamentalInformation
+     * @param goodsDetailsList
+     * @param ofcDistributionBasicInfo
+     * @param ofcWarehouseInformation
+     * @param ofcFinanceInformation
+     * @param orderStatus
+     * @param reviewTag
+     * @param authResDtoByToken
+     * @return
+     */
+    @Override
+    public Wrapper<?> orderAutoAuditFromOperation(OfcFundamentalInformation ofcFundamentalInformation,
+                                                 List<OfcGoodsDetailsInfo> goodsDetailsList,
+                                                 OfcDistributionBasicInfo ofcDistributionBasicInfo,
+                                                 OfcWarehouseInformation ofcWarehouseInformation,
+                                                 OfcFinanceInformation ofcFinanceInformation,
+                                                 String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        ofcOrderStatus.setOrderStatus(orderStatus);
+        logger.debug(ofcOrderStatus.toString());
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
+                && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
+            if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
+                ofcOrderStatus.setOrderStatus(ALREADYEXAMINE);
+                ofcOrderStatus.setStatusDesc("已审核");
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                        +" "+"订单审核完成");
+                ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcOrderStatus.setLastedOperTime(new Date());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcOrderStatus.setLastedOperTime(new Date());
+                // ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                ofcOrderStatusService.save(ofcOrderStatus);
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperTime(new Date());
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.TRANSPORTORDER)){
+                    //运输订单
+                    OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                    ofcTransplanInfo.setProgramSerialNumber("1");
+                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){//在城配下单这边没有卡班
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    }
+                }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)
+                        && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
+                        && ofcWarehouseInformation.getProvideTransport() == OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                    //000创建仓储计划单
+                    OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
+                    ofcSiloprogramInfo.setProgramSerialNumber("1");
+                    siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+
+                    if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
+                        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                        ofcTransplanInfo.setProgramSerialNumber("1");
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    }
+                }
+                else {
+                    throw new BusinessException("订单类型有误");
+                }
+                logger.debug("计划单创建成功");
+            }else {
+                throw new BusinessException("缺少标志位");
+            }
+
+            //return String.valueOf(Wrapper.SUCCESS_CODE);
+        }else {
+            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+        }
+
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
 
 }

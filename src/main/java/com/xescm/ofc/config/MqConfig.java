@@ -44,13 +44,13 @@ import java.util.Properties;
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
 
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public final static String MQ_PREFIX="mq";
 
     private String accessKey;  //阿里云公钥
     private String secretKey;  //阿里云密钥
-    private String topic;
+    private String consumerTopicNames;
+
     private String TFCTopic;
     private String OFCTopic;
     private String tfcCancelTopic;
@@ -63,8 +63,34 @@ public class MqConfig {
     private String deliveryTag;
     private String TfcTransPlanTopic;
     private String TfcTransPlanTag;
+    
+    private String WHOTopic;//仓储计划单
 
-    private String EPCTopic;
+    public String getTFCTopic() {
+        return TFCTopic;
+    }
+
+    public void setTFCTopic(String TFCTopic) {
+        this.TFCTopic = TFCTopic;
+    }
+
+    public String getConsumerTopicNames() {
+        return consumerTopicNames;
+    }
+
+    public void setConsumerTopicNames(String consumerTopicNames) {
+        this.consumerTopicNames = consumerTopicNames;
+    }
+
+    public String getWHOTopic() {
+		return WHOTopic;
+	}
+
+	public void setWHOTopic(String wHOTopic) {
+		WHOTopic = wHOTopic;
+	}
+
+	private String EPCTopic;
 
     private String EPCTag;
 
@@ -74,54 +100,6 @@ public class MqConfig {
 
     private String EPCToTag;
 
-    public Producer producer;
-
-
-    @Resource
-    SchedulingSingleFedbackImpl schedulingSingleFedback;
-
-    @Resource
-    CreateOrderApiConsumer createOrderApiConsumer;
-
-//    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Consumer consumer(){
-        System.out.println("yyyyyyyyy消费开始---:");
-        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(topic, null, schedulingSingleFedback);
-        return consumer;
-    }
-
-//    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Consumer consumerCreateOrderApi(){
-        logger.debug("createOrderApi消费开始---");
-        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(TFCTopic, null, createOrderApiConsumer);
-        initProducer();
-        return consumer;
-    }
-
-
-    private Properties consumerProperties(){
-        Properties consumerProperties = new Properties();
-        consumerProperties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
-        consumerProperties.setProperty(PropertyKeyConst.AccessKey, accessKey);
-        consumerProperties.setProperty(PropertyKeyConst.SecretKey, secretKey);
-        consumerProperties.setProperty(PropertyKeyConst.ONSAddr, onsAddr);
-        return consumerProperties;
-    }
-
-    private void initProducer() {
-        Properties producerProperties = new Properties();
-        producerProperties.setProperty(PropertyKeyConst.ProducerId, this.getProducerId());
-        producerProperties.setProperty(PropertyKeyConst.AccessKey, this.getAccessKey());
-        producerProperties.setProperty(PropertyKeyConst.SecretKey, this.getSecretKey());
-        producerProperties.setProperty(PropertyKeyConst.ONSAddr, this.getOnsAddr());
-
-        MQUtil.propertiesUtil(producerProperties);
-        Producer producer = ONSFactory.createProducer(producerProperties);
-        producer.start();
-        this.producer = producer;
-    }
 
 
 
@@ -141,13 +119,7 @@ public class MqConfig {
         TfcTransPlanTag = tfcTransPlanTag;
     }
 
-    public String getTFCTopic() {
-        return TFCTopic;
-    }
 
-    public void setTFCTopic(String TFCTopic) {
-        this.TFCTopic = TFCTopic;
-    }
 
     public String getOFCTopic() {
         return OFCTopic;
@@ -219,14 +191,6 @@ public class MqConfig {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
     }
 
     public String getTranTag() {

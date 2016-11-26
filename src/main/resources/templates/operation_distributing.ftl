@@ -74,7 +74,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品小类</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <select id="goodsSecTypeId" name="goodsSecTypeId"></select>
+                            <select id="goodsSecTypeId" name="goodsTypeSonId"></select>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,8 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">条形码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "barCodeCondition" name="barCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "barCode" name="barCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input id="customerId" name ="customerId" type="hidden"/>
                         </div>
                     </div>
                 </div>
@@ -145,7 +146,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix" >
-                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -153,7 +154,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContact.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -161,7 +162,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -211,7 +212,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName1" name="contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -219,7 +220,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -227,7 +228,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber1" name="phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -276,7 +277,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -311,7 +312,7 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer"><button style="float: left" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <!--goods&Consigee-->
@@ -324,6 +325,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
+                            <input id="goodsIndexDivHidden" type="hidden"/>
                             <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -332,7 +334,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -340,7 +342,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">规格</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "specificationDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -384,7 +386,7 @@
         Excel导入
     </button>
 
-    <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="">
+    <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_csc_contact_manage">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         收发货方档案
     </button>
@@ -392,17 +394,18 @@
 <br/>
 <br/>
 <br/>
-<form id="" method="post" class="form-horizontal" role="form">
+<form id="operationDistributingFormValidate" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
         <div class="form-group l-bj">
-            <label class="control-label col-label no-padding-right l-bj" for="">订单日期</label>
+            <div><label class="control-label col-label no-padding-right l-bj" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" type="text" placeholder="订单日期"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期"
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right l-bj" for="">开单员</label>
+            </div></div>
+
+            <div><label class="control-label col-label no-padding-right l-bj" for="">开单员</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="merchandiser" name="merchandiser" class="bk-1">
@@ -410,22 +413,22 @@
                         <option value="00002">杨过</option>
                     </select>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right l-bj" for="">预发货时间</label>
+            </div></div>
+            <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
-            </div>
+            </div></div>
         </div>
     </div>
     <div class="col-xs-12">
         <div class="form-group">
-            <label class="control-label col-label no-padding-right l-bj" for="">客户名称</label>
+            <div> <label class="control-label col-label no-padding-right l-bj" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="col-xs-10 col-xs-12 bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
                     <input class="col-xs-10 col-xs-12 bk-1" name=""  id="custId" type="text"  style="display: none"  />
                     <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -433,22 +436,22 @@
                             id="custListDivBlock"><i class="fa fa-user l-cor"></i>
                     </button></span>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right l-bj" for="">配送仓库</label>
+            </div></div>
+            <div> <label class="control-label col-label no-padding-right l-bj" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="warehouseCode" name="store" onclick="warehouseByCust()" class="bk-1">
-                    <#--<option value="00001">北京仓库</option>
-                        <option value="00002">天津仓库</option>-->
+                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="bk-1">
+                        <option value="">无</option>
+
                     </select>
                 </div>
-            </div>
-            <label class="control-label col-label no-padding-right l-bj" for="">备注</label>
+            </div></div>
+            <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="" id="notes" type="text" placeholder="备注"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="备注"/>
                 </div>
-            </div>
+            </div></div>
         </div>
     </div>
     <br/>
@@ -609,7 +612,7 @@
 </form>
 
 <div class="col-xs-12">
-    <button class="btn btn-white btn-info btn-bold btn-interval db-1" id="orderPlaceConTableBtn">
+    <button class="btn btn-white btn-info btn-bold btn-interval db-1" id="orderPlaceConTableBtn" onclick="javascript:$('#operationDistributingFormValidate').submit();">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         确认下单
     </button>
@@ -652,12 +655,26 @@
     });
 
     function main() {
-        //validateForm();
+        //$("#orderTime").val(new Date().toLocaleDateString());
+        validateFormData();
         $("#merchandiser").editableSelect();
         $("#store").editableSelect();
+
     }
+    //链接到收发货方联系人档案
+    $("#to_operation_csc_contact_manage").click(function () {
+        console.log("====++++")
+        xescm.common.loadPage("/csc/receive/toMainReceivAndDispatchFilePage");
+    })
+    //createCustBtn
+    $("#to_csc_createCustBtn").click(function () {
+        console.log("====++++==========")
+        xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+    })
     var goodsAndConsigneeMap = new HashMap();
     $(function () {
+
+
 
 
         $(".goodsLi").click(function () {
@@ -671,7 +688,7 @@
                     alert("请先添加收货方")
                 });
             }*/
-        })
+        });
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
@@ -681,9 +698,44 @@
                 alert("请先确认收货方");
             }else{
                 //$("#goodsSelectListTbody").html("");
+                //加载货品一级种类
+                //goodsTypeId  goodsSecTypeId
+                var custId = $("#custId").val();
+                $("#goodsTypeId option").remove();
+                $("#goodsSecTypeId option").remove();
+                $("#goodsTypeId").append("<option value = ''>全部</option>");//123//$("#warehouseCode").append("<option value = ''>无</option>");
+                $("#goodsSecTypeId").append("<option value = ''>全部</option>");
+
+                var firstGoodsType = null;
+                CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
+                    data=eval(data);
+                    $.each(data,function (index,goodsType) {
+                        console.log('-----------'+index);
+                        if(0 == index){
+                            firstGoodsType = goodsType.id;
+                            console.log("++++"+firstGoodsType)
+                        }
+                        $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
+                    });
+                });
+                //加载第一个一级货品的二级种类//000
+                $("#goodsSecTypeId option").remove();
+                $("#goodsSecTypeId").append("<option value = ''>全部</option>");
+                console.log('----------'+firstGoodsType)
+                if(null != firstGoodsType){
+                    console.log("sdfsdf")
+                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":firstGoodsType},function(data) {
+                        data=eval(data);
+                        $.each(data,function (index,secGoodsType) {
+                            $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
+                        });
+                    })
+                }
+
+
                 $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
-        })
+        });
         $("#goodsListDivNoneTop").click(function(){
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
@@ -695,8 +747,8 @@
 
         });
         $("#goodsSelectFormBtn").click(function () {
-
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelect", $("#goodsSelConditionForm").serialize(), function(data) {
+            debugger
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
                 var goodsList = "";
@@ -717,7 +769,7 @@
                     }else{
                     }*/
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品种类
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
                     goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
                     goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
@@ -730,7 +782,7 @@
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
-                /*
+                /*debugger
                 if($("#goodsInfoListDiv").find("tr").size() > 1){//页面
                     var goodsCodeForCheck = {};
                     $("#goodsInfoListDiv").find("tr").each(function () {//页面
@@ -743,7 +795,7 @@
                         var goodsCodeForCheckBoxDiv = tdArr.eq(4).text();//货品编码
                         //var checkBox = tdArr.eq(0).children('');
                         if(undefined != goodsCodeForCheck[goodsCodeForCheckBoxDiv] && 1 == goodsCodeForCheck[goodsCodeForCheckBoxDiv]){
-
+                            debugger
                             tdArr.eq(0).children('input').css('disabled','disabled');
                         }
                     })
@@ -779,8 +831,11 @@
                 var sendGoods = tdArr.eq(6).text();//发货数量
 
 
-                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>" +
+                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
@@ -808,9 +863,10 @@
                         return true;
                     }
 
-                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' onclick='goodsAndConsignee(this)'>";//class=\"btn btn-minier btn-yellow\"
+                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
                     goodsInfoListDiv =goodsInfoListDiv + "<td>" +
                             "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                            "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                             "</td>";
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
@@ -820,7 +876,6 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
-
                     str="str";
                 }
             });
@@ -842,10 +897,11 @@
         }
     }
 
-    function loadSecGoodsType() {
+    $("#goodsTypeId").change(function () {
+        debugger
         var custId = $("#custId").val();
         var goodsType = $("#goodsTypeId").val();
-        $("#goodsTypeId option").remove();
+        //$("#goodsTypeId option").remove();
         $("#goodsSecTypeId option").remove();
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":goodsType},function(data) {
             data=eval(data);
@@ -853,60 +909,113 @@
                 $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
             });
         })
-    }
+    })
 
 
 
-    function deleteGood(obj) {
-        if(ifConsigneeConfirm){
-            alert('您已确认收货方,无法删除!');
-        }else{
-            $(obj).parent().parent().remove();
-        }
 
-    }
 
     $("#goodsAndConsigneeDivNoneBottom").click(function () {
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     });
+
+
+    var deleteGoodsTag = false;
+
+    function deleteConsignee(obj) {
+        if(ifConsigneeConfirm){//000
+            alert("您已确认,无法删除收货方")
+        }else{
+            $(obj).parent().parent().remove();
+
+        }
+    }
+    function deleteGood(obj) {
+        deleteGoodsTag = true;
+        debugger
+        ///$(obj).parent().parent().off('click')
+        $(obj).parent().parent().remove();
+        //$("#goodsAndConsigneeDiv").fadeIn("slow");
+        //删除Map中对应的数据
+
+        var goodsIndex = $(obj).parent().parent().children().eq(1).text();
+        var goodsCode = $(obj).parent().parent().children().eq(2).text();
+        var mapKey =  goodsCode + "@" + goodsIndex;
+        if(null != goodsAndConsigneeMap.get(mapKey) || undefined != goodsAndConsigneeMap.get(mapKey)){
+            goodsAndConsigneeMap.remove(mapKey);
+        }
+    }
+
     function goodsAndConsignee(obj){
-        $("#goodsAndConsigneeDiv").fadeIn("slow");
-        //显示货品信息
-        var goodsIndex = $(obj).find('td')[1].innerText;
-        var goodsCode = $(obj).find('td')[2].innerText;
-        var goodsName = $(obj).find('td')[3].innerText;
-        var specification = $(obj).find('td')[4].innerText;
-        var unit = $(obj).find('td')[5].innerText;
-        $("#goodsCodeDiv").val(goodsCode);
-        $("#goodsNameDiv").val(goodsName);
-        $("#specificationDiv").val(specification);
-        $("#unitDiv").val(unit);
+        //$(obj).not($(obj).find('td')[0])
+
+        console.log("---"+obj)
+        if(deleteGoodsTag){
+            deleteGoodsTag = false;
+            return;
+        }else{
+            $("#goodsAndConsigneeDiv").fadeIn("slow");
+            //显示货品信息
+            /**
+             * var goodsIndex = $(obj).parent().parent().children().eq(1).text();
+             var goodsCode = $(obj).parent().parent().children().eq(2).text();
+             */
+            /*var goodsIndex = $(obj).find('td')[1].innerText;//000
+            var goodsCode = $(obj).find('td')[2].innerText;
+            var goodsName = $(obj).find('td')[3].innerText;
+            var specification = $(obj).find('td')[4].innerText;
+            var unit = $(obj).find('td')[5].innerText;*/
+            var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
+            var goodsCode = $(obj).parent().parent().children().eq(2).text();
+            var goodsName = $(obj).parent().parent().children().eq(3).text();
+            var specification = $(obj).parent().parent().children().eq(4).text();
+            var unit = $(obj).parent().parent().children().eq(5).text();
+            $("#goodsIndexDivHidden").val(goodsIndex);
+            $("#goodsCodeDiv").val(goodsCode);
+            $("#goodsNameDiv").val(goodsName);
+            $("#specificationDiv").val(specification);
+            $("#unitDiv").val(unit);
 
 
-        //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
-        //显示收货人信息
-        //goodsAndConsigneeTbody
-        var consignorout = "";
-        $("#consigneeInfoListDiv").find("tr").each(function(index){
-            var tdArr = $(this).children();
-            var consigneeName = tdArr.eq(1).text();//
-            var consigneeCode = tdArr.eq(7).text();//
-            var mapKey = goodsCode + "@" + goodsIndex;
-            var num = 0;
+            //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
+            //显示收货人信息
+            //goodsAndConsigneeTbody
+            var consignorout = "";
+            $("#consigneeInfoListDiv").find("tr").each(function(index){//00000
+                var tdArr = $(this).children();
+                var consigneeName = tdArr.eq(1).text();//
+                var consigneeContactName = tdArr.eq(3).text();//
+                var consigneeType = tdArr.eq(6).text();//
+                var consigneeCode = tdArr.eq(7).text();
+                var consigneeContactCode = tdArr.eq(8).text();
+                var mapKey = goodsCode + "@" + goodsIndex;
+                var num = "0";
 
-            if(undefined != goodsAndConsigneeMap.get(mapKey)){
-                var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
-                //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
-                num = preGoodsAndConsigneeJsonMsg[consigneeCode];
-            }
+                if(undefined != goodsAndConsigneeMap.get(mapKey)){
+                    var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
+                    //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
+                    var cadj = consigneeCode + "@" + consigneeContactCode;
+                    console.log("回显cadj:"+cadj)
+                    num = preGoodsAndConsigneeJsonMsg[cadj];
+                }
 
-            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-            consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='"+num+"' /></td>";
-            consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
-            consignorout =consignorout + "</tr>";
-        });
-        $("#goodsAndConsigneeTbody").html(consignorout);
+                consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+                if("1" == consigneeType){
+                    consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                }else if("2" == consigneeType){
+                    consignorout =consignorout + "<td>"+consigneeName+"-"+consigneeContactName+"</td>";
+                }else{
+                    consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                }
+               // consignorout =consignorout + "<td>"+consigneeName+"</td>";
+                consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
+                consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
+                consignorout =consignorout + "<td style='display:none'>"+consigneeContactCode+"</td>";
+                consignorout =consignorout + "</tr>";
+            });
+            $("#goodsAndConsigneeTbody").html(consignorout);
+        }
+
     }//
 
     //统计货品发货数量
@@ -919,19 +1028,28 @@
         var consigneeAndGoodsJson = {};
 
         $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
-
+            debugger
             var tdArr = $(this).children();
             var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
             var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
-            consigneeAndGoodsJson[consigneeCode] = num;
+            var consigneeContactCode = tdArr.eq(3).text();
+            //某个收货方联系人的编码
+            if(StringUtil.isEmpty(num)){
+                num = 0;
+            }
+            var cadj = consigneeCode + "@" + consigneeContactCode;
+            console.log("写入cadj:"+cadj)
+            consigneeAndGoodsJson[cadj] = num;
             sendNum += parseInt(num);
         })
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
+            var goodsIndex = tdArr.eq(1).text();//货品索引
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsCodeDiv = $("#goodsCodeDiv").val();
-            if(goodsCode == goodsCodeDiv){
+            var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
+            if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
                 tdArr.eq(6).text(sendNum);
                 var indexIn = tdArr.eq(1).text();
                 var goodsCodeIn = tdArr.eq(2).text();
@@ -1014,7 +1132,7 @@
             var streetAuto = null;
             var streetNameAuto = null;
             var addressAuto = null;
-
+            debugger;
             CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1026,7 +1144,7 @@
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
                         contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyId;
-                        contactCodeAuto = CscContantAndCompanyDto.contactCode;
+                        contactCodeAuto = CscContantAndCompanyDto.id;//000
                         phoneAuto = CscContantAndCompanyDto.phone;
                         provinceAuto = CscContantAndCompanyDto.province;
                         provinceNameAuto = CscContantAndCompanyDto.provinceName;
@@ -1078,6 +1196,7 @@
                 });
             }else if(contactList == 0){
                 alert("您还未添加任何联系人,请在收发货档案中进行添加操作！");
+                return;
             }else {
                 $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
@@ -1132,7 +1251,7 @@
                 contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -1259,7 +1378,7 @@
                 contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -1272,6 +1391,7 @@
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
+                console.log("弹框里的contactCode"+CscContantAndCompanyDto.id);
             });
         },"json");
     });
@@ -1313,10 +1433,11 @@
             var address = tdArr.eq(18).text();
 
             contactCodeOut[contactCompanyId] = 1;
+            contactCodeOut[contactCode] = 1;
 
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-            consignorout =consignorout + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+            consignorout =consignorout + "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
             consignorout =consignorout + "<td><input value='" + consigneeCustOrderCode + "' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
@@ -1352,6 +1473,7 @@
                 var type = tdArr.eq(6).text();
                 var contactCompanyId = tdArr.eq(7).text();
                 var contactCode = tdArr.eq(8).text();
+                console.log("页面上显示的时候拿的弹框里的contactCode"+contactCode);
                 var phone = tdArr.eq(9).text();
                 var province = tdArr.eq(10).text();
                 var provinceName = tdArr.eq(11).text();
@@ -1363,11 +1485,13 @@
                 var streetName = tdArr.eq(17).text();
                 var address = tdArr.eq(18).text();
 
-                if(undefined != contactCodeOut[contactCompanyId] && contactCodeOut[contactCompanyId] == 1){
+                if(undefined != contactCodeOut[contactCompanyId]
+                        && contactCodeOut[contactCompanyId] == 1
+                        && undefined != contactCodeOut[contactCode]&& contactCodeOut[contactCode] == 1){
                     return true;
                 }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-                consignorout =consignorout + "<td><button type='button'  onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input /></td>";
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
@@ -1433,9 +1557,9 @@
                 tdArr.eq(2).children().attr("readonly","readonly");
                 ifConsigneeConfirm = true;
                 //禁用添加收货人和确认收货人
-
-                layer.close(index);
+                debugger;
             })
+            layer.close(index);
         }, function(index){
             layer.close(index);
         });
@@ -1443,7 +1567,7 @@
 
     $("#consigneeListClearDivBlock").click(function () {
         //alert('3233')
-
+        debugger
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout > 0){
             layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
@@ -1454,7 +1578,7 @@
                 $("#consigneeInfoListDiv").html("");
                 ifConsigneeConfirm = false;
                 goodsAndConsigneeMap = new HashMap();
-                $("#TfcOrderTopicTransOrder").html("");
+                $("#goodsInfoListDiv").html("");
                 layer.close(index);
             }, function(index){
                 layer.close(index);
@@ -1504,6 +1628,7 @@
                 $("#custName").val(customerName);
                 $("#custGroupId").val(groupId);
                 $("#custId").val(custId);
+                $("#customerId").val(custId);
             }
         });
         if(custEnterTag==""){
@@ -1516,22 +1641,16 @@
         //加载仓库列表
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
+        //<option value="">无</option>
+       /* $("#warehouseCode").append("<option value="">无</option>");*/
+       $("#warehouseCode").append("<option value = ''>无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {
                 $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
             });
         })
-        //加载货品一级种类
-        //goodsTypeId  goodsSecTypeId
-        $("#goodsTypeId option").remove();
-        $("#goodsSecTypeId option").remove();
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
-            data=eval(data);
-            $.each(data,function (index,goodsType) {
-                $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
-            });
-        })
+
 
 
     });
@@ -1545,33 +1664,36 @@
 
 
 
-    $("#orderPlaceConTableBtn").click(function () {
+    function distributingOrderPlaceCon() {
+
+        if(!validateForm()){
+            return;
+        }
         //如果没有仓库信息就是城配运输订单
         //如果有仓库信息就是仓配订单, 销售出库,
         var orderLists = [];
         //堆齐基本信息
         var orderInfo = null;
 
-
-
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
 
+
             orderInfo = {};
 
-            var storeMessage = $("#store").val();
-            if("" == storeMessage){
+            var warehouseCodeMessage = $("#warehouseCode").val();
+            if("" == warehouseCodeMessage){
                 orderInfo.orderType = "60";//运输
                 orderInfo.businessType = "600";//城配
-                orderInfo.provideTransport = "0";//需要运输
+                orderInfo.provideTransport = "0";//不需要运输
             }else{
                 orderInfo.orderType = "61";//仓储
                 orderInfo.businessType = "610";//销售出库
                 orderInfo.provideTransport = "1";//需要运输
             }
-            orderInfo.orderTime = $dp.$('orderTime').value;//000
+            orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
-            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
             orderInfo.custName = $("#custName").val();//后端需特别处理
             orderInfo.custCode = $("#custId").val();//后端需特别处理
             orderInfo.warehouseCode = $("#warehouseCode").val();
@@ -1595,18 +1717,11 @@
             var streetCode = $("#consignorStreet").val();
             orderInfo.departureTowns = $("#consignorStreetName").val();
             orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
-            //orderInfo.departurePlace = $("#consignorAddress").val();
-
-
-
-
-
-
-
-
+                 //orderInfo.departurePlace = $("#consignorAddress").val();
 
             var tdArr = $(this).children();
             var consigneeName = tdArr.eq(1).text();//名称
+            var custOrderCode = tdArr.eq(2).children().val();
             var consigneeContactName = tdArr.eq(3).text();//联系人
             var consigneeContactPhone = tdArr.eq(4).text();//    联系电话
             var consigneeContactAddress = tdArr.eq(5).text();//    完整地址
@@ -1624,8 +1739,9 @@
             var streetName = tdArr.eq(17).text();
             var address = tdArr.eq(18).text();
             orderInfo.consigneeName = consigneeName;
+            orderInfo.custOrderCode = custOrderCode;
             orderInfo.consigneeType = type;
-            orderInfo.consigneeContactName = consigneeContactName;
+            orderInfo.consigneeContactName = consigneeContactName;//000
             orderInfo.consigneeCode = contactCompanyId;
             orderInfo.consigneeContactCode = contactCode;
             orderInfo.consigneeContactPhone = consigneeContactPhone;
@@ -1641,6 +1757,7 @@
             //遍历货品信息
 
             $("#goodsInfoListDiv").find("tr").each(function(index) {
+
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1657,7 +1774,8 @@
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
                 var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                var goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                var param =contactCompanyId + "@" + contactCode;
+                var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
                 goodsList[index] = goods;
             })
@@ -1666,13 +1784,113 @@
         })
 
         var param = JSON.stringify(orderLists);
+        if(StringUtil.isEmpty(param)){
+            return;
+        }
         xescm.common.submit("/ofc/distributing/placeOrdersListCon"
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
-                    //xescm.common.goBack("/ofc/orderPlace");
                 })
-    })
+    }
+
+    function validateForm() {//000
+        //校验是否有某个收货人下所有货品的数量都是0//能不能直接从HashMap下手//000
+        //校验货品某一行的需求数量不是//000
+        //校验必须有货品
+        //校验必须有收货方
+        //还有页面所有的校验都还没有做
+        //客户订单编号的校验也不好做
+        //添加批次号
+
+        var consigneeNum = 0;//收货方数量一级校验标记
+        var goodsNumTag = true;//货品明细数量一级校验标记
+        var consigneeGoodsIsEmptyOut = true;//收房方所有货品的数量是否都是0一级校验标记
+        var goodsIsEmptyOut = false;//货品列表中货品最后一列的货品数量一级校验标记
+        $("#consigneeInfoListDiv").find("tr").each(function (index) {
+            consigneeNum += 1;
+            var goods = null;
+            var tdArr = $(this).children();
+            var consigneeName = tdArr.eq(1).text();//名称
+            var consigneeContactName = tdArr.eq(3).text();//联系人
+            var consigneeType = tdArr.eq(6).text();
+            var contactCompanyId = tdArr.eq(7).text();
+            var contactCode = tdArr.eq(8).text();
+            debugger
+            //遍历货品信息
+            var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
+            var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
+            var goodsNum = 0;//货品列表数量
+            $("#goodsInfoListDiv").find("tr").each(function(index) {
+                goodsNum += 1;
+                debugger
+                goods = {};
+                var tdArr = $(this).children();
+                var goodsIndex = tdArr.eq(1).text();//货品序号
+                var goodsCode = tdArr.eq(2).text();//货品编码
+                var goodsName = tdArr.eq(3).text();//货品名称
+                var goodsTotalAmount = tdArr.eq(6).text();//总数量
+                if(goodsTotalAmount == 0){
+                    alert("货品列表中【"+goodsName+"】的数量为空,请检查!");
+                    //return false;
+                    goodsIsEmpty = true;
+                    return false;
+                }
+                var mapKey = goodsCode + "@" + goodsIndex;
+                var consigneeAndGoodsMsgJson = null;
+                if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                    consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                }
+                var goodsAmount = 0;
+                if(null != consigneeAndGoodsMsgJson){
+                    var param = contactCompanyId +"@"+ contactCode;
+                    goodsAmount = consigneeAndGoodsMsgJson[param];
+                }
+
+                if(goodsAmount != 0){
+
+                    consigneeGoodsIsEmpty = false;
+                    //return false;
+                }
+            })
+            if(0 == goodsNum){
+                goodsNumTag = false;
+                alert("请至少添加一个货品明细!");
+                return false;
+            }
+            if(goodsIsEmpty){
+                goodsIsEmptyOut = true;
+                return false;
+            }
+            if(consigneeGoodsIsEmpty){
+                if("1" == consigneeType) {
+                    alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                }else if("2" == consigneeType){
+                    alert("收货方【"+consigneeName+"-"+consigneeContactName+"】未有发货数量,请检查!");
+                }else{
+                    alert("收货方【"+consigneeName+"】未有发货数量,请检查!");
+                }
+
+                consigneeGoodsIsEmptyOut = false;
+                return false;
+            }
+        })
+        if(0 == consigneeNum){//如果收货人数量是0
+            alert("请至少添加一个货品明细以及对应的收货方！");
+            return false;
+        }
+        if(!goodsNumTag){//如果货品数量是0
+            return false;
+        }
+        if(!consigneeGoodsIsEmptyOut){//收货方所有货品的数量都是0
+            return false;
+        }
+        if(goodsIsEmptyOut){
+            return false;
+        }
+        return true;
+    }
+
 
     function HashMap() {
         /** Map 大小 **/
@@ -1758,6 +1976,113 @@
         {
             return size;
         }
+    }
+
+
+
+
+
+    /**
+     *表单验证
+     */
+
+    function validateFormData() {
+        var ofc_url = $("#ofc_url").html();
+        $('#operationDistributingFormValidate').validate({
+            errorElement : 'div',
+            errorClass : 'help-block',
+            focusInvalid : false,
+            ignore : "",
+            rules : {
+                orderTime:{
+                    required:true
+                },
+                merchandiser:{
+                    required:true
+                },
+                custName: {
+                    required:true,
+                    maxlength:100
+                },
+                /*warehouseCode : {
+                    required:true
+                },*/
+                notes:{
+                    maxlength:300
+                },
+                consignorName:{
+                    required:true
+                }
+            },
+            messages : {
+                orderTime:{
+                    required:"请输入订单日期"
+                },
+                merchandiser:{
+                    required:"请选择开单员"
+                },
+                custName: {
+                    required:"请选择客户",
+                    maxlength:"超过最大长度"
+                },
+               /* warehouseCode : {
+                    required:"请选择仓库"
+                },*/
+                notes:{
+                    maxlength:"超过最大长度"
+                },
+                consignorName:{
+                    required:"请选择发货方"
+                }
+
+            },
+            highlight : function(e) {
+                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
+            },
+            success : function(e) {
+                $(e).parent().parent().removeClass('has-error').addClass('has-success');
+                $(e).remove();
+            },
+            errorPlacement : function(error, element) {
+                //error.insertAfter(element.parent());
+                error.insertAfter(element.parent());
+            },
+            submitHandler : function(form) {
+                /*xescm.common.commit('addSupplierContactForm', '/csc/supplier/addCscSupplierContact', function(){
+                    var supplierId = $("#supplierId").val();
+                    var url = "/csc/supplier/toMaintainCscSupplierContactListPage/" + supplierId;
+                    xescm.common.loadPage(url);
+                });*/
+                distributingOrderPlaceCon();
+            },
+            invalidHandler : function(form) {
+            }
+        });
+
+    }
+
+    function onlyNumber(obj){
+
+        //得到第一个字符是否为负号
+        // var t = obj.value.charAt(0);
+        //先把非数字的都替换掉，除了数字和.
+        obj.value = obj.value.replace(/[^\d\.]/g,'');
+        //obj.value = obj.value.replace(/[^\d{1,6}]/,'');
+        //必须保证第一个为数字而不是.
+        obj.value = obj.value.replace(/^\./g,'');
+        //保证只有出现一个.而没有多个.
+        obj.value = obj.value.replace(/\.{2,}/g,'.');
+        //保证.只出现一次，而不能出现两次以上
+        obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+        //限制连续数字不能超过6个
+        if(/\d{7}/.test(obj.value)){
+            obj.value = obj.value.replace(/\d$/gi,'');
+        }
+        //限制小数点后3位
+        if(/\.\d{4}/.test(obj.value)){
+            obj.value = obj.value.replace(/\d$/gi,'');
+        }
+
     }
 </script>
 

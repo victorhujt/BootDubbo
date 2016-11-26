@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <id column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR" />
     <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
     <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
     <result column="cust_name" property="custName" jdbcType="VARCHAR" />
@@ -48,6 +49,8 @@
     <result column="destination" property="destination" jdbcType="VARCHAR" />
     <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
 
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
@@ -109,12 +112,21 @@
     FROM
     ofc_fundamental_information ofi,
     ofc_distribution_basic_info ofd,
-    ofc_order_status oos
+    (SELECT * FROM ofc_order_status
+    order by lasted_oper_time desc) oos
     WHERE ofi.order_code = ofd.order_code
     AND ofi.order_code = oos.order_code
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
+        AND oos.lasted_oper_time = (
+          SELECT
+          MAX(lasted_oper_time)
+          FROM
+          ofc_order_status
+          WHERE
+          order_code = #{code}
+        )
       </when>
       <when test="'custOrderCode'.toString() == searchType">
         AND ofi.cust_order_code = #{code}
@@ -124,6 +136,22 @@
       </when>
       <otherwise></otherwise>
     </choose>
+
+  </select>
+  
+  <select id="queryOrderByOrderBatchNumber" resultMap="BaseResultMap">
+    SELECT ofi.*,odb.consignee_name,owi.warehouse_name,oos.order_status
+    FROM ofc_fundamental_information ofi,
+    ofc_distribution_basic_info odb,
+    ofc_warehouse_information owi,
+    ofc_order_status oos
+    WHERE ofi.order_code = odb.order_code
+    AND
+    ofi.order_code = owi.order_code
+    AND
+    ofi.order_code = oos.order_code
+    AND
+    ofi.order_batch_number = #{orderBatchNumber}
   </select>
 
 </mapper>

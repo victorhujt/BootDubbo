@@ -64,6 +64,7 @@ public class OfcOrderFollowRest extends BaseController{
     public Wrapper<?> orderFollowCon(Model model, String code, String followTag) throws InvocationTargetException {
         logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
         logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
+        //Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> map = new HashMap<>();
         try{
             code = PubUtils.trimAndNullAsEmpty(code);
@@ -91,7 +92,10 @@ public class OfcOrderFollowRest extends BaseController{
         Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
         String custId = (String) wrapper.getResult();
         OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
+        //List<OfcOrderStatus> ofcOrderStatuses = new ArrayList<OfcOrderStatus>();
         List<OfcOrderStatus> ofcOrderStatuses = new ArrayList<>();
+        
+        //List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<OfcGoodsDetailsInfo>();
         List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
         //CscContantAndCompanyVo consignorMessage = null;
         //CscContantAndCompanyVo consigneeMessage = null;
