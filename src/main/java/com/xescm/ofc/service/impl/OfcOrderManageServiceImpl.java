@@ -294,7 +294,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
-                ofcTraplanSourceStatus.setResourceAllocationStatus("30");
+                ofcTraplanSourceStatus.setResourceAllocationStatus("40");
+                List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
+                ofcTransplanInfoList.add(ofcTransplanInfo);
+                String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
+                if(businessType.equals("600") || businessType.equals("601")){
+                    OrderScreenCondition condition=new OrderScreenCondition();
+                    condition.setOrderCode(ofcTransplanInfo.getOrderCode());
+                    String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
+                    OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+                    ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
+                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
+                    ofcOrderStatus.setStatusDesc("执行中");
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            +" "+"订单开始执行");
+                    ofcOrderStatus.setOperator(userId);
+                    ofcOrderStatus.setLastedOperTime(new Date());
+                    ofcOrderStatusService.save(ofcOrderStatus);
+                }
+                //向TFC推送
+                ofcTransplanInfoToTfc(ofcTransplanInfoList,userId);
             }
             /**
              * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
@@ -550,7 +569,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId,AuthResDto authResDtoByToken) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<String,Object>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContact(new CscContact());
         cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
@@ -637,7 +656,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
             String[] planCodeList=planCode.split("@");
-            List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
+            List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
             try {
                 for(int i=0;i<planCodeList.length;i++){
                     ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
@@ -707,7 +726,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
 
     public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList,String userName) {
-        List<TransportDTO> transportDTOList = new ArrayList<>();
+        List<TransportDTO> transportDTOList = new ArrayList<TransportDTO>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
                 TransportDTO transportDTO = new TransportDTO();
