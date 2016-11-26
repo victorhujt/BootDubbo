@@ -23,7 +23,8 @@ import com.xescm.ofc.utils.MQUtil;
 @Component
 public class DefaultMqProducer {
 	 private static final Logger logger = LoggerFactory.getLogger(DefaultMqProducer.class);
-	
+
+
     /**
      * MQ发送定时消息示例Demo
      */
@@ -33,7 +34,7 @@ public class DefaultMqProducer {
     Producer producer;
 
     public void toSendTfcTransPlanMQ(String jsonStr,String code) {
-        logger.info("{}开始消费,mqConfig.getTfcTransPlanTag()");
+        logger.info("{}开始消费",mqConfig.getTfcTransPlanTag());
         Message message = new Message(mqConfig.getTfcTransPlanTopic(), mqConfig.getTfcTransPlanTag(),jsonStr.getBytes());
         message.setKey(code);
 
@@ -43,7 +44,6 @@ public class DefaultMqProducer {
         }
     }
 
-    
     /**
      * 仓储计划单推送到仓储中心
      * @param jsonStr

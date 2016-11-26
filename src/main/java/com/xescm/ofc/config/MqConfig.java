@@ -63,12 +63,12 @@ public class MqConfig {
     private String WhoProducerId;//仓储订单生产者
     private String WhpOrderTopic;//仓储计划单
 
+
     public String getWhoProducerId() {
 		return WhoProducerId;
     }
-
-    public void setTFCTopic(String TFCTopic) {
-        this.TFCTopic = TFCTopic;
+    public String getTFCTopic() {
+        return TFCTopic;
     }
 
     public String getConsumerTopicNames() {
@@ -148,6 +148,7 @@ public class MqConfig {
         producer.start();
         this.producer = producer;
     }
+
 
 
 
