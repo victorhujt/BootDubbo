@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.domain.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFinanceInformation;
 import com.xescm.ofc.mapper.OfcFinanceInformationMapper;
 import com.xescm.ofc.service.OfcFinanceInformationService;
@@ -21,4 +22,6 @@ public class OfcFinanceInformationServiceImpl extends BaseService<OfcFinanceInfo
     public OfcFinanceInformation queryByOrderCode(String orderCode) {
         return ofcFinanceInformationMapper.queryByOrderCode(orderCode);
     }
+
+
 }

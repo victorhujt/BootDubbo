@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -56,6 +57,9 @@ public class OfcOrderManageOperaRest extends BaseController {
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
     private PlanAndStorageService planAndStorageService;
+    @Autowired
+    private OfcBatchOrderVoService ofcBatchOrderVoService;
+
 
     /**
      * 运营→订单管理 orderManageOpera
@@ -200,13 +204,81 @@ public class OfcOrderManageOperaRest extends BaseController {
      * 订单批次
      *
      * @param orderBatchCode
-     * @param dtotag
      * @return
      */
-    @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}/{dtotag}")
-    public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode, @PathVariable String dtotag) {
+    @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}")
+    public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode) {
         ModelAndView modelAndView = new ModelAndView("order_detail_batch_opera");
+        try {
+            if (StringUtils.isBlank(orderBatchCode)) {
+                throw new Exception("订单批次号不能为空！");
+            }
+            OfcBatchOrderVo ofcBatchOrderVo = ofcBatchOrderVoService.queryByBatchNumber(orderBatchCode);
+            modelAndView.addObject("ofcBatchOrderVo", ofcBatchOrderVo);
+            modelAndView.addObject("orderBatchNumber", orderBatchCode);
+        } catch (Exception ex) {
+            logger.info("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex);
+        }
         return modelAndView;
+    }
+
+
+    /**
+     * 根据批次号查询订单
+     *
+     * @param page
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "queryOrderByOrderBatchNumber", method = {RequestMethod.POST})
+    @ResponseBody
+    public Object queryOrderByOrderBatchNumber(Page<OrderOperForm> page, OrderOperForm form) {
+        logger.debug("根据批次号查询订单page:{},form:{}", page, form);
+        String orderBatchNumber = form.getOrderBatchNumber();
+        try {
+            if (StringUtils.isBlank(orderBatchNumber)) {
+                throw new Exception("订单批次号不能为空");
+            }
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            List<OfcFundamentalInformation> ofcBatchOrderVos = ofcFundamentalInformationService.queryOrderByOrderBatchNumber(orderBatchNumber);
+            PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<>(ofcBatchOrderVos);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
+        } catch (Exception ex) {
+            logger.info("订单批次号查询出错：orderBatchNumer{},{}", orderBatchNumber, ex);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
+    @ResponseBody
+    private Object queryGoodsInfoByOrderCode(String orderCode) {
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单号不能为空");
+            }
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+            List<OfcGoodsDetailsInfo> ofcBatchOrderVos = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcBatchOrderVos);
+        } catch (Exception ex) {
+            logger.info("订单号查询出错：orderCode{},{}", orderCode, ex);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+        }
+    }
+
+    @RequestMapping("selectCustPage")
+    public ModelAndView selectCustPage() {
+        return new ModelAndView("select_cust_page");
+    }
+
+    @RequestMapping(value = "querySelectCustData",method = RequestMethod.POST)
+    @ResponseBody
+    public Object querySelectCustData(String custName){
+        try {
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
+        } catch (Exception ex) {
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+        }
     }
 
 
