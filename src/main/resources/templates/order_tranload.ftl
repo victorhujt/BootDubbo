@@ -385,6 +385,16 @@
                         </div></div>
 
                 </div>
+                <div class="form-group">
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">运输要求</label>
+                        <div class="col-xs-2">
+                            <div class="position-relative" style="width:430px;">
+                                <input name="transRequire" id="transRequire" type="text" placeholder="运输要求" style="padding-left:8px;width:430px;" />
+                                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                            </div>
+                        </div></div>
+
+                </div>
 
             </form>
 
@@ -860,7 +870,7 @@
                 <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
                 <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 <label class="control-label" style="float:right;" for="name">数量合计：</label>
-
+                <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
             <#--dynamic-table-->
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -1332,6 +1342,7 @@
     }
     function countQuantityOrWeightOrCubageCheck() {
         var quantityCount=0;
+        var cubageCount=0;
         var weightCount=0;
         var luggage=0;
         var flg1="";
@@ -1371,6 +1382,8 @@
         luggage=0;
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
+                cubageCount=cubageCount+parseFloat($(this).val());
+
                 if(flg1=="error" && flg2=="error"){
                     if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
                         luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
@@ -1387,6 +1400,8 @@
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
+        $("#cubageCountHidden").html(cubageCount);
+        console.log("======33=="+JSON.stringify($("#cubageCountHidden").val(cubageCount)))
     }
     function countCostCheck() {
         var count=0;
@@ -1739,7 +1754,12 @@
                 jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
             }
             jsonStr.transCode = $("#transCode").val();
-            jsonStr.custName = $("#custName").val();
+            jsonStr.custName = $("#custName").val();//000
+            jsonStr.notes = $("#transRequire").val();
+            jsonStr.weight = $("#weightCount").html();
+            jsonStr.quantity = $("#quantityCount").html();
+            var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
             jsonStr=orderPlaceAddTranInfo(jsonStr);
             //货品添加

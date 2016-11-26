@@ -90,7 +90,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     //"SO"+ PrimaryGenerater.getInstance()
                     //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
                     ofcFundamentalInformation.setCustCode(custId);
-                    ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
+                    if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
+                        ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
+                    }
                     ofcFundamentalInformation.setAbolishMark(OrderConstEnum.ORDERWASNOTABOLISHED);//未作废
                     if (ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)){
 
@@ -415,8 +417,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     public OfcDistributionBasicInfo upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo
             ,OfcFundamentalInformation ofcFundamentalInformation){
 //        ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
-        ofcFundamentalInformation.setSecCustCode("001");
-        ofcFundamentalInformation.setSecCustName("众品");
+//        ofcFundamentalInformation.setSecCustCode("001");
+//        ofcFundamentalInformation.setSecCustName("众品");
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
         ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
         ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
