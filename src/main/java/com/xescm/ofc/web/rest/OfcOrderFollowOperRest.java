@@ -85,9 +85,7 @@ public class OfcOrderFollowOperRest extends BaseController {
                 }
             }
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
-                if (ofcOrderStatuses.size() == 1) {
-                    map.put("ofcOrderStatus", ofcOrderStatuses);
-                }
+                map.put("ofcOrderStatus", ofcOrderStatuses);
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
         } catch (Exception ex) {

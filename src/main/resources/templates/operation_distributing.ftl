@@ -58,7 +58,7 @@
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">货品列表</h4></div>
+        <p class="modal-title">货品列表</p></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
@@ -66,7 +66,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品种类</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <select id="goodsTypeId" name="goodsTypeId" ></select>
+                            <select id="goodsTypeId" name="goodsTypeId" onclick="loadSecGoodsType()"></select>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
-                        <div class="clearfix">
+                        <div class="clearfix" >
                             <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -154,7 +154,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContact.contactName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson1" name="contactName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -277,13 +277,13 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name"></label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 l-dw">
                         <div class="clearfix">
                             <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
@@ -342,7 +342,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">规格</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -376,17 +376,17 @@
 
 <br/>
 <div class="col-xs-9">
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="">
+    <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         历史订单选择
     </button>
 
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="to_operation_distributing_excel">
+    <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_distributing_excel">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         Excel导入
     </button>
 
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="to_operation_csc_contact_manage">
+    <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_csc_contact_manage">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         收发货方档案
     </button>
@@ -396,28 +396,28 @@
 <br/>
 <form id="operationDistributingFormValidate" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
-        <div class="form-group">
-            <div><label class="control-label col-label no-padding-right" for="">订单日期</label>
+        <div class="form-group l-bj">
+            <div><label class="control-label col-label no-padding-right l-bj" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期"
+                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
                 </div>
             </div></div>
 
-            <div><label class="control-label col-label no-padding-right" for="">开单员</label>
+            <div><label class="control-label col-label no-padding-right l-bj" for="">开单员</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="merchandiser" name="merchandiser">
+                    <select  id="merchandiser" name="merchandiser" class="bk-1">
                         <option value="00001">张无忌</option>
                         <option value="00002">杨过</option>
                     </select>
                 </div>
             </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">预计发货时间</label>
+            <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
+                    <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
                 </div>
             </div></div>
@@ -425,31 +425,31 @@
     </div>
     <div class="col-xs-12">
         <div class="form-group">
-            <div><label class="control-label col-label no-padding-right" for="">客户名称</label>
+            <div> <label class="control-label col-label no-padding-right l-bj" for="">客户名称</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
-                    <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
-                    <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
-                    <span style="cursor:pointer" id="custListDivBlock">
-                    <button type="button" class="btn btn-minier btn-inverse no-padding-right"
-                            id="">选择
+                    <input class="col-xs-10 col-xs-12 bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
+                    <input class="col-xs-10 col-xs-12 bk-1" name=""  id="custId" type="text"  style="display: none"  />
+                    <span style="cursor:pointer" id="custListDivBlock xz-1">
+                    <button type="button" class="btn btn-minier btn-inverse no-padding-right xz-1"
+                            id="custListDivBlock"><i class="fa fa-user l-cor"></i>
                     </button></span>
                 </div>
             </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">配送仓库</label>
+            <div> <label class="control-label col-label no-padding-right l-bj" for="">配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()">
+                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="bk-1">
                         <option value="">无</option>
-                    <#-- <option value="00002">天津仓库</option>-->
+
                     </select>
                 </div>
             </div></div>
-            <div><label class="control-label col-label no-padding-right" for="">备注</label>
+            <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="备注"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="备注"/>
                 </div>
             </div></div>
         </div>
@@ -459,64 +459,64 @@
     <br/>
     <div class="row">
         <div class="col-xs-12">
-            <div class="form-group">
-                <label class="control-label col-label no-padding-right" for=""><b>发货方</b></label>
-                <div class="col-xs-3">
+            <div class="form-group"style="border-top:1px solid #ccc;">
+                <label class="control-label col-label no-padding-right l-bj" for=""><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">发货方</b></label>
+                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 31px">
                 </div>
-                <label class="control-label col-label no-padding-right" for=""><b>出发地:</b></label>
-                <div class="col-xs-3">
+                <label class="control-label col-label no-padding-right l-bj" for=""><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">出发地:</b></label>
+                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 31px;">
                     <div class="clearfix">
-                        <span id="showDepaturePlace"></span>
+                        <span id="showDepaturePlace" class="l-bj"></span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-xs-12">
-            <div class="form-group">
-                <label class="control-label col-label no-padding-right" for="">名称</label>
+            <div class="form-group" style="margin-left: 0">
+                <label class="control-label col-label no-padding-right l-bj" for="">名称</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12" readonly="readonly" name="consignorName" id="consignorName" type="text"
+                        <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorName" id="consignorName" type="text"
                                placeholder="名称"/>
                         <span style="cursor:pointer" id="consignorListDivBlock">
-                        <button type="button" class="btn btn-minier btn-inverse no-padding-right"
-                                id="">选择
+                        <button type="button" class="btn btn-minier btn-inverse no-padding-right xz-1"
+                                id=""><i class="fa fa-user l-cor"></i>
                         </button></span>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right" for="">联系人</label>
+                <label class="control-label col-label no-padding-right l-bj" for="">联系人</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
+                        <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right" for="">联系电话</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-left: -6px">联系电话</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
+                        <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-xs-12">
-            <div class="form-group">
-                <label class="control-label col-label no-padding-right" for="">地址</label>
+            <div class="form-group" style="margin-left: 0">
+                <label class="control-label col-label no-padding-right l-bj" for="">地址</label>
                 <div class="col-xs-9">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
-                        <input class="col-xs-10 col-xs-12" name="consignorType" id="consignorType" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorContactCompanyId" id="consignorContactCompanyId" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorContactCode" id="consignorContactCode" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorPhone" id="consignorPhone" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorProvince" id="consignorProvince" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorProvinceName" id="consignorProvinceName" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorCity" id="consignorCity" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorCityName" id="consignorCityName" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorArea" id="consignorArea" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorAreaName" id="consignorAreaName" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorStreet" id="consignorStreet" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorStreetName" id="consignorStreetName" type="hidden" />
-                        <input class="col-xs-10 col-xs-12" name="consignorAddress" id="consignorAddress" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 dz-1"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorType" id="consignorType" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorContactCompanyId" id="consignorContactCompanyId" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorContactCode" id="consignorContactCode" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorPhone" id="consignorPhone" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorProvince" id="consignorProvince" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorProvinceName" id="consignorProvinceName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorCity" id="consignorCity" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorCityName" id="consignorCityName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorArea" id="consignorArea" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorAreaName" id="consignorAreaName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorStreet" id="consignorStreet" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorStreetName" id="consignorStreetName" type="hidden" />
+                        <input class="col-xs-10 col-xs-12 bk-1" name="consignorAddress" id="consignorAddress" type="hidden" />
                     </div>
                 </div>
 
@@ -524,95 +524,95 @@
         </div>
     </div>
 <#--</form>-->
-<br/>
-<div class="col-sm-12">
-    <div class="tabbable" style="width:1000px;">
-        <ul class="nav nav-tabs" id="myTab4">
-            <li class="goodsLi disable" >
-                <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-            </li>
+    <br/>
+    <div class="col-sm-12">
+        <div class="tabbable" style="width:1000px;">
+            <ul class="nav nav-tabs" id="myTab4">
+                <li class="goodsLi disable" >
+                    <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+                </li>
 
-            <li class="consigneeLi active">
-                <a data-toggle="tab" href="#profile4" aria-expanded="true">收货方列表</a>
-            </li>
+                <li class="consigneeLi active">
+                    <a data-toggle="tab" href="#profile4" aria-expanded="true">收货方列表</a>
+                </li>
 
-        </ul>
+            </ul>
 
-        <div class="tab-content">
-            <div id="home4" class="tab-pane ">
-                <!--货品明细-->
-                <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
-                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
-                       aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row" id="222">
-                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                            操作
-                        </th>
-                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Domain: activate to sort column ascending">序号
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Domain: activate to sort column ascending">货品编码
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Price: activate to sort column ascending">货品名称
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Update: activate to sort column ascending">规格
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">单位
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">数量
-                        </th>
-                    </thead>
-                    <tbody id="goodsInfoListDiv">
-                    </tbody>
-                </table>
+            <div class="tab-content">
+                <div id="home4" class="tab-pane ">
+                    <!--货品明细-->
+                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
+                    <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
+                           aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row" id="222">
+                            <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                操作
+                            </th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Domain: activate to sort column ascending">序号
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Domain: activate to sort column ascending">货品编码
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Price: activate to sort column ascending">货品名称
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Update: activate to sort column ascending">规格
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">单位
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">数量
+                            </th>
+                        </thead>
+                        <tbody id="goodsInfoListDiv">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="profile4" class="tab-pane active">
+                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
+                    <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>
+                    <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
+                    <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
+                           aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                操作
+                            </th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Domain: activate to sort column ascending">收货方名称
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Price: activate to sort column ascending">客户订单编号
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Update: activate to sort column ascending">联系人
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">联系电话
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">地址
+                            </th>
+                        </thead>
+                        <tbody id="consigneeInfoListDiv"></tbody>
+
+                    </table>
+                </div>
+
             </div>
-            <div id="profile4" class="tab-pane active">
-                <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
-                <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info" id="">确认收货方</button></span>
-                <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
-                <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
-                       aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row">
-                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                            操作
-                        </th>
-                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Domain: activate to sort column ascending">收货方名称
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Price: activate to sort column ascending">客户订单编号
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Update: activate to sort column ascending">联系人
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">联系电话
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">地址
-                        </th>
-                    </thead>
-                    <tbody id="consigneeInfoListDiv"></tbody>
-
-                </table>
-            </div>
-
         </div>
     </div>
-</div>
 </form>
 
 <div class="col-xs-12">
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn" onclick="javascript:$('#operationDistributingFormValidate').submit();">
+    <button class="btn btn-white btn-info btn-bold btn-interval db-1" id="orderPlaceConTableBtn" onclick="javascript:$('#operationDistributingFormValidate').submit();">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         确认下单
     </button>
@@ -684,7 +684,7 @@
                 consigneeChosen = "param";
             })
             if(""==consigneeChosen){
-                debugger
+
                 $(".goodsLi").off('click').on("click",function(){
                     alert("请先添加收货方")
                 });
@@ -764,7 +764,7 @@
                             if(cscGoodsVo.goodsCode == goodsCodeIn){
                                 goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' disabled='disabled' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
                             }else{
-                                
+
                             }
                         })
                     }else{
@@ -824,7 +824,7 @@
                 var index = tdArr.eq(1).text();//序号
                 var goodsCode = tdArr.eq(2).text();//货品编码
 
-                debugger
+
                 goodsCodeOut[goodsCode] = 1;
 
                 var goodsName = tdArr.eq(3).text();//货品名称
@@ -860,7 +860,7 @@
                     var specification = tdArr.eq(6).text();//规格
                     var unit = tdArr.eq(7).text();//单位
 
-                    debugger;
+
                     if(undefined != goodsCodeOut[goodsCode] && goodsCodeOut[goodsCode] == 1){
                         return true;
                     }
@@ -1465,7 +1465,7 @@
         $("#consigneeInfoListDiv").html("");
 
         $("#contactSelectListTbody1").find("tr").each(function(index){
-            
+
             var tdArr = $(this).children();
             if(tdArr.eq(0).find("input").prop("checked")){
 
@@ -1571,7 +1571,7 @@
             layer.close(index);
         });
     })
-    
+
     $("#consigneeListClearDivBlock").click(function () {
         //alert('3233')
         debugger
