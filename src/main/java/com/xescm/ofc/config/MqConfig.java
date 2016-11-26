@@ -63,20 +63,33 @@ public class MqConfig {
     private String deliveryTag;
     private String TfcTransPlanTopic;
     private String TfcTransPlanTag;
+    private String WhoProducerId;//仓储订单生产者
+    private String WhpOrderTopic;//仓储计划单
     
-    private String WHOTopic;//仓储计划单
-
-    public String getWHOTopic() {
-		return WHOTopic;
+    
+    public String getWhoProducerId() {
+		return WhoProducerId;
 	}
 
-	public void setWHOTopic(String wHOTopic) {
-		WHOTopic = wHOTopic;
+	public void setWhoProducerId(String whoProducerId) {
+		WhoProducerId = whoProducerId;
 	}
 
 	private String EPCTopic;
 
-    private String EPCTag;
+    public String getWhpOrderTopic() {
+		return WhpOrderTopic;
+	}
+
+	public void setWhpOrderTopic(String whpOrderTopic) {
+		WhpOrderTopic = whpOrderTopic;
+	}
+
+
+
+
+
+	private String EPCTag;
 
     private String opcToEpcTopic;
 

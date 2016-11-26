@@ -5,7 +5,11 @@ import com.aliyun.openservices.ons.api.transaction.LocalTransactionExecuter;
 import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
 import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
 import com.xescm.ofc.config.MqConfig;
+import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.utils.MQUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +23,8 @@ import java.util.Properties;
 @Component
 public class DefaultMqProducer {
 
+	 private static final Logger logger = LoggerFactory.getLogger(DefaultMqProducer.class);
+	
     /**
      * MQ发送定时消息示例 Demo
      */
@@ -60,22 +66,6 @@ public class DefaultMqProducer {
         }
     }
     
-    /**
-     * 仓储计划单推送到仓储中心
-     * @param jsonStr
-     * @param code
-     * @param tag
-     */
-    public void toSendWhc(String jsonStr,String code,String tag) {
-        System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getWHOTopic(), tag,jsonStr.getBytes());
-        message.setKey(code);
-        SendResult sendResult = producer().send(message);
-        if (sendResult != null) {
-            System.out.println(new Date() + " Send mq message success! Topic is:" + mqConfig.getTopic() + "msgId is: " + sendResult.getMessageId());
-        }
-    }
-
     public void toSendMQTest(String jsonStr,String code) {
         System.out.println("Producer Started");
         Message message = new Message(mqConfig.getTopic(), mqConfig.getTag(),jsonStr.getBytes());
@@ -86,6 +76,26 @@ public class DefaultMqProducer {
         }
     }
 
+    
+    
+    /**
+     * 仓储计划单推送到仓储中心
+     * @param jsonStr
+     * @param code
+     * @param tag
+     */
+    public void toSendWhc(String jsonStr,String code,String tag) {
+    	logger.info("WhcProducer Started");
+        Message message = new Message(mqConfig.getWhpOrderTopic(),tag,jsonStr.getBytes());
+        message.setKey(code);
+        SendResult sendResult = producer().send(message);
+        if (sendResult != null) {
+        	logger.info(new Date() + " Send mq message success! Topic is:" + mqConfig.getWhpOrderTopic() +",tag is : " + tag +",msgId is: " + sendResult.getMessageId());
+        }
+    }
+    
+    
+    
     /**
      * MQ发送普通消息示例 Demo
      */
