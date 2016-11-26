@@ -550,7 +550,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId,AuthResDto authResDtoByToken) {
-        Map<String,Object> map = new HashMap<String,Object>();
+        //Map<String,Object> map = new HashMap<String,Object>();
+        Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContact(new CscContact());
         cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
@@ -637,7 +638,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
             String[] planCodeList=planCode.split("@");
-            List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
+            //List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
+            List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
             try {
                 for(int i=0;i<planCodeList.length;i++){
                     ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
@@ -707,7 +709,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
 
     public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList,String userName) {
-        List<TransportDTO> transportDTOList = new ArrayList<TransportDTO>();
+       // List<TransportDTO> transportDTOList = new ArrayList<TransportDTO>();
+        List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
                 TransportDTO transportDTO = new TransportDTO();

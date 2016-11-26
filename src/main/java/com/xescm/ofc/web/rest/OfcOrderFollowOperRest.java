@@ -63,14 +63,16 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (StringUtils.isBlank(searchType)) {
                 throw new Exception("搜索类型不能为空");
             }
-            Set<String> searchTypes = new HashSet<String>();
+           // Set<String> searchTypes = new HashSet<String>();
+            Set<String> searchTypes = new HashSet<>();
             searchTypes.add("orderCode");
             searchTypes.add("custOrderCode");
             searchTypes.add("transCode");
             if (!searchTypes.contains(searchType)) {
                 throw new Exception("搜索类型错误！");
             }
-            Map<String, Object> map = new HashMap<String, Object>();
+            //Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
@@ -107,7 +109,8 @@ public class OfcOrderFollowOperRest extends BaseController {
             final String searchType = "orderCode";
             List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
-            Map<String, Object> map = new HashMap<String, Object>();
+           // Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             OfcFundamentalInformation ofcFundamentalInformation = null;
             if(!CollectionUtils.isEmpty(ofcOrderDTOs)){
                 ofcFundamentalInformation = ofcOrderDTOs.get(0);

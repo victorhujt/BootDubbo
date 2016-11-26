@@ -94,7 +94,8 @@ public class OfcOperationDistributing extends BaseController{
                 //Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
                 //String custId = (String) wrapper.getResult();
 
-                List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+               // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+                List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
                 if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
                     ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
                 }
