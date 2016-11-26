@@ -118,6 +118,7 @@
                         <option value="">----</option>
                         <option value="600">城配</option>
                         <option value="601">干线</option>
+                        <option value="602">卡班</option>
                     </select>
                     <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">查询</button></span>
                 </div>
@@ -323,7 +324,7 @@
                         curr: result.result.pageNum, // 当前页
                         jump: function(obj, first){ // 触发分页后的回调
                             if(!first){ // 点击跳页触发函数自身，并传递当前页：obj.curr
-                                queryData(obj.curr);
+                                queryOrderData(obj.curr);
                             }
                         }
                     });
@@ -539,6 +540,34 @@
             $("#custName").val(val);
             $("#custListDiv").hide();
         })
+
+    </script>
+    <script type="text/javascript">
+
+        function appendSelect(type) {
+            if (type == "60") {
+                return "<option value=''>----</option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
+            } else if (type == "61") {
+                var html = "";
+                html += "<option value='----------'>----------</option>";
+                html += "<option value='610'>销售出库</option>";
+                html += "<option value='611'>调拨出库</option>";
+                html += "<option value='612'>报损出库</option>";
+                html += "<option value='613'>其他出库</option>";
+                html += "<option value='620'>采购入库</option>";
+                html += "<option value='621'>调拨入库</option>";
+                html += "<option value='622'>退货入库</option>";
+                html += "<option value='623'>加工入库</option>";
+                return html;
+            }
+            return null;
+        }
+        $("#orderType").on("change", function () {
+            var type = $(this).val();
+            if (type == "60" || type == "61") {
+                $("#businessType").empty().append(appendSelect(type));
+            }
+        });
 
     </script>
 

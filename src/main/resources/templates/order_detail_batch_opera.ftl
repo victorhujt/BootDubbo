@@ -258,7 +258,7 @@
     function queryData(pageNum) {
         var param = {};
         param.pageNum = pageNum;
-        param.pageSize = 10;
+        param.pageSize = 20;
         param.orderBatchNumber = "${(orderBatchNumber)!""}";
         CommonClient.post(sys.rootPath + "/ofc/queryOrderByOrderBatchNumber", param, function(result) {
 
@@ -444,18 +444,18 @@
         var html = "";
         $.each(data.result,function(index,item){
             html += "<tr>"+
-                        "<td>"+"</td>"+
-                        "<td>"+item.goodsCode+"</td>"+
-                        "<td>"+item.goodsName+"</td>"+
-                        "<td>"+item.goodsSpec+"</td>"+
-                        "<td>"+item.unit+"</td>"+
-                        "<td>"+item.pack+"</td>"+
-                        "<td>"+item.quantity+"</td>"+
-                        "<td>"+item.quantityUnitPrice+"</td>"+
-                        "<td>"+item.weight+"</td>"+
-                        "<td>"+item.weightUnitPrice+"</td>"+
-                        "<td>"+item.cubage+"</td>"+
-                        "<td>"+item.volumeUnitPrice+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.goodsCategory)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.goodsCode)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.goodsName)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.goodsSpec)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.unit)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.pack)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.quantity)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.quantityUnitPrice)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.weight)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.weightUnitPrice)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.cubage)+"</td>"+
+                        "<td>"+StringUtil.nullToEmpty(item.volumeUnitPrice)+"</td>"+
                     "</tr>";
         });
         $("#goodsTbody").empty().append(html);

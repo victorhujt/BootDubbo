@@ -260,7 +260,7 @@
 
         <div class="page-header">
             <p>
-                发货方
+                收货方
             </p>
         </div>
         <div class="row">
@@ -325,118 +325,119 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">运费</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="luggage" name="luggage" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.luggage)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">费用总计</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="serviceCharge" name="serviceCharge" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.serviceCharge)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">费用支付方</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="expensePaymentParty" name="expensePaymentParty" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFinanceInformation.expensePaymentParty)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">支付方式</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
+                            <input id="payment" name="payment" type="search" placeholder=""
                                    aria-controls="dynamic-table">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">现结</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="currentAmount" name="currentAmount" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.currentAmount)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">到付</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="toPayAmount" name="toPayAmount" type="search" placeholder=""
+                                   aria-controls="dynamic-table"  value="${(ofcFinanceInformation.toPayAmount)!"0.00"}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">回付</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="returnAmount" name="returnAmount" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.returnAmount)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">月结</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="monthlyAmount" name="monthlyAmount" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.monthlyAmount)!"0.00"}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否上门提货</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="pickUpGoods" name="pickUpGoods" type="search" placeholder=""
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.pickUpGoods)!"" == "0">value="是"<#elseif (ofcFinanceInformation.pickUpGoods)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">上门提货费用</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="homeDeliveryFee" name="homeDeliveryFee" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.homeDeliveryFee)!"0.00"}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否二次配送</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="twoDistribution" name="twoDistribution" type="search" placeholder=""
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.twoDistribution)!"" == "0">value="是"<#elseif (ofcFinanceInformation.twoDistribution)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">二次配送费用</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="twoDistributionFee" name="twoDistributionFee" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.twoDistributionFee)!"0.00"}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否签单返回</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="returnList" name="returnList" type="search" placeholder=""
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.returnList)!"" == "0">value="是"<#elseif (ofcFinanceInformation.returnList)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">签单返回费用</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="returnListFee" name="returnListFee" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.returnListFee)!"0.00"}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否货物保险</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="insure" name="insure" type="search" placeholder=""
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.insure)!"" == "0">value="是"<#elseif (ofcFinanceInformation.insure)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">保险费用</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="insurance" name="insurance" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.insurance)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">声明价值</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table">
+                            <input id="insureValue" name="insureValue" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.insureValue)!"0.00"}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否代收货款</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="">
+                            <input id="collectFlag" name="collectFlag" type="search" placeholder=""
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.collectFlag)!"" == "0">value="是"<#elseif (ofcFinanceInformation.collectFlag)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">代收费用</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="0.00">
+                            <input id="collectServiceCharge" name="collectServiceCharge" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.collectServiceCharge)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">代收金额</label>
                         <div class="col-xs-3">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
+                            <input id="collectLoanAmount" name="collectLoanAmount" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcFinanceInformation.collectLoanAmount)!""}">
+                                   value="${(ofcFinanceInformation.collectLoanAmount)!"0.00"}">
                         </div>
                     </div>
                 </form>
@@ -628,12 +629,97 @@
 
 <script type="text/javascript">
     function detailBackToHistory() {
-            xescm.common.loadPage("/ofc/orderManageOpera");
+        xescm.common.loadPage("/ofc/orderManageOpera");
     }
 </script>
 <script>
     $(function () {
-        $("input[type='search']").attr("readonly","readonly")
+        $("input[type='search']").attr("readonly", "readonly")
     })
+
+    $(function () {
+        var orderType = "${(ofcFundamentalInformation.orderType)!""}";
+        $("#orderType").val(getOrderType(orderType));
+        var businessType = "${(ofcFundamentalInformation.businessType)!""}"
+        $("#businessType").val(getBusiType(businessType));
+        var transportType = "${(ofcFundamentalInformation.transport_type)!""}";
+        $("#transportType").val(getTransportType(transportType));
+        var expensePaymentParty = "${(ofcFinanceInformation.expensePaymentParty)!""}"
+        $("#expensePaymentParty").val(getExpensePaymentParty(expensePaymentParty));
+        var payment = "${(ofcFinanceInformation.payment)!""}";
+        $("#payment").val(getPayment(payment));
+    });
+
+    function getPayment(payment) {
+        if (payment == "6810") {
+            return "现金支付";
+        } else if (payment == "6820") {
+            return "POS刷卡";
+        } else if (payment == "6830") {
+            return "微信";
+        } else if (payment == "6840") {
+            return "支付宝";
+        } else if (payment == "6850") {
+            return "银行支付";
+        } else if (payment == "6860") {
+            return "账户结算";
+        }
+        return "";
+    }
+
+    function getExpensePaymentParty(type) {
+        if (type == "10") {
+            return "发货方";
+        } else if (type == "20") {
+            return "收货方";
+        }
+        return "";
+    }
+
+    function getBusiType(businessType) {
+        var value = "";
+        if (businessType == '600') {
+            value = "城配"
+        } else if (businessType == "601") {
+            value = "干线";
+        } else if (businessType == "610") {
+            value = "销售出库";
+        } else if (businessType == "611") {
+            value = "调拨出库";
+        } else if (businessType == "612") {
+            value = "报损出库";
+        } else if (businessType == "613") {
+            value = "其他出库";
+        } else if (businessType == "620") {
+            value = "采购入库";
+        } else if (order.businessType == "621") {
+            value = "调拨入库";
+        } else if (businessType == "622") {
+            value = "退货入库";
+        } else if (businessType == "623") {
+            value = "加工入库";
+        }
+        return value;
+    }
+
+    function getOrderType(orderType) {
+        var value = "";
+        if (orderType == "60") {
+            value = "运输订单";
+        } else if (orderType == "61") {
+            value = "仓配订单";
+        }
+        return value;
+    }
+
+    function getTransportType(type) {
+        var value = "";
+        if (type == "10") {
+            value = "零担"
+        } else if (type == "20") {
+            value = "整车";
+        }
+        return value;
+    }
 </script>
 </body>
