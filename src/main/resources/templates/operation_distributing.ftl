@@ -1693,7 +1693,7 @@
             }
             orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
-            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
             orderInfo.custName = $("#custName").val();//后端需特别处理
             orderInfo.custCode = $("#custId").val();//后端需特别处理
             orderInfo.warehouseCode = $("#warehouseCode").val();
