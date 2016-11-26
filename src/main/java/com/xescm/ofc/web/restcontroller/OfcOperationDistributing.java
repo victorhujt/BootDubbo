@@ -16,9 +16,7 @@ import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcOrderPlaceService;
-import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -50,6 +48,8 @@ public class OfcOperationDistributing extends BaseController{
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private OfcOrderManageService ofcOrderManageService;
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
@@ -90,10 +90,11 @@ public class OfcOperationDistributing extends BaseController{
                 //orderGoodsListStr = orderGoodsListStr.replace("~`","");
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
                 QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-                queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-                Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-                String custId = (String) wrapper.getResult();
+                //queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+                //Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+                //String custId = (String) wrapper.getResult();
 
+               // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
                 List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
                 if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
                     ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
@@ -103,8 +104,9 @@ public class OfcOperationDistributing extends BaseController{
 
                 ofcOrderDTO.setOrderBatchNumber(batchNumber);
 
-                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,custId
+                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,ofcOrderDTO.getCustCode()
                         ,consignor,consignee,new CscSupplierInfoDto());
+
             }
         }catch (Exception ex){
             logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
@@ -124,17 +126,21 @@ public class OfcOperationDistributing extends BaseController{
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
-            if(pageCustOrderCode == custOrderCode){
+            if("" != custOrderCode){
+                if(pageCustOrderCode == custOrderCode){
+                    logger.error("城配下单批量下单,客户订单编号重复");
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+                }
+                pageCustOrderCode = custOrderCode;
+                OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+                ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+                int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+                if (checkCustOrderCodeResult > 0) {
+                    logger.error("城配下单批量下单,客户订单编号重复");
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+                }
+            }
 
-            }
-            pageCustOrderCode = custOrderCode;
-            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-            ofcFundamentalInformation.setCustOrderCode(custOrderCode);
-            int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
-            if (checkCustOrderCodeResult > 0) {
-                logger.error("城配下单批量下单,客户订单编号重复");
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
-            }
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }

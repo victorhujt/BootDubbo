@@ -29,7 +29,7 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
             if(followTag.equals("orderCode")){
                 orderCode = code;
             }
-            Map<String,String> mapperMap = new HashMap<>();
+            Map<String,String> mapperMap = new HashMap<String,String>();
             mapperMap.put("orderCode",orderCode);
             return ofcGoodsDetailsInfoMapper.goodsDetailsScreen(mapperMap);
         }else {

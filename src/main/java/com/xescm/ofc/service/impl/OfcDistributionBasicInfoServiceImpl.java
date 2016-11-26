@@ -45,6 +45,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
     @Override
     public String getOrderCodeByTransCode(String transCode) {
         String custCode = "001";
+       // Map<String,String> mapperMap = new HashMap<String,String>();
         Map<String,String> mapperMap = new HashMap<>();
         mapperMap.put("custCode",custCode);
         mapperMap.put("transCode",transCode);

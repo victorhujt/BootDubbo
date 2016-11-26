@@ -312,7 +312,7 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer"><button style="float: left" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <!--goods&Consigee-->
@@ -325,6 +325,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
+                            <input id="goodsIndexDivHidden" type="hidden"/>
                             <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -385,7 +386,7 @@
         Excel导入
     </button>
 
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="">
+    <button class="btn btn-white btn-info btn-bold btn-interval" id="to_operation_csc_contact_manage">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         收发货方档案
     </button>
@@ -660,8 +661,20 @@
         $("#store").editableSelect();
 
     }
+    //链接到收发货方联系人档案
+    $("#to_operation_csc_contact_manage").click(function () {
+        console.log("====++++")
+        xescm.common.loadPage("/csc/receive/toMainReceivAndDispatchFilePage");
+    })
+    //createCustBtn
+    $("#to_csc_createCustBtn").click(function () {
+        console.log("====++++==========")
+        xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+    })
     var goodsAndConsigneeMap = new HashMap();
     $(function () {
+
+
 
 
         $(".goodsLi").click(function () {
@@ -690,6 +703,9 @@
                 var custId = $("#custId").val();
                 $("#goodsTypeId option").remove();
                 $("#goodsSecTypeId option").remove();
+                $("#goodsTypeId").append("<option value = ''>全部</option>");//123//$("#warehouseCode").append("<option value = ''>无</option>");
+                $("#goodsSecTypeId").append("<option value = ''>全部</option>");
+
                 var firstGoodsType = null;
                 CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
                     data=eval(data);
@@ -704,6 +720,7 @@
                 });
                 //加载第一个一级货品的二级种类//000
                 $("#goodsSecTypeId option").remove();
+                $("#goodsSecTypeId").append("<option value = ''>全部</option>");
                 console.log('----------'+firstGoodsType)
                 if(null != firstGoodsType){
                     console.log("sdfsdf")
@@ -731,12 +748,9 @@
         });
         $("#goodsSelectFormBtn").click(function () {
             debugger
-            console.log("筛选货品有问题")
-            console.log("==="+JSON.stringify( $("#goodsSelConditionForm").serialize()))
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
-                console.log("====================="+JSON.stringify(data))
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
 
@@ -933,7 +947,7 @@
     }
 
     function goodsAndConsignee(obj){
-        $(obj).not($(obj).find('td')[0])
+        //$(obj).not($(obj).find('td')[0])
 
         console.log("---"+obj)
         if(deleteGoodsTag){
@@ -956,6 +970,7 @@
             var goodsName = $(obj).parent().parent().children().eq(3).text();
             var specification = $(obj).parent().parent().children().eq(4).text();
             var unit = $(obj).parent().parent().children().eq(5).text();
+            $("#goodsIndexDivHidden").val(goodsIndex);
             $("#goodsCodeDiv").val(goodsCode);
             $("#goodsNameDiv").val(goodsName);
             $("#specificationDiv").val(specification);
@@ -971,14 +986,17 @@
                 var consigneeName = tdArr.eq(1).text();//
                 var consigneeContactName = tdArr.eq(3).text();//
                 var consigneeType = tdArr.eq(6).text();//
-                var consigneeCode = tdArr.eq(7).text();//
+                var consigneeCode = tdArr.eq(7).text();
+                var consigneeContactCode = tdArr.eq(8).text();
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var num = "";
+                var num = "0";
 
                 if(undefined != goodsAndConsigneeMap.get(mapKey)){
                     var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
                     //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
-                    num = preGoodsAndConsigneeJsonMsg[consigneeCode];
+                    var cadj = consigneeCode + "@" + consigneeContactCode;
+                    console.log("回显cadj:"+cadj)
+                    num = preGoodsAndConsigneeJsonMsg[cadj];
                 }
 
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -992,6 +1010,7 @@
                // consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
                 consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
+                consignorout =consignorout + "<td style='display:none'>"+consigneeContactCode+"</td>";
                 consignorout =consignorout + "</tr>";
             });
             $("#goodsAndConsigneeTbody").html(consignorout);
@@ -1013,18 +1032,24 @@
             var tdArr = $(this).children();
             var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
             var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
+            var consigneeContactCode = tdArr.eq(3).text();
+            //某个收货方联系人的编码
             if(StringUtil.isEmpty(num)){
                 num = 0;
             }
-            consigneeAndGoodsJson[consigneeCode] = num;
+            var cadj = consigneeCode + "@" + consigneeContactCode;
+            console.log("写入cadj:"+cadj)
+            consigneeAndGoodsJson[cadj] = num;
             sendNum += parseInt(num);
         })
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
+            var goodsIndex = tdArr.eq(1).text();//货品索引
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsCodeDiv = $("#goodsCodeDiv").val();
-            if(goodsCode == goodsCodeDiv){
+            var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
+            if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
                 tdArr.eq(6).text(sendNum);
                 var indexIn = tdArr.eq(1).text();
                 var goodsCodeIn = tdArr.eq(2).text();
@@ -1119,7 +1144,7 @@
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
                         contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyId;
-                        contactCodeAuto = CscContantAndCompanyDto.contactCode;
+                        contactCodeAuto = CscContantAndCompanyDto.id;//000
                         phoneAuto = CscContantAndCompanyDto.phone;
                         provinceAuto = CscContantAndCompanyDto.province;
                         provinceNameAuto = CscContantAndCompanyDto.provinceName;
@@ -1226,7 +1251,7 @@
                 contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -1353,7 +1378,7 @@
                 contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -1366,6 +1391,7 @@
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
+                console.log("弹框里的contactCode"+CscContantAndCompanyDto.id);
             });
         },"json");
     });
@@ -1407,6 +1433,7 @@
             var address = tdArr.eq(18).text();
 
             contactCodeOut[contactCompanyId] = 1;
+            contactCodeOut[contactCode] = 1;
 
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -1446,6 +1473,7 @@
                 var type = tdArr.eq(6).text();
                 var contactCompanyId = tdArr.eq(7).text();
                 var contactCode = tdArr.eq(8).text();
+                console.log("页面上显示的时候拿的弹框里的contactCode"+contactCode);
                 var phone = tdArr.eq(9).text();
                 var province = tdArr.eq(10).text();
                 var provinceName = tdArr.eq(11).text();
@@ -1457,7 +1485,9 @@
                 var streetName = tdArr.eq(17).text();
                 var address = tdArr.eq(18).text();
 
-                if(undefined != contactCodeOut[contactCompanyId] && contactCodeOut[contactCompanyId] == 1){
+                if(undefined != contactCodeOut[contactCompanyId]
+                        && contactCodeOut[contactCompanyId] == 1
+                        && undefined != contactCodeOut[contactCode]&& contactCodeOut[contactCode] == 1){
                     return true;
                 }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -1651,11 +1681,11 @@
 
             orderInfo = {};
 
-            var storeMessage = $("#store").val();
-            if("" == storeMessage){
+            var warehouseCodeMessage = $("#warehouseCode").val();
+            if("" == warehouseCodeMessage){
                 orderInfo.orderType = "60";//运输
                 orderInfo.businessType = "600";//城配
-                orderInfo.provideTransport = "0";//需要运输
+                orderInfo.provideTransport = "0";//不需要运输
             }else{
                 orderInfo.orderType = "61";//仓储
                 orderInfo.businessType = "610";//销售出库

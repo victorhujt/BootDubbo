@@ -2418,6 +2418,10 @@
         });
 
         $('#merchandiser').editableSelect();
+
+        $("#createCustBtn").click(function () {
+            xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+        });
     })
 
 </script>

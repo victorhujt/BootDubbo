@@ -122,6 +122,7 @@ public class OfcOrderDTO {
     private String consignorContactPhone;
     private String consigneeContactPhone;
 
+   // private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<OfcGoodsDetailsInfo>();
     private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
 
 
