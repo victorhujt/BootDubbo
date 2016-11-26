@@ -11,14 +11,14 @@
                             </p>
                         </div>
                         <div class=" form-group">
-                            <div class="col-sm-3  no-padding-right">
+                            <div class="col-width-168  no-padding-right">
                                 <select class="chosen-select col-xs-2 col-sm-12 " id="followTag" name="followTag">
                                     <option value="orderCode">订单编号</option>
                                     <option value="custOrderCode">客户订单编号</option>
                                     <option value="transCode">运输单号</option>
                                 </select>
                             </div>
-                            <div class="col-sm-3 ">
+                            <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
                                 </div>
