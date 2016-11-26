@@ -166,7 +166,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                     if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                         //进行自动审核
-                        ofcOrderManageService.orderAutoAuditFromDistributing(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
+                        ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
                                 ofcWarehouseInformation,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
                     }
 

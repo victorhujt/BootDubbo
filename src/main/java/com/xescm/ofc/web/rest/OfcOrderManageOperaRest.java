@@ -85,7 +85,8 @@ public class OfcOrderManageOperaRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> dataList = ofcOrderManageOperService.queryOrderOper(form);
-            PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(dataList);
+            //PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(dataList);
+            PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
             logger.error("运营平台查询订单出错：{}", ex);
@@ -241,6 +242,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             }
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OfcFundamentalInformation> ofcBatchOrderVos = ofcFundamentalInformationService.queryOrderByOrderBatchNumber(orderBatchNumber);
+            //PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<OfcFundamentalInformation>(ofcBatchOrderVos);
             PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<>(ofcBatchOrderVos);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {

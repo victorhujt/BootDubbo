@@ -312,8 +312,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setLastedOperTime(new Date());
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
-                //向TFC推送
-                ofcTransplanInfoToTfc(ofcTransplanInfoList,userId);
+                if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)){
+                    //向TFC推送
+                    ofcTransplanInfoToTfc(ofcTransplanInfoList,userId);
+                }
             }
             /**
              * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
@@ -569,7 +571,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId,AuthResDto authResDtoByToken) {
-        Map<String,Object> map = new HashMap<String,Object>();
+        //Map<String,Object> map = new HashMap<String,Object>();
+        Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContact(new CscContact());
         cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
@@ -656,7 +659,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
             String[] planCodeList=planCode.split("@");
-            List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
+            //List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
+            List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
             try {
                 for(int i=0;i<planCodeList.length;i++){
                     ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
@@ -726,7 +730,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
 
     public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList,String userName) {
-        List<TransportDTO> transportDTOList = new ArrayList<TransportDTO>();
+       // List<TransportDTO> transportDTOList = new ArrayList<TransportDTO>();
+        List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
                 TransportDTO transportDTO = new TransportDTO();
@@ -873,9 +878,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
-                    }
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
@@ -893,7 +896,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 城配下单自动审核
+     * 自动审核
      * @param ofcFundamentalInformation
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
@@ -905,7 +908,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @return
      */
     @Override
-    public Wrapper<?> orderAutoAuditFromDistributing(OfcFundamentalInformation ofcFundamentalInformation,
+    public Wrapper<?> orderAutoAuditFromOperation(OfcFundamentalInformation ofcFundamentalInformation,
                                                  List<OfcGoodsDetailsInfo> goodsDetailsList,
                                                  OfcDistributionBasicInfo ofcDistributionBasicInfo,
                                                  OfcWarehouseInformation ofcWarehouseInformation,

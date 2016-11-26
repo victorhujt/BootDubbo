@@ -102,7 +102,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
                 cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
             }
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+           // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
                 //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
@@ -157,7 +158,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
                 cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
             }
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+           // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
                 //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
