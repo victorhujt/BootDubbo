@@ -78,7 +78,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
 
-                createOrderResultList = new ArrayList<>();
+                createOrderResultList = new ArrayList<CreateOrderResult>();
                 ResultModel resultModel;
                 //返回结果
                 boolean result = false;
@@ -114,7 +114,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             if (!CollectionUtils.isEmpty(createOrderResultList)) {
                 String code = "200";
                 StringBuffer reason = new StringBuffer();
-                List<MessageDto> typeIdList = new ArrayList<>();
+                List<MessageDto> typeIdList = new ArrayList<MessageDto>();
                 for (int index = 0; index < createOrderResultList.size(); index++) {
                     CreateOrderResult orderResult = createOrderResultList.get(index);
                     if (orderResult.getResult() == false) {

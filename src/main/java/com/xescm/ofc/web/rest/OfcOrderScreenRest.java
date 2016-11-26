@@ -48,7 +48,7 @@ public class OfcOrderScreenRest extends BaseController {
         int currPage = Integer.parseInt(currPagePath);
         PageHelper.startPage(currPage,pageSize);
         List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-        PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(orderScreenResults);
+        PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
         pageInfo.setPageSize(pageSize);
         map.put("orderList", pageInfo.getList());
         map.put("totalPage", pageInfo.getPages());
@@ -73,7 +73,7 @@ public class OfcOrderScreenRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-            pageInfo = new PageInfo<>(orderScreenResults);
+            pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (Exception ex){
             logger.error("分页查询订单列表出现异常:{},{}", ex.getMessage(), ex);

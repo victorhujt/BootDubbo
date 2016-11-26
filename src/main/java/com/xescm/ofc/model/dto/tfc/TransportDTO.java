@@ -130,7 +130,7 @@ public class TransportDTO {
     private String transportSource;
 
 
-    private List<TransportDetailDTO> productDetail = new ArrayList<>();
+    private List<TransportDetailDTO> productDetail = new ArrayList<TransportDetailDTO>();
 
     public String getTransportNo() {
         return transportNo;

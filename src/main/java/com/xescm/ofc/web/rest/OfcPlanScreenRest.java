@@ -40,7 +40,7 @@ public class OfcPlanScreenRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OfcPlanScreenResult> orderScreenResults = ofcPlanScreenService.planScreen(ofcPlanScreenCondition);
-            pageInfo = new PageInfo<>(orderScreenResults);
+            pageInfo = new PageInfo<OfcPlanScreenResult>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (Exception ex){
             logger.error("分页查询供应商集合出现异常:{},{}", ex.getMessage(), ex);

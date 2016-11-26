@@ -42,7 +42,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> planFedBack(OfcPlanFedBackCondition ofcPlanFedBackCondition,String userName) {
-        Map<String,String> mapperMap = new HashMap<>();
+        Map<String,String> mapperMap = new HashMap<String,String>();
         String transPortNo= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getTransportNo());
         String status= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
         Date traceTime= ofcPlanFedBackCondition.getTraceTime();
