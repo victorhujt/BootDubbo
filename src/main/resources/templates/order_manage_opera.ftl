@@ -65,11 +65,11 @@
 </div>
 <div class="row">
     <div class="col-xs-12">
-        <form class="form-horizontal">
+        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <div class="col-xs-3">
-                    <input readonly="readonly" id="custName" class="w-width-220" name="custName" type="search" placeholder=""
+                    <input id="custName" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
                     <button type="button" onclick="selectCust();" style="width:20px;height:20px;">
                         <span class="glyphicon glyphicon-search" style="color: #0f5f9f;left:-3px;top:0px;" ></span>
@@ -125,7 +125,7 @@
                     <span><button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button></span>
 
             </div>
-        </form>
+        </div>
     </div>
 </div>
 <div class="page-header">
@@ -264,19 +264,19 @@
 
         function main(){
             //初始化页面数据
-            initPageData();
+            initPageDataOrder();
             // 查询
-            queryData(1);
+            queryOrderData(1);
 
             $("#doSearch").click(function () {
-                queryData(1);
+                queryOrderData(1);
             });
         }
 
 
 
         //页面数据初始化
-        function initPageData(){
+        function initPageDataOrder(){
             var active_class = "active";
             $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
                 var th_checked = this.checked;//checkbox inside "TH" table header
@@ -298,7 +298,7 @@
     <!-- inline scripts related to this page -->
     <script type="text/javascript">
 
-        function queryData(pageNum) {
+        function queryOrderData(pageNum) {
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
@@ -311,7 +311,7 @@
             param.orderStatus = $("#orderStatus").val();
             param.orderType = $("#orderType").val();
             param.businessType = $("#businessType").val();
-            CommonClient.post(sys.rootPath + "/ofc/queryOrderOper", param, function(result) {
+            CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function(result) {
 
                 if (result == undefined || result == null) {
                     alert("HTTP请求无数据返回！");
