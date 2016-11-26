@@ -41,7 +41,7 @@ import com.xescm.ofc.utils.MQUtil;
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
 
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     public final static String MQ_PREFIX="mq";
 
@@ -129,9 +129,7 @@ public class MqConfig {
         TfcTransPlanTag = tfcTransPlanTag;
     }
 
-    public String getTFCTopic() {
-        return TFCTopic;
-    }
+
 
     public void setTFCTopic(String TFCTopic) {
         this.TFCTopic = TFCTopic;
@@ -209,13 +207,7 @@ public class MqConfig {
         this.secretKey = secretKey;
     }
 
-    public String getTopic() {
-        return topic;
-    }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
 
     public String getTranTag() {
         return tranTag;
