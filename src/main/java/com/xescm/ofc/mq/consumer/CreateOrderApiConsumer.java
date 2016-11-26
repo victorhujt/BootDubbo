@@ -40,7 +40,8 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Autowired
     private MqConfig mqConfig;
 
-    private List<String> keyList = new ArrayList<String>();
+   // private List<String> keyList = new ArrayList<String>();
+    private List<String> keyList = new ArrayList<>();
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
