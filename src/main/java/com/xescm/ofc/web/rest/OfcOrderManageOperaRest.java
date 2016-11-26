@@ -85,7 +85,7 @@ public class OfcOrderManageOperaRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> dataList = ofcOrderManageOperService.queryOrderOper(form);
-            PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(dataList);
+            PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
             logger.error("运营平台查询订单出错：{}", ex);
