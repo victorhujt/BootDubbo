@@ -1,30 +1,32 @@
 package com.xescm.ofc.mq.producer;
 
-import com.aliyun.openservices.ons.api.*;
-import com.aliyun.openservices.ons.api.transaction.LocalTransactionExecuter;
-import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
-import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
-import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.utils.MQUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Properties;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.aliyun.openservices.ons.api.Message;
+import com.aliyun.openservices.ons.api.ONSFactory;
+import com.aliyun.openservices.ons.api.Producer;
+import com.aliyun.openservices.ons.api.PropertyKeyConst;
+import com.aliyun.openservices.ons.api.SendResult;
+import com.xescm.ofc.config.MqConfig;
+import com.xescm.ofc.utils.MQUtil;
 
 /**
  * Created by MT on 2016/11/11.
  */
 @Component
 public class DefaultMqProducer {
-    private Logger logger = LoggerFactory.getLogger(DefaultMqProducer.class);
+	 private static final Logger logger = LoggerFactory.getLogger(DefaultMqProducer.class);
+
 
     /**
-     * MQ发送定时消息示例 Demo
+     * MQ发送定时消息示例Demo
      */
     @Resource
     MqConfig mqConfig;
@@ -49,13 +51,27 @@ public class DefaultMqProducer {
      * @param tag
      */
     public void toSendWhc(String jsonStr,String code,String tag) {
-        System.out.println("Producer Started");
-        Message message = new Message(mqConfig.getWHOTopic(), tag,jsonStr.getBytes());
+    	logger.info("WhcProducer Started");
+        Message message = new Message(mqConfig.getWhpOrderTopic(),tag,jsonStr.getBytes());
         message.setKey(code);
-        SendResult sendResult = producer.send(message);
+        SendResult sendResult = producer().send(message);
         if (sendResult != null) {
-            logger.info("{}消费成功,消费时间为{},MsgID为{}",mqConfig.getWHOTopic(),new Date(),sendResult.getMessageId());
+            logger.info("{}消费成功,消费时间为{},MsgID为{}",mqConfig.getWhpOrderTopic(),new Date(),sendResult.getMessageId());
+
         }
     }
 
+    //@Bean(initMethod = "start", destroyMethod = "shutdown")
+    public Producer producer(){
+        Properties producerProperties = new Properties();
+        producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
+        producerProperties.setProperty(PropertyKeyConst.AccessKey, mqConfig.getAccessKey());
+        producerProperties.setProperty(PropertyKeyConst.SecretKey, mqConfig.getSecretKey());
+        producerProperties.setProperty(PropertyKeyConst.ONSAddr, mqConfig.getOnsAddr());
+
+        MQUtil.propertiesUtil(producerProperties);
+        Producer producer = ONSFactory.createProducer(producerProperties);
+        producer.start();
+        return producer;
+    }
 }
