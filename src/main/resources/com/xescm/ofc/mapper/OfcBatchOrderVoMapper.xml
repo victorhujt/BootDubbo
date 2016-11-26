@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcBatchOrderVoMapper" >
+  <resultMap id="OfcBatchOrderMap" type="com.xescm.ofc.domain.OfcBatchOrderVo" >
+    <result column="orderCode" property="order_code" jdbcType="VARCHAR" />
+    <result column="batch_order_number" property="batchOrderNumber" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="warehouse_name" property="warehouseName" jdbcType="DECIMAL" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
+    <result column="departure" property="departure" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="queryByBatchNumber" resultType="com.xescm.ofc.domain.OfcBatchOrderVo">
+        SELECT
+            ofi.order_code,
+            ofi.order_batch_number,
+            ofi.cust_name,
+            ofi.order_time,
+            owi.warehouse_name,
+            ofi.notes,
+            dbi.consignor_name,
+            dbi.consignor_contact_name,
+            dbi.consignor_contact_phone,
+            oos.order_status,
+            CONCAT(
+                IFNULL(dbi.departure_province, ""),
+                IFNULL(dbi.departure_city, ""),
+                IFNULL(dbi.departure_district, ""),
+                IFNULL(dbi.departure_towns, ""),
+                IFNULL(dbi.departure_place, "")
+            ) AS departure
+        FROM
+            ofc_fundamental_information ofi,
+            ofc_distribution_basic_info dbi,
+            ofc_warehouse_information owi,
+            ofc_order_status oos
+        WHERE
+            ofi.order_code = dbi.order_code
+        AND ofi.order_code = owi.order_code
+        AND ofi.order_code = oos.order_code
+        AND ofi.order_batch_number = #{orderBatchNumber}
+        LIMIT 1
+    </select>
+
+
+</mapper>

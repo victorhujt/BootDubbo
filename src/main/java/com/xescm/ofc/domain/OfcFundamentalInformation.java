@@ -720,6 +720,27 @@ public class OfcFundamentalInformation {
     @Transient
     private String orderStatus;
 
+    @Transient
+    private String warehouseName;
+    @Transient
+    private String consigneeName;
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public String getConsigneeName() {
+        return consigneeName;
+    }
+
+    public void setConsigneeName(String consigneeName) {
+        this.consigneeName = consigneeName;
+    }
+
     public String getDestinationTowns() {
         return destinationTowns;
     }
