@@ -79,7 +79,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/queryOrderOper", method = {RequestMethod.POST})
+    @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
         try {
@@ -271,9 +271,9 @@ public class OfcOrderManageOperaRest extends BaseController {
         return new ModelAndView("select_cust_page");
     }
 
-    @RequestMapping(value = "querySelectCustData",method = RequestMethod.POST)
+    @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
     @ResponseBody
-    public Object querySelectCustData(String custName){
+    public Object querySelectCustData(String custName) {
         try {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
         } catch (Exception ex) {
