@@ -28,4 +28,11 @@ public interface OfcOrderManageService {
     Wrapper<?> orderAutoAuditFromDistributing(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList,
                                           OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation,
                                           OfcFinanceInformation ofcFinanceInformation,String orderStatus, String reviewTag, AuthResDto authResDtoByToken);
+	Wrapper<?> orderAutoAuditFromOperation(
+			OfcFundamentalInformation ofcFundamentalInformation,
+			List<OfcGoodsDetailsInfo> goodsDetailsList,
+			OfcDistributionBasicInfo ofcDistributionBasicInfo,
+			OfcWarehouseInformation ofcWarehouseInformation,
+			OfcFinanceInformation ofcFinanceInformation, String orderStatus,
+			String reviewTag, AuthResDto authResDtoByToken);
 }

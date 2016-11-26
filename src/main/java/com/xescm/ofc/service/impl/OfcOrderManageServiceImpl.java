@@ -148,8 +148,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcOrderScreenService ofcOrderScreenService;
     @Resource
     private CodeGenUtils codeGenUtils;
-    @Autowired
-    private DefaultMqProducer defaultMqProducer;
 
     @Autowired
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
@@ -157,6 +155,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
+    @Autowired
+    private DefaultMqProducer defaultMqProducer;
 
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
@@ -1200,6 +1200,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     	logger.info("send to whc json is :" +jsonStr);
     	defaultMqProducer.toSendWhc(jsonStr, info.getPlanCode(), tag);
     }
+
+	@Override
+	public Wrapper<?> orderAutoAuditFromDistributing(
+			OfcFundamentalInformation ofcFundamentalInformation,
+			List<OfcGoodsDetailsInfo> goodsDetailsList,
+			OfcDistributionBasicInfo ofcDistributionBasicInfo,
+			OfcWarehouseInformation ofcWarehouseInformation,
+			OfcFinanceInformation ofcFinanceInformation, String orderStatus,
+			String reviewTag, AuthResDto authResDtoByToken) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     
     
