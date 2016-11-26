@@ -16,41 +16,38 @@
 package com.xescm.ofc.config;
 
 
-import com.aliyun.openservices.ons.api.Consumer;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.Producer;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
 import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
 import com.xescm.ofc.utils.MQUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.Resource;
-import java.util.Properties;
 /**
  * <p>Title:    MqConfig. </p>
  * <p>Description TODO </p>
  * <p>Company:    MT</p>
  *
- * @Author         <a />向铭涛</a>
+ * @Author         <a>向铭涛</a>
  * @CreateDate     2016/11/11 15:40
  */
 @Configuration
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
 
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public final static String MQ_PREFIX="mq";
 
     private String accessKey;  //阿里云公钥
     private String secretKey;  //阿里云密钥
-    private String topic;
+    private String consumerTopicNames;
+
     private String TFCTopic;
     private String OFCTopic;
     private String tfcCancelTopic;
@@ -65,11 +62,24 @@ public class MqConfig {
     private String TfcTransPlanTag;
     private String WhoProducerId;//仓储订单生产者
     private String WhpOrderTopic;//仓储计划单
-    
-    
+
     public String getWhoProducerId() {
 		return WhoProducerId;
-	}
+    }
+
+    public void setTFCTopic(String TFCTopic) {
+        this.TFCTopic = TFCTopic;
+    }
+
+    public String getConsumerTopicNames() {
+        return consumerTopicNames;
+    }
+
+    public void setConsumerTopicNames(String consumerTopicNames) {
+        this.consumerTopicNames = consumerTopicNames;
+    }
+
+   
 
 	public void setWhoProducerId(String whoProducerId) {
 		WhoProducerId = whoProducerId;
@@ -106,22 +116,15 @@ public class MqConfig {
     @Resource
     CreateOrderApiConsumer createOrderApiConsumer;
 
-//    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Consumer consumer(){
-        System.out.println("yyyyyyyyy消费开始---:");
-        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(topic, null, schedulingSingleFedback);
-        return consumer;
-    }
+
 
 //    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Consumer consumerCreateOrderApi(){
-        logger.debug("createOrderApi消费开始---");
-        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(TFCTopic, null, createOrderApiConsumer);
-        initProducer();
-        return consumer;
-    }
+//    public Consumer consumerCreateOrderApi(){
+//        logger.debug("createOrderApi消费开�--");
+//        Consumer consumer = ONSFactory.createCOrderApiConsumer);
+//        initProducer();
+//        return consumer;
+//    }
 
 
     private Properties consumerProperties(){
@@ -164,13 +167,7 @@ public class MqConfig {
         TfcTransPlanTag = tfcTransPlanTag;
     }
 
-    public String getTFCTopic() {
-        return TFCTopic;
-    }
 
-    public void setTFCTopic(String TFCTopic) {
-        this.TFCTopic = TFCTopic;
-    }
 
     public String getOFCTopic() {
         return OFCTopic;
@@ -242,14 +239,6 @@ public class MqConfig {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
     }
 
     public String getTranTag() {
