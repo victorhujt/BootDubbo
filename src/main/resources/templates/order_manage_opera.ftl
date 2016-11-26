@@ -121,6 +121,10 @@
                         <option value=""></option>
                         <option value="600">城配</option>
                         <option value="601">干线</option>
+                        <option value="602">卡班</option>
+                    </select>
+                    <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">查询</button></span>
+                </div>
                     </select></div>
                     <span><button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button></span>
 
