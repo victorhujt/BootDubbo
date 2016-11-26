@@ -55,7 +55,7 @@
                     <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
                     <div class="col-xs-2">
                         <div class="clearfix">
-                            <input id="order_cust_code" readonly="readonly" style="color: #000" name="orderTime"
+                            <input id="orderBatchNumber" readonly="readonly" style="color: #000" name="orderTime"
                                    type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -341,7 +341,7 @@
         var orderCode = orderDTO.orderCode;
         $("#orderCode").val(orderDTO.orderCode);
         $("#custOrderCode").val(orderDTO.custOrderCode);
-        $("#orderBatchCode").val(orderDTO.orderBatchCode);
+        $("#orderBatchNumber").val(orderDTO.orderBatchNumber);
         var orderStatus = getOrderStatus(orderDTO.orderStatus);
         $("#orderTime").val(orderDTO.orderTime)
         $("#custName").val(orderDTO.custName)
