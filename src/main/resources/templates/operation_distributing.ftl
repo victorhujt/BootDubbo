@@ -1693,7 +1693,7 @@
             }
             orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
-            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
             orderInfo.custName = $("#custName").val();//后端需特别处理
             orderInfo.custCode = $("#custId").val();//后端需特别处理
             orderInfo.warehouseCode = $("#warehouseCode").val();
@@ -1774,7 +1774,8 @@
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
                 var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                var goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                var param =contactCompanyId + "@" + contactCode;
+                var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
                 goodsList[index] = goods;
             })
@@ -1814,6 +1815,7 @@
             var consigneeContactName = tdArr.eq(3).text();//联系人
             var consigneeType = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
+            var contactCode = tdArr.eq(8).text();
             debugger
             //遍历货品信息
             var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
@@ -1841,7 +1843,8 @@
                 }
                 var goodsAmount = 0;
                 if(null != consigneeAndGoodsMsgJson){
-                    goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                    var param = contactCompanyId +"@"+ contactCode;
+                    goodsAmount = consigneeAndGoodsMsgJson[param];
                 }
 
                 if(goodsAmount != 0){
