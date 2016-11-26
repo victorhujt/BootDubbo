@@ -32,9 +32,6 @@ public class MqInitializer {
 
 
     @Resource
-    private SchedulingSingleFedbackImpl schedulingSingleFedback;
-
-    @Resource
     private CreateOrderApiConsumer createOrderApiConsumer;
 
 
