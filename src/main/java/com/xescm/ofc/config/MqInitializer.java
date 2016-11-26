@@ -5,7 +5,6 @@ import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.Producer;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.xescm.ofc.mq.consumer.CreateOrderApiConsumer;
-import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
 import com.xescm.ofc.utils.MQUtil;
 import com.xescm.ofc.utils.PubUtils;
 import org.slf4j.Logger;
@@ -44,7 +43,8 @@ public class MqInitializer {
         }
         String [] strArray = mqConfig.getConsumerTopicNames().split(",");
         for(int i = 0;i<strArray.length;i++){
-            consumer.subscribe(strArray[i], null,createOrderApiConsumer);
+            String[] topicArray = strArray[i].split("|");
+            consumer.subscribe(topicArray[0], topicArray[1],createOrderApiConsumer);
         }
         return consumer;
     }
