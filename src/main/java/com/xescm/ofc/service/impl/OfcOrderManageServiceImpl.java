@@ -893,7 +893,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 城配下单自动审核
+     * 自动审核
      * @param ofcFundamentalInformation
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
@@ -905,7 +905,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @return
      */
     @Override
-    public Wrapper<?> orderAutoAuditFromDistributing(OfcFundamentalInformation ofcFundamentalInformation,
+    public Wrapper<?> orderAutoAuditFromOperation(OfcFundamentalInformation ofcFundamentalInformation,
                                                  List<OfcGoodsDetailsInfo> goodsDetailsList,
                                                  OfcDistributionBasicInfo ofcDistributionBasicInfo,
                                                  OfcWarehouseInformation ofcWarehouseInformation,
