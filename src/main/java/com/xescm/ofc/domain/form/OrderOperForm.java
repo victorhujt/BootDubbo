@@ -17,6 +17,16 @@ public class OrderOperForm extends BaseForm {
 
     private String businessType;
 
+    private String orderBatchNumber;
+
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
+
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
+    }
+
     public String getCustName() {
         return custName;
     }

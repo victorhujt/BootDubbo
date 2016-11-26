@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFinanceInformation;
 
 /**
@@ -8,4 +9,6 @@ import com.xescm.ofc.domain.OfcFinanceInformation;
 public interface OfcFinanceInformationService extends IService<OfcFinanceInformation>{
 
     OfcFinanceInformation queryByOrderCode(String orderCode);
+
+
 }
