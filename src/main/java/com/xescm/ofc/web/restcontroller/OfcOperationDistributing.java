@@ -110,6 +110,8 @@ public class OfcOperationDistributing extends BaseController{
             }
         }catch (Exception ex){
             logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
+            System.out.println(ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
@@ -121,13 +123,15 @@ public class OfcOperationDistributing extends BaseController{
      * @throws Exception
      */
     private Wrapper<?> validateCustOrderCode(JSONArray jsonArray) throws Exception {
-        String pageCustOrderCode = null;
+        String pageCustOrderCode = "";
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
             if("" != custOrderCode){
-                if(pageCustOrderCode == custOrderCode){
+                System.out.println("pageCustOrderCode"+pageCustOrderCode);
+                System.out.println("custOrderCode"+custOrderCode);
+                if(pageCustOrderCode.equals(custOrderCode)){
                     logger.error("城配下单批量下单,客户订单编号重复");
                     return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请重试！");
                 }
