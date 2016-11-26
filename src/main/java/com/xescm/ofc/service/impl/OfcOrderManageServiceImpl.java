@@ -861,7 +861,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
                 System.out.println("订单中心向运输中心开始推送运输订单");
-                defaultMqProducer.toSendMQ(json,ofcTransplanInfo.getPlanCode());
+                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 System.out.println("订单中心向运输中心推送运输订单成功");
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
