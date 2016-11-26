@@ -69,20 +69,20 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <div class="col-xs-3">
-                    <input id="custName" name="custName" type="search" placeholder=""
+                    <input id="custName" class="w-width-220" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
-                    <button type="button" onclick="selectCust();">
-                        <span class="glyphicon glyphicon-search" style="color: #0f5f9f" ></span>
+                    <button type="button" onclick="selectCust();" style="width:20px;height:20px;">
+                        <span class="glyphicon glyphicon-search" style="color: #0f5f9f;left:-3px;top:0px;" ></span>
                     </button>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单编号</label>
                 <div class="col-xs-2">
-                    <input id="orderCode" name="" type="search" placeholder="" aria-controls="dynamic-table">
+                    <input id="orderCode" class="col-width-168" name="" type="search" placeholder="" aria-controls="dynamic-table">
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单状态</label>
-                <div class="col-xs-3">
-                    <select data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus">
-                        <option value="">----</option>
+                <div class="col-width-168">
+                    <select data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus" class=" chosen-select">
+                        <option value=""></option>
                         <option value="10">待审核</option>
                         <option value="20">已审核</option>
                         <option value="30">执行中</option>
@@ -94,34 +94,40 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                 <div class="col-xs-3">
-                    <input readonly="readonly" style="width: 110px;" id="startDate" name="startDate" type="search"
+                    <input readonly="readonly" style="width: 101px;" id="startDate" name="startDate" type="search"
                            placeholder=""
                            aria-controls="dynamic-table"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                    -
-                    <input readonly="readonly" style="width: 110px;" id="endDate" name="endDate" type="search"
+                    至
+                    <input readonly="readonly" style="width: 101px;" id="endDate" name="endDate" type="search"
                            placeholder=""
                            aria-controls="dynamic-table"
                            onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                 <div class="col-xs-2">
-                    <select data-placeholder="请选择订单类型" id="orderType" name="orderType">
-                        <option value="">----</option>
+                    <div class="col-width-168">
+                    <select data-placeholder="请选择订单类型" id="orderType" class="chosen-select" name="orderType">
+                        <option value=""></option>
                         <option value="60">运输订单</option>
                         <option value="61">仓配订单</option>
                     </select>
+                    </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
-                <div class="col-xs-3">
-                    <select data-placeholder="请选择业务类型" id="businessType" name="businessType">
-                        <option value="">----</option>
+
+                    <div class="col-width-168">
+                    <select data-placeholder="请选择业务类型" id="businessType" class="chosen-select" name="businessType">
+                        <option value=""></option>
                         <option value="600">城配</option>
                         <option value="601">干线</option>
                         <option value="602">卡班</option>
                     </select>
                     <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">查询</button></span>
                 </div>
+                    </select></div>
+                    <span><button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button></span>
+
             </div>
         </div>
     </div>
@@ -324,7 +330,7 @@
                         curr: result.result.pageNum, // 当前页
                         jump: function(obj, first){ // 触发分页后的回调
                             if(!first){ // 点击跳页触发函数自身，并传递当前页：obj.curr
-                                queryOrderData(obj.curr);
+                                queryData(obj.curr);
                             }
                         }
                     });
@@ -540,34 +546,6 @@
             $("#custName").val(val);
             $("#custListDiv").hide();
         })
-
-    </script>
-    <script type="text/javascript">
-
-        function appendSelect(type) {
-            if (type == "60") {
-                return "<option value=''>----</option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
-            } else if (type == "61") {
-                var html = "";
-                html += "<option value='----------'>----------</option>";
-                html += "<option value='610'>销售出库</option>";
-                html += "<option value='611'>调拨出库</option>";
-                html += "<option value='612'>报损出库</option>";
-                html += "<option value='613'>其他出库</option>";
-                html += "<option value='620'>采购入库</option>";
-                html += "<option value='621'>调拨入库</option>";
-                html += "<option value='622'>退货入库</option>";
-                html += "<option value='623'>加工入库</option>";
-                return html;
-            }
-            return null;
-        }
-        $("#orderType").on("change", function () {
-            var type = $(this).val();
-            if (type == "60" || type == "61") {
-                $("#businessType").empty().append(appendSelect(type));
-            }
-        });
 
     </script>
 
