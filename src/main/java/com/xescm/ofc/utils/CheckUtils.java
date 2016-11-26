@@ -64,7 +64,7 @@ public class CheckUtils {
      * @return
      */
     public static ResultModel checkBusinessType(String orderType, String businessType) {
-        Set<String> checkSet = new HashSet<>();
+        Set<String> checkSet = new HashSet<String>();
         if ("60".equals(orderType)) {
             String[] checkArray = {"600", "601", "602"};
             if (ArrayUtils.contains(checkArray, businessType)) {

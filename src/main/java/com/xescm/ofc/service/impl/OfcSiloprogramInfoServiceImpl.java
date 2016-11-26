@@ -25,7 +25,7 @@ public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInf
     public List<OfcSiloprogramInfo> ofcSiloprogramInfoScreenList(String orderCode) {
         if(!PubUtils.trimAndNullAsEmpty(orderCode).equals("")){
             //List<OfcTransplanInfo> ofcTransplanInfoList=new ArrayList<OfcTransplanInfo>();
-            Map<String,String> mapperMap = new HashMap<>();
+            Map<String,String> mapperMap = new HashMap<String,String>();
             mapperMap.put("orderCode",orderCode);
             /*OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);*/

@@ -78,7 +78,7 @@ public class CreateOrderTrans {
         if (createOrderEntity != null) {
             List<CreateOrderGoodsInfo> list = createOrderEntity.getCreateOrderGoodsInfos();
             if (null != list && !list.isEmpty()) {
-                this.ofcGoodsDetailsInfoList = new ArrayList<>();
+                this.ofcGoodsDetailsInfoList = new ArrayList<OfcGoodsDetailsInfo>();
                 for (CreateOrderGoodsInfo goodsInfo : list) {
                     OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
                     ofcGoodsDetailsInfo.setOrderCode(this.orderCode);
