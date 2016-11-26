@@ -31,6 +31,37 @@ public class OfcBatchOrderVo {
 
     private String orderStatus;
 
+    private String consigneeName;
+
+    private String consigneeContactName;
+
+    private String consigneeContactPhone;
+
+
+    public String getConsigneeName() {
+        return consigneeName;
+    }
+
+    public void setConsigneeName(String consigneeName) {
+        this.consigneeName = consigneeName;
+    }
+
+    public String getConsigneeContactName() {
+        return consigneeContactName;
+    }
+
+    public void setConsigneeContactName(String consigneeContactName) {
+        this.consigneeContactName = consigneeContactName;
+    }
+
+    public String getConsigneeContactPhone() {
+        return consigneeContactPhone;
+    }
+
+    public void setConsigneeContactPhone(String consigneeContactPhone) {
+        this.consigneeContactPhone = consigneeContactPhone;
+    }
+
     public String getOrderStatus() {
         return orderStatus;
     }

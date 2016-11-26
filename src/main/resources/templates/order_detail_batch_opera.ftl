@@ -322,8 +322,9 @@
                     +"<td class=\"hidden-480\">"+getOrderType(order)+"</td>"
                     +"<td class=\"hidden-480\">"+getBusiType(order)+"</td>"
                     +"<td class=\"hidden-480\">"+getOrderStatus(order.orderStatus)+"</td>"
-                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.consignorName)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.consigneeName)+"</td>"
                     +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.warehouseName)+"</td>"
+                    +"<td class=\"hidden-480\">"+StringUtil.nullToEmpty(order.notes)+"</td>"
                     + "</tr>";
         })
         $("#dataTbody").html(htmlText);
@@ -460,6 +461,12 @@
         $("#goodsTbody").empty().append(html);
     }
 
+</script>
+
+<script>
+    $(function () {
+        $("input[type='search']").attr("readonly","readonly")
+    })
 </script>
 
 </body>

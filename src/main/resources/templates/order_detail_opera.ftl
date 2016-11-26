@@ -631,4 +631,9 @@
             xescm.common.loadPage("/ofc/orderManageOpera");
     }
 </script>
+<script>
+    $(function () {
+        $("input[type='search']").attr("readonly","readonly")
+    })
+</script>
 </body>
