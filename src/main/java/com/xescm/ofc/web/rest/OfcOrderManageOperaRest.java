@@ -179,7 +179,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
-
+            ofcOrderStatus = ofcOrderStatusService.queryOrderByOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
             List<PlanAndStorage> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
@@ -192,6 +192,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("ofcOrderStatusList", ofcOrderStatusList);
 
             modelAndView.addObject("storageList", storageList);
+            modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
 //            modelAndView.addObject("planList", planList);
 
             return modelAndView;

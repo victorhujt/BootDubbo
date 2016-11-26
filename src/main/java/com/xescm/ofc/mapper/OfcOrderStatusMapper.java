@@ -30,4 +30,6 @@ public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
      * @return
      */
     List<OfcOrderStatus> queryOrderStatus(@Param("code") String code, @Param("searchType") String searchType);
+
+    OfcOrderStatus queryOrderByOrderCode(@Param(value = "orderCode") String orderCode);
 }

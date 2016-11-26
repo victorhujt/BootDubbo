@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class CreateOrderApiConsumer implements MessageListener {
 
-    private Logger logger = LoggerFactory.getLogger(SchedulingSingleFedbackImpl.class);
+    private Logger logger = LoggerFactory.getLogger(CreateOrderApiConsumer.class);
 
     @Autowired
     private CreateOrderService createOrderService;
