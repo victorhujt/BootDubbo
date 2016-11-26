@@ -69,7 +69,7 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <div class="col-xs-3">
-                    <input id="custName" name="custName" type="search" placeholder=""
+                    <input id="custName" class="w-width-220" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
                     <button type="button" onclick="selectCust();" style="width:20px;height:20px;">
                         <span class="glyphicon glyphicon-search" style="color: #0f5f9f;left:-3px;top:0px;" ></span>
