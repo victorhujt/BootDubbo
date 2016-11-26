@@ -672,12 +672,13 @@
         xescm.common.loadPage("/csc/customer/toAddCustomerPage");
     })
     var goodsAndConsigneeMap = new HashMap();
+    var couldChangeCust = true;
     $(function () {
 
 
 
-
         $(".goodsLi").click(function () {
+
             /*var consigneeChosen = "";
             $("#consigneeInfoListDiv").find("tr").each(function () {
                 consigneeChosen = "param";
@@ -814,6 +815,7 @@
             }
         });
         $("#goodsEnter").click(function () {
+            couldChangeCust = false;
             var goodsInfoListDiv = "";
             var preIndex = "0";
             var goodsCodeOut = {};
@@ -1269,7 +1271,7 @@
     });
 
     $("#contactinEnter").click(function () {
-
+        couldChangeCust = false;
         var consignorin = "";
         $("#contactSelectListTbody2").find("tr").each(function(index){
             var tdArr = $(this).children();
@@ -1407,6 +1409,7 @@
         }
     });
     $("#contactoutEnter").click(function () {
+        couldChangeCust = false;
         var consignorout = "";
 
         var contactCodeOut = {};
@@ -1522,7 +1525,11 @@
         }
     });//custListDiv
     $("#custListDivBlock").click(function () {
-        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        if(couldChangeCust){
+            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        }else{
+            alert("您不能再选择客户!")
+        }
     });
     $("#custListDivNoneBottom").click(function () {
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
@@ -1614,6 +1621,9 @@
     });
 
     $("#custEnter").click(function () {
+
+
+
         var custEnterTag = "";
         $("#custListDivTbody").find("tr").each(function(index){
             var tdArr = $(this).children();
@@ -1642,15 +1652,14 @@
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
         //<option value="">无</option>
-       /* $("#warehouseCode").append("<option value="">无</option>");*/
-       $("#warehouseCode").append("<option value = ''>无</option>");
+        /* $("#warehouseCode").append("<option value="">无</option>");*/
+        $("#warehouseCode").append("<option value = ''>无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {
                 $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
             });
         })
-
 
 
     });
@@ -1693,7 +1702,10 @@
             }
             orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
-            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
+            if("" != $("#expectedArrivedTime").val()){
+                orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
+            }
+
             orderInfo.custName = $("#custName").val();//后端需特别处理
             orderInfo.custCode = $("#custId").val();//后端需特别处理
             orderInfo.warehouseCode = $("#warehouseCode").val();

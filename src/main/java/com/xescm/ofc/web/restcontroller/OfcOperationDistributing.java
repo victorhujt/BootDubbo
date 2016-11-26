@@ -131,7 +131,7 @@ public class OfcOperationDistributing extends BaseController{
             if("" != custOrderCode){
                 System.out.println("pageCustOrderCode"+pageCustOrderCode);
                 System.out.println("custOrderCode"+custOrderCode);
-                if(pageCustOrderCode.equals(custOrderCode)){
+                if(!PubUtils.isSEmptyOrNull(custOrderCode) && pageCustOrderCode.equals(custOrderCode)){
                     logger.error("城配下单批量下单,客户订单编号重复");
                     return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请重试！");
                 }

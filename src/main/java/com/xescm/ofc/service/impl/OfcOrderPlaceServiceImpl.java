@@ -83,9 +83,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
+                int custOrderCode = 0;
+                if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
+                    custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+                }
 
-                String orderCodeByCustOrderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
-                if (PubUtils.isSEmptyOrNull(orderCodeByCustOrderCode)){//根据客户订单编号查询唯一性
+                if (custOrderCode < 1){//根据客户订单编号查询唯一性
                     ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
                     //"SO"+ PrimaryGenerater.getInstance()
                     //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
@@ -173,7 +176,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }
 
                 }else{
-                    throw new BusinessException("该客户订单编号已经存在!您不能重复下单!请查看订单编号为:" + orderCodeByCustOrderCode+ "的订单");
+                    throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
 
