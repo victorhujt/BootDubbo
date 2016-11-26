@@ -35,7 +35,7 @@ public class MqInitializer {
     private CreateOrderApiConsumer createOrderApiConsumer;
 
 
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
+//    @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
         logger.debug("createOrderApi消费开始---");
         Consumer consumer = ONSFactory.createConsumer(getConsumerProperties());

@@ -125,8 +125,8 @@
                     </select>
                     <span>&nbsp;<button class="btn btn-primary btn-xs" id="doSearch">查询</button></span>
                 </div>
-                    </select></div>
-                    <span><button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button></span>
+                    <#--</select></div>-->
+                    <#--<span><button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button></span>-->
 
             </div>
         </div>
@@ -330,7 +330,7 @@
                         curr: result.result.pageNum, // 当前页
                         jump: function(obj, first){ // 触发分页后的回调
                             if(!first){ // 点击跳页触发函数自身，并传递当前页：obj.curr
-                                queryData(obj.curr);
+                                queryOrderData(obj.curr);
                             }
                         }
                     });
