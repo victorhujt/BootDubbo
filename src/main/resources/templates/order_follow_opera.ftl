@@ -10,24 +10,29 @@
             查询条件
         </p>
     </div>
-    <div class=" form-group">
-        <div class="col-sm-3 ">
+    <div class="row">
+
+    <div class="form-group">
+        <label class="control-label col-label no-padding-right" for="name"></label>
+        <div class="w-width-220 col-float">
             <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
                 <option value="orderCode">订单编号</option>
                 <option value="custOrderCode">客户订单编号</option>
                 <option value="transCode">运输单号</option>
             </select>
         </div>
-        <div class="col-sm-3 ">
+        <label class="control-label col-label no-padding-right" for="name"></label>
+        <div class="w-width-220 col-float ">
             <div class="clearfix">
                 <input id="code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder=""
                        aria-controls="dynamic-table">
             </div>
         </div>
-    </div>
-    <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
+        <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
         查询
     </button>
+    </div>
+    </div>
     <div class="page-header">
         <p>
             订单跟踪记录
@@ -38,14 +43,14 @@
             <form id="" method="post" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">订单编号</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="orderCode" readonly="readonly" style="color: #000" name="orderTime" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="custOrderCode" readonly="readonly" style="color: #000" name="orderTime"
                                    type="text"
@@ -53,9 +58,9 @@
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
-                    <div class="col-xs-2">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="order_cust_code" readonly="readonly" style="color: #000" name="orderTime"
+                            <input id="orderBatchNumber" readonly="readonly" style="color: #000" name="orderTime"
                                    type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -63,21 +68,21 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="orderTime" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">客户名称</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="custName" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">订单状态</label>
-                    <div class="col-xs-2">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="orderStatus" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -86,21 +91,21 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">订单类型</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="orderType" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">业务类型</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="businessType" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">运输类型</label>
-                    <div class="col-xs-2">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="transportType" readonly="readonly" style="color: #000" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -109,21 +114,21 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">出发地</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input class="form-control input-sm" id="departurePlace" readonly="readonly"
                                    style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">目的地</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input class="form-control input-xl" id="destination" readonly="readonly"
                                    style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">运输单号</label>
-                    <div class="col-xs-2">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="transCode" readonly="readonly" style="color: #000" type="text">
                         </div>
@@ -132,19 +137,19 @@
 
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">车牌号</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="plateNumber" readonly="readonly" style="color: #000" type="text">
+                            <input id="plateNumber" readonly="readonly" style="color: #000;" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
-                    <div class="col-xs-3">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="driverName" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
-                    <div class="col-xs-2">
+                    <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input id="contactNumber" readonly="readonly" style="color: #000" type="text">
                         </div>
@@ -154,7 +159,7 @@
                     <label class="control-label col-label no-padding-right" for="name">收货地址</label>
                     <div class="col-xs-6">
                         <div class="clearfix">
-                            <input id="destinationPlace" readonly="readonly" style="color: #000" type="text" class="form-control input-sm">
+                            <input id="destinationPlace" readonly="readonly" style="color: #000;width:516px;" type="text" class="form-control input-sm">
                         </div>
                     </div>
                 </div>
@@ -341,7 +346,7 @@
         var orderCode = orderDTO.orderCode;
         $("#orderCode").val(orderDTO.orderCode);
         $("#custOrderCode").val(orderDTO.custOrderCode);
-        $("#orderBatchCode").val(orderDTO.orderBatchCode);
+        $("#orderBatchNumber").val(orderDTO.orderBatchNumber);
         var orderStatus = getOrderStatus(orderDTO.orderStatus);
         $("#orderTime").val(orderDTO.orderTime)
         $("#custName").val(orderDTO.custName)

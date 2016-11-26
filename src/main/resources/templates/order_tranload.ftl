@@ -319,9 +319,9 @@
 
             <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
                 <div class="form-group" id="transBusinessTypeDiv">
-                    <div><label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                    <div><label class="control-label col-label no-padding-right" for="name" style="margin-right:8px;">业务类型</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
+                            <div class="clearfix col-width-168">
                                 <select  id="businessType" name="businessType" class="chosen-select form-control ">
                                     <option value="600">城配</option>
                                     <option value="601">干线</option>
@@ -331,8 +331,8 @@
                         </div></div>
                     <div><label class="control-label col-label no-padding-right" for="name">开单员</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
-                                <select id="merchandiser" name="merchandiser" class="col-width-100">
+                            <div class="clearfix col-width-168">
+                                <select id="merchandiser" name="merchandiser" class="col-width-168">
                                     <option>中国人民</option>
                                     <option>人民中国</option>
                                     <option>民中国人</option>
@@ -340,7 +340,7 @@
                                 </select>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label" for="name" style="margin-right:10px;">运输类型</label>
+                    <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
 
                         <div class="col-width-50" style="margin-right:10px;">
                             <div class="clearfix control-label">
@@ -357,7 +357,7 @@
                         <input id="transportType" type="hidden" name="transportType"/></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
+                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;">订单日期</label>
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
@@ -374,7 +374,7 @@
                         </div></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">客户名称</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:430px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -620,7 +620,7 @@
             </div>
             <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form">
                 <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
-                    <div style="width:242px;float:left;margin-left:71px;" >
+                    <div style="width:242px;float:left;margin-left:45px;" >
                         <label class="col-label" for="name" style="float:left;">费用总计</label>
                         <div class="col-width-100 padding-15" style="width:130px">
                             <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -628,7 +628,7 @@
                         <label class="" for="name" >元</label>
                     </div>
                     <div >
-                        <label class=" no-padding-right" style="float:left; margin:0 15px 0 30px;" for="name">费用支付</label>
+                        <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;">
                             <div class="clearfix">
                                 <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
@@ -664,14 +664,14 @@
 
                     <div style="width:400px;">
                         <label class=" col-label col-float" for="name" >结算方式</label>
-                        <label class=" col-label-50 col-float" for="name">现结</label>
+                        <label class=" col-label-50 col-float" for="name" style="width:25px;">现结</label>
                         <div class="padding-15 col-float" style="width:130px;">
                             <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
                         <label class=" col-float" for="name">元</label>
                     </div>
                     <div >
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:35px;">到付</label>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:28px;">到付</label>
                         <div class="padding-15 col-float" style="width:130px;">
                             <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
@@ -695,8 +695,6 @@
                 <div class="page-header">
                 </div>
             </form>
-
-
                     <!-- /section:elements.tab.option -->
         </div>
         <!-- PAGE CONTENT ENDS -->
@@ -706,11 +704,6 @@
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
-<#--
-            <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
-                <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
-                确认下单
-            </button>-->
         </div>
 
     </div>

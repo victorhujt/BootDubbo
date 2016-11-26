@@ -60,7 +60,7 @@ public class DefaultMqProducer {
 
         }
     }
-    
+
     //@Bean(initMethod = "start", destroyMethod = "shutdown")
     public Producer producer(){
         Properties producerProperties = new Properties();

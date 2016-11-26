@@ -995,6 +995,7 @@
                     var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
                     //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                     var cadj = consigneeCode + "@" + consigneeContactCode;
+                    console.log("回显cadj:"+cadj)
                     num = preGoodsAndConsigneeJsonMsg[cadj];
                 }
 
@@ -1037,6 +1038,7 @@
                 num = 0;
             }
             var cadj = consigneeCode + "@" + consigneeContactCode;
+            console.log("写入cadj:"+cadj)
             consigneeAndGoodsJson[cadj] = num;
             sendNum += parseInt(num);
         })
@@ -1142,7 +1144,7 @@
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
                         contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyId;
-                        contactCodeAuto = CscContantAndCompanyDto.contactCode;
+                        contactCodeAuto = CscContantAndCompanyDto.id;//000
                         phoneAuto = CscContantAndCompanyDto.phone;
                         provinceAuto = CscContantAndCompanyDto.province;
                         provinceNameAuto = CscContantAndCompanyDto.provinceName;
@@ -1249,7 +1251,7 @@
                 contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -1376,7 +1378,7 @@
                 contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -1389,6 +1391,7 @@
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
+                console.log("弹框里的contactCode"+CscContantAndCompanyDto.id);
             });
         },"json");
     });
@@ -1470,6 +1473,7 @@
                 var type = tdArr.eq(6).text();
                 var contactCompanyId = tdArr.eq(7).text();
                 var contactCode = tdArr.eq(8).text();
+                console.log("页面上显示的时候拿的弹框里的contactCode"+contactCode);
                 var phone = tdArr.eq(9).text();
                 var province = tdArr.eq(10).text();
                 var provinceName = tdArr.eq(11).text();
@@ -1689,7 +1693,7 @@
             }
             orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
-            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value;
+            orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
             orderInfo.custName = $("#custName").val();//后端需特别处理
             orderInfo.custCode = $("#custId").val();//后端需特别处理
             orderInfo.warehouseCode = $("#warehouseCode").val();
@@ -1770,7 +1774,8 @@
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
                 var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                var goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                var param =contactCompanyId + "@" + contactCode;
+                var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
                 goodsList[index] = goods;
             })
@@ -1810,6 +1815,7 @@
             var consigneeContactName = tdArr.eq(3).text();//联系人
             var consigneeType = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
+            var contactCode = tdArr.eq(8).text();
             debugger
             //遍历货品信息
             var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
@@ -1837,7 +1843,8 @@
                 }
                 var goodsAmount = 0;
                 if(null != consigneeAndGoodsMsgJson){
-                    goodsAmount = consigneeAndGoodsMsgJson[contactCompanyId];
+                    var param = contactCompanyId +"@"+ contactCode;
+                    goodsAmount = consigneeAndGoodsMsgJson[param];
                 }
 
                 if(goodsAmount != 0){

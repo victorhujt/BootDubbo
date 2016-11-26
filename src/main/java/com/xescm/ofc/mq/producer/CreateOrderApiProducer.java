@@ -16,6 +16,9 @@ public class CreateOrderApiProducer {
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiProducer.class);
 
     @Resource
+    Producer producer;
+
+    @Resource
     MqConfig mqConfig;
 
     //发送MQ
@@ -24,7 +27,7 @@ public class CreateOrderApiProducer {
         if (StringUtils.isNotBlank(data)) {
             Message message = new Message(mqConfig.getOFCTopic(), mqConfig.getTag(), data.getBytes());
             message.setKey(code);
-            SendResult sendResult = mqConfig.producer.send(message);
+            SendResult sendResult = producer.send(message);
             if (sendResult != null) {
                 logger.info(new Date() + " 发送 mq message 成功! Topic：{},tag:{},message:{}",mqConfig.getOFCTopic() ,mqConfig.getTag(),sendResult.getMessageId());
             }

@@ -122,6 +122,21 @@
     </where>
     ORDER BY oos.lasted_oper_time ASC
   </select>
-
+  
+  <select id="queryOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
+     SELECT
+        *
+    FROM
+        ofc_order_status
+    WHERE
+        lasted_oper_time = (
+            SELECT
+                MAX(lasted_oper_time)
+            FROM
+                ofc_order_status
+            WHERE
+                order_code = 'SO161125000023'
+        )
+  </select>
 
 </mapper>

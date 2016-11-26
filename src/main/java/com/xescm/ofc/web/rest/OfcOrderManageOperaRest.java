@@ -79,7 +79,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/queryOrderOper", method = {RequestMethod.POST})
+    @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
         try {
@@ -179,7 +179,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
-
+            ofcOrderStatus = ofcOrderStatusService.queryOrderByOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
             List<PlanAndStorage> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
@@ -192,6 +192,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("ofcOrderStatusList", ofcOrderStatusList);
 
             modelAndView.addObject("storageList", storageList);
+            modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
 //            modelAndView.addObject("planList", planList);
 
             return modelAndView;
@@ -273,9 +274,9 @@ public class OfcOrderManageOperaRest extends BaseController {
         return new ModelAndView("select_cust_page");
     }
 
-    @RequestMapping(value = "querySelectCustData",method = RequestMethod.POST)
+    @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
     @ResponseBody
-    public Object querySelectCustData(String custName){
+    public Object querySelectCustData(String custName) {
         try {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
         } catch (Exception ex) {
