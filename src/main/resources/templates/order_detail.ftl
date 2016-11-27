@@ -80,7 +80,7 @@
                                             <#elseif (ofcOrderDTO.orderStatus)! == '20'>
                                                 <input id="" value = "已审核" readonly="readonly"  class="form-control input-sm"  type="text" >
                                             <#elseif (ofcOrderDTO.orderStatus)! == '30'>
-                                                <input id="" value = "已审核" readonly="readonly"  class="form-control input-sm"  type="text" >
+                                                <input id="" value = "执行中" readonly="readonly"  class="form-control input-sm"  type="text" >
                                             <#elseif (ofcOrderDTO.orderStatus)! == '40'>
                                                 <input id="" value = "已完成" readonly="readonly"  class="form-control input-sm"  type="text" >
                                             <#elseif (ofcOrderDTO.orderStatus)! == '50'>
