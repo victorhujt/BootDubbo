@@ -64,17 +64,17 @@
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品种类</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 tktp-1">
                         <div class="clearfix">
-                            <select id="goodsTypeId" name="goodsTypeId" onclick="loadSecGoodsType()"></select>
+                            <select id="goodsTypeId" name="goodsTypeId" class="bk-1"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品小类</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 tktp-1">
                         <div class="clearfix">
-                            <select id="goodsSecTypeId" name="goodsTypeSonId"></select>
+                            <select id="goodsSecTypeId" name="goodsTypeSonId" class="bk-1"></select>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">条形码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "barCode" name="barCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "barCode" name="barCode" type="text" style="color: black" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
                             <input id="customerId" name ="customerId" type="hidden"/>
                         </div>
                     </div>

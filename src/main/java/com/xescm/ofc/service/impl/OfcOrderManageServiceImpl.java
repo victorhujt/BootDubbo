@@ -281,7 +281,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException(companyList.getMessage());
             }
 
-            if(companyList.getCode()==200 && companyList.getMessage().equals("操作成功")
+            if(companyList.getCode()==200
                     && !CollectionUtils.isEmpty(companyList.getResult())){
                 /**
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
@@ -367,6 +367,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         throw new BusinessException("向分拣中心推送卡班订单失败");
                     }
                 }
+            }else{
+                if(CollectionUtils.isEmpty(companyList.getResult())){
+                    throw new BusinessException("没有查询到相关服务商!");
+                }
+                throw new BusinessException(companyList.getMessage());
             }
 
             ofcTransplanInfoService.save(ofcTransplanInfo);
@@ -860,9 +865,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                System.out.println("订单中心向运输中心开始推送运输订单");
                 defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
-                System.out.println("订单中心向运输中心推送运输订单成功");
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
