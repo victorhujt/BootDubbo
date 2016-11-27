@@ -88,8 +88,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 //客户订单编号
                 String custOrderCode = null;
                 //订单编号
-                for (int index = 0; index < createOrderEntityList.size(); index++) {
-                    CreateOrderEntity createOrderEntity = createOrderEntityList.get(index);
+                for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
                     try {
                         custOrderCode = createOrderEntity.getCustOrderCode();
                         String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
@@ -115,7 +114,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             if (!CollectionUtils.isEmpty(createOrderResultList)) {
                 String code = "200";
                 StringBuffer reason = new StringBuffer();
-                //List<MessageDto> typeIdList = new ArrayList<MessageDto>();
                 List<MessageDto> typeIdList = new ArrayList<>();
                 for (int index = 0; index < createOrderResultList.size(); index++) {
                     CreateOrderResult orderResult = createOrderResultList.get(index);
@@ -175,30 +173,30 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         if (StringUtils.isBlank(orderCode)) {
             cannelOrderVo.setReason("发货单号不存在");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
         }
         OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
         String orderState = ofcOrderStatus.getOrderStatus();
         if (StringUtils.equals(orderState, HASBEENCOMPLETED)) {
             cannelOrderVo.setReason("已完成的订单");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
         } else if (StringUtils.equals(orderState, HASBEENCANCELED)) {
             cannelOrderVo.setReason("已取消的订单");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
         } else {
             AuthResDto authResDto = new AuthResDto();
             UamUser uamUser = new UamUser();
             uamUser.setUserName(CREATE_ORDER_BYAPI);
             authResDto.setUamUser(uamUser);
             String result = ofcOrderManageService.orderCancel(orderCode, orderState, authResDto);
-            if(StringUtils.equals("200",result)){
+            if (StringUtils.equals("200", result)) {
                 cannelOrderVo.setReason("操作成功");
                 cannelOrderVo.setResultCode("1");
-                return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
             }
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
         }
     }
 

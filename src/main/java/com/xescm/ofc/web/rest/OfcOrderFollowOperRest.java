@@ -63,7 +63,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (StringUtils.isBlank(searchType)) {
                 throw new Exception("搜索类型不能为空");
             }
-            // Set<String> searchTypes = new HashSet<String>();
             Set<String> searchTypes = new HashSet<>();
             searchTypes.add("orderCode");
             searchTypes.add("custOrderCode");
@@ -71,7 +70,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (!searchTypes.contains(searchType)) {
                 throw new Exception("搜索类型错误！");
             }
-            //Map<String, Object> map = new HashMap<String, Object>();
             Map<String, Object> map = new HashMap<>();
             List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
@@ -89,7 +87,7 @@ public class OfcOrderFollowOperRest extends BaseController {
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
         } catch (Exception ex) {
-            logger.error("订单中心订单追踪出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -117,7 +115,7 @@ public class OfcOrderFollowOperRest extends BaseController {
             map.put("ofcOrderStatus", ofcOrderStatuses);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
         } catch (Exception ex) {
-            logger.error("订单中心订单追踪出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }

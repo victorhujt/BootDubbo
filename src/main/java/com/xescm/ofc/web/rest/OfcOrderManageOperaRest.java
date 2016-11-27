@@ -5,12 +5,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.form.OrderOperForm;
-import com.xescm.ofc.enums.OrderStatusEnum;
+import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -26,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -64,7 +59,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
 
     /**
-     * 运营→订单管理 orderManageOpera
+     * 运营→订单管理
      *
      * @return modelAndView
      */
@@ -88,11 +83,10 @@ public class OfcOrderManageOperaRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> dataList = ofcOrderManageOperService.queryOrderOper(form);
-            //PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(dataList);
             PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
-            logger.error("运营平台查询订单出错：{}", ex);
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -122,7 +116,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderAudit(orderCode, orderStatus, reviewTag, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -131,7 +125,6 @@ public class OfcOrderManageOperaRest extends BaseController {
      * 订单删除
      *
      * @param orderCode
-     * @return
      */
     @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
     @ResponseBody
@@ -147,7 +140,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderDelete(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单删除出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -172,7 +165,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{},错误：{}", orderCode, orderStatus, ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -185,14 +178,20 @@ public class OfcOrderManageOperaRest extends BaseController {
      */
     @RequestMapping(value = "/orderDetailPageByCode/{orderCode}")
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode) {
+        ModelAndView modelAndView = new ModelAndView("order_detail_opera");
         try {
-            ModelAndView modelAndView = new ModelAndView("order_detail_opera");
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号为空");
             }
             OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
             ofcFundamentalInformation.setOrderCode(orderCode);
             ofcFundamentalInformation = ofcFundamentalInformationService.selectOne(ofcFundamentalInformation);
+            if (ofcFundamentalInformation != null) {
+                //平台类型如果为4为鲜易网，如果不为空为三方
+                String platformType = ofcFundamentalInformation.getPlatformType();
+                platformType = StringUtils.equals(platformType, "4") ? "鲜易网" : StringUtils.isNotBlank(platformType) ? "三方" : platformType;
+                ofcFundamentalInformation.setPlatformType(platformType);
+            }
 
             OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
             ofcDistributionBasicInfo.setOrderCode(orderCode);
@@ -213,19 +212,14 @@ public class OfcOrderManageOperaRest extends BaseController {
                 planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
                 String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
                 planAndStorage.setPlannedSingleState(pl);
-                planAndStorage.setBusinessType(getBusiType(planAndStorage.getBusinessType()));
+                planAndStorage.setBusinessType(BusinessTypeEnum.getBusinessTypeDescByCode(planAndStorage.getBusinessType()));
             }
             if (ofcFinanceInformation != null) {
-                String pickUpGoods = StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "0") ? "否" : "";
-                ofcFinanceInformation.setPickUpGoods(pickUpGoods);
-                String twoDistribution = StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "0") ? "否" : "";
-                ofcFinanceInformation.setTwoDistribution(twoDistribution);
-                String returnList = StringUtils.equals(ofcFinanceInformation.getReturnList(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getReturnList(), "0") ? "否" : "";
-                ofcFinanceInformation.setReturnList(returnList);
-                String insure = StringUtils.equals(ofcFinanceInformation.getInsure(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getInsure(), "0") ? "否" : "";
-                ofcFinanceInformation.setInsure(insure);
-                String collectFlag = StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "0") ? "否" : "";
-                ofcFinanceInformation.setCollectFlag(collectFlag);
+                ofcFinanceInformation.setPickUpGoods(defaultString(ofcFinanceInformation.getPickUpGoods()));
+                ofcFinanceInformation.setTwoDistribution(defaultString(ofcFinanceInformation.getTwoDistribution()));
+                ofcFinanceInformation.setReturnList(defaultString(ofcFinanceInformation.getReturnList()));
+                ofcFinanceInformation.setInsure(defaultString(ofcFinanceInformation.getInsure()));
+                ofcFinanceInformation.setCollectFlag(defaultString(ofcFinanceInformation.getCollectFlag()));
             }
 
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
@@ -241,37 +235,13 @@ public class OfcOrderManageOperaRest extends BaseController {
 
             return modelAndView;
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},错误：{}", orderCode, ex.getMessage(), ex);
         }
-        return null;
+        return modelAndView;
     }
 
-    private String getBusiType(String businessType) {
-        String value = businessType;
-        if (StringUtils.equals(businessType, "600")) {
-            value = "城配";
-        } else if (StringUtils.equals(businessType, "601")) {
-            value = "干线";
-        } else if (StringUtils.equals(businessType, "602")) {
-            value = "卡班";
-        } else if (StringUtils.equals(businessType, "610")) {
-            value = "销售出库";
-        } else if (StringUtils.equals(businessType, "611")) {
-            value = "调拨出库";
-        } else if (StringUtils.equals(businessType, "612")) {
-            value = "报损出库";
-        } else if (StringUtils.equals(businessType, "613")) {
-            value = "其他出库";
-        } else if (StringUtils.equals(businessType, "620")) {
-            value = "采购入库";
-        } else if (StringUtils.equals(businessType, "621")) {
-            value = "调拨入库";
-        } else if (StringUtils.equals(businessType, "622")) {
-            value = "退货入库";
-        } else if (StringUtils.equals(businessType, "623")) {
-            value = "加工入库";
-        }
-        return value;
+    private String defaultString(String flag) {
+        return StringUtils.equals(flag, "1") ? "是" : StringUtils.equals(flag, "0") ? "否" : "";
     }
 
     /**
@@ -315,7 +285,6 @@ public class OfcOrderManageOperaRest extends BaseController {
             }
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OfcFundamentalInformation> ofcBatchOrderVos = ofcFundamentalInformationService.queryOrderByOrderBatchNumber(orderBatchNumber);
-            //PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<OfcFundamentalInformation>(ofcBatchOrderVos);
             PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<>(ofcBatchOrderVos);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
@@ -324,6 +293,12 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
+    /**
+     * 获取货品信息
+     *
+     * @param orderCode
+     * @return
+     */
     @RequestMapping(value = "/queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
     private Object queryGoodsInfoByOrderCode(String orderCode) {
@@ -346,15 +321,22 @@ public class OfcOrderManageOperaRest extends BaseController {
         return new ModelAndView("select_cust_page");
     }
 
+    /**
+     * 获取客户信息
+     *
+     * @param custName
+     * @return
+     */
     @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
     @ResponseBody
     public Object querySelectCustData(String custName) {
+        logger.info("获取客户信息：custName{}", custName);
         try {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
         } catch (Exception ex) {
+            logger.error("获取客户信息失败：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
         }
     }
-
 
 }

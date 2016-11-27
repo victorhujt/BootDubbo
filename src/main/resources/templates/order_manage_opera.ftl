@@ -103,12 +103,12 @@
                     <input readonly="readonly" style="width: 101px;" id="startDate" name="startDate" type="search"
                            placeholder=""
                            aria-controls="dynamic-table"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})">
                     至
                     <input readonly="readonly" style="width: 101px;" id="endDate" name="endDate" type="search"
                            placeholder=""
                            aria-controls="dynamic-table"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})">
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                 <div class="col-xs-2">
@@ -507,8 +507,6 @@
         }
         //订单详情
         function orderDetailOper(orderCode) {
-//            var url = "/ofc/orderDetailPageByCode/" + orderCode ;
-//            $.get("/ofc/orderDetailPageByCode",{"orderCode":orderCode});
             xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
         }
 
