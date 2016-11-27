@@ -23,6 +23,7 @@ import com.xescm.ofc.utils.*;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+//import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -219,8 +220,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
         OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
         try {
-            BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
+            BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userId);
