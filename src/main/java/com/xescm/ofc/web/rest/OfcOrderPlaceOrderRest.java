@@ -182,11 +182,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,custId
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
        }catch (BusinessException ex){
-            logger.error("订单中心下单或编辑出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         catch (Exception ex) {
-            logger.error("订单中心下单或编辑出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -282,7 +282,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             result.addAll(resultOfBoth);*/
             response.getWriter().print(JSONUtils.objectToJson(result));
         } catch (Exception ex) {
-            logger.error("订单中心筛选收货方出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选收货方出现异常:{}", ex.getMessage(), ex);
         }
     }
 
@@ -308,7 +308,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
         }catch (IOException ex) {
-            logger.error("订单中心筛选供应商出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
     }
     /*
@@ -331,7 +331,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 }
 
             } catch (Exception e) {
-                logger.error("校验客户订单编号出错:　", e.getMessage());
+                logger.error("校验客户订单编号出错:　{}", e.getMessage());
             }
             return flag;
         }
@@ -356,7 +356,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 }
 
             } catch (Exception e) {
-                logger.error("校验运输单号出错:　", e.getMessage());
+                logger.error("校验运输单号出错:{}　", e.getMessage());
             }
             return flag;
         }

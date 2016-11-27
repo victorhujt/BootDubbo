@@ -122,7 +122,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderAudit(orderCode, orderStatus, reviewTag, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -147,7 +147,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderDelete(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单删除出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -241,7 +241,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
             return modelAndView;
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}",  orderCode, ex);
         }
         return null;
     }

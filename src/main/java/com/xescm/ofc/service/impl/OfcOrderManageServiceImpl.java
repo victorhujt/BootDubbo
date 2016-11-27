@@ -492,7 +492,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
             }
             catch (Exception ex){
-                logger.error("运输计划单调用TFC取消端口出现异常",ex.getMessage());
+                logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage());
                 throw new BusinessException(ex.getMessage());
             }
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
