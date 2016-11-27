@@ -361,8 +361,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanInfoService.save(ofcTransplanInfo);
                 logger.debug("计划单信息保存成功");
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
-                logger.debug("计划单最新状态保存成功");
-                ofcTransplanStatusService.save(ofcTransplanStatus);
+
                 logger.debug("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
                 logger.debug("计划单资源状态保存成功");
@@ -370,6 +369,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //向TFC推送
+                    logger.debug("计划单最新状态保存成功");
+                    ofcTransplanStatusService.save(ofcTransplanStatus);
                     ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
