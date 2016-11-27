@@ -94,7 +94,7 @@
                     <tr role="row">
                         <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                             <label class="pos-rel">
-                                <input id="goodcheck" type="checkbox" class="ace">
+                                选择
                                 <span class="lbl"></span>
                             </label>
                         </th>
@@ -231,7 +231,7 @@
                     <thead>
                     <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                         <label class="pos-rel">
-                            <input id="consigneecheck" type="checkbox" class="ace">
+                            选择
                             <span class="lbl"></span>
                         </label>
                     </th>

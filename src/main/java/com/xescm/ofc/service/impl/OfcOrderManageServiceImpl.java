@@ -169,7 +169,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             ofcTransplanInfo.setProgramSerialNumber("1");
                             ofcSiloprogramInfo.setProgramSerialNumber("2");
                         }
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
@@ -214,7 +214,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
      */
-    public void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userId){
+    public void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userName){
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
@@ -224,7 +224,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
             ofcTransplanInfo.setCreationTime(new Date());
-            ofcTransplanInfo.setCreatePersonnel(userId);
+            ofcTransplanInfo.setCreatePersonnel(userName);
             ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);//$$$$
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
@@ -329,6 +329,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2]))).divide(BigDecimal.valueOf(1000000));
                     ofcTransplanInfo.setVolume(volume);//$$$
                 }
+                if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
+                    ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
+                }
+
 
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
@@ -350,7 +354,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单开始执行");
-                    ofcOrderStatus.setOperator(userId);
+                    ofcOrderStatus.setOperator(userName);
                     ofcOrderStatus.setLastedOperTime(new Date());
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
@@ -366,7 +370,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //向TFC推送
-                    ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userId);
+                    ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
