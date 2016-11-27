@@ -1281,7 +1281,6 @@
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
         $("#cubageCountHidden").html(cubageCount);
-        console.log("======33=="+JSON.stringify($("#cubageCountHidden").val(cubageCount)))
     }
     function countCostCheck() {
         var count=0;
@@ -1456,7 +1455,6 @@
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
         return cscContantAndCompanyDtoConsignorStr;
 
     }
@@ -1497,7 +1495,6 @@
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
         return cscContantAndCompanyDtoConsigneeStr;
     }
 
@@ -1671,7 +1668,6 @@
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             var cscContantAndCompanyDtoConsignorStr;
             var cscContantAndCompanyDtoConsigneeStr;
-            console.log("======orderGoodsListStr======"+orderGoodsListStr)
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
             xescm.common.submit("/ofc/orderPlaceCon"
@@ -1947,7 +1943,6 @@
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                            console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -2001,7 +1996,6 @@
                     var custId = $("#custId").val();
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId},function (data) {
                         data = eval(data);
-                        console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);

@@ -376,10 +376,8 @@
 
         var jsonStr={};
         var orderTimePre = $dp.$('orderTimePre').value;
-        console.log(orderTimePre);
         jsonStr.orderTimePre=orderTimePre;
         var orderTimeSuf = $dp.$('orderTimeSuf').value;
-        console.log(orderTimeSuf);
         jsonStr.orderTimeSuf=orderTimeSuf;
         jsonStr.orderCode=$("#orderCode").val();
         jsonStr.custOrderCode=$("#custOrderCode").val();

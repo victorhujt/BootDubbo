@@ -243,8 +243,6 @@
         for ( var i = 0; i < data.result.list.length; i++) {
             var order = data.result.list[i];
 
-
-            console.log("--zaa--"+JSON.stringify(order));
             var consigneeName = "";
             if("2"==StringUtil.nullToEmpty(order.consigneeType)){
 

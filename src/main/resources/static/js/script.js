@@ -190,7 +190,6 @@ var vm=new Vue({
             self.loginPwdErrorMessage = response.body.message
           }
         }
-        console.log(response);
       }, function (err) {
         alert("未知异常");
       }

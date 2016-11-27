@@ -1445,7 +1445,6 @@
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
         return cscContantAndCompanyDtoConsignorStr;
 
 
@@ -1490,7 +1489,6 @@
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
         return cscContantAndCompanyDtoConsigneeStr;
     }
     function getCscSupplierInfoDtoStr(){
@@ -1521,7 +1519,6 @@
         }
         paramSupport.address = $("#supportAddress").val();
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
-        console.log("function  support " + cscSupplierInfoDtoStr);
         return cscSupplierInfoDtoStr;
     }
 
@@ -1686,7 +1683,6 @@
                     var param = JSON.stringify(cscContantAndCompanyDto);
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
-                        console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
@@ -1838,7 +1834,6 @@
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                            console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -1889,7 +1884,6 @@
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
                                 debugger
-                                console.log("==-------data-----111-xxx--"+data);
                                 data=eval(data);
                                 var supplierList = "";
                                 $.each(data,function (index,CscSupplierInfoDto) {
@@ -1902,7 +1896,6 @@
                                             + "/" + cityName
                                             + "/" + areaName
                                             + "/" + streetName;
-                                    console.log("==------------111-xxx--"+paramAddressNameToPage);
                                     $("#city-picker3-support").val(paramAddressNameToPage);
                                     $("#city-picker3-support").citypicker('refresh');
                                 });
@@ -2050,8 +2043,6 @@
         }
         var orderTypeForSupportDiv = $("#orderType").val();
         var businessTypeForSupportDiv = $("#businessType").val().substring(0,2);
-        console.log("===========orderTypeForSupportDiv============="+orderTypeForSupportDiv);
-        console.log("===========businessTypeForSupportDiv============="+businessTypeForSupportDiv);
         if(orderTypeForSupportDiv == '61' && businessTypeForSupportDiv == '62'){
             $("#supportMessageShowDiv").show();
         }
@@ -2168,7 +2159,6 @@
             }
             orderGoodsList[tableRows - 1] = orderGoods;
         }
-        console.log("==orderGoodsList=="+orderGoodsList);
 
 
         //订单类型
@@ -2213,7 +2203,6 @@
         var tag = "manage";
         var ofcOrderDTOJson = JSON.stringify(jsonStr);
         var orderGoodsListStr = JSON.stringify(orderGoodsList);
-        console.log("-=-=-=-"+orderGoodsListStr);
         /*xescm.common.loadPage("/ofc/orderEdit/" + tag + "/" + ofcOrderDTOJson
                 + "/" + orderGoodsListStr+"~`"
                 + "/" + cscContantAndCompanyDtoConsignorStr

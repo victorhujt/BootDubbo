@@ -375,7 +375,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                    System.out.println("-"+ofcDistributionBasicInfo.getCubage());
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
                     BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                     ofcDistributionBasicInfo.setCubage(volume.toString());
@@ -902,8 +901,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
 
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);//$$$
-                System.out.println(ofcTransplanStatus);
-                System.out.println(ofcTransplanStatus);
             }
         }catch (Exception ex){
             throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage(),ex);

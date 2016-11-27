@@ -28,7 +28,7 @@ $(function () {
     });
     $('#destroy').click(function () {
       $citypicker1.citypicker('close');
-      console.log($citypicker1.val());
+      // console.log($citypicker1.val());
     });
     //
     //$('#distpicker1').distpicker();
