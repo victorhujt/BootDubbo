@@ -615,6 +615,12 @@
             }
         });
 
+        $("#createCustBtn").click(function () {
+            var csc_url = "${(CSC_URL)!}";
+            var url = csc_url + "/csc/customer/toAddCustomerPage";
+            xescm.common.loadPage(url);
+        });
+
     </script>
 
 </body>
