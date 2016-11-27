@@ -67,8 +67,9 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @return modelAndView
      */
     @RequestMapping(value = "/orderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView orderManageOpera() {
+    public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
+        setDefaultModel(model);
         return modelAndView;
     }
 

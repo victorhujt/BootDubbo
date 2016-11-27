@@ -32,13 +32,13 @@ public class DefaultMqProducer {
     Producer producer;
 
     public void toSendTfcTransPlanMQ(String jsonStr,String code) {
-        logger.info(mqConfig.getTfcTransPlanTag()+"开始消费");
-        Message message = new Message(mqConfig.getTfcTransPlanTopic(), mqConfig.getTfcTransPlanTag(),jsonStr.getBytes());
+        logger.info(mqConfig.getOfc2TfcOrderTopic()+"开始消费");
+        Message message = new Message(mqConfig.getOfc2TfcOrderTopic(), null,jsonStr.getBytes());
         message.setKey(code);
 
         SendResult sendResult = producer.send(message);
         if (sendResult != null) {
-            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getTfcTransPlanTag(),new Date(),sendResult.getMessageId());
+            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getOfc2TfcOrderTopic(),new Date(),sendResult.getMessageId());
         }
     }
 
