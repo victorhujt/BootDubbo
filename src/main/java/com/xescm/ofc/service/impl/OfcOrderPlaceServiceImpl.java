@@ -307,7 +307,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
                 ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
                 ofcFundamentalInformation.setCustCode(custId);
-                ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
+               // ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setAbolishMark(OrderConstEnum.ORDERWASNOTABOLISHED);//未作废
                 ofcFundamentalInformation.setOrderType(OrderConstEnum.TRANSPORTORDER);
                 if(ofcFundamentalInformation.getOrderType().equals(OrderConstEnum.TRANSPORTORDER)){

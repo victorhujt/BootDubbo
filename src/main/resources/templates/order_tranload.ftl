@@ -383,10 +383,10 @@
 
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">运输要求</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:430px;">
-                                <input name="transRequire" id="transRequire" type="text" placeholder="运输要求" style="padding-left:8px;width:430px;" />
+                                <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:430px;" />
                                 <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
                             </div>
                         </div></div>
@@ -637,29 +637,30 @@
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;">
                             <div class="clearfix">
-                                <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePaymentPartyV1" type="radio" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <div style="float:left;margin-right:5px;">发货方</div>
                             </div>
                         </div></div>
                     <div>
                         <div class="col-width-70" style="float:left;background:#eaedf1;">
                             <div class="clearfix">
-                                <input id="transportTypeV2" type="radio" name="transportTypeV" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePaymentPartyV2" type="radio" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <div style="float:left;margin-right:5px;">收货方</div>
                             </div></div>
                     </div>
                     <input id="transportType" type="hidden" name="transportType"/>
+                    <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
                     <div>
                         <label class="no-padding-right" for="name" style="margin-left:30px;float:left;">支付方式</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-100">
-                                <select class="chosen-select form-control" id="businessType" name="businessType">
-                                    <option value="01">现金</option>
-                                    <option value="02">POS刷卡</option>
-                                    <option value="03">微信</option>
-                                    <option value="04">支付宝</option>
-                                    <option value="05">银行支付</option>
-                                    <option value="06">账户结算</option>
+                                <select class="chosen-select form-control" id="payment" name="payment">
+                                    <option value="6810">现金</option>
+                                    <option value="6820">POS刷卡</option>
+                                    <option value="6830">微信</option>
+                                    <option value="6840">支付宝</option>
+                                    <option value="6850">银行支付</option>
+                                    <option value="6860">账户结算</option>
                                 </select>
                             </div>
                         </div>
@@ -1362,7 +1363,7 @@
         jsonStr.luggage = $("#luggage").val();
         //费用总计
         jsonStr.serviceCharge = $("#serviceCharge").val();
-        jsonStr.expensePaymentParty = $("input[name=expensePaymentPartyV]:checked").val();
+        jsonStr.expensePaymentParty = $("#expensePaymentParty").val();
         jsonStr.payment = $("#payment").val();
         jsonStr.currentAmount = $("#currentAmount").val();
         jsonStr.toPayAmount = $("#toPayAmount").val();
@@ -1628,13 +1629,13 @@
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
-            jsonStr.transportType = $("input[name=transportTypeV]:checked").val();
+            jsonStr.transportType = $("#transportType").val();
             if($dp.$('orderTime').value!=""){
                 jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
-            jsonStr.notes = $("#transRequire").val();
+            jsonStr.transRequire = $("#transRequire").val();
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
             var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
@@ -2087,6 +2088,11 @@
 
         });
 
+
+        var transportTypePub = "10";
+        $("#transportType").val(transportTypePub);
+        var expensePaymentParty = "10";
+        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });

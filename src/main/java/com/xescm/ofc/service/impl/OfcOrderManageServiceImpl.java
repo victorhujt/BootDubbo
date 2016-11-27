@@ -225,7 +225,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userId);
-            ofcTransplanInfo.setNotes(ofcFundamentalInformation.getNotes());
+            ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);//$$$$
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
@@ -330,12 +330,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanInfo.setVolume(volume);//$$$
                 }
 
-
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
                 ofcTraplanSourceStatus.setResourceAllocationStatus("40");
+                ofcTraplanSourceStatus.setResourceConfirmation(ofcFundamentalInformation.getCustName());
+                ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
                 ofcTransplanInfoList.add(ofcTransplanInfo);
                 String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
@@ -353,9 +354,19 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setLastedOperTime(new Date());
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
+                ofcTransplanInfoService.save(ofcTransplanInfo);
+                logger.debug("计划单信息保存成功");
+                ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
+                logger.debug("计划单最新状态保存成功");
+                ofcTransplanStatusService.save(ofcTransplanStatus);
+                logger.debug("计划单状态保存成功");
+                ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
+                logger.debug("计划单资源状态保存成功");
+
+
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //向TFC推送
-                    //ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userId);
+                    ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userId);
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
@@ -375,14 +386,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException(companyList.getMessage());
             }
 
-            ofcTransplanInfoService.save(ofcTransplanInfo);
-            logger.debug("计划单信息保存成功");
-            ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
-            logger.debug("计划单最新状态保存成功");
-            ofcTransplanStatusService.save(ofcTransplanStatus);
-            logger.debug("计划单状态保存成功");
-            ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
-            logger.debug("计划单资源状态保存成功");
+
+            /*planUpdate(ofcTransplanInfo.getPlanCode(),"40",ofcTraplanSourceStatus.getServiceProviderName()
+                    ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&*/
+
+            //更改计划单状态为执行中//###
+
 
 
         }catch (Exception e) {
@@ -663,6 +672,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return result;
     }*/
 
+    /**
+     * 计划单状态自动更新
+     */
+
+    /*private Wrapper<?> autoPlanUpdate*/
+
+    /**
+     * 计划单更新
+     * @param planCode
+     * @param planStatus
+     * @param serviceProviderName
+     * @param serviceProviderContact
+     * @param serviceProviderContactPhone
+     * @param userName
+     * @return
+     */
     @Override
     public String planUpdate(String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userName) {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
@@ -720,7 +745,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
                 }
-                //向TFC推送
+
 
                 ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
             } catch (Exception ex) {
@@ -866,11 +891,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
+             //   defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());   ///####
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
+
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);//$$$
+                System.out.println(ofcTransplanStatus);
+                System.out.println(ofcTransplanStatus);
             }
         }catch (Exception ex){
             throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage(),ex);
@@ -895,6 +923,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         +" "+"订单审核完成");
                 ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcOrderStatus.setLastedOperTime(new Date());
+                ofcOrderStatusService.save(ofcOrderStatus);
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
@@ -910,9 +941,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else {
                 throw new BusinessException("缺少标志位");
             }
-            ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
-            ofcOrderStatus.setLastedOperTime(new Date());
-            ofcOrderStatusService.save(ofcOrderStatus);
+
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
             throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
