@@ -583,7 +583,7 @@
             <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
                 <#list ofcGoodsDetailsInfoList as goods>
                 <tr>
-                    <td>${(goodsCategory)!"" }</td>
+                    <td>${(goods.goodsCategory)!"" }</td>
                     <td>${(goods.goodsCode)!"" }</td>
                     <td>${(goods.goodsName)!"" }</td>
                     <td>${(goods.goodsSpec)!"" }</td>
