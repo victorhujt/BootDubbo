@@ -6,6 +6,8 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.form.OrderOperForm;
 import com.xescm.ofc.enums.OrderStatusEnum;
+import com.xescm.ofc.enums.PlanEnum;
+import com.xescm.ofc.enums.ResourceEnum;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
@@ -108,6 +110,15 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Wrapper<?> orderAuditOper(String orderCode, String orderStatus, String reviewTag) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
+            if (StringUtils.isBlank(reviewTag)) {
+                throw new Exception("订单标识不能为空！");
+            }
             String result = ofcOrderManageService.orderAudit(orderCode, orderStatus, reviewTag, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
@@ -127,6 +138,12 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Wrapper<?> orderDeleteOper(String orderCode, String orderStatus) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
             String result = ofcOrderManageService.orderDelete(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
@@ -146,6 +163,12 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Wrapper<?> orderCancelOper(String orderCode, String orderStatus) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
@@ -185,6 +208,25 @@ public class OfcOrderManageOperaRest extends BaseController {
             List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
             List<PlanAndStorage> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
             storageList.addAll(planList);
+            for (PlanAndStorage planAndStorage : storageList) {
+                String resourceAllocationStatus = ResourceEnum.getDescByCode(planAndStorage.getResourceAllocationStatus());
+                planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
+                String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
+                planAndStorage.setPlannedSingleState(pl);
+            }
+            if(ofcFinanceInformation != null){
+                String pickUpGoods = StringUtils.equals(ofcFinanceInformation.getPickUpGoods() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getPickUpGoods() ,"0")?"否":"";
+                ofcFinanceInformation.setPickUpGoods(pickUpGoods);
+                String twoDistribution = StringUtils.equals(ofcFinanceInformation.getTwoDistribution() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getTwoDistribution() ,"0")?"否":"";
+                ofcFinanceInformation.setTwoDistribution(twoDistribution);
+                String returnList = StringUtils.equals(ofcFinanceInformation.getReturnList() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getReturnList() ,"0")?"否":"";
+                ofcFinanceInformation.setReturnList(returnList);
+                String insure = StringUtils.equals(ofcFinanceInformation.getInsure() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getInsure() ,"0")?"否":"";
+                ofcFinanceInformation.setInsure(insure);
+                String collectFlag = StringUtils.equals(ofcFinanceInformation.getCollectFlag() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getCollectFlag() ,"0")?"否":"";
+                ofcFinanceInformation.setCollectFlag(collectFlag);
+            }
+
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
             modelAndView.addObject("ofcDistributionBasicInfo", ofcDistributionBasicInfo);
             modelAndView.addObject("ofcFinanceInformation", ofcFinanceInformation);

@@ -107,20 +107,20 @@
 
     <select id="queryOrderOper_BACK" resultMap="orderSearchResult_resultMap">
         SELECT
-        ofi.cust_name custName,
-        ofi.order_code orderCode,
-        ofi.cust_order_code custOrderCode,
-        ofi.order_batch_number,
-        ofi.order_time orderTime,
-        ofi.order_type orderType,
-        ofi.business_type businessType,
-        oos.order_status orderStatus,
-        odbi.consignee_type consigneeType,
-        odbi.consignee_name consigneeName,
-        odbi.consignee_contact_name consigneeContactName,
-        owi.warehouse_name warehouseName,
-        ofi.notes notes,
-        ofi.store_name storeName
+            ofi.cust_name custName,
+            ofi.order_code orderCode,
+            ofi.cust_order_code custOrderCode,
+            ofi.order_batch_number,
+            ofi.order_time orderTime,
+            ofi.order_type orderType,
+            ofi.business_type businessType,
+            oos.order_status orderStatus,
+            odbi.consignee_type consigneeType,
+            odbi.consignee_name consigneeName,
+            odbi.consignee_contact_name consigneeContactName,
+            owi.warehouse_name warehouseName,
+            ofi.notes notes,
+            ofi.store_name storeName
         FROM
         ofc_fundamental_information ofi
         LEFT JOIN (
@@ -173,6 +173,7 @@
                 AND ofi.business_type = #{form.businessType}
             </if>
         </where>
+        GROUP BY ofi.order_code
     </select>
 
     <select id="queryOrderOper" resultMap="orderSearchResult_resultMap">
@@ -226,4 +227,5 @@
             </if>
         </where>
     </select>
+
 </mapper>

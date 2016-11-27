@@ -125,7 +125,7 @@
   
   <select id="queryOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
      SELECT
-        *
+        order_code,order_status,status_desc,lasted_oper_time,notes,operator
     FROM
         ofc_order_status
     WHERE

@@ -45,7 +45,7 @@
     <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
     <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
     <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
-    <result column="trans_code" property="trans_code" jdbcType="VARCHAR" />
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
     <result column="destination" property="destination" jdbcType="VARCHAR" />
     <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />

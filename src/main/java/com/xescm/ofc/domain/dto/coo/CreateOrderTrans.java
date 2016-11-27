@@ -137,6 +137,7 @@ public class CreateOrderTrans {
             ofcFundamentalInformation.setCreationTime(nowDate);
             ofcFundamentalInformation.setOperator(CREATE_ORDER_BYAPI);
             ofcFundamentalInformation.setOperTime(nowDate);
+            ofcFundamentalInformation.setPlatformType("4");
             return ofcFundamentalInformation;
         }
         return null;
