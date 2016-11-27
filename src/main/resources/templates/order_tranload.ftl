@@ -329,15 +329,11 @@
                                 </select>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="name">开单员</label>
+
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-168">
-                                <select id="merchandiser" name="merchandiser" class="col-width-168">
-                                    <option>中国人民</option>
-                                    <option>人民中国</option>
-                                    <option>民中国人</option>
-                                    <option>国人民中</option>
-                                </select>
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="merchandiser" id="merchandiser" type="text" placeholder="开单员" style="padding-left:8px;" />
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
@@ -393,7 +389,6 @@
                                 <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
                             </div>
                         </div></div>
-
                 </div>
 
             </form>
@@ -2313,7 +2308,7 @@
             }
         });
 
-        $('#merchandiser').editableSelect();
+        //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
             xescm.common.loadPage("/csc/customer/toAddCustomerPage");
