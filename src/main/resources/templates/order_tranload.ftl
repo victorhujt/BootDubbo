@@ -528,7 +528,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">上门提货:费用</label>
                         <div style="width:140px;float:left;">
                             <div class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
+                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "" />
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -543,7 +543,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">货物保险:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
-                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -552,7 +552,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">声明价值</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -567,7 +567,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">二次配送:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -582,7 +582,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">代收货款:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
-                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -591,7 +591,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">代收金额</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -606,7 +606,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">签单返回:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -615,7 +615,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">运费</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -671,31 +671,38 @@
                     <div style="width:400px;">
                         <label class=" col-label col-float" for="name" >结算方式</label>
                         <label class=" col-label-50 col-float" for="name" style="width:25px;">现结</label>
+                        <div style="float:left;width:145px;">
                         <div class="padding-15 col-float" style="width:130px;">
                             <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
-                        <label class=" col-float" for="name">元</label>
+                        <label class=" col-float" for="name">元</label></div>
                     </div>
                     <div >
                         <label class=" col-label-50 col-float" for="name" style="margin-left:28px;">到付</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        <div style="width:145px;float:left;">
+                            <div class="padding-15 col-float" style="width:130px;">
+                                <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
-                        <label class=" col-float" for="name">元</label>
                     </div>
                     <div>
                         <label class=" col-label-50 col-float" for="name" style="margin-left:51px;">回付</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        <div style="width:145px;float:left;">
+                            <div class="padding-15 col-float" style="width:130px;">
+                                <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
-                        <label class=" col-float" for="name">元</label>
                     </div>
                     <div>
                         <label class=" col-label-50" for="name">月结</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        <div style="width:145px;float:left;">
+                            <div class="padding-15 col-float" style="width:130px;">
+                                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
-                        <label class=" col-float" for="name">元</label>
                     </div>
                 </div>
                 <div class="page-header">
