@@ -6,15 +6,17 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 资源分配状态枚举类
  * Created by hiyond on 2016/11/27.
  */
 public enum ResourceEnum {
 
-    ZIYUANFENPEIZ("10", "资源分配中"),
-    YITUISONG("20", "已推送"),
-    RENWUZHONG("30", "任务中"),
-    RENWUWANCH("40", "任务完成"),
-    YIZUOFEI("50", "已作废");
+
+
+    DAIFENPEI("10", "待分配"),
+    WEIFENPEI("20", "未分配"),
+    YIFENPEI("30", "已分配"),
+    YIQUEDING("40", "已确定");
 
     ResourceEnum(String code, String desc) {
         this.code = code;
