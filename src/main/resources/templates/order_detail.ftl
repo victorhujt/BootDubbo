@@ -457,16 +457,12 @@
                                                     <input id="orderTime" value = "${(supportMessage.supplierName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="control-label col-label no-padding-right" for="name">联系人</label>
                                             <div class="w-width-220 y-float">
                                                 <div class="clearfix">
                                                     <input id="orderTime" value = "${(supportMessage.contactName)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="control-label col-label no-padding-right" for="name">Email</label>
                                             <div class="w-width-220 y-float">
                                                 <div class="clearfix">
@@ -481,17 +477,12 @@
                                                     <input id="orderTime" value = "${(supportMessage.contactPhone)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label class="control-label col-label no-padding-right" for="name">传真</label>
                                             <div class="w-width-220 y-float">
                                                 <div class="clearfix">
                                                     <input id="orderTime" value = "${(supportMessage.fax)!""}" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="control-label col-label no-padding-right" for="name">地址</label>
                                             <div class="w-width-220 y-float">
                                                 <div class="clearfix">
@@ -499,6 +490,8 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         <div class="form-group">
                                             <label class="control-label col-label no-padding-right" for="name">邮编</label>
                                             <div class="w-width-220 y-float">
