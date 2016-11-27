@@ -135,7 +135,7 @@
             FROM
                 ofc_order_status
             WHERE
-                order_code = 'SO161125000023'
+                order_code = #{orderCode}
         )
   </select>
 
