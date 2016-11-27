@@ -33,28 +33,26 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Autowired
     private MqConfig mqConfig;
 
-   // private List<String> keyList = new ArrayList<String>();
     private List<String> keyList = new ArrayList<>();
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
-        logger.debug("创单api消费MQ开始。。。");
+        logger.info("创单api消费MQ开始。。。");
         String topicName = message.getTopic();
         String key = message.getKey();
         String messageBody = new String(message.getBody());
         //TFCTopic
         if (StringUtils.equals(topicName, mqConfig.getTFCTopic()) && !keyList.contains(key)) {
-            if(StringUtils.equals(message.getTag(),mqConfig.getEPCToTag())){
-                logger.debug("创单api消费MQ:Tag:{},topic:{}"+message.getTag(),topicName);
+            if (StringUtils.equals(message.getTag(), mqConfig.getEPCToTag())) {
+                logger.info("创单api消费MQ:Tag:{},topic:{},key{}" + message.getTag(), topicName, key);
                 keyList.add(key);
                 String result = null;
                 try {
-                    logger.debug("创单api消费MQ获取message:{},key:{}", messageBody, key);
                     result = createOrderService.createOrder(messageBody);
                 } catch (Exception ex) {
                     logger.error("创单api消费MQ异常：{}{}", ex.getMessage(), ex);
                 } finally {
-                    logger.debug("创单api消费MQ获取message处理结束");
+                    logger.info("创单api消费MQ获取message处理结束");
                     //调用MQ生产者
                     if (StringUtils.isNotBlank(result)) {
                         String code = String.valueOf(result.hashCode());

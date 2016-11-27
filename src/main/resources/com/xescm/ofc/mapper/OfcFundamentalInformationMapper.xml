@@ -52,6 +52,11 @@
     <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
     <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
 
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
@@ -108,7 +113,11 @@
     ofd.destination_province,
     ofd.destination_city,
     ofd.destination_district,
-    ofd.destination_towns
+    ofd.destination_towns,
+    ofd.departure_province,
+    ofd.departure_city,
+    ofd.departure_district,
+    ofd.departure_towns
     FROM
     ofc_fundamental_information ofi,
     ofc_distribution_basic_info ofd,
@@ -135,22 +144,15 @@
   </select>
   
   <select id="queryOrderByOrderBatchNumber" resultMap="BaseResultMap">
-    SELECT ofi.*,odb.consignee_name,owi.warehouse_name,oos.order_status
-    FROM ofc_fundamental_information ofi,
-    ofc_distribution_basic_info odb,
-    ofc_warehouse_information owi,
-    (SELECT temp.* FROM ofc_order_status temp
-    WHERE temp.lasted_oper_time = (
-    SELECT MAX(lasted_oper_time) FROM ofc_order_status
-    WHERE temp.order_code = order_code
-    ) ORDER BY temp.lasted_oper_time DESC) oos
-    WHERE ofi.order_code = odb.order_code
-    AND
-    ofi.order_code = owi.order_code
-    AND
-    ofi.order_code = oos.order_code
-    AND
-    ofi.order_batch_number = #{orderBatchNumber}
+    SELECT ofi.*,odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
+      LEFT JOIN (SELECT temp.* FROM ofc_order_status temp
+          WHERE temp.lasted_oper_time = (
+          SELECT MAX(lasted_oper_time) FROM ofc_order_status
+          WHERE temp.order_code = order_code
+          ) ORDER BY temp.lasted_oper_time DESC) oos ON ofi.order_code = oos.order_code
+      LEFT JOIN ofc_distribution_basic_info odb ON odb.order_code = ofi.order_code
+      LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+      WHERE ofi.order_batch_number = #{orderBatchNumber}
   </select>
 
 </mapper>
