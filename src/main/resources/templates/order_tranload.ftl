@@ -1681,15 +1681,7 @@
 
         });
 
-        $("#custListDivBlock").click(function () {
-            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
-        });
-        $("#custListDivNoneBottom").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
-        $("#custListDivNoneTop").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
+
 
         $("#custSelectFormBtn").click(function () {
             var custName = $("#custNameDiv").val();
@@ -2317,7 +2309,15 @@
             xescm.common.loadPage(url);
         });
     })
-
+    $("#custListDivBlock").click(function () {
+        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+    });
+    $("#custListDivNoneBottom").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+    $("#custListDivNoneTop").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>

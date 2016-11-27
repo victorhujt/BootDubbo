@@ -854,6 +854,7 @@
         var goodsType = $("#goodsTypeId").val();
         //$("#goodsTypeId option").remove();
         $("#goodsSecTypeId option").remove();
+        $("#goodsSecTypeId").append("<option value = ''>全部</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":goodsType},function(data) {
             data=eval(data);
             $.each(data,function (index,secGoodsType) {
