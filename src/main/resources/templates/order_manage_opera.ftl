@@ -297,7 +297,7 @@
             //初始化页面数据
             initPageDataOrder();
             // 查询
-            queryOrderData(1);
+//            queryOrderData(1);
 
             $("#doSearch").click(function () {
                 queryOrderData(1);
