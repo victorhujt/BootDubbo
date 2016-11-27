@@ -434,6 +434,8 @@
                 value = "城配"
             } else if (order.businessType == "601") {
                 value = "干线";
+            } else if (order.businessType == "602") {
+                value = "卡班";
             } else if (order.businessType == "610") {
                 value = "销售出库";
             } else if (order.businessType == "611") {
