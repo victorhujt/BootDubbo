@@ -55,14 +55,15 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){
+
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                   if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
                     }
                     if(PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     }
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
                 } catch (IllegalAccessException e) {
                     throw new BusinessException(e.getMessage());
                 } catch (InvocationTargetException e) {

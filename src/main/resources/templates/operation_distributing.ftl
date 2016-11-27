@@ -727,7 +727,7 @@
 
         });
         $("#goodsSelectFormBtn").click(function () {
-            debugger
+            
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
@@ -852,7 +852,7 @@
     }
 
     $("#goodsTypeId").change(function () {
-        debugger
+        
         var custId = $("#custId").val();
         var goodsType = $("#goodsTypeId").val();
         //$("#goodsTypeId option").remove();
@@ -970,7 +970,7 @@
         var consigneeAndGoodsJson = {};
 
         $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
-            debugger
+            
             var tdArr = $(this).children();
             var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
             var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
@@ -1073,7 +1073,7 @@
             var streetAuto = null;
             var streetNameAuto = null;
             var addressAuto = null;
-            debugger;
+            
             CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1503,7 +1503,7 @@
                 //tdArr.eq(2).children().attr("readonly","readonly");
                 ifConsigneeConfirm = true;
                 //禁用添加收货人和确认收货人
-                debugger;
+                
             })
             layer.close(index);
         }, function(index){
@@ -1513,7 +1513,7 @@
 
     $("#consigneeListClearDivBlock").click(function () {
         //alert('3233')
-        debugger
+        
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout > 0){
             layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
@@ -1769,14 +1769,14 @@
             var consigneeType = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             var contactCode = tdArr.eq(8).text();
-            debugger
+            
             //遍历货品信息
             var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
             var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
             var goodsNum = 0;//货品列表数量
             $("#goodsInfoListDiv").find("tr").each(function(index) {
                 goodsNum += 1;
-                debugger
+                
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号

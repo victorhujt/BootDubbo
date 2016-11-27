@@ -1830,7 +1830,7 @@
                         debugger
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            debugger;
+                            
 //                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
 //                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
 //                            resultConsignorType = CscContantAndCompanyDto.type;
