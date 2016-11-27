@@ -44,7 +44,11 @@ public class MqInitializer {
         String [] strArray = mqConfig.getConsumerTopicNames().split(",");
         for(int i = 0;i<strArray.length;i++){
             String[] topicArray = strArray[i].split("@");
-            consumer.subscribe(topicArray[0], topicArray[1],createOrderApiConsumer);
+            String tag = null;
+            if(null != topicArray && topicArray.length > 1){
+                tag =  topicArray[1];
+            }
+            consumer.subscribe(topicArray[0], tag,createOrderApiConsumer);
         }
         return consumer;
     }
