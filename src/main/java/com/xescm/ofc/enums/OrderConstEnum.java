@@ -54,7 +54,10 @@ public final class OrderConstEnum {
     public static final String OFC_URL = "OFC_URL";
     /** 订单中心标记，用于Redis分区 */
     public static final String OFC_ENV = "OFC";
+    /**四级地址*/
     public static final String ADDR_URL = "ADDR_URL";
+    /**CSC地址*/
+    public static final String CSC_URL = "CSC_URL";
     //支付方式
     public static final String FINNANCEPAYWAYCASH="6810";//现金支付
     public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡

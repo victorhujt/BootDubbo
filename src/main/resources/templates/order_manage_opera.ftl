@@ -112,8 +112,8 @@
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                 <div class="col-xs-2">
                     <div class="col-width-168">
-                        <select data-placeholder="请选择订单类型" id="orderType" class="chosen-select" name="orderType">
-                            <option value=""></option>
+                        <select data-placeholder="请选择订单类型" style="width: 168px;" id="orderType" class="" name="orderType">
+                            <option value="">----</option>
                             <option value="60">运输订单</option>
                             <option value="61">仓配订单</option>
                         </select>
@@ -122,7 +122,7 @@
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
 
                 <div class="col-width-168">
-                    <select data-placeholder="请选择业务类型" id="businessType" class="chosen-select" name="businessType">
+                    <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class="" name="businessType">
                         <option value=""></option>
                         <option value="600">城配</option>
                         <option value="601">干线</option>

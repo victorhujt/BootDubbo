@@ -150,12 +150,12 @@
                         <div class="w-width-220 col-float">
                             <input id="departurePlace" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcDistributionBasicInfo.departurePlace)!""}">
+                                   value="${(ofcDistributionBasicInfo.departureProvince)!""}${(ofcDistributionBasicInfo.departureCity)!""}${(ofcDistributionBasicInfo.departureDistrict)!""}${(ofcDistributionBasicInfo.departureTowns)!""}${(ofcDistributionBasicInfo.departurePlace)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">目的地</label>
                         <div class="w-width-220 col-float">
                             <input id="destination" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destination)!""}">
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
                         </div>
                     </div>
                     <div class="form-group">
@@ -373,7 +373,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否上门提货</label>
                         <div class="w-width-220 col-float">
                             <input id="pickUpGoods" name="pickUpGoods" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.pickUpGoods)!"" == "0">value="是"<#elseif (ofcFinanceInformation.pickUpGoods)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.pickUpGoods)!"" == "1">value="是"<#elseif (ofcFinanceInformation.pickUpGoods)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">上门提货费用</label>
                         <div class="w-width-220 col-float">
@@ -385,7 +385,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否二次配送</label>
                         <div class="w-width-220 col-float">
                             <input id="twoDistribution" name="twoDistribution" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.twoDistribution)!"" == "0">value="是"<#elseif (ofcFinanceInformation.twoDistribution)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.twoDistribution)!"" == "1">value="是"<#elseif (ofcFinanceInformation.twoDistribution)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">二次配送费用</label>
                         <div class="w-width-220 col-float">
@@ -397,7 +397,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否签单返回</label>
                         <div class="w-width-220 col-float">
                             <input id="returnList" name="returnList" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.returnList)!"" == "0">value="是"<#elseif (ofcFinanceInformation.returnList)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.returnList)!"" == "1">value="是"<#elseif (ofcFinanceInformation.returnList)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">签单返回费用</label>
                         <div class="w-width-220 col-float">
@@ -409,7 +409,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否货物保险</label>
                         <div class="w-width-220 col-float">
                             <input id="insure" name="insure" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.insure)!"" == "0">value="是"<#elseif (ofcFinanceInformation.insure)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.insure)!"" == "1">value="是"<#elseif (ofcFinanceInformation.insure)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">保险费用</label>
                         <div class="w-width-220 col-float">
@@ -426,7 +426,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否代收货款</label>
                         <div class="w-width-220 col-float">
                             <input id="collectFlag" name="collectFlag" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.collectFlag)!"" == "0">value="是"<#elseif (ofcFinanceInformation.collectFlag)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.collectFlag)!"" == "1">value="是"<#elseif (ofcFinanceInformation.collectFlag)!"" == "0">value="否"</#if>>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">代收费用</label>
                         <div class="w-width-220 col-float">

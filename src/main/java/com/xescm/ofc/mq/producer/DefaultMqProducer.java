@@ -1,32 +1,30 @@
 package com.xescm.ofc.mq.producer;
 
-import java.util.Date;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import com.aliyun.openservices.ons.api.Message;
-import com.aliyun.openservices.ons.api.ONSFactory;
-import com.aliyun.openservices.ons.api.Producer;
-import com.aliyun.openservices.ons.api.PropertyKeyConst;
-import com.aliyun.openservices.ons.api.SendResult;
+import com.aliyun.openservices.ons.api.*;
+import com.aliyun.openservices.ons.api.transaction.LocalTransactionExecuter;
+import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
+import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.utils.MQUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * Created by MT on 2016/11/11.
  */
 @Component
 public class DefaultMqProducer {
-	 private static final Logger logger = LoggerFactory.getLogger(DefaultMqProducer.class);
-
+    private Logger logger = LoggerFactory.getLogger(DefaultMqProducer.class);
 
     /**
-     * MQ发送定时消息示例Demo
+     * MQ发送定时消息示例 Demo
      */
     @Resource
     MqConfig mqConfig;
@@ -34,13 +32,13 @@ public class DefaultMqProducer {
     Producer producer;
 
     public void toSendTfcTransPlanMQ(String jsonStr,String code) {
-        logger.info("{}开始消费",mqConfig.getTfcTransPlanTag());
+        logger.info(mqConfig.getTfcTransPlanTag()+"开始消费");
         Message message = new Message(mqConfig.getTfcTransPlanTopic(), mqConfig.getTfcTransPlanTag(),jsonStr.getBytes());
         message.setKey(code);
 
         SendResult sendResult = producer.send(message);
         if (sendResult != null) {
-            logger.info("{}消费成功,消费时间为{},MsgID为{}",mqConfig.getTfcTransPlanTag(),new Date(),sendResult.getMessageId());
+            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getTfcTransPlanTag(),new Date(),sendResult.getMessageId());
         }
     }
 
@@ -51,27 +49,13 @@ public class DefaultMqProducer {
      * @param tag
      */
     public void toSendWhc(String jsonStr,String code,String tag) {
-    	logger.info("WhcProducer Started");
-        Message message = new Message(mqConfig.getWhpOrderTopic(),tag,jsonStr.getBytes());
-        message.setKey(code);
-        SendResult sendResult = producer().send(message);
-        if (sendResult != null) {
-            logger.info("{}消费成功,消费时间为{},MsgID为{}",mqConfig.getWhpOrderTopic(),new Date(),sendResult.getMessageId());
-
-        }
+//        System.out.println("Producer Started");
+//        Message message = new Message(mqConfig.getWHOTopic(), tag,jsonStr.getBytes());
+//        message.setKey(code);
+//        SendResult sendResult = producer.send(message);
+//        if (sendResult != null) {
+//            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getWHOTopic(),new Date(),sendResult.getMessageId());
+//        }
     }
 
-    //@Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Producer producer(){
-        Properties producerProperties = new Properties();
-        producerProperties.setProperty(PropertyKeyConst.ProducerId, mqConfig.getProducerId());
-        producerProperties.setProperty(PropertyKeyConst.AccessKey, mqConfig.getAccessKey());
-        producerProperties.setProperty(PropertyKeyConst.SecretKey, mqConfig.getSecretKey());
-        producerProperties.setProperty(PropertyKeyConst.ONSAddr, mqConfig.getOnsAddr());
-
-        MQUtil.propertiesUtil(producerProperties);
-        Producer producer = ONSFactory.createProducer(producerProperties);
-        producer.start();
-        return producer;
-    }
 }

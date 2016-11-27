@@ -312,6 +312,7 @@
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
                     <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                    <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
                 <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
                 <#--<#import "address.ftl" as apiAddrFtl>-->
                 </p>
@@ -329,15 +330,11 @@
                                 </select>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="name">开单员</label>
+
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-168">
-                                <select id="merchandiser" name="merchandiser" class="col-width-168">
-                                    <option>中国人民</option>
-                                    <option>人民中国</option>
-                                    <option>民中国人</option>
-                                    <option>国人民中</option>
-                                </select>
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="merchandiser" id="merchandiser" type="text" placeholder="开单员" style="padding-left:8px;" />
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
@@ -393,7 +390,6 @@
                                 <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
                             </div>
                         </div></div>
-
                 </div>
 
             </form>
@@ -1685,15 +1681,7 @@
 
         });
 
-        $("#custListDivBlock").click(function () {
-            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
-        });
-        $("#custListDivNoneBottom").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
-        $("#custListDivNoneTop").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
+
 
         $("#custSelectFormBtn").click(function () {
             var custName = $("#custNameDiv").val();
@@ -2313,13 +2301,23 @@
             }
         });
 
-        $('#merchandiser').editableSelect();
+        //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
-            xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+            var csc_url = $("#csc_url").html();
+            var url = csc_url + "/csc/customer/toAddCustomerPage";
+            xescm.common.loadPage(url);
         });
     })
-
+    $("#custListDivBlock").click(function () {
+        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+    });
+    $("#custListDivNoneBottom").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+    $("#custListDivNoneTop").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
