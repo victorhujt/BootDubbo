@@ -1635,7 +1635,7 @@
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
-            jsonStr.transRequire = $("#transRequire").val();
+            jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
             var cubageAmount = $("#cubageCountHidden").html() + "*1*1";

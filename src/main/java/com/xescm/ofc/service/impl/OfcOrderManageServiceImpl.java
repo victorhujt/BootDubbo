@@ -141,7 +141,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
                     if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                     }
 
 
@@ -937,7 +937,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
