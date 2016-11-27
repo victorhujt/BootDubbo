@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.xescm.ofc.enums.OrderConstEnum.ALREADYEXAMINE;
+import static com.xescm.ofc.enums.OrderConstEnum.IMPLEMENTATIONIN;
 
 /**
  * Created by ydx on 2016/10/12.
@@ -106,7 +107,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(orderCode);
         ofcOrderStatus.setOrderStatus(orderStatus);
         logger.debug(ofcOrderStatus.toString());
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.IMPLEMENTATIONIN))
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE)&&reviewTag.equals("rereview")){
@@ -167,7 +168,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             ofcTransplanInfo.setProgramSerialNumber("1");
                             ofcSiloprogramInfo.setProgramSerialNumber("2");
                         }
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());//$$$1
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
                     }else if (ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
@@ -185,7 +186,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         throw new BusinessException("无法确定是否需要运输");
                     }
                     ofcOrderStatusService.save(ofcOrderStatus);
-                    ofcOrderStatus.setOrderStatus(OrderConstEnum.IMPLEMENTATIONIN);
+                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单开始执行");
@@ -343,7 +344,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
                     OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
                     ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                    ofcOrderStatus.setOrderStatus(OrderConstEnum.IMPLEMENTATIONIN);
+                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单开始执行");
@@ -689,7 +690,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             }else {
                                 OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
                                 ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                                ofcOrderStatus.setOrderStatus(OrderConstEnum.IMPLEMENTATIONIN);
+                                ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                                 ofcOrderStatus.setStatusDesc("执行中");
                                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                                         +" "+"订单开始执行");
@@ -880,7 +881,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(ofcDistributionBasicInfo.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
         logger.debug(ofcOrderStatus.toString());
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.IMPLEMENTATIONIN))
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){
@@ -937,7 +938,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
         logger.debug(ofcOrderStatus.toString());
-        if((!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.IMPLEMENTATIONIN))
+        if((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.HASBEENCANCELED))){
             if(ofcOrderStatus.getOrderStatus().equals(OrderConstEnum.PENDINGAUDIT)&&reviewTag.equals("review")){

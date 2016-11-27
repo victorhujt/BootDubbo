@@ -16,10 +16,11 @@
 package com.xescm.ofc.config;
 
 
-import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,8 +41,6 @@ import com.xescm.ofc.utils.MQUtil;
 @Configuration
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
-
-
 
     public final static String MQ_PREFIX="mq";
 
@@ -66,7 +65,7 @@ public class MqConfig {
 
 
     public String getWhoProducerId() {
-		return WhoProducerId;
+        return WhoProducerId;
     }
     public String getTFCTopic() {
         return TFCTopic;
@@ -82,25 +81,25 @@ public class MqConfig {
 
 
 
-	public void setWhoProducerId(String whoProducerId) {
-		WhoProducerId = whoProducerId;
-	}
+    public void setWhoProducerId(String whoProducerId) {
+        WhoProducerId = whoProducerId;
+    }
 
-	private String EPCTopic;
+    private String EPCTopic;
 
     public String getWhpOrderTopic() {
-		return WhpOrderTopic;
-	}
+        return WhpOrderTopic;
+    }
 
-	public void setWhpOrderTopic(String whpOrderTopic) {
-		WhpOrderTopic = whpOrderTopic;
-	}
-
-
+    public void setWhpOrderTopic(String whpOrderTopic) {
+        WhpOrderTopic = whpOrderTopic;
+    }
 
 
 
-	private String EPCTag;
+
+
+    private String EPCTag;
 
     private String opcToEpcTopic;
 
