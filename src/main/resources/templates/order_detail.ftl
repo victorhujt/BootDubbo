@@ -610,9 +610,6 @@
 <script type="text/javascript">
     $(function(){
         
-
-        console.log(${(ofcOrderDTO.orderType)!});
-        console.log(${(ofcOrderDTO.businessType)!});
         var businessType = $("#hiddenBusinessType").html();
         businessType = businessType.toString().substring(0,2);
         var orderType = $("#hiddenOrderType").html();
@@ -641,7 +638,6 @@
     });
     function detailBackToHistory() {
 
-        console.log($("#goBack").val())
         var tag = $("#goBack").val();
         if("orderManage" == tag){
             xescm.common.loadPage("/ofc/orderManage");

@@ -1348,8 +1348,6 @@
         //仓配基本信息
         jsonStr.warehouseCode = $("#warehouseName").val();
         jsonStr.warehouseName = $("#warehouseName option:selected").text();//$("#storeCode option:selected").text();
-        console.log("===========warehouseCode============"+$("#warehouseName").val());
-        console.log("===========warehouseName============"+$("#warehouseName option:selected").text());
         jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();
@@ -1403,7 +1401,6 @@
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
         return cscContantAndCompanyDtoConsignorStr;
 
     }
@@ -1447,7 +1444,6 @@
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
         return cscContantAndCompanyDtoConsigneeStr;
     }
     function getCscSupplierInfoDtoStr(){
@@ -1480,7 +1476,6 @@
         paramSupport.address = $("#supportAddress").val();
 
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
-        console.log("function  support " + cscSupplierInfoDtoStr);
         return cscSupplierInfoDtoStr;
     }
 
@@ -1612,10 +1607,6 @@
             var tag = "place";
             var ofcOrderDTO = JSON.stringify(jsonStr);
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
-            console.log("======orderGoodsListStr======"+orderGoodsListStr)
-            console.log("======cscContantAndCompanyDtoConsignorStr======"+cscContantAndCompanyDtoConsignorStr)
-            console.log("======cscContantAndCompanyDtoConsigneeStr======"+cscContantAndCompanyDtoConsigneeStr)
-            console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)
 
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
@@ -1876,7 +1867,6 @@
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                            console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -1935,7 +1925,6 @@
                     var param = JSON.stringify(cscContantAndCompanyDto);
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
-                        console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
@@ -1989,7 +1978,6 @@
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
 
-                        console.log("==-------data-----111-xxx--"+data);
                         data=eval(data);
                         var supplierList = "";
                         $.each(data,function (index,CscSupplierInfoDto) {
@@ -2002,7 +1990,6 @@
                                     + "/" + cityName
                                     + "/" + areaName
                                     + "/" + streetName;
-                            console.log("==------------111-xxx--"+paramAddressNameToPage);
                             $("#city-picker3-support").val(paramAddressNameToPage);
                             $("#city-picker3-support").citypicker('refresh');
                         });

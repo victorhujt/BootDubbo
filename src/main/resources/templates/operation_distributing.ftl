@@ -690,10 +690,8 @@
                 CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
                     data=eval(data);
                     $.each(data,function (index,goodsType) {
-                        console.log('-----------'+index);
                         if(0 == index){
                             firstGoodsType = goodsType.id;
-                            console.log("++++"+firstGoodsType)
                         }
                         $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
                     });
@@ -701,9 +699,7 @@
                 //加载第一个一级货品的二级种类//000
                 $("#goodsSecTypeId option").remove();
                 $("#goodsSecTypeId").append("<option value = ''>全部</option>");
-                console.log('----------'+firstGoodsType)
                 if(null != firstGoodsType){
-                    console.log("sdfsdf")
                     CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":firstGoodsType},function(data) {
                         data=eval(data);
                         $.each(data,function (index,secGoodsType) {
@@ -938,7 +934,6 @@
                 var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
-                console.log("回显cadj:"+cadj)
                 num = preGoodsAndConsigneeJsonMsg[cadj];
             }
 
@@ -980,7 +975,6 @@
                 num = 0;
             }
             var cadj = consigneeCode + "@" + consigneeContactCode;
-            console.log("写入cadj:"+cadj)
             consigneeAndGoodsJson[cadj] = num;
             sendNum += parseInt(num);
         })
@@ -1015,12 +1009,6 @@
         mapValue[0] = goodsJson;
         mapValue[1] = consigneeAndGoodsJson;
         goodsAndConsigneeMap.put(mapKey,mapValue);
-
-        console.log("mapKey:"+mapKey);
-        console.log("mapValue:" + JSON.stringify(mapValue));
-
-        console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[0]))
-        console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[1]))
 
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     })
@@ -1332,7 +1320,6 @@
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
-                console.log("弹框里的contactCode"+CscContantAndCompanyDto.id);
             });
         },"json");
     });
@@ -1415,7 +1402,6 @@
                 var type = tdArr.eq(6).text();
                 var contactCompanyId = tdArr.eq(7).text();
                 var contactCode = tdArr.eq(8).text();
-                console.log("页面上显示的时候拿的弹框里的contactCode"+contactCode);
                 var phone = tdArr.eq(9).text();
                 var province = tdArr.eq(10).text();
                 var provinceName = tdArr.eq(11).text();
