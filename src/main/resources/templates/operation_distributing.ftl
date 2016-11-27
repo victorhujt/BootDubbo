@@ -410,7 +410,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">开单员</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="开单员"/>
+                        <input class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="merchandiser" type="text" placeholder="开单员"/>
                     </div>
                 </div></div>
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
