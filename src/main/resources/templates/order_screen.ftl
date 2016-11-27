@@ -174,7 +174,7 @@
         //初始化页面数据
         initPageData();
         // 查询
-        queryData(1);
+       // queryData(1);
 
         $("#doSearch").click(function () {
             queryData(1);

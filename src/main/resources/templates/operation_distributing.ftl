@@ -82,7 +82,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsName" name="goodsName" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                     <label class="control-label col-sm-1 no-padding-right" for="name">条形码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <input  id = "barCode" name="barCode" type="text" style="color: black" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
                             <input id="customerId" name ="customerId" type="hidden"/>
                         </div>
                     </div>
@@ -744,8 +744,8 @@
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
                     goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
                     goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
-                    /*goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
-                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
+                    /* goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
+                     goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
@@ -776,11 +776,12 @@
 
                 goodsCodeOut[goodsCode] = 1;
 
+
                 var goodsName = tdArr.eq(3).text();//货品名称
                 var specification = tdArr.eq(4).text();//    货品规格
                 var unit = tdArr.eq(5).text();//    单位
                 var sendGoods = tdArr.eq(6).text();//发货数量
-
+                var goodsSecType = tdArr.eq(7).text();//货品二级类
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
@@ -793,6 +794,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                 preIndex = index;
             });
@@ -804,11 +806,11 @@
 
                     var numIndex = parseInt(preIndex);
                     preIndex = numIndex + 1;
+                    var goodsSecType = tdArr.eq(2).text();//货品二级类
                     var goodsCode = tdArr.eq(4).text();//货品编码
                     var goodsName = tdArr.eq(5).text();//货品名称
                     var specification = tdArr.eq(6).text();//规格
                     var unit = tdArr.eq(7).text();//单位
-
 
                     if(undefined != goodsCodeOut[goodsCode] && goodsCodeOut[goodsCode] == 1){
                         return true;
@@ -826,6 +828,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -1430,7 +1433,7 @@
                     return true;
                 }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-                consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+                consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input /></td>";
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
@@ -1704,7 +1707,7 @@
             var goods = null;
             //遍历货品信息
 
-            $("#goodsInfoListDiv").find("tr").each(function(index) {
+            $("#goodsInfoListDiv").find("tr").each(function(index) {//&&&
 
                 goods = {};
                 var tdArr = $(this).children();
@@ -1714,10 +1717,12 @@
                 var goodsSpec = tdArr.eq(4).text();//规格
                 var goodsUnit = tdArr.eq(5).text();//单位
                 //var goodsTotalAmount = tdArr.eq(6).text();//总数量
+                var goodsSecType = tdArr.eq(7).text();
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
+                goods.goodsCategory = goodsSecType;
 
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
