@@ -130,7 +130,7 @@
                     <label class="control-label col-label no-padding-right" for="name">运输单号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input class="form-control input-xl" id="transCode" readonly="readonly" style="color: #000" type="text">
+                            <input id="transCode" class="form-control input-xl" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                 </div>
@@ -145,13 +145,13 @@
                     <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input class="form-control input-xl"  id="driverName" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="driverName" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input class="form-control input-xl"  id="contactNumber" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="contactNumber" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                 </div>
@@ -344,27 +344,48 @@
             return;
         }
         var orderCode = orderDTO.orderCode;
-        $("#orderCode").val(orderDTO.orderCode);
-        $("#custOrderCode").val(orderDTO.custOrderCode);
-        $("#orderBatchNumber").val(orderDTO.orderBatchNumber);
+        $("#orderCode").val(StringUtil.nullToEmpty(orderDTO.orderCode));
+        $("#custOrderCode").val(StringUtil.nullToEmpty(orderDTO.custOrderCode));
+        $("#orderBatchNumber").val(StringUtil.nullToEmpty(orderDTO.orderBatchNumber));
         var orderStatus = getOrderStatus(orderDTO.orderStatus);
-        $("#orderTime").val(orderDTO.orderTime)
-        $("#custName").val(orderDTO.custName)
+        $("#orderTime").val(subTimeString(StringUtil.nullToEmpty(orderDTO.orderTime)))
+        $("#custName").val(StringUtil.nullToEmpty(orderDTO.custName))
         $("#orderStatus").val(orderStatus);
         var orderType = getOrderType(orderDTO.orderType);
         $("#orderType").val(orderType);
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#transportType").val(orderDTO.transportType);
-        $("#departurePlace").val(orderDTO.departurePlace);
-        $("#destination").val(orderDTO.destination);
-        $("#transCode").val(orderDTO.transCode);
-        $("#transCode").val(orderDTO.transCode);
-        $("#plateNumber").val(orderDTO.plateNumber);
-        $("#driverName").val(orderDTO.driverName);
-        $("#contactNumber").val(orderDTO.contactNumber);
-        var destinationPlace = (orderDTO.destinationProvince + orderDTO.destinationCity + orderDTO.destinationDistrict + orderDTO.destinationTowns + orderDTO.destination).replace(/null/, "");
+        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)+StringUtil.nullToEmpty(orderDTO.departureCity)+StringUtil.nullToEmpty(orderDTO.departureDistrict)+StringUtil.nullToEmpty(orderDTO.DistrictTowns)+StringUtil.nullToEmpty(orderDTO.departurePlace));
+        $("#departurePlace").val(departurePlace);
+        $("#transCode").val(StringUtil.nullToEmpty(orderDTO.transCode));
+        $("#transCode").val(StringUtil.nullToEmpty(orderDTO.transCode));
+        $("#plateNumber").val(StringUtil.nullToEmpty(orderDTO.plateNumber));
+        $("#driverName").val(StringUtil.nullToEmpty(orderDTO.driverName));
+        $("#contactNumber").val(StringUtil.nullToEmpty(orderDTO.contactNumber));
+        var destinationPlace = (StringUtil.nullToEmpty(orderDTO.destinationProvince) + StringUtil.nullToEmpty(orderDTO.destinationCity) + StringUtil.nullToEmpty(orderDTO.destinationDistrict) + StringUtil.nullToEmpty(orderDTO.destinationTowns) + StringUtil.nullToEmpty(orderDTO.destination)).replace(/null/, "");
+        $("#destination").val(destinationPlace);
         $("#destinationPlace").val(destinationPlace);
+
+
+    }
+
+    function subTimeString(s) {
+        try {
+            return s.substring(0, 11);
+        } catch (e) {
+            return s;
+        }
+    }
+
+    function getTransportType(type) {
+        var value = "";
+        if (type == "10") {
+            value = "零担"
+        } else if (type == "20") {
+            value = "整车";
+        }
+        return value;
     }
 
     function getOrderStatus(status) {

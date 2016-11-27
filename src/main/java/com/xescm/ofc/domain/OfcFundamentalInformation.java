@@ -724,6 +724,46 @@ public class OfcFundamentalInformation {
     private String warehouseName;
     @Transient
     private String consigneeName;
+    @Transient
+    private String departureProvince;
+    @Transient
+    private String departureCity;
+    @Transient
+    private String departureDistrict;
+    @Transient
+    private String departureTowns;
+
+    public String getDepartureProvince() {
+        return departureProvince;
+    }
+
+    public void setDepartureProvince(String departureProvince) {
+        this.departureProvince = departureProvince;
+    }
+
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public String getDepartureDistrict() {
+        return departureDistrict;
+    }
+
+    public void setDepartureDistrict(String departureDistrict) {
+        this.departureDistrict = departureDistrict;
+    }
+
+    public String getDepartureTowns() {
+        return departureTowns;
+    }
+
+    public void setDepartureTowns(String departureTowns) {
+        this.departureTowns = departureTowns;
+    }
 
     public String getWarehouseName() {
         return warehouseName;

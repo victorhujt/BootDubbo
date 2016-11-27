@@ -312,6 +312,7 @@
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
                     <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                    <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
                 <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
                 <#--<#import "address.ftl" as apiAddrFtl>-->
                 </p>
@@ -329,15 +330,11 @@
                                 </select>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="name">开单员</label>
+
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-168">
-                                <select id="merchandiser" name="merchandiser" class="col-width-168">
-                                    <option>中国人民</option>
-                                    <option>人民中国</option>
-                                    <option>民中国人</option>
-                                    <option>国人民中</option>
-                                </select>
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="merchandiser" id="merchandiser" type="text" placeholder="开单员" style="padding-left:8px;" />
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
@@ -384,6 +381,15 @@
                             </div>
                         </div></div>
 
+                </div>
+                <div class="form-group">
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">运输要求</label>
+                        <div class="col-xs-2">
+                            <div class="position-relative" style="width:430px;">
+                                <input name="transRequire" id="transRequire" type="text" placeholder="运输要求" style="padding-left:8px;width:430px;" />
+                                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                            </div>
+                        </div></div>
                 </div>
 
             </form>
@@ -736,7 +742,7 @@
                 <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
                 <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 <label class="control-label" style="float:right;" for="name">数量合计：</label>
-
+                <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
             <#--dynamic-table-->
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -1208,6 +1214,7 @@
     }
     function countQuantityOrWeightOrCubageCheck() {
         var quantityCount=0;
+        var cubageCount=0;
         var weightCount=0;
         var luggage=0;
         var flg1="";
@@ -1247,6 +1254,8 @@
         luggage=0;
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
+                cubageCount=cubageCount+parseFloat($(this).val());
+
                 if(flg1=="error" && flg2=="error"){
                     if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
                         luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
@@ -1263,6 +1272,8 @@
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
+        $("#cubageCountHidden").html(cubageCount);
+        console.log("======33=="+JSON.stringify($("#cubageCountHidden").val(cubageCount)))
     }
     function countCostCheck() {
         var count=0;
@@ -1615,7 +1626,12 @@
                 jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
             }
             jsonStr.transCode = $("#transCode").val();
-            jsonStr.custName = $("#custName").val();
+            jsonStr.custName = $("#custName").val();//000
+            jsonStr.notes = $("#transRequire").val();
+            jsonStr.weight = $("#weightCount").html();
+            jsonStr.quantity = $("#quantityCount").html();
+            var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
             jsonStr=orderPlaceAddTranInfo(jsonStr);
             //货品添加
@@ -1665,15 +1681,7 @@
 
         });
 
-        $("#custListDivBlock").click(function () {
-            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
-        });
-        $("#custListDivNoneBottom").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
-        $("#custListDivNoneTop").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
+
 
         $("#custSelectFormBtn").click(function () {
             var custName = $("#custNameDiv").val();
@@ -2293,13 +2301,23 @@
             }
         });
 
-        $('#merchandiser').editableSelect();
+        //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
-            xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+            var csc_url = $("#csc_url").html();
+            var url = csc_url + "/csc/customer/toAddCustomerPage";
+            xescm.common.loadPage(url);
         });
     })
-
+    $("#custListDivBlock").click(function () {
+        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+    });
+    $("#custListDivNoneBottom").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+    $("#custListDivNoneTop").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
