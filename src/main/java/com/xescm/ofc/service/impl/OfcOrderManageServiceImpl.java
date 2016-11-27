@@ -355,7 +355,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //向TFC推送
-                    ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userId);
+                    //ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userId);
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
