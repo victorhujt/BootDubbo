@@ -59,7 +59,7 @@
     <!--<logger name="org.apdplat.word" level="INFO"/>-->
 
     <root level="INFO">
-        <!--<appender-ref ref="Console"/>-->
+        <appender-ref ref="Console"/>
         <appender-ref ref="LogFile"/>
         <appender-ref ref="ErrorFile"/>
     </root>

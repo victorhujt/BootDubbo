@@ -486,8 +486,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
                 if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!:message",response.getMessage());
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!:result",response.getResult());
+                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getMessage());
+                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getResult());
                     throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
                 }
             }
@@ -895,7 +895,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-        //        defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());   ///####
+                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());   ///####
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
