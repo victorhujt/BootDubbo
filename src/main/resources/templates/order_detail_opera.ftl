@@ -42,7 +42,7 @@
                         <div class="w-width-220 col-float">
                             <input id="orderCode" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcFundamentalInformation.orderTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
+                                   value="${(ofcFundamentalInformation.orderTime?string("yyyy-MM-dd"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                         <div class="w-width-220 col-float">
@@ -373,7 +373,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否上门提货</label>
                         <div class="w-width-220 col-float">
                             <input id="pickUpGoods" name="pickUpGoods" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.pickUpGoods)!"" == "1">value="是"<#elseif (ofcFinanceInformation.pickUpGoods)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.pickUpGoods)!""}" >
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">上门提货费用</label>
                         <div class="w-width-220 col-float">
@@ -385,7 +385,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否二次配送</label>
                         <div class="w-width-220 col-float">
                             <input id="twoDistribution" name="twoDistribution" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.twoDistribution)!"" == "1">value="是"<#elseif (ofcFinanceInformation.twoDistribution)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.twoDistribution)!""}" >
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">二次配送费用</label>
                         <div class="w-width-220 col-float">
@@ -397,7 +397,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否签单返回</label>
                         <div class="w-width-220 col-float">
                             <input id="returnList" name="returnList" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.returnList)!"" == "1">value="是"<#elseif (ofcFinanceInformation.returnList)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.returnList)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">签单返回费用</label>
                         <div class="w-width-220 col-float">
@@ -409,7 +409,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否货物保险</label>
                         <div class="w-width-220 col-float">
                             <input id="insure" name="insure" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.insure)!"" == "1">value="是"<#elseif (ofcFinanceInformation.insure)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.insure)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">保险费用</label>
                         <div class="w-width-220 col-float">
@@ -426,7 +426,7 @@
                         <label class="control-label col-label no-padding-right" for="name">是否代收货款</label>
                         <div class="w-width-220 col-float">
                             <input id="collectFlag" name="collectFlag" type="search" placeholder=""
-                                   aria-controls="dynamic-table" <#if (ofcFinanceInformation.collectFlag)!"" == "1">value="是"<#elseif (ofcFinanceInformation.collectFlag)!"" == "0">value="否"</#if>>
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.collectFlag)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">代收费用</label>
                         <div class="w-width-220 col-float">
@@ -539,6 +539,51 @@
                 </tr>
                 </#list>
             </#if>
+            <#if storageList ?? && (storageList?size > 0) >
+                <#list storageList as stroage>
+                <tr>
+                    <td>
+                    ${stroage_index+1}
+                    </td>
+                    <td>
+                    ${stroage.planCode!""}
+                    </td>
+                    <td>
+                    ${stroage.type!""}
+                    </td>
+                    <td>
+                    ${stroage.businessType!""}
+                    </td>
+                    <td>
+                    ${stroage.resourceAllocationStatus!""}
+                    </td>
+                    <td>
+                    ${stroage.serviceProviderName!""}
+                    </td>
+                    <td>
+                    ${stroage.serviceProviderContact!""}
+                    </td>
+                    <td>
+                    ${stroage.serviceProviderContactPhone!""}
+                    </td>
+                    <td>
+                    ${stroage.plannedSingleState!""}
+                    </td>
+                    <td>
+                    ${stroage.departure!""}
+                    </td>
+                    <td>
+                    ${stroage.destination!""}
+                    </td>
+                    <td>
+                    ${stroage.warehouseName!""}
+                    </td>
+                    <td>
+                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
+                    </td>
+                </tr>
+                </#list>
+            </#if>
             </tbody>
         </table>
 
@@ -583,7 +628,7 @@
             <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
                 <#list ofcGoodsDetailsInfoList as goods>
                 <tr>
-                    <td>${(goods_index + 1)!"" }</td>
+                    <td>${(goodsCategory)!"" }</td>
                     <td>${(goods.goodsCode)!"" }</td>
                     <td>${(goods.goodsName)!"" }</td>
                     <td>${(goods.goodsSpec)!"" }</td>
