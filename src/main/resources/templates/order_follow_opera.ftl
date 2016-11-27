@@ -130,7 +130,7 @@
                     <label class="control-label col-label no-padding-right" for="name">运输单号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="transCode" readonly="readonly" style="color: #000" type="text">
+                            <input id="transCode" class="form-control input-xl" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                 </div>
@@ -139,19 +139,19 @@
                     <label class="control-label col-label no-padding-right" for="name">车牌号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="plateNumber" readonly="readonly" style="color: #000;" type="text">
+                            <input class="form-control input-xl" id="plateNumber" readonly="readonly" style="color: #000;" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="driverName" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="driverName" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="contactNumber" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="contactNumber" readonly="readonly" style="color: #000" type="text">
                         </div>
                     </div>
                 </div>

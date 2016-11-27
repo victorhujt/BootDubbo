@@ -150,7 +150,7 @@
                         <div class="w-width-220 col-float">
                             <input id="departurePlace" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcDistributionBasicInfo.departurePlace)!""}">
+                                   value="${(ofcDistributionBasicInfo.departureProvince)!""}${(ofcDistributionBasicInfo.departureCity)!""}${(ofcDistributionBasicInfo.departureDistrict)!""}${(ofcDistributionBasicInfo.departureTowns)!""}${(ofcDistributionBasicInfo.departurePlace)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">目的地</label>
                         <div class="w-width-220 col-float">

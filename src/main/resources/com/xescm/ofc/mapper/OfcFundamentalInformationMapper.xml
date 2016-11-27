@@ -112,21 +112,16 @@
     FROM
     ofc_fundamental_information ofi,
     ofc_distribution_basic_info ofd,
-    (SELECT * FROM ofc_order_status
-    order by lasted_oper_time desc) oos
+    (SELECT temp.* FROM ofc_order_status temp
+    WHERE temp.lasted_oper_time = (
+    SELECT MAX(lasted_oper_time) FROM ofc_order_status
+    WHERE temp.order_code = order_code
+    ) ORDER BY temp.lasted_oper_time DESC) oos
     WHERE ofi.order_code = ofd.order_code
     AND ofi.order_code = oos.order_code
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
-        AND oos.lasted_oper_time = (
-          SELECT
-          MAX(lasted_oper_time)
-          FROM
-          ofc_order_status
-          WHERE
-          order_code = #{code}
-        )
       </when>
       <when test="'custOrderCode'.toString() == searchType">
         AND ofi.cust_order_code = #{code}
@@ -144,7 +139,11 @@
     FROM ofc_fundamental_information ofi,
     ofc_distribution_basic_info odb,
     ofc_warehouse_information owi,
-    ofc_order_status oos
+    (SELECT temp.* FROM ofc_order_status temp
+    WHERE temp.lasted_oper_time = (
+    SELECT MAX(lasted_oper_time) FROM ofc_order_status
+    WHERE temp.order_code = order_code
+    ) ORDER BY temp.lasted_oper_time DESC) oos
     WHERE ofi.order_code = odb.order_code
     AND
     ofi.order_code = owi.order_code
