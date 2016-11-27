@@ -405,15 +405,13 @@
                 </div>
             </div></div>
 
+
             <div><label class="control-label col-label no-padding-right l-bj" for="">开单员</label>
-            <div class="col-xs-3">
-                <div class="clearfix">
-                    <select  id="merchandiser" name="merchandiser" class="bk-1">
-                        <option value="00001">张无忌</option>
-                        <option value="00002">杨过</option>
-                    </select>
-                </div>
-            </div></div>
+                <div class="col-xs-3">
+                    <div class="clearfix">
+                        <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="开单员"/>
+                    </div>
+                </div></div>
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
@@ -457,14 +455,14 @@
     <br/>
     <br/>
     <br/>
-    <div class="row">
+    <div class="row" style="margin-right: -10px">
         <div class="col-xs-12">
             <div class="form-group"style="border-top:1px solid #ccc;">
-                <label class="control-label col-label no-padding-right l-bj" for=""><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">发货方</b></label>
-                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 31px">
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">发货方</b></label>
+                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 32px">
                 </div>
-                <label class="control-label col-label no-padding-right l-bj" for=""><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">出发地:</b></label>
-                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 31px;">
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">出发地:</b></label>
+                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 32px;">
                     <div class="clearfix">
                         <span id="showDepaturePlace" class="l-bj"></span>
                     </div>
@@ -473,7 +471,7 @@
         </div>
         <div class="col-xs-12">
             <div class="form-group" style="margin-left: 0">
-                <label class="control-label col-label no-padding-right l-bj" for="">名称</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">名称</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorName" id="consignorName" type="text"
@@ -484,13 +482,13 @@
                         </button></span>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right l-bj" for="">联系人</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系人</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-left: -6px">联系电话</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-left: -6px;margin-right:0">联系电话</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
@@ -500,7 +498,7 @@
         </div>
         <div class="col-xs-12">
             <div class="form-group" style="margin-left: 0">
-                <label class="control-label col-label no-padding-right l-bj" for="">地址</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">地址</label>
                 <div class="col-xs-9">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12 dz-1"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
@@ -657,8 +655,8 @@
     function main() {
         //$("#orderTime").val(new Date().toLocaleDateString());
         validateFormData();
-        $("#merchandiser").editableSelect();
-        $("#store").editableSelect();
+        //$("#merchandiser").editableSelect();
+       // $("#store").editableSelect();
 
     }
     //链接到收发货方联系人档案

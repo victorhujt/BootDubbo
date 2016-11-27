@@ -15,15 +15,15 @@
         </div>
         <div class="form-group">
             <label class="control-label col-sm-1 no-padding-right" for="name">上传文件</label>
-            <div class="col-sm-3">
+            <div class="col-sm-3 tktp-1">
                 <div class="clearfix">
                     <input  id = "" name="" type="text" style="color: black" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-1 no-padding-right " for="name">Sheet页</label>
-            <div class="col-sm-3">
+            <label class="control-label col-sm-1 no-padding-right" for="name">Sheet页</label>
+            <div class="col-sm-3 tktp-1">
                 <div class="clearfix">
                     <select class="bk-1">
                     </select>
