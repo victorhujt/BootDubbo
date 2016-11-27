@@ -4,7 +4,7 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <<div class="col-sm-6" style="float: right">
+    <div class="col-sm-6" style="float: right">
     <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="goBack" value="" onclick="detailBackToHistory()">
         返回
     </button>

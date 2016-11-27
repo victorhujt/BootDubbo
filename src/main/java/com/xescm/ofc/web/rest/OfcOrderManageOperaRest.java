@@ -213,17 +213,18 @@ public class OfcOrderManageOperaRest extends BaseController {
                 planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
                 String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
                 planAndStorage.setPlannedSingleState(pl);
+                planAndStorage.setBusinessType(getBusiType(planAndStorage.getBusinessType()));
             }
-            if(ofcFinanceInformation != null){
-                String pickUpGoods = StringUtils.equals(ofcFinanceInformation.getPickUpGoods() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getPickUpGoods() ,"0")?"否":"";
+            if (ofcFinanceInformation != null) {
+                String pickUpGoods = StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "0") ? "否" : "";
                 ofcFinanceInformation.setPickUpGoods(pickUpGoods);
-                String twoDistribution = StringUtils.equals(ofcFinanceInformation.getTwoDistribution() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getTwoDistribution() ,"0")?"否":"";
+                String twoDistribution = StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "0") ? "否" : "";
                 ofcFinanceInformation.setTwoDistribution(twoDistribution);
-                String returnList = StringUtils.equals(ofcFinanceInformation.getReturnList() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getReturnList() ,"0")?"否":"";
+                String returnList = StringUtils.equals(ofcFinanceInformation.getReturnList(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getReturnList(), "0") ? "否" : "";
                 ofcFinanceInformation.setReturnList(returnList);
-                String insure = StringUtils.equals(ofcFinanceInformation.getInsure() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getInsure() ,"0")?"否":"";
+                String insure = StringUtils.equals(ofcFinanceInformation.getInsure(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getInsure(), "0") ? "否" : "";
                 ofcFinanceInformation.setInsure(insure);
-                String collectFlag = StringUtils.equals(ofcFinanceInformation.getCollectFlag() ,"1")?"是":StringUtils.equals(ofcFinanceInformation.getCollectFlag() ,"0")?"否":"";
+                String collectFlag = StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "0") ? "否" : "";
                 ofcFinanceInformation.setCollectFlag(collectFlag);
             }
 
@@ -243,6 +244,34 @@ public class OfcOrderManageOperaRest extends BaseController {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex);
         }
         return null;
+    }
+
+    private String getBusiType(String businessType) {
+        String value = businessType;
+        if (StringUtils.equals(businessType, "600")) {
+            value = "城配";
+        } else if (StringUtils.equals(businessType, "601")) {
+            value = "干线";
+        } else if (StringUtils.equals(businessType, "602")) {
+            value = "卡班";
+        } else if (StringUtils.equals(businessType, "610")) {
+            value = "销售出库";
+        } else if (StringUtils.equals(businessType, "611")) {
+            value = "调拨出库";
+        } else if (StringUtils.equals(businessType, "612")) {
+            value = "报损出库";
+        } else if (StringUtils.equals(businessType, "613")) {
+            value = "其他出库";
+        } else if (StringUtils.equals(businessType, "620")) {
+            value = "采购入库";
+        } else if (StringUtils.equals(businessType, "621")) {
+            value = "调拨入库";
+        } else if (StringUtils.equals(businessType, "622")) {
+            value = "退货入库";
+        } else if (StringUtils.equals(businessType, "623")) {
+            value = "加工入库";
+        }
+        return value;
     }
 
     /**

@@ -539,51 +539,6 @@
                 </tr>
                 </#list>
             </#if>
-            <#if storageList ?? && (storageList?size > 0) >
-                <#list storageList as stroage>
-                <tr>
-                    <td>
-                    ${stroage_index+1}
-                    </td>
-                    <td>
-                    ${stroage.planCode!""}
-                    </td>
-                    <td>
-                    ${stroage.type!""}
-                    </td>
-                    <td>
-                    ${stroage.businessType!""}
-                    </td>
-                    <td>
-                    ${stroage.resourceAllocationStatus!""}
-                    </td>
-                    <td>
-                    ${stroage.serviceProviderName!""}
-                    </td>
-                    <td>
-                    ${stroage.serviceProviderContact!""}
-                    </td>
-                    <td>
-                    ${stroage.serviceProviderContactPhone!""}
-                    </td>
-                    <td>
-                    ${stroage.plannedSingleState!""}
-                    </td>
-                    <td>
-                    ${stroage.departure!""}
-                    </td>
-                    <td>
-                    ${stroage.destination!""}
-                    </td>
-                    <td>
-                    ${stroage.warehouseName!""}
-                    </td>
-                    <td>
-                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
-                    </td>
-                </tr>
-                </#list>
-            </#if>
             </tbody>
         </table>
 
@@ -597,7 +552,7 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">序号
+                    aria-label="Clicks: activate to sort column ascending">获取类别
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">货品编码
@@ -687,7 +642,7 @@
         $("#orderType").val(getOrderType(orderType));
         var businessType = "${(ofcFundamentalInformation.businessType)!""}"
         $("#businessType").val(getBusiType(businessType));
-        var transportType = "${(ofcFundamentalInformation.transport_type)!""}";
+        var transportType = "${(ofcFundamentalInformation.transportType)!""}";
         $("#transportType").val(getTransportType(transportType));
         var expensePaymentParty = "${(ofcFinanceInformation.expensePaymentParty)!""}"
         $("#expensePaymentParty").val(getExpensePaymentParty(expensePaymentParty));
@@ -745,6 +700,8 @@
             value = "城配"
         } else if (businessType == "601") {
             value = "干线";
+        } else if (businessType == "602") {
+            value = "卡班";
         } else if (businessType == "610") {
             value = "销售出库";
         } else if (businessType == "611") {

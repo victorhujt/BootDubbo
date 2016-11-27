@@ -72,8 +72,9 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
+                <input type="hidden" value="${(OFC_URL)!""}">
                 <div class="col-xs-3">
-                    <input id="custName" class="w-width-220" name="custName" type="search" placeholder=""
+                    <input readonly="readonly" id="custName" class="w-width-220" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
                     <button type="button" onclick="selectCust();" style="width:20px;height:20px;">
                         <span class="glyphicon glyphicon-search" style="color: #0f5f9f;left:-3px;top:0px;"></span>
@@ -112,7 +113,8 @@
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                 <div class="col-xs-2">
                     <div class="col-width-168">
-                        <select data-placeholder="请选择订单类型" style="width: 168px;" id="orderType" class="" name="orderType">
+                        <select data-placeholder="请选择订单类型" style="width: 168px;" id="orderType" class=""
+                                name="orderType">
                             <option value="">----</option>
                             <option value="60">运输订单</option>
                             <option value="61">仓配订单</option>
@@ -122,7 +124,8 @@
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
 
                 <div class="col-width-168">
-                    <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class="" name="businessType">
+                    <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class=""
+                            name="businessType">
                         <option value=""></option>
                         <option value="600">城配</option>
                         <option value="601">干线</option>
@@ -190,11 +193,9 @@
 
 
     <div class="modal-content" id="custListDiv" style="display: none;">
-        <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id=""
-                                                                                               style="cursor:pointer"
-                                                                                               class="bootbox-close-button close"
-                                                                                               data-dismiss="modal"
-                                                                                               aria-hidden="true">×</button></span>
+        <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer">
+            <button type="button" id="" style="cursor:pointer" class="bootbox-close-button close"
+                    data-dismiss="modal" aria-hidden="true">×</button></span>
             <h4 class="modal-title">选择客户</h4></div>
         <div class="modal-body">
             <div class="bootbox-body">
@@ -595,7 +596,7 @@
                 return "<option value=''>----</option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
             } else if (type == "61") {
                 var html = "";
-                html += "<option value='----------'>----------</option>";
+                html += "<option value=''>----------</option>";
                 html += "<option value='610'>销售出库</option>";
                 html += "<option value='611'>调拨出库</option>";
                 html += "<option value='612'>报损出库</option>";

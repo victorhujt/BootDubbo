@@ -55,41 +55,42 @@
   <!--</select>-->
 
     <select id="queryPlanAndStorage" resultMap="BaseResultMap">
-    SELECT
-    '仓储订单' AS type,
-    osi.business_type,
-    sss.resource_allocation_status,
-    sss.service_provider_name,
-    sss.service_provider_contact,
-    sss.service_provider_contact_phone,
-    oss.planned_single_state,
-    owi.warehouse_name,
-    oss.task_start_time AS finishedTime,
-    CONCAT(
-    IFNULL(dbi.departure_province, ''),
-    IFNULL(dbi.departure_city, ''),
-    IFNULL(dbi.departure_district, ''),
-    IFNULL(dbi.departure_towns, ''),
-    IFNULL(dbi.departure_place, '')
-    ) AS departure,
-    CONCAT(
-    IFNULL(dbi.destination_province,''),
-    IFNULL(dbi.destination_city, ''),
-    IFNULL(dbi.destination_district,''),
-    IFNULL(dbi.destination_towns, ''),
-    IFNULL(dbi.destination, '')
-    ) AS destination
-    FROM
-    ofc_siloprogram_info osi,
-    ofc_silopro_status oss,
-    ofc_silopro_source_status sss,
-    ofc_distribution_basic_info dbi,
-    ofc_warehouse_information owi
-    WHERE   osi.order_code = oss.order_code
-    AND osi.order_code = sss.order_code
-    AND osi.order_code = dbi.order_code
-    AND osi.order_code = owi.order_code
-    AND osi.order_code = #{orderCode}
+        SELECT
+        osi.plan_code,
+        '仓储订单' AS type,
+        osi.business_type,
+        sss.resource_allocation_status,
+        sss.service_provider_name,
+        sss.service_provider_contact,
+        sss.service_provider_contact_phone,
+        oss.planned_single_state,
+        owi.warehouse_name,
+        oss.task_start_time AS finishedTime,
+        CONCAT(
+        IFNULL(dbi.departure_province, ''),
+        IFNULL(dbi.departure_city, ''),
+        IFNULL(dbi.departure_district, ''),
+        IFNULL(dbi.departure_towns, ''),
+        IFNULL(dbi.departure_place, '')
+        ) AS departure,
+        CONCAT(
+        IFNULL(dbi.destination_province,''),
+        IFNULL(dbi.destination_city, ''),
+        IFNULL(dbi.destination_district,''),
+        IFNULL(dbi.destination_towns, ''),
+        IFNULL(dbi.destination, '')
+        ) AS destination
+        FROM
+        ofc_siloprogram_info osi,
+        ofc_silopro_status oss,
+        ofc_silopro_source_status sss,
+        ofc_distribution_basic_info dbi,
+        ofc_warehouse_information owi
+        WHERE   osi.order_code = oss.order_code
+        AND osi.order_code = sss.order_code
+        AND osi.order_code = dbi.order_code
+        AND osi.order_code = owi.order_code
+        AND osi.order_code = #{orderCode}
     </select>
 
     <select id="queryPlanAndStorageTrans" resultMap="BaseResultMap">
@@ -103,7 +104,7 @@
             tss.service_provider_contact_phone,
             ots.planned_single_state,
             owi.warehouse_name,
-            ots.task_completion_time as finishedTime,
+            ots.task_completion_time AS finishedTime,
             CONCAT(
                 IFNULL(dbi.departure_province, ''),
                 IFNULL(dbi.departure_city, ''),
@@ -112,22 +113,34 @@
                 IFNULL(dbi.departure_place, '')
             ) AS departure,
             CONCAT(
-                IFNULL(dbi.destination_province,''),
+                IFNULL(
+                    dbi.destination_province,
+                    ''
+                ),
                 IFNULL(dbi.destination_city, ''),
-                IFNULL(dbi.destination_district,''),
+                IFNULL(
+                    dbi.destination_district,
+                    ''
+                ),
                 IFNULL(dbi.destination_towns, ''),
                 IFNULL(dbi.destination, '')
             ) AS destination
-        FROM ofc_transplan_info oti,
-            ofc_traplan_source_status tss,
-            ofc_transplan_status ots,
-            ofc_warehouse_information owi,
+        FROM
+            ofc_transplan_info oti
+        LEFT JOIN
+            ofc_traplan_source_status tss
+        ON oti.order_code = tss.order_code
+        LEFT JOIN
+            ofc_transplan_status ots
+        ON oti.order_code = ots.order_code
+        LEFT JOIN
+            ofc_warehouse_information owi
+        ON oti.order_code = owi.order_code
+        LEFT JOIN
             ofc_distribution_basic_info dbi
-        WHERE oti.order_code = tss.order_code
-        AND oti.order_code = ots.order_code
-        AND oti.order_code = owi.order_code
-        AND oti.order_code = dbi.order_code
-        AND oti.order_code = #{orderCode}
+        ON oti.order_code = dbi.order_code
+        WHERE
+        oti.order_code = #{orderCode}
     </select>
 
 </mapper>
