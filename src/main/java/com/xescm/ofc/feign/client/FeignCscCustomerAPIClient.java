@@ -1,9 +1,6 @@
 package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerCodeDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerNameDto;
+import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
 import com.xescm.ofc.exception.BusinessException;
@@ -86,6 +83,20 @@ public class FeignCscCustomerAPIClient {
             throw new BusinessException("参数为空");
         }
         Wrapper<CscCustomerVo> wrapper = getApi().queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+        return wrapper;
+    }
+
+    /**
+     * 模糊匹配，查询客户
+     * @param queryCustomerNameDto
+     * @return
+     */
+    public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto) {
+        logger.debug("通过QueryCustomerCodeDto查询客户信息:{}",queryCustomerNameDto);
+        if(queryCustomerNameDto == null){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<?> wrapper = getApi().QueryCustomerByNameAvgue(queryCustomerNameDto);
         return wrapper;
     }
 }

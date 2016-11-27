@@ -256,7 +256,10 @@ public class OfcOperationDistributing extends BaseController{
                 queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
                 queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
             }
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerByName(queryCustomerNameDto);
+//            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerByName(queryCustomerNameDto);
+            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
+            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
             if(wrapper.getCode() == Wrapper.ERROR_CODE){
                 logger.error("查询客户列表失败,查询结果有误!");
             }
