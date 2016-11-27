@@ -75,7 +75,7 @@ public class OfcOrderFollowRest extends BaseController{
             map.put("ofcOrderDTO",ofcOrderDTO);
             map.put("ofcOrderStatus",ofcOrderStatuses);
         }catch (Exception ex){
-            logger.error("订单中心订单追踪出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,map);
@@ -135,7 +135,7 @@ public class OfcOrderFollowRest extends BaseController{
             }
 
         }catch (Exception ex){
-            logger.error("订单中心订单追踪出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
 //            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         map.put("ofcOrderDTO",ofcOrderDTO);

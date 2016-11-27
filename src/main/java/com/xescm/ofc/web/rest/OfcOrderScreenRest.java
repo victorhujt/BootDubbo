@@ -78,7 +78,7 @@ public class OfcOrderScreenRest extends BaseController {
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (Exception ex){
-            logger.error("分页查询订单列表出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("分页查询订单列表出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);

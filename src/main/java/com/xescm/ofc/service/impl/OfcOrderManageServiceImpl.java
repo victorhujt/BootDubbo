@@ -141,7 +141,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
                     if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                     }
 
 
@@ -361,8 +361,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanInfoService.save(ofcTransplanInfo);
                 logger.debug("计划单信息保存成功");
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
-                logger.debug("计划单最新状态保存成功");
-                ofcTransplanStatusService.save(ofcTransplanStatus);
+
                 logger.debug("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
                 logger.debug("计划单资源状态保存成功");
@@ -370,11 +369,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //向TFC推送
+                    logger.debug("计划单最新状态保存成功");
+                    ofcTransplanStatusService.save(ofcTransplanStatus);
                     ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                    System.out.println("-"+ofcDistributionBasicInfo.getCubage());
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
                     BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                     ofcDistributionBasicInfo.setCubage(volume.toString());
@@ -486,13 +486,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
                 if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!:message",response.getMessage());
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!:result",response.getResult());
+                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getMessage());
+                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getResult());
                     throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
                 }
             }
             catch (Exception ex){
-                logger.error("运输计划单调用TFC取消端口出现异常",ex.getMessage());
+                logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage());
                 throw new BusinessException(ex.getMessage());
             }
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
@@ -901,8 +901,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanStatus.setPlannedSingleState(OrderConstEnum.YITUISONG);
 
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);//$$$
-                System.out.println(ofcTransplanStatus);
-                System.out.println(ofcTransplanStatus);
             }
         }catch (Exception ex){
             throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage(),ex);
@@ -937,7 +935,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
@@ -997,7 +995,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
                     if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.WITHTHEKABAN)){//在城配下单这边没有卡班
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                     }
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER)
                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstEnum.SALESOUTOFTHELIBRARY)
@@ -1010,7 +1008,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     if(ofcWarehouseInformation.getProvideTransport()==OrderConstEnum.WAREHOUSEORDERPROVIDETRANS){
                         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                         ofcTransplanInfo.setProgramSerialNumber("1");
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                     }
                 }
                 else {

@@ -250,7 +250,7 @@ public class TestOrder extends BaseController {
         addressDto.setCityName(city);
         addressDto.setDistrictName(coun);
         String result = feignAddressCodeClient.findCodeByName(addressDto);
-        System.out.println(result);
+        logger.info(result);
         return result;
     }
 

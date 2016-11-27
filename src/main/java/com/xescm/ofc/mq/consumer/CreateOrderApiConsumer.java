@@ -59,7 +59,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             try {
                 result = createOrderService.createOrder(messageBody);
             } catch (Exception ex) {
-                logger.error("创单api消费MQ异常：{}{}", ex.getMessage(), ex);
+                logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
             } finally {
                 logger.info("创单api消费MQ获取message处理结束");
                 //调用MQ生产者

@@ -5,9 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.form.OrderOperForm;
-import com.xescm.ofc.enums.BusinessTypeEnum;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
+import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
+import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -59,7 +64,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
 
     /**
-     * 运营→订单管理
+     * 运营→订单管理 orderManageOpera
      *
      * @return modelAndView
      */
@@ -83,10 +88,11 @@ public class OfcOrderManageOperaRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> dataList = ofcOrderManageOperService.queryOrderOper(form);
+            //PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(dataList);
             PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
-            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
+            logger.error("运营平台查询订单出错：{}", ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -125,6 +131,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      * 订单删除
      *
      * @param orderCode
+     * @return
      */
     @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
     @ResponseBody
@@ -178,8 +185,8 @@ public class OfcOrderManageOperaRest extends BaseController {
      */
     @RequestMapping(value = "/orderDetailPageByCode/{orderCode}")
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode) {
-        ModelAndView modelAndView = new ModelAndView("order_detail_opera");
         try {
+            ModelAndView modelAndView = new ModelAndView("order_detail_opera");
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号为空");
             }
@@ -235,9 +242,9 @@ public class OfcOrderManageOperaRest extends BaseController {
 
             return modelAndView;
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},错误：{}", orderCode, ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}",  orderCode, ex);
         }
-        return modelAndView;
+        return null;
     }
 
     private String defaultString(String flag) {
@@ -285,6 +292,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             }
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OfcFundamentalInformation> ofcBatchOrderVos = ofcFundamentalInformationService.queryOrderByOrderBatchNumber(orderBatchNumber);
+            //PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<OfcFundamentalInformation>(ofcBatchOrderVos);
             PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<>(ofcBatchOrderVos);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
@@ -293,12 +301,6 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
-    /**
-     * 获取货品信息
-     *
-     * @param orderCode
-     * @return
-     */
     @RequestMapping(value = "/queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
     private Object queryGoodsInfoByOrderCode(String orderCode) {
@@ -321,12 +323,6 @@ public class OfcOrderManageOperaRest extends BaseController {
         return new ModelAndView("select_cust_page");
     }
 
-    /**
-     * 获取客户信息
-     *
-     * @param custName
-     * @return
-     */
     @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
     @ResponseBody
     public Object querySelectCustData(String custName) {

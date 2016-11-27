@@ -311,21 +311,21 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#notes").val(orderDTO.notes);
-        var departurePlace = (orderDTO.departureProvince
-        + orderDTO.departureCity
-        + orderDTO.departureDistrict
-        + orderDTO.departureTowns).replace(/null/,"");
+        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)
+        + StringUtil.nullToEmpty(orderDTO.departureCity)
+        + StringUtil.nullToEmpty(orderDTO.departureDistrict)
+        + StringUtil.nullToEmpty(orderDTO.departureTowns)).replace(/null/,"");
         $("#departurePlace" ).val(departurePlace);
-        var destination = (orderDTO.destinationProvince
-        + orderDTO.destinationCity
-        + orderDTO.destinationDistrict
-        + orderDTO.destinationTowns).replace(/null/,"");
+        var destination = (StringUtil.nullToEmpty(orderDTO.destinationProvince)
+        + StringUtil.nullToEmpty(orderDTO.destinationCity)
+        + StringUtil.nullToEmpty(orderDTO.destinationDistrict)
+        + StringUtil.nullToEmpty(orderDTO.destinationTowns)).replace(/null/,"");
         $("#destination").val(destination);
-        var destinationPlace = (orderDTO.destinationProvince
-        + orderDTO.destinationCity
-        + orderDTO.destinationDistrict
-        + orderDTO.destinationTowns
-        + orderDTO.destination).replace(/null/,"");
+        var destinationPlace = (StringUtil.nullToEmpty(orderDTO.destinationProvince)
+        + StringUtil.nullToEmpty(orderDTO.destinationCity)
+        + StringUtil.nullToEmpty(orderDTO.destinationDistrict)
+        + StringUtil.nullToEmpty(orderDTO.destinationTowns)
+        + StringUtil.nullToEmpty(orderDTO.destination)).replace(/null/,"");
         $("#destinationPlace").val(destinationPlace);
         $("#quantity").val(orderDTO.quantity);
         $("#weight").val(orderDTO.weight);

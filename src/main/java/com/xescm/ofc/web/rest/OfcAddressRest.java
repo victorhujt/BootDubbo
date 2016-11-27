@@ -25,7 +25,7 @@ public class OfcAddressRest extends BaseController{
         try{
             wrapper = feignAddressInterfaceClient.queryAddressByCodeAndType(queryAddress);
         }catch (Exception ex){
-            logger.error("订单中心查询四级地址出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心查询四级地址出现异常:{}", ex.getMessage(), ex);
         }
         return wrapper;
     }

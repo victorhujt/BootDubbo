@@ -690,10 +690,8 @@
                 CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
                     data=eval(data);
                     $.each(data,function (index,goodsType) {
-                        console.log('-----------'+index);
                         if(0 == index){
                             firstGoodsType = goodsType.id;
-                            console.log("++++"+firstGoodsType)
                         }
                         $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
                     });
@@ -701,9 +699,7 @@
                 //加载第一个一级货品的二级种类//000
                 $("#goodsSecTypeId option").remove();
                 $("#goodsSecTypeId").append("<option value = ''>全部</option>");
-                console.log('----------'+firstGoodsType)
                 if(null != firstGoodsType){
-                    console.log("sdfsdf")
                     CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":firstGoodsType},function(data) {
                         data=eval(data);
                         $.each(data,function (index,secGoodsType) {
@@ -727,7 +723,7 @@
 
         });
         $("#goodsSelectFormBtn").click(function () {
-            debugger
+            
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
@@ -852,7 +848,7 @@
     }
 
     $("#goodsTypeId").change(function () {
-        debugger
+        
         var custId = $("#custId").val();
         var goodsType = $("#goodsTypeId").val();
         //$("#goodsTypeId option").remove();
@@ -938,7 +934,6 @@
                 var preGoodsAndConsigneeJsonMsg = goodsAndConsigneeMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
-                console.log("回显cadj:"+cadj)
                 num = preGoodsAndConsigneeJsonMsg[cadj];
             }
 
@@ -970,7 +965,7 @@
         var consigneeAndGoodsJson = {};
 
         $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
-            debugger
+            
             var tdArr = $(this).children();
             var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
             var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
@@ -980,7 +975,6 @@
                 num = 0;
             }
             var cadj = consigneeCode + "@" + consigneeContactCode;
-            console.log("写入cadj:"+cadj)
             consigneeAndGoodsJson[cadj] = num;
             sendNum += parseInt(num);
         })
@@ -1015,12 +1009,6 @@
         mapValue[0] = goodsJson;
         mapValue[1] = consigneeAndGoodsJson;
         goodsAndConsigneeMap.put(mapKey,mapValue);
-
-        console.log("mapKey:"+mapKey);
-        console.log("mapValue:" + JSON.stringify(mapValue));
-
-        console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[0]))
-        console.log(JSON.stringify(goodsAndConsigneeMap.get(mapKey)[1]))
 
         $("#goodsAndConsigneeDiv").fadeOut("slow");
     })
@@ -1073,7 +1061,7 @@
             var streetAuto = null;
             var streetNameAuto = null;
             var addressAuto = null;
-            debugger;
+            
             CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
                 data=eval(data);
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1332,7 +1320,6 @@
                 contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
-                console.log("弹框里的contactCode"+CscContantAndCompanyDto.id);
             });
         },"json");
     });
@@ -1415,7 +1402,6 @@
                 var type = tdArr.eq(6).text();
                 var contactCompanyId = tdArr.eq(7).text();
                 var contactCode = tdArr.eq(8).text();
-                console.log("页面上显示的时候拿的弹框里的contactCode"+contactCode);
                 var phone = tdArr.eq(9).text();
                 var province = tdArr.eq(10).text();
                 var provinceName = tdArr.eq(11).text();
@@ -1503,7 +1489,7 @@
                 //tdArr.eq(2).children().attr("readonly","readonly");
                 ifConsigneeConfirm = true;
                 //禁用添加收货人和确认收货人
-                debugger;
+                
             })
             layer.close(index);
         }, function(index){
@@ -1513,7 +1499,7 @@
 
     $("#consigneeListClearDivBlock").click(function () {
         //alert('3233')
-        debugger
+        
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout > 0){
             layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
@@ -1769,14 +1755,14 @@
             var consigneeType = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             var contactCode = tdArr.eq(8).text();
-            debugger
+            
             //遍历货品信息
             var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
             var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
             var goodsNum = 0;//货品列表数量
             $("#goodsInfoListDiv").find("tr").each(function(index) {
                 goodsNum += 1;
-                debugger
+                
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1940,7 +1926,6 @@
      */
 
     function validateFormData() {
-        var ofc_url = $("#ofc_url").html();
         $('#operationDistributingFormValidate').validate({
             errorElement : 'div',
             errorClass : 'help-block',
