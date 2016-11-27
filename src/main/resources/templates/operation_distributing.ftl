@@ -1940,7 +1940,6 @@
      */
 
     function validateFormData() {
-        var ofc_url = $("#ofc_url").html();
         $('#operationDistributingFormValidate').validate({
             errorElement : 'div',
             errorClass : 'help-block',

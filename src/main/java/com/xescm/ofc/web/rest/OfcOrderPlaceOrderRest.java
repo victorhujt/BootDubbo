@@ -215,7 +215,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
-            logger.error("订单中心筛选货品出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
     }
 
@@ -241,7 +241,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGood);
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
-            logger.error("订单中心筛选货品出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
     }
 

@@ -109,8 +109,7 @@ public class OfcOperationDistributing extends BaseController{
 
             }
         }catch (Exception ex){
-            logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
-            System.out.println(ex.getMessage());
+            logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
@@ -163,7 +162,7 @@ public class OfcOperationDistributing extends BaseController{
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
         }catch (Exception ex){
-            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
+            logger.error("城配下单查询仓库列表失败!{}",ex.getMessage(),ex);
         }
     }
 
@@ -187,7 +186,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品种类失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
         }
     }
 
@@ -214,7 +213,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品小类失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
         }
     }
 
@@ -234,7 +233,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品列表失败!{}",ex.getMessage(),wrapper.getMessage());
         }
     }
 
@@ -270,7 +269,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
             }
         }catch (Exception ex){
-            logger.error("查询客户列表失败!",ex.getMessage());
+            logger.error("查询客户列表失败!异常信息为:{}",ex.getMessage(),ex);
         }
 
     }

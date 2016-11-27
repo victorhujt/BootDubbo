@@ -79,7 +79,7 @@ public class OfcJumpontroller extends BaseController{
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();

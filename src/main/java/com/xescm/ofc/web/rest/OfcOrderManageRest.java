@@ -261,7 +261,7 @@ public class OfcOrderManageRest extends BaseController{
             rmcCompanyLists.setResult(lineVos1);*/
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
-            logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
         }
     }
 
@@ -337,7 +337,7 @@ public class OfcOrderManageRest extends BaseController{
         try{
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
-            logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
         }
 
     }
