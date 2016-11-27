@@ -61,7 +61,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
                     }
-                    if(PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getOrderCode())){
+                    if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     }
                 } catch (IllegalAccessException e) {
