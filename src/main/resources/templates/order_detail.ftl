@@ -74,14 +74,27 @@
                                         <div class="form-group">
                                             <label class="control-label col-label no-padding-right" for="name">订单状态</label>
                                             <div class="w-width-220 y-float" style="height:34px;">
+
+                                            <#if (ofcOrderDTO.orderStatus)! == '10'>
+                                                <input id="" value = "待审核" readonly="readonly"  class="form-control input-sm"  type="text" >
+                                            <#elseif (ofcOrderDTO.orderStatus)! == '20'>
+                                                <input id="" value = "已审核" readonly="readonly"  class="form-control input-sm"  type="text" >
+                                            <#elseif (ofcOrderDTO.orderStatus)! == '30'>
+                                                <input id="" value = "已审核" readonly="readonly"  class="form-control input-sm"  type="text" >
+                                            <#elseif (ofcOrderDTO.orderStatus)! == '40'>
+                                                <input id="" value = "已完成" readonly="readonly"  class="form-control input-sm"  type="text" >
+                                            <#elseif (ofcOrderDTO.orderStatus)! == '50'>
+                                                <input id="" value = "已取消" readonly="readonly"  class="form-control input-sm"  type="text" >
+                                            <#else>
                                                 <input type="text" readonly="readonly" class="form-control input-sm" />
-                                                <div class="w-width-220 y-float">
-                                                <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '10'><input id="" value = "待审核" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
+                                            </#if>
+                                               <#-- <div class="w-width-220 y-float">-->
+                                                <#--<#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '10'><input id="" value = "待审核" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
                                                 <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '20'><input id="" value = "已审核" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
-                                                <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '30'><input id="" value = "执行中" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
+                                                <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '30'><input id="" value = "已审核" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
                                                 <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '40'><input id="" value = "已完成" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
-                                                <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '50'><input id="" value = "已取消" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>
-                                                </div>
+                                                <#if (ofcOrderDTO.orderStatus)! ??><#if (ofcOrderDTO.orderStatus)! == '50'><input id="" value = "已取消" readonly="readonly" style="color: #000" class="form-control input-sm"  type="text" ></#if></#if>-->
+                                              <#--  </div>-->
                                             </div>
                                             <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                                             <div class="w-width-220 y-float">
@@ -116,7 +129,7 @@
                                             <label class="control-label col-label no-padding-right" for="name">平台类型</label>
                                             <div class="w-width-220 y-float" style="height:34px;">
                                                 <div class="clearfix">
-                                                    <input type="text" readonly="readonly" class="form-control input-sm" />
+
                                                 <#if (ofcOrderDTO.platformType)! == '1'>
                                                     <input id="platformType" value = "线下" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 <#elseif (ofcOrderDTO.platformType)! == '2'>
@@ -125,6 +138,8 @@
                                                     <input id="platformType" value = "京东" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                 <#elseif (ofcOrderDTO.platformType)! == '4'>
                                                     <input id="platformType" value = "鲜易网" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                <#else>
+                                                    <input type="text" readonly="readonly" class="form-control input-sm" />
                                                 </#if>
 
                                                 </div>
@@ -202,12 +217,14 @@
                                             <label class="control-label col-label no-padding-right" for="name">是否加急</label>
                                             <div class="w-width-220 y-float" style="height:34px;">
                                                 <div class="clearfix">
-                                                    <input type="text" readonly="readonly" class="form-control input-sm" />
+
                                                     <#if (ofcOrderDTO.urgent) ??>
                                                         <#if (ofcOrderDTO.urgent)! == 1>
                                                             <input id="urgent" value = "加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                         <#elseif (ofcOrderDTO.urgent)! == 0>
                                                             <input id="urgent" value = "不加急" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                        <#else>
+                                                            <input type="text" readonly="readonly" class="form-control input-sm" />
                                                         </#if>
                                                     </#if>
 
