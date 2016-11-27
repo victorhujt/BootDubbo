@@ -21,35 +21,35 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
                         <div class="w-width-220 col-float">
-                            <input id="orderBatchNumber" name="orderBatchNumber" type="search" placeholder=""
+                            <input readonly="readonly" id="orderBatchNumber" name="orderBatchNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(orderBatchNumber)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                         <div class="w-width-220 col-float">
-                            <input id="orderCode" name="custName" type="search" placeholder=""
+                            <input readonly="readonly" id="orderCode" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.custName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">开单员</label>
                         <div class="w-width-220 col-float">
-                            <input id="merchandiser" name="merchandiser" type="search" placeholder=""
+                            <input readonly="readonly" id="merchandiser" name="merchandiser" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.merchandiser)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                         <div class="w-width-220 col-float">
-                            <input id="orderTime" name="orderTime" type="search" placeholder=""
+                            <input readonly="readonly" id="orderTime" name="orderTime" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(ofcBatchOrderVo.orderTime?string("yyyy-MM-dd"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">配送仓库</label>
                         <div class="w-width-220 col-float">
-                            <input id="warehouseName" name="warehouseName" type="search" placeholder=""
+                            <input readonly="readonly" id="warehouseName" name="warehouseName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.warehouseName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">备注</label>
                         <div class="w-width-220 col-float">
-                            <input id="notes" name="notes" type="search" placeholder=""
+                            <input readonly="readonly" id="notes" name="notes" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.notes)!""}">
                         </div>
                     </div>
@@ -68,24 +68,24 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">名称</label>
                         <div class="w-width-220 col-float">
-                            <input id="consignorName" name="consignorName" type="search" placeholder=""
+                            <input readonly="readonly" id="consignorName" name="consignorName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.consignorName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系人</label>
                         <div class="w-width-220 col-float">
-                            <input id="consignorContactName" name="consignorContactName" type="search" placeholder=""
+                            <input readonly="readonly" id="consignorContactName" name="consignorContactName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.consignorContactName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                         <div class="w-width-220 col-float">
-                            <input id="consignorContactPhone" name="consignorContactPhone" type="search" placeholder=""
+                            <input readonly="readonly" id="consignorContactPhone" name="consignorContactPhone" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.consignorContactPhone)!""}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
-                            <input id="address" name="address" style="width: 100%;width:462px;" type="search"
+                            <input readonly="readonly" id="address" name="address" style="width: 100%;width:462px;" type="search"
                                    placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcBatchOrderVo.departure)!"" }">
                         </div>
@@ -468,7 +468,7 @@
 
 <script>
     $(function () {
-        $("input[type='search']").attr("readonly", "readonly")
+        $("input[type='search']").attr("readonly", "readonly");
     })
 
     $(function () {

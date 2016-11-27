@@ -331,7 +331,7 @@
                         <label class="control-label col-label no-padding-right" for="name">费用总计</label>
                         <div class="w-width-220 col-float">
                             <input id="serviceCharge" name="serviceCharge" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.luggage)!"0.00"}">
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.serviceCharge)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">费用支付方</label>
                         <div class="w-width-220 col-float">
@@ -414,7 +414,7 @@
                         <label class="control-label col-label no-padding-right" for="name">保险费用</label>
                         <div class="w-width-220 col-float">
                             <input id="insurance" name="insurance" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.insurance)!"0.00"}">
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.cargoInsuranceFee)!"0.00"}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">声明价值</label>
                         <div class="w-width-220 col-float">
