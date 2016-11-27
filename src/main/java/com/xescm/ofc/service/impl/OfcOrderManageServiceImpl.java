@@ -383,7 +383,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.debug("计划单状态保存成功");
             ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
             logger.debug("计划单资源状态保存成功");
-
+            planUpdate(ofcTransplanInfo.getPlanCode(),"40",ofcTraplanSourceStatus.getServiceProviderName()
+                    ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&
 
         }catch (Exception e) {
             throw new BusinessException(e.getMessage());
@@ -720,7 +721,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
                 }
-                //向TFC推送
+
 
                 ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
             } catch (Exception ex) {
