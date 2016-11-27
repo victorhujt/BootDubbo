@@ -312,6 +312,7 @@
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
                     <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                    <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
                 <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
                 <#--<#import "address.ftl" as apiAddrFtl>-->
                 </p>
@@ -1680,15 +1681,7 @@
 
         });
 
-        $("#custListDivBlock").click(function () {
-            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
-        });
-        $("#custListDivNoneBottom").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
-        $("#custListDivNoneTop").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
+
 
         $("#custSelectFormBtn").click(function () {
             var custName = $("#custNameDiv").val();
@@ -2311,10 +2304,20 @@
         //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
-            xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+            var csc_url = $("#csc_url").html();
+            var url = csc_url + "/csc/customer/toAddCustomerPage";
+            xescm.common.loadPage(url);
         });
     })
-
+    $("#custListDivBlock").click(function () {
+        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+    });
+    $("#custListDivNoneBottom").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+    $("#custListDivNoneTop").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
