@@ -1,33 +1,22 @@
-<head>
-    <title>城配开单Excel导入</title>
-</head>
-<body>
-<span></span>
+<title>城配开单Excel导入</title>
     <form class="form-horizontal" role="form">
         <div class="form-group">
-            <label class="control-label col-sm-1 no-padding-right" for="name">下载模板</label>
-            <div class="col-sm-3">
-                <div class="clearfix">
+            <label class="control-label col-label no-padding-right" for="name">下载模板</label>
+            <div class="col-xs-3">
                     <a>批量下单导入模版_商超配送</a>
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
-                </div>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-1 no-padding-right" for="name">上传文件</label>
-            <div class="col-sm-3 tktp-1">
-                <div class="clearfix">
-                    <input  id = "" name="" type="text" style="color: black" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
-                </div>
+            <label class="control-label col-label no-padding-right" for="name">上传文件</label>
+            <div class="col-xs-3">
+                    <input id = "" name="" type="text"  class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-1 no-padding-right" for="name">Sheet页</label>
-            <div class="col-sm-3 tktp-1">
-                <div class="clearfix">
-                    <select class="bk-1">
-                    </select>
-                </div>
+            <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
+            <div class="col-xs-3">
+                    <select class="col-xs-12"> </select>
             </div>
         </div>
     </form>
@@ -70,4 +59,3 @@
         xescm.common.loadPage(historyUrl);
     })
 </script>
-</body>
