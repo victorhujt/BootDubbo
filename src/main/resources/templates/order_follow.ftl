@@ -9,22 +9,23 @@
                                 筛选条件
                             </p>
                         </div>
-                        <div class=" form-group y-float">
-                          <label class="control-label col-label no-padding-right" for="followTag"></label>
-                            <div class="col-width-168  no-padding-right">
-                                <select class="chosen-select col-xs-2 col-sm-12 " id="followTag" name="followTag">
+                        <div class=" form-group" style="margin-left:-15px">
+                            <label class="control-label col-label no-padding-right" for="followTag"></label>
+                            <div class="w-width-220 col-float">
+                                <select class="chosen-select" id="followTag" name="followTag">
                                     <option value="orderCode">订单编号</option>
                                     <option value="custOrderCode">客户订单编号</option>
                                     <option value="transCode">运输单号</option>
                                 </select>
                             </div>
-                            <div class="col-width-168 padding-15">
-                                <div class="clearfix">
-                                    <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
-                                </div>
+                            <label class="control-label col-label no-padding-right" for="code"></label>
+                            <div class="w-width-220 col-float">
+                                <div class="clearfix" style="margin-left:-20px;width:196px;">
+                                <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
+                              </div>
                             </div>
                         </div>
-                        <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
+                        <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn" style="margin-left:-20px;">
                             筛选
                         </button>
                         <div class="page-header" style="margin-top:30px;">
@@ -33,7 +34,6 @@
                             </p>
                         </div>
                         <form id="" method="post" class="form-horizontal" role="form" >
-                            <div class="row">
                             <div class="form-group y-float">
                                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                                 <div class="w-width-220 col-float">
@@ -195,7 +195,6 @@
                                     </div>
                                 </div>
                             </div>
-                            </div>
 
                         </form>
 
@@ -206,6 +205,7 @@
                                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">订单状态</th>
                             </thead>
                             <tbody id="orderFollowStatusListTBody">
+
                             </tbody>
                         </table>
 

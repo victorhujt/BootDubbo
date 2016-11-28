@@ -18,7 +18,7 @@
                 <option value="transCode">运输单号</option>
             </select>
         </div>
-        <label class="control-label col-label no-padding-right" for="name"></label>
+        <label class="control-label col-label no-padding-right" for="code"></label>
         <div class="w-width-220 col-float ">
             <div class="clearfix">
                 <input id="code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder=""
