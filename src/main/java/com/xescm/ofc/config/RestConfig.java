@@ -33,6 +33,19 @@ public class RestConfig {
      */
     private String cscUrl;
 
+    public String getCscWebUrl() {
+        return cscWebUrl;
+    }
+
+    public void setCscWebUrl(String cscWebUrl) {
+        this.cscWebUrl = cscWebUrl;
+    }
+
+    /**
+     * 客户中心前端Url
+     */
+    private String cscWebUrl;
+
     /**
      * 地址库地址
      * @return

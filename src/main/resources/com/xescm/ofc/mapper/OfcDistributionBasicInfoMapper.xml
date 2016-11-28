@@ -229,4 +229,61 @@
         AND ofi.cust_code = #{custCode,jdbcType=VARCHAR}
         ORDER BY odbi.oper_time DESC limit 1
   </select>
+
+  <select id="checkTransCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" resultType="java.lang.Integer">
+    SELECT
+    count(order_code) AS countOrderCode
+    FROM
+    ofc_distribution_basic_info odbi
+    <where>
+      <if test="selfTransCode != null and selfTransCode != ''" >
+        trans_code != #{selfTransCode}
+      </if>
+      AND
+      trans_code = #{transCode}
+    </where>
+  </select>
+
+
+  <resultMap id="OfcBatchOrderMap" type="com.xescm.ofc.domain.OfcBatchOrderVo" >
+    <result column="orderCode" property="order_code" jdbcType="VARCHAR" />
+    <result column="batch_order_number" property="batchOrderNumber" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="warehouse_name" property="warehouseName" jdbcType="DECIMAL" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
+    <result column="departure" property="departure" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="queryByBatchNumber" resultType="com.xescm.ofc.domain.OfcBatchOrderVo">
+    SELECT
+    ofi.order_code,
+    ofi.order_batch_number,
+    ofi.cust_name,
+    ofi.order_time,
+    owi.warehouse_name,
+    ofi.notes,
+    dbi.consignor_name,
+    dbi.consignor_contact_name,
+    dbi.consignor_contact_phone,
+    CONCAT(
+    IFNULL(dbi.departure_province, ""),
+    IFNULL(dbi.departure_city, ""),
+    IFNULL(dbi.departure_district, ""),
+    IFNULL(dbi.departure_towns, ""),
+    IFNULL(dbi.departure_place, "")
+    ) AS departure
+    FROM
+    ofc_fundamental_information ofi,
+    ofc_distribution_basic_info dbi,
+    ofc_warehouse_information owi
+    WHERE
+    ofi.order_code = dbi.order_code
+    AND ofi.order_code = owi.order_code
+    AND ofi.order_batch_number = #{orderBatchNumber}
+    LIMIT 1
+  </select>
 </mapper>

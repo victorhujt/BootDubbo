@@ -18,37 +18,33 @@
                     <div class="col-xs-12">
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right" for="name">订单日期</label>
+                                <div class="y-float" style="width:530px;margin-left:12px;">
                                     <div class="clearfix">
-                                        <input id="orderTimePre" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                        至
-                                        <input id="orderTimeSuf" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                        <input id="orderTimePre" style="width:196px;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                        <label class="control-label col-label no-padding-right" style="margin:0 26px;text-align:center;" for="name">至</label>
+                                        <input id="orderTimeSuf" style="width:196px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单编号</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right" for="name">订单编号</label>
+                                <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <input id="orderCode" name="orderCode" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+                                <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <input id="custOrderCode" name="custOrderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单状态</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right" for="name">订单状态</label>
+                                <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <select class="chosen-select form-control" data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus">
-                                            <option value="">----</option>
+                                            <option value=""></option>
                                             <option value="10">待审核</option>
                                             <option value="20">已审核</option>
                                             <option value="30">执行中</option>
@@ -57,13 +53,11 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right" for="name">订单类型</label>
+                                <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <select class="chosen-select form-control" data-placeholder="请选择订单类型" id="orderType" name="orderType">
-                                            <option value="">----</option>
+                                            <option value=""></option>
                                             <option value="60">运输订单</option>
                                             <option value="61">仓配订单</option>
                                         </select>
@@ -71,11 +65,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                                <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <select class="chosen-select form-control" data-placeholder="请选择业务类型" id="businessType" name="businessType">
-                                            <option value="">----</option>
+                                            <option value=""></option>
                                             <option value="600">城配</option>
                                             <option value="601">干线</option>
                                             <option value="----------">----------</option>
@@ -93,7 +87,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                                <label class="control-label col-label no-padding-right" for="name"></label>
                                 <div class="col-sm-6">
                                     <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
                                         筛选
@@ -180,7 +174,7 @@
         //初始化页面数据
         initPageData();
         // 查询
-        queryData(1);
+       // queryData(1);
 
         $("#doSearch").click(function () {
             queryData(1);
@@ -382,10 +376,8 @@
 
         var jsonStr={};
         var orderTimePre = $dp.$('orderTimePre').value;
-        console.log(orderTimePre);
         jsonStr.orderTimePre=orderTimePre;
         var orderTimeSuf = $dp.$('orderTimeSuf').value;
-        console.log(orderTimeSuf);
         jsonStr.orderTimeSuf=orderTimeSuf;
         jsonStr.orderCode=$("#orderCode").val();
         jsonStr.custOrderCode=$("#custOrderCode").val();

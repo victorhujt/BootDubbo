@@ -1,8 +1,5 @@
 package com.xescm.ofc.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -66,8 +63,6 @@ public class OfcFinanceInformation {
     /**
      * 创建日期
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "creation_time")
     private Date creationTime;
 
@@ -84,8 +79,6 @@ public class OfcFinanceInformation {
     /**
      * 操作时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "oper_time")
     private Date operTime;
 
@@ -110,7 +103,7 @@ public class OfcFinanceInformation {
      * 保价金额(电商)
      */
     @Column(name = "insure_value")
-    private String insureValue;
+    private BigDecimal insureValue;
 
     /**
      * 是否上门提货
@@ -177,13 +170,13 @@ public class OfcFinanceInformation {
     private BigDecimal currentAmount;
 
     /**
-     * 到付金额
+     * 到付金额 
      */
     @Column(name = "to_pay_amount")
     private BigDecimal toPayAmount;
 
     /**
-     * 回付金额
+     * 回付金额 
      */
     @Column(name = "return_amount")
     private BigDecimal returnAmount;
@@ -198,7 +191,6 @@ public class OfcFinanceInformation {
      * 运费
      */
     private BigDecimal luggage;
-
 
     /**
      * 获取服务费
@@ -493,7 +485,7 @@ public class OfcFinanceInformation {
      *
      * @return insure_value - 保价金额(电商)
      */
-    public String getInsureValue() {
+    public BigDecimal getInsureValue() {
         return insureValue;
     }
 
@@ -502,7 +494,7 @@ public class OfcFinanceInformation {
      *
      * @param insureValue 保价金额(电商)
      */
-    public void setInsureValue(String insureValue) {
+    public void setInsureValue(BigDecimal insureValue) {
         this.insureValue = insureValue;
     }
 
@@ -705,36 +697,36 @@ public class OfcFinanceInformation {
     }
 
     /**
-     * 获取到付金额
+     * 获取到付金额 
      *
-     * @return to_pay_amount - 到付金额
+     * @return to_pay_amount - 到付金额 
      */
     public BigDecimal getToPayAmount() {
         return toPayAmount;
     }
 
     /**
-     * 设置到付金额
+     * 设置到付金额 
      *
-     * @param toPayAmount 到付金额
+     * @param toPayAmount 到付金额 
      */
     public void setToPayAmount(BigDecimal toPayAmount) {
         this.toPayAmount = toPayAmount;
     }
 
     /**
-     * 获取回付金额
+     * 获取回付金额 
      *
-     * @return return_amount - 回付金额
+     * @return return_amount - 回付金额 
      */
     public BigDecimal getReturnAmount() {
         return returnAmount;
     }
 
     /**
-     * 设置回付金额
+     * 设置回付金额 
      *
-     * @param returnAmount 回付金额
+     * @param returnAmount 回付金额 
      */
     public void setReturnAmount(BigDecimal returnAmount) {
         this.returnAmount = returnAmount;

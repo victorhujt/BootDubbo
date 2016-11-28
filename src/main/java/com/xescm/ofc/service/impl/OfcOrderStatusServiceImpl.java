@@ -25,6 +25,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
     @Autowired
     private OfcOrderStatusMapper ofcOrderStatusMapper;
+
     @Override
     public int deleteByOrderCode(Object key) {
         ofcOrderStatusMapper.deleteByOrderCode(key);
@@ -32,57 +33,74 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public List<OfcOrderStatus> orderStatusScreen(String code,String followTag) {
-        if(!PubUtils.trimAndNullAsEmpty(code).equals("")){
+    public List<OfcOrderStatus> orderStatusScreen(String code, String followTag) {
+        if (!PubUtils.trimAndNullAsEmpty(code).equals("")) {
             String orderCode = null;
-            String custOrderCode =null;
+            String custOrderCode = null;
             String transCode = null;
-            if(followTag.equals("orderCode")){
+            if (followTag.equals("orderCode")) {
                 orderCode = code;
-            }else if(followTag.equals("custOrderCode")){
+            } else if (followTag.equals("custOrderCode")) {
                 custOrderCode = code;
-            }else if(followTag.equals("transCode")){
+            } else if (followTag.equals("transCode")) {
                 transCode = code;
             }
-            Map<String,String> mapperMap = new HashMap<>();
-            mapperMap.put("orderCode",orderCode);
-            mapperMap.put("custOrderCode",custOrderCode);
-            mapperMap.put("transCode",transCode);
+            // Map<String,String> mapperMap = new HashMap<String,String>();
+            Map<String, String> mapperMap = new HashMap<>();
+            mapperMap.put("orderCode", orderCode);
+            mapperMap.put("custOrderCode", custOrderCode);
+            mapperMap.put("transCode", transCode);
             return ofcOrderStatusMapper.orderStatusScreen(mapperMap);
-        }else {
+        } else {
             throw new BusinessException();
         }
     }
 
     @Override
-    public OfcOrderStatus orderStatusSelect(String code,String followTag) {
-        if(!PubUtils.trimAndNullAsEmpty(code).equals("")){
+    public OfcOrderStatus orderStatusSelect(String code, String followTag) {
+        if (!PubUtils.trimAndNullAsEmpty(code).equals("")) {
             String orderCode = null;
-            String custOrderCode =null;
+            String custOrderCode = null;
             String transCode = null;
 
-            if(followTag.equals("orderCode")){
+            if (followTag.equals("orderCode")) {
                 orderCode = code;
-            }else if(followTag.equals("custOrderCode")){
+            } else if (followTag.equals("custOrderCode")) {
                 custOrderCode = code;
-            }else if(followTag.equals("transCode")){
+            } else if (followTag.equals("transCode")) {
                 transCode = code;
             }
-            logger.debug("`````````````"+orderCode);
-            logger.debug("`````````````"+custOrderCode);
-            logger.debug("`````````````"+transCode);
-            Map<String,String> mapperMap = new HashMap<>();
-            mapperMap.put("orderCode",orderCode);
-            mapperMap.put("custOrderCode",custOrderCode);
-            mapperMap.put("transCode",transCode);
+            logger.debug("`````````````" + orderCode);
+            logger.debug("`````````````" + custOrderCode);
+            logger.debug("`````````````" + transCode);
+            // Map<String,String> mapperMap = new HashMap<String,String>();
+            Map<String, String> mapperMap = new HashMap<>();
+            mapperMap.put("orderCode", orderCode);
+            mapperMap.put("custOrderCode", custOrderCode);
+            mapperMap.put("transCode", transCode);
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
-            if(ofcOrderStatus == null){
+            if (ofcOrderStatus == null) {
                 return new OfcOrderStatus();
             }
             return ofcOrderStatus;
-        }else {
+        } else {
             throw new BusinessException();
         }
 
+    }
+
+    @Override
+    public OfcOrderStatus queryOrderStateByOrderCode(String orderCode) {
+        return ofcOrderStatusMapper.queryOrderStateByOrderCode(orderCode);
+    }
+
+    @Override
+    public void cancelOrderStateByOrderCode(String orderCode) {
+        ofcOrderStatusMapper.cancelOrderStateByOrderCode(orderCode);
+    }
+
+    @Override
+    public OfcOrderStatus queryOrderByOrderCode(String orderCode) {
+        return ofcOrderStatusMapper.queryOrderByOrderCode(orderCode);
     }
 }

@@ -1,8 +1,8 @@
 package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.domain.dto.csc.*;
 import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
+import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -10,6 +10,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,42 @@ public class FeignCscCustomerAPIClient {
             throw new BusinessException("参数为空");
         }
         Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(queryCustomerIdDto);
+        return wrapper;
+    }
+    public Wrapper<?> queryCustomerByName(QueryCustomerNameDto queryCustomerNameDto){
+        logger.debug("==>通过客户名称获取客户列表 queryCustomerNameDto={}", queryCustomerNameDto);
+        if(null == queryCustomerNameDto){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<?> wrapper = getApi().queryCustomerByName(queryCustomerNameDto);
+        return wrapper;
+    }
+
+    /**
+     * 根据 CustomerCode
+     * @param
+     * @return
+     */
+    public Wrapper<CscCustomerVo> queryCustomerByCustomerCodeOrId(QueryCustomerCodeDto queryCustomerCodeDto) {
+        logger.debug("通过QueryCustomerCodeDto查询客户信息:{}",queryCustomerCodeDto);
+        if(queryCustomerCodeDto == null){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<CscCustomerVo> wrapper = getApi().queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+        return wrapper;
+    }
+
+    /**
+     * 模糊匹配，查询客户
+     * @param queryCustomerNameDto
+     * @return
+     */
+    public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto) {
+        logger.debug("通过QueryCustomerCodeDto查询客户信息:{}",queryCustomerNameDto);
+        if(queryCustomerNameDto == null){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<?> wrapper = getApi().QueryCustomerByNameAvgue(queryCustomerNameDto);
         return wrapper;
     }
 }

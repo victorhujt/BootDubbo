@@ -1,14 +1,19 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.dto.csc.CscGoods;
 import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
+import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
 import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
 import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,13 +21,16 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +47,17 @@ public class OfcJumpontroller extends BaseController{
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
+    @Autowired
+    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+
+    public String getCustId() {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+        String custId = (String) wrapper.getResult();
+        return custId;
+    }
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
@@ -46,23 +65,23 @@ public class OfcJumpontroller extends BaseController{
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);
         try{
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+
+            String custId = getCustId();
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerId(custId);
             Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+
         }catch (BusinessException ex){
-            logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
+            //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
+            //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
         map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
@@ -93,6 +112,11 @@ public class OfcJumpontroller extends BaseController{
         return "order_follow";
     }
 
+    /**
+     * 进入主页
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/index")
     public String toIndex(Model model){
 
@@ -104,38 +128,52 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
+    /**
+     * 城配开单
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/ofc/operationDistributing")
-    public String operationDistributing(Model model){
+    public String operationDistributing(Model model,Map<String,Object> map){
+        map.put("currentTime",new Date());
+        setDefaultModel(model);
         return "operation_distributing";
     }
+
+    /**
+     * 城配开单Excel导入
+     * @param model
+     * @param historyUrl
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl, Map<String,Object> map){
+        if("operation_distributing".equals(historyUrl)){
+            historyUrl = "/ofc/operationDistributing";
+        }
+        map.put("historyUrl",historyUrl);
+        return "operation_distributing_excel";
+    }
+
+    /**
+     * 运输开单
+     * @param model
+     * @param map
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
-        List<RmcWarehouse> rmcWarehouseByCustCode = null;
-        List<CscStorevo> cscStoreListResult = null;
-        setDefaultModel(model);
         try{
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
-            QueryStoreDto queryStoreDto = new QueryStoreDto();
-            queryStoreDto.setCustomerId(custId);
-            Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
-            cscStoreListResult = storeByCustomerId.getResult();
-        }catch (BusinessException ex){
-            logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            rmcWarehouseByCustCode = new ArrayList<>();
+            map.put("currentTime",new Date());
+            setDefaultModel(model);
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
             ex.printStackTrace();
-            rmcWarehouseByCustCode = new ArrayList<>();
         }
-        map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
-        map.put("cscStoreByCustId",cscStoreListResult);
         return new ModelAndView("order_tranload");
-
     }
+
+
 }

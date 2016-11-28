@@ -211,7 +211,7 @@
                 } else if ($target.is('.city-picker-dropdown *')) {
                     $dropdown = $target.parents('.city-picker-dropdown');
                 }
-                console.log($dropdown);
+                // console.log($dropdown);
                 if (
                     (!$input && !$span && !$dropdown) ||
                     ($span && $span.get(0) !== $this.$textspan.get(0)) ||

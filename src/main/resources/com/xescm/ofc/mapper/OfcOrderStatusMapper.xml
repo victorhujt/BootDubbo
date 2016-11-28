@@ -83,4 +83,60 @@
   </select>
 
 
+  <select id="queryOrderStateByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
+    SELECT *
+    FROM ofc_order_status oos
+    WHERE oos.order_code = #{orderCode}
+  </select>
+
+
+  <!--修改订单状态，并标记为作废-->
+  <update id="cancelOrderStateByOrderCode">
+    UPDATE ofc_order_status oos, ofc_fundamental_information ofi
+    SET oos.order_status = '50',ofi.abolish_mark = '1'
+    WHERE oos.order_code = ofi.order_code
+    AND ofi.order_code = #{orderCode}
+    AND oos.order_status IN ('10','20','30')
+  </update>
+
+  <select id="queryOrderStatus" resultMap="BaseResultMap">
+    SELECT
+    oos.notes
+    FROM
+    ofc_order_status oos
+    LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
+    LEFT JOIN ofc_distribution_basic_info odbi ON oos.order_code = odbi.order_code
+    <where>
+      <choose>
+        <when test=" 'orderCode'.toString() == searchType ">
+          AND ofi.order_code = #{code}
+        </when>
+        <when test="'custOrderCode'.toString() == searchType">
+          AND ofi.cust_order_code = #{code}
+        </when>
+        <when test="'transCode'.toString() == searchType">
+          AND ofd.trans_code = #{code}
+        </when>
+        <otherwise></otherwise>
+      </choose>
+    </where>
+    ORDER BY oos.lasted_oper_time ASC
+  </select>
+  
+  <select id="queryOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
+     SELECT
+        order_code,order_status,status_desc,lasted_oper_time,notes,operator
+    FROM
+        ofc_order_status
+    WHERE
+        lasted_oper_time = (
+            SELECT
+                MAX(lasted_oper_time)
+            FROM
+                ofc_order_status
+            WHERE
+                order_code = #{orderCode}
+        )
+  </select>
+
 </mapper>

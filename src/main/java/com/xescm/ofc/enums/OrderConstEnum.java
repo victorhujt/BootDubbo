@@ -54,7 +54,10 @@ public final class OrderConstEnum {
     public static final String OFC_URL = "OFC_URL";
     /** 订单中心标记，用于Redis分区 */
     public static final String OFC_ENV = "OFC";
+    /**四级地址*/
     public static final String ADDR_URL = "ADDR_URL";
+    /**CSC地址*/
+    public static final String CSC_URL = "CSC_URL";
     //支付方式
     public static final String FINNANCEPAYWAYCASH="6810";//现金支付
     public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡
@@ -68,6 +71,21 @@ public final class OrderConstEnum {
     public static final String YIDAODA="30";   //已到达
     public static final String YIQIANSHOU="40";  //已签收
     public static final String YIHUIDAN="50";  //已回单
+
+    //通过接口创建的订单
+    public static final String CREATE_ORDER_BYAPI = "createOrderByApi";
+
+    //是或者不是
+    public static final Integer SHI=1;      //是
+    public static final Integer FOU=0;      //否
+
+    //运输类型
+    public static final Integer LINGDAN=10;       //零担
+    public static final Integer ZHENGCHE=20;        //整车
+
+    //费用支付方
+    public static final Integer FAHUOFANG=10;       //发货方
+    public static final Integer SHOUHUOFANG=20;        //收货方
 
     public OrderConstEnum() {
     }

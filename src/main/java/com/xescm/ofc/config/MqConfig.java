@@ -16,118 +16,128 @@
 package com.xescm.ofc.config;
 
 
-import com.aliyun.openservices.ons.api.Consumer;
-import com.aliyun.openservices.ons.api.ONSFactory;
-import com.aliyun.openservices.ons.api.PropertyKeyConst;
-import com.xescm.ofc.mq.consumer.SchedulingSingleFedbackImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
-import java.util.Properties;
 /**
  * <p>Title:    MqConfig. </p>
  * <p>Description TODO </p>
  * <p>Company:    MT</p>
  *
- * @Author         <a />向铭涛</a>
+ * @Author         <a>向铭涛</a>
  * @CreateDate     2016/11/11 15:40
  */
 @Configuration
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
+
     public final static String MQ_PREFIX="mq";
+
 
     private String accessKey;  //阿里云公钥
     private String secretKey;  //阿里云密钥
-    private String topic;
-    private String TFCTopic;
-    private String OFCTopic;
-    private String tfcCancelTopic;
-    private String tag;
-    private String tfcCancelTag;
+    private String consumerTopicNames;
+
+    /**
+     * 仓储订单状态
+     */
+    private String whcOrderStatusTopic;
+    /**
+     * 对接订单
+     */
+    private String epcOrderTopic;
+    /**
+     * 运输订单状态
+     */
+    private String tfcOrderStatusTopic;
+    /**
+     * 订单状态反馈
+     */
+    private String ofcOrderStatusTopic;
+
+    /**
+     * 运输计划单
+     */
+    private String ofc2TfcOrderTopic;
+    /**
+     * 仓储计划单
+     */
+    private String ofc2WhcOrderTopic;
+
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
     private String onsAddr;  //阿里云地址
-    private String tranTag;
-    private String deliveryTag;
-    private String TfcTransPlanTopic;
-    private String TfcTransPlanTag;
 
-    @Resource
-    SchedulingSingleFedbackImpl schedulingSingleFedback;
-
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Consumer consumer(){
-        System.out.println("yyyyyyyyy消费开始---:");
-        Consumer consumer = ONSFactory.createConsumer(consumerProperties());
-        consumer.subscribe(topic, null, schedulingSingleFedback);
-        return consumer;
-    }
-    private Properties consumerProperties(){
-        Properties consumerProperties = new Properties();
-        consumerProperties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
-        consumerProperties.setProperty(PropertyKeyConst.AccessKey, accessKey);
-        consumerProperties.setProperty(PropertyKeyConst.SecretKey, secretKey);
-        consumerProperties.setProperty(PropertyKeyConst.ONSAddr, onsAddr);
-        return consumerProperties;
+    public String getAccessKey() {
+        return accessKey;
     }
 
-    public String getTfcTransPlanTopic() {
-        return TfcTransPlanTopic;
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
     }
 
-    public void setTfcTransPlanTopic(String tfcTransPlanTopic) {
-        TfcTransPlanTopic = tfcTransPlanTopic;
+    public String getSecretKey() {
+        return secretKey;
     }
 
-    public String getTfcTransPlanTag() {
-        return TfcTransPlanTag;
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 
-    public void setTfcTransPlanTag(String tfcTransPlanTag) {
-        TfcTransPlanTag = tfcTransPlanTag;
+    public String getConsumerTopicNames() {
+        return consumerTopicNames;
     }
 
-    public String getTFCTopic() {
-        return TFCTopic;
+    public void setConsumerTopicNames(String consumerTopicNames) {
+        this.consumerTopicNames = consumerTopicNames;
     }
 
-    public void setTFCTopic(String TFCTopic) {
-        this.TFCTopic = TFCTopic;
+    public String getWhcOrderStatusTopic() {
+        return whcOrderStatusTopic;
     }
 
-    public String getOFCTopic() {
-        return OFCTopic;
+    public void setWhcOrderStatusTopic(String whcOrderStatusTopic) {
+        this.whcOrderStatusTopic = whcOrderStatusTopic;
     }
 
-    public void setOFCTopic(String OFCTopic) {
-        this.OFCTopic = OFCTopic;
+    public String getEpcOrderTopic() {
+        return epcOrderTopic;
     }
 
-    public String getTfcCancelTopic() {
-        return tfcCancelTopic;
+    public void setEpcOrderTopic(String epcOrderTopic) {
+        this.epcOrderTopic = epcOrderTopic;
     }
 
-    public void setTfcCancelTopic(String tfcCancelTopic) {
-        this.tfcCancelTopic = tfcCancelTopic;
+    public String getTfcOrderStatusTopic() {
+        return tfcOrderStatusTopic;
     }
 
-    public String getTfcCancelTag() {
-        return tfcCancelTag;
+    public void setTfcOrderStatusTopic(String tfcOrderStatusTopic) {
+        this.tfcOrderStatusTopic = tfcOrderStatusTopic;
     }
 
-    public void setTfcCancelTag(String tfcCancelTag) {
-        this.tfcCancelTag = tfcCancelTag;
+    public String getOfcOrderStatusTopic() {
+        return ofcOrderStatusTopic;
     }
 
-    public String getOnsAddr() {
-        return onsAddr;
+    public void setOfcOrderStatusTopic(String ofcOrderStatusTopic) {
+        this.ofcOrderStatusTopic = ofcOrderStatusTopic;
     }
 
-    public void setOnsAddr(String onsAddr) {
-        this.onsAddr = onsAddr;
+    public String getOfc2TfcOrderTopic() {
+        return ofc2TfcOrderTopic;
+    }
+
+    public void setOfc2TfcOrderTopic(String ofc2TfcOrderTopic) {
+        this.ofc2TfcOrderTopic = ofc2TfcOrderTopic;
+    }
+
+    public String getOfc2WhcOrderTopic() {
+        return ofc2WhcOrderTopic;
+    }
+
+    public void setOfc2WhcOrderTopic(String ofc2WhcOrderTopic) {
+        this.ofc2WhcOrderTopic = ofc2WhcOrderTopic;
     }
 
     public String getProducerId() {
@@ -146,60 +156,13 @@ public class MqConfig {
         this.consumerId = consumerId;
     }
 
-    public String getTag() {
-        return tag;
+    public String getOnsAddr() {
+        return onsAddr;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setOnsAddr(String onsAddr) {
+        this.onsAddr = onsAddr;
     }
-
-    public String getAccessKey() {
-        return accessKey;
-    }
-
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getTranTag() {
-        return tranTag;
-    }
-
-    public void setTranTag(String tranTag) {
-        this.tranTag = tranTag;
-    }
-
-    public String getDeliveryTag() {
-        return deliveryTag;
-    }
-
-    public void setDeliveryTag(String deliveryTag) {
-        this.deliveryTag = deliveryTag;
-    }
-
-    //    public static final String TOPIC = "Ray_MQ_demoTest";
-//    public static final String PRODUCER_ID = "PID_demoTest";
-//    public static final String CONSUMER_ID = "CID_MQ_demoTest";
-//    public static final String ACCESS_KEY = "LTAI3W8se7p0zD5b";
-//    public static final String SECRET_KEY = "U1HuxjcUNZDxYhNwcRHbigQGzDREbd";
-//    public static final String TAG = "mq_test_tag";
 
 
 }

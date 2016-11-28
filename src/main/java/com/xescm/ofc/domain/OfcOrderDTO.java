@@ -5,7 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lyh on 2016/10/11.
@@ -57,6 +59,10 @@ public class OfcOrderDTO {
     private String merchandiser;
 
     private String transportType;
+
+    private String batchNumber;
+
+    private String orderBatchNumber;
 
     /*订单状态表*/
 
@@ -116,6 +122,10 @@ public class OfcOrderDTO {
     private String consignorContactPhone;
     private String consigneeContactPhone;
 
+   // private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<OfcGoodsDetailsInfo>();
+    private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
+
+
 
 
 //    private String orderCode;
@@ -165,7 +175,7 @@ public class OfcOrderDTO {
     private String printInvoice;
     private String buyerPaymentMethod;
     private String insure;
-    private String insureValue;
+    private BigDecimal insureValue;
     private String pickUpGoods;
     private BigDecimal homeDeliveryFee;
     private BigDecimal cargoInsuranceFee;
@@ -184,11 +194,31 @@ public class OfcOrderDTO {
 
 
 
-
-
     private String selfCustOrderCode;
 
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
 
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
+    }
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
+    }
+
+    public List<OfcGoodsDetailsInfo> getGoodsList() {
+        return goodsList;
+    }
+
+    public void setGoodsList(List<OfcGoodsDetailsInfo> goodsList) {
+        this.goodsList = goodsList;
+    }
 
     public String getConsignorContactPhone() {
         return consignorContactPhone;
@@ -910,11 +940,11 @@ public class OfcOrderDTO {
         this.insure = insure;
     }
 
-    public String getInsureValue() {
+    public BigDecimal getInsureValue() {
         return insureValue;
     }
 
-    public void setInsureValue(String insureValue) {
+    public void setInsureValue(BigDecimal insureValue) {
         this.insureValue = insureValue;
     }
 

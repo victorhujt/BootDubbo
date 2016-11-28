@@ -1,11 +1,14 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.domain.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by lyh on 2016/10/10.
@@ -27,5 +30,20 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     public int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation) {
         int result =  ofcFundamentalInformationMapper.checkCustOrderCode(ofcFundamentalInformation);
         return result;
+    }
+
+    @Override
+    public String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode) {
+        return ofcFundamentalInformationMapper.getOrderCodeByCustOrderCodeAndCustCode(custOrderCode, custCode);
+    }
+
+    @Override
+    public List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber) {
+        return ofcFundamentalInformationMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
+    }
+
+    @Override
+    public OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber) {
+        return ofcFundamentalInformationMapper.queryByBatchNumber(orderBatchNumber);
     }
 }

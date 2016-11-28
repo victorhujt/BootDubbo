@@ -61,7 +61,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
             }
             List<CscWarehouse> result = cscWarehouseByCustomerId.getResult();
-            if(result.size() < 1){
+            if(null == result){
                 return new ArrayList<>();
             }
             List<RmcWarehouse> warehouseList = new ArrayList<>();

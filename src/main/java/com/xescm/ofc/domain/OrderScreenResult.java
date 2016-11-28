@@ -27,6 +27,16 @@ public class OrderScreenResult {
     private String notes;
     private String storeName;//店铺
 
+    private String custName;//客户名称
+
+    public String getCustName() {
+        return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+
     public String getConsigneeType() {
         return consigneeType;
     }
@@ -121,5 +131,15 @@ public class OrderScreenResult {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    private String orderBatchNumber;
+
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
+
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
     }
 }

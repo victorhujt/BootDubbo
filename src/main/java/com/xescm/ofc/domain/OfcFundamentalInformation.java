@@ -15,8 +15,11 @@ public class OfcFundamentalInformation {
      */
     @Id
     @Column(name = "order_code")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String orderCode;
+
+
+    @Column(name = "order_batch_number")
+    private String orderBatchNumber;
 
     /**
      * 订单日期
@@ -200,6 +203,14 @@ public class OfcFundamentalInformation {
      */
     @Column(name = "transport_type")
     private String transportType;
+
+    public String getOrderBatchNumber() {
+        return orderBatchNumber;
+    }
+
+    public void setOrderBatchNumber(String orderBatchNumber) {
+        this.orderBatchNumber = orderBatchNumber;
+    }
 
     public String getSelfCustOrderCode() {
         return selfCustOrderCode;
@@ -665,40 +676,213 @@ public class OfcFundamentalInformation {
         this.operTime = opertime;
     }
 
-    /**
-     * 获取开单员
-     *
-     * @return merchandiser - 开单员
-     */
+//    ofd.departure_place,
+//    ofd.destination,
+//    ofd.trans_code,
+//    ofd.plate_number,
+//    ofd.driver_name,
+//    ofd.contact_number,
+//    ofd.destination_province,
+//    ofd.destination_city,
+//    ofd.destination_district,
+//    ofd.destination_towns
+
+    @Transient
+    private String departurePlace;
+
+    @Transient
+    private String destination;
+
+    @Transient
+    private String transCode;
+
+    @Transient
+    private String plateNumber;
+
+    @Transient
+    private String driverName;
+
+    @Transient
+    private String contactNumber;
+
+    @Transient
+    private String destinationProvince;
+
+    @Transient
+    private String destinationCity;
+
+    @Transient
+    private String destinationDistrict;
+
+    @Transient
+    private String destinationTowns;
+
+    @Transient
+    private String orderStatus;
+
+    @Transient
+    private String warehouseName;
+    @Transient
+    private String consigneeName;
+    @Transient
+    private String departureProvince;
+    @Transient
+    private String departureCity;
+    @Transient
+    private String departureDistrict;
+    @Transient
+    private String departureTowns;
+
+    public String getDepartureProvince() {
+        return departureProvince;
+    }
+
+    public void setDepartureProvince(String departureProvince) {
+        this.departureProvince = departureProvince;
+    }
+
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public String getDepartureDistrict() {
+        return departureDistrict;
+    }
+
+    public void setDepartureDistrict(String departureDistrict) {
+        this.departureDistrict = departureDistrict;
+    }
+
+    public String getDepartureTowns() {
+        return departureTowns;
+    }
+
+    public void setDepartureTowns(String departureTowns) {
+        this.departureTowns = departureTowns;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public String getConsigneeName() {
+        return consigneeName;
+    }
+
+    public void setConsigneeName(String consigneeName) {
+        this.consigneeName = consigneeName;
+    }
+
+    public String getDestinationTowns() {
+        return destinationTowns;
+    }
+
+    public void setDestinationTowns(String destinationTowns) {
+        this.destinationTowns = destinationTowns;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     public String getMerchandiser() {
         return merchandiser;
     }
 
-    /**
-     * 设置开单员
-     *
-     * @param merchandiser 开单员
-     */
     public void setMerchandiser(String merchandiser) {
         this.merchandiser = merchandiser;
     }
 
-    /**
-     * 获取运输类型
-     *
-     * @return transport_type - 运输类型
-     */
     public String getTransportType() {
         return transportType;
     }
 
-    /**
-     * 设置运输类型
-     *
-     * @param transportType 运输类型
-     */
     public void setTransportType(String transportType) {
         this.transportType = transportType;
+    }
+
+    public String getDeparturePlace() {
+        return departurePlace;
+    }
+
+    public void setDeparturePlace(String departurePlace) {
+        this.departurePlace = departurePlace;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getTransCode() {
+        return transCode;
+    }
+
+    public void setTransCode(String transCode) {
+        this.transCode = transCode;
+    }
+
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public String getDestinationProvince() {
+        return destinationProvince;
+    }
+
+    public void setDestinationProvince(String destinationProvince) {
+        this.destinationProvince = destinationProvince;
+    }
+
+    public String getDestinationCity() {
+        return destinationCity;
+    }
+
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
+    }
+
+    public String getDestinationDistrict() {
+        return destinationDistrict;
+    }
+
+    public void setDestinationDistrict(String destinationDistrict) {
+        this.destinationDistrict = destinationDistrict;
     }
 
 }

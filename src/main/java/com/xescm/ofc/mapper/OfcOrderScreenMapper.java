@@ -2,7 +2,9 @@ package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.domain.OrderScreenResult;
+import com.xescm.ofc.domain.form.OrderOperForm;
 import com.xescm.ofc.utils.MyMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +26,11 @@ public interface OfcOrderScreenMapper extends MyMapper<OrderScreenResult> {
      * @return
      */
     List<OrderScreenResult> orderScreen(OrderScreenCondition orderScreenCondition);
+
+    /**
+     * 查询订单--运营
+     * @param form
+     * @return
+     */
+    List<OrderScreenResult> queryOrderOper(@Param(value = "form") OrderOperForm form);
 }

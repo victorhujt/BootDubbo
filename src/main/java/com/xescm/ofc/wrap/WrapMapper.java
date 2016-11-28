@@ -52,7 +52,7 @@ public class WrapMapper {
      * @return the wrapper
      */
     public static <E> Wrapper<E> wrap(int code, String message, E o) {
-        System.out.println(code);
+//        System.out.println(code);
         return new Wrapper<E>(code, message, o);
     }
 
