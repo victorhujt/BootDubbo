@@ -20,6 +20,12 @@ public class MqTopicConstants {
      * 仓储中心消费topic
      */
     public static final String WHC = "WhcOrderTopic";
+    
+    /**
+     * 仓储中心生产topic
+     */
+    public static final String WHP = "WhpOrderTopic";
+ 
 
 
 }

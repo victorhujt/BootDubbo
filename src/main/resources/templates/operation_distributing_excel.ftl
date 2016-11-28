@@ -15,24 +15,24 @@
         </div>
         <div class="form-group">
             <label class="control-label col-sm-1 no-padding-right" for="name">上传文件</label>
-            <div class="col-sm-3">
+            <div class="col-sm-3 tktp-1">
                 <div class="clearfix">
-                    <input  id = "" name="" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                    <input  id = "" name="" type="text" style="color: black" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                 </div>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-1 no-padding-right" for="name">Sheet页</label>
-            <div class="col-sm-3">
+            <div class="col-sm-3 tktp-1">
                 <div class="clearfix">
-                    <select>
+                    <select class="bk-1">
                     </select>
                 </div>
             </div>
         </div>
     </form>
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">货品列表</h4></div>
+        <h4 class="modal-title" style="font-size: 14px">货品列表</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form class="bootbox-form">

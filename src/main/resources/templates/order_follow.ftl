@@ -11,14 +11,14 @@
                             </p>
                         </div>
                         <div class=" form-group">
-                            <div class="col-sm-3  no-padding-right">
+                            <div class="col-width-168  no-padding-right">
                                 <select class="chosen-select col-xs-2 col-sm-12 " id="followTag" name="followTag">
                                     <option value="orderCode">订单编号</option>
                                     <option value="custOrderCode">客户订单编号</option>
                                     <option value="transCode">运输单号</option>
                                 </select>
                             </div>
-                            <div class="col-sm-3 ">
+                            <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
                                 </div>
@@ -311,21 +311,21 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#notes").val(orderDTO.notes);
-        var departurePlace = (orderDTO.departureProvince
-        + orderDTO.departureCity
-        + orderDTO.departureDistrict
-        + orderDTO.departureTowns).replace(/null/,"");
+        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)
+        + StringUtil.nullToEmpty(orderDTO.departureCity)
+        + StringUtil.nullToEmpty(orderDTO.departureDistrict)
+        + StringUtil.nullToEmpty(orderDTO.departureTowns)).replace(/null/,"");
         $("#departurePlace" ).val(departurePlace);
-        var destination = (orderDTO.destinationProvince
-        + orderDTO.destinationCity
-        + orderDTO.destinationDistrict
-        + orderDTO.destinationTowns).replace(/null/,"");
+        var destination = (StringUtil.nullToEmpty(orderDTO.destinationProvince)
+        + StringUtil.nullToEmpty(orderDTO.destinationCity)
+        + StringUtil.nullToEmpty(orderDTO.destinationDistrict)
+        + StringUtil.nullToEmpty(orderDTO.destinationTowns)).replace(/null/,"");
         $("#destination").val(destination);
-        var destinationPlace = (orderDTO.destinationProvince
-        + orderDTO.destinationCity
-        + orderDTO.destinationDistrict
-        + orderDTO.destinationTowns
-        + orderDTO.destination).replace(/null/,"");
+        var destinationPlace = (StringUtil.nullToEmpty(orderDTO.destinationProvince)
+        + StringUtil.nullToEmpty(orderDTO.destinationCity)
+        + StringUtil.nullToEmpty(orderDTO.destinationDistrict)
+        + StringUtil.nullToEmpty(orderDTO.destinationTowns)
+        + StringUtil.nullToEmpty(orderDTO.destination)).replace(/null/,"");
         $("#destinationPlace").val(destinationPlace);
         $("#quantity").val(orderDTO.quantity);
         $("#weight").val(orderDTO.weight);

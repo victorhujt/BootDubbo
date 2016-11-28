@@ -74,12 +74,12 @@ public class OfcJumpontroller extends BaseController{
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
 
         }catch (BusinessException ex){
-            logger.error("订单中心从API获取仓库信息出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
@@ -136,6 +136,7 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
         map.put("currentTime",new Date());
+        setDefaultModel(model);
         return "operation_distributing";
     }
 
@@ -167,13 +168,11 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         try{
             map.put("currentTime",new Date());
-        }catch (BusinessException ex){
+            setDefaultModel(model);
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        //map.put("cscGoodsVoList",cscGoodsVoList);
         return new ModelAndView("order_tranload");
-
     }
 
 

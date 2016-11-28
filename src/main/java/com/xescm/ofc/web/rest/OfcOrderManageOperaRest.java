@@ -6,6 +6,8 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.form.OrderOperForm;
 import com.xescm.ofc.enums.OrderStatusEnum;
+import com.xescm.ofc.enums.PlanEnum;
+import com.xescm.ofc.enums.ResourceEnum;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
@@ -67,8 +69,9 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @return modelAndView
      */
     @RequestMapping(value = "/orderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView orderManageOpera() {
+    public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
+        setDefaultModel(model);
         return modelAndView;
     }
 
@@ -79,7 +82,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/queryOrderOper", method = {RequestMethod.POST})
+    @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
         try {
@@ -107,10 +110,19 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Wrapper<?> orderAuditOper(String orderCode, String orderStatus, String reviewTag) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
+            if (StringUtils.isBlank(reviewTag)) {
+                throw new Exception("订单标识不能为空！");
+            }
             String result = ofcOrderManageService.orderAudit(orderCode, orderStatus, reviewTag, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -126,10 +138,16 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Wrapper<?> orderDeleteOper(String orderCode, String orderStatus) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
             String result = ofcOrderManageService.orderDelete(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单删除出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -145,6 +163,12 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Wrapper<?> orderCancelOper(String orderCode, String orderStatus) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
@@ -179,11 +203,31 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
-
+            ofcOrderStatus = ofcOrderStatusService.queryOrderByOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
             List<PlanAndStorage> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
             storageList.addAll(planList);
+            for (PlanAndStorage planAndStorage : storageList) {
+                String resourceAllocationStatus = ResourceEnum.getDescByCode(planAndStorage.getResourceAllocationStatus());
+                planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
+                String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
+                planAndStorage.setPlannedSingleState(pl);
+                planAndStorage.setBusinessType(getBusiType(planAndStorage.getBusinessType()));
+            }
+            if (ofcFinanceInformation != null) {
+                String pickUpGoods = StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "0") ? "否" : "";
+                ofcFinanceInformation.setPickUpGoods(pickUpGoods);
+                String twoDistribution = StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "0") ? "否" : "";
+                ofcFinanceInformation.setTwoDistribution(twoDistribution);
+                String returnList = StringUtils.equals(ofcFinanceInformation.getReturnList(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getReturnList(), "0") ? "否" : "";
+                ofcFinanceInformation.setReturnList(returnList);
+                String insure = StringUtils.equals(ofcFinanceInformation.getInsure(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getInsure(), "0") ? "否" : "";
+                ofcFinanceInformation.setInsure(insure);
+                String collectFlag = StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "0") ? "否" : "";
+                ofcFinanceInformation.setCollectFlag(collectFlag);
+            }
+
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
             modelAndView.addObject("ofcDistributionBasicInfo", ofcDistributionBasicInfo);
             modelAndView.addObject("ofcFinanceInformation", ofcFinanceInformation);
@@ -192,13 +236,42 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("ofcOrderStatusList", ofcOrderStatusList);
 
             modelAndView.addObject("storageList", storageList);
+            modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
 //            modelAndView.addObject("planList", planList);
 
             return modelAndView;
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}",  orderCode, ex);
         }
         return null;
+    }
+
+    private String getBusiType(String businessType) {
+        String value = businessType;
+        if (StringUtils.equals(businessType, "600")) {
+            value = "城配";
+        } else if (StringUtils.equals(businessType, "601")) {
+            value = "干线";
+        } else if (StringUtils.equals(businessType, "602")) {
+            value = "卡班";
+        } else if (StringUtils.equals(businessType, "610")) {
+            value = "销售出库";
+        } else if (StringUtils.equals(businessType, "611")) {
+            value = "调拨出库";
+        } else if (StringUtils.equals(businessType, "612")) {
+            value = "报损出库";
+        } else if (StringUtils.equals(businessType, "613")) {
+            value = "其他出库";
+        } else if (StringUtils.equals(businessType, "620")) {
+            value = "采购入库";
+        } else if (StringUtils.equals(businessType, "621")) {
+            value = "调拨入库";
+        } else if (StringUtils.equals(businessType, "622")) {
+            value = "退货入库";
+        } else if (StringUtils.equals(businessType, "623")) {
+            value = "加工入库";
+        }
+        return value;
     }
 
     /**
@@ -273,9 +346,9 @@ public class OfcOrderManageOperaRest extends BaseController {
         return new ModelAndView("select_cust_page");
     }
 
-    @RequestMapping(value = "querySelectCustData",method = RequestMethod.POST)
+    @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
     @ResponseBody
-    public Object querySelectCustData(String custName){
+    public Object querySelectCustData(String custName) {
         try {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
         } catch (Exception ex) {

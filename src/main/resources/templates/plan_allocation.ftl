@@ -204,10 +204,10 @@
                     <div class="col-xs-12">
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">资源分配状态</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">资源分配状态</label>
+                                <div class="col-width-168 padding-15">
                                     <div class="clearfix">
-                                        <select multiple="" class="chosen-select form-control" id="resourceAllocationStatues" name="resourceAllocationStatues" data-placeholder="请选择一个状态..." style="display: none;">
+                                        <select multiple="" style="height:34px;" class="chosen-select form-control" id="resourceAllocationStatues" name="resourceAllocationStatues" data-placeholder="请选择一个状态..." style="display: none;">
                                             <option value="10">待分配</option>
                                             <option value="20">未分配</option>
                                             <option value="30">已分配</option>
@@ -215,36 +215,42 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">客户名称</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">客户名称</label>
+                                <div class="col-width-168 padding-15">
                                     <div class="clearfix">
                                         <input id="custName" name="custName" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单批次号</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单批次号</label>
+                                <div class="col-width-168 padding-15">
                                     <div class="clearfix">
                                         <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <input id="orderTimePre" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                        至
-                                        <input id="orderTimeSuf" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                    </div>
-                                </div>
+                           <#-- <div class="form-group">
+
                             </div>
                             <div class="form-group">
+
+                            </div>-->
+                            <div class="form-group">
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单日期</label>
+                                <div class="padding-15" style="float:left;">
+                                    <div class="clearfix">
+                                        <input id="orderTimePre" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                    </div>
+                                </div>
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;text-align:center;" for="name">至</label>
+                                <div class="padding-15" style="float:left;">
+                                    <div class="clearfix">
+                                        <input id="orderTimeSuf" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                    </div>
+                                </div>
+                               </div>
+                            <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name"></label>
-                                <div class="col-sm-6">
+                                <div class="col-width-376 padding-15">
                                     <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
                                         筛选
                                     </button>
@@ -258,8 +264,8 @@
                         订单列表
                     </p>
                 </div>
-                <span style="cursor:pointer" id="serviceProviderDivBlock"><button class="btn btn-info btn-sm popover-info" id="doSelt" value="">分配资源</button></span>
-                <button class="btn btn-info btn-sm popover-info" id="doEnter" >资源确认</button>
+                <span style="cursor:pointer" id="serviceProviderDivBlock"><button class="btn btn-white btn-info btn-bold btn-interval" id="doSelt" value="">分配资源</button></span>
+                <button class="btn btn-white btn-info btn-bold btn-interval" id="doEnter" >资源确认</button>
                 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
 
                         <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">

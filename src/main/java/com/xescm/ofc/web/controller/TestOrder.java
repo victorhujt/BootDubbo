@@ -41,15 +41,15 @@ public class TestOrder extends BaseController {
     @RequestMapping(value = "/order", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String test() throws Exception {
-//        OrderOperForm orderOperForm = new OrderOperForm();
-//        System.out.println(ofcOrderManageOperService.queryOrderOper(orderOperForm));
-        OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect("SO161124000237", "orderCode");
-        List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen("SO161124000237", "orderCode");
-        System.out.println(ofcOrderDTO);
-        System.out.println(ofcOrderStatuses);
-        return null;
-//        return createOrderService.createOrder(queryJson());
+////        OrderOperForm orderOperForm = new OrderOperForm();
+////        System.out.println(ofcOrderManageOperService.queryOrderOper(orderOperForm));
+//        OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect("SO161124000237", "orderCode");
+//        List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen("SO161124000237", "orderCode");
+//        System.out.println(ofcOrderDTO);
+//        System.out.println(ofcOrderStatuses);
+        return createOrderService.createOrder(queryJson());
 //        createOrderService.createOrder(queryJ());
+//        return null;
     }
 
     public String queryJson() {
@@ -57,7 +57,7 @@ public class TestOrder extends BaseController {
         return "[{\n" +
                 "        \"custOrderCode\": \"D161115107629044\",\n" +
                 "        \"orderTime\": \"2016-11-15\",\n" +
-                "        \"custCode\": \"e5d99a13b2a844229d4b5e3c5bc46999\",\n" +
+                "        \"custCode\": \"110603444ce84af7ab0c62e2936be426\",\n" +
                 "        \"custName\": \"XE\",\n" +
                 "        \"orderType\": \"60\",\n" +
                 "        \"businessType\": \"600\",\n" +
@@ -250,7 +250,7 @@ public class TestOrder extends BaseController {
         addressDto.setCityName(city);
         addressDto.setDistrictName(coun);
         String result = feignAddressCodeClient.findCodeByName(addressDto);
-        System.out.println(result);
+        logger.info(result);
         return result;
     }
 

@@ -56,12 +56,12 @@
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">货品列表</h4></div>
+        <p class="modal-title" style="font-size:14px;font-family:'微软雅黑'">货品列表</p></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
+                    <label class="control-label col-label no-padding-right" for="name">货品编码</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -77,10 +77,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <label class="control-label col-label no-padding-right" for="name"></label>
                     <div class="col-sm-3">
                         <div class="clearfix">
-                            <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            <span id="goodsSelectFormBtn" class="btn btn-white btn-info btn-bold btn-interval" style="margin-top:3px;">筛选</span>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer" style="background:#fff;"><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-white btn-info btn-bold btn-interval y-rt-btn">返回</button></span><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">确定</button></div>
 </div>
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
@@ -120,7 +120,7 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -128,7 +128,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson2" name="cscContact.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -136,7 +136,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber2" name="cscContact.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <label class="control-label col-label no-padding-right" for="name"></label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -189,7 +189,7 @@
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -197,7 +197,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -205,7 +205,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -213,7 +213,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <label class="control-label col-label no-padding-right" for="name"></label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -256,7 +256,7 @@
         <div class="bootbox-body">
             <form id="supplierSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "supplierName" name="supplierName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -264,7 +264,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "contactName" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -272,7 +272,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "contactPhone" name="contactPhone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -280,7 +280,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <label class="control-label col-label no-padding-right" for="name"></label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <span id="supplierSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -332,7 +332,7 @@
                     <div class="col-xs-12">
                         <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
                            <#-- <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单日期</label>
+                                <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                         <input id="orderTime" style="color: #000" name="orderTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"1 onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
@@ -341,7 +341,7 @@
                                 </div>
                             </div>-->
                             <#--<div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">客户订单编号</label>
+                                <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                         <input id="custOrderCode" name="custOrderCode" type="text" style="color: #000">
@@ -349,38 +349,47 @@
                                 </div>
                             </div>-->
                            <div class="form-group">
-                               <label class="control-label col-sm-1 no-padding-right" for="supplierCode">订单日期</label>
-                               <div class="col-sm-6">
+                               <label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
+                               <div class="w-width-220 y-float">
                                    <div class="clearfix">
-                                       <input class="col-xs-10 col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                   </div>
+                               </div>
+                               <label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
+                               <div class="w-width-220 y-float">
+                                   <div class="clearfix">
+                                       <input class="col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
+
                                    </div>
                                </div>
                            </div>
-                           <div class="form-group">
-                               <label class="control-label col-sm-1 no-padding-right" for="custOrderCode">客户订单编号</label>
-                               <div class="col-sm-6">
-                                   <div class="clearfix">
-                                       <input class="col-xs-10 col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
-
-                                   </div>
-                               </div>
-                            </div>
-
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">订单类型</label>
-                                <div class="col-sm-6">
+                                <label class="control-label col-label no-padding-right no-padding-top" for="name">订单类型</label>
+                                <div class="w-width-220 y-float">
                                     <div class="clearfix">
-                                        <select  id="orderTypeSel" name="orderType">
+                                        <select class="w-width-220 chosen-select" id="orderTypeSel" name="orderType">
                                             <option value="60">运输订单</option>
                                             <option value="61">仓配订单</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <label class="control-label col-label no-padding-right no-padding-top" for="name">店铺</label>
+                                <div class="w-width-220 y-float">
+                                    <div class="clearfix">
+                                        <select class="w-width-220 chosen-select" id="storeCode" name="storeCode">
+                                        <#list cscStoreByCustId! as cscStore>
+                                            <option value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
+                                        </#list>
+                                        <#--<option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
+                                        <option value="众品京东旗舰店">众品京东旗舰店</option>-->
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
                            <#--<div class="form-group" id="transBusinessTypeDiv" style="display: block">
-                               <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
-                               <div class="col-sm-6">
+                               <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                               <div class="w-width-220 y-float">
                                    <div class="clearfix">
                                        <select  id="businessType" name="businessType">
                                            <option value="600">城配</option>
@@ -391,7 +400,7 @@
                                </div>
                            </div>-->
                             <div class="form-group" id="businessTypeDiv" style="display: none">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">业务类型</label>
+                                <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                     <#--<span id="businessTypeDiv" style="display: none">-->
@@ -412,7 +421,7 @@
                             </div>
 
                             <div class="form-group" id="provideTransportDiv" style="display: none">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">是否需要运输</label>
+                                <label class="control-label col-label no-padding-right" for="name">是否需要运输</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                     <#-- <span id="provideTransportDiv" style="display: none">-->
@@ -422,36 +431,16 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">店铺</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <select id="storeCode" name="storeCode">
-                                        <#list cscStoreByCustId! as cscStore>
-                                            <option value="${(cscStore.storeCode)!""}/${(cscStore.platformType)!""}">${(cscStore.storeName)!""}</option>
-                                        </#list>
-                                        <#--<option value="众品天猫生鲜旗舰店">众品天猫生鲜旗舰店</option>
-                                        <option value="众品京东旗舰店">众品京东旗舰店</option>-->
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                                <label class="control-label col-label no-padding-right no-padding-top y-float" style="margin-right:20px;" for="name">备注</label>
+                                <input id="orderNotes" name="notes" style="color: #000;width:517px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
-                            <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name">备注</label>
-                                <div class="col-sm-6">
-                                    <div class="clearfix">
-                                        <input id="orderNotes" name="notes" style="color: #000"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                    </div>
-                                </div>
                             </div>
-
                         </form>
                         <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
-                            <div class="col-sm-12">
+                            <div class="col-label2">
                                 <!-- #section:elements.tab.option -->
-                                <div class="tabbable" style="width:1000px;" >
+                                <div class="tabbable" style="width:1000px;float:left;" >
                                     <ul class="nav nav-tabs" id="myTab4">
                                         <li class="active">
                                             <a data-toggle="tab" href="#home4" aria-expanded="false">货品明细</a>
@@ -471,7 +460,7 @@
 
                                             <!--货品明细-->
 
-                                            <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">添加货品</button></span>
+                                            <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm">添加货品</button></span>
                                         <#--dynamic-table-->
                                             <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                                                 <thead>
@@ -516,7 +505,7 @@
                                         <div id="profile4" class="tab-pane">
 
                                             <div class="page-header">
-                                                <h4>运输基本信息</h4>
+                                                <h4 class="w-font">运输基本信息</h4>
                                             </div>
 
                                             <div class="row">
@@ -524,143 +513,130 @@
                                                 <div id="dynamic-table_filter" class="dataTables_length">
 
                                                                 <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">数量</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top no-padding-top no-padding-top" for="name">数量</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="quantity" name="quantity" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">重量</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">重量</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="weight" name="weight" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">体积</label>
-                                                                    <div class="col-sm-6">
-                                                                        <div class="clearfix">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">体积</label>
+                                                                    <div class="w-width-220 y-float">
+                                                                        <div class="clearfix" style="color:#c3c3c3;">
                                                                             <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:m)
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
                                                                 <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">合计标准箱</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">合计标准箱</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="totalStandardBox" name="totalStandardBox" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">取货时间</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">期望送达时间</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
                                                                 <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">是否加急</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">是否加急</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
-                                                                            <input id="urgent" type="checkbox" name=""  />
+                                                                            <input id="urgent" type="checkbox" name="" style="margin-top:10px;" />
                                                                             <input id="urgentHel" type="hidden" name="urgent"  value="0" />
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group" >
-                                                                    <label class="control-label col-sm-1 no-padding-right" for="name">运输要求</label>
-                                                                    <div class="col-sm-6">
+                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">运输要求</label>
+                                                                    <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="transRequire" name="transRequire" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
                                                             </div>
                                                         </div>
 
                                             <div class="page-header">
-                                                <h4>发货方信息</h4>
+                                                <h4 class="w-font">发货方信息</h4>
                                             </div>
-                                            <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-info" id="consignorselbtn">选择</button></span>
+                                            <span style="cursor:pointer" id="consignorListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consignorselbtn">选择</button></span>
 
                                             <div id="consignorin">
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorCode" name="consignorCode" type="hidden">
                                                             <input id="consignorType" name="consignorType" type="hidden">
                                                             <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorContactCode"   name="consignorContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                             <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorFax" name="consignorFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorEmail" name="consignorEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorPostCode" name="consignorPostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
-                                                    <div class="col-sm-6">
-                                                        <div class="clearfix">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">地址选择</label>
+                                                    <div class="y-float" style="width:518px;">
+                                                        <div class="clearfix position-relative">
                                                             <input id="city-picker3-consignor" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">详细地址</label>
+                                                    <div class="y-float" style="width:518px;">
                                                         <div class="clearfix">
                                                             <input id="consignorAddress" name="consignorAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
@@ -670,13 +646,13 @@
                                             </div>
 
                                             <div class="page-header">
-                                                <h4>收货方信息</h4>
+                                                <h4 class="w-font">收货方信息</h4>
                                             </div>
-                                            <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" id="consigneeselbtn">选择</button></span>
+                                            <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
                                             <div id="consignorout">
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeCode" name="consigneeCode" type="hidden">
                                                             <input id="consigneeType" name="consigneeType" type="hidden">
@@ -684,62 +660,56 @@
 
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeContactCode" name="consigneeContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                             <input id="consigneeContactName" name="consigneeContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeFax" name="consigneeFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeEmail" name="consigneeEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
+                                                    <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneePostCode" name="consigneePostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">地址选择</label>
-                                                    <div class="col-sm-6">
-                                                        <div class="clearfix">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">地址选择</label>
+                                                    <div class="y-float" style="width:518px;">
+                                                        <div class="clearfix position-relative">
                                                             <input id="city-picker3-consignee" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
-                                                    <div class="col-sm-6">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">详细地址</label>
+                                                    <div class="y-float" style="width:518px;">
                                                         <div class="clearfix">
                                                             <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
@@ -760,7 +730,7 @@
 
 
                                                     <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">仓库名称</label>
+                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name">仓库名称</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
                                                                 <select id="warehouseName" name="warehouseName" class="col-xs-3">
@@ -774,7 +744,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
+                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name">入库预计到达时间</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
                                                                 <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
@@ -783,7 +753,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">车牌号</label>
+                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name">车牌号</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
                                                                 <input id="plateNumber" name="plateNumber" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -792,7 +762,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">司机姓名</label>
+                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name">司机姓名</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
                                                                 <input id="driverName" name="driverName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
@@ -800,7 +770,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group" >
-                                                        <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
                                                                 <input id="contactNumber" name="contactNumber" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -815,13 +785,13 @@
                                                 <div class="page-header">
                                                     <h4>供应商信息</h4>
                                                 </div>
-                                                <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-info" id="bootbox-confirm">选择</button></span>
+                                                <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm">选择</button></span>
 
 
 
 
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportCode" name="supportCode" type="hidden">
@@ -831,7 +801,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportContactName" name="supportContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -839,7 +809,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportPhone" name="supportPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -848,7 +818,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportFax" name="supportFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -857,7 +827,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportEmail" name="supportEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -865,7 +835,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportPostCode" name="supportPostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -873,7 +843,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-sm-1 no-padding-right" for="name">地址</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">地址</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <div class="docs-methods">
@@ -1378,8 +1348,6 @@
         //仓配基本信息
         jsonStr.warehouseCode = $("#warehouseName").val();
         jsonStr.warehouseName = $("#warehouseName option:selected").text();//$("#storeCode option:selected").text();
-        console.log("===========warehouseCode============"+$("#warehouseName").val());
-        console.log("===========warehouseName============"+$("#warehouseName option:selected").text());
         jsonStr.arriveTime = $dp.$('arriveTime').value;
         jsonStr.plateNumber = $("#plateNumber").val();
         jsonStr.driverName = $("#driverName").val();
@@ -1433,7 +1401,6 @@
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
         return cscContantAndCompanyDtoConsignorStr;
 
     }
@@ -1477,7 +1444,6 @@
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
         return cscContantAndCompanyDtoConsigneeStr;
     }
     function getCscSupplierInfoDtoStr(){
@@ -1510,7 +1476,6 @@
         paramSupport.address = $("#supportAddress").val();
 
         var cscSupplierInfoDtoStr = JSON.stringify(paramSupport);
-        console.log("function  support " + cscSupplierInfoDtoStr);
         return cscSupplierInfoDtoStr;
     }
 
@@ -1642,10 +1607,6 @@
             var tag = "place";
             var ofcOrderDTO = JSON.stringify(jsonStr);
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
-            console.log("======orderGoodsListStr======"+orderGoodsListStr)
-            console.log("======cscContantAndCompanyDtoConsignorStr======"+cscContantAndCompanyDtoConsignorStr)
-            console.log("======cscContantAndCompanyDtoConsigneeStr======"+cscContantAndCompanyDtoConsigneeStr)
-            console.log("======cscSupplierInfoDtoStr======"+cscSupplierInfoDtoStr)
 
             xescm.common.submit("/ofc/orderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
@@ -1906,7 +1867,6 @@
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                            console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -1965,7 +1925,6 @@
                     var param = JSON.stringify(cscContantAndCompanyDto);
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
-                        console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
@@ -2019,7 +1978,6 @@
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
 
-                        console.log("==-------data-----111-xxx--"+data);
                         data=eval(data);
                         var supplierList = "";
                         $.each(data,function (index,CscSupplierInfoDto) {
@@ -2032,7 +1990,6 @@
                                     + "/" + cityName
                                     + "/" + areaName
                                     + "/" + streetName;
-                            console.log("==------------111-xxx--"+paramAddressNameToPage);
                             $("#city-picker3-support").val(paramAddressNameToPage);
                             $("#city-picker3-support").citypicker('refresh');
                         });

@@ -94,7 +94,7 @@
                     <tr role="row">
                         <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                             <label class="pos-rel">
-                                <input id="goodcheck" type="checkbox" class="ace">
+                                选择
                                 <span class="lbl"></span>
                             </label>
                         </th>
@@ -231,7 +231,7 @@
                     <thead>
                     <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                         <label class="pos-rel">
-                            <input id="consigneecheck" type="checkbox" class="ace">
+                            选择
                             <span class="lbl"></span>
                         </label>
                     </th>
@@ -312,6 +312,7 @@
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
                     <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                    <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
                 <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
                 <#--<#import "address.ftl" as apiAddrFtl>-->
                 </p>
@@ -319,9 +320,9 @@
 
             <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
                 <div class="form-group" id="transBusinessTypeDiv">
-                    <div><label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                    <div><label class="control-label col-label no-padding-right" for="name" style="margin-right:8px;">业务类型</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
+                            <div class="clearfix col-width-168">
                                 <select  id="businessType" name="businessType" class="chosen-select form-control ">
                                     <option value="600">城配</option>
                                     <option value="601">干线</option>
@@ -329,18 +330,14 @@
                                 </select>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="name">开单员</label>
+
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
-                                <select id="merchandiser" name="merchandiser" class="col-width-100">
-                                    <option>中国人民</option>
-                                    <option>人民中国</option>
-                                    <option>民中国人</option>
-                                    <option>国人民中</option>
-                                </select>
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="merchandiser" id="merchandiser" type="text" placeholder="开单员" style="padding-left:8px;" />
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label" for="name" style="margin-right:10px;">运输类型</label>
+                    <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
 
                         <div class="col-width-50" style="margin-right:10px;">
                             <div class="clearfix control-label">
@@ -357,7 +354,7 @@
                         <input id="transportType" type="hidden" name="transportType"/></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="supplierCode">订单日期</label>
+                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;">订单日期</label>
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
@@ -374,7 +371,7 @@
                         </div></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">客户名称</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:430px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -384,6 +381,15 @@
                             </div>
                         </div></div>
 
+                </div>
+                <div class="form-group">
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
+                        <div class="col-xs-2">
+                            <div class="position-relative" style="width:430px;">
+                                <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:430px;" />
+                                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                            </div>
+                        </div></div>
                 </div>
 
             </form>
@@ -522,7 +528,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">上门提货:费用</label>
                         <div style="width:140px;float:left;">
                             <div class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCost(this)" />
+                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "" />
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -537,7 +543,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">货物保险:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
-                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -546,7 +552,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">声明价值</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -561,7 +567,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">二次配送:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -576,7 +582,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">代收货款:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
-                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -585,7 +591,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">代收金额</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -600,7 +606,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">签单返回:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -609,7 +615,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">运费</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCost(this)">
+                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -620,7 +626,7 @@
             </div>
             <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form">
                 <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
-                    <div style="width:242px;float:left;margin-left:71px;" >
+                    <div style="width:242px;float:left;margin-left:45px;" >
                         <label class="col-label" for="name" style="float:left;">费用总计</label>
                         <div class="col-width-100 padding-15" style="width:130px">
                             <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -628,32 +634,33 @@
                         <label class="" for="name" >元</label>
                     </div>
                     <div >
-                        <label class=" no-padding-right" style="float:left; margin:0 15px 0 30px;" for="name">费用支付</label>
+                        <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;">
                             <div class="clearfix">
-                                <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePaymentPartyV1" type="radio" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <div style="float:left;margin-right:5px;">发货方</div>
                             </div>
                         </div></div>
                     <div>
                         <div class="col-width-70" style="float:left;background:#eaedf1;">
                             <div class="clearfix">
-                                <input id="transportTypeV2" type="radio" name="transportTypeV" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePaymentPartyV2" type="radio" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <div style="float:left;margin-right:5px;">收货方</div>
                             </div></div>
                     </div>
                     <input id="transportType" type="hidden" name="transportType"/>
+                    <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
                     <div>
                         <label class="no-padding-right" for="name" style="margin-left:30px;float:left;">支付方式</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-100">
-                                <select class="chosen-select form-control" id="businessType" name="businessType">
-                                    <option value="01">现金</option>
-                                    <option value="02">POS刷卡</option>
-                                    <option value="03">微信</option>
-                                    <option value="04">支付宝</option>
-                                    <option value="05">银行支付</option>
-                                    <option value="06">账户结算</option>
+                                <select class="chosen-select form-control" id="payment" name="payment">
+                                    <option value="6810">现金</option>
+                                    <option value="6820">POS刷卡</option>
+                                    <option value="6830">微信</option>
+                                    <option value="6840">支付宝</option>
+                                    <option value="6850">银行支付</option>
+                                    <option value="6860">账户结算</option>
                                 </select>
                             </div>
                         </div>
@@ -664,39 +671,44 @@
 
                     <div style="width:400px;">
                         <label class=" col-label col-float" for="name" >结算方式</label>
-                        <label class=" col-label-50 col-float" for="name">现结</label>
+                        <label class=" col-label-50 col-float" for="name" style="width:25px;">现结</label>
+                        <div style="float:left;width:145px;">
                         <div class="padding-15 col-float" style="width:130px;">
                             <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
-                        <label class=" col-float" for="name">元</label>
+                        <label class=" col-float" for="name">元</label></div>
                     </div>
                     <div >
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:35px;">到付</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:28px;">到付</label>
+                        <div style="width:145px;float:left;">
+                            <div class="padding-15 col-float" style="width:130px;">
+                                <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
-                        <label class=" col-float" for="name">元</label>
                     </div>
                     <div>
                         <label class=" col-label-50 col-float" for="name" style="margin-left:51px;">回付</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        <div style="width:145px;float:left;">
+                            <div class="padding-15 col-float" style="width:130px;">
+                                <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
-                        <label class=" col-float" for="name">元</label>
                     </div>
                     <div>
                         <label class=" col-label-50" for="name">月结</label>
-                        <div class="padding-15 col-float" style="width:130px;">
-                            <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                        <div style="width:145px;float:left;">
+                            <div class="padding-15 col-float" style="width:130px;">
+                                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
-                        <label class=" col-float" for="name">元</label>
                     </div>
                 </div>
                 <div class="page-header">
                 </div>
             </form>
-
-
                     <!-- /section:elements.tab.option -->
         </div>
         <!-- PAGE CONTENT ENDS -->
@@ -706,11 +718,6 @@
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
-<#--
-            <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
-                <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
-                确认下单
-            </button>-->
         </div>
 
     </div>
@@ -743,7 +750,7 @@
                 <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
                 <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 <label class="control-label" style="float:right;" for="name">数量合计：</label>
-
+                <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
             <#--dynamic-table-->
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
@@ -1215,6 +1222,7 @@
     }
     function countQuantityOrWeightOrCubageCheck() {
         var quantityCount=0;
+        var cubageCount=0;
         var weightCount=0;
         var luggage=0;
         var flg1="";
@@ -1254,6 +1262,8 @@
         luggage=0;
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
+                cubageCount=cubageCount+parseFloat($(this).val());
+
                 if(flg1=="error" && flg2=="error"){
                     if($(this).parent().next().find('input').first().val()!="" && $(this).parent().next().find('input').first()!="0" && $(this).val()!="0"){
                         luggage=luggage+parseFloat($(this).val())*parseFloat($(this).parent().next().find('input').first().val());
@@ -1270,6 +1280,7 @@
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
+        $("#cubageCountHidden").html(cubageCount);
     }
     function countCostCheck() {
         var count=0;
@@ -1351,7 +1362,7 @@
         jsonStr.luggage = $("#luggage").val();
         //费用总计
         jsonStr.serviceCharge = $("#serviceCharge").val();
-        jsonStr.expensePaymentParty = $("input[name=expensePaymentPartyV]:checked").val();
+        jsonStr.expensePaymentParty = $("#expensePaymentParty").val();
         jsonStr.payment = $("#payment").val();
         jsonStr.currentAmount = $("#currentAmount").val();
         jsonStr.toPayAmount = $("#toPayAmount").val();
@@ -1444,7 +1455,6 @@
         paramConsignor.cscContact = cscContact;
         paramConsignor.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
-        console.log("function  consignor " + cscContantAndCompanyDtoConsignorStr);
         return cscContantAndCompanyDtoConsignorStr;
 
     }
@@ -1485,7 +1495,6 @@
         paramConsignee.cscContact = cscContact;
         paramConsignee.cscContactCompany = cscContactCompany;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
-        console.log("function  consignee " + cscContantAndCompanyDtoConsigneeStr);
         return cscContantAndCompanyDtoConsigneeStr;
     }
 
@@ -1617,12 +1626,17 @@
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
-            jsonStr.transportType = $("input[name=transportTypeV]:checked").val();
+            jsonStr.transportType = $("#transportType").val();
             if($dp.$('orderTime').value!=""){
                 jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
             }
             jsonStr.transCode = $("#transCode").val();
-            jsonStr.custName = $("#custName").val();
+            jsonStr.custName = $("#custName").val();//000
+            jsonStr.notes = $("#transRequire").val();//
+            jsonStr.weight = $("#weightCount").html();
+            jsonStr.quantity = $("#quantityCount").html();
+            var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
             jsonStr=orderPlaceAddTranInfo(jsonStr);
             //货品添加
@@ -1654,7 +1668,6 @@
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             var cscContantAndCompanyDtoConsignorStr;
             var cscContantAndCompanyDtoConsigneeStr;
-            console.log("======orderGoodsListStr======"+orderGoodsListStr)
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
             xescm.common.submit("/ofc/orderPlaceCon"
@@ -1672,15 +1685,7 @@
 
         });
 
-        $("#custListDivBlock").click(function () {
-            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
-        });
-        $("#custListDivNoneBottom").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
-        $("#custListDivNoneTop").click(function () {
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-        });
+
 
         $("#custSelectFormBtn").click(function () {
             var custName = $("#custNameDiv").val();
@@ -1938,7 +1943,6 @@
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                            console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
                             var provinceName = CscContantAndCompanyDto.provinceName;
                             var cityName = CscContantAndCompanyDto.cityName;
                             var areaName = CscContantAndCompanyDto.areaName;
@@ -1992,7 +1996,6 @@
                     var custId = $("#custId").val();
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId},function (data) {
                         data = eval(data);
-                        console.log("-=-=-=-------234-ee--------111-11"+JSON.stringify(data));
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
@@ -2079,6 +2082,11 @@
 
         });
 
+
+        var transportTypePub = "10";
+        $("#transportType").val(transportTypePub);
+        var expensePaymentParty = "10";
+        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
@@ -2300,13 +2308,23 @@
             }
         });
 
-        $('#merchandiser').editableSelect();
+        //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
-            xescm.common.loadPage("/csc/customer/toAddCustomerPage");
+            var csc_url = $("#csc_url").html();
+            var url = csc_url + "/csc/customer/toAddCustomerPage";
+            xescm.common.loadPage(url);
         });
     })
-
+    $("#custListDivBlock").click(function () {
+        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+    });
+    $("#custListDivNoneBottom").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
+    $("#custListDivNoneTop").click(function () {
+        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+    });
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>

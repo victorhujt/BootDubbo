@@ -78,7 +78,7 @@ public class OfcOrderManageRest extends BaseController{
         try {
             result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -100,7 +100,7 @@ public class OfcOrderManageRest extends BaseController{
         try {
             result = ofcOrderManageService.orderDelete(orderCode,orderStatus,authResDtoByToken);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单删除出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
@@ -122,7 +122,7 @@ public class OfcOrderManageRest extends BaseController{
         try {
             result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常:{},{}", "", null);
+            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage());
             //ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
@@ -182,9 +182,9 @@ public class OfcOrderManageRest extends BaseController{
             storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
         }catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
         }catch (Exception ex) {
-            logger.error("订单中心订单管理订单编辑出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
             ex.printStackTrace();
         }
         if (ofcOrderDTO!=null){
@@ -261,7 +261,7 @@ public class OfcOrderManageRest extends BaseController{
             rmcCompanyLists.setResult(lineVos1);*/
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
-            logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
         }
     }
 
@@ -283,7 +283,7 @@ public class OfcOrderManageRest extends BaseController{
         try {
             result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,serviceProviderContact,serviceProviderContactPhone,userName);
         } catch (Exception ex) {
-            logger.error("计划单状态更新出错:{},{}", ex.getMessage(), ex);
+            logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
             ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -313,7 +313,7 @@ public class OfcOrderManageRest extends BaseController{
             ca.add(Calendar.HOUR_OF_DAY, 3);
             rmcCompanyLineQO.setDepartureTime(ca.getTime());
         }else {
-            logger.error("订单中心筛选服务商出现异常:{},{}");
+            logger.error("订单中心筛选服务商出现异常:{}");
             return;
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
@@ -337,7 +337,7 @@ public class OfcOrderManageRest extends BaseController{
         try{
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
-            logger.error("订单中心筛选服务商出现异常:{},{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
         }
 
     }

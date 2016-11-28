@@ -109,7 +109,8 @@ public class OfcOperationDistributing extends BaseController{
 
             }
         }catch (Exception ex){
-            logger.error("运营中心城配开单批量下单失败!",ex.getMessage());
+            logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
@@ -121,15 +122,17 @@ public class OfcOperationDistributing extends BaseController{
      * @throws Exception
      */
     private Wrapper<?> validateCustOrderCode(JSONArray jsonArray) throws Exception {
-        String pageCustOrderCode = null;
+        String pageCustOrderCode = "";
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
             if("" != custOrderCode){
-                if(pageCustOrderCode == custOrderCode){
+                logger.debug("pageCustOrderCode = {}",pageCustOrderCode);
+                logger.debug("custOrderCode = {}",custOrderCode);
+                if(!PubUtils.isSEmptyOrNull(custOrderCode) && pageCustOrderCode.equals(custOrderCode)){
                     logger.error("城配下单批量下单,客户订单编号重复");
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
                 }
                 pageCustOrderCode = custOrderCode;
                 OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
@@ -137,7 +140,7 @@ public class OfcOperationDistributing extends BaseController{
                 int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
                 if (checkCustOrderCodeResult > 0) {
                     logger.error("城配下单批量下单,客户订单编号重复");
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的订单编号重复！请重试！");
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
                 }
             }
 
@@ -159,7 +162,7 @@ public class OfcOperationDistributing extends BaseController{
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
         }catch (Exception ex){
-            logger.error("城配下单查询仓库列表失败!",ex.getMessage());
+            logger.error("城配下单查询仓库列表失败!{}",ex.getMessage(),ex);
         }
     }
 
@@ -183,7 +186,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品种类失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
         }
     }
 
@@ -210,7 +213,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品小类失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
         }
     }
 
@@ -230,7 +233,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品列表失败!{}",ex.getMessage(),wrapper.getMessage());
         }
     }
 
@@ -252,7 +255,10 @@ public class OfcOperationDistributing extends BaseController{
                 queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
                 queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
             }
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerByName(queryCustomerNameDto);
+//            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerByName(queryCustomerNameDto);
+            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
+            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
+            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
             if(wrapper.getCode() == Wrapper.ERROR_CODE){
                 logger.error("查询客户列表失败,查询结果有误!");
             }
@@ -263,7 +269,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
             }
         }catch (Exception ex){
-            logger.error("查询客户列表失败!",ex.getMessage());
+            logger.error("查询客户列表失败!异常信息为:{}",ex.getMessage(),ex);
         }
 
     }
