@@ -3,17 +3,14 @@
     <!-- bootstrap & fontawesome -->
 </head>
 <body class="no-skin">
-
-<div class="col-xs-12">
     <div class="page-header">
         <p>
             查询条件
         </p>
     </div>
-    <div class="row">
 
     <div class="form-group">
-        <label class="control-label col-label no-padding-right" for="name"></label>
+        <label class="control-label col-label no-padding-right" for="followTag"></label>
         <div class="w-width-220 col-float">
             <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
                 <option value="orderCode">订单编号</option>
@@ -31,7 +28,6 @@
         <button class="btn btn-white btn-info btn-bold filters" id="followOrderFormBtn">
         查询
     </button>
-    </div>
     </div>
     <div class="page-header">
         <p>
