@@ -51,6 +51,57 @@
     <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
   </resultMap>
 
+  <resultMap id="SiloprogramAndResourceInfoResultMap" type="com.xescm.ofc.domain.OfcSiloprogramInfoVo">
+    <id column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR" />
+    <result column="program_serial_number" property="programSerialNumber" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+    <result column="estimated_time_of_delivery" property="estimatedTimeOfDelivery" jdbcType="TIMESTAMP" />
+    <result column="arrive_time" property="arriveTime" jdbcType="TIMESTAMP" />
+    <result column="loading_place" property="loadingPlace" jdbcType="VARCHAR" />
+    <result column="unloading_place" property="unloadingPlace" jdbcType="VARCHAR" />
+    <result column="delivery_place" property="deliveryPlace" jdbcType="VARCHAR" />
+    <result column="eceiving_platform" property="eceivingPlatform" jdbcType="VARCHAR" />
+    <result column="the_total_value_of" property="theTotalValueOf" jdbcType="VARCHAR" />
+    <result column="support_code" property="supportCode" jdbcType="VARCHAR" />
+    <result column="support_name" property="supportName" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="consignee_code" property="consigneeCode" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignee_contact" property="consigneeContact" jdbcType="VARCHAR" />
+    <result column="consignee_contact_phone" property="consigneeContactPhone" jdbcType="VARCHAR" />
+    <result column="consignee_fax" property="consigneeFax" jdbcType="VARCHAR" />
+    <result column="consignee_email" property="consigneeEmail" jdbcType="VARCHAR" />
+    <result column="consignee_post_code" property="consigneePostCode" jdbcType="VARCHAR" />
+    <result column="consignee_province" property="consigneeProvince" jdbcType="VARCHAR" />
+    <result column="consignee_city" property="consigneeCity" jdbcType="VARCHAR" />
+    <result column="consignee_district_and_county" property="consigneeDistrictAndCounty" jdbcType="VARCHAR" />
+    <result column="consignee_township_streets" property="consigneeTownshipStreets" jdbcType="VARCHAR" />
+    <result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+    <result column="print_invoice" property="printInvoice" jdbcType="VARCHAR" />
+    <result column="buyer_payment_method" property="buyerPaymentMethod" jdbcType="VARCHAR" />
+    <result column="order_amount" property="orderAmount" jdbcType="VARCHAR" />
+    <result column="collect_flag" property="collectFlag" jdbcType="VARCHAR" />
+    <result column="insure" property="insure" jdbcType="VARCHAR" />
+    <result column="insure_value" property="insureValue" jdbcType="VARCHAR" />
+    <result column="warehouse_number" property="warehouseNumber" jdbcType="VARCHAR" />
+    <result column="service_charge" property="serviceCharge" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="create_personnel" property="createPersonnel" jdbcType="VARCHAR" />
+    <result column="void_personnel" property="voidPersonnel" jdbcType="VARCHAR" />
+    <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+  </resultMap>
+
   <!--非作废仓储计划单列表查询-->
   <select id="ofcSiloprogramInfoScreenList" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
@@ -68,5 +119,35 @@
       </if>
     </where>
   </select>
+
+  <select id="ofcSiloprogramAndResourceInfo" parameterType="java.lang.String" resultMap="SiloprogramAndResourceInfoResultMap">
+  
+    SELECT
+    sinfo.*,
+    sss.plate_number,
+    sss.driver_name,
+    sss.contact_number,
+    sss.trans_code
+    FROM
+    ofc_siloprogram_info sinfo
+    LEFT JOIN ofc_silopro_source_status sss ON sinfo.plan_code = sss.plan_code
+   <!--   LEFT JOIN ofc_silopro_status ss ON sinfo.plan_code = ss.plan_code
+    LEFT JOIN ofc_silopro_newstatus sn ON sinfo.plan_code = sn.plan_code-->
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        sinfo.order_code =#{orderCode}
+      </if>
+    </where>
+  </select>
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

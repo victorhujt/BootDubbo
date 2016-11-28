@@ -49,13 +49,13 @@ public class DefaultMqProducer {
      * @param tag
      */
     public void toSendWhc(String jsonStr,String code,String tag) {
-//        System.out.println("Producer Started");
-//        Message message = new Message(mqConfig.getWHOTopic(), tag,jsonStr.getBytes());
-//        message.setKey(code);
-//        SendResult sendResult = producer.send(message);
-//        if (sendResult != null) {
-//            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getWHOTopic(),new Date(),sendResult.getMessageId());
-//        }
+        logger.info(mqConfig.getOfc2WhcOrderTopic()+"开始消费");
+        Message message = new Message(mqConfig.getOfc2WhcOrderTopic(), tag,jsonStr.getBytes());
+        message.setKey(code);
+        SendResult sendResult = producer.send(message);
+        if (sendResult != null) {
+            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getOfc2WhcOrderTopic(),new Date(),sendResult.getMessageId());
+        }
     }
 
 }
