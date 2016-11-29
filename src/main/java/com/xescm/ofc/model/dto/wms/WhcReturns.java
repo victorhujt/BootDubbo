@@ -68,7 +68,6 @@ public class WhcReturns {
 
     private List<WhcReturnsDetail> detailList;
 
-    private List<WhcReturnsStatus> stList;
 
     public List<WhcReturnsDetail> getDetailList() {
         return detailList;
@@ -76,14 +75,6 @@ public class WhcReturns {
 
     public void setDetailList(List<WhcReturnsDetail> detailList) {
         this.detailList = detailList;
-    }
-
-    public List<WhcReturnsStatus> getStList() {
-        return stList;
-    }
-
-    public void setStList(List<WhcReturnsStatus> stList) {
-        this.stList = stList;
     }
 
     public String getId() {

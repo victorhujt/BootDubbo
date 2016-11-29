@@ -1,6 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcSiloprogramInfo;
+import com.xescm.ofc.domain.OfcSiloprogramInfoVo;
 
 import java.util.List;
 
@@ -9,4 +10,7 @@ import java.util.List;
  */
 public interface OfcSiloprogramInfoService extends IService<OfcSiloprogramInfo> {
     public List<OfcSiloprogramInfo> ofcSiloprogramInfoScreenList(String orderCode);
+
+    public OfcSiloprogramInfoVo ofcSiloprogramAndResourceInfo(String orderCode);
 }
+

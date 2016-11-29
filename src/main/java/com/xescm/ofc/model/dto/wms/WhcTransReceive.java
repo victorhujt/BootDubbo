@@ -67,7 +67,6 @@ public class WhcTransReceive {
 
     private List<WhcTransReceiveDetail> detailList;
 
-    private List<WhcTransReceiveStatus> stList;
 
     public List<WhcTransReceiveDetail> getDetailList() {
         return detailList;
@@ -77,13 +76,6 @@ public class WhcTransReceive {
         this.detailList = detailList;
     }
 
-    public List<WhcTransReceiveStatus> getStList() {
-        return stList;
-    }
-
-    public void setStList(List<WhcTransReceiveStatus> stList) {
-        this.stList = stList;
-    }
 
     public String getId() {
         return id;
@@ -305,7 +297,7 @@ public class WhcTransReceive {
                 ", userDefine7='" + userDefine7 + '\'' +
                 ", notes='" + notes + '\'' +
                 ", detailList=" + detailList +
-                ", stList=" + stList +
+                "" +
                 '}';
     }
 }

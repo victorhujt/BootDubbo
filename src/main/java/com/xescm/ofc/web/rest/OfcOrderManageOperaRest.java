@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.domain.form.OrderOperForm;
+import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
@@ -172,7 +173,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{},错误：{}", orderCode, orderStatus, ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -193,6 +194,12 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
             ofcFundamentalInformation.setOrderCode(orderCode);
             ofcFundamentalInformation = ofcFundamentalInformationService.selectOne(ofcFundamentalInformation);
+            if (ofcFundamentalInformation != null) {
+                //平台类型如果为4为鲜易网，如果不为空为三方
+                String platformType = ofcFundamentalInformation.getPlatformType();
+                platformType = StringUtils.equals(platformType, "4") ? "鲜易网" : StringUtils.isNotBlank(platformType) ? "三方" : platformType;
+                ofcFundamentalInformation.setPlatformType(platformType);
+            }
 
             OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
             ofcDistributionBasicInfo.setOrderCode(orderCode);
@@ -213,19 +220,14 @@ public class OfcOrderManageOperaRest extends BaseController {
                 planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
                 String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
                 planAndStorage.setPlannedSingleState(pl);
-                planAndStorage.setBusinessType(getBusiType(planAndStorage.getBusinessType()));
+                planAndStorage.setBusinessType(BusinessTypeEnum.getBusinessTypeDescByCode(planAndStorage.getBusinessType()));
             }
             if (ofcFinanceInformation != null) {
-                String pickUpGoods = StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getPickUpGoods(), "0") ? "否" : "";
-                ofcFinanceInformation.setPickUpGoods(pickUpGoods);
-                String twoDistribution = StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getTwoDistribution(), "0") ? "否" : "";
-                ofcFinanceInformation.setTwoDistribution(twoDistribution);
-                String returnList = StringUtils.equals(ofcFinanceInformation.getReturnList(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getReturnList(), "0") ? "否" : "";
-                ofcFinanceInformation.setReturnList(returnList);
-                String insure = StringUtils.equals(ofcFinanceInformation.getInsure(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getInsure(), "0") ? "否" : "";
-                ofcFinanceInformation.setInsure(insure);
-                String collectFlag = StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "1") ? "是" : StringUtils.equals(ofcFinanceInformation.getCollectFlag(), "0") ? "否" : "";
-                ofcFinanceInformation.setCollectFlag(collectFlag);
+                ofcFinanceInformation.setPickUpGoods(defaultString(ofcFinanceInformation.getPickUpGoods()));
+                ofcFinanceInformation.setTwoDistribution(defaultString(ofcFinanceInformation.getTwoDistribution()));
+                ofcFinanceInformation.setReturnList(defaultString(ofcFinanceInformation.getReturnList()));
+                ofcFinanceInformation.setInsure(defaultString(ofcFinanceInformation.getInsure()));
+                ofcFinanceInformation.setCollectFlag(defaultString(ofcFinanceInformation.getCollectFlag()));
             }
 
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
@@ -246,32 +248,8 @@ public class OfcOrderManageOperaRest extends BaseController {
         return null;
     }
 
-    private String getBusiType(String businessType) {
-        String value = businessType;
-        if (StringUtils.equals(businessType, "600")) {
-            value = "城配";
-        } else if (StringUtils.equals(businessType, "601")) {
-            value = "干线";
-        } else if (StringUtils.equals(businessType, "602")) {
-            value = "卡班";
-        } else if (StringUtils.equals(businessType, "610")) {
-            value = "销售出库";
-        } else if (StringUtils.equals(businessType, "611")) {
-            value = "调拨出库";
-        } else if (StringUtils.equals(businessType, "612")) {
-            value = "报损出库";
-        } else if (StringUtils.equals(businessType, "613")) {
-            value = "其他出库";
-        } else if (StringUtils.equals(businessType, "620")) {
-            value = "采购入库";
-        } else if (StringUtils.equals(businessType, "621")) {
-            value = "调拨入库";
-        } else if (StringUtils.equals(businessType, "622")) {
-            value = "退货入库";
-        } else if (StringUtils.equals(businessType, "623")) {
-            value = "加工入库";
-        }
-        return value;
+    private String defaultString(String flag) {
+        return StringUtils.equals(flag, "1") ? "是" : StringUtils.equals(flag, "0") ? "否" : "";
     }
 
     /**
@@ -349,12 +327,13 @@ public class OfcOrderManageOperaRest extends BaseController {
     @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
     @ResponseBody
     public Object querySelectCustData(String custName) {
+        logger.info("获取客户信息：custName{}", custName);
         try {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
         } catch (Exception ex) {
+            logger.error("获取客户信息失败：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
         }
     }
-
 
 }
