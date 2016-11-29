@@ -196,24 +196,25 @@
         <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer">
             <button type="button" id="" style="cursor:pointer" class="bootbox-close-button close"
                     data-dismiss="modal" aria-hidden="true">×</button></span>
-            <h4 class="modal-title">选择客户</h4></div>
+            <h4 class="modal-title w-font">选择客户</h4></div>
         <div class="modal-body">
             <div class="bootbox-body">
-                <form id="consignorSelConditionForm" class="form-horizontal" role="form">
+                <form id="consignorSelConditionForm" class="form-horizontal" role="form" style="margin-bottom:15px;">
                 <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                     <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                        <div class="col-xs-3">
+                        <label class="control-label col-label no-padding-right" for="name">名称</label>
+                        <div class="w-width-220 padding-15 y-float">
                             <div class="clearfix">
                                 <input id="custNameDiv" name="cscContactCompany.contactCompanyName" type="text"
                                        style="color: black" class="form-control input-sm" placeholder=""
                                        aria-controls="dynamic-table">
                             </div>
                         </div>
+                       <#-- <label class="control-label col-xs-1 no-padding-right" for="name"></label>-->
+
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                        <div class="col-xs-3">
+                        <div class="col-xs-3 y-float">
                             <div class="clearfix">
                                 <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                             </div>
