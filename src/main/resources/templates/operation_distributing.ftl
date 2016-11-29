@@ -411,7 +411,9 @@
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="merchandiser" type="text" placeholder="开单员">
-                            <option>Alfa Romeo</option>
+                            <#list merchandiserList! as merchandiser>
+                                <option>${(merchandiser.merchandiser)!""}</option>
+                            </#list>
                         </select>
                     </div>
                 </div></div>

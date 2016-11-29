@@ -335,7 +335,9 @@
                         <div class="col-width-168 padding-15">
                             <div class="col-width-168">
                                 <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
-                                    <option>Alfa Romeo</option>
+                                    <#list merchandiserList! as merchandiser>
+                                        <option>${(merchandiser.merchandiser)!""}</option>
+                                    </#list>
                                 </select>
                             </div>
                         </div></div>
