@@ -1,6 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcSiloprogramInfo;
+import com.xescm.ofc.domain.OfcSiloprogramInfoVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcSiloprogramInfoMapper;
 import com.xescm.ofc.service.OfcSiloprogramInfoService;
@@ -31,6 +32,17 @@ public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInf
             /*OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);*/
             return ofcSiloprogramInfoMapper.ofcSiloprogramInfoScreenList(mapperMap);
+        }else {
+            throw new BusinessException();
+        }
+    }
+
+    @Override
+    public OfcSiloprogramInfoVo ofcSiloprogramAndResourceInfo(String orderCode) {
+        if(!PubUtils.trimAndNullAsEmpty(orderCode).equals("")){
+            Map<String,String> mapperMap = new HashMap<>();
+            mapperMap.put("orderCode",orderCode);
+           return ofcSiloprogramInfoMapper.ofcSiloprogramAndResourceInfo(mapperMap);
         }else {
             throw new BusinessException();
         }

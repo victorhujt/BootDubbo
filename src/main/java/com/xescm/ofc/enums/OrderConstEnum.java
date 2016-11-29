@@ -87,6 +87,15 @@ public final class OrderConstEnum {
     public static final Integer FAHUOFANG=10;       //发货方
     public static final Integer SHOUHUOFANG=20;        //收货方
 
+
+    public static final String OFC_WHC_OUT_TYPE = "出库";
+
+    public static final String OFC_WHC_IN_TYPE = "入库";
+
+    public static final String ORDER_SOURCE = "ofc";
+
+
+
     public OrderConstEnum() {
     }
 }

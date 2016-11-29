@@ -65,7 +65,6 @@ public class WhcPurchase {
 
     private List<WhcPurchaseDetail> detailList;
 
-    private List<WhcPurchaseStatus> stList;
 
 
     public List<WhcPurchaseDetail> getDetailList() {
@@ -75,15 +74,6 @@ public class WhcPurchase {
     public void setDetailList(List<WhcPurchaseDetail> detailList) {
         this.detailList = detailList;
     }
-
-    public List<WhcPurchaseStatus> getStList() {
-        return stList;
-    }
-
-    public void setStList(List<WhcPurchaseStatus> stList) {
-        this.stList = stList;
-    }
-
 
     public String getId() {
         return id;
