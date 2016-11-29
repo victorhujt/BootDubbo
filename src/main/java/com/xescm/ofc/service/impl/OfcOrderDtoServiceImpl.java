@@ -58,6 +58,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
 
                     BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                    ofcOrderDTO.setOrderStatus(ofcOrderStatus.getOrderStatus());
                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
                     }
@@ -73,6 +74,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 }catch (Exception ex){
                     throw new BusinessException(ex.getMessage());
                 }
+
                 return ofcOrderDTO;
             }
         }else{
