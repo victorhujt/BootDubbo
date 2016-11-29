@@ -51,7 +51,7 @@
     <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
   </resultMap>
 
-  <resultMap id="SiloprogramAndResourceInfoResultMap" type="com.xescm.ofc.domain.OfcSiloprogramInfoVo">
+  <resultMap id="SiloprogramAndResourceInfoResultMap" type="com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo">
     <id column="plan_code" property="planCode" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR" />

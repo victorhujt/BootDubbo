@@ -1,11 +1,7 @@
 package com.xescm.ofc.enums;
 
-import com.google.common.collect.Lists;
-
 import java.util.Arrays;
 import java.util.List;
-
-import static com.xescm.ofc.enums.OrderConstEnum.PENDINGAUDIT;
 
 /**
  * Created by hiyond on 2016/11/21.

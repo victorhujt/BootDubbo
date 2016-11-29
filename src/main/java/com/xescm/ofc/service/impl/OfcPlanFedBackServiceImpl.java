@@ -3,6 +3,8 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
+import com.xescm.ofc.domain.OfcPlanFedBackCondition;
+import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xescm.ofc.enums.OrderConstEnum.*;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  * Created by lyh on 2016/10/10.
@@ -41,7 +43,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
 
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBack(OfcPlanFedBackCondition ofcPlanFedBackCondition,String userName) {
+    public Wrapper<List<OfcPlanFedBackResult>> planFedBack(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
         //Map<String,String> mapperMap = new HashMap<String,String>();
         Map<String,String> mapperMap = new HashMap<>();
         String transPortNo= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getTransportNo());

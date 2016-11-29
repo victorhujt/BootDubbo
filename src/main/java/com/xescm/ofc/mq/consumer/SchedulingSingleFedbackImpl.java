@@ -26,7 +26,6 @@ import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

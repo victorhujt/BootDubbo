@@ -4,12 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcOrderDTO;
-import com.xescm.ofc.domain.dto.csc.*;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
-import com.xescm.ofc.enums.OrderConstEnum;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.csc.*;
+import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
+import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignAddressInterfaceClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -116,10 +115,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcOrderDTO.setOrderTime(new Date());
             }
             if (null == ofcOrderDTO.getProvideTransport()){
-                ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
+                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
             }
             if (null == ofcOrderDTO.getUrgent()){
-                ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
+                ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
             }
 
             result =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,custId
@@ -171,10 +170,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
             if(null !=ofcOrderDTO){
                 if (null == ofcOrderDTO.getProvideTransport()){
-                    ofcOrderDTO.setProvideTransport(OrderConstEnum.WAREHOUSEORDERNOTPROVIDETRANS);
+                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
                 }
                 if (null == ofcOrderDTO.getUrgent()){
-                    ofcOrderDTO.setUrgent(OrderConstEnum.DISTRIBUTIONORDERNOTURGENT);
+                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
                 }
             }else{
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");

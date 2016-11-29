@@ -334,7 +334,11 @@
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
                         <div class="col-width-168 padding-15">
                             <div class="col-width-168">
-                                <input class="col-width-168"  name="merchandiser" id="merchandiser" type="text" placeholder="开单员" style="padding-left:8px;" />
+                                <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
+                                    <#list merchandiserList! as merchandiser>
+                                        <option>${(merchandiser.merchandiser)!""}</option>
+                                    </#list>
+                                </select>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
@@ -2325,6 +2329,8 @@
     $("#custListDivNoneTop").click(function () {
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
     });
+
+    $("#merchandiser").editableSelect();
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
