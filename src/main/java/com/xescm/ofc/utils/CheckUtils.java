@@ -1,17 +1,15 @@
 package com.xescm.ofc.utils;
 
 import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.domain.dto.coo.CreateOrderGoodsInfo;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.CscWarehouse;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
+import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.dto.csc.CscWarehouse;
+import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

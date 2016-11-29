@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.domain.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.exception.BusinessException;
 
 /**

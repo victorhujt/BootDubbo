@@ -3,21 +3,22 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.coo.CreateOrderEntity;
-import com.xescm.ofc.domain.dto.coo.CreateOrderGoodsInfo;
-import com.xescm.ofc.domain.dto.coo.CreateOrderTrans;
-import com.xescm.ofc.domain.dto.csc.*;
-import com.xescm.ofc.domain.dto.csc.domain.CscContact;
-import com.xescm.ofc.domain.dto.csc.domain.CscContactCompany;
-import com.xescm.ofc.domain.dto.csc.vo.*;
-import com.xescm.ofc.domain.dto.wms.AddressDto;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
+import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
+import com.xescm.ofc.model.dto.csc.*;
+import com.xescm.ofc.model.dto.csc.domain.CscContact;
+import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
+import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
+import com.xescm.ofc.model.vo.csc.CscCustomerVo;
+import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -28,19 +29,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xescm.ofc.enums.OrderConstEnum.ALREADYEXAMINE;
-import static com.xescm.ofc.enums.OrderConstEnum.CREATE_ORDER_BYAPI;
-import static com.xescm.ofc.enums.OrderConstEnum.PENDINGAUDIT;
-import static org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW;
-import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
+import static com.xescm.ofc.constant.OrderConstConstant.ALREADYEXAMINE;
+import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
+import static com.xescm.ofc.constant.OrderConstConstant.PENDINGAUDIT;
 
 /**
  * Created by hiyond on 2016/11/18.

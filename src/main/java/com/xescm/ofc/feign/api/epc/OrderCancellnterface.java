@@ -1,7 +1,6 @@
 package com.xescm.ofc.feign.api.epc;
 
-import com.xescm.ofc.domain.dto.addr.QueryAddress;
-import com.xescm.ofc.domain.dto.epc.CancelOrderDto;
+import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;

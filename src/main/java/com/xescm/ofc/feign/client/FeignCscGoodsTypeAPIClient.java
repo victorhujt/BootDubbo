@@ -1,10 +1,8 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscGoodsApiDto;
-import com.xescm.ofc.domain.dto.csc.CscGoodsType;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsTypeVo;
+import com.xescm.ofc.model.dto.csc.CscGoodsType;
+import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscGoodsAPI;
 import com.xescm.ofc.feign.api.csc.FeignCscGoodsTypeAPI;

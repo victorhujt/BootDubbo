@@ -1,19 +1,15 @@
 package com.xescm.ofc.web.controller;
 
-import com.xescm.ofc.domain.dto.csc.CscGoods;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.enums.OrderStatusEnum;
+import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -24,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;

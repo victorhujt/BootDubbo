@@ -1,6 +1,6 @@
 package com.xescm.ofc.web.rest;
 
-import com.xescm.ofc.domain.dto.addr.QueryAddress;
+import com.xescm.ofc.model.dto.addr.QueryAddress;
 import com.xescm.ofc.feign.client.FeignAddressInterfaceClient;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.Wrapper;
