@@ -1,6 +1,6 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.model.dto.vo.PlanAndStorageVo;
+import com.xescm.ofc.domain.PlanAndStorage;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface PlanAndStorageService {
 
-    List<PlanAndStorageVo> queryPlanAndStorage(String orderCode, String transCode);
+    List<PlanAndStorage> queryPlanAndStorage(String orderCode, String transCode);
 
-    List<PlanAndStorageVo> queryPlanAndStorageTrans(String orderCode, String transCode);
+    List<PlanAndStorage> queryPlanAndStorageTrans(String orderCode, String transCode);
 
 
 }

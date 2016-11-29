@@ -1,8 +1,8 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
-import com.xescm.ofc.domain.dto.csc.CscWarehouse;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.model.dto.csc.CscWarehouse;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcWarehouseAPIClient;

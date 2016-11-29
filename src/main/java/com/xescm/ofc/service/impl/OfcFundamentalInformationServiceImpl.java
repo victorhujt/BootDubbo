@@ -1,6 +1,6 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.model.dto.vo.OfcBatchOrderVo;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
@@ -35,11 +35,6 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     @Override
     public String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode) {
         return ofcFundamentalInformationMapper.getOrderCodeByCustOrderCodeAndCustCode(custOrderCode, custCode);
-    }
-
-    @Override
-    public List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber) {
-        return ofcFundamentalInformationMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
     }
 
     @Override

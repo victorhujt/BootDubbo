@@ -8,8 +8,7 @@ import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
-import com.xescm.ofc.model.dto.vo.OfcBatchOrderVo;
-import com.xescm.ofc.model.dto.vo.PlanAndStorageVo;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -18,6 +17,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,19 +36,14 @@ public class OfcOrderManageOperaRest extends BaseController {
 
     @Autowired
     private OfcOrderManageOperService ofcOrderManageOperService;
-
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
-
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-
     @Autowired
     private OfcFinanceInformationService ofcFinanceInformationService;
-
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
@@ -58,24 +53,20 @@ public class OfcOrderManageOperaRest extends BaseController {
     @Autowired
     private OfcBatchOrderVoService ofcBatchOrderVoService;
 
-
-
-
     /**
      * 查询订单
      *
      * @param page
      * @param form
-     * @return
+     * @return Object
      */
     @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
-            List<OrderScreenResult> dataList = ofcOrderManageOperService.queryOrderOper(form);
-            //PageInfo<OrderScreenResult> pageInfo = new PageInfo<OrderScreenResult>(dataList);
-            PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(dataList);
+            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderList(form);
+            PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
             logger.error("运营平台查询订单出错：{}", ex);
@@ -158,7 +149,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{},错误：{}", orderCode, orderStatus, ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
     }
@@ -176,43 +167,43 @@ public class OfcOrderManageOperaRest extends BaseController {
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号为空");
             }
+            //订单基本信息
             OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
             ofcFundamentalInformation.setOrderCode(orderCode);
             ofcFundamentalInformation = ofcFundamentalInformationService.selectOne(ofcFundamentalInformation);
-            if (ofcFundamentalInformation != null) {
-                //平台类型如果为4为鲜易网，如果不为空为三方
-                String platformType = ofcFundamentalInformation.getPlatformType();
-                platformType = StringUtils.equals(platformType, "4") ? "鲜易网" : StringUtils.isNotBlank(platformType) ? "三方" : platformType;
-                ofcFundamentalInformation.setPlatformType(platformType);
-            }
-
+            //订单配送基本信息
             OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
             ofcDistributionBasicInfo.setOrderCode(orderCode);
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
-
+            //财务信息
             OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
-
+            //订单状态集合
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
-            ofcOrderStatus = ofcOrderStatusService.queryOrderByOrderCode(orderCode);
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-            List<PlanAndStorageVo> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
-            List<PlanAndStorageVo> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
-            storageList.addAll(planList);
-            for (PlanAndStorageVo planAndStorage : storageList) {
+            //最新订单状态
+            ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+            //货品信息
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+            //相关计划单
+            List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
+            for (PlanAndStorage planAndStorage : storageList) {
                 String resourceAllocationStatus = ResourceEnum.getDescByCode(planAndStorage.getResourceAllocationStatus());
                 planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
                 String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
                 planAndStorage.setPlannedSingleState(pl);
-                planAndStorage.setBusinessType(BusinessTypeEnum.getBusinessTypeDescByCode(planAndStorage.getBusinessType()));
+                String businessType = BusinessTypeEnum.getBusinessTypeDescByCode(planAndStorage.getBusinessType());
+                planAndStorage.setBusinessType(businessType);
             }
             if (ofcFinanceInformation != null) {
-                ofcFinanceInformation.setPickUpGoods(defaultString(ofcFinanceInformation.getPickUpGoods()));
-                ofcFinanceInformation.setTwoDistribution(defaultString(ofcFinanceInformation.getTwoDistribution()));
-                ofcFinanceInformation.setReturnList(defaultString(ofcFinanceInformation.getReturnList()));
-                ofcFinanceInformation.setInsure(defaultString(ofcFinanceInformation.getInsure()));
-                ofcFinanceInformation.setCollectFlag(defaultString(ofcFinanceInformation.getCollectFlag()));
+                ofcFinanceInformation.setPickUpGoods(defalutString(ofcFinanceInformation.getPickUpGoods()));
+                ofcFinanceInformation.setTwoDistribution(defalutString(ofcFinanceInformation.getTwoDistribution()));
+                ofcFinanceInformation.setReturnList(defalutString(ofcFinanceInformation.getReturnList()));
+                ofcFinanceInformation.setInsure(defalutString(ofcFinanceInformation.getInsure()));
+                ofcFinanceInformation.setCollectFlag(defalutString(ofcFinanceInformation.getCollectFlag()));
             }
 
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
@@ -224,21 +215,20 @@ public class OfcOrderManageOperaRest extends BaseController {
 
             modelAndView.addObject("storageList", storageList);
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
-//            modelAndView.addObject("planList", planList);
 
             return modelAndView;
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}",  orderCode, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex);
         }
         return null;
     }
 
-    private String defaultString(String flag) {
-        return StringUtils.equals(flag, "1") ? "是" : StringUtils.equals(flag, "0") ? "否" : "";
+    private String defalutString(String str) {
+        return StringUtils.equals(str, "1") ? "是" : StringUtils.equals(str, "0") ? "否" : "";
     }
 
     /**
-     * 订单批次
+     * 订单批次查询
      *
      * @param orderBatchCode
      * @return
@@ -265,7 +255,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      *
      * @param page
      * @param form
-     * @return
+     * @return Object
      */
     @RequestMapping(value = "queryOrderByOrderBatchNumber", method = {RequestMethod.POST})
     @ResponseBody
@@ -277,9 +267,8 @@ public class OfcOrderManageOperaRest extends BaseController {
                 throw new Exception("订单批次号不能为空");
             }
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
-            List<OfcFundamentalInformation> ofcBatchOrderVos = ofcFundamentalInformationService.queryOrderByOrderBatchNumber(orderBatchNumber);
-            //PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<OfcFundamentalInformation>(ofcBatchOrderVos);
-            PageInfo<OfcFundamentalInformation> pageInfo = new PageInfo<>(ofcBatchOrderVos);
+            List<OrderSearchOperResult> ofcBatchOrderVos = ofcOrderManageOperService.queryOrderByOrderBatchNumber(orderBatchNumber);
+            PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(ofcBatchOrderVos);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
             logger.info("订单批次号查询出错：orderBatchNumer{},{}", orderBatchNumber, ex);
@@ -287,6 +276,11 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
+    /**
+     *根据订单编号查询货品信息
+     * @param orderCode
+     * @return Object
+     */
     @RequestMapping(value = "/queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
     private Object queryGoodsInfoByOrderCode(String orderCode) {
@@ -300,23 +294,6 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcBatchOrderVos);
         } catch (Exception ex) {
             logger.info("订单号查询出错：orderCode{},{}", orderCode, ex);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
-        }
-    }
-
-    @RequestMapping("selectCustPage")
-    public ModelAndView selectCustPage() {
-        return new ModelAndView("select_cust_page");
-    }
-
-    @RequestMapping(value = "querySelectCustData", method = RequestMethod.POST)
-    @ResponseBody
-    public Object querySelectCustData(String custName) {
-        logger.info("获取客户信息：custName{}", custName);
-        try {
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, custName);
-        } catch (Exception ex) {
-            logger.error("获取客户信息失败：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
         }
     }

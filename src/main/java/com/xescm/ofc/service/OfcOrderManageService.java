@@ -1,10 +1,10 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
+import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
+import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 

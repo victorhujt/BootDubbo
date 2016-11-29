@@ -1,17 +1,17 @@
 package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.enums.OrderConstEnum;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
+import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
+import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
@@ -159,18 +159,18 @@ public class OfcOrderManageRest extends BaseController{
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
             //如果是运输订单,就去找收发货方联系人的信息
-            if(OrderConstEnum.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
-                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
-                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+            if(OrderConstConstant.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
+                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
+                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
             }
             //仓配订单
-            if(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
+            if(OrderConstConstant.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
 
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
-                if(OrderConstEnum.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
-                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
-                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+                if(OrderConstConstant.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
+                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
+                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
                 }
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
                 if("62".equals(businessTypeHead)){

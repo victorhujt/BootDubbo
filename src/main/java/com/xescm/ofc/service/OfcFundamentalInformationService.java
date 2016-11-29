@@ -1,6 +1,6 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.model.dto.vo.OfcBatchOrderVo;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 
 import java.util.List;
@@ -15,8 +15,6 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
     int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation);
 
     String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
-
-    List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber);
 
     OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber);
 

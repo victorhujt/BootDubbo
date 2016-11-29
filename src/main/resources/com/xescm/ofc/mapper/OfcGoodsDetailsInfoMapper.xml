@@ -60,7 +60,11 @@
 
   <select id="queryByOrderCode" resultMap="BaseResultMap">
     SELECT gdi.*
-    FROM ofc_goods_details_info gdi,ofc_fundamental_information ofi
-    WHERE ofi.order_code = gdi.order_code AND gdi.order_code = #{orderCode}
+    FROM ofc_goods_details_info gdi
+    LEFT JOIN
+    ofc_fundamental_information ofi
+    ON ofi.order_code = gdi.order_code
+    WHERE
+     gdi.order_code = #{orderCode}
   </select>
 </mapper>
