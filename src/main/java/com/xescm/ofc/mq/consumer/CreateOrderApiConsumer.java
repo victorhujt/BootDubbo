@@ -102,6 +102,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
 //                logger.error(ex.getMessage(), ex);
+                return Action.ReconsumeLater;
             }
         }
         return Action.CommitMessage;
