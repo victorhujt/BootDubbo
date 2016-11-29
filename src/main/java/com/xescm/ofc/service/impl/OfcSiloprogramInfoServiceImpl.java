@@ -1,7 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcSiloprogramInfo;
-import com.xescm.ofc.domain.OfcSiloprogramInfoVo;
+import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcSiloprogramInfoMapper;
 import com.xescm.ofc.service.OfcSiloprogramInfoService;

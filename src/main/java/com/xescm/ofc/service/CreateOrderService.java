@@ -1,9 +1,7 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.coo.CreateOrderEntity;
-import com.xescm.ofc.domain.dto.epc.CannelOrderVo;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.uam.utils.wrap.Wrapper;
 
 import java.util.List;

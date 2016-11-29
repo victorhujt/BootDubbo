@@ -1,13 +1,10 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.wms.AddressDto;
-import com.xescm.ofc.feign.api.addr.AddressInterface;
+import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.feign.api.wms.AddressCodeInterface;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
-import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcSiloprogramInfo;
-import com.xescm.ofc.domain.OfcSiloprogramInfoVo;
+import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 
 import java.util.List;
 

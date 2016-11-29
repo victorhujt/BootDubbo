@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 
 import java.util.List;
 

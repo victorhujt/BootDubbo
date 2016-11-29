@@ -1,7 +1,7 @@
 package com.xescm.ofc.feign.api.csc;
 
-import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
