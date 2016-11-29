@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcPlanScreenCondition;
-import com.xescm.ofc.domain.OfcPlanScreenResult;
+import com.xescm.ofc.model.dto.ofc.OfcPlanScreenCondition;
+import com.xescm.ofc.model.vo.ofc.OfcPlanScreenResult;
 
 import java.util.List;
 

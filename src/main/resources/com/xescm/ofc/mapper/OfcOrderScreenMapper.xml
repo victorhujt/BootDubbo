@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xescm.ofc.mapper.OfcOrderScreenMapper" >
-    <resultMap id="orderSearchResult_resultMap" type="com.xescm.ofc.domain.OrderScreenResult">
+    <resultMap id="orderSearchResult_resultMap" type="com.xescm.ofc.model.vo.ofc.OrderScreenResult">
         <!--配置映射关系-->
         <!--column是结果集中的列名,property是pojo的属性-->
         <result property="orderCode" column="order_code"></result>

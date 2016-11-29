@@ -3,17 +3,9 @@ package com.xescm.ofc.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.coo.*;
-import com.xescm.ofc.domain.dto.csc.*;
-import com.xescm.ofc.domain.dto.csc.domain.CscContact;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
-import com.xescm.ofc.domain.dto.epc.CannelOrderVo;
-import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.mapper.OfcCreateOrderMapper;
+import com.xescm.ofc.model.dto.coo.*;
+import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.utils.JsonUtil;
@@ -27,13 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.xescm.ofc.enums.OrderConstEnum.*;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  * 订单api

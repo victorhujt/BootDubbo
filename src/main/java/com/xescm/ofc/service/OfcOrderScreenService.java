@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OrderScreenCondition;
-import com.xescm.ofc.domain.OrderScreenResult;
+import com.xescm.ofc.model.dto.ofc.OrderScreenCondition;
+import com.xescm.ofc.model.vo.ofc.OrderScreenResult;
 
 import java.util.List;
 

@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -30,7 +31,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
-    public OfcOrderDTO orderDtoSelect(String code,String dtoTag) {
+    public OfcOrderDTO orderDtoSelect(String code, String dtoTag) {
         String orderCode = null;
         String custOrderCode =null;
         String transCode = null;
@@ -55,7 +56,6 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-
                     BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){

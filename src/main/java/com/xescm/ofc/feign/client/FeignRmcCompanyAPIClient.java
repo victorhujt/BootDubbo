@@ -1,8 +1,8 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
+import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
+import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.rmc.FeignRmcCompanyAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;

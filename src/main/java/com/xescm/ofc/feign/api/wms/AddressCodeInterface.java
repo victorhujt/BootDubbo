@@ -1,8 +1,6 @@
 package com.xescm.ofc.feign.api.wms;
 
-import com.xescm.ofc.domain.dto.addr.QueryAddress;
-import com.xescm.ofc.domain.dto.wms.AddressDto;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.ofc.model.dto.wms.AddressDto;
 import feign.Headers;
 import feign.RequestLine;
 

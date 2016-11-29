@@ -1,7 +1,7 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.domain.OfcPlanScreenCondition;
-import com.xescm.ofc.domain.OfcPlanScreenResult;
+import com.xescm.ofc.model.dto.ofc.OfcPlanScreenCondition;
+import com.xescm.ofc.model.vo.ofc.OfcPlanScreenResult;
 import com.xescm.ofc.utils.MyMapper;
 
 import java.util.List;
