@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.model.dto.ofc.OfcPlanFedBackCondition;
-import com.xescm.ofc.model.vo.ofc.OfcPlanFedBackResult;
+import com.xescm.ofc.domain.OfcPlanFedBackCondition;
+import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.uam.utils.wrap.Wrapper;
 

@@ -1,4 +1,4 @@
-package com.xescm.ofc.model.vo.ofc;
+package com.xescm.ofc.domain;
 
 /**
  * Created by lyh on 2016/10/10.

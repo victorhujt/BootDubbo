@@ -1,6 +1,6 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.model.vo.ofc.OrderScreenResult;
+import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 
 import java.util.List;

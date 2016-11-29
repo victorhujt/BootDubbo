@@ -6,7 +6,7 @@ import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
-import com.xescm.ofc.model.dto.ofc.OrderScreenCondition;
+import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;

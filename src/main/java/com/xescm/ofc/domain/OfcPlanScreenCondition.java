@@ -1,4 +1,4 @@
-package com.xescm.ofc.model.dto.ofc;
+package com.xescm.ofc.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;

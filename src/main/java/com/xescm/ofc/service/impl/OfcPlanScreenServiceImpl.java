@@ -1,7 +1,7 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.model.dto.ofc.OfcPlanScreenCondition;
-import com.xescm.ofc.model.vo.ofc.OfcPlanScreenResult;
+import com.xescm.ofc.domain.OfcPlanScreenCondition;
+import com.xescm.ofc.domain.OfcPlanScreenResult;
 import com.xescm.ofc.mapper.OfcPlanScreenMapper;
 import com.xescm.ofc.service.OfcPlanScreenService;
 import org.springframework.beans.factory.annotation.Autowired;

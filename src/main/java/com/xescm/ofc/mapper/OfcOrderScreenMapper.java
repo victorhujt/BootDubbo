@@ -1,7 +1,7 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.model.dto.ofc.OrderScreenCondition;
-import com.xescm.ofc.model.vo.ofc.OrderScreenResult;
+import com.xescm.ofc.domain.OrderScreenCondition;
+import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;

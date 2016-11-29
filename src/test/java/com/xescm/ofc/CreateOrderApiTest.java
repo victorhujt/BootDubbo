@@ -1,6 +1,6 @@
 package com.xescm.ofc;
 
-import com.xescm.ofc.model.vo.ofc.OrderScreenResult;
+import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
