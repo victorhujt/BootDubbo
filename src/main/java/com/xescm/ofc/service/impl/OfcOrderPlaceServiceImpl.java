@@ -171,6 +171,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }
                     //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                    if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
+                        ofcMerchandiserService.save(ofcMerchandiser);
+                    }
                     if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                         //进行自动审核
                         ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
