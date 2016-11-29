@@ -349,22 +349,22 @@
                                 </div>
                             </div>-->
                            <div class="form-group">
-                               <label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
+                               <div><label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
                                <div class="w-width-220 y-float">
                                    <div class="clearfix">
                                        <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
                                    </div>
-                               </div>
-                               <label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
+                               </div></div>
+                               <div><label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
                                <div class="w-width-220 y-float">
                                    <div class="clearfix">
                                        <input class="col-xs-12"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单编号" />
 
                                    </div>
-                               </div>
+                               </div></div>
                            </div>
                             <div class="form-group">
-                                <label class="control-label col-label no-padding-right no-padding-top" for="name">订单类型</label>
+                                <div><label class="control-label col-label no-padding-right no-padding-top" for="name">订单类型</label>
                                 <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <select class="w-width-220 chosen-select" id="orderTypeSel" name="orderType">
@@ -372,8 +372,8 @@
                                             <option value="61">仓配订单</option>
                                         </select>
                                     </div>
-                                </div>
-                                <label class="control-label col-label no-padding-right no-padding-top" for="name">店铺</label>
+                                </div></div>
+                                <div><label class="control-label col-label no-padding-right no-padding-top" for="name">店铺</label>
                                 <div class="w-width-220 y-float">
                                     <div class="clearfix">
                                         <select class="w-width-220 chosen-select" id="storeCode" name="storeCode">
@@ -384,7 +384,7 @@
                                         <option value="众品京东旗舰店">众品京东旗舰店</option>-->
                                         </select>
                                     </div>
-                                </div>
+                                </div></div>
                             </div>
 
                            <#--<div class="form-group" id="transBusinessTypeDiv" style="display: block">
@@ -400,7 +400,7 @@
                                </div>
                            </div>-->
                             <div class="form-group" id="businessTypeDiv" style="display: none">
-                                <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                                <div><label class="control-label col-label no-padding-right" for="name">业务类型</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                     <#--<span id="businessTypeDiv" style="display: none">-->
@@ -417,11 +417,11 @@
                                         </select>
                                     <#--  </span>-->
                                     </div>
-                                </div>
+                                </div></div>
                             </div>
 
                             <div class="form-group" id="provideTransportDiv" style="display: none">
-                                <label class="control-label col-label no-padding-right" for="name">是否需要运输</label>
+                                <div><label class="control-label col-label no-padding-right" for="name">是否需要运输</label>
                                 <div class="col-sm-6">
                                     <div class="clearfix">
                                     <#-- <span id="provideTransportDiv" style="display: none">-->
@@ -429,12 +429,14 @@
                                         <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
                                     <#-- </span>-->
                                     </div>
-                                </div>
+                                </div></div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-label no-padding-right no-padding-top y-float" style="margin-right:20px;" for="name">备注</label>
-                                <input id="orderNotes" name="notes" style="color: #000;width:517px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
+                                <div><label class="control-label col-label no-padding-right no-padding-top y-float" style="margin-right:20px;" for="name">备注</label>
+                                <div class="col-sm-6">
+                                    <div class="clearfix">
+                                        <input id="orderNotes" name="notes" style="color: #000;width:517px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                </div></div>
                             </div>
                         </form>
                         <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
@@ -513,61 +515,61 @@
                                                 <div id="dynamic-table_filter" class="dataTables_length">
 
                                                                 <div class="form-group" >
-                                                                    <label class="control-label col-label no-padding-right no-padding-top no-padding-top no-padding-top" for="name">数量</label>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top no-padding-top no-padding-top" for="name">数量</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="quantity" name="quantity" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                         </div>
-                                                                    </div>
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">重量</label>
+                                                                    </div></div>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">重量</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="weight" name="weight" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
-                                                                    </div>
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">体积</label>
+                                                                    </div></div>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">体积</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix" style="color:#c3c3c3;">
                                                                             <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:m)
                                                                         </div>
-                                                                    </div>
+                                                                    </div></div>
                                                                 </div>
 
                                                                 <div class="form-group" >
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">合计标准箱</label>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">合计标准箱</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="totalStandardBox" name="totalStandardBox" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
-                                                                    </div>
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">取货时间</label>
+                                                                    </div></div>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">取货时间</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
-                                                                    </div>
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">期望送达时间</label>
+                                                                    </div></div>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">期望送达时间</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
                                                                         </div>
-                                                                    </div>
+                                                                    </div></div>
                                                                 </div>
 
                                                                 <div class="form-group" >
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">是否加急</label>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">是否加急</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="urgent" type="checkbox" name="" style="margin-top:10px;" />
                                                                             <input id="urgentHel" type="hidden" name="urgent"  value="0" />
                                                                         </div>
-                                                                    </div>
-                                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">运输要求</label>
+                                                                    </div></div>
+                                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">运输要求</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
                                                                             <input id="transRequire" name="transRequire" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                                                         </div>
-                                                                    </div>
+                                                                    </div></div>
                                                                 </div>
 
                                                             </div>
@@ -580,50 +582,50 @@
 
                                             <div id="consignorin">
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorCode" name="consignorCode" type="hidden">
                                                             <input id="consignorType" name="consignorType" type="hidden">
                                                             <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorContactCode"   name="consignorContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                             <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
-                                                    </div>
+                                                    </div></div>
                                                 </div>
 
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorFax" name="consignorFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorEmail" name="consignorEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consignorPostCode" name="consignorPostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
-                                                    </div>
+                                                    </div></div>
                                                 </div>
 
                                                 <div class="form-group" >
@@ -651,7 +653,7 @@
                                             <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
                                             <div id="consignorout">
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">名称</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeCode" name="consigneeCode" type="hidden">
@@ -659,44 +661,44 @@
                                                             <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeContactCode" name="consigneeContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                             <input id="consigneeContactName" name="consigneeContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
-                                                    </div>
+                                                    </div></div>
                                                 </div>
 
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeFax" name="consigneeFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
-                                                    </div>
+                                                    </div></div>
                                                     <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
-                                                    <div class="w-width-220 y-float">
+                                                    <div><div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeEmail" name="consigneeEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
-                                                    </div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
+                                                    </div></div>
+                                                    <div><label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
                                                     <div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneePostCode" name="consigneePostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
-                                                    </div>
+                                                    </div></div>
                                                 </div>
 
                                                 <div class="form-group" >
@@ -1001,10 +1003,10 @@
                 }*/
             },
             highlight : function(e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
             },
             success : function(e) {
-                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(e).parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
             },
             errorPlacement : function(error, element) {
@@ -1258,10 +1260,10 @@
 
             },
             highlight : function(e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
             },
             success : function(e) {
-                $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(e).parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
             },
             errorPlacement : function(error, element) {

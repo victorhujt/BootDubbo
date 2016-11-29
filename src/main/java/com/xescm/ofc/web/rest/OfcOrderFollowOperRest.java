@@ -52,7 +52,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (StringUtils.isBlank(searchType)) {
                 throw new Exception("搜索类型不能为空");
             }
-            // Set<String> searchTypes = new HashSet<String>();
             Set<String> searchTypes = new HashSet<>();
             searchTypes.add("orderCode");
             searchTypes.add("custOrderCode");
@@ -60,7 +59,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (!searchTypes.contains(searchType)) {
                 throw new Exception("搜索类型错误！");
             }
-            //Map<String, Object> map = new HashMap<String, Object>();
             Map<String, Object> map = new HashMap<>();
             List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
