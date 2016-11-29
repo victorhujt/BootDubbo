@@ -1,6 +1,6 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.domain.OfcBatchOrderVo;
+import com.xescm.ofc.model.dto.vo.OfcBatchOrderVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

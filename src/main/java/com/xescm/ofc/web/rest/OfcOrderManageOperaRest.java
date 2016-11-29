@@ -4,14 +4,12 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.form.OrderOperForm;
 import com.xescm.ofc.enums.BusinessTypeEnum;
-import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
+import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.vo.OfcBatchOrderVo;
+import com.xescm.ofc.model.dto.vo.PlanAndStorageVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -20,15 +18,12 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -64,17 +59,7 @@ public class OfcOrderManageOperaRest extends BaseController {
     private OfcBatchOrderVoService ofcBatchOrderVoService;
 
 
-    /**
-     * 运营→订单管理 orderManageOpera
-     *
-     * @return modelAndView
-     */
-    @RequestMapping(value = "/orderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView orderManageOpera(Model model) {
-        ModelAndView modelAndView = new ModelAndView("order_manage_opera");
-        setDefaultModel(model);
-        return modelAndView;
-    }
+
 
     /**
      * 查询订单
@@ -212,10 +197,10 @@ public class OfcOrderManageOperaRest extends BaseController {
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
             ofcOrderStatus = ofcOrderStatusService.queryOrderByOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-            List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
-            List<PlanAndStorage> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
+            List<PlanAndStorageVo> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
+            List<PlanAndStorageVo> planList = planAndStorageService.queryPlanAndStorageTrans(orderCode, "");
             storageList.addAll(planList);
-            for (PlanAndStorage planAndStorage : storageList) {
+            for (PlanAndStorageVo planAndStorage : storageList) {
                 String resourceAllocationStatus = ResourceEnum.getDescByCode(planAndStorage.getResourceAllocationStatus());
                 planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
                 String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());

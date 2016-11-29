@@ -35,10 +35,6 @@ import java.util.*;
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderFollowOperRest extends BaseController {
-    @Autowired
-    private OfcOrderDtoService ofcOrderDtoService;
-    @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
 
     @Autowired
     private OrderFollowOperService orderFollowOperService;

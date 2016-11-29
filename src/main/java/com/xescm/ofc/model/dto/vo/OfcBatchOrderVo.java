@@ -1,4 +1,4 @@
-package com.xescm.ofc.domain;
+package com.xescm.ofc.model.dto.vo;
 
 import java.util.Date;
 

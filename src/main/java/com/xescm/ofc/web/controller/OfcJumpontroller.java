@@ -175,5 +175,26 @@ public class OfcJumpontroller extends BaseController{
         return new ModelAndView("order_tranload");
     }
 
+    /**
+     * 运营中心→订单跟踪
+     * @return
+     */
+    @RequestMapping(value = "/orderFollowOpera")
+    public String orderFollowOpera() {
+        return "order_follow_opera";
+    }
+
+    /**
+     * 运营→订单管理 orderManageOpera
+     *
+     * @return modelAndView
+     */
+    @RequestMapping(value = "/orderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView orderManageOpera(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_manage_opera");
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
 
 }

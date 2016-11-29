@@ -1,6 +1,6 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcBatchOrderVo;
+import com.xescm.ofc.model.dto.vo.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
 import com.xescm.ofc.service.OfcFundamentalInformationService;

@@ -1,6 +1,6 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.PlanAndStorage;
+import com.xescm.ofc.model.dto.vo.PlanAndStorageVo;
 import com.xescm.ofc.mapper.PlanAndStorageMapper;
 import com.xescm.ofc.service.PlanAndStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ public class PlanAndStorageServiceImpl implements PlanAndStorageService {
     private PlanAndStorageMapper planAndStorageMapper;
 
     @Override
-    public List<PlanAndStorage> queryPlanAndStorage(String orderCode, String transCode) {
+    public List<PlanAndStorageVo> queryPlanAndStorage(String orderCode, String transCode) {
         return planAndStorageMapper.queryPlanAndStorage(orderCode,transCode);
     }
 
     @Override
-    public List<PlanAndStorage> queryPlanAndStorageTrans(String orderCode, String transCode) {
+    public List<PlanAndStorageVo> queryPlanAndStorageTrans(String orderCode, String transCode) {
         return planAndStorageMapper.queryPlanAndStorageTrans(orderCode,transCode);
     }
 }

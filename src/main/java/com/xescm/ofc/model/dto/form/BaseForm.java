@@ -1,4 +1,4 @@
-package com.xescm.ofc.domain.form;
+package com.xescm.ofc.model.dto.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.StringUtils;

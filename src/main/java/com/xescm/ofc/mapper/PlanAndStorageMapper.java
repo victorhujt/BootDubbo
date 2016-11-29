@@ -1,6 +1,6 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.domain.PlanAndStorage;
+import com.xescm.ofc.model.dto.vo.PlanAndStorageVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface PlanAndStorageMapper {
 
-    List<PlanAndStorage> queryPlanAndStorage(@Param("orderCode") String orderCode, @Param("transCode") String transCode);
+    List<PlanAndStorageVo> queryPlanAndStorage(@Param("orderCode") String orderCode, @Param("transCode") String transCode);
 
-    List<PlanAndStorage> queryPlanAndStorageTrans(@Param("orderCode") String orderCode, @Param("transCode") String transCode);
+    List<PlanAndStorageVo> queryPlanAndStorageTrans(@Param("orderCode") String orderCode, @Param("transCode") String transCode);
 
 }

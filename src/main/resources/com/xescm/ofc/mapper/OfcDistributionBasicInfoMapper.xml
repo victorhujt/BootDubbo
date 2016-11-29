@@ -245,7 +245,7 @@
   </select>
 
 
-  <resultMap id="OfcBatchOrderMap" type="com.xescm.ofc.domain.OfcBatchOrderVo" >
+  <resultMap id="OfcBatchOrderMap" type="com.xescm.ofc.model.dto.vo.OfcBatchOrderVo" >
     <result column="orderCode" property="order_code" jdbcType="VARCHAR" />
     <result column="batch_order_number" property="batchOrderNumber" jdbcType="VARCHAR" />
     <result column="cust_name" property="custName" jdbcType="VARCHAR" />
@@ -258,7 +258,7 @@
     <result column="departure" property="departure" jdbcType="VARCHAR" />
   </resultMap>
 
-  <select id="queryByBatchNumber" resultType="com.xescm.ofc.domain.OfcBatchOrderVo">
+  <select id="queryByBatchNumber" resultType="com.xescm.ofc.model.dto.vo.OfcBatchOrderVo">
     SELECT
     ofi.order_code,
     ofi.order_batch_number,

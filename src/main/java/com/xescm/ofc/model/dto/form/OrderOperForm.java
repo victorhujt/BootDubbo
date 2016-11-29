@@ -1,6 +1,4 @@
-package com.xescm.ofc.domain.form;
-
-import org.apache.commons.lang3.StringUtils;
+package com.xescm.ofc.model.dto.form;
 
 /**
  * Created by hiyond on 2016/11/24.

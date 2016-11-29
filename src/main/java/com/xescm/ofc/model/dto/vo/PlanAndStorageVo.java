@@ -1,4 +1,4 @@
-package com.xescm.ofc.domain;
+package com.xescm.ofc.model.dto.vo;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import java.util.Date;
  * 仓储-计划
  * Created by hiyond on 2016/11/25.
  */
-public class PlanAndStorage {
+public class PlanAndStorageVo {
 
     private String planCode;
 
