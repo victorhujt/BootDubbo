@@ -1,5 +1,6 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
@@ -8,6 +9,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
+import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -44,6 +46,8 @@ public class OfcJumpontroller extends BaseController{
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    @Autowired
+    private OfcMerchandiserService ofcMerchandiserService;
 
     public String getCustId() {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -130,6 +134,8 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
+        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+        map.put("merchandiserList",merchandiserList);
         map.put("currentTime",new Date());
         setDefaultModel(model);
         return "operation_distributing";
@@ -162,12 +168,35 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         try{
+            List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+            map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
             setDefaultModel(model);
         }catch (Exception ex){
             ex.printStackTrace();
         }
         return new ModelAndView("order_tranload");
+    }
+
+    /**
+     * 跳转运营中心→订单跟踪
+     * @return
+     */
+    @RequestMapping(value = "/orderFollowOpera")
+    public String orderFollowOpera() {
+        return "order_follow_opera";
+    }
+
+    /**
+     * 跳转到运营→订单管理 orderManageOpera
+     *
+     * @return modelAndView
+     */
+    @RequestMapping(value = "ofc/orderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView orderManageOpera(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_manage_opera");
+        setDefaultModel(model);
+        return modelAndView;
     }
 
 

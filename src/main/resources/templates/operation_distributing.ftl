@@ -3,8 +3,9 @@
     <style type="text/css">
         #goodsListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:85px;
+            margin-left:-400px;
             width:946px;
             height:500px;
             z-index:3;
@@ -13,8 +14,9 @@
         }
         #consignorListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
+            margin-left:-400px;
             width:946px;
             height:500px;
             z-index:3;
@@ -23,8 +25,9 @@
         }
         #consigneeListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
+            margin-left:-400px;
             width:946px;
             height:500px;
             z-index:3;
@@ -33,8 +36,9 @@
         }
         #custListDiv{
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
+            margin-left:-400px;
             width:946px;
             height:500px;
             z-index:3;
@@ -43,8 +47,9 @@
         }
         #goodsAndConsigneeDiv{
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
+            margin-left:-400px;
             width:946px;
             height:500px;
             z-index:3;
@@ -137,7 +142,7 @@
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
     <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">发货方联系人</h4></div>
+        <h4 class="modal-title w-font">发货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
@@ -203,7 +208,7 @@
 <!--consigneeListDiv-->
 <div class="modal-content" id="consigneeListDiv" style="display: none;">
     <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">收货方联系人</h4></div>
+        <h4 class="modal-title w-font">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
@@ -268,7 +273,7 @@
 <!--custListDiv-->
 <div class="modal-content" id="custListDiv" style="display: none;">
     <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">选择客户</h4></div>
+        <h4 class="modal-title w-font">选择客户</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
@@ -411,7 +416,9 @@
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="merchandiser" type="text" placeholder="开单员">
-                            <option>Alfa Romeo</option>
+                            <#list merchandiserList! as merchandiser>
+                                <option>${(merchandiser.merchandiser)!""}</option>
+                            </#list>
                         </select>
                     </div>
                 </div></div>

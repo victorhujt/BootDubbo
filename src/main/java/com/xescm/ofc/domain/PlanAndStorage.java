@@ -8,6 +8,8 @@ import java.util.Date;
  */
 public class PlanAndStorage {
 
+    private String orderCode;
+
     private String planCode;
 
     private String type;
@@ -31,6 +33,14 @@ public class PlanAndStorage {
     private String warehouseName;
 
     private Date finishedTime;
+
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
 
     public String getPlanCode() {
         return planCode;

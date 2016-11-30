@@ -11,11 +11,11 @@ import java.util.List;
  */
 public enum PlanEnum {
 
-    ZIYUANFENPEIZ("10", "资源分配中"),
-    YITUISONG("20", "已推送"),
-    RENWUZHONG("30", "任务中"),
-    RENWUWANCH("40", "任务完成"),
-    YIZUOFEI("50", "已作废");
+    RESOURCE_ALLOCATION("10", "资源分配中"),
+    ALREADY_PUSH("20", "已推送"),
+    TASK("30", "任务中"),
+    TASK_ACCOMPLISHED("40", "任务完成"),
+    ALREADY_CANCELLED("50", "已作废");
 
     PlanEnum(String code, String desc) {
         this.code = code;
