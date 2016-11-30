@@ -180,7 +180,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
         String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
         if (StringUtils.isBlank(supportCode)) {
-            addSupplier(createOrderEntity,cscSupplierInfoDto,custId);
+            addSupplier(createOrderEntity, cscSupplierInfoDto, custId);
         }
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
@@ -219,7 +219,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     /**
      * 保存供应商信息
      */
-    public void addSupplier(CreateOrderEntity createOrderEntity,CscSupplierInfoDto cscSupplierInfoDto, String custId) {
+    public void addSupplier(CreateOrderEntity createOrderEntity, CscSupplierInfoDto cscSupplierInfoDto, String custId) {
         cscSupplierInfoDto.setCustomerId(custId);
         cscSupplierInfoDto.setUserId(CreateOrderApiConstant.USERID);
         cscSupplierInfoDto.setUserName(CreateOrderApiConstant.USERNAME);
