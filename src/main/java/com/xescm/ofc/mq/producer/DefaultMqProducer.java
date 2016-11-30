@@ -48,14 +48,17 @@ public class DefaultMqProducer {
      * @param code
      * @param tag
      */
-    public void toSendWhc(String jsonStr,String code,String tag) {
-        logger.info(mqConfig.getOfc2WhcOrderTopic()+"开始消费");
+    public boolean toSendWhc(String jsonStr,String code,String tag) {
+        boolean isSend=false;
+        logger.info(mqConfig.getOfc2WhcOrderTopic()+"开始生产");
         Message message = new Message(mqConfig.getOfc2WhcOrderTopic(), tag,jsonStr.getBytes());
         message.setKey(code);
         SendResult sendResult = producer.send(message);
         if (sendResult != null) {
-            logger.info("{0}消费成功,消费时间为{1},MsgID为{2}",mqConfig.getOfc2WhcOrderTopic(),new Date(),sendResult.getMessageId());
+            isSend=true;
+            logger.info("{0}生产成功,tag为{1}生产时间为{2},MsgID为{3}",mqConfig.getOfc2WhcOrderTopic(),tag,new Date(),sendResult.getMessageId());
         }
+        return isSend;
     }
 
 }
