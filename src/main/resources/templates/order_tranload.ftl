@@ -1639,7 +1639,10 @@
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
-            var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            var cubageAmount ="";
+            if(!$("#cubageCountHidden").html()==""){
+                cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            }
             jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
             jsonStr=orderPlaceAddTranInfo(jsonStr);
