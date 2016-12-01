@@ -1,6 +1,5 @@
 package com.xescm.ofc.feign.api.epc;
 
-import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
@@ -12,5 +11,5 @@ public interface OrderCancellnterfaceApi {
 
     @RequestLine("POST /api/epc/order/orderCancel")
     @Headers("Content-Type: application/json")
-    Wrapper<?> OrderCancel(CancelOrderDto cancelOrderDto);
+    Wrapper<?> orderCancel(String custOrderCode);
 }

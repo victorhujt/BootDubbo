@@ -52,6 +52,9 @@
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
+        .date_a{
+            line-height:21px !important;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -362,8 +365,8 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})" value="${(currentTime?string("yyyy-MM-dd"))!""}"/>
-                                    <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                        <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                        <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
                         </div></div>
@@ -1552,8 +1555,105 @@
         }
         $("#destination").html(destination);
     }
+    //带出发货方
+    function outConsignor(cscContact,cscContactCompany,groupId,custId){
+        var cscContantAndCompanyDto = {};
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+            data=eval(data);
+            if(data.length==1){
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    $("#consignorName").val(CscContantAndCompanyDto.contactCompanyName);
+                    $("#consignorContactName").val(CscContantAndCompanyDto.contactName);
+                    $("#consignorPhone").val(CscContantAndCompanyDto.phone);
+                    $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+                    $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                    $("#consignorType").val(CscContantAndCompanyDto.type);
+                    $("#consignorAddress").val(CscContantAndCompanyDto.address);
+                    var provinceName = CscContantAndCompanyDto.provinceName;
+                    var cityName = CscContantAndCompanyDto.cityName;
+                    var areaName = CscContantAndCompanyDto.areaName;
+                    var streetName = CscContantAndCompanyDto.streetName;
+                    var paramAddressNameToPage = provinceName
+                            + "/" + cityName
+                            + "/" + areaName
+                            + "/" + streetName;
+                    $("#city-picker3-consignor").val(paramAddressNameToPage);
+                    $("#city-picker3-consignor").citypicker('refresh');
+                    departurePlace();
+                    cscContact.purpose = "1";
+                    outConsignee(cscContact,cscContactCompany,groupId,custId);
+                });
+            }else{
+                clearConsignor();
+                cscContact.purpose = "1";
+                outConsignee(cscContact,cscContactCompany,groupId,custId);
+            }
+        },"json");
 
-
+    }
+    //带出收货方
+    function outConsignee(cscContact,cscContactCompany,groupId,custId){
+        var cscContantAndCompanyDto = {};
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var param = JSON.stringify(cscContantAndCompanyDto);
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+            data=eval(data);
+            if(data.length==1){
+                $.each(data,function (index,CscContantAndCompanyDto) {
+                    $("#consigneeName").val(CscContantAndCompanyDto.contactCompanyName);
+                    $("#consigneeContactName").val(CscContantAndCompanyDto.contactName);
+                    $("#consigneePhone").val(CscContantAndCompanyDto.phone);
+                    $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                    $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                    $("#consigneeType").val(CscContantAndCompanyDto.type);
+                    $("#consigneeAddress").val(CscContantAndCompanyDto.address);
+                    var provinceName = CscContantAndCompanyDto.provinceName;
+                    var cityName = CscContantAndCompanyDto.cityName;
+                    var areaName = CscContantAndCompanyDto.areaName;
+                    var streetName = CscContantAndCompanyDto.streetName;
+                    var paramAddressNameToPage = provinceName
+                            + "/" + cityName
+                            + "/" + areaName
+                            + "/" + streetName;
+                    $("#city-picker3-consignee").val(paramAddressNameToPage);
+                    $("#city-picker3-consignee").citypicker('refresh');
+                    destination();
+                });
+            }else{
+                clearConsignee();
+            }
+        },"json");
+    }
+    //清空发货方
+    function clearConsignor(){
+        $("#consignorName").val("");
+        $("#consignorContactName").val("");
+        $("#consignorPhone").val("");
+        $("#consignorCode").val("");
+        $("#consignorContactCode").val("");
+        $("#consignorType").val("");
+        $("#consignorAddress").val("");
+        $("#city-picker3-consignee").val("");
+        $("#city-picker3-consignee").citypicker('refresh');
+        departurePlace();
+    }
+    //清空收货方
+    function clearConsignee(){
+        $("#consigneeName").val("");
+        $("#consigneeContactName").val("");
+        $("#consigneePhone").val("");
+        $("#consigneeCode").val("");
+        $("#consigneeContactCode").val("");
+        $("#consigneeType").val("");
+        $("#consigneeAddress").val("");
+        $("#city-picker3-consignee").val("");
+        $("#city-picker3-consignee").citypicker('refresh');
+        destination();
+    }
 
     $(function(){
 
@@ -1630,11 +1730,12 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("#transportType").val();
-            if($dp.$('orderTime').value!=""){
-                jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
+            if($('#orderTime').val()!=""){
+                jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
+            jsonStr.custCode = $("#custId").val();//000
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
@@ -1735,59 +1836,10 @@
                     $("#custGroupId").val(groupId);
                     $("#custId").val(custId);
 
-                    var cscContantAndCompanyDto = {};
                     var cscContact = {};
                     var cscContactCompany = {};
-                    cscContact.purpose = "1";
-                    cscContantAndCompanyDto.cscContact = cscContact;
-                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-                    var groupId = $("#custGroupId").val();
-                    var custId = $("#custId").val();
-                    var param = JSON.stringify(cscContantAndCompanyDto);
-                    CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
-                        data=eval(data);
-                        if(data.length==1){
-                            var contactList = "";
-                            $.each(data,function (index,CscContantAndCompanyDto) {
-                                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                                consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
-                                consigneeTypeHide = CscContantAndCompanyDto.type;*/
-                                contactList =contactList + "<tr role='row' class='odd'>";
-                                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                                contactList =contactList + "<td>"+(index+1)+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                                contactList =contactList + "</tr>";
-                                $("#contactSelectListTbody1").html(contactList);
-                            });
-                        }
-                    },"json");
                     cscContact.purpose = "2";
-                    cscContantAndCompanyDto.cscContact = cscContact;
-                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-                    param = JSON.stringify(cscContantAndCompanyDto);
-                    CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
-                        data=eval(data);
-                        if(data.length==1){
-                            var contactList = "";
-                            $.each(data,function (index,CscContantAndCompanyDto) {
-                                /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                                consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
-                                consignorTypeHide = CscContantAndCompanyDto.type;*/
-                                contactList =contactList + "<tr role='row' class='odd'>";
-                                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                                contactList =contactList + "<td>"+(index+1)+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                                contactList =contactList + "</tr>";
-                            });
-                            $("#contactSelectListTbody2").html(contactList);
-                        }
-                    },"json");
+                    outConsignor(cscContact,cscContactCompany,groupId,custId);
                 }
             });
             if(custEnterTag==""){

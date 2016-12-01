@@ -14,29 +14,57 @@ import java.util.List;
  */
 public interface FeignCscCustomerAPI {
 
+    /**
+     * 查询客户中心收发货方联系人
+     * @param cscContantAndCompanyDto
+     * @return
+     */
     @RequestLine("POST /api/csc/customer/queryCscReceivingInfoList")
     @Headers("Content-Type: application/json")
     public Wrapper<List<CscContantAndCompanyVo>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto);
 
+    /**
+     * 已弃用
+     * @param cscContantAndCompanyDto
+     * @return
+     */
     @RequestLine("POST /api/csc/customer/addCscContantAndCompany")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto);
 
-    /*@RequestLine("POST /api/csc/customer/queryCustomerIdByGroupId")
-    @Headers("Content-Type: application/json")AuthResDto
-    public Wrapper<?> queryCustomerIdByGroupId(String groupId);*/
+    /**
+     * 根据GroupId查询客户ID
+     * @param queryCustomerIdDto
+     * @return
+     */
     @RequestLine("POST /api/csc/customer/queryCustomerIdByGroupId")
     @Headers("Content-Type: application/json")
     public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto);
 
+    /**
+     * 根据客户ID或CODE查询客户
+     * @param queryCustomerCodeDto
+     * @return
+     */
     @RequestLine("POST /api/csc/customer/queryCustomerByCustomerCodeOrId")
     @Headers("Content-Type: application/json")
     Wrapper<CscCustomerVo> queryCustomerByCustomerCodeOrId(QueryCustomerCodeDto queryCustomerCodeDto);
 
+    /**
+     * 根据客户名称查询客户(已经过时)
+     * @param queryCustomerNameDto
+     * @return
+     */
     @RequestLine("POST /api/csc/customer/queryCustomerByName")
     @Headers("Content-Type: application/json")
     public Wrapper<?> queryCustomerByName(QueryCustomerNameDto queryCustomerNameDto);
 
+
+    /**
+     * 客户名称模糊查询客户列表
+     * @param queryCustomerNameDto
+     * @return
+     */
     @RequestLine("POST /api/csc/customer/QueryCustomerByNameAvgue")
     @Headers("Content-Type: application/json")
     public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto);

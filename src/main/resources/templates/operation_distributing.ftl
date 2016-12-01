@@ -406,8 +406,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                 </div>
             </div></div>
 
@@ -425,8 +424,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="预计发货时间"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                 </div>
             </div></div>
         </div>
@@ -1027,7 +1025,8 @@
     //校验是否选了客户
     function validateCustChosen() {
         var custChosen = $("#custName").val();
-        if(""==custChosen){
+        var custId = $("#custId").val();
+        if(StringUtil.isEmpty(custChosen) || StringUtil.isEmpty(custId)){
             return false;
         }else{
             return true;
@@ -1599,9 +1598,14 @@
     });
 
     $("#to_operation_distributing_excel").click(function () {
-        var historyUrl = "operation_distributing";
-        var url = "/ofc/operationDistributingExcel" + "/" + historyUrl;
-        xescm.common.loadPage(url);
+        if(!validateCustChosen()){
+            alert("请先选择客户");
+        }else{
+            var historyUrl = "operation_distributing";
+            var custId = $("#custId").val();
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId;
+            xescm.common.loadPage(url);
+        }
     })
 
     $("#merchandiser").editableSelect();
@@ -1634,10 +1638,10 @@
                 orderInfo.businessType = "610";//销售出库
                 orderInfo.provideTransport = "1";//需要运输
             }
-            orderInfo.orderTime = $dp.$('orderTime').value + " 00:00:00";//000
+            orderInfo.orderTime = $('#orderTime').val() + " 00:00:00";//000
             orderInfo.merchandiser = $("#merchandiser").val();
             if("" != $("#expectedArrivedTime").val()){
-                orderInfo.expectedArrivedTime = $dp.$('expectedArrivedTime').value+ ":00";
+                orderInfo.expectedArrivedTime = $('#expectedArrivedTime').val()+ ":00";
             }
 
             orderInfo.custName = $("#custName").val();//后端需特别处理
