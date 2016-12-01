@@ -13,6 +13,11 @@ import java.util.List;
  */
 public interface FeignRmcCompanyAPI {
 
+    /**
+     * 线路资源查询
+     * @param rmcCompanyLineQO
+     * @return
+     */
     @RequestLine("POST /api/rmc/company/queryCompanyLine")
     @Headers("Content-Type: application/json")
     public Wrapper<List<RmcCompanyLineVo>> queryCompanyLine(RmcCompanyLineQO rmcCompanyLineQO);

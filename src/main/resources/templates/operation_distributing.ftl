@@ -1027,7 +1027,8 @@
     //校验是否选了客户
     function validateCustChosen() {
         var custChosen = $("#custName").val();
-        if(""==custChosen){
+        var custId = $("#custId").val();
+        if(StringUtil.isEmpty(custChosen) || StringUtil.isEmpty(custId)){
             return false;
         }else{
             return true;
@@ -1599,9 +1600,14 @@
     });
 
     $("#to_operation_distributing_excel").click(function () {
-        var historyUrl = "operation_distributing";
-        var url = "/ofc/operationDistributingExcel" + "/" + historyUrl;
-        xescm.common.loadPage(url);
+        if(!validateCustChosen()){
+            alert("请先选择客户");
+        }else{
+            var historyUrl = "operation_distributing";
+            var custId = $("#custId").val();
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId;
+            xescm.common.loadPage(url);
+        }
     })
 
     $("#merchandiser").editableSelect();
