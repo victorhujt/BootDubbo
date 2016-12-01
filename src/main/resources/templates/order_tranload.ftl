@@ -327,9 +327,9 @@
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-168">
                                 <select  id="businessType" name="businessType" class="chosen-select form-control ">
+                                    <option value="602">卡班</option>
                                     <option value="600">城配</option>
                                     <option value="601">干线</option>
-                                    <option value="602">卡班</option>
                                 </select>
                             </div>
                         </div></div>
