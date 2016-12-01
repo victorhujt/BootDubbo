@@ -424,7 +424,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="col-xs-3">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
+                    <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                 </div>
             </div></div>
         </div>
