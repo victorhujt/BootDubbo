@@ -11,8 +11,6 @@ public class WhcSalesDelivery {
 
     private String id;
 
-    @ApiModelProperty(notes = "订单号",required = true)
-    private String shipNo;
 
     @ApiModelProperty(notes = "客户编码",required = true)
     private String customerCode;
@@ -28,9 +26,6 @@ public class WhcSalesDelivery {
 
     @ApiModelProperty(notes = "订单号(同shipNo)",required = true)
     private String orderNo;
-
-    @ApiModelProperty(notes = "订单类型",required = true)
-    private String shipType;
 
     @ApiModelProperty(notes = "订单类型(同shipType)",required = true)
     private String orderType;
@@ -458,21 +453,6 @@ public class WhcSalesDelivery {
         this.detailsList = detailsList;
     }
 
-    public String getShipNo() {
-        return shipNo;
-    }
-
-    public void setShipNo(String shipNo) {
-        this.shipNo = shipNo;
-    }
-
-    public String getShipType() {
-        return shipType;
-    }
-
-    public void setShipType(String shipType) {
-        this.shipType = shipType;
-    }
 
     public String getFromWarehouseCode() {
         return fromWarehouseCode;

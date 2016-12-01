@@ -1031,6 +1031,16 @@ public class OfcSiloprogramInfoVo {
      * 服务商编码
      */
     private String serviceProviderCode;
+    /**
+
+     * 服务商名称
+     */
+    private String serviceProviderName;
+    /**
+     * 仓储计划单状态
+     */
+    private String plannedSingleState;
+
 
     public String getServiceProviderCode() {
         return serviceProviderCode;
@@ -1048,13 +1058,16 @@ public class OfcSiloprogramInfoVo {
         this.serviceProviderName = serviceProviderName;
     }
 
-    /**
+  
+    public String getPlannedSingleState() {
+		return plannedSingleState;
+	}
 
-     * 服务商名称
-     */
-    private String serviceProviderName;
+	public void setPlannedSingleState(String plannedSingleState) {
+		this.plannedSingleState = plannedSingleState;
+	}
 
-    public String getPlateNumber() {
+	public String getPlateNumber() {
         return plateNumber;
     }
 
