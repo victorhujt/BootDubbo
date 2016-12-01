@@ -148,12 +148,16 @@ public class OfcJumpontroller extends BaseController{
      * @param map
      * @return
      */
-    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}")
-    public String operationDistributingExcel(Model model, @PathVariable String historyUrl, Map<String,Object> map){
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{custId}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String custId , Map<String,Object> map){
+        logger.info("城配开单Excel导入==> historyUrl={}", historyUrl);
+        logger.info("城配开单Excel导入==> custId={}", custId);
         if("operation_distributing".equals(historyUrl)){
             historyUrl = "/ofc/operationDistributing";
         }
+        setDefaultModel(model);
         map.put("historyUrl",historyUrl);
+        map.put("custId",custId);
         return "operation_distributing_excel";
     }
 

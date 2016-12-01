@@ -11,6 +11,11 @@ import feign.RequestLine;
 public interface FeignRmcWarehouseAPI {// /api/rmc/warehouse/queryRmcWarehouseById
 
 
+    /**
+     * 根据仓库编码查询仓库
+     * @param warehouse
+     * @return
+     */
     @RequestLine("POST /api/rmc/warehouse/queryRmcWarehouseById")
     @Headers("Content-Type: application/json")
     public Wrapper<RmcWarehouse> queryRmcWarehouseById(RmcWarehouse warehouse);
