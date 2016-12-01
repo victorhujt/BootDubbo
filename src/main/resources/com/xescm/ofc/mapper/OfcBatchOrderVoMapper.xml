@@ -13,10 +13,10 @@
     <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
     <result column="departure" property="departure" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
-      <result column="consignee_name" property="consigeeName" jdbcType="VARCHAR" />
-      <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR" />
-      <result column="consignee_contact_phone" property="consigneeContactPhone" jdbcType="VARCHAR" />
-      <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigeeName" jdbcType="VARCHAR"/>
+    <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR"/>
+    <result column="consignee_contact_phone" property="consigneeContactPhone" jdbcType="VARCHAR"/>
+    <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
   </resultMap>
 
   <select id="queryByBatchNumber" resultType="com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo">

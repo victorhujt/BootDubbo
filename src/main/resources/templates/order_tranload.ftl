@@ -334,7 +334,11 @@
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
                         <div class="col-width-168 padding-15">
                             <div class="col-width-168">
-                                <input class="col-width-168"  name="merchandiser" id="merchandiser" type="text" placeholder="开单员" style="padding-left:8px;" />
+                                <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
+                                    <#list merchandiserList! as merchandiser>
+                                        <option>${(merchandiser.merchandiser)!""}</option>
+                                    </#list>
+                                </select>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
@@ -802,7 +806,6 @@
 <script src="../components/chosen/chosen.jquery.js"></script>
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
-
 
 
 <script type="text/javascript">
@@ -1635,7 +1638,10 @@
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
-            var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            var cubageAmount ="";
+            if(!$("#cubageCountHidden").html()==""){
+                cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            }
             jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
             jsonStr=orderPlaceAddTranInfo(jsonStr);
@@ -1679,7 +1685,7 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
-
+                        location.reload();
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
@@ -2325,6 +2331,8 @@
     $("#custListDivNoneTop").click(function () {
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
     });
+
+    $("#merchandiser").editableSelect();
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>

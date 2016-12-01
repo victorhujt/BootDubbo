@@ -10,7 +10,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-label no-padding-right" for="followTag"></label>
+        <label class="control-label col-label no-padding-right" style="margin-right:-5px;" for="followTag"></label>
         <div class="w-width-220 col-float">
             <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
                 <option value="orderCode">订单编号</option>

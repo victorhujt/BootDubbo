@@ -6,19 +6,11 @@ import feign.Headers;
 import feign.RequestLine;
 
 /**
- * @author Chen zhen gang
- * @date 2016/11/10
- * @time 10:48
+ * 取消订单接口
  */
+public interface OrderCancellnterfaceApi {
 
-public interface OrderCancellnterface {
-    /**
-     * 对接中心订单取消
-     * @param cancelOrderDto
-     * @return
-     */
-    /*@Headers("Content-Type: application/json")*/
-    @RequestLine("POST /api/orderCancel")
+    @RequestLine("POST /api/epc/order/orderCancel")
     @Headers("Content-Type: application/json")
     Wrapper<?> OrderCancel(CancelOrderDto cancelOrderDto);
 }

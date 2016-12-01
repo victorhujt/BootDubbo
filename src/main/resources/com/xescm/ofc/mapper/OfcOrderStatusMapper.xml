@@ -122,8 +122,9 @@
     </where>
     ORDER BY oos.lasted_oper_time ASC
   </select>
-  
-  <select id="queryOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
+
+  <!--获取最新状态-->
+  <select id="queryLastUpdateOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
      SELECT
         order_code,order_status,status_desc,lasted_oper_time,notes,operator
     FROM
@@ -137,6 +138,7 @@
             WHERE
                 order_code = #{orderCode}
         )
+    LIMIT 1
   </select>
 
 </mapper>

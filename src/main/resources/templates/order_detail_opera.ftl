@@ -229,23 +229,7 @@
                                    value="${(ofcDistributionBasicInfo.consignorContactPhone)!""}">
                         </div>
                     </div>
-                    <#--<div class="form-group">-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">传真</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">Email</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">邮编</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                    <#--</div>-->
+
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
@@ -285,23 +269,7 @@
                                    value="${(ofcDistributionBasicInfo.consigneeContactPhone)!""}">
                         </div>
                     </div>
-                    <#--<div class="form-group">-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">传真</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">Email</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">邮编</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                    <#--</div>-->
+
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
@@ -497,43 +465,43 @@
             <#if storageList ?? && (storageList?size > 0) >
                 <#list storageList as stroage>
                 <tr>
-                    <td>
+                    <td class="center">
                     ${stroage_index+1}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.planCode!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.type!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.businessType!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.resourceAllocationStatus!""}
-                    </td>
+                    </td class="center">
                     <td>
                     ${stroage.serviceProviderName!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.serviceProviderContact!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.serviceProviderContactPhone!""}
                     </td>
                     <td>
                     ${stroage.plannedSingleState!""}
-                    </td>
+                    </td class="center">
                     <td>
                     ${stroage.departure!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.destination!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.warehouseName!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
                     </td>
                 </tr>
@@ -583,15 +551,15 @@
             <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
                 <#list ofcGoodsDetailsInfoList as goods>
                 <tr>
-                    <td>${(goods.goodsCategory)!"" }</td>
-                    <td>${(goods.goodsCode)!"" }</td>
-                    <td>${(goods.goodsName)!"" }</td>
-                    <td>${(goods.goodsSpec)!"" }</td>
-                    <td>${goods.unit!"" }</td>
-                    <td>${goods.productionBatch!"" }</td>
-                    <td>${(goods.productionTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td>${(goods.invalidTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td>${goods.quantity!"" }</td>
+                    <td class="center">${(goods.goodsCategory)!"" }</td>
+                    <td class="center">${(goods.goodsCode)!"" }</td>
+                    <td class="center">${(goods.goodsName)!"" }</td>
+                    <td class="center">${(goods.goodsSpec)!"" }</td>
+                    <td class="center">${goods.unit!"" }</td>
+                    <td class="center">${goods.productionBatch!"" }</td>
+                    <td class="center">${(goods.productionTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
+                    <td class="center">${(goods.invalidTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
+                    <td class="center">${goods.quantity!"" }</td>
                 </tr>
                 </#list>
             </#if>

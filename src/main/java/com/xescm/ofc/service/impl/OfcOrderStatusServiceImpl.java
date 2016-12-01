@@ -100,7 +100,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public OfcOrderStatus queryOrderByOrderCode(String orderCode) {
-        return ofcOrderStatusMapper.queryOrderByOrderCode(orderCode);
+    public OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode) {
+        return ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
     }
 }

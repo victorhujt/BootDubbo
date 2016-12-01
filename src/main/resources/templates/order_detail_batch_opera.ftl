@@ -317,17 +317,17 @@
             }
             htmlText += "<tr onclick=\"queryGoodsData('" + order.orderCode + "')\" role='row' class='odd' >"
                     + "<td>" + "<input type='checkbox'>" + "</td>"
-                    + "<td>"
+                    + "<td class='center'>"
                     + "<a onclick=\"orderDetailOper('" + order.orderCode + "')\">" + StringUtil.nullToEmpty(order.orderCode) + "</a>"
                     + "</td>"
-                    + "<td class=\"center\">" + StringUtil.nullToEmpty(order.custOrderCode) + "</td>"
-                    + "<td class=\"hidden-480\">" + subTimeString(StringUtil.nullToEmpty(order.orderTime)) + "</td>"
-                    + "<td class=\"hidden-480\">" + getOrderType(order) + "</td>"
-                    + "<td class=\"hidden-480\">" + getBusiType(order) + "</td>"
-                    + "<td class=\"hidden-480\">" + getOrderStatus(order.orderStatus) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.consigneeName) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.notes) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.custOrderCode) + "</td>"
+                    + "<td class='center'>" + subTimeString(StringUtil.nullToEmpty(order.orderTime)) + "</td>"
+                    + "<td class='center'>" + getOrderType(order) + "</td>"
+                    + "<td class='center'>" + getBusiType(order) + "</td>"
+                    + "<td class='center'>" + getOrderStatus(order.orderStatus) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.consigneeName) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.notes) + "</td>"
                     + "</tr>";
         })
         $("#dataTbody").html(htmlText);

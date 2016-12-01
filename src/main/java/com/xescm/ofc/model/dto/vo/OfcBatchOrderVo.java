@@ -1,9 +1,8 @@
-package com.xescm.ofc.model.vo.ofc;
+package com.xescm.ofc.model.dto.vo;
 
 import java.util.Date;
 
 /**
- *
  * Created by hiyond on 2016/11/25.
  */
 public class OfcBatchOrderVo {

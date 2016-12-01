@@ -38,11 +38,6 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     }
 
     @Override
-    public List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber) {
-        return ofcFundamentalInformationMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
-    }
-
-    @Override
     public OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber) {
         return ofcFundamentalInformationMapper.queryByBatchNumber(orderBatchNumber);
     }

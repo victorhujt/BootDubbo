@@ -1027,6 +1027,32 @@ public class OfcSiloprogramInfoVo {
     private String plateNumber;
 
     private String contactNumber;
+    /**
+     * 服务商编码
+     */
+    private String serviceProviderCode;
+
+    public String getServiceProviderCode() {
+        return serviceProviderCode;
+    }
+
+    public void setServiceProviderCode(String serviceProviderCode) {
+        this.serviceProviderCode = serviceProviderCode;
+    }
+
+    public String getServiceProviderName() {
+        return serviceProviderName;
+    }
+
+    public void setServiceProviderName(String serviceProviderName) {
+        this.serviceProviderName = serviceProviderName;
+    }
+
+    /**
+
+     * 服务商名称
+     */
+    private String serviceProviderName;
 
     public String getPlateNumber() {
         return plateNumber;

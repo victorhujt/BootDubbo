@@ -19,7 +19,7 @@ public interface CreateOrderService {
      */
     boolean CreateOrders(List<CreateOrderEntity> list);
 
-    Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode, String orderCode, String custCode);
+    Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode);
 
     String createOrder(String data) throws Exception;
 

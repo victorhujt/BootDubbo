@@ -100,6 +100,8 @@
     <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
     <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+     <result column="service_provider_name" property="serviceProviderName" jdbcType="VARCHAR" />
+    <result column="service_provider_code" property="serviceProviderCode" jdbcType="VARCHAR" />
   </resultMap>
 
   <!--非作废仓储计划单列表查询-->
@@ -121,21 +123,22 @@
   </select>
 
   <select id="ofcSiloprogramAndResourceInfo" parameterType="java.lang.String" resultMap="SiloprogramAndResourceInfoResultMap">
-  
-    SELECT
+      SELECT
     sinfo.*,
     sss.plate_number,
     sss.driver_name,
     sss.contact_number,
-    sss.trans_code
+    sss.trans_code,
+    sss.service_provider_name,
+    sss.service_provider_code
     FROM
     ofc_siloprogram_info sinfo
     LEFT JOIN ofc_silopro_source_status sss ON sinfo.plan_code = sss.plan_code
-   <!--   LEFT JOIN ofc_silopro_status ss ON sinfo.plan_code = ss.plan_code
-    LEFT JOIN ofc_silopro_newstatus sn ON sinfo.plan_code = sn.plan_code-->
+    LEFT JOIN ofc_silopro_status ss ON sinfo.plan_code = ss.plan_code
     <where>
+       ss.planned_single_state ='10'
       <if test="orderCode!=null and orderCode!=''">
-        sinfo.order_code =#{orderCode}
+         AND sinfo.order_code =#{orderCode}
       </if>
     </where>
   </select>

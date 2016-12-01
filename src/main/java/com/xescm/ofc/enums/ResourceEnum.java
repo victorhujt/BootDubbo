@@ -11,12 +11,10 @@ import java.util.List;
  */
 public enum ResourceEnum {
 
-
-
-    DAIFENPEI("10", "待分配"),
-    WEIFENPEI("20", "未分配"),
-    YIFENPEI("30", "已分配"),
-    YIQUEDING("40", "已确定");
+    TO_BE_DISTRIBUTED("10", "待分配"),
+    NOT_DISTRIBUTED("20", "未分配"),
+    ALREADY_DISTRIBUTED("30", "已分配"),
+    ALREADY_SURE("40", "已确定");
 
     ResourceEnum(String code, String desc) {
         this.code = code;

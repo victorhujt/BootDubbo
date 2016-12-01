@@ -53,6 +53,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
+    @Autowired
+    private OfcMerchandiserService ofcMerchandiserService;
     @Resource
     private CodeGenUtils codeGenUtils;
 
@@ -70,6 +72,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
+        OfcMerchandiser ofcMerchandiser=modelMapper.map(ofcOrderDTO,OfcMerchandiser.class);
         ofcFundamentalInformation.setCreationTime(new Date());
         ofcFundamentalInformation.setCreator(authResDtoByToken.getUamUser().getUserName());
         ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());
@@ -168,6 +171,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }
                     //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                    if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
+                        ofcMerchandiserService.save(ofcMerchandiser);
+                    }
                     if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                         //进行自动审核
                         ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
@@ -351,6 +357,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
                 //添加基本信息
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
+                    ofcMerchandiserService.save(ofcMerchandiser);
+                }
                 ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
                         "review",authResDtoByToken);
             }else {
