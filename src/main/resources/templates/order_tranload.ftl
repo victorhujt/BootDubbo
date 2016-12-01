@@ -808,7 +808,6 @@
 <script src="../js/city-picker.js"></script><#--111-->
 
 
-
 <script type="text/javascript">
     var scripts = [ null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
@@ -1639,7 +1638,10 @@
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
-            var cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            var cubageAmount ="";
+            if(!$("#cubageCountHidden").html()==""){
+                cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+            }
             jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
             jsonStr=orderPlaceAddTranInfo(jsonStr);
@@ -1683,7 +1685,7 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
-
+                        location.reload();
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 

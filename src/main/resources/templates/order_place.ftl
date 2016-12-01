@@ -1619,7 +1619,7 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
-
+                        location.reload();
                         //xescm.common.goBack("/ofc/orderPlace");
                     })
         });

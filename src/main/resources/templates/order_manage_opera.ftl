@@ -191,7 +191,6 @@
         </div>
     </div>
 
-
     <div class="modal-content" id="custListDiv" style="display: none;">
         <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer">
             <button type="button" id="" style="cursor:pointer" class="bootbox-close-button close"
