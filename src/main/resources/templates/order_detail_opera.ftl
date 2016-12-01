@@ -101,8 +101,6 @@
                             <input id="merchandiser" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.merchandiser)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">备注</label>
                         <div class="w-width-220 col-float">
                             <input id="notes" name="custName" type="search" placeholder=""

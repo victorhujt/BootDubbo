@@ -52,6 +52,9 @@
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
+        .date_a{
+            line-height:21px !important;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -362,8 +365,8 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})" value="${(currentTime?string("yyyy-MM-dd"))!""}"/>
-                                    <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                        <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                        <label for="orderTime"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
                         </div></div>
@@ -1630,8 +1633,8 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("#transportType").val();
-            if($dp.$('orderTime').value!=""){
-                jsonStr.orderTime = $dp.$('orderTime').value+" 00:00:00";
+            if($('#orderTime').val()!=""){
+                jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000

@@ -154,5 +154,10 @@
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
       WHERE ofi.order_batch_number = #{orderBatchNumber}
   </select>
+  
+  <select id="queryDataByCustOrderCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation">
+    SELECT ofi.order_code,ofi.cust_code,ofi.cust_name
+    FROM ofc_fundamental_information ofi WHERE ofi.cust_order_code = #{custOrderCode}
+  </select>
 
 </mapper>
