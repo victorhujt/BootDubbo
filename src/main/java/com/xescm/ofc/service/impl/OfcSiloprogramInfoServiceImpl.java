@@ -6,6 +6,8 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcSiloprogramInfoMapper;
 import com.xescm.ofc.service.OfcSiloprogramInfoService;
 import com.xescm.ofc.utils.PubUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,13 +40,15 @@ public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInf
     }
 
     @Override
-    public OfcSiloprogramInfoVo ofcSiloprogramAndResourceInfo(String orderCode) {
-        if(!PubUtils.trimAndNullAsEmpty(orderCode).equals("")){
-            Map<String,String> mapperMap = new HashMap<>();
-            mapperMap.put("orderCode",orderCode);
-           return ofcSiloprogramInfoMapper.ofcSiloprogramAndResourceInfo(mapperMap);
-        }else {
-            throw new BusinessException();
-        }
+    public List<OfcSiloprogramInfoVo> ofcSiloprogramAndResourceInfo(String orderCode,String plannedSingleState) {
+    	Map<String,String> mapperMap = new HashMap<>();
+    	if(!StringUtils.isEmpty(orderCode)){
+    		mapperMap.put("orderCode",orderCode);
+    	}
+    	if(!StringUtils.isEmpty(orderCode)){
+    		mapperMap.put("plannedSingleState",plannedSingleState);
+    	}
+       return  ofcSiloprogramInfoMapper.ofcSiloprogramAndResourceInfo(mapperMap);
+        
     }
 }
