@@ -8,11 +8,15 @@ import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
 import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
+import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
+import com.xescm.ofc.service.OfcSiloproStatusService;
+import com.xescm.ofc.service.impl.OfcSiloproStatusServiceImpl;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,9 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Autowired
     private OfcPlanFedBackService ofcPlanFedBackService;
+    
+    @Autowired
+    private OfcSiloproStatusService ofcSiloproStatusService;
 
     @Autowired
     private MqConfig mqConfig;
@@ -103,8 +110,27 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
 //                logger.error(ex.getMessage(), ex);
             }
+        }else if(StringUtils.equals(topicName,mqConfig.getWhcOrderStatusTopic())){
+        	logger.info("仓储计划单状态反馈的消息体为:"+messageBody);
+			logger.info("仓储计划单开始消费");
+			try {
+	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+				 List<ofcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
+				 try {
+					 ofcSiloprogramStatusFedBackConditions= JSONUtils.jsonToList(messageBody , ofcSiloprogramStatusFedBackCondition.class);
+					 for(int i=0;i<ofcSiloprogramStatusFedBackConditions.size();i++){
+                         ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
+					 }
+				 } catch (Exception e) {
+					 logger.info(e.getMessage());
+					// return Action.ReconsumeLater;
+				 }
+			} catch (Exception e) {
+				  logger.info(e.getMessage());
+				 // return Action.ReconsumeLater;
+			}
         }
-        return Action.CommitMessage;
+        return Action.ReconsumeLater;
     }
 
 }

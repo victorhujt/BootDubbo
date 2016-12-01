@@ -6,8 +6,11 @@ import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -23,17 +26,22 @@ public class OfcOrderCancelRest extends BaseController {
 
     /**
      * 鲜易网取消接口
-     * @param cancelOrderDto
+     *
+     * @param
      * @return
      */
     @RequestMapping("/api/epc/order/orderCancel")
     @ResponseBody
-    public Wrapper<?> orderCancel(CancelOrderDto cancelOrderDto) {
-        logger.info("取消订单接口参数：cancelOrderDto：{}", cancelOrderDto);
+    @ApiOperation(value = "鲜易网取消接口", notes = "返回是否成功", response = Wrapper.class)
+    public Wrapper<?> orderCancel(@RequestBody CancelOrderDto cancelOrderDto) {
+        logger.info("取消订单接口参数：custOrderCode：{}", cancelOrderDto);
         Wrapper<CannelOrderVo> wrapper = null;
         try {
             if (cancelOrderDto == null) {
-                throw new Exception("取消参数不能为空");
+                throw new Exception("客户订单编号不能为空");
+            }
+            if (StringUtils.isBlank(cancelOrderDto.getCustOrderCode())) {
+                throw new Exception("客户订单编号不能为空");
             }
             wrapper = createOrderService.cancelOrderStateByOrderCode(cancelOrderDto.getCustOrderCode());
             return wrapper;

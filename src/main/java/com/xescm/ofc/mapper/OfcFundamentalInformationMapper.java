@@ -20,4 +20,6 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
 
     List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(@Param("orderBatchNumber") String orderBatchNumber);
 
+    OfcFundamentalInformation queryDataByCustOrderCode(@Param("custOrderCode") String custOrderCode);
+
 }

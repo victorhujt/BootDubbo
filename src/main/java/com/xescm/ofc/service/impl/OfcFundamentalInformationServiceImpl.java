@@ -41,4 +41,9 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     public OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber) {
         return ofcFundamentalInformationMapper.queryByBatchNumber(orderBatchNumber);
     }
+
+    @Override
+    public OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode) {
+        return ofcFundamentalInformationMapper.queryDataByCustOrderCode(custOrderCode);
+    }
 }
