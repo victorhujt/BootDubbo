@@ -12,6 +12,11 @@ import feign.RequestLine;
  */
 
 public interface OrderCancellnterface {
+    /**
+     * 对接中心订单取消
+     * @param cancelOrderDto
+     * @return
+     */
     /*@Headers("Content-Type: application/json")*/
     @RequestLine("POST /api/orderCancel")
     @Headers("Content-Type: application/json")

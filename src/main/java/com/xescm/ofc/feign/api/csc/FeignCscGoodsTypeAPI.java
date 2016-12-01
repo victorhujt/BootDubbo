@@ -13,10 +13,20 @@ import java.util.List;
  */
 public interface FeignCscGoodsTypeAPI {
 
+    /**
+     * 查询货品种类
+     * @param cscGoodsType
+     * @return
+     */
     @RequestLine("POST /api/csc/goodstype/queryCscGoodsTypeList")
     @Headers("Content-Type: application/json")
     public Wrapper<List<CscGoodsTypeVo>> queryCscGoodsTypeList(CscGoodsType cscGoodsType);
 
+    /**
+     * 添加货品(弃用)
+     * @param cscGoodsType
+     * @return
+     */
     @RequestLine("POST /api/csc/goodstype/addCscGoodsType")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addCscGoodsType(CscGoodsType cscGoodsType);

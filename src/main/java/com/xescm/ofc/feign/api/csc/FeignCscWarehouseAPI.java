@@ -11,6 +11,11 @@ import java.util.List;
  * Created by 韦能 on 2016/10/18.
  */
 public interface FeignCscWarehouseAPI {
+    /**
+     * 查询客户所属仓库
+     * @param cscWarehouse
+     * @return
+     */
     @RequestLine("POST /api/csc/warehouse/queryWarehouseByGroupId")
     @Headers("Content-Type: application/json")
     public Wrapper<List<CscWarehouse>> getCscWarehouseByCustomerId(CscWarehouse cscWarehouse);

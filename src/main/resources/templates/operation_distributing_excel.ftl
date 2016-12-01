@@ -3,14 +3,26 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
-                    <a>批量下单导入模版_商超配送</a>
+                    <a href="javascript:downloadTemplate()">批量下单导入模版_商超配送(点击下载)</a>
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
+
+                <input id="historyUrl" value="${historyUrl!""}" hidden/>
+                <input id="custId" value="${custId!""}" hidden/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">上传文件</label>
             <div class="col-xs-3">
-                    <input id = "" name="" type="text"  class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
+                <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
+            </div>
+            <div class="col-xs-3">
+                <#--<button id="uploadFileBtn" data-bb-handler="confirm" type="file" class="btn btn-white btn-info btn-bold btn-interval">浏览</button>
+                <button id="uploadFileBtn" data-bb-handler="confirm" type="submit" class="btn btn-white btn-info btn-bold btn-interval">上传</button>-->
+                <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
+                    <p><input type="file" id="uploadFile" multiple name="templateForCP" class="file-loading"/></p>
+                    <p><input type="button" id="uploadFileInput"  value="上传"/></p>
+                </form>
             </div>
         </div>
         <div class="form-group">
@@ -52,10 +64,103 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom" value="${(historyUrl)!""}" data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
+    <div class="modal-footer"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
 <script type="text/javascript">
+    var scripts = [null,
+        sys.rootPath + "/plugins/bootstrap-fileinput/js/fileinput.min.js",
+        sys.rootPath + "/plugins/bootstrap-fileinput/js/locales/zh.js",
+        null];
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function () {
+                    $('.chosen-select').each(function () {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    });
+
+    function main() {
+
+    }
+
+    var ofc_url = $("#ofc_url").html();
     $("#ExcelNoneBottom").click(function () {
-        var historyUrl = $("#ExcelNoneBtnBottom").val();
+        var historyUrl = $("#historyUrl").val();
+        console.log("0000"+historyUrl)
         xescm.common.loadPage(historyUrl);
     })
+
+    var file;
+    var fileName;
+    $(function () {
+
+        $("#uploadFile").change(function () {
+            debugger
+            file = this.files[0];
+            fileName = $("uploadFile").val();
+            $("#uploadFileShow").val(fileName);
+        })
+
+        $("#uploadFileInput").click(function () {
+            debugger
+            var formData = new FormData();
+            var custId = $("#custId").val();
+            formData.append('file',file);
+            formData.append('fileName',fileName);
+            formData.append('custId',custId);
+            var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    debugger
+                    if (result == undefined || result == null) {
+                        layer.msg("HTTP请求无数据返回", {
+                            icon: 1
+                        });
+                    } else if (result.code == "200") {
+                        layer.msg(result.message, {
+                            skin: 'layui-layer-molv',
+                            icon: 1
+                        });
+                    } else {
+                        layer.msg(result.message, {
+                            skin: 'layui-layer-molv',
+                            icon: 5
+                        });
+                    }
+                    //xescm.common.loadPage('/dms/exception/toMaintainDmsExceptionListPage');
+                    //attachmentSerialNoArry.length = 0;
+                },
+                error: function (data) {
+                    alert("操作失败");
+                }
+            });
+
+
+        })
+    })
+    function downloadTemplate() {
+        debugger
+        var url = ofc_url + "/ofc/distributing/downloadTemplate";
+        window.location.href = url;
+    }
+
 </script>
