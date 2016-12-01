@@ -11,6 +11,6 @@ import java.util.List;
 public interface OfcSiloprogramInfoService extends IService<OfcSiloprogramInfo> {
     public List<OfcSiloprogramInfo> ofcSiloprogramInfoScreenList(String orderCode);
 
-    public OfcSiloprogramInfoVo ofcSiloprogramAndResourceInfo(String orderCode);
+    public List<OfcSiloprogramInfoVo> ofcSiloprogramAndResourceInfo(String orderCode,String plannedSingleState);
 }
 

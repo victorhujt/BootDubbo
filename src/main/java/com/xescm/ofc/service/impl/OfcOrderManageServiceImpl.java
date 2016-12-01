@@ -24,6 +24,8 @@ import com.xescm.ofc.utils.*;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+
+
 //import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -35,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -176,9 +179,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
                         //仓储计划单生成以后通过MQ推送到仓储中心
-                        OfcSiloprogramInfoVo info= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode);
-                        if(info!=null){
-                        sendToWhc(info,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation);
+                        List <OfcSiloprogramInfoVo> infos= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,OrderConstConstant.ZIYUANFENPEIZ);
+                        if(infos!=null&&infos.size()>0){
+                        sendToWhc(infos.get(0),goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation);
                         }else{
                             logger.debug("仓储计划单不存在");
                         }
@@ -1048,7 +1051,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setExpectedShipmentTime(info.getArriveTime());//预计货物到达时间
                 wsv.setRequiredDeliveryTime(info.getArriveTime());//预计货物到达时间
                 wsv.setRouteCode("");//线路
-                wsv.setStop(PubUtils.trimAndNullAsEmpty(info.getEceivingPlatform()));//站点 月台待确定
+              //  wsv.setStop(PubUtils.trimAndNullAsEmpty(info.getEceivingPlatform()));//站点 月台待确定
                 wsv.setFromAddressCodel(disInfo.getDeparturePlaceCode());//寄件地代码
                 wsv.setToAddressCodel(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationCode()));//目的地代码
                 wsv.setChannel("");//渠道
@@ -1058,7 +1061,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运商名称
                 wsv.setPlatformOrderNo(fuInfo.getCustOrderCode());//平台订单号  客户订单编号
                 wsv.setStoreName(fuInfo.getStoreName());//店铺名称
-                wsv.setDeliveryNo("");//快递单�
+                wsv.setDeliveryNo("");//快递单号
                 wsv.setConsigneeCode(PubUtils.trimAndNullAsEmpty(info.getConsigneeCode()));//收货人编码
                 wsv.setConsigneeName(PubUtils.trimAndNullAsEmpty(info.getConsigneeName()));//收货方名称
                 wsv.setcCountry("");//国家
@@ -1103,6 +1106,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 wsv.setDetailsList(detailList);
                 jsonStr=JSONUtils.objectToJson(wsv);
+                //调拨出库
     		}else if(OrderConstConstant.TRANSFEROUTOFTHELIBRARY.equals(documentType)){
                 tag=documentType;
                 WhcTransShip wsv=new WhcTransShip();
@@ -1204,7 +1208,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                // wsv.setAmountPayable(0L);//应付金额
                 wsv.setInsuredFlag(info.getInsure());//是否报价
                // wsv.setInsuredMoney(Long.parseLong(info.getInsureValue()));//报价金额
-                wsv.setFreight(finfo.getLuggage().longValue());//运费
+               // wsv.setFreight(finfo.getLuggage().longValue());//运费
                 for (int i=0;i<goodDetails.size();i++) {
                     OfcGoodsDetailsInfo  gdinfo=goodDetails.get(i);
                     WhcReworkDetails detail=new WhcReworkDetails();
@@ -1358,11 +1362,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(isSend){
         	//推送成功后将计划单状态更新为已推送
              OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
+             OfcSiloproNewstatus  ofcSiloproNewStatus=new OfcSiloproNewstatus();
+             ofcSiloproNewStatus.setJobNewStatus(OrderConstConstant.YITUISONG);
+             ofcSiloproNewStatus.setPlanCode(info.getPlanCode());
         	 ofcSiloproStatus.setPlannedSingleState(OrderConstConstant.YITUISONG);
         	  ofcSiloproStatus.setPlanCode(info.getPlanCode());
-             ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+             ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);//更新仓储计划单的状态
+             ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewStatus);//更新仓储计划单最新的状态
         }
-
-
     }
 }
