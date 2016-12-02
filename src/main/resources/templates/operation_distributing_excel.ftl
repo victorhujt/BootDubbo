@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
-                    <a href="javascript:downloadTemplate()">批量下单导入模版_商超配送(点击下载)</a>
+                    <a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -20,7 +20,7 @@
                 <#--<button id="uploadFileBtn" data-bb-handler="confirm" type="file" class="btn btn-white btn-info btn-bold btn-interval">浏览</button>
                 <button id="uploadFileBtn" data-bb-handler="confirm" type="submit" class="btn btn-white btn-info btn-bold btn-interval">上传</button>-->
                 <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" multiple name="templateForCP" class="file-loading"/></p>
+                    <p><input type="file" id="uploadFile" multiple name="uploadFile" class="file-loading"/></p>
                     <p><input type="button" id="uploadFileInput"  value="上传"/></p>
                 </form>
             </div>
@@ -28,7 +28,13 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
             <div class="col-xs-3">
-                    <select class="col-xs-12"> </select>
+                    <select class="col-xs-12" id="uploadExcelSheet">
+
+                    </select>
+
+            </div>
+            <div class="col-xs-3">
+                <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">加载</button>
             </div>
         </div>
     </form>
@@ -57,6 +63,7 @@
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Clicks: activate to sort column ascending">发货数量
                             </th>
+
                         </thead>
                         <tbody id="goodsSelectListTbody"></tbody>
 
@@ -109,7 +116,7 @@
         $("#uploadFile").change(function () {
             debugger
             file = this.files[0];
-            fileName = $("uploadFile").val();
+            fileName = $("#uploadFile").val();
             $("#uploadFileShow").val(fileName);
         })
 
@@ -136,6 +143,17 @@
                             icon: 1
                         });
                     } else if (result.code == "200") {
+                        //加载用户的Sheet页
+                        var sheetMsg = eval(result.result);
+                        $("#uploadExcelSheet option").remove();
+                        $.each(sheetMsg,function (index,sheet) {
+                            var sh = sheet.split("@");
+                            if("active" == sh[1]){
+                                $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
+                            }else{
+                                $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
+                            }
+                        })
                         layer.msg(result.message, {
                             skin: 'layui-layer-molv',
                             icon: 1
@@ -145,9 +163,9 @@
                             skin: 'layui-layer-molv',
                             icon: 5
                         });
+
+
                     }
-                    //xescm.common.loadPage('/dms/exception/toMaintainDmsExceptionListPage');
-                    //attachmentSerialNoArry.length = 0;
                 },
                 error: function (data) {
                     alert("操作失败");
@@ -156,11 +174,57 @@
 
 
         })
+
+        $("#loadSheetAndCheckBtn").click(function () {
+            var sheetNum = $("#uploadExcelSheet").val();
+            var formData = new FormData();
+            var custId = $("#custId").val();
+            formData.append('file',file);
+            formData.append('fileName',fileName);
+            formData.append('custId',custId);
+            formData.append('sheetNum',sheetNum);
+            var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    debugger
+                    /*if (result == undefined || result == null) {
+                        layer.msg("HTTP请求无数据返回", {
+                            icon: 1
+                        });
+                    } else if (result.code == "200") {
+                        //将校验结果进行展示
+
+                        layer.msg(result.message, {
+                            skin: 'layui-layer-molv',
+                            icon: 1
+                        });
+                    } else if (result.code == "500") {
+                        //将校验结果进行展示
+                        layer.msg(result.message, {
+                            skin: 'layui-layer-molv',
+                            icon: 5
+                        });
+                    } else {
+                        layer.msg(result.message, {
+                            skin: 'layui-layer-molv',
+                            icon: 5
+                        });
+
+
+                    }*/
+                },
+                error: function (data) {
+                    alert("操作失败");
+                }
+            });
+        })
     })
-    function downloadTemplate() {
-        debugger
-        var url = ofc_url + "/ofc/distributing/downloadTemplate";
-        window.location.href = url;
-    }
 
 </script>

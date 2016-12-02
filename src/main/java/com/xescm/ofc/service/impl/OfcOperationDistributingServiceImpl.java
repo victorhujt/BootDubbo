@@ -17,7 +17,6 @@ import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.ofc.utils.PubUtils;
-import com.xescm.ofc.web.restcontroller.WebDto;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -30,9 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,27 +143,52 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
+
+    @Override
+    public List<String> getExcelSheet(MultipartFile uploadFile, String fileName) {
+        List<String> sheetMsgList = new ArrayList<>();
+        try {
+            String suffix = fileName.split("\\.")[1];
+            if("xls".equals(suffix)){
+                HSSFWorkbook hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
+                int activeSheetIndex = hssfWorkbook.getActiveSheetIndex();
+                int numberOfSheets = hssfWorkbook.getNumberOfSheets();
+                for(int sheetNum = 0; sheetNum < numberOfSheets;  sheetNum ++){
+                    if(sheetNum == activeSheetIndex){
+                        sheetMsgList.add(hssfWorkbook.getSheetName(sheetNum) + "@active");
+                    }else{
+                        sheetMsgList.add(hssfWorkbook.getSheetName(sheetNum) + "@");
+                    }
+                }
+            }else if("xlsx".equals(suffix)){
+
+            }else if("csv".equals(suffix)){
+
+            }else{
+                throw new BusinessException("您上传的文档格式不正确!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sheetMsgList;
+    }
+
     /**
      * 校验用户上传的Excel是否符合我们的格式
      * @param uploadFile
+     * @param fileName
      * @param authResDto
      * @param custId
-     * @param staticCell 固定列
-     * @return
-     */
+     * @param staticCell 固定列    @return
+     * */
     @Override
-    public Wrapper<?> checkExcel(MultipartFile uploadFile, AuthResDto authResDto, String custId, Integer staticCell) {
-        String filename = uploadFile.getOriginalFilename();
-        String[] split = filename.split("\\.");
-        String  suffix = split[1];
+    public Wrapper<?> checkExcel(MultipartFile uploadFile, String fileName, String sheetNumChosen, AuthResDto authResDto, String custId, Integer staticCell) {
+        String suffix = fileName.split("\\.")[1];
         boolean checkPass = true;
         HSSFWorkbook hssfWorkbook ;
         HSSFWorkbook newHssfWorkBook ;
         XSSFWorkbook xssfWorkbook ;
         XSSFWorkbook newXssfWorkBook ;
-        Map<String,JSONArray> resultMap = new HashMap<>();
-        List<CscContantAndCompanyVo> consigneeNameList = new ArrayList<>();
-        List<CscGoodsApiVo> goodsApiVoList = new ArrayList<>();
         try {
             if("xls".equals(suffix)){
                 hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
@@ -176,11 +198,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 cellWarningStyle.setFillForegroundColor(HSSFColor.RED.index);
                 cellWarningStyle.setLeftBorderColor(HSSFColor.RED.index);
                 cellWarningStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
                 int numberOfSheets = hssfWorkbook.getNumberOfSheets();
+                Map<String,JSONArray> resultMap = null;
+                List<CscContantAndCompanyVo> consigneeNameList = null;
+                List<CscGoodsApiVo> goodsApiVoList = null;
                 //遍历sheet
                 for (int sheetNum = 0; sheetNum < numberOfSheets; sheetNum ++){
+                    if(sheetNum != Integer.valueOf(sheetNumChosen)){
+                        continue;
+                    }
                     HSSFSheet sheet = hssfWorkbook.getSheetAt(sheetNum);
+                    resultMap = new HashMap<>();
+                    consigneeNameList = new ArrayList<>();
+                    goodsApiVoList = new ArrayList<>();
                     //遍历row
                     for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
                         HSSFRow hssfRow = sheet.getRow(rowNum);
@@ -346,37 +376,14 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
                     }
                 }
-                String expFile = "D:/template/result.xls";
-                OutputStream outputStream = new FileOutputStream(expFile);
-                newHssfWorkBook.write(outputStream);
-                outputStream.close();
+
                 if(checkPass){
-//                    return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",hssfWorkbook);
                     return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
                 }else{
-//                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!",newHssfWorkBook);
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!",newHssfWorkBook);
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您生成校验结果,请改正后重新上传!",newHssfWorkBook);
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            }else if("xlsx".equals(suffix)){
+            }/*else if("xlsx".equals(suffix)){
                 xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
                 newXssfWorkBook = new XSSFWorkbook(uploadFile.getInputStream());
                 XSSFCellStyle cellWarningStyle = newXssfWorkBook.createCellStyle();
@@ -436,10 +443,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 }
             }else if("csv".equals(suffix)){
 
-            }
+            }*/
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
+
+
 }
