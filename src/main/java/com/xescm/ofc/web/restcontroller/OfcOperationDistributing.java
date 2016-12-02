@@ -263,7 +263,7 @@ public class OfcOperationDistributing extends BaseController{
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody
-    public void excelCheckBySheet(HttpServletRequest paramHttpServletRequest, HttpServletResponse response){
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest, HttpServletResponse response){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
@@ -278,26 +278,19 @@ public class OfcOperationDistributing extends BaseController{
             Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,fileName,sheetNum,authResDto,custId,5);
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
-                HSSFWorkbook newHssfWorkbook = (HSSFWorkbook) checkResult.getResult();
-                fileName = URLEncoder.encode(fileName, "UTF-8");
-                response.reset();
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-                response.addHeader("Content-Length", "" + newHssfWorkbook.getBytes().length);
-                response.setContentType("application/octet-stream;charset=UTF-8");
-                OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-                newHssfWorkbook.write(outputStream);
-                outputStream.flush();
-                outputStream.close();
-
+                List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
+                System.out.println(" ==ERROR== " + xlsErrorMsg);
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),xlsErrorMsg);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
-                System.out.println(JSONUtils.objectToJson(checkResult.getResult()));
-                result =  com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(), checkResult.getResult());
+                System.out.println(" ==SUCCESS== " + checkResult.getResult());
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(), checkResult.getResult());
             }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage());
             result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"导入出错");
         }
+        return result;
     }
 
 

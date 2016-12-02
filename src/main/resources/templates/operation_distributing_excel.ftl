@@ -1,4 +1,5 @@
 <title>城配开单Excel导入</title>
+<div class="col-sm-12">
     <form class="form-horizontal" role="form">
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
@@ -17,8 +18,6 @@
                 <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
             <div class="col-xs-3">
-                <#--<button id="uploadFileBtn" data-bb-handler="confirm" type="file" class="btn btn-white btn-info btn-bold btn-interval">浏览</button>
-                <button id="uploadFileBtn" data-bb-handler="confirm" type="submit" class="btn btn-white btn-info btn-bold btn-interval">上传</button>-->
                 <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
                     <p><input type="file" id="uploadFile" multiple name="uploadFile" class="file-loading"/></p>
                     <p><input type="button" id="uploadFileInput"  value="上传"/></p>
@@ -29,25 +28,57 @@
             <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
             <div class="col-xs-3">
                     <select class="col-xs-12" id="uploadExcelSheet">
-
                     </select>
-
             </div>
             <div class="col-xs-3">
                 <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">加载</button>
             </div>
         </div>
     </form>
-    <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title" style="font-size: 14px">货品列表</h4></div>
-    <div class="modal-body">
-        <div class="bootbox-body">
-            <form class="bootbox-form">
+</div>
 
-                    <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
+<div id="errorMsgDiv" hidden>
+    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+        <thead>
+        <tr role="row">
+            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">错误信息</th>
+        </thead>
+        <tbody id="errorMsgTbody">
+        </tbody>
+    </table>
+</div>
+
+
+<div id="goodsListDiv">
+
+    <div class="col-sm-12">
+        <div class="tabbable" style="width:1000px;">
+            <ul class="nav nav-tabs" id="myTab4">
+                <li class="goodsLi disable" >
+                    <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+                </li>
+
+                <li class="consigneeLi active">
+                    <a data-toggle="tab" href="#profile4" aria-expanded="true">收货方列表</a>
+                </li>
+
+            </ul>
+
+            <div class="tab-content">
+                <div id="home4" class="tab-pane ">
+                    <!--货品明细-->
+                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
+                    <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
                            aria-describedby="dynamic-table_info">
                         <thead>
-                        <tr role="row">
+                        <tr role="row" id="222">
+                            <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                操作
+                            </th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Domain: activate to sort column ascending">序号
+                            </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">货品编码
                             </th>
@@ -61,17 +92,54 @@
                                 aria-label="Clicks: activate to sort column ascending">单位
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Clicks: activate to sort column ascending">发货数量
+                                aria-label="Clicks: activate to sort column ascending">数量
                             </th>
-
                         </thead>
-                        <tbody id="goodsSelectListTbody"></tbody>
+                        <tbody id="goodsInfoListDiv">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="profile4" class="tab-pane active">
+                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
+                    <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>
+                    <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
+                    <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
+                           aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                操作
+                            </th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Domain: activate to sort column ascending">收货方名称
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Price: activate to sort column ascending">客户订单编号
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Update: activate to sort column ascending">联系人
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">联系电话
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">地址
+                            </th>
+                        </thead>
+                        <tbody id="consigneeInfoListDiv"></tbody>
 
                     </table>
-            </form>
+                </div>
+
+            </div>
         </div>
     </div>
     <div class="modal-footer"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
+
+</div>
+
+
 <script type="text/javascript">
     var scripts = [null,
         sys.rootPath + "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -194,13 +262,14 @@
                 processData: false,
                 success: function (result) {
                     debugger
-                    /*if (result == undefined || result == null) {
+                    if (result == undefined || result == null) {
                         layer.msg("HTTP请求无数据返回", {
                             icon: 1
                         });
                     } else if (result.code == "200") {
+                        $("#goodsListDiv").show();
+                        $("#errorMsgDiv").hide();
                         //将校验结果进行展示
-
                         layer.msg(result.message, {
                             skin: 'layui-layer-molv',
                             icon: 1
@@ -211,6 +280,13 @@
                             skin: 'layui-layer-molv',
                             icon: 5
                         });
+                        $("#goodsListDiv").hide();
+                        $("#errorMsgDiv").show();
+                        $("#errorMsgTbody").html("");
+                        var errorMsgList = result.result;
+                        $.each(errorMsgList,function (index, errorMsg) {
+                            $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
+                        })
                     } else {
                         layer.msg(result.message, {
                             skin: 'layui-layer-molv',
@@ -218,7 +294,7 @@
                         });
 
 
-                    }*/
+                    }
                 },
                 error: function (data) {
                     alert("操作失败");
