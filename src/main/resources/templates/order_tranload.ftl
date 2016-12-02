@@ -1724,7 +1724,19 @@
 
         });
 
+        //卡班类型必须输入运输单号
+        function checkBusiType(businessType){
+            if(businessType == "602"){
+                var transCode = $("#transCode").val();
+                if(transCode == null || transCode == "" || transCode == undefined){
+                    alert("业务类型选择卡班，必须输入运输单号！");
+                    return false;
+                }
+            }
+        }
+
         $("#orderPlaceConTableBtn").click(function () {
+            checkBusiType($("#businessType").val());
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
