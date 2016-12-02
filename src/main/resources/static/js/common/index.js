@@ -80,11 +80,11 @@ var xescm = {
 								icon : 1
 							});
 						} else if (result.code == "200") {
-                            layer.open({
-                                content: result.message,
-								success: function() {
+                            layer.msg(result.message, {
+                                time:2000,
+								end: function() {
                                 	if(successFunction()){
-                                    	setTimeout(successFunction(),500);
+                                        successFunction();
 									}
                                 }
                             });
