@@ -24,7 +24,6 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,9 +36,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +90,7 @@ public class OfcOperationDistributing extends BaseController{
                 String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
                 List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
                     ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
                 }
                 CscContantAndCompanyDto consignor = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
@@ -234,7 +230,7 @@ public class OfcOperationDistributing extends BaseController{
     }
 
      /**
-     * Excel导入并保存
+     * Excel导入,展示Sheet页
      * @param paramHttpServletRequest
      */
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
@@ -257,8 +253,9 @@ public class OfcOperationDistributing extends BaseController{
     }
 
     /**
-     * 根据用户选择的Sheet页进行校验并加载
+     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
      * @param paramHttpServletRequest
+     * @param response
      * @return
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
