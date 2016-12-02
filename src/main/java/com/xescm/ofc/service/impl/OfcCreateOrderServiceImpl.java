@@ -221,8 +221,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      */
     public void addSupplier(CreateOrderEntity createOrderEntity, CscSupplierInfoDto cscSupplierInfoDto, String custId) {
         cscSupplierInfoDto.setCustomerId(custId);
-        cscSupplierInfoDto.setUserId(CreateOrderApiConstant.USERID);
-        cscSupplierInfoDto.setUserName(CreateOrderApiConstant.USERNAME);
+        cscSupplierInfoDto.setUserId(CreateOrderApiConstant.USER_ID);
+        cscSupplierInfoDto.setUserName(CreateOrderApiConstant.USER_NAME);
         cscSupplierInfoDto.setProvinceName(createOrderEntity.getSupportProvince());
         cscSupplierInfoDto.setCityName(createOrderEntity.getSupportCity());
         cscSupplierInfoDto.setAreaName(createOrderEntity.getSupportCounty());
@@ -247,8 +247,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         CscContantAndCompanyDto cscContantAndCompanyVo = new CscContantAndCompanyDto();
         cscContantAndCompanyVo.setGroupId(groupId);
         cscContantAndCompanyVo.setCustomerId(custId);
-        cscContantAndCompanyVo.setUserId(CreateOrderApiConstant.USERID);
-        cscContantAndCompanyVo.setUserName(CreateOrderApiConstant.USERNAME);
+        cscContantAndCompanyVo.setUserId(CreateOrderApiConstant.USER_ID);
+        cscContantAndCompanyVo.setUserName(CreateOrderApiConstant.USER_NAME);
         if (StringUtils.equals("1", purpose)) {
             AddressDto addressDto = new AddressDto();
             addressDto.setProvinceName(createOrderEntity.getConsignorProvince());

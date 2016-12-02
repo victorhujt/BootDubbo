@@ -1,6 +1,7 @@
 package com.xescm.ofc.model.dto.coo;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.OrderSourceEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.utils.DateUtils;
 import org.modelmapper.ModelMapper;
@@ -127,7 +128,10 @@ public class CreateOrderTrans {
             ofcFundamentalInformation.setCreationTime(nowDate);
             ofcFundamentalInformation.setOperator(CREATE_ORDER_BYAPI);
             ofcFundamentalInformation.setOperTime(nowDate);
-            ofcFundamentalInformation.setPlatformType("4");
+            String custCode = createOrderEntity.getCustCode();
+            String orderSource = OrderSourceEnum.getCodeByCustCode(custCode);
+            ofcFundamentalInformation.setOrderSource(orderSource);
+//            ofcFundamentalInformation.setPlatformType("4");
             return ofcFundamentalInformation;
         }
         return null;
