@@ -20,4 +20,18 @@
     <result column="cubage" property="cubage" jdbcType="DECIMAL" />
     <result column="total_box" property="totalBox" jdbcType="INTEGER" />
   </resultMap>
+
+  <!--计划单明细列表查询-->
+  <select id="plannedDetailsScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    pd.*
+    FROM
+    ofc_planned_detail pd
+    LEFT JOIN ofc_siloprogram_info ofi ON pd.plan_code = ofi.plan_code
+    <where>
+      <if test="planCode!=null and plan_code!=''">
+        pd.plan_code =#{planCode}
+      </if>
+    </where>
+  </select>
 </mapper>
