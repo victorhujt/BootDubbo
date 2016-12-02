@@ -80,7 +80,7 @@ var xescm = {
 								icon : 1
 							});
 						} else if (result.code == "200") {
-                            layer.msg(result.message,{
+                            layer.msg(result.message, {
                                 time:2000,
 								end: function() {
                                 	if(successFunction()){
