@@ -973,6 +973,32 @@
             alert("您已确认,无法删除收货方")
         }else{
             $(obj).parent().parent().remove();
+            //动态删除收货方,即从Map中从收货方给拆出来//---
+            $("#consigneeInfoListDiv").find("tr").each(function (index) {
+                var tdArr = $(this).children();
+                var contactCompanyId = tdArr.eq(7).text();
+                var contactCode = tdArr.eq(8).text();
+                //遍历货品信息
+                $("#goodsInfoListDiv").find("tr").each(function(index) {
+                    var tdArr = $(this).children();
+                    var goodsIndex = tdArr.eq(1).text();//货品序号
+                    var goodsCode = tdArr.eq(2).text();//货品编码
+                    var mapKey = goodsCode + "@" + goodsIndex;
+                    var consigneeAndGoodsMsgJson = null;
+                    if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                        consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                    }
+                    if(null != consigneeAndGoodsMsgJson){
+                        var param = contactCompanyId +"@"+ contactCode;
+                        var goodsAmount = consigneeAndGoodsMsgJson[param];
+                        if(undefined != goodsAmount || !StringUtil.isEmpty(goodsAmount)){
+                            delete consigneeAndGoodsMsgJson[param];
+                        }
+                    }
+                })
+
+            })
+
 
         }
     }
