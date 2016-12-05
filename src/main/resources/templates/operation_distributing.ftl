@@ -746,16 +746,19 @@
             //显示货品列表//viewMap
             $("#goodsInfoListDiv").html("");
             var viewMapKeys = viewMap.keys();
+            var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
+                viewMapIndexOf += 1;
                 console.log("key----" + key + "value --- " + viewMapKeys[key])
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
+                goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
                 $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
                         "<td>" +
                         "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
                         "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                         "</td>" +
-                        "<td>" + (1) + "</td>" +
+                        "<td>" + viewMapIndexOf + "</td>" +
                         "<td>" + goodsDetail.goodsCode + "</td>" +
                         "<td>" + goodsDetail.goodsName + "</td>" +
                         "<td>" + goodsDetail.specification + "</td>" +
