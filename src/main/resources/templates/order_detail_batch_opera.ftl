@@ -204,8 +204,8 @@
         xescm.common.loadPage("/ofc/orderManageOpera");
     }
     function invoicePrint() {
+        var sel = "";
         $("#dataTbody").find("tr").each(function(index){
-            var sel = "";
             var tdArr = $(this).children();
             if(tdArr.eq(0).find("input").prop("checked")){
                 sel="1";
@@ -214,6 +214,9 @@
                 window.open(url);
             }
         });
+        if(sel==""){
+            alert("请至少选择一个订单！");
+        }
         //xescm.common.loadPage(url);
     }
 </script>
