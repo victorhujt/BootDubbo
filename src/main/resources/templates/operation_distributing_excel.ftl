@@ -588,9 +588,6 @@
                         title : '确认操作'
                     }, function(index){
                         debugger
-//                        viewMap = JSON.stringify(viewMap);
-//                        consigneeList = JSON.stringify(consigneeList);
-//                        var url = "/ofc/distributing/excelImportConfirm/" + viewMap + "/" + consigneeList;
                         var excelImportTag = "confirm";
                         var custId = $("#custId").val();
                         var custName = $("#custName").val();

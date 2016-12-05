@@ -170,6 +170,10 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{custId}/{custName}")
     public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String custId, @PathVariable String custName){
+        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+        setDefaultModel(model);
+        model.addAttribute("merchandiserList",merchandiserList);
+        model.addAttribute("currentTime",new Date());
         model.addAttribute("excelImportTag",excelImportTag);
         model.addAttribute("custIdFromExcelImport",custId);
         model.addAttribute("custNameFromExcelImport",custName);
