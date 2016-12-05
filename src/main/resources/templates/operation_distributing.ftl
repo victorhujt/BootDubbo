@@ -767,8 +767,6 @@
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
                         "</tr>");
             }
-
-
         }
 
         $("#goodsListDivBlock").click(function () {
