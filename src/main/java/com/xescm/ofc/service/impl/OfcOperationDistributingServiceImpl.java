@@ -311,12 +311,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
                                         //如果校验成功,就往结果集里堆
                                         if(matches){
-                                            System.out.println(cellNum - staticCell);
-                                            System.out.println(cellNum - staticCell);
-                                            System.out.println(rowNum - 1);
                                             CscContantAndCompanyVo cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                             CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
-                                            goodsAmount += cscGoodsApiVo.getGoodsAmount();
+                                            goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                             cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                             goodsApiVoList.remove(rowNum - 1);
                                             goodsApiVoList.add(rowNum-1,cscGoodsApiVo);

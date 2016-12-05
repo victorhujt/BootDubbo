@@ -83,6 +83,7 @@
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
                 <input id="custId" value="${custId!""}" hidden/>
+                <input id="custName" value="${custName!""}" hidden/>
             </div>
         </div>
         <div class="form-group">
@@ -381,6 +382,9 @@
 
     }//
     var viewMap = new HashMap();
+    var loadSheetTag = false;
+    var consigneeList = [];
+
     $(function () {
         var file;
         var fileName;
@@ -450,6 +454,9 @@
         $("#loadSheetAndCheckBtn").click(function () {
 
             if($("#uploadExcelSheet option").size() > 0){
+
+                loadSheetTag = true;
+
                 var sheetNum = $("#uploadExcelSheet").val();
                 var formData = new FormData();
                 var custId = $("#custId").val();
@@ -483,7 +490,7 @@
                                 icon: 1
                             });
                             var resultMap =  JSON.parse(result.result);
-                            var consigneeList = [];
+
                             var consigneeTag = true;
                             var indexView = 0;
                             for(var key in resultMap){
@@ -529,23 +536,6 @@
                                 viewMap.put(key,viewMapValue);
                             }
 
-                            /*var indexView = 0;
-                            for(var viewKey in viewMap){
-                                console.log("viewKey" + viewKey)
-                                indexView += 1;
-                                var goodsMsg = viewMap[viewKey];
-                                console.log("goodsMsg:" + goodsMsg)
-                                console.log("goodsMsg:" + goodsMsg[0])
-                                $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
-                                        "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button></td>" +
-                                        "<td>" + indexView + "</td>" +
-                                        "<td>" + goodsMsg.goodsCode + "</td>" +
-                                        "<td>" + goodsMsg.goodsName + "</td>" +
-                                        "<td>" + goodsMsg.specification + "</td>" +
-                                        "<td>" + goodsMsg.unit + "</td>" +
-                                        "<td>数量需计算</td>" +
-                                        "</tr>");
-                            }*/
 
                         } else if (result.code == "500") {
                             //如果校验失败!
@@ -583,11 +573,44 @@
         });
 
         $("#excelImportEnter").click(function () {
-            if(false){
-
+            var consigneeNum = $("#consigneeInfoListDiv tr").size();
+            var goodsNum = $("#goodsInfoListDiv tr").size();
+            if(loadSheetTag){
+                if(consigneeNum < 1){
+                    alert('请先上传Excel导入数据，再加载后执行导入！')
+                }else if(goodsNum < 0){
+                    alert('请先上传Excel导入数据，再加载后执行导入！');
+                }else{
+                    //所有校验通过
+                    layer.confirm('请您再次确认订单信息,我们将把订单信息导入下单界面!', {
+                        skin : 'layui-layer-molv',
+                        icon : 3,
+                        title : '确认操作'
+                    }, function(index){
+                        debugger
+//                        viewMap = JSON.stringify(viewMap);
+//                        consigneeList = JSON.stringify(consigneeList);
+//                        var url = "/ofc/distributing/excelImportConfirm/" + viewMap + "/" + consigneeList;
+                        var excelImportTag = "confirm";
+                        var custId = $("#custId").val();
+                        var custName = $("#custName").val();
+                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + custId + "/" + custName;
+                        xescm.common.loadPage(url);
+                        layer.close(index);
+                    }, function(index){
+                        layer.close(index);
+                    });
+                }
             }else {
-                alert('请先加载文件!')
+                alert('请先加载Sheet页!')
             }
+        })
+
+        $("#ExcelNoneBtnBottom").click(function () {
+            var excelImportTag = "cancel";
+            var custId = $("#custId").val();
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + custId;
+            xescm.common.loadPage(url);
         })
     })
 

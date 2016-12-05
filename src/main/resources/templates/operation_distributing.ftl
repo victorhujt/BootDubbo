@@ -388,6 +388,9 @@
 
     <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_distributing_excel">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
+        <span hidden="true" id = "excelImportTag">${(excelImportTag)!}</span>
+        <span hidden="true" id = "custIdFromExcelImport">${(custIdFromExcelImport)!}</span>
+        <span hidden="true" id = "custNameFromExcelImport">${(custNameFromExcelImport)!}</span>
         Excel导入
     </button>
 
@@ -661,6 +664,7 @@
     });
 
     function main() {
+
         validateFormData();
     }
     //链接到收发货方联系人档案
@@ -678,6 +682,35 @@
     var goodsAndConsigneeMap = new HashMap();
     var couldChangeCust = true;
     $(function () {
+
+        var excelImportTag = $("#excelImportTag").html();
+        if("confirm" == excelImportTag){
+            var custId = $("#custIdFromExcelImport").html();
+            var custName = $("#custNameFromExcelImport").html();
+            //重新从接口里查一遍
+            console.log("ok:"+JSON.stringify(consigneeList))
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
+                data=eval(data);
+                $.each(data,function (index,cscCustomerVo) {
+                    $("#custName").val(cscCustomerVo.customerName);
+                    $("#custGroupId").val(cscCustomerVo.groupId);
+                    $("#custId").val(cscCustomerVo.id);
+                    $("#customerId").val(cscCustomerVo.id);
+                });
+            })
+            //加载完客户后自动加载仓库列表, 和货品种类
+            //加载仓库列表
+            $("#warehouseCode option").remove();
+            //<option value="">无</option>
+            /* $("#warehouseCode").append("<option value="">无</option>");*/
+            $("#warehouseCode").append("<option value = ''>无</option>");
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
+                data=eval(data);
+                $.each(data,function (index,warehouse) {
+                    $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
+                });
+            })
+        }
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
@@ -1100,7 +1133,7 @@
             },"json");
             if(contactList == 1){
                 //只有一个联系人
-                layer.confirm('您只有一个收货方联系人,点击确定我们将为您自动加载!', {
+                layer.confirm('您只有一个发货方联系人,点击确定我们将为您自动加载!', {
                     skin : 'layui-layer-molv',
                     icon : 3,
                     title : '确认操作'
@@ -1603,7 +1636,8 @@
         }else{
             var historyUrl = "operation_distributing";
             var custId = $("#custId").val();
-            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId;
+            var custName = $("#custName").val();
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId + "/" + custName;
             xescm.common.loadPage(url);
         }
     })
