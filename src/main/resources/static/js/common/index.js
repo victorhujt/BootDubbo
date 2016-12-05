@@ -80,13 +80,14 @@ var xescm = {
 								icon : 1
 							});
 						} else if (result.code == "200") {
-							layer.msg(result.message, {
-								skin : 'layui-layer-molv',
-								icon : 1
-							});
-							if(successFunction){
-								successFunction();
-							}
+                            layer.msg(result.message, {
+                                time:2000,
+								end: function() {
+                                	if(successFunction()){
+                                        successFunction();
+									}
+                                }
+                            });
 						} else {
 
 							layer.msg(result.message, {

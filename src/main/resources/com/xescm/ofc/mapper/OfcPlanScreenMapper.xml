@@ -74,6 +74,12 @@
                 <if test="orderBatchNumber!=null and orderBatchNumber!=''">
                     AND otp.order_batch_number = #{orderBatchNumber}
                 </if>
+                <if test="orderCode!=null and orderCode!=''">
+                    AND otp.order_code = #{orderCode}
+                </if>
+                <if test="planCode!=null and planCode!=''">
+                    AND otp.plan_code = #{planCode}
+                </if>
                 <if test="resourceAllocationStatus!=null and resourceAllocationStatus!=''">
                     AND otss.resource_allocation_status = #{resourceAllocationStatus}
                 </if>

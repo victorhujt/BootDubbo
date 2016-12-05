@@ -64,6 +64,21 @@ public class RestConfig {
      */
     private String tfcUrl;
 
+    public String getWhcUrl() {
+        return whcUrl;
+    }
+
+    public void setWhcUrl(String whcUrl) {
+        this.whcUrl = whcUrl;
+    }
+
+    /**
+     * 仓储中心的地址
+
+     */
+    private String whcUrl;
+
+
     public String getTfcUrl() {
         return tfcUrl;
     }
