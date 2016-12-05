@@ -16,10 +16,7 @@ import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.JsonUtil;
-import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.utils.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -38,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /*
 *
@@ -276,11 +274,11 @@ public class OfcOperationDistributing extends BaseController{
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
-                System.out.println(" ==ERROR== " + xlsErrorMsg);
                 result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),xlsErrorMsg);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
-                System.out.println(" ==SUCCESS== " + checkResult.getResult());
-                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(), checkResult.getResult());
+                Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
+                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
             }
         } catch (Exception e) {
             e.printStackTrace();

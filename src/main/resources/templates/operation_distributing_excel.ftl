@@ -177,9 +177,96 @@
         xescm.common.loadPage(historyUrl);
     })
 
-    var file;
-    var fileName;
+    function HashMap() {
+        /** Map 大小 **/
+        var size = 0;
+        /** 对象 **/
+        var entry = new Object();
+
+        /** 存 **/
+        this.put = function (key , value)
+        {
+            if(!this.containsKey(key))
+            {
+                size ++ ;
+            }
+            entry[key] = value;
+        }
+
+        /** 取 **/
+        this.get = function (key)
+        {
+            if( this.containsKey(key) )
+            {
+                return entry[key];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /** 删除 **/
+        this.remove = function ( key )
+        {
+            if( delete entry[key] )
+            {
+                size --;
+            }
+        }
+
+        /** 是否包含 Key **/
+        this.containsKey = function ( key )
+        {
+            return (key in entry);
+        }
+
+        /** 是否包含 Value **/
+        this.containsValue = function ( value )
+        {
+            for(var prop in entry)
+            {
+                if(entry[prop] == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** 所有 Value **/
+        this.values = function ()
+        {
+            var values = new Array(size);
+            for(var prop in entry)
+            {
+                values.push(entry[prop]);
+            }
+            return values;
+        }
+
+        /** 所有 Key **/
+        this.keys = function ()
+        {
+            var keys = new Array(size);
+            for(var prop in entry)
+            {
+                keys.push(prop);
+            }
+            return keys;
+        }
+
+        /** Map Size **/
+        this.size = function ()
+        {
+            return size;
+        }
+    }
+
     $(function () {
+        var file;
+        var fileName;
+        var viewMap = new HashMap();
 
         $("#uploadFile").change(function () {
             debugger
@@ -205,7 +292,6 @@
                 contentType: false,
                 processData: false,
                 success: function (result) {
-                    debugger
                     if (result == undefined || result == null) {
                         layer.msg("HTTP请求无数据返回", {
                             icon: 1
@@ -269,13 +355,38 @@
                     } else if (result.code == "200") {
                         $("#goodsListDiv").show();
                         $("#errorMsgDiv").hide();
-                        //将校验结果进行展示
+                        //如果校验成功!
                         layer.msg(result.message, {
                             skin: 'layui-layer-molv',
                             icon: 1
                         });
+                        var resultMap =  JSON.parse(result.result);
+                        var consigneeList = [];
+                        var consigneeTag = true;
+                        for(var key in resultMap){
+                            debugger
+                            var resultMapValue = resultMap[key]; //一条货品记录
+                            var viewMapValue = [];
+                            var consigeeMsg = {};
+                            for(var index = 0; index < resultMapValue.length; index ++){
+                                var data = resultMapValue[index];
+
+                                if(index == 0){//货品信息
+                                    viewMapValue[0] = data;
+                                }else if(index % 3 == 1){//收货人和货品需求量
+                                    for(var inkey in data){
+                                        consigeeMsg[inkey] = data[inkey];
+                                    }
+                                }else if(index % 3 == 2 && consigneeTag){//收货人信息
+                                    consigneeList.push(data);
+                                }
+                            }
+                            consigneeTag = false;
+                            viewMapValue[1] = consigeeMsg;
+                            viewMap.put(key,viewMapValue);
+                        }
                     } else if (result.code == "500") {
-                        //将校验结果进行展示
+                        //如果校验失败!
                         layer.msg(result.message, {
                             skin: 'layui-layer-molv',
                             icon: 5

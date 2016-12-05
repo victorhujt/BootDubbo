@@ -30,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lyh on 2016/11/30.
@@ -187,7 +184,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         boolean checkPass = true;
         HSSFWorkbook hssfWorkbook ;
         XSSFWorkbook xssfWorkbook ;
-        XSSFWorkbook newXssfWorkBook ;
         try {
             if("xls".equals(suffix)){
                 hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
@@ -202,7 +198,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                         continue;
                     }
                     HSSFSheet sheet = hssfWorkbook.getSheetAt(sheetNum);
-                    resultMap = new HashMap<>();
+                    resultMap = new LinkedHashMap<>();
                     consigneeNameList = new ArrayList<>();
                     goodsApiVoList = new ArrayList<>();
                     xlsErrorMsg = new ArrayList<>();
@@ -319,7 +315,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                             System.out.println(rowNum - 1);
                                             CscContantAndCompanyVo cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                             CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
-                                            String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getContactName();
+                                            String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getId();
                                             jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
                                             jsonArray.add(cscGoodsApiVo);
                                             jsonArray.add(jsonObject);
