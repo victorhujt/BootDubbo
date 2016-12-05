@@ -51,4 +51,16 @@ public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInf
        return  ofcSiloprogramInfoMapper.ofcSiloprogramAndResourceInfo(mapperMap);
         
     }
+
+    @Override
+    public List<String> ofcMaxSiloprogramInfoSerialNumberScreenList(String planCode,String businessType) {
+            Map<String,String> mapperMap = new HashMap<>();
+            if(!StringUtils.isEmpty(planCode)){
+                mapperMap.put("planCode",planCode);
+            }
+            if(!StringUtils.isEmpty(businessType)){
+                mapperMap.put("businessType",businessType);
+            }
+            return ofcSiloprogramInfoMapper.ofcMaxSiloprogramInfoSerialNumberScreenList(mapperMap);
+    }
 }

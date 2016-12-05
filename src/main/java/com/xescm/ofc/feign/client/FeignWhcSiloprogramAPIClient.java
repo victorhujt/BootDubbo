@@ -9,6 +9,8 @@ import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class FeignWhcSiloprogramAPIClient {
+    private static final Logger logger = LoggerFactory.getLogger(FeignWhcOrderAPI.class);
 
     @Resource
     RestConfig restConfig;

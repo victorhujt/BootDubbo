@@ -11,4 +11,6 @@ public interface OfcSiloprogramInfoMapper extends Mapper<OfcSiloprogramInfo> {
     List<OfcSiloprogramInfo> ofcSiloprogramInfoScreenList(Map<String,String> mapperMap);
 
     List<OfcSiloprogramInfoVo> ofcSiloprogramAndResourceInfo(Map<String,String> mapperMap);
+
+    List<String> ofcMaxSiloprogramInfoSerialNumberScreenList(Map<String,String> mapperMap);
 }
