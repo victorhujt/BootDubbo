@@ -5,6 +5,7 @@ import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
+import com.xescm.ofc.model.dto.whc.CancelWhcOrderDTO;
 import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
@@ -99,6 +100,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
     @Autowired
+    private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
+
+    @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
@@ -177,11 +181,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else if (ofcWarehouseInformation.getProvideTransport()== OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS){
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
-                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
+                       String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,authResDtoByToken.getUamUser().getUserName());
                         //仓储计划单生成以后通过MQ推送到仓储中心
                         List <OfcSiloprogramInfoVo> infos= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,OrderConstConstant.ZIYUANFENPEIZ);
+
+                        List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
                         if(infos!=null&&infos.size()>0){
-                        sendToWhc(infos.get(0),goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation);
+                        sendToWhc(infos.get(0),pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation);
                         }else{
                             logger.debug("仓储计划单不存在");
                         }
@@ -420,7 +426,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcWarehouseInformation
      * @param ofcFinanceInformation
      */
-    public void siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,String userId){
+    public String siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,String userId){
+        String planCode="";
         OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
         OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
         OfcSiloproSourceStatus ofcSiloproSourceStatus=new OfcSiloproSourceStatus();
@@ -430,6 +437,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
+            planCode=ofcSiloprogramInfo.getPlanCode();
             ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
             if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.SALESOUTOFTHELIBRARY)
                     || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.TRANSFEROUTOFTHELIBRARY)
@@ -478,6 +486,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
+        return planCode;
     }
 
     public void planCancle(String orderCode,String userId){
@@ -525,6 +534,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
         for(int i=0;i<ofcSiloprogramInfoList.size();i++){
             OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
+            Response response=null;
             OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
             ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
             ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
@@ -534,7 +544,46 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     || PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(OrderConstConstant.RENWUWANCH)){
                 throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
             }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(OrderConstConstant.YITUISONG)){
-                throw new BusinessException("为仓储计划单，则调用【仓储中心】运单取消接口");
+                try {
+                    if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                        CancelWhcOrderDTO dto=new CancelWhcOrderDTO();
+                        dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
+                        dto.setOrderNo("A004");
+                        dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
+                        dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
+                        dto.setCustomerID("CUS0001");
+                        dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
+                        dto.setWarehouseID("WH01");
+                        //调用接口尝试3次
+                        for (int j = 0; j <3; j++) {
+                            response=feignWhcSiloprogramAPIClient.inOrderCancel(dto);
+                            if(response!=null){
+                                break;
+                            }
+                        }
+                    }else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                        CancelWhcOrderDTO dto=new CancelWhcOrderDTO();
+                        dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
+                        dto.setOrderNo("A001");
+                        dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
+                        dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
+                        dto.setCustomerID("CUS0001");
+                        dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
+                        dto.setWarehouseID("WH01");
+                        for (int j = 0; j <3 ; j++) {
+                            response= feignWhcSiloprogramAPIClient.outOrderCancel(dto);
+                            if(response!=null){
+                                break;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage());
+                    throw new BusinessException(e.getMessage());
+                }
+                if(Response.ERROR_CODE == response.getCode()){
+                    throw new BusinessException(response.getMessage());
+                }
             }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
                 throw new BusinessException("状态有误");
             }
@@ -542,13 +591,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcSiloprogramInfo.setVoidTime(new Date());
             //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
             //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-            ofcSiloproStatus.setPlannedSingleState("50");
+            ofcSiloproStatus.setPlannedSingleState(OrderConstConstant.YIZUOFEI);
             //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
             //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
             ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
             ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+
+
+
+
+
+
+
+
         }
     }
+
     @Override
     public String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if(orderStatus.equals(OrderConstConstant.PENDINGAUDIT)){
@@ -1035,9 +1093,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     /**
      * 发送到仓储中心
      * @param info
-     * @param goodDetails
+     * @param planDetails
      */
-    public void sendToWhc(OfcSiloprogramInfoVo info,List<OfcGoodsDetailsInfo> goodDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo){
+    public void sendToWhc(OfcSiloprogramInfoVo info,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo){
     	String documentType=info.getDocumentType();
     	String tag="";
     	String jsonStr="";
@@ -1046,12 +1104,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 tag=documentType;
                 WhcSalesDelivery wsv=new WhcSalesDelivery();
                 List<WhcSalesDeliveryDetails> detailList=new ArrayList<>();
-                wsv.setOrderNo(info.getOrderCode());
+                wsv.setOrderNo(info.getPlanCode());
                 wsv.setWhcBillno("");//流水号
                 wsv.setOrderType(documentType);//订单类型
                 wsv.setFromSystem(PubUtils.trimAndNullAsEmpty(fuInfo.getOrderSource()));//订单来源
                 wsv.setCustomerCode(PubUtils.trimAndNullAsEmpty(info.getCustCode()));//货主编号
+                //货主名称
                 wsv.setWarehouseCode(PubUtils.trimAndNullAsEmpty(info.getWarehouseCode()));//仓库编号
+                //
                 wsv.setCreateTime(info.getCreationTime()==null?new Date():info.getCreationTime());//创建时间
                 wsv.setExpectedShipmentTime(info.getArriveTime());//预计货物到达时间
                 wsv.setRequiredDeliveryTime(info.getArriveTime());//预计货物到达时间
@@ -1094,8 +1154,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setInsuredFlag(PubUtils.trimAndNullAsEmpty(info.getInsure()));//是否报价
                // wsv.setInsuredMoney(Long.parseLong(info.getInsureValue()));//报价金额
               // wsv.setFreight(finfo.getLuggage().longValue());//运费
-                for (int i=0;i<goodDetails.size();i++) {
-                    OfcGoodsDetailsInfo  gdinfo=goodDetails.get(i);
+                for (int i=0;i<planDetails.size();i++) {
+                    OfcPlannedDetail  gdinfo=planDetails.get(i);
                     WhcSalesDeliveryDetails detail=new WhcSalesDeliveryDetails();
                     detail.setWhcBillno("");//流水号
                     detail.setCustomerCode(PubUtils.trimAndNullAsEmpty(info.getCustCode()));//货主编号
@@ -1103,7 +1163,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detail.setItemName(PubUtils.trimAndNullAsEmpty(gdinfo.getGoodsName()));//货品名称
                     detail.setPrice(gdinfo.getUnitPrice());//价格是否是单价
                     detail.setUom(PubUtils.trimAndNullAsEmpty(gdinfo.getUnit()));//单位
-                    detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
+                    //detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
                     detail.setItemWeight(gdinfo.getWeight());//货品重量
                     detail.setItemCubic(gdinfo.getCubage());//货品体积
                     detail.setQtyOrdered(gdinfo.getQuantity());//订货数量
@@ -1155,8 +1215,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setInsuredFlag(info.getInsure());//是否报价
                 //wsv.setInsuredMoney(Long.parseLong(info.getInsureValue()));//报价金额
                 //wsv.setFreight(finfo.getLuggage().longValue());//运费
-                for (int i=0;i<goodDetails.size();i++) {
-                    OfcGoodsDetailsInfo  gdinfo=goodDetails.get(i);
+                for (int i=0;i<planDetails.size();i++) {
+                    OfcPlannedDetail  gdinfo=planDetails.get(i);
                     WhcTransShipDetails detail=new WhcTransShipDetails();
                     detail.setWhcBillno("");//流水号
                     detail.setLineNo(i+1);
@@ -1165,7 +1225,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detail.setItemName(PubUtils.trimAndNullAsEmpty(gdinfo.getGoodsName()));//货品名称
                     detail.setPrice(gdinfo.getUnitPrice());//价格是否是单价
                     detail.setUom(PubUtils.trimAndNullAsEmpty(gdinfo.getUnit()));//单位
-                    detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
+                    //detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
                     detail.setItemWeight(gdinfo.getWeight());//货品重量
                     detail.setItemCubic(gdinfo.getCubage());//货品体积
                     detail.setQtyOrdered(gdinfo.getQuantity());//订货数量
@@ -1214,8 +1274,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setInsuredFlag(info.getInsure());//是否报价
                // wsv.setInsuredMoney(Long.parseLong(info.getInsureValue()));//报价金额
                // wsv.setFreight(finfo.getLuggage().longValue());//运费
-                for (int i=0;i<goodDetails.size();i++) {
-                    OfcGoodsDetailsInfo  gdinfo=goodDetails.get(i);
+                for (int i=0;i<planDetails.size();i++) {
+                    OfcPlannedDetail  gdinfo=planDetails.get(i);
                     WhcReworkDetails detail=new WhcReworkDetails();
                     detail.setWhcBillno("");//流水号
                     detail.setLineNo(i+1);
@@ -1224,7 +1284,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detail.setItemName(PubUtils.trimAndNullAsEmpty(gdinfo.getGoodsName()));//货品名称
                     detail.setPrice(gdinfo.getUnitPrice());//价格是否是单价
                     detail.setUom(PubUtils.trimAndNullAsEmpty(gdinfo.getUnit()));//单位
-                    detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
+                    //detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
                     detail.setItemWeight(gdinfo.getWeight());//货品重量
                     detail.setItemCubic(gdinfo.getCubage());//货品体积
                     detail.setQtyOrdered(gdinfo.getQuantity());//订货数量
@@ -1241,7 +1301,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 tag=documentType;
 				WhcPurchase wp=new WhcPurchase();
 				List<WhcPurchaseDetail> detailList=new ArrayList<WhcPurchaseDetail>();
-				wp.setOrderNo(info.getOrderCode());
+				wp.setOrderNo(info.getPlanCode());
 				wp.setWhcBillno("");//仓库中心入库单
 				wp.setOrdertype(documentType);//入库单类型
                 wp.setFromSystem(PubUtils.trimAndNullAsEmpty(fuInfo.getOrderSource()));//订单来源
@@ -1255,8 +1315,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 				wp.setSupplierName(PubUtils.trimAndNullAsEmpty(info.getSupportName()));//供应商名称
 				wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
 				wp.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运人姓名
-				for (int i=0; i<goodDetails.size(); i++) {
-                    OfcGoodsDetailsInfo gdinfo=goodDetails.get(i);
+				for (int i=0; i<planDetails.size(); i++) {
+                    OfcPlannedDetail gdinfo=planDetails.get(i);
 					WhcPurchaseDetail detail=new WhcPurchaseDetail();
 					detail.setWhcBillno("");//仓库中心入库单
 					detail.setLineno(i+1);//行号
@@ -1266,7 +1326,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 					detail.setItemName(PubUtils.trimAndNullAsEmpty(gdinfo.getGoodsName()));//货品名称
 					detail.setQty(gdinfo.getQuantity());//货品数量
 					detail.setUom(PubUtils.trimAndNullAsEmpty(gdinfo.getUnit()));//单位
-					detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
+					//detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
 					detail.setItemWeight(gdinfo.getWeight());//货品重量
 					detail.setItemCubic(gdinfo.getCubage());//货品体积
 					detail.setStandard("");//货品规格
@@ -1280,10 +1340,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 tag=documentType;
 				WhcTransReceive r=new WhcTransReceive();
 				List<WhcTransReceiveDetail> detailList=new ArrayList<WhcTransReceiveDetail>();
-				r.setOrderNo(PubUtils.trimAndNullAsEmpty(info.getOrderCode()));
+				r.setOrderNo(PubUtils.trimAndNullAsEmpty(info.getPlanCode()));
 				r.setWhcBillno("");//仓库中心入库单
 				r.setOrdertype(documentType);//入库单类型
-				r.setOaOrderNo(PubUtils.trimAndNullAsEmpty(info.getOrderCode()));//调拨出库单号
+				r.setOaOrderNo(PubUtils.trimAndNullAsEmpty(info.getOrderCode()));//调拨出库单号  待定
                 r.setFromSystem(PubUtils.trimAndNullAsEmpty(fuInfo.getOrderSource()));//订单来源
                 r.setCustomerCode(PubUtils.trimAndNullAsEmpty(fuInfo.getCustCode()));//货主编号
                 r.setCustomerName(PubUtils.trimAndNullAsEmpty(fuInfo.getCustName()));//货主名称
@@ -1295,8 +1355,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 				r.setExpectedArriveTime(info.getArriveTime());//预计货物到达时间
                 r.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
                 r.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运人姓名
-				for (int i=0; i<goodDetails.size();i++) {
-                    OfcGoodsDetailsInfo gdinfo=goodDetails.get(i);
+				for (int i=0; i<planDetails.size();i++) {
+                    OfcPlannedDetail gdinfo=planDetails.get(i);
 					WhcTransReceiveDetail detail=new WhcTransReceiveDetail();
 					detail.setWhcBillno("");//仓库中心入库单
 					detail.setLineno(i+1);//行号
@@ -1306,7 +1366,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 					detail.setItemName(PubUtils.trimAndNullAsEmpty(gdinfo.getGoodsName()));//货品名称
 					detail.setQty(gdinfo.getQuantity());//货品数量
 					detail.setUom(PubUtils.trimAndNullAsEmpty(gdinfo.getUnit()));//单位
-					detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
+					//detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
 					detail.setItemWeight(gdinfo.getWeight());//货品重量
 					detail.setItemCubic(gdinfo.getCubage());//货品体积
 					detail.setStandard("");//货品规格
@@ -1320,7 +1380,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 tag=documentType;
                 WhcReturns w=new WhcReturns();
                 List<WhcReturnsDetail> detailList=new ArrayList<WhcReturnsDetail>();
-                w.setOrderNo(PubUtils.trimAndNullAsEmpty(info.getOrderCode()));
+                w.setOrderNo(PubUtils.trimAndNullAsEmpty(info.getPlanCode()));
                 w.setOrdertype(documentType);//入库单类型
                 w.setFromSystem(PubUtils.trimAndNullAsEmpty(fuInfo.getOrderSource()));//订单来源
                 w.setCustomerCode(PubUtils.trimAndNullAsEmpty(fuInfo.getCustCode()));//货主编号
@@ -1336,8 +1396,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 w.setCarrierName("");//退货人姓名
                 w.setReturnPeople("");//退货运单号
                 w.setReturnTrackingNo("");//退货原因
-                for(int i=0;i<goodDetails.size();i++){
-                    OfcGoodsDetailsInfo gdinfo=goodDetails.get(i);
+                for(int i=0;i<planDetails.size();i++){
+                    OfcPlannedDetail gdinfo=planDetails.get(i);
                     WhcReturnsDetail detail=new WhcReturnsDetail();
                     detail.setWhcBillno("");//仓库中心入库单
                     detail.setLineno(i+1);//行号
@@ -1347,7 +1407,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detail.setItemName(PubUtils.trimAndNullAsEmpty(gdinfo.getGoodsName()));//货品名称
                     detail.setQty(gdinfo.getQuantity());//货品数量
                     detail.setUom(gdinfo.getUnit());//单位
-                    detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
+                  //  detail.setPackid(PubUtils.trimAndNullAsEmpty(gdinfo.getPack()));//包装
                     detail.setItemWeight(gdinfo.getWeight());//货品重量
                     detail.setItemCubic(gdinfo.getCubage());//货品体积
                     detail.setStandard("");//货品规格
