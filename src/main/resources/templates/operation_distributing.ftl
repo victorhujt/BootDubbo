@@ -1545,6 +1545,33 @@
         }else{
             $("#consigneeInfoListDiv").html(consignorout);
             $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            //遍历货品和收货人列表,将新增的收货人在map集合中增加对应的货品中收货人的信息,设初始收货数量为0
+
+            $("#consigneeInfoListDiv").find("tr").each(function (index) {
+                var tdArr = $(this).children();
+                var contactCompanyId = tdArr.eq(7).text();
+                var contactCode = tdArr.eq(8).text();
+                //遍历货品信息
+                $("#goodsInfoListDiv").find("tr").each(function(index) {
+                    var tdArr = $(this).children();
+                    var goodsIndex = tdArr.eq(1).text();//货品序号
+                    var goodsCode = tdArr.eq(2).text();//货品编码
+                    var mapKey = goodsCode + "@" + goodsIndex;
+                    var consigneeAndGoodsMsgJson = null;
+                    if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                        consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                    }
+                    if(null != consigneeAndGoodsMsgJson){
+                        var param = contactCompanyId +"@"+ contactCode;
+                        var goodsAmount = consigneeAndGoodsMsgJson[param];
+                        if(undefined == goodsAmount || StringUtil.isEmpty(goodsAmount)){
+                            consigneeAndGoodsMsgJson[param] = 0;
+                        }
+                    }
+                })
+
+            })
+
         }
     });//custListDiv
     $("#custListDivBlock").click(function () {
@@ -2091,11 +2118,6 @@
                 error.insertAfter(element.parent());
             },
             submitHandler : function(form) {
-                /*xescm.common.commit('addSupplierContactForm', '/csc/supplier/addCscSupplierContact', function(){
-                    var supplierId = $("#supplierId").val();
-                    var url = "/csc/supplier/toMaintainCscSupplierContactListPage/" + supplierId;
-                    xescm.common.loadPage(url);
-                });*/
                 distributingOrderPlaceCon();
             },
             invalidHandler : function(form) {
