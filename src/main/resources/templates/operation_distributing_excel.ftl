@@ -1,4 +1,78 @@
-<title>城配开单Excel导入</title>
+<head>
+    <title>城配开单Excel导入</title>
+    <style type="text/css">
+        #goodsAndConsigneeDiv{
+            position:fixed;
+            left:50%;
+            top:77px;
+            margin-left:-400px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 2px;
+        }
+
+    </style>
+</head>
+<!--goods&Consigee-->
+<div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form class="form-horizontal" role="form">
+
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input id="goodsIndexDivHidden" type="hidden"/>
+                            <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">规格</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-1 no-padding-right" for="name">单位</label>
+                    <div class="col-sm-3">
+                        <div class="clearfix">
+                            <input  id = "unitDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                        </div>
+                    </div>
+                </div>
+
+                <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">发货数量</th>
+                    </tr>
+                    </thead>
+                    <tbody id="goodsAndConsigneeTbody">
+                    </tbody>
+                </table>
+            </form>
+
+        </div>
+    </div>
+    <div class="form-group" >
+        <div class="modal-footer"><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    </div>
+</div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
         <div class="form-group">
@@ -67,7 +141,7 @@
             <div class="tab-content">
                 <div id="home4" class="tab-pane ">
                     <!--货品明细-->
-                    <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
+
                     <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
                            aria-describedby="dynamic-table_info">
                         <thead>
@@ -100,22 +174,12 @@
                     </table>
                 </div>
                 <div id="profile4" class="tab-pane active">
-                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
-                    <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>
-                    <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
                     <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
                            aria-describedby="dynamic-table_info">
                         <thead>
                         <tr role="row">
-                            <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                                操作
-                            </th>
-                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">收货方名称
-                            </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Price: activate to sort column ascending">客户订单编号
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Update: activate to sort column ascending">联系人
@@ -135,7 +199,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
+    <div class="modal-footer"><button id="excelImportEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
 
 </div>
 
@@ -262,13 +326,67 @@
             return size;
         }
     }
+    function goodsAndConsignee(obj){
+        $("#goodsAndConsigneeDiv").fadeIn("slow");
+        //显示货品信息
+        var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
+        var goodsCode = $(obj).parent().parent().children().eq(2).text();
+        var goodsName = $(obj).parent().parent().children().eq(3).text();
+        var specification = $(obj).parent().parent().children().eq(4).text();
+        var unit = $(obj).parent().parent().children().eq(5).text();
+        $("#goodsIndexDivHidden").val(goodsIndex);
+        $("#goodsCodeDiv").val(goodsCode);
+        $("#goodsNameDiv").val(goodsName);
+        $("#specificationDiv").val(specification);
+        $("#unitDiv").val(unit);
 
+
+        //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
+        //显示收货人信息
+        var consignorout = "";
+
+        $("#consigneeInfoListDiv").find("tr").each(function(index){//00000
+            var tdArr = $(this).children();
+            var consigneeName = tdArr.eq(0).text();//
+            var consigneeContactName = tdArr.eq(1).text();//
+            var consigneeType = tdArr.eq(4).text();//
+            var consigneeCode = tdArr.eq(5).text();
+            var consigneeContactCode = tdArr.eq(6).text();
+            var mapKey = goodsCode + "@" + goodsIndex;
+            var num = "0";
+
+            if(undefined != viewMap.get(mapKey)){
+                debugger
+                var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
+                //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
+                var cadj = consigneeCode + "@" + consigneeContactCode;
+                num = preGoodsAndConsigneeJsonMsg[cadj];
+            }
+
+            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+            if("1" == consigneeType){
+                consignorout =consignorout + "<td>"+consigneeName+"</td>";
+            }else if("2" == consigneeType){
+                consignorout =consignorout + "<td>"+consigneeName+"-"+consigneeContactName+"</td>";
+            }else{
+                consignorout =consignorout + "<td>"+consigneeName+"</td>";
+            }
+            consignorout =consignorout + "<td><input readonly value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
+            consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
+            consignorout =consignorout + "<td style='display:none'>"+consigneeContactCode+"</td>";
+            consignorout =consignorout + "</tr>";
+        });
+        $("#goodsAndConsigneeTbody").html(consignorout);
+
+
+    }//
+    var viewMap = new HashMap();
     $(function () {
         var file;
         var fileName;
-        var viewMap = new HashMap();
-
+        var uploadFileTag = false;
         $("#uploadFile").change(function () {
+            uploadFileTag = true;
             debugger
             file = this.files[0];
             fileName = $("#uploadFile").val();
@@ -276,141 +394,200 @@
         })
 
         $("#uploadFileInput").click(function () {
-            debugger
-            var formData = new FormData();
-            var custId = $("#custId").val();
-            formData.append('file',file);
-            formData.append('fileName',fileName);
-            formData.append('custId',custId);
-            var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (result) {
-                    if (result == undefined || result == null) {
-                        layer.msg("HTTP请求无数据返回", {
-                            icon: 1
-                        });
-                    } else if (result.code == "200") {
-                        //加载用户的Sheet页
-                        var sheetMsg = eval(result.result);
-                        $("#uploadExcelSheet option").remove();
-                        $.each(sheetMsg,function (index,sheet) {
-                            var sh = sheet.split("@");
-                            if("active" == sh[1]){
-                                $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
-                            }else{
-                                $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
-                            }
-                        })
-                        layer.msg(result.message, {
-                            skin: 'layui-layer-molv',
-                            icon: 1
-                        });
-                    } else {
-                        layer.msg(result.message, {
-                            skin: 'layui-layer-molv',
-                            icon: 5
-                        });
-
-
+            if(uploadFileTag){
+                debugger
+                var formData = new FormData();
+                var custId = $("#custId").val();
+                formData.append('file',file);
+                formData.append('fileName',fileName);
+                formData.append('custId',custId);
+                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        if (result == undefined || result == null) {
+                            layer.msg("HTTP请求无数据返回", {
+                                icon: 1
+                            });
+                        } else if (result.code == "200") {
+                            //加载用户的Sheet页
+                            var sheetMsg = eval(result.result);
+                            $("#uploadExcelSheet option").remove();
+                            $.each(sheetMsg,function (index,sheet) {
+                                var sh = sheet.split("@");
+                                if("active" == sh[1]){
+                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
+                                }else{
+                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
+                                }
+                            })
+                            layer.msg(result.message, {
+                                skin: 'layui-layer-molv',
+                                icon: 1
+                            });
+                        } else {
+                            layer.msg(result.message, {
+                                skin: 'layui-layer-molv',
+                                icon: 5
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        alert("操作失败");
                     }
-                },
-                error: function (data) {
-                    alert("操作失败");
-                }
-            });
-
-
+                });
+            }else {
+                alert('请先选择文件!')
+            }
         })
 
         $("#loadSheetAndCheckBtn").click(function () {
-            var sheetNum = $("#uploadExcelSheet").val();
-            var formData = new FormData();
-            var custId = $("#custId").val();
-            formData.append('file',file);
-            formData.append('fileName',fileName);
-            formData.append('custId',custId);
-            formData.append('sheetNum',sheetNum);
-            var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (result) {
-                    debugger
-                    if (result == undefined || result == null) {
-                        layer.msg("HTTP请求无数据返回", {
-                            icon: 1
-                        });
-                    } else if (result.code == "200") {
-                        $("#goodsListDiv").show();
-                        $("#errorMsgDiv").hide();
-                        //如果校验成功!
-                        layer.msg(result.message, {
-                            skin: 'layui-layer-molv',
-                            icon: 1
-                        });
-                        var resultMap =  JSON.parse(result.result);
-                        var consigneeList = [];
-                        var consigneeTag = true;
-                        for(var key in resultMap){
-                            debugger
-                            var resultMapValue = resultMap[key]; //一条货品记录
-                            var viewMapValue = [];
-                            var consigeeMsg = {};
-                            for(var index = 0; index < resultMapValue.length; index ++){
-                                var data = resultMapValue[index];
 
-                                if(index == 0){//货品信息
-                                    viewMapValue[0] = data;
-                                }else if(index % 3 == 1){//收货人和货品需求量
-                                    for(var inkey in data){
-                                        consigeeMsg[inkey] = data[inkey];
+            if($("#uploadExcelSheet option").size() > 0){
+                var sheetNum = $("#uploadExcelSheet").val();
+                var formData = new FormData();
+                var custId = $("#custId").val();
+                formData.append('file',file);
+                formData.append('fileName',fileName);
+                formData.append('custId',custId);
+                formData.append('sheetNum',sheetNum);
+                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        debugger
+                        if (result == undefined || result == null) {
+                            layer.msg("HTTP请求无数据返回", {
+                                icon: 1
+                            });
+                        } else if (result.code == "200") {
+                            $("#goodsInfoListDiv").html("");
+                            $("#consigneeInfoListDiv").html("");
+                            $("#goodsListDiv").show();
+                            $("#errorMsgDiv").hide();
+                            //如果校验成功!
+                            layer.msg(result.message, {
+                                skin: 'layui-layer-molv',
+                                icon: 1
+                            });
+                            var resultMap =  JSON.parse(result.result);
+                            var consigneeList = [];
+                            var consigneeTag = true;
+                            var indexView = 0;
+                            for(var key in resultMap){
+                                indexView += 1;
+                                debugger
+                                var resultMapValue = resultMap[key]; //一条货品记录
+                                var viewMapValue = [];
+                                var consigeeMsg = {};
+                                for(var index = 0; index < resultMapValue.length; index ++){
+                                    var data = resultMapValue[index];
+
+                                    if(index == 0){//货品详细信息
+                                        viewMapValue[0] = data;
+                                        //顺便在页面中进行展示
+                                        $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
+                                                "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>查看</button></td>" +
+                                                "<td>" + indexView + "</td>" +
+                                                "<td>" + data.goodsCode + "</td>" +
+                                                "<td>" + data.goodsName + "</td>" +
+                                                "<td>" + data.specification + "</td>" +
+                                                "<td>" + data.unit + "</td>" +
+                                                "<td>" + data.goodsAmount + "</td>" +
+                                                "</tr>");
+                                    }else if(index % 3 == 1){//收货人和货品需求量
+                                        for(var inkey in data){
+                                            consigeeMsg[inkey] = data[inkey];
+                                        }
+                                    }else if(index % 3 == 2 && consigneeTag){//收货人详细信息
+                                        consigneeList.push(data);
+                                        $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
+                                                "<td>" + data.contactCompanyName + "</td>" +
+                                                "<td>" + data.contactName + "</td>" +
+                                                "<td>" + data.phone + "</td>" +
+                                                "<td>" + data.detailAddress + "</td>" +
+                                                "<td style='display:none'>" + data.type + "</td>" +
+                                                "<td style='display:none'>" + data.contactCompanyId + "</td>" +
+                                                "<td style='display:none'>" + data.id + "</td>" +
+                                                "</tr>");
                                     }
-                                }else if(index % 3 == 2 && consigneeTag){//收货人信息
-                                    consigneeList.push(data);
                                 }
+                                consigneeTag = false;
+                                viewMapValue[1] = consigeeMsg;
+                                viewMap.put(key,viewMapValue);
                             }
-                            consigneeTag = false;
-                            viewMapValue[1] = consigeeMsg;
-                            viewMap.put(key,viewMapValue);
+
+                            /*var indexView = 0;
+                            for(var viewKey in viewMap){
+                                console.log("viewKey" + viewKey)
+                                indexView += 1;
+                                var goodsMsg = viewMap[viewKey];
+                                console.log("goodsMsg:" + goodsMsg)
+                                console.log("goodsMsg:" + goodsMsg[0])
+                                $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
+                                        "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button></td>" +
+                                        "<td>" + indexView + "</td>" +
+                                        "<td>" + goodsMsg.goodsCode + "</td>" +
+                                        "<td>" + goodsMsg.goodsName + "</td>" +
+                                        "<td>" + goodsMsg.specification + "</td>" +
+                                        "<td>" + goodsMsg.unit + "</td>" +
+                                        "<td>数量需计算</td>" +
+                                        "</tr>");
+                            }*/
+
+                        } else if (result.code == "500") {
+                            //如果校验失败!
+                            layer.msg(result.message, {
+                                skin: 'layui-layer-molv',
+                                icon: 5
+                            });
+                            $("#goodsListDiv").hide();
+                            $("#errorMsgDiv").show();
+                            $("#errorMsgTbody").html("");
+                            var errorMsgList = result.result;
+                            $.each(errorMsgList,function (index, errorMsg) {
+                                $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
+                            })
+                        } else {
+                            layer.msg(result.message, {
+                                skin: 'layui-layer-molv',
+                                icon: 5
+                            });
+
+
                         }
-                    } else if (result.code == "500") {
-                        //如果校验失败!
-                        layer.msg(result.message, {
-                            skin: 'layui-layer-molv',
-                            icon: 5
-                        });
-                        $("#goodsListDiv").hide();
-                        $("#errorMsgDiv").show();
-                        $("#errorMsgTbody").html("");
-                        var errorMsgList = result.result;
-                        $.each(errorMsgList,function (index, errorMsg) {
-                            $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
-                        })
-                    } else {
-                        layer.msg(result.message, {
-                            skin: 'layui-layer-molv',
-                            icon: 5
-                        });
-
-
+                    },
+                    error: function (data) {
+                        alert("操作失败");
                     }
-                },
-                error: function (data) {
-                    alert("操作失败");
-                }
-            });
+                });
+            }else{
+                alert('请先上传文件!')
+            }
+        })
+
+        $("#goodsAndConsigneeDivNoneBottom").click(function () {
+            $("#goodsAndConsigneeDiv").fadeOut("slow");
+        });
+
+        $("#excelImportEnter").click(function () {
+            if(false){
+
+            }else {
+                alert('请先加载文件!')
+            }
         })
     })
 

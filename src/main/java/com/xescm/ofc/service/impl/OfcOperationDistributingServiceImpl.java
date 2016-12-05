@@ -287,7 +287,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     if(null != result && result.size() > 0){
                                         //如果校验成功,就往结果集里堆
                                         CscGoodsApiVo cscGoodsApiVo = result.get(0);
-                                        mapKey = rowNum + "@" + cscGoodsApiVo.getGoodsCode();
+                                        mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                                         System.out.println(rowNum - 1);
                                         goodsApiVoList.add(cscGoodsApiVo); //
                                     }else{
@@ -305,6 +305,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 }else if(cellNum > (staticCell -1)){
                                     try{
                                         //校验是否数字
+                                        Double goodsAmount = 0.0;
                                         Double goodsAndConsigneeNum = hssfCell.getNumericCellValue();
                                         //使用正则对数字进行校验
                                         boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
@@ -315,6 +316,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                             System.out.println(rowNum - 1);
                                             CscContantAndCompanyVo cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                             CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
+                                            goodsAmount += cscGoodsApiVo.getGoodsAmount();
+                                            cscGoodsApiVo.setGoodsAmount(goodsAmount);
+                                            goodsApiVoList.remove(rowNum - 1);
+                                            goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
                                             String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getId();
                                             jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
                                             jsonArray.add(cscGoodsApiVo);
