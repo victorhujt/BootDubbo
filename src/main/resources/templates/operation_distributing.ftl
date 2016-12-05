@@ -388,6 +388,9 @@
 
     <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_distributing_excel">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
+        <span hidden="true" id = "excelImportTag">${(excelImportTag)!}</span>
+        <span hidden="true" id = "custIdFromExcelImport">${(custIdFromExcelImport)!}</span>
+        <span hidden="true" id = "custNameFromExcelImport">${(custNameFromExcelImport)!}</span>
         Excel导入
     </button>
 
@@ -661,6 +664,7 @@
     });
 
     function main() {
+
         validateFormData();
     }
     //链接到收发货方联系人档案
@@ -678,6 +682,92 @@
     var goodsAndConsigneeMap = new HashMap();
     var couldChangeCust = true;
     $(function () {
+
+        var excelImportTag = $("#excelImportTag").html();
+        if("confirm" == excelImportTag){ // 如果是Excel导入进入这个页面//先将用户选择的客户显示出来
+            var custId = $("#custIdFromExcelImport").html();
+            var custName = $("#custNameFromExcelImport").html();
+            //重新从接口里查一遍
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
+                data=eval(data);
+                $.each(data,function (index,cscCustomerVo) {
+                    if(index == 0){//只显示第一条
+                        $("#custName").val(cscCustomerVo.customerName);
+                        $("#custGroupId").val(cscCustomerVo.groupId);
+                        $("#custId").val(cscCustomerVo.id);
+                        $("#customerId").val(cscCustomerVo.id);
+                    }
+                });
+            })
+            //加载完客户后自动加载仓库列表, 和货品种类
+            //加载仓库列表
+            $("#warehouseCode option").remove();
+            //<option value="">无</option>
+            /* $("#warehouseCode").append("<option value="">无</option>");*/
+            $("#warehouseCode").append("<option value = ''>无</option>");
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
+                data=eval(data);
+                $.each(data,function (index,warehouse) {
+                    $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
+                });
+            })
+
+            //将用户选择的客户以及连带的仓库显示出来后,再在页面上展示用户插入的数据
+            //显示收货人列表
+            $("#consigneeInfoListDiv").html("");
+            $.each(consigneeList,function(index,consignee){
+                $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
+                        "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>"+
+                        "<td>" + consignee.contactCompanyName + "</td>" +
+                        "<td><input /></td>" +
+                        "<td>" + consignee.contactName + "</td>" +
+                        "<td>" + consignee.phone + "</td>" +
+                        "<td>" + consignee.detailAddress + "</td>" +
+                        "<td style='display:none'>" + consignee.type + "</td>" +
+                        "<td style='display:none'>" + consignee.contactCompanyId + "</td>" +
+                        "<td style='display:none'>" + consignee.id + "</td>" +
+                        "<td style='display:none'>" + consignee.phone + "</td>" +
+                        "<td style='display:none'>" + consignee.province + "</td>" +
+                        "<td style='display:none'>" + consignee.provinceName + "</td>" +
+                        "<td style='display:none'>" + consignee.city + "</td>" +
+                        "<td style='display:none'>" + consignee.cityName + "</td>" +
+                        "<td style='display:none'>" + consignee.area + "</td>" +
+                        "<td style='display:none'>" + consignee.areaName + "</td>" +
+                        "<td style='display:none'>" + consignee.street + "</td>" +
+                        "<td style='display:none'>" + consignee.streetName + "</td>" +
+                        "<td style='display:none'>" + consignee.address + "</td>" +
+                        "</tr>");
+            })
+
+            debugger
+            //先做成死的, 暂时不允许收货方动态增删
+            ifConsigneeConfirm = true;
+
+            //显示货品列表//viewMap
+            $("#goodsInfoListDiv").html("");
+            var viewMapKeys = viewMap.keys();
+            var viewMapIndexOf = 0;
+            for(var key in viewMapKeys){
+                viewMapIndexOf += 1;
+                console.log("key----" + key + "value --- " + viewMapKeys[key])
+                var viewMapValue = viewMapKeys[key];
+                var goodsDetail = viewMap.get(viewMapValue)[0];
+                goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
+                $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
+                        "<td>" +
+                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "</td>" +
+                        "<td>" + viewMapIndexOf + "</td>" +
+                        "<td>" + goodsDetail.goodsCode + "</td>" +
+                        "<td>" + goodsDetail.goodsName + "</td>" +
+                        "<td>" + goodsDetail.specification + "</td>" +
+                        "<td>" + goodsDetail.unit + "</td>" +
+                        "<td>" + goodsDetail.goodsAmount + "</td>" +
+                        "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
+                        "</tr>");
+            }
+        }
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
@@ -1100,7 +1190,7 @@
             },"json");
             if(contactList == 1){
                 //只有一个联系人
-                layer.confirm('您只有一个收货方联系人,点击确定我们将为您自动加载!', {
+                layer.confirm('您只有一个发货方联系人,点击确定我们将为您自动加载!', {
                     skin : 'layui-layer-molv',
                     icon : 3,
                     title : '确认操作'
@@ -1603,7 +1693,8 @@
         }else{
             var historyUrl = "operation_distributing";
             var custId = $("#custId").val();
-            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId;
+            var custName = $("#custName").val();
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId + "/" + custName;
             xescm.common.loadPage(url);
         }
     })

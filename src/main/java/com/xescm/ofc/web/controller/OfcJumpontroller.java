@@ -148,8 +148,8 @@ public class OfcJumpontroller extends BaseController{
      * @param map
      * @return
      */
-    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{custId}")
-    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String custId , Map<String,Object> map){
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{custId}/{custName}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String custId, @PathVariable String custName , Map<String,Object> map){
         logger.info("城配开单Excel导入==> historyUrl={}", historyUrl);
         logger.info("城配开单Excel导入==> custId={}", custId);
         if("operation_distributing".equals(historyUrl)){
@@ -158,7 +158,26 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         map.put("historyUrl",historyUrl);
         map.put("custId",custId);
+        map.put("custName",custName);
         return "operation_distributing_excel";
+    }
+
+    /**
+     * Excel确认导入,跳转城配开单
+     * @param model
+     * @param excelImportTag
+     * @return
+     */
+    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{custId}/{custName}")
+    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String custId, @PathVariable String custName){
+        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+        setDefaultModel(model);
+        model.addAttribute("merchandiserList",merchandiserList);
+        model.addAttribute("currentTime",new Date());
+        model.addAttribute("excelImportTag",excelImportTag);
+        model.addAttribute("custIdFromExcelImport",custId);
+        model.addAttribute("custNameFromExcelImport",custName);
+        return "operation_distributing";
     }
 
     /**

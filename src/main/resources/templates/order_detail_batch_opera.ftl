@@ -204,8 +204,20 @@
         xescm.common.loadPage("/ofc/orderManageOpera");
     }
     function invoicePrint() {
-        var url = "http://localhost:8075/WebReport/ReportServer?reportlet=ofc/invoices/test1.cpt&orderCode=SO161128000468";
-        xescm.common.loadPage(url);
+        var sel = "";
+        $("#dataTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+                sel="1";
+                var order_code=tdArr.eq(1).find("a").html();
+                var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlet=ofc/invoices/Invoice.cpt&orderCode="+order_code;
+                window.open(url);
+            }
+        });
+        if(sel==""){
+            alert("请至少选择一个订单！");
+        }
+        //xescm.common.loadPage(url);
     }
 </script>
 <script type="text/javascript">

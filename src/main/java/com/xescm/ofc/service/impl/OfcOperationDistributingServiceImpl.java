@@ -17,7 +17,6 @@ import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.ofc.utils.PubUtils;
-import com.xescm.ofc.web.restcontroller.WebDto;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -30,13 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by lyh on 2016/11/30.
@@ -146,51 +140,79 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
+
+    @Override
+    public List<String> getExcelSheet(MultipartFile uploadFile, String fileName) {
+        List<String> sheetMsgList = new ArrayList<>();
+        try {
+            String suffix = fileName.split("\\.")[1];
+            if("xls".equals(suffix)){
+                HSSFWorkbook hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
+                int activeSheetIndex = hssfWorkbook.getActiveSheetIndex();
+                int numberOfSheets = hssfWorkbook.getNumberOfSheets();
+                for(int sheetNum = 0; sheetNum < numberOfSheets;  sheetNum ++){
+                    if(sheetNum == activeSheetIndex){
+                        sheetMsgList.add(hssfWorkbook.getSheetName(sheetNum) + "@active");
+                    }else{
+                        sheetMsgList.add(hssfWorkbook.getSheetName(sheetNum) + "@");
+                    }
+                }
+            }else if("xlsx".equals(suffix)){
+
+            }else if("csv".equals(suffix)){
+
+            }else{
+                throw new BusinessException("您上传的文档格式不正确!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sheetMsgList;
+    }
+
     /**
      * 校验用户上传的Excel是否符合我们的格式
      * @param uploadFile
+     * @param fileName
      * @param authResDto
      * @param custId
-     * @param staticCell 固定列
-     * @return
-     */
+     * @param staticCell 固定列    @return
+     * */
     @Override
-    public Wrapper<?> checkExcel(MultipartFile uploadFile, AuthResDto authResDto, String custId, Integer staticCell) {
-        String filename = uploadFile.getOriginalFilename();
-        String[] split = filename.split("\\.");
-        String  suffix = split[1];
+    public Wrapper<?> checkExcel(MultipartFile uploadFile, String fileName, String sheetNumChosen, AuthResDto authResDto, String custId, Integer staticCell) {
+        String suffix = fileName.split("\\.")[1];
         boolean checkPass = true;
         HSSFWorkbook hssfWorkbook ;
-        HSSFWorkbook newHssfWorkBook ;
         XSSFWorkbook xssfWorkbook ;
-        XSSFWorkbook newXssfWorkBook ;
-        Map<String,JSONArray> resultMap = new HashMap<>();
-        List<CscContantAndCompanyVo> consigneeNameList = new ArrayList<>();
-        List<CscGoodsApiVo> goodsApiVoList = new ArrayList<>();
         try {
             if("xls".equals(suffix)){
                 hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
-                newHssfWorkBook = new HSSFWorkbook(uploadFile.getInputStream());
-                HSSFCellStyle cellWarningStyle = newHssfWorkBook.createCellStyle();
-                cellWarningStyle.setFillBackgroundColor(HSSFColor.RED.index);//设置单元格的颜色为红色
-                cellWarningStyle.setFillForegroundColor(HSSFColor.RED.index);
-                cellWarningStyle.setLeftBorderColor(HSSFColor.RED.index);
-                cellWarningStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
                 int numberOfSheets = hssfWorkbook.getNumberOfSheets();
+                Map<String,JSONArray> resultMap = null;
+                List<CscContantAndCompanyVo> consigneeNameList = null;
+                List<CscGoodsApiVo> goodsApiVoList = null;
+                List<String> xlsErrorMsg = null;
                 //遍历sheet
                 for (int sheetNum = 0; sheetNum < numberOfSheets; sheetNum ++){
+                    if(sheetNum != Integer.valueOf(sheetNumChosen)){
+                        continue;
+                    }
                     HSSFSheet sheet = hssfWorkbook.getSheetAt(sheetNum);
+                    resultMap = new LinkedHashMap<>();
+                    consigneeNameList = new ArrayList<>();
+                    goodsApiVoList = new ArrayList<>();
+                    xlsErrorMsg = new ArrayList<>();
                     //遍历row
                     for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
                         HSSFRow hssfRow = sheet.getRow(rowNum);
+                        String mapKey = "";
+                        JSONArray jsonArray = new JSONArray();
                         //空行
                         HSSFCell cell = hssfRow.getCell(0);
                         if(null == hssfRow || PubUtils.isSEmptyOrNull(cell.getStringCellValue()) ){
                             //标记当前行出错,并跳出当前循环
                             break;
                         }
-
                         //遍历cell
                         for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                             HSSFCell hssfCell = hssfRow.getCell(cellNum);
@@ -199,7 +221,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 //标记当前列出错, 并跳过当前循环
                                 break;
                             }
-
                             //校验第一行,包括固定内容和收货人列表
                             if(rowNum == 0){
                                 //第一行全为字符串
@@ -211,12 +232,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     if(!cellName[cellNum].equals(cellValue)){
                                         //模板固定内容
                                         checkPass = false;
-                                        HSSFSheet newSheet = newHssfWorkBook.getSheetAt(sheetNum);//获取新文件的出错Sheet页
-                                        HSSFRow newRow = newSheet.getRow(rowNum);
-                                        HSSFCell newCell = newRow.getCell(cellNum);
-                                        newCell.setCellStyle(cellWarningStyle);
-                                        newCell.setCellValue(PubUtils.trimAndNullAsEmpty(hssfRow.getCell(cellNum).getStringCellValue() + "(建议:" + cellName[cellNum] + ")"));
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第1行,第" + (cellNum + 1) + "列的值不符合规范!请检查!");
+                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!建议:" + cellName[cellNum]);
+                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!建议:" + cellName[cellNum]);
 
                                     }/*else{
                                         //如果校验成功,就不用变
@@ -240,24 +257,18 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     if(null != result && result.size() > 0){
                                         //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                                         consigneeNameList.add(result.get(0));
-//                                        consigneeNameList.add((cellNum - staticCell),result.get(0));
                                     }else{
                                         //收货人列表不在联系人档案中,则需要对当前格子进行报错处理
                                         checkPass = false;
                                         consigneeNameList.add(new CscContantAndCompanyVo());
-                                        HSSFSheet newSheet = newHssfWorkBook.getSheetAt(sheetNum);//获取新文件的出错Sheet页
-                                        HSSFRow newRow = newSheet.getRow(rowNum);
-                                        HSSFCell newCell = newRow.getCell(cellNum);
-                                        newCell.setCellStyle(cellWarningStyle);
-                                        newCell.setCellValue(PubUtils.trimAndNullAsEmpty(hssfRow.getCell(cellNum).getStringCellValue() + "(提示:该收货方名称在联系人档案中不存在)"));
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第1行,第" + (cellNum + 1) + "列的值不符合规范!请检查!");
+                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
+                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
                                     }
                                 }
                             //校验从第二行开始的体
                             }else if(rowNum > 0){
                                 //校验第一列即货品编码是否已经在货品档案中进行了维护
-                                String mapKey = "";
-                                JSONArray jsonArray = new JSONArray();
+
                                 JSONObject jsonObject = new JSONObject();
                                 if(cellNum == 0){
                                     String goodsCode = hssfCell.getStringCellValue();
@@ -268,32 +279,24 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                         checkPass = false;
                                         goodsApiVoList.add(new CscGoodsApiVo());
-                                        HSSFSheet newSheet = newHssfWorkBook.getSheetAt(sheetNum);//获取新文件的出错Sheet页
-                                        HSSFRow newRow = newSheet.getRow(rowNum);
-                                        HSSFCell newCell = newRow.getCell(cellNum);
-                                        newCell.setCellStyle(cellWarningStyle);
-                                        newCell.setCellValue(PubUtils.trimAndNullAsEmpty(hssfRow.getCell(cellNum).getStringCellValue() + "(提示:该货品在货品档案中不存在)"));
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第1行,第" + (cellNum + 1) + "列的值不符合规范!请检查!");
+                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
+                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
                                         break;
                                     }
                                     List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
                                     if(null != result && result.size() > 0){
                                         //如果校验成功,就往结果集里堆
                                         CscGoodsApiVo cscGoodsApiVo = result.get(0);
-                                        mapKey = rowNum + "@" + cscGoodsApiVo.getGoodsCode();
+                                        mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                                         System.out.println(rowNum - 1);
                                         goodsApiVoList.add(cscGoodsApiVo); //
                                     }else{
                                         //如果校验失败,就标记该单元格
                                         checkPass = false;
                                         goodsApiVoList.add(new CscGoodsApiVo());
-                                        System.out.println("添加了");
-                                        HSSFSheet newSheet = newHssfWorkBook.getSheetAt(sheetNum);//获取新文件的出错Sheet页
-                                        HSSFRow newRow = newSheet.getRow(rowNum);
-                                        HSSFCell newCell = newRow.getCell(cellNum);
-                                        newCell.setCellStyle(cellWarningStyle);
-                                        newCell.setCellValue(PubUtils.trimAndNullAsEmpty(hssfRow.getCell(cellNum).getStringCellValue() + "(提示:该货品名称在货品档案中不存在)"));
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第1行,第" + (cellNum + 1) + "列的值不符合规范!请检查!");
+                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品名称在货品档案中不存在!");
+                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品名称在货品档案中不存在!");
+
                                     }
                                     //货品名称, 规格, 单位, 单价的数据暂时不需校验
                                 }else if(cellNum > 0 && cellNum <= (staticCell -1)){
@@ -302,81 +305,51 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 }else if(cellNum > (staticCell -1)){
                                     try{
                                         //校验是否数字
+                                        Double goodsAmount = 0.0;
                                         Double goodsAndConsigneeNum = hssfCell.getNumericCellValue();
                                         //使用正则对数字进行校验
                                         boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
                                         //如果校验成功,就往结果集里堆
                                         if(matches){
-                                            System.out.println(cellNum - staticCell);
-                                            System.out.println(cellNum - staticCell);
-                                            System.out.println(rowNum - 1);
                                             CscContantAndCompanyVo cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                             CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
-                                            String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getContactName();
+                                            goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
+                                            cscGoodsApiVo.setGoodsAmount(goodsAmount);
+                                            goodsApiVoList.remove(rowNum - 1);
+                                            goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
+                                            String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getId();
                                             jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
                                             jsonArray.add(cscGoodsApiVo);
                                             jsonArray.add(jsonObject);
                                             jsonArray.add(cscContantAndCompanyVo);
-                                            resultMap.put(mapKey,jsonArray);//一条结果
+
                                             //如果数字格式不对,就标记该单元格
                                         }else{
                                             checkPass = false;
-                                            HSSFSheet newSheet = newHssfWorkBook.getSheetAt(sheetNum);//获取新文件的出错Sheet页
-                                            HSSFRow newRow = newSheet.getRow(rowNum);
-                                            HSSFCell newCell = newRow.getCell(cellNum);
-                                            newCell.setCellStyle(cellWarningStyle);
-                                            newCell.setCellValue(PubUtils.trimAndNullAsEmpty(hssfRow.getCell(cellNum).getNumericCellValue() + "(提示:该货品数量格式不正确)"));
-                                            System.out.println("sheet页第" + (sheetNum + 1) + "页,第1行,第" + (cellNum + 1) + "列的值不符合规范!请检查!");
+                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                            System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
                                         }
                                         //这里只抓不是数字的情况
                                     }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                         checkPass = false;
-                                        HSSFSheet newSheet = newHssfWorkBook.getSheetAt(sheetNum);//获取新文件的出错Sheet页
-                                        HSSFRow newRow = newSheet.getRow(rowNum);
-                                        HSSFCell newCell = newRow.getCell(cellNum);
-                                        newCell.setCellStyle(cellWarningStyle);
-                                        newCell.setCellValue(PubUtils.trimAndNullAsEmpty(hssfRow.getCell(cellNum).getStringCellValue() + "(提示:该货品数量不是数字格式)"));
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第1行,第" + (cellNum + 1) + "列的值不符合规范!请检查!");
+                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
+                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                     }
-
-
                                 }
                             }
                         }
-
+                        if(rowNum > 0){//避免第一行
+                            resultMap.put(mapKey,jsonArray);//一条结果
+                        }
                     }
                 }
-                String expFile = "D:/template/result.xls";
-                OutputStream outputStream = new FileOutputStream(expFile);
-                newHssfWorkBook.write(outputStream);
-                outputStream.close();
                 if(checkPass){
-//                    return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",hssfWorkbook);
                     return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
                 }else{
-//                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!",newHssfWorkBook);
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!",newHssfWorkBook);
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",xlsErrorMsg);
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            }else if("xlsx".equals(suffix)){
+            }/*else if("xlsx".equals(suffix)){
                 xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
                 newXssfWorkBook = new XSSFWorkbook(uploadFile.getInputStream());
                 XSSFCellStyle cellWarningStyle = newXssfWorkBook.createCellStyle();
@@ -436,10 +409,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 }
             }else if("csv".equals(suffix)){
 
-            }
+            }*/
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
+
+
 }
