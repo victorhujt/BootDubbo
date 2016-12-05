@@ -148,6 +148,16 @@ public class CscGoodsApiVo implements Serializable {
      */
     private String keeptemperate;
 
+    private Double goodsAmount = 0.0;
+
+    public Double getGoodsAmount() {
+        return goodsAmount;
+    }
+
+    public void setGoodsAmount(Double goodsAmount) {
+        this.goodsAmount = goodsAmount;
+    }
+
     public String getId() {
         return id;
     }

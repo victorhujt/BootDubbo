@@ -1,6 +1,7 @@
 package com.xescm.ofc.model.vo.epc;
 
 /**
+ * 鲜易网订单取消返回
  * Created by hiyond on 2016/11/21.
  */
 public class CannelOrderVo {

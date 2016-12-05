@@ -194,6 +194,7 @@
         AND ofi.business_type = #{form.businessType}
       </if>
     </where>
+    ORDER BY ofi.order_code ASC
   </select>
 
   <select id="queryOrderByOrderBatchNumber" resultMap="Order_Search_Oper_Map">

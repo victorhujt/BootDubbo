@@ -33,19 +33,15 @@
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
   </resultMap>
 
+  <!--根据客户订单编号与货主编码查询是否存在订单-->
   <select id="queryCountByOrderStatus" resultType="int">
     SELECT
       COUNT(*)
     FROM
       ofc_fundamental_information ofi
-    LEFT JOIN ofc_order_status oos
-    ON ofi.order_code = oos.order_code
     WHERE 1=1
-    AND ofi.order_code = #{orderCode}
-    <if test="orderStatus!= null and orderStatus !='' ">
-      AND oos.order_status = #{orderStatus}
-    </if>
-    LIMIT 1
+    AND ofi.cust_order_code = #{custOrderCode}
+    AND ofi.cust_code = #{custCode}
   </select>
 
 </mapper>

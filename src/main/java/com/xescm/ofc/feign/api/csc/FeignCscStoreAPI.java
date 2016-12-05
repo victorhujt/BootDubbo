@@ -12,6 +12,11 @@ import java.util.List;
  * Created by gsfeng on 2016/11/5.
  */
 public interface FeignCscStoreAPI {
+    /**
+     * 查询客户所属店铺
+     * @param queryStoreDto
+     * @return
+     */
     @RequestLine("POST /api/csc/store/getStoreByCustomerId")
     @Headers("Content-Type: application/json")
     public Wrapper<List<CscStorevo>> getStoreByCustomerId(QueryStoreDto queryStoreDto);

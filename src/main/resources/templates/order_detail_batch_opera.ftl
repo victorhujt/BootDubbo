@@ -5,6 +5,9 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
+    <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="InvoicePrinting" value="" onclick="invoicePrint()">
+        发货单打印
+    </button>
     <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="goBack" value="" onclick="detailBackToHistory()">
         返回
     </button>
@@ -199,6 +202,22 @@
 <script type="text/javascript">
     function detailBackToHistory() {
         xescm.common.loadPage("/ofc/orderManageOpera");
+    }
+    function invoicePrint() {
+        var sel = "";
+        $("#dataTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+                sel="1";
+                var order_code=tdArr.eq(1).find("a").html();
+                var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlet=ofc/invoices/Invoice.cpt&orderCode="+order_code;
+                window.open(url);
+            }
+        });
+        if(sel==""){
+            alert("请至少选择一个订单！");
+        }
+        //xescm.common.loadPage(url);
     }
 </script>
 <script type="text/javascript">
@@ -470,7 +489,6 @@
     $(function () {
         $("input[type='search']").attr("readonly", "readonly");
     })
-
     $(function () {
         var orderType = "${(ofcFundamentalInformation.orderType)!""}";
         $("#orderType").val(getOrderType(orderType));

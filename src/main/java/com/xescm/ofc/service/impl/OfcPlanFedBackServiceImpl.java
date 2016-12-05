@@ -136,7 +136,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     ofcTraplanSourceStatus.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                 }*/
                 }
-                if(ofcSchedulingSingleFeedbackCondition.getVehical().equals("")){
+                /*if(ofcSchedulingSingleFeedbackCondition.getVehical().equals("")){
                     throw new BusinessException("车牌号不可以为空");
                 }else {
                     ofcTraplanSourceStatus.setPlateNumber(ofcSchedulingSingleFeedbackCondition.getVehical());
@@ -149,7 +149,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         }else {
                             ofcTraplanSourceStatus.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
                         }
-                    }
+                    }*/
                     ofcTraplanSourceStatusService.updateByPlanCode(ofcTraplanSourceStatus);
                     if(ofcSchedulingSingleFeedbackCondition.getCreateTime()==null){
                         throw new BusinessException("调度单时间不可以为空");
@@ -177,8 +177,8 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")){
                         ofcDistributionBasicInfo.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
-                    ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
-                }*/
+                        ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
+                        }*/
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
                     if(!(orderStatus.getLastedOperTime().toString().equals(ofcSchedulingSingleFeedbackCondition.getCreateTime().toString()))
@@ -188,7 +188,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 +" "+"订单已调度");
                         ofcOrderStatusService.save(orderStatus);
                     }
-                }
+                /*}*/
             }
         }
         return null;

@@ -221,20 +221,6 @@
                                         <input id="custName" name="custName" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单批次号</label>
-                                <div class="col-width-168 padding-15">
-                                    <div class="clearfix">
-                                        <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                                    </div>
-                                </div>
-                            </div>
-                           <#-- <div class="form-group">
-
-                            </div>
-                            <div class="form-group">
-
-                            </div>-->
-                            <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单日期</label>
                                 <div class="padding-15" style="float:left;">
                                     <div class="clearfix">
@@ -247,7 +233,33 @@
                                         <input id="orderTimeSuf" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                     </div>
                                 </div>
-                               </div>
+                            </div>
+                           <#-- <div class="form-group">
+
+                            </div>
+                            <div class="form-group">
+
+                            </div>-->
+                            <div class="form-group">
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单编号</label>
+                                <div class="col-width-168 padding-15">
+                                    <div class="clearfix">
+                                        <input id="orderCode" name="orderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                </div>
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">计划单编号</label>
+                                <div class="col-width-168 padding-15">
+                                    <div class="clearfix">
+                                        <input id="planCode" name="planCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                </div>
+                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单批次号</label>
+                                <div class="col-width-168 padding-15">
+                                    <div class="clearfix">
+                                        <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-1 no-padding-right" for="name"></label>
                                 <div class="col-width-376 padding-15">
@@ -837,6 +849,8 @@
         param.orderTimeSuf = orderTimeSuf;
         param.custName = $("#custName").val();
         param.orderBatchNumber = $("#orderBatchNumber").val();
+        param.orderCode = $("#orderCode").val();
+        param.planCode = $("#planCode").val();
         var rsa = $("#resourceAllocationStatues").val();
         //alert($("#resourceAllocationStatus").val());
 

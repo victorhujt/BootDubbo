@@ -58,6 +58,66 @@
     <result column="transport_type" jdbcType="VARCHAR" property="transportType" />
   </resultMap>
 
+
+  <resultMap id="ofcTransplanInfoVoResultMap" type="com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR" />
+    <result column="program_serial_number" property="programSerialNumber" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+    <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="shippin_customer_code" property="shippinCustomerCode" jdbcType="VARCHAR" />
+    <result column="shippin_customer_name" property="shippinCustomerName" jdbcType="VARCHAR" />
+    <result column="shipping_address" property="shippingAddress" jdbcType="VARCHAR" />
+    <result column="shipping_customer_contact" property="shippingCustomerContact" jdbcType="VARCHAR" />
+    <result column="customer_contact_phone" property="customerContactPhone" jdbcType="VARCHAR" />
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="departure_place_code" jdbcType="VARCHAR" property="departurePlaceCode" />
+    <result column="receiving_customer_code" property="receivingCustomerCode" jdbcType="VARCHAR" />
+    <result column="receiving_customer_name" property="receivingCustomerName" jdbcType="VARCHAR" />
+    <result column="receiving_customer_address" property="receivingCustomerAddress" jdbcType="VARCHAR" />
+    <result column="receiving_customer_contact" property="receivingCustomerContact" jdbcType="VARCHAR" />
+    <result column="receiving_customer_contact_phone" property="receivingCustomerContactPhone" jdbcType="VARCHAR" />
+    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
+    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
+    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
+    <result column="destination_town" property="destinationTown" jdbcType="VARCHAR" />
+    <result column="destination_code" jdbcType="VARCHAR" property="destinationCode" />
+    <result column="receiving_address_longitude" property="receivingAddressLongitude" jdbcType="VARCHAR" />
+    <result column="receiving_address_latitude" property="receivingAddressLatitude" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="sale_organization" property="saleOrganization" jdbcType="VARCHAR" />
+    <result column="product_group" property="productGroup" jdbcType="VARCHAR" />
+    <result column="sale_department" property="saleDepartment" jdbcType="VARCHAR" />
+    <result column="sale_group" property="saleGroup" jdbcType="VARCHAR" />
+    <result column="sale_department_desc" property="saleDepartmentDesc" jdbcType="VARCHAR" />
+    <result column="sale_group_desc" property="saleGroupDesc" jdbcType="VARCHAR" />
+    <result column="single_source_of_transport" property="singleSourceOfTransport" jdbcType="VARCHAR" />
+    <result column="service_charge" property="serviceCharge" jdbcType="DECIMAL" />
+    <result column="base_id" jdbcType="VARCHAR" property="baseId" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="create_personnel" property="createPersonnel" jdbcType="VARCHAR" />
+    <result column="void_personnel" property="voidPersonnel" jdbcType="VARCHAR" />
+    <result column="void_time" property="voidTime" jdbcType="TIMESTAMP" />
+    <result column="merchandiser" jdbcType="VARCHAR" property="merchandiser" />
+    <result column="transport_type" jdbcType="VARCHAR" property="transportType" />
+    <result column="transport_type" jdbcType="VARCHAR" property="transportType" />
+    <result column="planned_single_state" property="plannedSingleState" jdbcType="VARCHAR" />
+  </resultMap>
+
   <!--非作废运输计划单列表查询-->
   <select id="ofcTransplanInfoScreenList" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
@@ -75,5 +135,31 @@
       </if>
     </where>
   </select>
+
+  <select id="ofcTransplanInfoVoList" parameterType="java.lang.String" resultMap="ofcTransplanInfoVoResultMap">
+    SELECT
+    tinfo.*,
+    ots.planned_single_state
+    FROM
+    ofc_transplan_info tinfo
+    LEFT JOIN ofc_transplan_status ots ON tinfo.plan_code = ots.plan_code
+    <where>
+        1 = 1
+      <if test="planCode!=null and planCode!=''">
+        tinfo.plan_code =#{planCode}
+      </if>
+    </where>
+  </select>
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

@@ -102,6 +102,7 @@
     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
      <result column="service_provider_name" property="serviceProviderName" jdbcType="VARCHAR" />
     <result column="service_provider_code" property="serviceProviderCode" jdbcType="VARCHAR" />
+     <result column="planned_single_state" property="plannedSingleState" jdbcType="VARCHAR" />
   </resultMap>
 
   <!--非作废仓储计划单列表查询-->
@@ -130,13 +131,17 @@
     sss.contact_number,
     sss.trans_code,
     sss.service_provider_name,
-    sss.service_provider_code
+    sss.service_provider_code,
+    ss.planned_single_state
     FROM
     ofc_siloprogram_info sinfo
     LEFT JOIN ofc_silopro_source_status sss ON sinfo.plan_code = sss.plan_code
     LEFT JOIN ofc_silopro_status ss ON sinfo.plan_code = ss.plan_code
     <where>
-       ss.planned_single_state ='10'
+         1 = 1
+    	 <if test="plannedSingleState!=null and plannedSingleState!=''">
+         AND ss.planned_single_state =#{plannedSingleState}
+        </if>
       <if test="orderCode!=null and orderCode!=''">
          AND sinfo.order_code =#{orderCode}
       </if>
