@@ -35,9 +35,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
     
     @Autowired
     private OfcSiloproNewstatusService ofcSiloproNewstatusService;
-    @Autowired
-    private OfcTransplanInfoService  ofcTransplanInfoService;
-    
+
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
 
@@ -113,10 +111,11 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				ofcSiloproNewstatusService.updateByPlanCode(ofcTransplanNewstatus);//仓储计划单最新状态的更新
 			}
 				status.setLastedOperTime(traceTime);
-				status.setStatusDesc("执行中");
+				status.setStatusDesc(translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
+				status.setOperator("");
 				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+condition.getStatus());
+	                     +" "+translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
 				ofcOrderStatusService.save(status);
 		}else{
@@ -188,4 +187,72 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}
 		}
 	}
+
+	public String translateStatusToDesc(String statusCode,String businessType){
+		String statusDesc="";
+		if(statusCode.equals(OrderConstConstant.TRACE_STATUS_1)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="入库单已创建";
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库单已创建";
+			}
+	}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_2)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="部分收货";
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_3)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="完全收货";
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库分配完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_4)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="拣货完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_5)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="二次拣货完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_6)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="装车完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_7)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库单已发运";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_8)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="入库单取消";
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库单取消";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_9)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="入库完毕";
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库完毕";
+			}
+		}
+		return statusDesc;
+	}
+
+
+
+
+
+
 }

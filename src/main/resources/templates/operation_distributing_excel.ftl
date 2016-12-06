@@ -394,17 +394,41 @@
         var fileName;
         var uploadFileTag = false;
         $("#uploadFile").change(function () {
-            uploadFileTag = true;
+            $("#uploadExcelSheet").html("");
+            //清空错误和正确的加载项
+            $("#errorMsgTbody").html("");
+            $("#goodsInfoListDiv").html("");
+            $("#consigneeInfoListDiv").html("");
+            $("#goodsListDiv").show();
+            $("#errorMsgDiv").hide();
             debugger
             file = this.files[0];
-            fileName = $("#uploadFile").val();
-//            fileName = target.value;
+            var fileSize = file.size;
+            if(fileSize / 1024 > 1000){
+                alert("附件大小不能大于1M");
+                this.value = "";
+                $("#uploadFileShow").val("");
+                uploadFileTag = false;
+                return;
+            }else{
+                fileName = $("#uploadFile").val();
+                var suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                if(suffix != "xls" && suffix != "xlsx"){
+                    alert("请选择excel格式文件上传")
+                    this.value = "";
+                    $("#uploadFileShow").val("");
+                    uploadFileTag = false;
+                    return;
+                }else{
+                    uploadFileTag = true;
+                    $("#uploadFileShow").val(fileName);
+                }
+            }
 
-
-            $("#uploadFileShow").val(fileName);
         })
 
         $("#uploadFileInput").click(function () {
+
             if(uploadFileTag){
                 debugger
                 var formData = new FormData();
