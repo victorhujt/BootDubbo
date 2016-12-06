@@ -551,7 +551,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(OrderConstConstant.YITUISONG)){
                 try {
                     if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
-                        CancelWhcOrderDTO dto=new CancelWhcOrderDTO();
+                        CancelOrderDTO dto=new CancelOrderDTO();
                         dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
                         dto.setOrderNo("A004");
                         dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
@@ -567,7 +567,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             }
                         }
                     }else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
-                        CancelWhcOrderDTO dto=new CancelWhcOrderDTO();
+                        CancelOrderDTO dto=new CancelOrderDTO();
                         dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
                         dto.setOrderNo("A001");
                         dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
