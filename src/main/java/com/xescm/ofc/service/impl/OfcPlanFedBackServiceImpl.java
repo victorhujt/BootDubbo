@@ -79,14 +79,20 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             logger.info("跟踪状态已发运");
                         }else if(status.equals("已到达")){
                             ofcTransplanNewstatus.setTransportSingleLatestStatus(YIDAODA);
+                            orderStatus.setLastedOperTime(traceTime);
+                            orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                                    +" "+"订单已到达");
+                            logger.info("跟踪状态已到达");
+                        }else if(status.equals("已签收")){
+                            ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
                             ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
                             ofcTransplanStatus.setTaskCompletionTime(traceTime);
                             ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
                             orderStatus.setLastedOperTime(traceTime);
                             orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-                                    +" "+"订单已到达");
+                                    +" "+"订单已签收");
+                            logger.info("跟踪状态已签收");
                             ofcOrderStatusService.save(orderStatus);
-                            logger.info("跟踪状态已到达");
                             mapperMap.put("ifFinished","planfinish");
                             mapperMap.put("orderCode",orderCode);
                             List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
@@ -94,19 +100,13 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 orderStatus=new OfcOrderStatus();
                                 orderStatus.setOrderCode(orderCode);
                                 orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                orderStatus.setLastedOperTime(traceTime);
+                                orderStatus.setLastedOperTime(new Date());
                                 orderStatus.setStatusDesc("已完成");
-                                orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                                orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                                         +" "+"订单已完成");
                                 orderStatus.setOperator(userName);
                             }
                             logger.info("跟踪状态已完成");
-                        }else if(status.equals("已签收")){
-                            ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
-                            orderStatus.setLastedOperTime(traceTime);
-                            orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-                                    +" "+"订单已签收");
-                            logger.info("跟踪状态已签收");
                         }else if(status.equals("已回单")){
                             ofcTransplanNewstatus.setTransportSingleLatestStatus(YIHUIDAN);
                             orderStatus.setLastedOperTime(traceTime);
