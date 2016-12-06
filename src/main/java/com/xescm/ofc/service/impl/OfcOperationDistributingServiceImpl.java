@@ -285,6 +285,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         }*/
                                 //校验5列之后的收货人名称是否在客户中心收发货档案中维护了
                             }else if(cellNum > (staticCell -1)){//   第一个收货人cellNum是5 > 5 - 1
+                                if(PubUtils.isSEmptyOrNull(cellValue)){
+                                    continue;
+                                }
                                 //如果校验失败,就标记该单元格
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompany cscContactCompany = new CscContactCompany();
@@ -317,6 +320,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                             JSONObject jsonObject = new JSONObject();
                             if(cellNum == 0){
                                 String goodsCode = hssfCell.getStringCellValue();
+                                if(PubUtils.isSEmptyOrNull(goodsCode)){
+                                    continue;
+                                }
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(goodsCode);
                                 cscGoodsApiDto.setCustomerId(custId);
@@ -390,6 +396,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
         }
         if(checkPass){
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
@@ -466,6 +475,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         }*/
                                 //校验5列之后的收货人名称是否在客户中心收发货档案中维护了
                             }else if(cellNum > (staticCell -1)){//   第一个收货人cellNum是5 > 5 - 1
+                                if(PubUtils.isSEmptyOrNull(cellValue)){
+                                    continue;
+                                }
                                 //如果校验失败,就标记该单元格
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompany cscContactCompany = new CscContactCompany();
@@ -498,6 +510,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                             JSONObject jsonObject = new JSONObject();
                             if(cellNum == 0){
                                 String goodsCode = xssfCell.getStringCellValue();
+                                if(PubUtils.isSEmptyOrNull(goodsCode)){
+                                    continue;
+                                }
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(goodsCode);
                                 cscGoodsApiDto.setCustomerId(custId);
@@ -571,6 +586,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
         }
         if(checkPass){
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
