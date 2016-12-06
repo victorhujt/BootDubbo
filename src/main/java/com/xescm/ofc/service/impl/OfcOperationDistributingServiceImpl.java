@@ -47,7 +47,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     @Override
     /**
-     * 转换页面DTO为CSCDTO以便复用
+     * 转换页面DTO为CSCCUSTOMERDTO以便复用原有下单逻辑
      * @param ofcOrderDTO
      * @param purpose
      * @return
@@ -134,13 +134,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
             }
         }catch (Exception ex){
-
+            throw new BusinessException(ex.getMessage());
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
 
+    /**
+     * 获取用户上传的Excel的sheet页
+     * @param uploadFile
+     * @param fileName
+     * @return
+     */
     @Override
     public List<String> getExcelSheet(MultipartFile uploadFile, String fileName) {
         List<String> sheetMsgList = new ArrayList<>();
@@ -158,7 +164,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     }
                 }
             }else if("xlsx".equals(suffix)){
-
+                XSSFWorkbook xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
+                int activeSheetIndex = xssfWorkbook.getActiveSheetIndex();
+                int numberOfSheets = xssfWorkbook.getNumberOfSheets();
+                for(int sheetNum = 0; sheetNum < numberOfSheets;  sheetNum ++){
+                    if(sheetNum == activeSheetIndex){
+                        sheetMsgList.add(xssfWorkbook.getSheetName(sheetNum) + "@active");
+                    }else{
+                        sheetMsgList.add(xssfWorkbook.getSheetName(sheetNum) + "@");
+                    }
+                }
             }else if("csv".equals(suffix)){
 
             }else{
@@ -166,6 +181,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new BusinessException(e.getMessage());
         }
         return sheetMsgList;
     }
@@ -416,5 +432,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
 
+    /**
+     * 校验XLS格式
+     */
+
+
+    /**
+     * 校验XLSX格式
+     */
+    /**
+     * 校验CSV格式
+     */
 
 }
