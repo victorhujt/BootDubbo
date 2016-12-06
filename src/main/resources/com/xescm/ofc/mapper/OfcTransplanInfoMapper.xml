@@ -146,10 +146,17 @@
     <where>
         1 = 1
       <if test="planCode!=null and planCode!=''">
-        tinfo.plan_code =#{planCode}
+        AND  tinfo.plan_code =#{planCode}
       </if>
     </where>
   </select>
+
+
+
+
+
+
+
 
 
 

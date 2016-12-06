@@ -120,6 +120,12 @@ public class OfcGoodsDetailsInfo {
     private Integer totalBox;
 
     /**
+     * 货品种类
+     */
+    @Column(name = "goods_type")
+    private String goodsType;
+
+    /**
      * 货品类别
      */
     @Column(name = "goods_category")
@@ -147,6 +153,30 @@ public class OfcGoodsDetailsInfo {
      */
     @Column(name = "volume_unit_price")
     private BigDecimal volumeUnitPrice;
+
+    /**
+     * 记账重量
+     */
+    @Column(name = "billing_weight")
+    private BigDecimal billingWeight;
+
+    /**
+     * 计费方式
+     */
+    @Column(name = "charging_ways")
+    private String chargingWays;
+
+    /**
+     * 计费数量
+     */
+    @Column(name = "charging_quantity")
+    private BigDecimal chargingQuantity;
+
+    /**
+     * 计费单价
+     */
+    @Column(name = "charging_unit_price")
+    private BigDecimal chargingUnitPrice;
 
     /**
      * 获取货品代码
@@ -473,6 +503,24 @@ public class OfcGoodsDetailsInfo {
     }
 
     /**
+     * 获取货品种类
+     *
+     * @return goods_type - 货品种类
+     */
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    /**
+     * 设置货品种类
+     *
+     * @param goodsType 货品种类
+     */
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    /**
      * 获取货品类别
      *
      * @return goods_category - 货品类别
@@ -560,5 +608,77 @@ public class OfcGoodsDetailsInfo {
      */
     public void setVolumeUnitPrice(BigDecimal volumeUnitPrice) {
         this.volumeUnitPrice = volumeUnitPrice;
+    }
+
+    /**
+     * 获取记账重量
+     *
+     * @return billing_weight - 记账重量
+     */
+    public BigDecimal getBillingWeight() {
+        return billingWeight;
+    }
+
+    /**
+     * 设置记账重量
+     *
+     * @param billingWeight 记账重量
+     */
+    public void setBillingWeight(BigDecimal billingWeight) {
+        this.billingWeight = billingWeight;
+    }
+
+    /**
+     * 获取计费方式
+     *
+     * @return charging_ways - 计费方式
+     */
+    public String getChargingWays() {
+        return chargingWays;
+    }
+
+    /**
+     * 设置计费方式
+     *
+     * @param chargingWays 计费方式
+     */
+    public void setChargingWays(String chargingWays) {
+        this.chargingWays = chargingWays;
+    }
+
+    /**
+     * 获取计费数量
+     *
+     * @return charging_quantity - 计费数量
+     */
+    public BigDecimal getChargingQuantity() {
+        return chargingQuantity;
+    }
+
+    /**
+     * 设置计费数量
+     *
+     * @param chargingQuantity 计费数量
+     */
+    public void setChargingQuantity(BigDecimal chargingQuantity) {
+        this.chargingQuantity = chargingQuantity;
+    }
+
+    /**
+     * 获取计费单价
+     *
+     * @return charging_unit_price - 计费单价
+     */
+    public BigDecimal getChargingUnitPrice() {
+        return chargingUnitPrice;
+    }
+
+    /**
+     * 设置计费单价
+     *
+     * @param chargingUnitPrice 计费单价
+     */
+    public void setChargingUnitPrice(BigDecimal chargingUnitPrice) {
+        this.chargingUnitPrice = chargingUnitPrice;
     }
 }

@@ -334,6 +334,11 @@
                             <input id="monthlyAmount" name="monthlyAmount" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFinanceInformation.monthlyAmount)!"0.00"}">
                         </div>
+                        <label class="control-label col-label no-padding-right" for="name">是否开发票</label>
+                        <div class="w-width-220 col-float">
+                            <input id="openInvoices" name="openInvoices" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.openInvoices)!""}" >
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否上门提货</label>

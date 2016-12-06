@@ -106,54 +106,19 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				ofcTransplanNewstatus.setJobNewStatus((OrderConstConstant.RENWUZHONG));//仓储计划单最新状态
 				ofcTransplanNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时间
 				status.setLastedOperTime(traceTime);
+				status.setOrderStatus(OrderConstConstant.IMPLEMENTATIONIN);
 				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+"仓储计划单开始");
-
+	                     +" "+traceStatus);
+				updateByPlanCode(statusCondition);//仓储计划单状态的更新
+				ofcSiloproNewstatusService.updateByPlanCode(ofcTransplanNewstatus);//仓储计划单最新状态的更新
 			}
-			//仓储计划单状态任务开始任务已完成
-			if(OrderConstConstant.TRACE_STATUS_4.equals(traceStatus)){
-				statusCondition.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
-				statusCondition.setTaskCompletionTime(traceTime);
-				ofcTransplanNewstatus.setJobNewStatus((OrderConstConstant.RENWUWANCH));
-				ofcTransplanNewstatus.setJobStatusUpdateTime(condition.getTraceTime());
 				status.setLastedOperTime(traceTime);
-				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+"仓储计划单完成");
-			}
-			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-			ofcSiloproNewstatusService.updateByPlanCode(ofcTransplanNewstatus);//仓储计划单最新状态的更新
-			//订单下只存在仓储计划单且仓储计划单全部已经完成,该订单状态可以改为已经完成
-			List<OfcTransplanInfoVo> tsnfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
-			boolean isCompleted=true;
-			if(tsnfos!=null) {
-				if (tsnfos.size() > 0) {
-					for (OfcTransplanInfoVo ofcTransplanInfo : tsnfos) {
-						if (!OrderConstConstant.RENWUWANCH.equals(ofcTransplanInfo.getPlannedSingleState())) {
-							isCompleted = false;
-							break;
-						}
-					}
-				}
-			}
-			List<OfcSiloprogramInfoVo> ofcSiloprogramInfoVoScreenList=ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,"");
-			if(ofcSiloprogramInfoVoScreenList!=null&&ofcSiloprogramInfoVoScreenList.size()>0){
-				for (OfcSiloprogramInfoVo ofcSiloprogramInfoVo : ofcSiloprogramInfoVoScreenList) {
-					if(!OrderConstConstant.RENWUWANCH.equals(ofcSiloprogramInfoVo.getPlannedSingleState())){
-						isCompleted=false;
-						break;
-					}
-				}
-			}else{
-				isCompleted=false;
-			}
-			//所有仓储计划单已经全部完成可将订单状态改为已完成
-			if(isCompleted){
-				status.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
+				status.setStatusDesc("执行中");
 				status.setOrderCode(orderCode);
-				status.setStatusDesc("已完成");
-				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"订单已完成");
-			}
-			ofcOrderStatusService.save(status);
+				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+	                     +" "+condition.getStatus());
+				status.setOrderCode(orderCode);
+				ofcOrderStatusService.save(status);
 		}else{
 			throw new BusinessException("该仓储计划单对应的订单不存在");
 		}
@@ -188,24 +153,39 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 		List<OfcPlannedDetail> plannedDetails=condition.getPlannedDetails();
 		if(plannedDetails!=null&&plannedDetails.size()>0){
 			for (OfcPlannedDetail plannedDetailnfo : plannedDetails) {
+				boolean isExist=false;
 				List<OfcPlannedDetail>  infos=ofcPlannedDetailService.planDetailsScreenList(condition.getPlanCode(),"planCode");
 				if(infos!=null&&infos.size()>0){
 					for (OfcPlannedDetail pdinfo:infos) {
 						if(plannedDetailnfo.getGoodsCode().equals(pdinfo.getGoodsCode())){
 							pdinfo.setRealQuantity(plannedDetailnfo.getRealQuantity());
 							ofcPlannedDetailService.update(pdinfo);//更新库存数量
-						}else{
-							ofcPlannedDetailService.save(plannedDetailnfo);
+							isExist=true;
+							break;
 						}
 					}
-				}else{
-					throw new BusinessException("仓储中心反馈过来的仓储计划单详情为空");
+				}
+				if(!isExist){
+					ofcPlannedDetailService.save(plannedDetailnfo);
 				}
 			}
 		}else{
 			throw new BusinessException("该仓储计划单不存在寄计划单详情");
 		}
 			statusCondition.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
-		updateByPlanCode(statusCondition);//仓储计划单状态的更新
+			updateByPlanCode(statusCondition);//仓储计划单状态的更新
+		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),OrderConstConstant.OFC_WHC_IN_TYPE);
+		if(infos!=null&&infos.size()>0){
+			String ProgramSerialNumber=infos.get(0);
+			if(ProgramSerialNumber.equals(info.getProgramSerialNumber())){
+				OfcOrderStatus status=new OfcOrderStatus();
+				status.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
+				status.setOrderCode(info.getOrderCode());
+				status.setStatusDesc("已完成");
+				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"订单已完成");
+				status.setLastedOperTime(new Date());
+				ofcOrderStatusService.save(status);
+			}
+		}
 	}
 }

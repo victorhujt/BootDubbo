@@ -2,6 +2,7 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.PubUtils;
@@ -27,6 +28,8 @@ public class OfcOrderFollowOperRest extends BaseController {
 
     @Autowired
     private OrderFollowOperService orderFollowOperService;
+    @Autowired
+    private OfcOrderManageOperService ofcOrderManageOperService;
 
     @RequestMapping(value = "/orderFollowOpera")
     public String orderFollowOpera() {
@@ -56,7 +59,8 @@ public class OfcOrderFollowOperRest extends BaseController {
                 throw new Exception("搜索类型错误！");
             }
             Map<String, Object> map = new HashMap<>();
-            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
+            List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
+//            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
                 if (ofcOrderDTOs.size() == 1) {
@@ -88,11 +92,12 @@ public class OfcOrderFollowOperRest extends BaseController {
     public Object queryOrderFollowByCode(String code) {
         try {
             final String searchType = "orderCode";
-            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
+//            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
+            List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
-            // Map<String, Object> map = new HashMap<String, Object>();
+
             Map<String, Object> map = new HashMap<>();
-            OfcFundamentalInformation ofcFundamentalInformation = null;
+            OrderFollowOperResult ofcFundamentalInformation = null;
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
                 ofcFundamentalInformation = ofcOrderDTOs.get(0);
             }

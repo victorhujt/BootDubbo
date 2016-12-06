@@ -38,10 +38,11 @@
             <maxHistory>2</maxHistory>
         </rollingPolicy>
     </appender>
+
     <!-- ###################### DAO日志监控  ###################### -->
     <appender name="DaoStatistics" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/${log.name.sql}.%d{yyyy-MM-dd }</fileNamePattern>
+            <fileNamePattern>${log.path}/${log.name.sql}.%d{yyyy-MM-dd }.log</fileNamePattern>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -49,20 +50,22 @@
         </encoder>
     </appender>
 
-    <logger name="com.xescm.uam.mapper" level="DEBUG">
+    <logger name="com.xescm.ofc.mapper" level="DEBUG">
         <appender-ref ref="DaoStatistics" />
     </logger>
-    <!--<logger name="org.springframework" level="DEBUG"/>-->
-    <!--<logger name="org.apache" level="DEBUG"/>-->
-    <!--<logger name="org.mybatis.spring" level="DEBUG"/>-->
-    <!--<logger name="org.springframework.web" level="INFO"/>-->
-    <!--<logger name="org.apdplat.word" level="INFO"/>-->
+
+    <!-- ###################### SQL日志监控  ###################### -->
+
+
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.apache" level="INFO"/>
+    <logger name="org.mybatis.spring" level="INFO"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.apdplat.word" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>
         <appender-ref ref="LogFile"/>
         <appender-ref ref="ErrorFile"/>
     </root>
-
-
 </configuration>
