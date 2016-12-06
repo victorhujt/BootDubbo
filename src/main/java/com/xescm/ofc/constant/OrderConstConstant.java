@@ -92,14 +92,23 @@ public final class OrderConstConstant {
 
     public static final String OFC_WHC_IN_TYPE = "入库";
 
-    
-    public static final String TRACE_STATUS_1 = "开始";
-    
-    public static final String TRACE_STATUS_2 = "收货";
-    
-    public static final String TRACE_STATUS_3 = "开始上架";
-    
-    public static final String TRACE_STATUS_4 = "已完成";
+    public static final String TRACE_STATUS_1 = "00";
+
+    public static final String TRACE_STATUS_2 = "30";
+
+    public static final String TRACE_STATUS_3 = "40";
+
+    public static final String TRACE_STATUS_4 = "60";
+
+    public static final String TRACE_STATUS_5 = "61";
+
+    public static final String TRACE_STATUS_6 = "66";
+
+    public static final String TRACE_STATUS_7 = "80";
+
+    public static final String TRACE_STATUS_8 = "90";
+
+    public static final String TRACE_STATUS_9 = "99";
 
 
 
