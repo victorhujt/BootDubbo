@@ -77,7 +77,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
 
             try {
-                if(message.getTag().equals("deliveryTag")){
+                if(message.getTag().equals("DeliveryTag")){
                     logger.info("调度单：{}",message);
                     List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions = null;
                     try {
@@ -89,7 +89,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     } catch (Exception e) {
                         logger.info(e.getMessage());
                     }
-                }else if(message.getTag().equals("transportTag")){
+                }else if(message.getTag().equals("TransportTag")){
                     logger.info("运输单消费 :{}",message);
                     // 将获取的json格式字符串转换成相应对象
                     List<OfcPlanFedBackCondition> ofcPlanFedBackConditions = null;
