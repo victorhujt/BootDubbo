@@ -5,18 +5,15 @@ import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.domain.OfcPlanFedBackCondition;
-import com.xescm.ofc.domain.OfcPlanFedBackResult;
-import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
-import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
+import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.service.OfcSiloproStatusService;
-import com.xescm.ofc.service.impl.OfcSiloproStatusServiceImpl;
 import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +52,7 @@ public class CreateOrderApiConsumer implements MessageListener {
     public Action consume(Message message, ConsumeContext consumeContext) {
         logger.info("OFC消费MQ开始。。。");
         String topicName = message.getTopic();
+        String tag=message.getTag();
         String userName ="";
         String key = message.getKey();
         String messageBody = new String(message.getBody());
@@ -110,9 +108,9 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
 //                logger.error(ex.getMessage(), ex);
             }
-        }else if(StringUtils.equals(topicName,mqConfig.getWhcOrderStatusTopic())){
+         }else if(StringUtils.equals(topicName,mqConfig.getOfcOrderStatusTopic())){
         	logger.info("仓储计划单状态反馈的消息体为:"+messageBody);
-			logger.info("仓储计划单开始消费");
+			logger.info("仓储计划单状态开始消费");
 			try {
 	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
 				 List<ofcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
@@ -123,14 +121,44 @@ public class CreateOrderApiConsumer implements MessageListener {
 					 }
 				 } catch (Exception e) {
 					 logger.info(e.getMessage());
+					 e.printStackTrace();
 					// return Action.ReconsumeLater;
 				 }
 			} catch (Exception e) {
 				  logger.info(e.getMessage());
 				 // return Action.ReconsumeLater;
 			}
+        }else if(StringUtils.equals(topicName,mqConfig.getOfc2WhcOrderTopic())){
+            //出库
+            if (PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.SALESOUTOFTHELIBRARY)
+                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.TRANSFEROUTOFTHELIBRARY)
+                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.LOSSOFREPORTING)
+                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.OTHEROUTOFTHELIBRARY)
+                    ){
+
+            //入库
+            }else if (PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.PURCHASINGANDSTORAGE)
+                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.ALLOCATESTORAGE)
+                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.RETURNWAREHOUSING)
+                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.PROCESSINGSTORAGE)){
+                logger.info("仓储计划单入库单反馈的消息体为:"+messageBody);
+                logger.info("仓储计划单入库单反馈开始消费");
+                {
+                    logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+                    List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
+                    try {
+                        ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
+                        for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
+                            ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
+                        }
+                    } catch (Exception e) {
+                        logger.info(e.getMessage());
+                        // return Action.ReconsumeLater;
+                    }
+                }
+            }
         }
-        return Action.ReconsumeLater;
+        return Action.CommitMessage;
     }
 
 }

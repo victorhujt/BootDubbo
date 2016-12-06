@@ -4,24 +4,17 @@ import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATIONIN;
 import static com.xescm.ofc.constant.OrderConstConstant.YIDIAODU;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.domain.OfcSiloproNewstatus;
-import com.xescm.ofc.domain.OfcSiloproStatus;
-import com.xescm.ofc.domain.OfcSiloprogramInfo;
-import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcSiloproStatusMapper;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
-import com.xescm.ofc.service.OfcOrderStatusService;
-import com.xescm.ofc.service.OfcSiloproNewstatusService;
-import com.xescm.ofc.service.OfcSiloproStatusService;
-import com.xescm.ofc.service.OfcSiloprogramInfoService;
-import com.xescm.ofc.service.OfcTransplanInfoService;
+import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
+import com.xescm.ofc.service.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +41,9 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
 
+	@Autowired
+	private OfcPlannedDetailService ofcPlannedDetailService;
+
     public int updateByPlanCode(Object key){
         ofcSiloproStatusMapper.updateByPlanCode(key);
         return 0;
@@ -56,7 +52,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	@Override
 	public void feedBackSiloproStatusFromWhc(
 			ofcSiloprogramStatusFedBackCondition condition) {
-		String orderCode="";
+		String orderCode;
 		String planCode=condition.getPlanCode();
 		String traceStatus=condition.getStatus();
 		Date traceTime=condition.getTraceTime();
@@ -91,6 +87,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 		}
 		
 		OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
+		OfcOrderStatus status=new OfcOrderStatus();
 		if(orderStatus!=null){
 			if(OrderConstConstant.HASBEENCOMPLETED.equals(orderStatus.getOrderStatus())){
 				throw new BusinessException("该仓储计划单对应的订单已经完成");
@@ -108,48 +105,87 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				statusCondition.setPlannedStartTime(condition.getTraceTime());
 				ofcTransplanNewstatus.setJobNewStatus((OrderConstConstant.RENWUZHONG));//仓储计划单最新状态
 				ofcTransplanNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时间
-				orderStatus.setLastedOperTime(traceTime);
-	            orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+"仓储计划单开始");
+				status.setLastedOperTime(traceTime);
+				status.setOrderStatus(OrderConstConstant.IMPLEMENTATIONIN);
+				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+	                     +" "+traceStatus);
+				updateByPlanCode(statusCondition);//仓储计划单状态的更新
+				ofcSiloproNewstatusService.updateByPlanCode(ofcTransplanNewstatus);//仓储计划单最新状态的更新
+			}
+				status.setLastedOperTime(traceTime);
+				status.setStatusDesc("执行中");
+				status.setOrderCode(orderCode);
+				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+	                     +" "+condition.getStatus());
+				status.setOrderCode(orderCode);
+				ofcOrderStatusService.save(status);
+		}else{
+			throw new BusinessException("该仓储计划单对应的订单不存在");
+		}
+	}
 
+	@Override
+	public void ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackCondition condition) {
+		String planCode=condition.getPlanCode();
+		if(StringUtils.isEmpty(planCode)){
+			throw new BusinessException("仓储计划单号不可以为空");
+		}
+		OfcSiloprogramInfo conditionInfo=new OfcSiloprogramInfo();
+		conditionInfo.setPlanCode(planCode);
+		OfcSiloprogramInfo info=ofcSiloprogramInfoService.selectOne(conditionInfo);
+		if(info==null){
+			throw new BusinessException("仓储计划单不存在");
+		}
+		OfcSiloproStatus statusCondition=new  OfcSiloproStatus();
+		statusCondition.setPlanCode(planCode);
+		OfcSiloproStatus sinfostatus=ofcSiloproStatusMapper.selectOne(statusCondition);
+		if(sinfostatus!=null){
+			if(OrderConstConstant.ZIYUANFENPEIZ.equals(sinfostatus.getPlannedSingleState())){
+				throw new BusinessException("该仓储计划处于单资源分配中");
 			}
-			//仓储计划单状态任务开始任务已完成
-			if(OrderConstConstant.TRACE_STATUS_4.equals(traceStatus)){
-				statusCondition.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
-				statusCondition.setTaskCompletionTime(traceTime);
-				ofcTransplanNewstatus.setJobNewStatus((OrderConstConstant.RENWUWANCH));
-				ofcTransplanNewstatus.setJobStatusUpdateTime(condition.getTraceTime());
-				orderStatus.setLastedOperTime(traceTime);
-	            orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+"仓储计划单完成");
+			if(OrderConstConstant.RENWUWANCH.equals(sinfostatus.getPlannedSingleState())){
+				throw new BusinessException("该仓储计划单已经完成");
 			}
-			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-			ofcSiloproNewstatusService.updateByPlanCode(ofcTransplanNewstatus);//仓储计划单最新状态的更新
-			//订单下只存在仓储计划单且仓储计划单全部已经完成,该订单状态可以改为已经完成
-			List<OfcTransplanInfo> tsnfos=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
-			if(tsnfos!=null&&tsnfos.size()==0){
-				List<OfcSiloprogramInfoVo> ofcSiloprogramInfoVoScreenList=ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,"");
-				if(ofcSiloprogramInfoVoScreenList!=null&&ofcSiloprogramInfoVoScreenList.size()>0){
-					boolean isCompleted=true;
-					for (OfcSiloprogramInfoVo ofcSiloprogramInfoVo : ofcSiloprogramInfoVoScreenList) {
-						if(!OrderConstConstant.RENWUWANCH.equals(ofcSiloprogramInfoVo.getPlannedSingleState())){
-							isCompleted=false;
+			if(OrderConstConstant.YIZUOFEI.equals(sinfostatus.getPlannedSingleState())){
+				throw new BusinessException("该仓储计划单已经作废");
+			}
+		}
+		List<OfcPlannedDetail> plannedDetails=condition.getPlannedDetails();
+		if(plannedDetails!=null&&plannedDetails.size()>0){
+			for (OfcPlannedDetail plannedDetailnfo : plannedDetails) {
+				boolean isExist=false;
+				List<OfcPlannedDetail>  infos=ofcPlannedDetailService.planDetailsScreenList(condition.getPlanCode(),"planCode");
+				if(infos!=null&&infos.size()>0){
+					for (OfcPlannedDetail pdinfo:infos) {
+						if(plannedDetailnfo.getGoodsCode().equals(pdinfo.getGoodsCode())){
+							pdinfo.setRealQuantity(plannedDetailnfo.getRealQuantity());
+							ofcPlannedDetailService.update(pdinfo);//更新库存数量
+							isExist=true;
 							break;
 						}
 					}
-					//所有仓储计划单已经全部完成可将订单状态改为已完成
-					if(isCompleted){
-						orderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
-						orderStatus.setOrderCode(orderCode);
-						orderStatus.setStatusDesc("已完成");
-						orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"订单已完成");
-					}
+				}
+				if(!isExist){
+					ofcPlannedDetailService.save(plannedDetailnfo);
 				}
 			}
-			
-			ofcOrderStatusService.save(orderStatus);
 		}else{
-			throw new BusinessException("该仓储计划单对应的订单不存在");
+			throw new BusinessException("该仓储计划单不存在寄计划单详情");
+		}
+			statusCondition.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+			updateByPlanCode(statusCondition);//仓储计划单状态的更新
+		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),OrderConstConstant.OFC_WHC_IN_TYPE);
+		if(infos!=null&&infos.size()>0){
+			String ProgramSerialNumber=infos.get(0);
+			if(ProgramSerialNumber.equals(info.getProgramSerialNumber())){
+				OfcOrderStatus status=new OfcOrderStatus();
+				status.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
+				status.setOrderCode(info.getOrderCode());
+				status.setStatusDesc("已完成");
+				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"订单已完成");
+				status.setLastedOperTime(new Date());
+				ofcOrderStatusService.save(status);
+			}
 		}
 	}
 }
