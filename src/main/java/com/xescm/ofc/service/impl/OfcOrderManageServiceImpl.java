@@ -226,7 +226,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-        OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
+        OfcPlannedDetail ofcPlannedDetail=null;
         try {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
@@ -247,6 +247,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
             while(iter.hasNext())
             {
+                ofcPlannedDetail=new OfcPlannedDetail();
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();

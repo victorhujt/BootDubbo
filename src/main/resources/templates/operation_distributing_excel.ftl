@@ -95,7 +95,7 @@
             </div>
             <div class="col-xs-3">
                 <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" name="uploadFile"/></p>
+                    <p><input type="file" id="uploadFile" name="uploadFile" /></p>
                     <p><input type="button" id="uploadFileInput"  value="上传"/></p>
                 </form>
             </div>
@@ -386,6 +386,9 @@
     var loadSheetTag = false;
     var consigneeList = [];
 
+    function uploadFileChange(target) {
+
+    }
     $(function () {
         var file;
         var fileName;
@@ -395,6 +398,9 @@
             debugger
             file = this.files[0];
             fileName = $("#uploadFile").val();
+//            fileName = target.value;
+
+
             $("#uploadFileShow").val(fileName);
         })
 
