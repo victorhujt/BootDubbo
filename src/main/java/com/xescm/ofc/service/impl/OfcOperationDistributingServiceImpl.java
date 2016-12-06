@@ -21,16 +21,23 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lyh on 2016/11/30.
@@ -175,7 +182,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     }
                 }
             }else if("csv".equals(suffix)){
-
+                //CSV只有一页
+                sheetMsgList.add(fileName.split("\\.")[0]);
             }else{
                 throw new BusinessException("您上传的文档格式不正确!");
             }
@@ -203,8 +211,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 return checkXls(uploadFile,sheetNumChosen,custId,staticCell);
             }else if("xlsx".equals(suffix)){
                 return checkXlsx(uploadFile,sheetNumChosen,custId,staticCell);
-            }else if("csv".equals(suffix)){
-
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
@@ -573,15 +579,5 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
     }
 
-    /**
-     * 校验CSV格式
-     * @param uploadFile
-     * @param sheetNumChosen
-     * @param custId
-     * @param staticCell
-     * @return
-     */
-    private Wrapper<?> checkCsv(MultipartFile uploadFile,String sheetNumChosen, String custId, Integer staticCell){
-        return null;
-    }
+
 }
