@@ -19,9 +19,6 @@ import java.io.FileOutputStream;
 @RequestMapping(value = "/open")
 public class OfcOpenController extends BaseController{
 
-    @Autowired
-    private OfcOperationDistributingService ofcOperationDistributingService;
-
     /**
      * 城配开单下载模板
      * @param response

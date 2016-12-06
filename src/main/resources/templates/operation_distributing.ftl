@@ -58,6 +58,7 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
+
 </head>
 <body>
 <!--goodsListDiv-->
@@ -635,7 +636,9 @@
     var scripts = [null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
         "/components/jquery-validation/src/localization/messages_zh.js",
-        "/components/jquery-validation/dist/additional-methods.js", null];
+        "/components/jquery-validation/dist/additional-methods.js",
+
+        null];
     $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
         /*jQuery(function($) {
             validateForm();//校验表单信息
@@ -681,6 +684,7 @@
     })
     var goodsAndConsigneeMap = new HashMap();
     var couldChangeCust = true;
+
     $(function () {
 
         var excelImportTag = $("#excelImportTag").html();
