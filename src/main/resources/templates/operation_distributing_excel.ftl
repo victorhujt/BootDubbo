@@ -14,6 +14,7 @@
         }
 
     </style>
+    <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
 </head>
 <!--goods&Consigee-->
 <div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
@@ -94,7 +95,7 @@
             </div>
             <div class="col-xs-3">
                 <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" multiple name="uploadFile" class="file-loading"/></p>
+                    <p><input type="file" id="uploadFile" name="uploadFile" /></p>
                     <p><input type="button" id="uploadFileInput"  value="上传"/></p>
                 </form>
             </div>
@@ -207,8 +208,8 @@
 
 <script type="text/javascript">
     var scripts = [null,
-        sys.rootPath + "/plugins/bootstrap-fileinput/js/fileinput.min.js",
-        sys.rootPath + "/plugins/bootstrap-fileinput/js/locales/zh.js",
+        "/plugins/bootstrap-fileinput/js/fileinput.min.js",
+        "/plugins/bootstrap-fileinput/js/locales/zh.js",
         null];
     $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
         $(document).ready(main);
@@ -385,19 +386,49 @@
     var loadSheetTag = false;
     var consigneeList = [];
 
+    function uploadFileChange(target) {
+
+    }
     $(function () {
         var file;
         var fileName;
         var uploadFileTag = false;
         $("#uploadFile").change(function () {
-            uploadFileTag = true;
+            $("#uploadExcelSheet").html("");
+            //清空错误和正确的加载项
+            $("#errorMsgTbody").html("");
+            $("#goodsInfoListDiv").html("");
+            $("#consigneeInfoListDiv").html("");
+            $("#goodsListDiv").show();
+            $("#errorMsgDiv").hide();
             debugger
             file = this.files[0];
-            fileName = $("#uploadFile").val();
-            $("#uploadFileShow").val(fileName);
+            var fileSize = file.size;
+            if(fileSize / 1024 > 1000){
+                alert("附件大小不能大于1M");
+                this.value = "";
+                $("#uploadFileShow").val("");
+                uploadFileTag = false;
+                return;
+            }else{
+                fileName = $("#uploadFile").val();
+                var suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                if(suffix != "xls" && suffix != "xlsx"){
+                    alert("请选择excel格式文件上传")
+                    this.value = "";
+                    $("#uploadFileShow").val("");
+                    uploadFileTag = false;
+                    return;
+                }else{
+                    uploadFileTag = true;
+                    $("#uploadFileShow").val(fileName);
+                }
+            }
+
         })
 
         $("#uploadFileInput").click(function () {
+
             if(uploadFileTag){
                 debugger
                 var formData = new FormData();

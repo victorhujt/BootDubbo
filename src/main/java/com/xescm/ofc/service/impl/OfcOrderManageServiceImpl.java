@@ -230,7 +230,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-        OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
+        OfcPlannedDetail ofcPlannedDetail=null;
         try {
             BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
             BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
@@ -248,19 +248,20 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTraplanSourceStatus.setResourceAllocationStatus(OrderConstConstant.DAIFENPEI);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
+            List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
             while(iter.hasNext())
             {
-                List<OfcPlannedDetail> ofcPlannedDetailList = new ArrayList<>();
+                ofcPlannedDetail=new OfcPlannedDetail();
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
                 ofcPlannedDetailList.add(ofcPlannedDetail);
-                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
             }
+            ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
             RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
             if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
                     && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
@@ -961,12 +962,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());   ///####
+                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.YITUISONG);
 
-                ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);//$$$
+                ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
             }
         }catch (Exception ex){
             throw new BusinessException("OFC推送TFC运输订单异常"+ex.getMessage(),ex);

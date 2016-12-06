@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
@@ -36,5 +37,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Override
     public List<OrderSearchOperResult> queryOrderByOrderBatchNumber(String orderBatchNumber) {
         return ofcOrderOperMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
+    }
+
+    @Override
+    public List<OrderFollowOperResult> queryOrder(String code, String searchType) {
+        return ofcOrderOperMapper.queryOrder(code, searchType);
     }
 }
