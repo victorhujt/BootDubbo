@@ -58,6 +58,8 @@ public final class OrderConstConstant {
     public static final String ADDR_URL = "ADDR_URL";
     /**CSC地址*/
     public static final String CSC_URL = "CSC_URL";
+    /**OFC_WEB_URL*/
+    public static final String OFC_WEB_URL = "OFC_WEB_URL";
     //支付方式
     public static final String FINNANCEPAYWAYCASH="6810";//现金支付
     public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡

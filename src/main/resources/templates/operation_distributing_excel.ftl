@@ -79,7 +79,7 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
-                    <a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
+                    <a href="${(OFC_WEB_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -91,6 +91,7 @@
             <label class="control-label col-label no-padding-right" for="name">上传文件</label>
             <div class="col-xs-3">
                 <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
                 <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
             <div class="col-xs-3">
@@ -237,6 +238,7 @@
     }
 
     var ofc_url = $("#ofc_url").html();
+    var ofc_web_url = $("#ofc_web_url").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
         console.log("0000"+historyUrl)
@@ -436,7 +438,9 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
-                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+
                 $.ajax({
                     url: url,
                     type: 'POST',
