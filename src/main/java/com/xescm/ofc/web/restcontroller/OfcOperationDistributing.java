@@ -13,11 +13,10 @@ import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
-import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.JsonUtil;
-import com.xescm.ofc.utils.PubUtils;
+import com.xescm.ofc.service.OfcOperationDistributingService;
+import com.xescm.ofc.service.OfcOrderPlaceService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.utils.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -25,7 +24,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,11 +34,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-//import org.apache.tomcat.util.http.fileupload.FileItem;
 /*
 *
  * Created by lyh on 2016/11/19.
@@ -91,7 +89,7 @@ public class OfcOperationDistributing extends BaseController{
                 String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
                 List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
                     ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
                 }
                 CscContantAndCompanyDto consignor = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
@@ -230,50 +228,68 @@ public class OfcOperationDistributing extends BaseController{
 
     }
 
-    /**
-     * 模板下载
-     * @param response
-     */
-    @RequestMapping(value = "/downloadTemplate")
-    public void downloadTemplate( HttpServletResponse response){
-        try {
-            response.setHeader("content-type", "application/octet-stream");
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", "attachment;filename=Template_forCP.xlsx");
-            File f = ResourceUtils.getFile("classpath:static/xlsx/Template_forCP.xlsx");
-            FileOutputStream fos=new FileOutputStream(f);
-            response.setContentLengthLong(f.length());
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Excel导入
+     /**
+     * Excel导入,展示Sheet页
      * @param paramHttpServletRequest
      */
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> fileUploadAndCheck(HttpServletRequest paramHttpServletRequest){
+        List<String> excelSheet = null;
+        try {
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
+            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
+            String[] filePathName = multipartHttpServletRequest.getParameter("fileName").split("\\.");
+            String[] split = filePathName[0].split("\\\\");
+            String fileName = split[split.length - 1] + "." + filePathName[1];
+            excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("城配开单Excel导入出错:{}",e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"上传成功！",excelSheet);
+    }
+
+    /**
+     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
+     * @param paramHttpServletRequest
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest, HttpServletResponse response){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
+            String[] filePathName = multipartHttpServletRequest.getParameter("fileName").split("\\.");
+            String[] split = filePathName[0].split("\\\\");
+            String fileName = split[split.length - 1] + "." + filePathName[1];
             String custId = multipartHttpServletRequest.getParameter("custId");
+            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
             //校验
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,authResDto,custId,5);
+            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,fileName,sheetNum,authResDto,custId,5);
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
-                result =  WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),checkResult.getResult());
+                List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),xlsErrorMsg);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
-                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),checkResult.getResult());
+                Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
+                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage());
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE,"导入出错");
+            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"导入出错");
         }
         return result;
     }
+
+
+
+
 }

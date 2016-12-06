@@ -149,6 +149,25 @@
   </select>
 
 
+  <select id="ofcMaxSiloprogramInfoSerialNumberScreenList" parameterType="java.lang.String" resultType="String">
+    SELECT
+    max(ii.program_serial_number)
+    FROM
+    ofc_siloprogram_info ii
+    <where>
+       1 = 1
+    <if test="orderCode!=null and orderCode!=''">
+      AND  ii.order_code =#{orderCode}
+    </if>
+
+    <if test="businessType!=null and businessType!=''">
+      AND  ii.business_type =#{businessType}
+    </if>
+      ORDER BY
+      ii.creation_time DESC;
+    </where>
+  </select>
+
 
 
 
