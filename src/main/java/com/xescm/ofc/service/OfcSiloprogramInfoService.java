@@ -12,5 +12,7 @@ public interface OfcSiloprogramInfoService extends IService<OfcSiloprogramInfo> 
     public List<OfcSiloprogramInfo> ofcSiloprogramInfoScreenList(String orderCode);
 
     public List<OfcSiloprogramInfoVo> ofcSiloprogramAndResourceInfo(String orderCode,String plannedSingleState);
+
+    public List<String> ofcMaxSiloprogramInfoSerialNumberScreenList(String planCode,String buniessType);
 }
 
