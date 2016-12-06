@@ -584,7 +584,7 @@
                 </div>
                 <div id="profile4" class="tab-pane active">
                     <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
-                    <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>
+                    <#--<span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>-->
                     <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
                     <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
                            aria-describedby="dynamic-table_info">
@@ -741,7 +741,7 @@
 
             debugger
             //先做成死的, 暂时不允许收货方动态增删
-            ifConsigneeConfirm = true;
+            //ifConsigneeConfirm = true;
 
             //显示货品列表//viewMap
             $("#goodsInfoListDiv").html("");
@@ -773,9 +773,9 @@
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
             if(consigneeChosen < 1){
                 alert("请先添加收货方")
-            }else if(!ifConsigneeConfirm){
+            }/*else if(!ifConsigneeConfirm){
                 alert("请先确认收货方");
-            }else{
+            }*/else{
                 //加载货品一级种类
                 var custId = $("#custId").val();
                 $("#goodsTypeId option").remove();
@@ -969,38 +969,60 @@
 
 
     function deleteConsignee(obj) {
-        if(ifConsigneeConfirm){//000
+       /* if(ifConsigneeConfirm){//000
             alert("您已确认,无法删除收货方")
-        }else{
-            $(obj).parent().parent().remove();
-            //动态删除收货方,即从Map中从收货方给拆出来//---
-            $("#consigneeInfoListDiv").find("tr").each(function (index) {
-                var tdArr = $(this).children();
-                var contactCompanyId = tdArr.eq(7).text();
-                var contactCode = tdArr.eq(8).text();
+        }else{*/
+        debugger
+        //动态删除收货方,即从Map中从收货方给拆出来
+        //var delConsigneeTag = false;
+        /*$(this).parent().parent().find("tr").each(function (index) {//得确认当前删的是哪一行收货人
+            var tdArr = $(this).children();
+            var contactCompanyId = tdArr.eq(7).text();
+            var contactCode = tdArr.eq(8).text();*/
                 //遍历货品信息
-                $("#goodsInfoListDiv").find("tr").each(function(index) {
-                    var tdArr = $(this).children();
-                    var goodsIndex = tdArr.eq(1).text();//货品序号
-                    var goodsCode = tdArr.eq(2).text();//货品编码
-                    var mapKey = goodsCode + "@" + goodsIndex;
-                    var consigneeAndGoodsMsgJson = null;
-                    if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
-                        consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                    }
-                    if(null != consigneeAndGoodsMsgJson){
-                        var param = contactCompanyId +"@"+ contactCode;
-                        var goodsAmount = consigneeAndGoodsMsgJson[param];
-                        if(undefined != goodsAmount || !StringUtil.isEmpty(goodsAmount)){
-                            delete consigneeAndGoodsMsgJson[param];
-                        }
-                    }
-                })
+        var contactCompanyId = $(obj).parent().parent().children().eq(7).text();//---
+        var contactCode = $(obj).parent().parent().children().eq(8).text();
+        $("#goodsInfoListDiv").find("tr").each(function(index) {
+            var tdArr = $(this).children();
+            var goodsIndex = tdArr.eq(1).text();//货品序号
+            var goodsCode = tdArr.eq(2).text();//货品编码
+            var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
+            debugger
+            console.log("goodsAmountTotal" + goodsAmountTotal)
+            var mapKey = goodsCode + "@" + goodsIndex;
+            var consigneeAndGoodsMsgJson = null;
+            if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+            }
+            debugger
+            if(null != consigneeAndGoodsMsgJson){
+                debugger
+                var param = contactCompanyId +"@"+ contactCode;
+                var goodsAmount = consigneeAndGoodsMsgJson[param];
+                if(undefined != goodsAmount || !StringUtil.isEmpty(goodsAmount)){
 
-            })
+                    //delConsigneeTag = true;
+                    ///然后从每个货品数量的总量中减去对应的数量
+                    goodsAmountTotal = goodsAmountTotal - goodsAmount;
+                    //对货品列表重新进行展示
+                    tdArr.eq(6).text(goodsAmountTotal);
+                    console.log(goodsAmountTotal)
+                    console.log(tdArr.eq(6).text())
+                    delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
+                    return true;
+                }
 
+            }
+        })
+            /*if(delConsigneeTag){
+                return false;
+            }*/
 
-        }
+        //})
+        $(obj).parent().parent().remove();
+        console.log("删除完收货方:" + JSON.stringify(goodsAndConsigneeMap));
+
+       // }//
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
@@ -1378,10 +1400,10 @@
 
         if(!validateCustChosen()){
             alert("请先选择客户")
-        } else if(ifConsigneeConfirm){
+        }/* else if(ifConsigneeConfirm){
             alert("您已确认过一次,无法再次添加新客户!");
             return;
-        }else{
+        }*/else{
             //$("#contactSelectListTbody1").html("");
             $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
         }
@@ -1616,8 +1638,8 @@
 
 
     //确定收货方列表
-    var ifConsigneeConfirm = false;
-    $("#consigneeListConfirmDivBlock").click(function () {
+   // var ifConsigneeConfirm = false;
+    /*$("#consigneeListConfirmDivBlock").click(function () {
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout < 1){
             alert("请先添加收货方");
@@ -1646,7 +1668,7 @@
         }, function(index){
             layer.close(index);
         });
-    })
+    })*/
 
     $("#consigneeListClearDivBlock").click(function () {
         //alert('3233')
@@ -1659,7 +1681,7 @@
                 title : '确认操作'
             }, function(index){
                 $("#consigneeInfoListDiv").html("");
-                ifConsigneeConfirm = false;
+                //ifConsigneeConfirm = false;
                 goodsAndConsigneeMap = new HashMap();
                 $("#goodsInfoListDiv").html("");
                 layer.close(index);
