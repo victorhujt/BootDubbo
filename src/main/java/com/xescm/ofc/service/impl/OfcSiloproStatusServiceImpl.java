@@ -174,7 +174,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 		}
 			statusCondition.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(planCode,OrderConstConstant.OFC_WHC_IN_TYPE);
+		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),OrderConstConstant.OFC_WHC_IN_TYPE);
 		if(infos!=null&&infos.size()>0){
 			String ProgramSerialNumber=infos.get(0);
 			if(ProgramSerialNumber.equals(info.getProgramSerialNumber())){

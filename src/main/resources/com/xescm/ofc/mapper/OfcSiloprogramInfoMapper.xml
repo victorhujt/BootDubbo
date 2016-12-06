@@ -156,8 +156,8 @@
     ofc_siloprogram_info ii
     <where>
        1 = 1
-    <if test="planCode!=null and planCode!=''">
-      AND  ii.plan_code =#{planCode}
+    <if test="orderCode!=null and orderCode!=''">
+      AND  ii.order_code =#{orderCode}
     </if>
 
     <if test="businessType!=null and businessType!=''">

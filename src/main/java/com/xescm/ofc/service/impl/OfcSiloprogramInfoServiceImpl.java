@@ -53,10 +53,10 @@ public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInf
     }
 
     @Override
-    public List<String> ofcMaxSiloprogramInfoSerialNumberScreenList(String planCode,String businessType) {
+    public List<String> ofcMaxSiloprogramInfoSerialNumberScreenList(String orderCode,String businessType) {
             Map<String,String> mapperMap = new HashMap<>();
-            if(!StringUtils.isEmpty(planCode)){
-                mapperMap.put("planCode",planCode);
+            if(!StringUtils.isEmpty(orderCode)){
+                mapperMap.put("orderCode",orderCode);
             }
             if(!StringUtils.isEmpty(businessType)){
                 mapperMap.put("businessType",businessType);
