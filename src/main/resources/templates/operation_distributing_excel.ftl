@@ -14,6 +14,7 @@
         }
 
     </style>
+    <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
 </head>
 <!--goods&Consigee-->
 <div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
@@ -94,7 +95,7 @@
             </div>
             <div class="col-xs-3">
                 <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" multiple name="uploadFile" class="file-loading"/></p>
+                    <p><input type="file" id="uploadFile" name="uploadFile"/></p>
                     <p><input type="button" id="uploadFileInput"  value="上传"/></p>
                 </form>
             </div>
@@ -207,8 +208,8 @@
 
 <script type="text/javascript">
     var scripts = [null,
-        sys.rootPath + "/plugins/bootstrap-fileinput/js/fileinput.min.js",
-        sys.rootPath + "/plugins/bootstrap-fileinput/js/locales/zh.js",
+        "/plugins/bootstrap-fileinput/js/fileinput.min.js",
+        "/plugins/bootstrap-fileinput/js/locales/zh.js",
         null];
     $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
         $(document).ready(main);
