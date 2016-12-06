@@ -932,7 +932,6 @@
                 $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 $("#goodsListDiv").fadeOut("slow");
             }
-            //validateForm();
 
         });
     })
@@ -969,17 +968,9 @@
 
 
     function deleteConsignee(obj) {
-       /* if(ifConsigneeConfirm){//000
-            alert("您已确认,无法删除收货方")
-        }else{*/
         debugger
         //动态删除收货方,即从Map中从收货方给拆出来
-        //var delConsigneeTag = false;
-        /*$(this).parent().parent().find("tr").each(function (index) {//得确认当前删的是哪一行收货人
-            var tdArr = $(this).children();
-            var contactCompanyId = tdArr.eq(7).text();
-            var contactCode = tdArr.eq(8).text();*/
-                //遍历货品信息
+        //遍历货品信息
         var contactCompanyId = $(obj).parent().parent().children().eq(7).text();//---
         var contactCode = $(obj).parent().parent().children().eq(8).text();
         $("#goodsInfoListDiv").find("tr").each(function(index) {
@@ -1014,15 +1005,8 @@
 
             }
         })
-            /*if(delConsigneeTag){
-                return false;
-            }*/
-
-        //})
         $(obj).parent().parent().remove();
         console.log("删除完收货方:" + JSON.stringify(goodsAndConsigneeMap));
-
-       // }//
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
@@ -1192,7 +1176,7 @@
 
             var contactCompanyNameAuto = null;
             var contactNameAuto = null;
-            var phoneAuto = null;
+            //var phoneAuto = null;
             var detailAddressAuto = null;
             var typeAuto = null;
             var contactCompanyIdAuto = null;
@@ -1215,7 +1199,7 @@
                     if(contactList == 1){
                         contactCompanyNameAuto = CscContantAndCompanyDto.contactCompanyName;
                         contactNameAuto = CscContantAndCompanyDto.contactName;
-                        phoneAuto = CscContantAndCompanyDto.phone;
+                        //phoneAuto = CscContantAndCompanyDto.phone;
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
                         contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyId;
@@ -1636,43 +1620,8 @@
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
     });
 
-
-    //确定收货方列表
-   // var ifConsigneeConfirm = false;
-    /*$("#consigneeListConfirmDivBlock").click(function () {
-        var consignorout = $("#consigneeInfoListDiv").find("tr").size();
-        if(consignorout < 1){
-            alert("请先添加收货方");
-            return;
-        }
-        if(ifConsigneeConfirm){
-            alert("您已确认过一次,无法再次确认!");
-            return;
-        }
-        //校验收货方列表中是否所有的客户订单编号都填写了
-        //统计收货方列表数据传给后台
-        //然后将添加收货人按钮禁掉,提示用户暂时不能在添加了货品后选择收货方, 让客户订单编号的输入框变为只读的
-        layer.confirm('您即将确认收货方列表,您如果添加货品将无法再添加收货方!', {
-            skin : 'layui-layer-molv',
-            icon : 3,
-            title : '确认操作'
-        }, function(index){
-            $("#consigneeInfoListDiv").find("tr").each(function(index) {
-                var tdArr = $(this).children();
-                //tdArr.eq(2).children().attr("readonly","readonly");
-                ifConsigneeConfirm = true;
-                //禁用添加收货人和确认收货人
-                
-            })
-            layer.close(index);
-        }, function(index){
-            layer.close(index);
-        });
-    })*/
-
     $("#consigneeListClearDivBlock").click(function () {
-        //alert('3233')
-        
+
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout > 0){
             layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
@@ -1681,7 +1630,6 @@
                 title : '确认操作'
             }, function(index){
                 $("#consigneeInfoListDiv").html("");
-                //ifConsigneeConfirm = false;
                 goodsAndConsigneeMap = new HashMap();
                 $("#goodsInfoListDiv").html("");
                 layer.close(index);
@@ -1749,8 +1697,6 @@
         //加载仓库列表
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
-        //<option value="">无</option>
-        /* $("#warehouseCode").append("<option value="">无</option>");*/
         $("#warehouseCode").append("<option value = ''>无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
@@ -1787,7 +1733,6 @@
         var orderLists = [];
         //堆齐基本信息
         var orderInfo = null;
-
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
 
