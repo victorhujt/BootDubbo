@@ -15,10 +15,15 @@ public final class OrderConstConstant {
     public static final String TRANSFEROUTOFTHELIBRARY="611";        //调拨出库
     public static final String LOSSOFREPORTING="612";        //报损出库
     public static final String OTHEROUTOFTHELIBRARY="613";       //其他出库
+    public static final String ALLOTOUTOFTHELIBRARY="614";       //分拨出库
     public static final String PURCHASINGANDSTORAGE="620";       //采购入库
     public static final String ALLOCATESTORAGE="621";        //调拨入库
     public static final String RETURNWAREHOUSING="622";      //退货入库
     public static final String PROCESSINGSTORAGE="623";      //加工入库
+    public static final String INVENTORYPROFITSTORAGE="624";      //盘盈入库
+    public static final String CIRCULATESTORAGE="625";      //流通入库
+    public static final String OTHERSTORAGE="626";      //其他入库
+    public static final String ALLOTSTORAGE="627";      //分拨入库
 
     public static final String PENDINGAUDIT="10";       //待审核
     public static final String ALREADYEXAMINE="20";     //已审核

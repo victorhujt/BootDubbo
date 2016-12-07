@@ -50,19 +50,11 @@ public class OfcOpenController extends BaseController{
             OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
             int b;
-//            b = bis.read();
             while((b = bis.read()) != -1) {
                 outputStream.write(b);
             }
             bis.close();
             outputStream.close();
-            /*FileInputStream fis = new FileInputStream(f);
-            byte[] arr = new byte[fis.available()];
-            fis.read(arr);
-            outputStream.write(arr);
-            fis.close();
-            outputStream.flush();
-            outputStream.close();*/
         } catch (IOException e) {
             e.printStackTrace();
         }
