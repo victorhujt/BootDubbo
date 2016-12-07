@@ -7,6 +7,7 @@ import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
 import com.xescm.ofc.mapper.OfcPlannedDetailMapper;
 import com.xescm.ofc.service.OfcPlannedDetailService;
 import com.xescm.ofc.utils.PubUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.Map;
  */
 @Service
 @Transactional
+
 public class OfcPlannedDetailServiceImpl extends BaseService<OfcPlannedDetail> implements OfcPlannedDetailService {
 
     @Autowired
@@ -38,5 +40,10 @@ public class OfcPlannedDetailServiceImpl extends BaseService<OfcPlannedDetail> i
         }else {
             throw new BusinessException();
         }
+    }
+
+    @Override
+    public void updateByPlanCode(OfcPlannedDetail detail) {
+         ofcPlannedDetailMapper.updateByPlanCode(detail);
     }
 }

@@ -34,4 +34,16 @@
       </if>
     </where>
   </select>
+
+
+  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcPlannedDetail" >
+    update ofc_planned_detail
+    <set >
+      <if test="realQuantity != null" >
+        real_quantity = #{realQuantity,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where plan_code = #{planCode,jdbcType=VARCHAR}
+    AND goods_code = #{goodsCode,jdbcType=VARCHAR}
+  </update>
 </mapper>

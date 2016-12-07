@@ -1,19 +1,21 @@
 package com.xescm.ofc.feign.client;
 
-import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.whc.FeignWhcOrderAPI;
-import com.xescm.ofc.model.dto.whc.CancelWhcOrderDTO;
-import com.xescm.ofc.utils.Response;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import feign.Feign;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.api.whc.FeignWhcOrderAPI;
+import com.xescm.ofc.model.dto.whc.CancelOrderDTO;
+import com.xescm.ofc.utils.Response;
+import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 
 /**
  * Created by victor on 2016/12/2.
@@ -33,26 +35,26 @@ public class FeignWhcSiloprogramAPIClient {
         return res;
     }
 
-    public Response inOrderCancel(CancelWhcOrderDTO cancelWhcOrderDTO){
+    public Response inOrderCancel(CancelOrderDTO cancelOrderDTO){
         Response response = null;
-        if(null == cancelWhcOrderDTO){
+        if(null == cancelOrderDTO){
             throw new BusinessException("参数为空");
         }
         try {
-            response = getApi().inOrderCancel(cancelWhcOrderDTO);
+            response = getApi().inOrderCancel(cancelOrderDTO);
         }catch (Exception ex){
             throw new BusinessException(ex.getMessage());
         }
         return response;
     }
 
-    public Response outOrderCancel(CancelWhcOrderDTO cancelWhcOrderDTO){
+    public Response outOrderCancel(CancelOrderDTO cancelOrderDTO){
         Response response = null;
-        if(null == cancelWhcOrderDTO){
+        if(null == cancelOrderDTO){
             throw new BusinessException("参数为空");
         }
         try {
-            response = getApi().outOrderCancel(cancelWhcOrderDTO);
+            response = getApi().outOrderCancel(cancelOrderDTO);
         }catch (Exception ex){
             throw new BusinessException(ex.getMessage());
         }
