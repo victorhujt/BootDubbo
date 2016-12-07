@@ -1785,7 +1785,7 @@
                 "<input class='col-xs-10 col-xs-12'  name='' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                "<input class='col-xs-10 col-xs-12'  name='billingWeight' id='billingWeight' type='text' onblur='checkBillingWeight(this)'/>"
+                "<input class='col-xs-10 col-xs-12'  name='billingWeight' id='' type='text' onblur='checkBillingWeight(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
@@ -1870,6 +1870,29 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+            $("input[name='billingWeight']").each(function(){
+                var value=onlyNumber($(this).val());
+                if(value==""){
+                    if($(this).parent().children().length<2){
+                        $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(this));
+                        $(this).parent().removeClass('has-info').addClass('has-error');
+                        $(this).val("");
+                    }else{
+                        $(this).val("");
+                    }
+                }else{
+                    $(this).val(value);
+                    $(this).parent().find("div").remove();
+                }
+            });
+            if($("#orderFundamentalFormValidate").find("div.has-error").length>0
+                    || $("#orderFinanceFormValidate").find("div.has-error").length>0
+                    || $("#orderFinanceChargeFormValidate").find("div.has-error").length>0
+                    || $("#orderInfoTableValidate").find("div.has-error").length>0
+                    || $("#goodsInfoListDiv").find("div.has-error").length>0){
+                alert("页面中存在错误数据，请检查！",{icon:5});
+                return false;
+            }
             //卡班类型必须输入运输单号
             if($("#businessType").val() == "602"){
                 var transCode = $("#transCode").val().trim();
@@ -1878,6 +1901,7 @@
                     return false;
                 }
             }
+
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
@@ -1915,8 +1939,8 @@
                         case 5 :orderGoods.goodsSpec = param.getElementsByTagName("input")[0].value;break;
                         case 6 :orderGoods.unit = param.getElementsByTagName("input")[0].value;break;
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
-                        case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
-                        case 9 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
+                        case 8 :orderGoods.chargingQuantity = param.getElementsByTagName("select")[0].value;break;
+                        case 9 :orderGoods.chargingWays = param.getElementsByTagName("input")[0].value;break;
                         case 10 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
