@@ -24,6 +24,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -288,7 +290,31 @@ public class OfcOperationDistributing extends BaseController{
         }
         return result;
     }
+    /**
+     * 城配开单下载模板
+     * @param response
+     */
+    @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
+    public void downloadTemplate( HttpServletResponse response){
+        try {
+            File f = ResourceUtils.getFile("classpath:templates/xlsx/Template_forCP.xlsx");
+            response.reset();
+            response.setHeader("Content-Disposition", "attachment; filename=Template_forCP.xlsx");
+            response.addHeader("Content-Length", "" + f.length());
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
+            int b;
+            while((b = bis.read()) != -1) {
+                outputStream.write(b);
+            }
+            bis.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
 
 
 
