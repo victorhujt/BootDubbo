@@ -285,6 +285,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         }*/
                                 //校验5列之后的收货人名称是否在客户中心收发货档案中维护了
                             }else if(cellNum > (staticCell -1)){//   第一个收货人cellNum是5 > 5 - 1
+                                if(PubUtils.isSEmptyOrNull(cellValue)){
+                                    consigneeNameList.add(new CscContantAndCompanyVo());
+                                    continue;
+                                }
                                 //如果校验失败,就标记该单元格
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompany cscContactCompany = new CscContactCompany();
@@ -317,6 +321,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                             JSONObject jsonObject = new JSONObject();
                             if(cellNum == 0){
                                 String goodsCode = hssfCell.getStringCellValue();
+                                if(PubUtils.isSEmptyOrNull(goodsCode)){
+                                    continue;
+                                }
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(goodsCode);
                                 cscGoodsApiDto.setCustomerId(custId);
@@ -362,7 +369,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
-                                        String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getId();
+                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyId();
+                                        String consigneeContactCode = cscContantAndCompanyVo.getId();
+                                        if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
+                                            continue;
+                                        }
+                                        String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                         jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
                                         jsonArray.add(cscGoodsApiVo);
                                         jsonArray.add(jsonObject);
@@ -377,8 +389,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //这里只抓不是数字的情况
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
-                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
+                                    throw new BusinessException(ex.getMessage());
+                                    //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
+                                    //System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }
                             }
                         }
@@ -390,6 +403,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
         }
         if(checkPass){
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
@@ -466,6 +482,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         }*/
                                 //校验5列之后的收货人名称是否在客户中心收发货档案中维护了
                             }else if(cellNum > (staticCell -1)){//   第一个收货人cellNum是5 > 5 - 1
+                                if(PubUtils.isSEmptyOrNull(cellValue)){
+                                    consigneeNameList.add(new CscContantAndCompanyVo());
+                                    continue;
+                                }
                                 //如果校验失败,就标记该单元格
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompany cscContactCompany = new CscContactCompany();
@@ -498,6 +518,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                             JSONObject jsonObject = new JSONObject();
                             if(cellNum == 0){
                                 String goodsCode = xssfCell.getStringCellValue();
+                                if(PubUtils.isSEmptyOrNull(goodsCode)){
+                                    continue;
+                                }
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(goodsCode);
                                 cscGoodsApiDto.setCustomerId(custId);
@@ -543,7 +566,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
-                                        String consigneeMsg = cscContantAndCompanyVo.getContactCompanyId() + "@" + cscContantAndCompanyVo.getId();
+                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyId();
+                                        String consigneeContactCode = cscContantAndCompanyVo.getId();
+                                        if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
+                                            continue;
+                                        }
+                                        String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                         jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
                                         jsonArray.add(cscGoodsApiVo);
                                         jsonArray.add(jsonObject);
@@ -558,8 +586,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //这里只抓不是数字的情况
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
-                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
+                                    throw new BusinessException(ex.getMessage());
+                                    //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
+                                    //System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }
                             }
                         }
@@ -571,6 +600,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
         }
         if(checkPass){
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
@@ -579,5 +611,20 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
     }
 
+    /**
+     * 收货方列表出现重复
+     */
+    private Wrapper<?> checkConsigneeRepeat(List<String> consigneeNameList){//出错位置也要有
+        for(String consigneeName : consigneeNameList){
+            consigneeNameList.contains(consigneeName);
+        }
+        return null;
+    }
 
+    /**
+     * 货品编码出现重复
+     */
+    private Wrapper<?> checkGoodsCodeRepeat(List<String> consigneeName){
+        return null;
+    }
 }
