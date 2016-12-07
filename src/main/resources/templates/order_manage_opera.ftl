@@ -435,6 +435,8 @@
                 value = "报损出库";
             } else if (order.businessType == "613") {
                 value = "其他出库";
+            } else if (order.businessType == "614") {
+                value = "分拨出库";
             } else if (order.businessType == "620") {
                 value = "采购入库";
             } else if (order.businessType == "621") {
@@ -443,6 +445,14 @@
                 value = "退货入库";
             } else if (order.businessType == "623") {
                 value = "加工入库";
+            } else if (order.businessType == "624") {
+                value = "盘盈入库";
+            } else if (order.businessType == "625") {
+                value = "流通入库";
+            } else if (order.businessType == "626") {
+                value = "其他入库";
+            } else if (order.businessType == "627") {
+                value = "分拨入库";
             }
             return value;
         }
@@ -592,10 +602,15 @@
                 html += "<option value='611'>调拨出库</option>";
                 html += "<option value='612'>报损出库</option>";
                 html += "<option value='613'>其他出库</option>";
+                html += "<option value='614'>分拨出库</option>";
                 html += "<option value='620'>采购入库</option>";
                 html += "<option value='621'>调拨入库</option>";
                 html += "<option value='622'>退货入库</option>";
                 html += "<option value='623'>加工入库</option>";
+                html += "<option value='624'>盘盈入库</option>";
+                html += "<option value='625'>流通入库</option>";
+                html += "<option value='626'>其他入库</option>";
+                html += "<option value='627'>分拨入库</option>";
                 return html;
             }
             return null;

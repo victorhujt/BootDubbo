@@ -80,7 +80,8 @@
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
                     <#--<a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>-->
-                    <a href="${(OFC_WEB_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
+                    <#--<a href="${(OFC_WEB_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>-->
+                    <a href="javascript:downloadTemplate()">批量下单导入模版_商超配送(点击下载)</a>
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -245,7 +246,10 @@
         console.log("0000"+historyUrl)
         xescm.common.loadPage(historyUrl);
     })
-
+    function downloadTemplate(){
+        var url = ofc_url + "/open/downloadTemplate";
+        window.location.href = url;
+    }
     function HashMap() {
         /** Map 大小 **/
         var size = 0;
