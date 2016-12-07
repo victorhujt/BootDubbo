@@ -879,6 +879,7 @@
                 var unit = tdArr.eq(5).text();//    单位
                 var sendGoods = tdArr.eq(6).text();//发货数量
                 var goodsSecType = tdArr.eq(7).text();//货品二级类
+                var goodsFirType = tdArr.eq(8).text();//货品一级类
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
@@ -892,6 +893,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                 preIndex = index;
             });
@@ -903,6 +905,7 @@
 
                     var numIndex = parseInt(preIndex);
                     preIndex = numIndex + 1;
+                    var goodsFirType = tdArr.eq(1).text();//货品一级类
                     var goodsSecType = tdArr.eq(2).text();//货品二级类
                     var goodsCode = tdArr.eq(4).text();//货品编码
                     var goodsName = tdArr.eq(5).text();//货品名称
@@ -926,6 +929,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -1832,11 +1836,13 @@
                 var goodsUnit = tdArr.eq(5).text();//单位
                 //var goodsTotalAmount = tdArr.eq(6).text();//总数量
                 var goodsSecType = tdArr.eq(7).text();
+                var goodsFirType = tdArr.eq(8).text();
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
                 goods.goodsCategory = goodsSecType;
+                goods.goodsType = goodsFirType;
                 goods.chargingWays = '01';//计费方式按默认按件数
 
                 var mapKey = goodsCode + "@" + goodsIndex;

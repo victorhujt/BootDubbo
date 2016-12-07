@@ -286,7 +286,7 @@ public class OfcOperationDistributing extends BaseController{
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage());
-            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"导入出错");
+            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return result;
     }

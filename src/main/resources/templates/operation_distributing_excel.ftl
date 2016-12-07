@@ -385,9 +385,9 @@
 
 
     }//
-    var viewMap = new HashMap();
+    var viewMap = null;
     var loadSheetTag = false;
-    var consigneeList = [];
+    var consigneeList = null;
 
     function uploadFileChange(target) {
 
@@ -439,8 +439,8 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
-                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-//                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
                     url: url,
@@ -488,6 +488,10 @@
         })
 
         $("#loadSheetAndCheckBtn").click(function () {//加载
+//            viewMap = null;
+            viewMap = new HashMap();
+//            consigneeList = null;
+            consigneeList = [];
 
             if($("#uploadExcelSheet option").size() > 0){
 
@@ -500,8 +504,8 @@
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
                 formData.append('sheetNum',sheetNum);
-                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-//                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',
