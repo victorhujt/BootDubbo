@@ -79,8 +79,8 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
-                    <a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
-                    <#--<a href="${(OFC_WEB_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>-->
+                    <#--<a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>-->
+                    <a href="${(OFC_WEB_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -439,8 +439,8 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
-                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-//                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
                     url: url,
@@ -500,8 +500,8 @@
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
                 formData.append('sheetNum',sheetNum);
-                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-//                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',

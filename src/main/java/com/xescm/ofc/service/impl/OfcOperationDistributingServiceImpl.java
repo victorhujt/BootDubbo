@@ -611,5 +611,20 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
     }
 
+    /**
+     * 收货方列表出现重复
+     */
+    private Wrapper<?> checkConsigneeRepeat(List<String> consigneeNameList){//出错位置也要有
+        for(String consigneeName : consigneeNameList){
+            consigneeNameList.contains(consigneeName);
+        }
+        return null;
+    }
 
+    /**
+     * 货品编码出现重复
+     */
+    private Wrapper<?> checkGoodsCodeRepeat(List<String> consigneeName){
+        return null;
+    }
 }
