@@ -260,21 +260,19 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                    <div class="col-xs-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
+                    <div class="col-width-220 padding-15 y-float">
                         <div class="clearfix">
                             <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                    <div class="col-xs-3">
+
+                    <div class="col-xs-3 y-float">
                         <div class="clearfix">
-                            <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
                         </div>
                     </div>
-                </div>
+                 </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -298,7 +296,9 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+            <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+            <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <div class="row">
@@ -683,7 +683,7 @@
                         <label class=" col-float" for="name">元</label></div>
                     </div>
                     <div >
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:28px;">到付</label>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:25px;">到付</label>
                         <div style="width:145px;float:left;">
                             <div class="padding-15 col-float" style="width:130px;">
                                 <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
@@ -692,7 +692,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:51px;">回付</label>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;">回付</label>
                         <div style="width:145px;float:left;">
                             <div class="padding-15 col-float" style="width:130px;">
                                 <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
