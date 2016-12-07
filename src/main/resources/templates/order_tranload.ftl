@@ -1939,9 +1939,9 @@
                         case 5 :orderGoods.goodsSpec = param.getElementsByTagName("input")[0].value;break;
                         case 6 :orderGoods.unit = param.getElementsByTagName("input")[0].value;break;
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
-                        case 8 :orderGoods.chargingQuantity = param.getElementsByTagName("select")[0].value;break;
-                        case 9 :orderGoods.chargingWays = param.getElementsByTagName("input")[0].value;break;
-                        case 10 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
+                        case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
+                        case 9 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
                 }

@@ -327,9 +327,11 @@
         var orderStatusList = data.ofcOrderStatus;
         if (orderStatusList != null && orderStatusList != "" && orderStatusList != undefined) {
             $.each(orderStatusList, function (index, orderStatus) {
-                htmlText += "<tr role=\"row\" class=\"odd\">"
-                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(orderStatus.notes) + "</td>"
-                        + "</tr>";
+                if(orderStatus != null && orderStatus != "" && orderStatus != undefined ){
+                    htmlText += "<tr role=\"row\" class=\"odd\">"
+                            + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(orderStatus.notes) + "</td>"
+                            + "</tr>";
+                }
             })
         }
         $("#orderFollowStatusListTBody").html(htmlText);
