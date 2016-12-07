@@ -107,7 +107,11 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">选择
+                    aria-label="Clicks: activate to sort column ascending" >
+                    <label class="pos-rel">
+                        <input id="selOrder" type="checkbox" class="ace" onchange="selOrder()">
+                        <span class="lbl"></span>
+                    </label>选择
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">订单编号
@@ -205,19 +209,37 @@
     }
     function invoicePrint() {
         var sel = "";
+        var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlets=";
+        var code="";
         $("#dataTbody").find("tr").each(function(index){
             var tdArr = $(this).children();
             if(tdArr.eq(0).find("input").prop("checked")){
                 sel="1";
                 var order_code=tdArr.eq(1).find("a").html();
-                var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlet=ofc/invoices/Invoice.cpt&orderCode="+order_code;
-                window.open(url);
+                code = code+"{reportlet:'/ofc/invoices/Invoice.cpt',orderCode:'"+order_code+"'},";
             }
         });
         if(sel==""){
             alert("请至少选择一个订单！");
+        }else{
+            code=code.substring(0,code.length-1);
+            url=url+"["+code+"]";
+            debugger;
+            window.open(encodeURI(url));
         }
-        //xescm.common.loadPage(url);
+    }
+
+    function selOrder() {
+        debugger;
+        if($("#selOrder").prop("checked")){
+            $("#dataTbody").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',true);
+            });
+        }else{
+            $("#dataTbody").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',false);
+            });
+        }
     }
 </script>
 <script type="text/javascript">
@@ -573,6 +595,8 @@
         }
         return value;
     }
+
+
 </script>
 
 </body>
