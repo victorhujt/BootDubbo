@@ -769,6 +769,7 @@
                         "<td>" + goodsDetail.unit + "</td>" +
                         "<td>" + goodsDetail.goodsAmount + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
+                        "<td  style='display:none'>" + goodsDetail.goodsTypeParentName + "</td>" +
                         "</tr>");
             }
         }
@@ -879,7 +880,9 @@
                 var unit = tdArr.eq(5).text();//    单位
                 var sendGoods = tdArr.eq(6).text();//发货数量
                 var goodsSecType = tdArr.eq(7).text();//货品二级类
+
                 var goodsFirType = tdArr.eq(8).text();//货品一级类
+
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
@@ -902,7 +905,7 @@
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
-
+                    debugger;
                     var numIndex = parseInt(preIndex);
                     preIndex = numIndex + 1;
                     var goodsFirType = tdArr.eq(1).text();//货品一级类
