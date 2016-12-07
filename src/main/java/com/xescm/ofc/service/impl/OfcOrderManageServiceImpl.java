@@ -162,20 +162,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
                     if (ofcWarehouseInformation.getProvideTransport()== OrderConstConstant.WAREHOUSEORDERPROVIDETRANS){
                         //需要提供运输
-                        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-                        if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.SALESOUTOFTHELIBRARY)
-                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.TRANSFEROUTOFTHELIBRARY)
-                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.LOSSOFREPORTING)
-                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.OTHEROUTOFTHELIBRARY)
-                        ){
+                        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();//(PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).substring(0,2).equals("61"))
+                        if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                             //出库
                             ofcTransplanInfo.setProgramSerialNumber("2");
                             ofcSiloprogramInfo.setProgramSerialNumber("1");
 
-                        }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.PURCHASINGANDSTORAGE)
-                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.ALLOCATESTORAGE)
-                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.RETURNWAREHOUSING)
-                                || PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.PROCESSINGSTORAGE)){
+                        }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
                             //入库
                             ofcTransplanInfo.setProgramSerialNumber("1");
                             ofcSiloprogramInfo.setProgramSerialNumber("2");
@@ -444,18 +437,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
             planCode=ofcSiloprogramInfo.getPlanCode();
             ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
-            if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.SALESOUTOFTHELIBRARY)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.TRANSFEROUTOFTHELIBRARY)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.LOSSOFREPORTING)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.OTHEROUTOFTHELIBRARY)
-                    ){
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).substring(0,2).equals("61")){
                 //出库
                 ofcSiloprogramInfo.setBusinessType("出库");
 
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.PURCHASINGANDSTORAGE)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.ALLOCATESTORAGE)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.RETURNWAREHOUSING)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).equals(OrderConstConstant.PROCESSINGSTORAGE)){
+            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).substring(0,2).equals("62")){
                 //入库
                 ofcSiloprogramInfo.setBusinessType("入库");
             }
