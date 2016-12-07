@@ -77,7 +77,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
 
             try {
-                if(message.getTag().equals("deliveryTag")){
+                if(message.getTag().equals("DeliveryTag")){
                     logger.info("调度单：{}",message);
                     List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions = null;
                     try {
@@ -89,7 +89,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     } catch (Exception e) {
                         logger.info(e.getMessage());
                     }
-                }else if(message.getTag().equals("transportTag")){
+                }else if(message.getTag().equals("TransportTag")){
                     logger.info("运输单消费 :{}",message);
                     // 将获取的json格式字符串转换成相应对象
                     List<OfcPlanFedBackCondition> ofcPlanFedBackConditions = null;
@@ -122,29 +122,15 @@ public class CreateOrderApiConsumer implements MessageListener {
 				 } catch (Exception e) {
 					 logger.info(e.getMessage());
 					 e.printStackTrace();
-					// return Action.ReconsumeLater;
 				 }
 			} catch (Exception e) {
 				  logger.info(e.getMessage());
-				 // return Action.ReconsumeLater;
 			}
         }else if(StringUtils.equals(topicName,mqConfig.getOfc2WhcOrderTopic())){
-            //出库
-            if (PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.SALESOUTOFTHELIBRARY)
-                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.TRANSFEROUTOFTHELIBRARY)
-                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.LOSSOFREPORTING)
-                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.OTHEROUTOFTHELIBRARY)
-                    ){
-
-            //入库
-            }else if (PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.PURCHASINGANDSTORAGE)
-                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.ALLOCATESTORAGE)
-                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.RETURNWAREHOUSING)
-                    || PubUtils.trimAndNullAsEmpty(tag).equals(OrderConstConstant.PROCESSINGSTORAGE)){
-                logger.info("仓储计划单入库单反馈的消息体为:"+messageBody);
-                logger.info("仓储计划单入库单反馈开始消费");
+                logger.info("仓储计划单出入库单反馈的消息体为:"+messageBody);
+                logger.info("仓储计划单出入库单反馈开始消费");
                 {
-                    logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+                    logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                     List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
                     try {
                         ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
@@ -153,10 +139,9 @@ public class CreateOrderApiConsumer implements MessageListener {
                         }
                     } catch (Exception e) {
                         logger.info(e.getMessage());
-                        // return Action.ReconsumeLater;
                     }
                 }
-            }
+
         }
         return Action.CommitMessage;
     }

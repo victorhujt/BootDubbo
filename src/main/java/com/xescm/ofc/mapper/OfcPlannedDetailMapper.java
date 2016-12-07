@@ -10,4 +10,6 @@ import java.util.Map;
 public interface OfcPlannedDetailMapper extends Mapper<OfcPlannedDetail> {
 
     List<OfcPlannedDetail> plannedDetailsScreen(Map<String,String> mapperMap);
+
+    void updateByPlanCode(Object key);
 }

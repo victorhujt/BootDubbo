@@ -389,11 +389,16 @@
                                                         <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '611')>selected="selected"</#if></#if>>调拨出库</option>
                                                         <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '612')>selected="selected"</#if></#if>>报损出库</option>
                                                         <option value="613" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '613')>selected="selected"</#if></#if>>其他出库</option>
+                                                        <option value="614" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '614')>selected="selected"</#if></#if>>分拨出库</option>
                                                         <option value="----------">----------</option>
                                                         <option value="620" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '620')>selected="selected"</#if></#if>>采购入库</option>
                                                         <option value="621" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '621')>selected="selected"</#if></#if>>调拨入库</option>
                                                         <option value="622" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '622')>selected="selected"</#if></#if>>退货入库</option>
                                                         <option value="623" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '623')>selected="selected"</#if></#if>>加工入库</option>
+                                                        <option value="624" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '624')>selected="selected"</#if></#if>>盘盈入库</option>
+                                                        <option value="625" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '625')>selected="selected"</#if></#if>>流通入库</option>
+                                                        <option value="626" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '626')>selected="selected"</#if></#if>>其他入库</option>
+                                                        <option value="627" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '627')>selected="selected"</#if></#if>>分拨入库</option>
                                                     </select>
                                                 </div>
                                             </div>

@@ -192,7 +192,7 @@ public class OfcOrderDTO {
     private BigDecimal returnAmount;
     private BigDecimal monthlyAmount;
     private BigDecimal luggage;
-
+    private String openInvoices;
 
 
     private String selfCustOrderCode;
@@ -1067,5 +1067,13 @@ public class OfcOrderDTO {
 
     public void setLuggage(BigDecimal luggage) {
         this.luggage = luggage;
+    }
+
+    public String getOpenInvoices() {
+        return openInvoices;
+    }
+
+    public void setOpenInvoices(String openInvoices) {
+        this.openInvoices = openInvoices;
     }
 }

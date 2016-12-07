@@ -15,10 +15,15 @@ public final class OrderConstConstant {
     public static final String TRANSFEROUTOFTHELIBRARY="611";        //调拨出库
     public static final String LOSSOFREPORTING="612";        //报损出库
     public static final String OTHEROUTOFTHELIBRARY="613";       //其他出库
+    public static final String ALLOTOUTOFTHELIBRARY="614";       //分拨出库
     public static final String PURCHASINGANDSTORAGE="620";       //采购入库
     public static final String ALLOCATESTORAGE="621";        //调拨入库
     public static final String RETURNWAREHOUSING="622";      //退货入库
     public static final String PROCESSINGSTORAGE="623";      //加工入库
+    public static final String INVENTORYPROFITSTORAGE="624";      //盘盈入库
+    public static final String CIRCULATESTORAGE="625";      //流通入库
+    public static final String OTHERSTORAGE="626";      //其他入库
+    public static final String ALLOTSTORAGE="627";      //分拨入库
 
     public static final String PENDINGAUDIT="10";       //待审核
     public static final String ALREADYEXAMINE="20";     //已审核
@@ -58,6 +63,8 @@ public final class OrderConstConstant {
     public static final String ADDR_URL = "ADDR_URL";
     /**CSC地址*/
     public static final String CSC_URL = "CSC_URL";
+    /**OFC_WEB_URL*/
+    public static final String OFC_WEB_URL = "OFC_WEB_URL";
     //支付方式
     public static final String FINNANCEPAYWAYCASH="6810";//现金支付
     public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡
@@ -92,14 +99,23 @@ public final class OrderConstConstant {
 
     public static final String OFC_WHC_IN_TYPE = "入库";
 
-    
-    public static final String TRACE_STATUS_1 = "开始";
-    
-    public static final String TRACE_STATUS_2 = "收货";
-    
-    public static final String TRACE_STATUS_3 = "开始上架";
-    
-    public static final String TRACE_STATUS_4 = "已完成";
+    public static final String TRACE_STATUS_1 = "00";
+
+    public static final String TRACE_STATUS_2 = "30";
+
+    public static final String TRACE_STATUS_3 = "40";
+
+    public static final String TRACE_STATUS_4 = "60";
+
+    public static final String TRACE_STATUS_5 = "61";
+
+    public static final String TRACE_STATUS_6 = "66";
+
+    public static final String TRACE_STATUS_7 = "80";
+
+    public static final String TRACE_STATUS_8 = "90";
+
+    public static final String TRACE_STATUS_9 = "99";
 
 
 

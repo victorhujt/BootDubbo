@@ -334,6 +334,11 @@
                             <input id="monthlyAmount" name="monthlyAmount" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFinanceInformation.monthlyAmount)!"0.00"}">
                         </div>
+                        <label class="control-label col-label no-padding-right" for="name">是否开发票</label>
+                        <div class="w-width-220 col-float">
+                            <input id="openInvoices" name="openInvoices" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.openInvoices)!""}" >
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">是否上门提货</label>
@@ -518,7 +523,10 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">获取类别
+                    aria-label="Clicks: activate to sort column ascending">货品种类
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">货品小类
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">货品编码
@@ -533,31 +541,75 @@
                     aria-label="Clicks: activate to sort column ascending">单位
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">生产批次
+                    aria-label="Clicks: activate to sort column ascending">包装
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">生产日期
+                    aria-label="Clicks: activate to sort column ascending">计费方式
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">失效日期
+                    aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量
+                    aria-label="Clicks: activate to sort column ascending">计费数量
                 </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">重量(kg)
+                </th>
+            </tr>
             </thead>
             <tbody>
             <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
                 <#list ofcGoodsDetailsInfoList as goods>
                 <tr>
+                    <td class="center">${(goods.goodsType)!"" }</td>
                     <td class="center">${(goods.goodsCategory)!"" }</td>
                     <td class="center">${(goods.goodsCode)!"" }</td>
                     <td class="center">${(goods.goodsName)!"" }</td>
                     <td class="center">${(goods.goodsSpec)!"" }</td>
                     <td class="center">${goods.unit!"" }</td>
-                    <td class="center">${goods.productionBatch!"" }</td>
-                    <td class="center">${(goods.productionTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td class="center">${(goods.invalidTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td class="center">${goods.quantity!"" }</td>
+                    <td class="center">
+                        <#if (goods.pack)! == '01'>
+                            纸箱
+                        <#elseif (goods.pack)! == '02'>
+                            木箱
+                        <#elseif (goods.pack)! == '03'>
+                            桶
+                        <#elseif (goods.pack)! == '04'>
+                            混包
+                        <#elseif (goods.pack)! == '05'>
+                            裸装
+                        <#elseif (goods.pack)! == '06'>
+                            编袋
+                        <#elseif (goods.pack)! == '07'>
+                            托盘
+                        <#elseif (goods.pack)! == '08'>
+                            木框架
+                        <#elseif (goods.pack)! == '09'>
+                            泡沫箱
+                        <#elseif (goods.pack)! == '10'>
+                            缠绕膜
+                        <#elseif (goods.pack)! == '11'>
+                            盘
+                        <#elseif (goods.pack)! == '12'>
+                            铁框
+                        <#elseif (goods.pack)! == '13'>
+                            布袋
+                        <#else>
+                        </#if>
+                    </td>
+                    <td class="center">
+                        <#if (goods.chargingWays)! == '01'>
+                            件数
+                        <#elseif (goods.chargingWays)! == '02'>
+                            重量Kg
+                        <#elseif (goods.chargingWays)! == '03'>
+                            体积m³
+                        <#else>
+                        </#if>
+                    </td>
+                    <td class="center">${goods.chargingUnitPrice!"" }</td>
+                    <td class="center">${goods.chargingQuantity!"" }</td>
+                    <td class="center">${goods.billingWeight!"" }</td>
                 </tr>
                 </#list>
             </#if>

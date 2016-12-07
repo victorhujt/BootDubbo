@@ -203,6 +203,7 @@ public class OfcOrderManageOperaRest extends BaseController {
                 ofcFinanceInformation.setReturnList(defalutString(ofcFinanceInformation.getReturnList()));
                 ofcFinanceInformation.setInsure(defalutString(ofcFinanceInformation.getInsure()));
                 ofcFinanceInformation.setCollectFlag(defalutString(ofcFinanceInformation.getCollectFlag()));
+                ofcFinanceInformation.setOpenInvoices(defalutString(ofcFinanceInformation.getOpenInvoices()));
             }
 
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);

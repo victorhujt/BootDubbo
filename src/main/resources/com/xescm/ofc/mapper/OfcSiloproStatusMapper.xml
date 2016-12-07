@@ -24,7 +24,7 @@
         plan_code = #{planCode,jdbcType=VARCHAR},
       </if>
       <if test="orderCode != null" >
-        order_code = #{orderCode,jdbcType=INTEGER},
+        order_code = #{orderCode,jdbcType=VARCHAR},
       </if>
       <if test="plannedSingleState != null" >
         planned_single_state = #{plannedSingleState,jdbcType=INTEGER},
