@@ -352,7 +352,7 @@
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
                                <div class="w-width-220 y-float">
                                    <div class="clearfix">
-                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
                                    </div>
                                </div></div>
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
@@ -1536,9 +1536,7 @@
 
             var jsonStr = {};
             //订单基本信息
-            //$dp.$('orderTimePre').value;
-
-            jsonStr.orderTime = $dp.$('orderTime').value;
+            jsonStr.orderTime = $('#orderTime').val();
             jsonStr.custOrderCode = $("#custOrderCode").val();
             jsonStr.orderType = $("#orderTypeSel").val();
             jsonStr.businessType = $("#businessType").val();
@@ -1619,7 +1617,7 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
-
+                        location.reload();
                         //xescm.common.goBack("/ofc/orderPlace");
                     })
         });

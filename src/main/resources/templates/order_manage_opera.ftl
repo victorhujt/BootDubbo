@@ -56,6 +56,9 @@
             overflow: auto;
             border: solid #7A7A7A 2px;
         }
+        .date_a{
+            line-height:21px !important;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css"/>
 </head>
@@ -100,15 +103,9 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                 <div class="col-xs-3">
-                    <input readonly="readonly" style="width: 101px;" id="startDate" name="startDate" type="search"
-                           placeholder=""
-                           aria-controls="dynamic-table"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})">
+                    <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 101px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                     至
-                    <input readonly="readonly" style="width: 101px;" id="endDate" name="endDate" type="search"
-                           placeholder=""
-                           aria-controls="dynamic-table"
-                           onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-{%d-30}',maxDate:'%y-%M-%d'})">
+                    <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 101px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                 <div class="col-xs-2">
@@ -191,7 +188,6 @@
         </div>
     </div>
 
-
     <div class="modal-content" id="custListDiv" style="display: none;">
         <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer">
             <button type="button" id="" style="cursor:pointer" class="bootbox-close-button close"
@@ -210,7 +206,7 @@
                                        aria-controls="dynamic-table">
                             </div>
                         </div>
-                       <#-- <label class="control-label col-xs-1 no-padding-right" for="name"></label>-->
+                    <#-- <label class="control-label col-xs-1 no-padding-right" for="name"></label>-->
                         <div class="col-xs-3 y-float">
                             <div class="clearfix">
                                 <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
@@ -264,7 +260,6 @@
 
     <link rel="stylesheet" href="../components/chosen/chosen.css"/>
     <script src="../components/chosen/chosen.jquery.js"></script>
-
     <script type="text/javascript">
         var scripts = [null, "../components/chosen/chosen.jquery.js", null]
         $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
@@ -330,8 +325,8 @@
             param.pageNum = pageNum;
             param.pageSize = 10;
             param.custName = $("#custName").val();
-            var startDate = $dp.$('startDate').value;
-            var endDate = $dp.$('endDate').value;
+            var startDate = $('#startDate').val();
+            var endDate = $('endDate').val();
             param.startDate = startDate;
             param.endDate = endDate;
             param.orderCode = $("#orderCode").val();

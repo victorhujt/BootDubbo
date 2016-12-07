@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by lyh on 2016/10/10.
  */
-public interface OfcFundamentalInformationService extends IService<OfcFundamentalInformation>{
+public interface OfcFundamentalInformationService extends IService<OfcFundamentalInformation> {
     String getOrderCodeByCustOrderCode(String custOrderCode);
 
 
@@ -16,8 +16,8 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
 
     String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
 
-    List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber);
-
     OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber);
+
+    OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode);
 
 }

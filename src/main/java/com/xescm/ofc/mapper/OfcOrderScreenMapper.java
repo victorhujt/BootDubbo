@@ -30,7 +30,7 @@ public interface OfcOrderScreenMapper extends MyMapper<OrderScreenResult> {
     /**
      * 查询订单--运营
      * @param form
-     * @return
+     * @return List<OrderScreenResult>
      */
     List<OrderScreenResult> queryOrderOper(@Param(value = "form") OrderOperForm form);
 }

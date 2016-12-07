@@ -10,6 +10,11 @@ import feign.RequestLine;
  */
 public interface FeignOfcDistributionAPI {
 
+    /**
+     * 推送卡班订单
+     * @param ofcDistributionBasicInfo
+     * @return
+     */
     @RequestLine("POST /api/ofc/distribution/addDistributionBasicInfo")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo);

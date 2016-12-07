@@ -20,4 +20,30 @@
     <result column="cubage" property="cubage" jdbcType="DECIMAL" />
     <result column="total_box" property="totalBox" jdbcType="INTEGER" />
   </resultMap>
+
+  <!--计划单明细列表查询-->
+  <select id="plannedDetailsScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    pd.*
+    FROM
+    ofc_planned_detail pd
+    LEFT JOIN ofc_siloprogram_info ofi ON pd.plan_code = ofi.plan_code
+    <where>
+      <if test="planCode!=null and plan_code!=''">
+        pd.plan_code =#{planCode}
+      </if>
+    </where>
+  </select>
+
+
+  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcPlannedDetail" >
+    update ofc_planned_detail
+    <set >
+      <if test="realQuantity != null" >
+        real_quantity = #{realQuantity,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where plan_code = #{planCode,jdbcType=VARCHAR}
+    AND goods_code = #{goodsCode,jdbcType=VARCHAR}
+  </update>
 </mapper>

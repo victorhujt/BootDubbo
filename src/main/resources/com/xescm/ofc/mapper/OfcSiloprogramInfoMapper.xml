@@ -100,6 +100,9 @@
     <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
     <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+     <result column="service_provider_name" property="serviceProviderName" jdbcType="VARCHAR" />
+    <result column="service_provider_code" property="serviceProviderCode" jdbcType="VARCHAR" />
+     <result column="planned_single_state" property="plannedSingleState" jdbcType="VARCHAR" />
   </resultMap>
 
   <!--非作废仓储计划单列表查询-->
@@ -121,33 +124,47 @@
   </select>
 
   <select id="ofcSiloprogramAndResourceInfo" parameterType="java.lang.String" resultMap="SiloprogramAndResourceInfoResultMap">
-  
-    SELECT
+      SELECT
     sinfo.*,
     sss.plate_number,
     sss.driver_name,
     sss.contact_number,
-    sss.trans_code
+    sss.trans_code,
+    sss.service_provider_name,
+    sss.service_provider_code,
+    ss.planned_single_state
     FROM
     ofc_siloprogram_info sinfo
     LEFT JOIN ofc_silopro_source_status sss ON sinfo.plan_code = sss.plan_code
-   <!--   LEFT JOIN ofc_silopro_status ss ON sinfo.plan_code = ss.plan_code
-    LEFT JOIN ofc_silopro_newstatus sn ON sinfo.plan_code = sn.plan_code-->
+    LEFT JOIN ofc_silopro_status ss ON sinfo.plan_code = ss.plan_code
     <where>
+         1 = 1
+    	 <if test="plannedSingleState!=null and plannedSingleState!=''">
+         AND ss.planned_single_state =#{plannedSingleState}
+        </if>
       <if test="orderCode!=null and orderCode!=''">
-        sinfo.order_code =#{orderCode}
+         AND sinfo.order_code =#{orderCode}
       </if>
     </where>
   </select>
 
 
+  <select id="ofcMaxSiloprogramInfoSerialNumberScreenList" parameterType="java.lang.String" resultType="String">
+    SELECT
+    max(ii.program_serial_number)
+    FROM
+    ofc_siloprogram_info ii
+    <where>
+       1 = 1
+    <if test="orderCode!=null and orderCode!=''">
+      AND  ii.order_code =#{orderCode}
+    </if>
 
-
-
-
-
-
-
-
-
+    <if test="businessType!=null and businessType!=''">
+      AND  ii.business_type =#{businessType}
+    </if>
+      ORDER BY
+      ii.creation_time DESC;
+    </where>
+  </select>
 </mapper>

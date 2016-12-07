@@ -5,13 +5,14 @@ import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.domain.OfcPlanFedBackCondition;
-import com.xescm.ofc.domain.OfcPlanFedBackResult;
-import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
+import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
+import com.xescm.ofc.service.OfcSiloproStatusService;
 import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -38,6 +39,9 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Autowired
     private OfcPlanFedBackService ofcPlanFedBackService;
+    
+    @Autowired
+    private OfcSiloproStatusService ofcSiloproStatusService;
 
     @Autowired
     private MqConfig mqConfig;
@@ -48,6 +52,7 @@ public class CreateOrderApiConsumer implements MessageListener {
     public Action consume(Message message, ConsumeContext consumeContext) {
         logger.info("OFC消费MQ开始。。。");
         String topicName = message.getTopic();
+        String tag=message.getTag();
         String userName ="";
         String key = message.getKey();
         String messageBody = new String(message.getBody());
@@ -72,7 +77,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
 
             try {
-                if(message.getTag().equals("deliveryTag")){
+                if(message.getTag().equals("DeliveryTag")){
                     logger.info("调度单：{}",message);
                     List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions = null;
                     try {
@@ -84,7 +89,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     } catch (Exception e) {
                         logger.info(e.getMessage());
                     }
-                }else if(message.getTag().equals("transportTag")){
+                }else if(message.getTag().equals("TransportTag")){
                     logger.info("运输单消费 :{}",message);
                     // 将获取的json格式字符串转换成相应对象
                     List<OfcPlanFedBackCondition> ofcPlanFedBackConditions = null;
@@ -103,6 +108,40 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
 //                logger.error(ex.getMessage(), ex);
             }
+         }else if(StringUtils.equals(topicName,mqConfig.getOfcOrderStatusTopic())){
+        	logger.info("仓储计划单状态反馈的消息体为:"+messageBody);
+			logger.info("仓储计划单状态开始消费");
+			try {
+	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+				 List<ofcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
+				 try {
+					 ofcSiloprogramStatusFedBackConditions= JSONUtils.jsonToList(messageBody , ofcSiloprogramStatusFedBackCondition.class);
+					 for(int i=0;i<ofcSiloprogramStatusFedBackConditions.size();i++){
+                         ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
+					 }
+				 } catch (Exception e) {
+					 logger.info(e.getMessage());
+					 e.printStackTrace();
+				 }
+			} catch (Exception e) {
+				  logger.info(e.getMessage());
+			}
+        }else if(StringUtils.equals(topicName,mqConfig.getOfc2WhcOrderTopic())){
+                logger.info("仓储计划单出入库单反馈的消息体为:"+messageBody);
+                logger.info("仓储计划单出入库单反馈开始消费");
+                {
+                    logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+                    List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
+                    try {
+                        ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
+                        for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
+                            ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
+                        }
+                    } catch (Exception e) {
+                        logger.info(e.getMessage());
+                    }
+                }
+
         }
         return Action.CommitMessage;
     }

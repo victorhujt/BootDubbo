@@ -10,4 +10,33 @@
     <result column="job_new_status" property="jobNewStatus" jdbcType="VARCHAR" />
     <result column="job_status_update_time" property="jobStatusUpdateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  
+  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcSiloproNewstatus" >
+    <!--
+      根据计划单号进行修改
+    -->
+    update ofc_silopro_newstatus
+    <set >
+      <if test="planCode != null" >
+        plan_code = #{planCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        order_code = #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="jobNewStatus != null" >
+        job_new_status = #{jobNewStatus,jdbcType=INTEGER},
+      </if>
+      <if test="jobStatusUpdateTime != null" >
+        job_status_update_time = #{jobStatusUpdateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where plan_code = #{planCode,jdbcType=VARCHAR}
+  </update>
+  
+  
+  
+  
+  
+  
+  
 </mapper>

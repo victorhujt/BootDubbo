@@ -11,12 +11,12 @@ import org.apache.ibatis.annotations.Param;
 public interface OfcCreateOrderMapper {
 
     /**
-     * 根据订单号与订单状态查询
-     * @param orderCode 订单号
-     * @param orderStatus 订单状态
+     * 根据客户订单号与货主编码查询是否存在订单
+     * @param custOrderCode 客户订单号
+     * @param custCode 货主编码
      * @return queryCountByOrderStatus
      */
-    int queryCountByOrderStatus(@Param(value = "orderCode") String orderCode, @Param(value = "orderStatus") String orderStatus);
+    int queryCountByOrderStatus(@Param(value = "custOrderCode") String custOrderCode, @Param(value = "custCode") String custCode);
 
 
 

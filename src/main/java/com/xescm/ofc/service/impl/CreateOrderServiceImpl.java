@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.coo.*;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
@@ -156,26 +157,40 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     @Transactional
     @Override
-    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode, String orderCode, String custCode) {
+    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode) {
         CannelOrderVo cannelOrderVo = new CannelOrderVo();
         cannelOrderVo.setCustOrderCode(custOrderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation = ofcFundamentalInformationService.queryDataByCustOrderCode(custOrderCode);
+        if(ofcFundamentalInformation == null){
+            cannelOrderVo.setReason("发货单号不存在");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
+        }
+        String custCode = ofcFundamentalInformation.getCustCode();
+        String orderCode = ofcFundamentalInformation.getOrderCode();
         cannelOrderVo.setCustCode(custCode);
         cannelOrderVo.setResultCode("0");
         if (StringUtils.isBlank(orderCode)) {
             cannelOrderVo.setReason("发货单号不存在");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         }
-        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
+        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+        if (null == ofcOrderStatus) {
+            cannelOrderVo.setReason("发货单号不存在");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
+        }
         String orderState = ofcOrderStatus.getOrderStatus();
         if (StringUtils.equals(orderState, HASBEENCOMPLETED)) {
             cannelOrderVo.setReason("已完成的订单");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         } else if (StringUtils.equals(orderState, HASBEENCANCELED)) {
             cannelOrderVo.setReason("已取消的订单");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         } else {
             AuthResDto authResDto = new AuthResDto();
             UamUser uamUser = new UamUser();

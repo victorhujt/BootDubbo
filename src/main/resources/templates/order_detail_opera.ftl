@@ -101,8 +101,6 @@
                             <input id="merchandiser" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.merchandiser)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">备注</label>
                         <div class="w-width-220 col-float">
                             <input id="notes" name="custName" type="search" placeholder=""
@@ -229,23 +227,7 @@
                                    value="${(ofcDistributionBasicInfo.consignorContactPhone)!""}">
                         </div>
                     </div>
-                    <#--<div class="form-group">-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">传真</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">Email</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">邮编</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                    <#--</div>-->
+
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
@@ -285,23 +267,7 @@
                                    value="${(ofcDistributionBasicInfo.consigneeContactPhone)!""}">
                         </div>
                     </div>
-                    <#--<div class="form-group">-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">传真</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">Email</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">邮编</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                    <#--</div>-->
+
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
                         <div class="col-xs-6">
@@ -367,6 +333,11 @@
                         <div class="w-width-220 col-float">
                             <input id="monthlyAmount" name="monthlyAmount" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFinanceInformation.monthlyAmount)!"0.00"}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">是否开发票</label>
+                        <div class="w-width-220 col-float">
+                            <input id="openInvoices" name="openInvoices" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.openInvoices)!""}" >
                         </div>
                     </div>
                     <div class="form-group">
@@ -497,43 +468,43 @@
             <#if storageList ?? && (storageList?size > 0) >
                 <#list storageList as stroage>
                 <tr>
-                    <td>
+                    <td class="center">
                     ${stroage_index+1}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.planCode!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.type!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.businessType!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.resourceAllocationStatus!""}
-                    </td>
+                    </td class="center">
                     <td>
                     ${stroage.serviceProviderName!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.serviceProviderContact!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.serviceProviderContactPhone!""}
                     </td>
                     <td>
                     ${stroage.plannedSingleState!""}
-                    </td>
+                    </td class="center">
                     <td>
                     ${stroage.departure!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.destination!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.warehouseName!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
                     </td>
                 </tr>
@@ -552,7 +523,10 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">获取类别
+                    aria-label="Clicks: activate to sort column ascending">货品种类
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">货品小类
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">货品编码
@@ -567,31 +541,75 @@
                     aria-label="Clicks: activate to sort column ascending">单位
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">生产批次
+                    aria-label="Clicks: activate to sort column ascending">包装
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">生产日期
+                    aria-label="Clicks: activate to sort column ascending">计费方式
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">失效日期
+                    aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量
+                    aria-label="Clicks: activate to sort column ascending">计费数量
                 </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">重量(kg)
+                </th>
+            </tr>
             </thead>
             <tbody>
             <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
                 <#list ofcGoodsDetailsInfoList as goods>
                 <tr>
-                    <td>${(goods.goodsCategory)!"" }</td>
-                    <td>${(goods.goodsCode)!"" }</td>
-                    <td>${(goods.goodsName)!"" }</td>
-                    <td>${(goods.goodsSpec)!"" }</td>
-                    <td>${goods.unit!"" }</td>
-                    <td>${goods.productionBatch!"" }</td>
-                    <td>${(goods.productionTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td>${(goods.invalidTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td>${goods.quantity!"" }</td>
+                    <td class="center">${(goods.goodsType)!"" }</td>
+                    <td class="center">${(goods.goodsCategory)!"" }</td>
+                    <td class="center">${(goods.goodsCode)!"" }</td>
+                    <td class="center">${(goods.goodsName)!"" }</td>
+                    <td class="center">${(goods.goodsSpec)!"" }</td>
+                    <td class="center">${goods.unit!"" }</td>
+                    <td class="center">
+                        <#if (goods.pack)! == '01'>
+                            纸箱
+                        <#elseif (goods.pack)! == '02'>
+                            木箱
+                        <#elseif (goods.pack)! == '03'>
+                            桶
+                        <#elseif (goods.pack)! == '04'>
+                            混包
+                        <#elseif (goods.pack)! == '05'>
+                            裸装
+                        <#elseif (goods.pack)! == '06'>
+                            编袋
+                        <#elseif (goods.pack)! == '07'>
+                            托盘
+                        <#elseif (goods.pack)! == '08'>
+                            木框架
+                        <#elseif (goods.pack)! == '09'>
+                            泡沫箱
+                        <#elseif (goods.pack)! == '10'>
+                            缠绕膜
+                        <#elseif (goods.pack)! == '11'>
+                            盘
+                        <#elseif (goods.pack)! == '12'>
+                            铁框
+                        <#elseif (goods.pack)! == '13'>
+                            布袋
+                        <#else>
+                        </#if>
+                    </td>
+                    <td class="center">
+                        <#if (goods.chargingWays)! == '01'>
+                            件数
+                        <#elseif (goods.chargingWays)! == '02'>
+                            重量Kg
+                        <#elseif (goods.chargingWays)! == '03'>
+                            体积m³
+                        <#else>
+                        </#if>
+                    </td>
+                    <td class="center">${goods.chargingUnitPrice!"" }</td>
+                    <td class="center">${goods.chargingQuantity!"" }</td>
+                    <td class="center">${goods.billingWeight!"" }</td>
                 </tr>
                 </#list>
             </#if>
