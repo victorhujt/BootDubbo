@@ -297,9 +297,9 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
     public void downloadTemplate( HttpServletResponse response){
         try {
-            File f = ResourceUtils.getFile("classpath:templates/xlsx/Template_forCP.xlsx");
+            File f = ResourceUtils.getFile("classpath:templates/xlsx/template_for_cp.xlsx");
             response.reset();
-            response.setHeader("Content-Disposition", "attachment; filename=Template_forCP.xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename=template_for_cp.xlsx");
             response.addHeader("Content-Length", "" + f.length());
             response.setContentType("application/octet-stream;charset=UTF-8");
             OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());

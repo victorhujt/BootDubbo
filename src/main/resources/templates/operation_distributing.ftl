@@ -1837,6 +1837,7 @@
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
                 goods.goodsCategory = goodsSecType;
+                goods.chargingWays = '01';//计费方式按默认按件数
 
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
