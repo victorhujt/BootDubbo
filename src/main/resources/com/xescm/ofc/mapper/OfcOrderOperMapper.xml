@@ -279,15 +279,16 @@
     ofd.departure_district,
     ofd.departure_towns
     FROM
-    ofc_fundamental_information ofi,
-    ofc_distribution_basic_info ofd,
-    (SELECT temp.* FROM ofc_order_status temp
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info ofd
+    ON ofi.order_code = ofd.order_code
+    LEFT JOIN (SELECT temp.* FROM ofc_order_status temp
     WHERE temp.lasted_oper_time = (
     SELECT MAX(lasted_oper_time) FROM ofc_order_status
     WHERE temp.order_code = order_code
     ) ORDER BY temp.lasted_oper_time DESC) oos
-    WHERE ofi.order_code = ofd.order_code
-    AND ofi.order_code = oos.order_code
+    ON ofi.order_code = oos.order_code
+    WHERE 1= 1
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
