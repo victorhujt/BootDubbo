@@ -58,6 +58,7 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
+
 </head>
 <body>
 <!--goodsListDiv-->
@@ -584,7 +585,7 @@
                 </div>
                 <div id="profile4" class="tab-pane active">
                     <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-info" style="" id="">添加收货方</button></span>
-                    <span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>
+                    <#--<span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>-->
                     <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
                     <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
                            aria-describedby="dynamic-table_info">
@@ -635,7 +636,9 @@
     var scripts = [null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
         "/components/jquery-validation/src/localization/messages_zh.js",
-        "/components/jquery-validation/dist/additional-methods.js", null];
+        "/components/jquery-validation/dist/additional-methods.js",
+
+        null];
     $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
         /*jQuery(function($) {
             validateForm();//校验表单信息
@@ -681,6 +684,7 @@
     })
     var goodsAndConsigneeMap = new HashMap();
     var couldChangeCust = true;
+
     $(function () {
 
         var excelImportTag = $("#excelImportTag").html();
@@ -741,7 +745,7 @@
 
             debugger
             //先做成死的, 暂时不允许收货方动态增删
-            ifConsigneeConfirm = true;
+            //ifConsigneeConfirm = true;
 
             //显示货品列表//viewMap
             $("#goodsInfoListDiv").html("");
@@ -749,7 +753,6 @@
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
                 viewMapIndexOf += 1;
-                console.log("key----" + key + "value --- " + viewMapKeys[key])
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
@@ -765,6 +768,7 @@
                         "<td>" + goodsDetail.unit + "</td>" +
                         "<td>" + goodsDetail.goodsAmount + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
+                        "<td  style='display:none'>" + goodsDetail.goodsTypeParentName + "</td>" +
                         "</tr>");
             }
         }
@@ -773,9 +777,9 @@
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
             if(consigneeChosen < 1){
                 alert("请先添加收货方")
-            }else if(!ifConsigneeConfirm){
+            }/*else if(!ifConsigneeConfirm){
                 alert("请先确认收货方");
-            }else{
+            }*/else{
                 //加载货品一级种类
                 var custId = $("#custId").val();
                 $("#goodsTypeId option").remove();
@@ -829,14 +833,14 @@
 
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品种类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
-                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
-                    goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeParentName)+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeName)+"</td>";//货品小类
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.brand)+"</td>";//品牌
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsCode)+"</td>";//货品编码
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsName)+"</td>";//货品名称
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";//规格
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";//单位
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.barCode)+"</td>";//条形码
                     /* goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
                      goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
                     goodsList =goodsList + "</tr>";
@@ -876,6 +880,9 @@
                 var sendGoods = tdArr.eq(6).text();//发货数量
                 var goodsSecType = tdArr.eq(7).text();//货品二级类
 
+                var goodsFirType = tdArr.eq(8).text();//货品一级类
+
+
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
                         "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
@@ -888,6 +895,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                 preIndex = index;
             });
@@ -899,6 +907,7 @@
 
                     var numIndex = parseInt(preIndex);
                     preIndex = numIndex + 1;
+                    var goodsFirType = tdArr.eq(1).text();//货品一级类
                     var goodsSecType = tdArr.eq(2).text();//货品二级类
                     var goodsCode = tdArr.eq(4).text();//货品编码
                     var goodsName = tdArr.eq(5).text();//货品名称
@@ -922,6 +931,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -932,7 +942,6 @@
                 $("#goodsInfoListDiv").html(goodsInfoListDiv);
                 $("#goodsListDiv").fadeOut("slow");
             }
-            //validateForm();
 
         });
     })
@@ -969,12 +978,41 @@
 
 
     function deleteConsignee(obj) {
-        if(ifConsigneeConfirm){//000
-            alert("您已确认,无法删除收货方")
-        }else{
-            $(obj).parent().parent().remove();
+        debugger
+        //动态删除收货方,即从Map中从收货方给拆出来
+        //遍历货品信息
+        var contactCompanyId = $(obj).parent().parent().children().eq(7).text();//---
+        var contactCode = $(obj).parent().parent().children().eq(8).text();
+        $("#goodsInfoListDiv").find("tr").each(function(index) {
+            var tdArr = $(this).children();
+            var goodsIndex = tdArr.eq(1).text();//货品序号
+            var goodsCode = tdArr.eq(2).text();//货品编码
+            var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
+            debugger
+            var mapKey = goodsCode + "@" + goodsIndex;
+            var consigneeAndGoodsMsgJson = null;
+            if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+            }
+            debugger
+            if(null != consigneeAndGoodsMsgJson){
+                debugger
+                var param = contactCompanyId +"@"+ contactCode;
+                var goodsAmount = consigneeAndGoodsMsgJson[param];
+                if(undefined != goodsAmount || !StringUtil.isEmpty(goodsAmount)){
 
-        }
+                    //delConsigneeTag = true;
+                    ///然后从每个货品数量的总量中减去对应的数量
+                    goodsAmountTotal = goodsAmountTotal - goodsAmount;
+                    //对货品列表重新进行展示
+                    tdArr.eq(6).text(goodsAmountTotal);
+                    delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
+                    return true;
+                }
+
+            }
+        })
+        $(obj).parent().parent().remove();
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
@@ -1144,7 +1182,7 @@
 
             var contactCompanyNameAuto = null;
             var contactNameAuto = null;
-            var phoneAuto = null;
+            //var phoneAuto = null;
             var detailAddressAuto = null;
             var typeAuto = null;
             var contactCompanyIdAuto = null;
@@ -1167,7 +1205,7 @@
                     if(contactList == 1){
                         contactCompanyNameAuto = CscContantAndCompanyDto.contactCompanyName;
                         contactNameAuto = CscContantAndCompanyDto.contactName;
-                        phoneAuto = CscContantAndCompanyDto.phone;
+                        //phoneAuto = CscContantAndCompanyDto.phone;
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
                         contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyId;
@@ -1272,23 +1310,23 @@
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.city+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.area+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.street+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyId)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
                 contactList =contactList + "</tr>";
             });
             $("#contactSelectListTbody2").html(contactList);
@@ -1352,10 +1390,10 @@
 
         if(!validateCustChosen()){
             alert("请先选择客户")
-        } else if(ifConsigneeConfirm){
+        }/* else if(ifConsigneeConfirm){
             alert("您已确认过一次,无法再次添加新客户!");
             return;
-        }else{
+        }*/else{
             //$("#contactSelectListTbody1").html("");
             $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
         }
@@ -1399,23 +1437,23 @@
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.city+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.area+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.street+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyId)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
             });
@@ -1545,6 +1583,33 @@
         }else{
             $("#consigneeInfoListDiv").html(consignorout);
             $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            //遍历货品和收货人列表,将新增的收货人在map集合中增加对应的货品中收货人的信息,设初始收货数量为0
+
+            $("#consigneeInfoListDiv").find("tr").each(function (index) {
+                var tdArr = $(this).children();
+                var contactCompanyId = tdArr.eq(7).text();
+                var contactCode = tdArr.eq(8).text();
+                //遍历货品信息
+                $("#goodsInfoListDiv").find("tr").each(function(index) {
+                    var tdArr = $(this).children();
+                    var goodsIndex = tdArr.eq(1).text();//货品序号
+                    var goodsCode = tdArr.eq(2).text();//货品编码
+                    var mapKey = goodsCode + "@" + goodsIndex;
+                    var consigneeAndGoodsMsgJson = null;
+                    if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
+                        consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                    }
+                    if(null != consigneeAndGoodsMsgJson){
+                        var param = contactCompanyId +"@"+ contactCode;
+                        var goodsAmount = consigneeAndGoodsMsgJson[param];
+                        if(undefined == goodsAmount || StringUtil.isEmpty(goodsAmount)){
+                            consigneeAndGoodsMsgJson[param] = 0;
+                        }
+                    }
+                })
+
+            })
+
         }
     });//custListDiv
     $("#custListDivBlock").click(function () {
@@ -1561,43 +1626,8 @@
         $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
     });
 
-
-    //确定收货方列表
-    var ifConsigneeConfirm = false;
-    $("#consigneeListConfirmDivBlock").click(function () {
-        var consignorout = $("#consigneeInfoListDiv").find("tr").size();
-        if(consignorout < 1){
-            alert("请先添加收货方");
-            return;
-        }
-        if(ifConsigneeConfirm){
-            alert("您已确认过一次,无法再次确认!");
-            return;
-        }
-        //校验收货方列表中是否所有的客户订单编号都填写了
-        //统计收货方列表数据传给后台
-        //然后将添加收货人按钮禁掉,提示用户暂时不能在添加了货品后选择收货方, 让客户订单编号的输入框变为只读的
-        layer.confirm('您即将确认收货方列表,您如果添加货品将无法再添加收货方!', {
-            skin : 'layui-layer-molv',
-            icon : 3,
-            title : '确认操作'
-        }, function(index){
-            $("#consigneeInfoListDiv").find("tr").each(function(index) {
-                var tdArr = $(this).children();
-                //tdArr.eq(2).children().attr("readonly","readonly");
-                ifConsigneeConfirm = true;
-                //禁用添加收货人和确认收货人
-                
-            })
-            layer.close(index);
-        }, function(index){
-            layer.close(index);
-        });
-    })
-
     $("#consigneeListClearDivBlock").click(function () {
-        //alert('3233')
-        
+
         var consignorout = $("#consigneeInfoListDiv").find("tr").size();
         if(consignorout > 0){
             layer.confirm('您即将清空收货方列表,您之前输入的货品信息将被清空!', {
@@ -1606,7 +1636,6 @@
                 title : '确认操作'
             }, function(index){
                 $("#consigneeInfoListDiv").html("");
-                ifConsigneeConfirm = false;
                 goodsAndConsigneeMap = new HashMap();
                 $("#goodsInfoListDiv").html("");
                 layer.close(index);
@@ -1630,12 +1659,12 @@
                 custList =custList + "<tr role='row' class='odd'>";
                 custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='custList' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 custList =custList + "<td>"+(index+1)+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.type+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.type)+"</td>";
+                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.customerName)+"</td>";
                 custList =custList + "<td>"+channel+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
-                custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
-                custList =custList + "<td style='display: none'>"+cscCustomerVo.id+"</td>";
+                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.productType)+"</td>";
+                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.groupId)+"</td>";
+                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.id)+"</td>";
                 custList =custList + "</tr>";
                 $("#custListDivTbody").html(custList);
             });
@@ -1674,8 +1703,6 @@
         //加载仓库列表
         var custId = $("#custId").val();
         $("#warehouseCode option").remove();
-        //<option value="">无</option>
-        /* $("#warehouseCode").append("<option value="">无</option>");*/
         $("#warehouseCode").append("<option value = ''>无</option>");
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
             data=eval(data);
@@ -1712,7 +1739,6 @@
         var orderLists = [];
         //堆齐基本信息
         var orderInfo = null;
-
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
 
@@ -1808,11 +1834,14 @@
                 var goodsUnit = tdArr.eq(5).text();//单位
                 //var goodsTotalAmount = tdArr.eq(6).text();//总数量
                 var goodsSecType = tdArr.eq(7).text();
+                var goodsFirType = tdArr.eq(8).text();
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
                 goods.goodsCategory = goodsSecType;
+                goods.goodsType = goodsFirType;
+                goods.chargingWays = '01';//计费方式按默认按件数
 
                 var mapKey = goodsCode + "@" + goodsIndex;
                 var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
@@ -2026,6 +2055,8 @@
 
 
 
+
+
     /**
      *表单验证
      */
@@ -2091,11 +2122,6 @@
                 error.insertAfter(element.parent());
             },
             submitHandler : function(form) {
-                /*xescm.common.commit('addSupplierContactForm', '/csc/supplier/addCscSupplierContact', function(){
-                    var supplierId = $("#supplierId").val();
-                    var url = "/csc/supplier/toMaintainCscSupplierContactListPage/" + supplierId;
-                    xescm.common.loadPage(url);
-                });*/
                 distributingOrderPlaceCon();
             },
             invalidHandler : function(form) {

@@ -14,6 +14,7 @@
         }
 
     </style>
+    <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
 </head>
 <!--goods&Consigee-->
 <div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
@@ -78,7 +79,8 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
-                    <a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
+                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
+                    <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -90,11 +92,12 @@
             <label class="control-label col-label no-padding-right" for="name">上传文件</label>
             <div class="col-xs-3">
                 <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
+                <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
                 <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
             <div class="col-xs-3">
                 <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" multiple name="uploadFile" class="file-loading"/></p>
+                    <p><input type="file" id="uploadFile" name="uploadFile" /></p>
                     <p><input type="button" id="uploadFileInput"  value="上传"/></p>
                 </form>
             </div>
@@ -207,8 +210,8 @@
 
 <script type="text/javascript">
     var scripts = [null,
-        sys.rootPath + "/plugins/bootstrap-fileinput/js/fileinput.min.js",
-        sys.rootPath + "/plugins/bootstrap-fileinput/js/locales/zh.js",
+        "/plugins/bootstrap-fileinput/js/fileinput.min.js",
+        "/plugins/bootstrap-fileinput/js/locales/zh.js",
         null];
     $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
         $(document).ready(main);
@@ -236,9 +239,9 @@
     }
 
     var ofc_url = $("#ofc_url").html();
+    var ofc_web_url = $("#ofc_web_url").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
-        console.log("0000"+historyUrl)
         xescm.common.loadPage(historyUrl);
     })
 
@@ -357,7 +360,7 @@
             var num = "0";
 
             if(undefined != viewMap.get(mapKey)){
-                debugger
+                
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
@@ -381,23 +384,53 @@
 
 
     }//
-    var viewMap = new HashMap();
+    var viewMap = null;
     var loadSheetTag = false;
-    var consigneeList = [];
+    var consigneeList = null;
 
+    function uploadFileChange(target) {
+
+    }
     $(function () {
         var file;
         var fileName;
         var uploadFileTag = false;
         $("#uploadFile").change(function () {
-            uploadFileTag = true;
+            $("#uploadExcelSheet").html("");
+            //清空错误和正确的加载项
+            $("#errorMsgTbody").html("");
+            $("#goodsInfoListDiv").html("");
+            $("#consigneeInfoListDiv").html("");
+            $("#goodsListDiv").show();
+            $("#errorMsgDiv").hide();
             debugger
             file = this.files[0];
-            fileName = $("#uploadFile").val();
-            $("#uploadFileShow").val(fileName);
+            var fileSize = file.size;
+            if(fileSize / 1024 > 1000){
+                alert("附件大小不能大于1M");
+                this.value = "";
+                $("#uploadFileShow").val("");
+                uploadFileTag = false;
+                return;
+            }else{
+                fileName = $("#uploadFile").val();
+                var suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                if(suffix != "xls" && suffix != "xlsx"){
+                    alert("请选择excel格式文件上传")
+                    this.value = "";
+                    $("#uploadFileShow").val("");
+                    uploadFileTag = false;
+                    return;
+                }else{
+                    uploadFileTag = true;
+                    $("#uploadFileShow").val(fileName);
+                }
+            }
+
         })
 
-        $("#uploadFileInput").click(function () {
+        $("#uploadFileInput").click(function () {//上传
+
             if(uploadFileTag){
                 debugger
                 var formData = new FormData();
@@ -405,7 +438,9 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
-                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -451,7 +486,11 @@
             }
         })
 
-        $("#loadSheetAndCheckBtn").click(function () {
+        $("#loadSheetAndCheckBtn").click(function () {//加载
+//            viewMap = null;
+            viewMap = new HashMap();
+//            consigneeList = null;
+            consigneeList = [];
 
             if($("#uploadExcelSheet option").size() > 0){
 
@@ -464,7 +503,8 @@
                 formData.append('fileName',fileName);
                 formData.append('custId',custId);
                 formData.append('sheetNum',sheetNum);
-                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',

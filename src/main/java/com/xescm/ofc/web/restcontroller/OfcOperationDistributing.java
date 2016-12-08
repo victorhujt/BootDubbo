@@ -24,6 +24,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +190,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!{}",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage());
         }
     }
 
@@ -223,7 +225,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
             }
         }catch (Exception ex){
-            logger.error("查询客户列表失败!异常信息为:{}",ex.getMessage(),ex);
+            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
         }
 
     }
@@ -284,11 +286,37 @@ public class OfcOperationDistributing extends BaseController{
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage());
-            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"导入出错");
+            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return result;
     }
+    /**
+     * 城配开单下载模板
+     * @param response
+     */
+    @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
+    public void downloadTemplate( HttpServletResponse response){
+        try {
+            File f = ResourceUtils.getFile("classpath:templates/xlsx/template_for_cp.xlsx");
+            response.reset();
+            response.setHeader("Content-Disposition", "attachment; filename=template_for_cp.xlsx");
+            response.addHeader("Content-Length", "" + f.length());
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
+            int b;
+            while((b = bis.read()) != -1) {
+                outputStream.write(b);
+            }
+            bis.close();
+            outputStream.close();
+        } catch (IOException e) {
+            logger.error("城配开单下载模板出错{}",e.getMessage());
+        } catch (Exception e){
+            logger.error("城配开单下载模板出错{}",e.getMessage());
+        }
 
+    }
 
 
 

@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATIONIN;
 import static com.xescm.ofc.constant.OrderConstConstant.YIDIAODU;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +36,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
     
     @Autowired
     private OfcSiloproNewstatusService ofcSiloproNewstatusService;
-    @Autowired
-    private OfcTransplanInfoService  ofcTransplanInfoService;
-    
+
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
 
@@ -97,26 +96,29 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				throw new BusinessException("该仓储计划单对应的订单已经取消");
 			}
 			
-			OfcSiloproNewstatus ofcTransplanNewstatus=new OfcSiloproNewstatus();
-			ofcTransplanNewstatus.setPlanCode(planCode);
+			OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
+			ofcSiloproNewstatus.setPlanCode(planCode);
 			//仓储计划单状态任务开始
 			if(OrderConstConstant.TRACE_STATUS_1.equals(traceStatus)){
 				statusCondition.setPlannedSingleState(OrderConstConstant.RENWUZHONG);
 				statusCondition.setPlannedStartTime(condition.getTraceTime());
-				ofcTransplanNewstatus.setJobNewStatus((OrderConstConstant.RENWUZHONG));//仓储计划单最新状态
-				ofcTransplanNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时间
+				ofcSiloproNewstatus.setJobNewStatus((OrderConstConstant.RENWUZHONG));//仓储计划单最新状态
+				ofcSiloproNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时间
+				ofcSiloproNewstatus.setOrderCode(infostatus.getOrderCode());
 				status.setLastedOperTime(traceTime);
 				status.setOrderStatus(OrderConstConstant.IMPLEMENTATIONIN);
 				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
 	                     +" "+traceStatus);
+				status.setOperator("");
 				updateByPlanCode(statusCondition);//仓储计划单状态的更新
-				ofcSiloproNewstatusService.updateByPlanCode(ofcTransplanNewstatus);//仓储计划单最新状态的更新
+				ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewstatus);//仓储计划单最新状态的更新
 			}
 				status.setLastedOperTime(traceTime);
-				status.setStatusDesc("执行中");
+				status.setStatusDesc(translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
+				status.setOperator("");
 				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+condition.getStatus());
+	                     +" "+translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
 				ofcOrderStatusService.save(status);
 		}else{
@@ -152,14 +154,14 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 		}
 		List<OfcPlannedDetail> plannedDetails=condition.getPlannedDetails();
 		if(plannedDetails!=null&&plannedDetails.size()>0){
-			for (OfcPlannedDetail plannedDetailnfo : plannedDetails) {
+      			for (OfcPlannedDetail plannedDetailnfo : plannedDetails) {
 				boolean isExist=false;
 				List<OfcPlannedDetail>  infos=ofcPlannedDetailService.planDetailsScreenList(condition.getPlanCode(),"planCode");
 				if(infos!=null&&infos.size()>0){
 					for (OfcPlannedDetail pdinfo:infos) {
 						if(plannedDetailnfo.getGoodsCode().equals(pdinfo.getGoodsCode())){
 							pdinfo.setRealQuantity(plannedDetailnfo.getRealQuantity());
-							ofcPlannedDetailService.update(pdinfo);//更新库存数量
+							ofcPlannedDetailService.updateByPlanCode(pdinfo);//更新库存数量
 							isExist=true;
 							break;
 						}
@@ -184,8 +186,77 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				status.setStatusDesc("已完成");
 				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"订单已完成");
 				status.setLastedOperTime(new Date());
+				status.setOperator("");
 				ofcOrderStatusService.save(status);
 			}
 		}
 	}
+
+	public String translateStatusToDesc(String statusCode,String businessType){
+		String statusDesc="";
+		if(statusCode.equals(OrderConstConstant.TRACE_STATUS_1)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="入库单已创建";
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库单已创建";
+			}
+	}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_2)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="部分收货";
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_3)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="完全收货";
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库分配完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_4)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="拣货完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_5)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="二次拣货完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_6)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="装车完成";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_7)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库单已发运";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_8)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="入库单取消";
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库单取消";
+			}
+		}else if(statusCode.equals(OrderConstConstant.TRACE_STATUS_9)){
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(businessType)){
+				statusDesc="入库完毕";
+			}else if(OrderConstConstant.OFC_WHC_OUT_TYPE.equals(businessType)){
+				statusDesc="出库完毕";
+			}
+		}
+		return statusDesc;
+	}
+
+
+
+
+
+
 }

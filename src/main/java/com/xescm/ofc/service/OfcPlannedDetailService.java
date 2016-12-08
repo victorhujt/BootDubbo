@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface OfcPlannedDetailService extends IService<OfcPlannedDetail> {
      List<OfcPlannedDetail> planDetailsScreenList(String code, String followTag);
+
+     void updateByPlanCode(OfcPlannedDetail Key);
 }

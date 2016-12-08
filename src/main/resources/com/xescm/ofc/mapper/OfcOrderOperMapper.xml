@@ -134,7 +134,6 @@
     <result column="order_type" property="orderType" jdbcType="VARCHAR"></result>
     <result column="business_type" property="businessType" jdbcType="TIMESTAMP"></result>
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR"></result>
-    <result column="order_status" property="orderStatus" jdbcType="VARCHAR"></result>
     <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR"></result>
     <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR"></result>
     <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR"></result>
@@ -194,7 +193,7 @@
         AND ofi.business_type = #{form.businessType}
       </if>
     </where>
-    ORDER BY ofi.order_code ASC
+    ORDER BY ofi.order_code DESC
   </select>
 
   <select id="queryOrderByOrderBatchNumber" resultMap="Order_Search_Oper_Map">
@@ -225,6 +224,84 @@
     LEFT JOIN ofc_warehouse_information owi
     ON ofi.order_code = owi.order_code
     WHERE ofi.order_batch_number = #{orderBatchNumber}
+  </select>
+
+  <resultMap id="Order_Follow_Oper_Map" type="com.xescm.ofc.domain.OrderFollowOperResult">
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR"/>
+    <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR"/>
+    <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR"/>
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP"/>
+    <result column="cust_name" property="custName" jdbcType="VARCHAR"/>
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR"/>
+    <result column="order_type" property="orderType" jdbcType="VARCHAR"/>
+    <result column="business_type" property="businessType" jdbcType="VARCHAR"/>
+    <result column="transport_type" property="transportType" jdbcType="VARCHAR"/>
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR"/>
+    <result column="destination" property="destination" jdbcType="VARCHAR"/>
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR"/>
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR"/>
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR"/>
+    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR"/>
+    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR"/>
+    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR"/>
+    <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR"/>
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR"/>
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR"/>
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR"/>
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <!--订单追踪-->
+  <select id="queryOrder" resultMap="Order_Follow_Oper_Map">
+    SELECT
+    ofi.order_code,
+    ofi.cust_order_code,
+    ofi.order_batch_number,
+    ofi.order_time,
+    ofi.cust_name,
+    oos.order_status,
+    ofi.order_type,
+    ofi.business_type,
+    ofi.transport_type,
+    ofd.departure_place,
+    ofd.destination,
+    ofd.trans_code,
+    ofd.plate_number,
+    ofd.driver_name,
+    ofd.contact_number,
+    ofd.destination_province,
+    ofd.destination_city,
+    ofd.destination_district,
+    ofd.destination_towns,
+    ofd.departure_province,
+    ofd.departure_city,
+    ofd.departure_district,
+    ofd.departure_towns
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info ofd
+    ON ofi.order_code = ofd.order_code
+    LEFT JOIN (SELECT temp.* FROM ofc_order_status temp
+    WHERE temp.lasted_oper_time = (
+    SELECT MAX(lasted_oper_time) FROM ofc_order_status
+    WHERE temp.order_code = order_code
+    ) ORDER BY temp.lasted_oper_time DESC) oos
+    ON ofi.order_code = oos.order_code
+    WHERE 1= 1
+    <choose>
+      <when test=" 'orderCode'.toString() == searchType ">
+        AND ofi.order_code = #{code}
+      </when>
+      <when test="'custOrderCode'.toString() == searchType">
+        AND ofi.cust_order_code = #{code}
+      </when>
+      <when test="'transCode'.toString() == searchType">
+        AND ofd.trans_code = #{code}
+      </when>
+      <otherwise></otherwise>
+    </choose>
+
   </select>
 
 

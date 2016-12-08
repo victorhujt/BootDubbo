@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 
 /**
  * Created by lyh on 2016/12/2.
@@ -18,29 +17,5 @@ import java.io.FileOutputStream;
 @Controller
 @RequestMapping(value = "/open")
 public class OfcOpenController extends BaseController{
-
-    @Autowired
-    private OfcOperationDistributingService ofcOperationDistributingService;
-
-    /**
-     * 城配开单下载模板
-     * @param response
-     */
-    @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
-    public void downloadTemplate( HttpServletResponse response){
-        try {
-            response.setHeader("content-type", "application/octet-stream");
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", "attachment;filename=Template_forCP.xlsx");
-            File f = ResourceUtils.getFile("classpath:static/xlsx/Template_forCP.xlsx");
-            FileOutputStream fos=new FileOutputStream(f);
-            response.setContentLengthLong(f.length());
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

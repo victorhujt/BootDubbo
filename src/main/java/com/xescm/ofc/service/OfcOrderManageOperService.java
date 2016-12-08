@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
@@ -32,6 +33,8 @@ public interface OfcOrderManageOperService {
      * @return list
      */
     List<OrderSearchOperResult> queryOrderByOrderBatchNumber(String orderBatchNumber);
+
+    List<OrderFollowOperResult> queryOrder(String code, String searchType);
 
 
 }

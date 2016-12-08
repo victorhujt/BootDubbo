@@ -167,14 +167,4 @@
       ii.creation_time DESC;
     </where>
   </select>
-
-
-
-
-
-
-
-
-
-
 </mapper>
