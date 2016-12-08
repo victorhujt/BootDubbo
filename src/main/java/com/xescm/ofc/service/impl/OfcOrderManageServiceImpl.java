@@ -254,7 +254,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
             }
-            ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
+            if(ofcPlannedDetailList.size()>0){
+                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
+            }
             RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
             if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
                     && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
@@ -909,42 +911,44 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTO.setTransportSource(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSingleSourceOfTransport()));//运输单来源
                 //OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
                 //ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
-                List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode());
-                for(OfcPlannedDetail detail : ofcPlannedDetailList){
-                    TransportDetailDTO transportDetailDTO = new TransportDetailDTO();
-                    transportDetailDTO.setTransportNo(detail.getPlanCode());
-                    transportDetailDTO.setItemCode(detail.getGoodsCode());
-                    transportDetailDTO.setItemName(detail.getGoodsName());
-                    if(null == detail.getQuantity()){
-                        transportDetailDTO.setQty(0.0);
-                    }else{
-                        transportDetailDTO.setQty(detail.getQuantity().doubleValue());
+                if(ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode())!=null){
+                    List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode());
+                    for(OfcPlannedDetail detail : ofcPlannedDetailList){
+                        TransportDetailDTO transportDetailDTO = new TransportDetailDTO();
+                        transportDetailDTO.setTransportNo(detail.getPlanCode());
+                        transportDetailDTO.setItemCode(detail.getGoodsCode());
+                        transportDetailDTO.setItemName(detail.getGoodsName());
+                        if(null == detail.getQuantity()){
+                            transportDetailDTO.setQty(0.0);
+                        }else{
+                            transportDetailDTO.setQty(detail.getQuantity().doubleValue());
+                        }
+                        if(null == detail.getWeight()){
+                            transportDetailDTO.setWeight(0.0);
+                        }else{
+                            transportDetailDTO.setWeight(detail.getWeight().doubleValue());
+                        }
+                        if(null == detail.getCubage()){
+                            transportDetailDTO.setVolume(0.0);
+                        }else{
+                            transportDetailDTO.setVolume(detail.getCubage().doubleValue());
+                        }
+                        if(null == detail.getUnitPrice()){
+                            transportDetailDTO.setPrice(0.0);
+                        }else{
+                            transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
+                        }
+                        transportDetailDTO.setMoney(0.0);
+                        transportDetailDTO.setUom(detail.getUnit());
+                        if(null == detail.getTotalBox()){
+                            detail.setTotalBox(0);
+                        }else{
+                            detail.setTotalBox(detail.getTotalBox());
+                        }
+                        transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
+                        transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
+                        transportDTO.getProductDetail().add(transportDetailDTO);
                     }
-                    if(null == detail.getWeight()){
-                        transportDetailDTO.setWeight(0.0);
-                    }else{
-                        transportDetailDTO.setWeight(detail.getWeight().doubleValue());
-                    }
-                    if(null == detail.getCubage()){
-                        transportDetailDTO.setVolume(0.0);
-                    }else{
-                        transportDetailDTO.setVolume(detail.getCubage().doubleValue());
-                    }
-                    if(null == detail.getUnitPrice()){
-                        transportDetailDTO.setPrice(0.0);
-                    }else{
-                        transportDetailDTO.setPrice(detail.getUnitPrice().doubleValue());
-                    }
-                    transportDetailDTO.setMoney(0.0);
-                    transportDetailDTO.setUom(detail.getUnit());
-                    if(null == detail.getTotalBox()){
-                        detail.setTotalBox(0);
-                    }else{
-                        detail.setTotalBox(detail.getTotalBox());
-                    }
-                    transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
-                    transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
-                    transportDTO.getProductDetail().add(transportDetailDTO);
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);

@@ -783,7 +783,7 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费数量</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
                     </thead>
                 <#--货品明细-->
 
@@ -860,6 +860,7 @@
      */
 
     function validateForm() {
+        debugger;
         var ofc_url = $("#ofc_url").html();
         $('#orderFundamentalFormValidate').validate({
             errorElement : 'div',
@@ -1352,8 +1353,11 @@
         $("#cubageCountHidden").html(cubageCount);
     }
 
-    function  chargingWaysChange(){
+    function  chargingWaysChange(obj){
         countQuantityOrWeightOrCubageCheck();
+        if($(obj).val()=="02"){
+            $(obj).parent().next().next().next().children().val($(obj).parent().next().next().children().val());
+        }
     }
 
     function checkBillingWeight(obj){
@@ -1773,7 +1777,7 @@
                 "<option value='13'>布袋</option></select>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<select  id='chargingWays' name='chargingWays' onchange='chargingWaysChange()'>"+
+                "<select  id='chargingWays' name='chargingWays' onchange='chargingWaysChange(this)'>"+
                 "<option value='01'>件数</option>"+
                 "<option value='02'>重量Kg</option>"+
                 "<option value='03'>体积m³</option>"+
@@ -1885,6 +1889,7 @@
                     $(this).parent().find("div").remove();
                 }
             });
+            validateForm();
             if($("#orderFundamentalFormValidate").find("div.has-error").length>0
                     || $("#orderFinanceFormValidate").find("div.has-error").length>0
                     || $("#orderFinanceChargeFormValidate").find("div.has-error").length>0
@@ -2346,15 +2351,22 @@
                 var goodsInfoListDiv = "";
                 var groupId = $("#custGroupId").val();
                 var custId = $("#custId").val();
+                var firstGoodsType = null;
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger' style='margin-top:5px;'>删除</button></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                         "<select  id='goodsType' name='goodsType'>";
-                if($("#goodsInfoListDiv").find("tr").length<1){
-                    CommonClient.syncpost(sys.rootPath + "/ofc/goodsSelects", {"groupId":groupId,"custId":custId}, function(data) {
+                /*if($("#goodsInfoListDiv").find("tr").length<1){*/
+
+                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
+                        debugger;
                         data=eval(data);
-                        $.each(data,function (index,cscGoodsVo) {
-                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeParentName + "'>" + cscGoodsVo.goodsTypeParentName + "</option>";
+
+                        $.each(data,function (index,goodsType) {
+                            if(0 == index){
+                                firstGoodsType = goodsType.id;
+                            }
+                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + goodsType.goodsTypeName + "'>" + goodsType.goodsTypeName + "</option>";
                         });
                         if($("#goodsInfoListDiv").find("tr").length==1){
                             $("select option").each(function() {
@@ -2364,20 +2376,21 @@
                             });
                         }
                     });
-                }else{
+                /*}else{
                     $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
                         text = $(this).text();
                         goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
                     });
 
-                }
+                }*/
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                         "<select  id='goodsCategory' name='goodsCategory'>";
-                if($("#goodsInfoListDiv").find("tr").length<1){
-                    CommonClient.syncpost(sys.rootPath + "/ofc/goodsSelects", {"groupId":groupId,"custId":custId}, function(data) {
+                /*if($("#goodsInfoListDiv").find("tr").length<1){*/
+                if(null != firstGoodsType){
+                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":firstGoodsType},function(data) {
                         data=eval(data);
-                        $.each(data,function (index,cscGoodsVo) {
-                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + cscGoodsVo.goodsTypeName + "'>" + cscGoodsVo.goodsTypeName + "</option>";
+                        $.each(data,function (index,secGoodsType) {
+                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + secGoodsType.goodsTypeName + "'>" + secGoodsType.goodsTypeName + "</option>";
                         });
                         goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                         $("#goodsInfoListDiv").append(goodsInfoListDiv);
@@ -2388,15 +2401,17 @@
                                     $("select option:contains("+text+"):gt(0)").remove();
                             });
                         }
-                    });
-                }else{
+                    })
+                }
+
+                /*}else{
                     $("#goodsInfoListDiv tr:first-child").children().eq(2).find("select:first").find("option").each(function() {
                         text = $(this).text();
                         goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
                     });
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
-                }
+                }*/
             }
         });
 
