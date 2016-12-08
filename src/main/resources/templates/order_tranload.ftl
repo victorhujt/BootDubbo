@@ -55,6 +55,29 @@
         .date_a{
             line-height:21px !important;
         }
+        .form-group > label[class*="col-"]{
+            margin-top:0;
+            line-height:30px;
+        }
+        .form-horizontal .control-label{
+            padding-top:0;
+            line-height:30px;
+        }
+        input[type=checkbox], input[type=radio]{
+            margin:10px 0 0;
+        }
+        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+            color:#393939;
+        }
+        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+            color:#393939;
+        }
+        .help-block{
+            color:#f00 !important;
+        }
+        .has-error .form-control{
+            border-color:#b5b5b5 !important;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -263,21 +286,19 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                    <div class="col-xs-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
+                    <div class="col-width-220 padding-15 y-float">
                         <div class="clearfix">
                             <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                    <div class="col-xs-3">
+
+                    <div class="col-xs-3 y-float">
                         <div class="clearfix">
-                            <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
                         </div>
                     </div>
-                </div>
+                 </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -301,7 +322,9 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+            <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+            <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <div class="row">
@@ -323,7 +346,7 @@
 
             <form id="orderFundamentalFormValidate" method="post" class="form-horizontal" role="form" >
                 <div class="form-group" id="transBusinessTypeDiv">
-                    <div><label class="control-label col-label no-padding-right" for="name" style="margin-right:8px;">业务类型</label>
+                    <div><label class="control-label col-label no-padding-right" for="name" style="margin-right:8px;"><span class="w-label-icon">*</span>业务类型</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-168">
                                 <select  id="businessType" name="businessType" class="chosen-select form-control ">
@@ -334,7 +357,7 @@
                             </div>
                         </div></div>
 
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">开单员</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
                         <div class="col-width-168 padding-15">
                             <div class="col-width-168">
                                 <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
@@ -344,7 +367,7 @@
                                 </select>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label" for="name" style="margin-right:18px;">运输类型</label>
+                    <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
 
                         <div class="col-width-50" style="margin-right:10px;">
                             <div class="clearfix control-label">
@@ -361,7 +384,7 @@
                         <input id="transportType" type="hidden" name="transportType"/></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;">订单日期</label>
+                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
@@ -370,7 +393,7 @@
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode">运输单号</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>运输单号</label>
                         <div class="col-width-168 padding-15">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
@@ -378,7 +401,7 @@
                         </div></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">客户名称</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:430px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -401,18 +424,18 @@
 
             </form>
 
-            <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="height:360px;">
-                <div style="width:45%;float:left;">
+            <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:360px;overflow:hidden;">
+                <div style="width:450px;margin-right:100px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
                     </div>
                     <span style="cursor:pointer" id="consignorListDivBlock">
                     <button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consignorselbtn">选择</button></span>
                     <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <label class="control-label" style="float:right;" for="name">出发地：</label>
+                    <label class="control-label" style="float:right;" for="name"><span class="w-label-icon">*</span>出发地：</label>
                     <div id="consignorin" style="margin-top:15px;">
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">名称</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
                             <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id="consignorCode" name="consignorCode" type="hidden">
@@ -422,7 +445,7 @@
                             </div>
                         </div>
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">联系人</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系人</label>
                             <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id="consignorContactCode"   name="consignorContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -431,7 +454,7 @@
                             </div>
                         </div>
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">联系电话</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系电话</label>
                             <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -440,7 +463,7 @@
                             </div>
                         </div>
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">地址选择</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>地址选择</label>
                             <div class="col-width-376 padding-15">
                                 <div class="clearfix">
                                     <span style="cursor:pointer;position:relative;" id="city-picker-consignor"><input id="city-picker3-consignor" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker"></span>
@@ -461,17 +484,17 @@
                 </div>
 
 
-                <div style="width:45%;float:right;">
+                <div style="width:450px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">收货方信息</h4>
                     </div>
                     <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
                     <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <label id="destination" class="control-label" style="float:right;" for="name"></label>
-                    <label class="control-label" style="float:right;" for="name">目的地：</label>
+                    <label class="control-label" style="float:right;" for="name"><span class="w-label-icon">*</span>目的地：</label>
                     <div id="consignorout" style="margin-top:15px;">
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">名称</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
                             <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id="consigneeCode" name="consigneeCode" type="hidden">
@@ -482,7 +505,7 @@
                             </div>
                         </div>
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">联系人</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系人</label>
                             <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id="consigneeContactCode" name="consigneeContactCode" type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -492,7 +515,7 @@
                             </div>
                         </div>
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">联系电话</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系电话</label>
                             <div class="col-width-168 padding-15">
                                 <div class="clearfix">
                                     <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -501,7 +524,7 @@
                             </div>
                         </div>
                         <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name">地址选择</label>
+                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>地址选择</label>
                             <div class="col-width-376 padding-15">
                                 <div class="clearfix">
                                     <span style="cursor:pointer;position:relative;" id="city-picker-consignee"><input id="city-picker3-consignee" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker"></span>
@@ -532,7 +555,7 @@
                             <input id="pickUpGoodsV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                             <input id="pickUpGoods" type="hidden" name="pickUpGoods"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">上门提货:费用</label>
+                        <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">上门提货:费用</label>
                         <div style="width:140px;float:left;">
                             <div class="col-width-100 margin-right-15">
                                 <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "" />
@@ -547,7 +570,7 @@
                             <input id="insureV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="insure" type="hidden" name="insure"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">货物保险:费用</label>
+                        <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">货物保险:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
                                 <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -556,7 +579,7 @@
                         </div>
                     </div>
                     <div class="col-xs-6 no-padding-left">
-                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">声明价值</label>
+                        <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">声明价值</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
                                 <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -571,7 +594,7 @@
                             <input id="twoDistributionV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="twoDistribution" type="hidden" name="twoDistribution"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">二次配送:费用</label>
+                        <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">二次配送:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
                                 <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -586,7 +609,7 @@
                             <input id="collectFlagV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="collectFlag" type="hidden" name="collectFlag"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">代收货款:费用</label>
+                        <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">代收货款:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
                                 <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -595,7 +618,7 @@
                         </div>
                     </div>
                     <div class="col-xs-6 no-padding-left">
-                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">代收金额</label>
+                        <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">代收金额</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
                                 <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -610,7 +633,7 @@
                             <input id="returnListV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
                             <input id="returnList" type="hidden" name="returnList"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0; 10px">签单返回:费用</label>
+                        <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">签单返回:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
                                 <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -619,7 +642,7 @@
                         </div>
                     </div>
                     <div class="col-xs-6 no-padding-left">
-                        <label class="control-label col-width-80" for="name" style="padding:7px 15px 0;">运费</label>
+                        <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">运费</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
                                 <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
@@ -672,9 +695,9 @@
                             </div>
                         </div>
                     </div>
-                    <div style="width:280px;margin:0 0 0 15px;float:left;">
+                    <div style="width:260px;margin:0 0 0 15px;float:left;">
                         <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="openInvoicesV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
+                            <input id="openInvoicesV" type="checkbox" name="" style="margin-top:4px;" class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                             <input id="openInvoices" type="hidden" name="openInvoices"  value="0" />
                         </div>
                         <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">是否开发票</label>
@@ -685,38 +708,38 @@
 
                     <div style="width:400px;">
                         <label class=" col-label col-float" for="name" >结算方式</label>
-                        <label class=" col-label-50 col-float" for="name" style="width:25px;">现结</label>
-                        <div style="float:left;width:145px;">
-                        <div class="padding-15 col-float" style="width:130px;">
+                        <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:0;margin-right:15px;">现结</label>
+                        <div style="float:left;width:130px;">
+                        <div class="col-float" style="width:100px;margin-right:15px;">
                             <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                         </div>
                         <label class=" col-float" for="name">元</label></div>
                     </div>
                     <div >
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:28px;">到付</label>
-                        <div style="width:145px;float:left;">
-                            <div class="padding-15 col-float" style="width:130px;">
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:25px;margin-right:15px;">到付</label>
+                        <div style="width:130px;float:left;">
+                            <div class="col-float" style="width:100px;margin-right:15px;">
                                 <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                             </div>
                             <label class=" col-float" for="name">元</label>
                         </div>
                     </div>
                     <div>
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:51px;">回付</label>
-                        <div style="width:145px;float:left;">
-                            <div class="padding-15 col-float" style="width:130px;">
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:15px;">回付</label>
+                        <div style="width:130px;float:left;">
+                            <div class="col-float" style="width:100px;margin-right:15px;">
                                 <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
                             </div>
                             <label class=" col-float" for="name">元</label>
                         </div>
                     </div>
                     <div>
-                        <label class=" col-label-50" for="name">月结</label>
-                        <div style="width:145px;float:left;">
-                            <div class="padding-15 col-float" style="width:130px;">
-                                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
-                            </div>
-                            <label class=" col-float" for="name">元</label>
+                        <label class=" col-label-50" for="name" style="margin-right:15px;">月结</label>
+                        <div style="width:130px;float:left;">
+                                <div class="col-float" style="width:100px;margin-right:15px;">
+                                    <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                                </div>
+                                <label class=" col-float" for="name">元</label>
                         </div>
                     </div>
                 </div>
@@ -901,18 +924,18 @@
             },
             messages : {
                 merchandiser:{
-                    required:"请填写开单员"
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请填写开单员"
                 },
                 orderTime:{
-                    required:"请填写订单日期"
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请填写订单日期"
                 },
                 transCode:{
-                    maxlength: "超过最大长度50",
-                    pattern:"只能输入数字和字母",
-                    remote: "运输单号已存在"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度50",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>只能输入数字和字母",
+                    remote: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>运输单号已存在"
                 },
                 custName:{
-                    maxlength:"超过最大长度"
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -978,37 +1001,37 @@
             },
             messages : {
                 luggage:{
-                    maxlength: "最大999999.99元",
-                    required:"请填写运费",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请填写运费",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 homeDeliveryFee:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 cargoInsuranceFee:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 insureValue:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 twoDistributionFee:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 collectServiceCharge:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 collectLoanAmount:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 returnListFee:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1056,20 +1079,20 @@
             },
             messages : {
                 currentAmount:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 toPayAmount:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 returnAmount:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 },
                 monthlyAmount:{
-                    maxlength: "最大999999.99元",
-                    pattern:"金额大小有误"
+                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
+                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1080,7 +1103,7 @@
 
                 if(countSettlement()=="false"){
                     $(e).parent().removeClass('has-info').addClass('has-error');
-                    $(e).html("结算方式的金额合计应于费用总计一致！");
+                    $(e).html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>结算方式的金额合计应于费用总计一致！");
                 }else{
                     $("#monthlyAmount-error").parent().removeClass('has-error').addClass('has-success');
                     $("#currentAmount-error").parent().removeClass('has-error').addClass('has-success');
@@ -1140,36 +1163,36 @@
             },
             messages : {
                 consignorName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consignorContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consignorPhone:{
-                    isPhone:"请输入正确的手机号",
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    isPhone:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入正确的手机号",
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:"超过最大长度"
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consigneeName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consigneeContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consigneePhone:{
-                    isPhone:"请输入正确格式的手机号",
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    isPhone:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入正确格式的手机号",
+                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:"超过最大长度"
+                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
                 }
             },
             highlight : function(e) {
@@ -2402,7 +2425,7 @@
         $("#consignorName,#consigneeName").blur(function () {
             if($(this).val().length>100){
                 if($(this).parent().children().length==3){
-                    $("<div id='price-error' class='help-block has-error'>超过最大长度</div>").insertAfter($(this));
+                    $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度</div>").insertAfter($(this));
                     $(this).parent().parent().parent().removeClass('has-info').addClass('has-error');
                 }
             }else{
@@ -2413,7 +2436,7 @@
         $("#consignorContactName,#consigneeContactName").blur(function () {
             if($(this).val().length>20){
                 if($(this).parent().children().length==2){
-                    $("<div id='price-error' class='help-block has-error'>超过最大长度</div>").insertAfter($(this));
+                    $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度</div>").insertAfter($(this));
                     $(this).parent().parent().parent().removeClass('has-info').addClass('has-error');
                 }
             }else{
@@ -2424,12 +2447,12 @@
         $("#consignorPhone,#consigneePhone").blur(function () {
             if($(this).val().length>20){
                 if($(this).parent().children().length==1){
-                    $("<div id='price-error' class='help-block has-error'>超过最大长度</div>").insertAfter($(this));
+                    $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度</div>").insertAfter($(this));
                     $(this).parent().parent().parent().removeClass('has-info').addClass('has-error');
                 }
             }else if(!(/^(-?[1-9]\d*|0)$/.test($(this).val()))){
                 if($(this).parent().children().length==1){
-                    $("<div id='price-error' class='help-block has-error'>电话格式错误</div>").insertAfter($(this));
+                    $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>电话格式错误</div>").insertAfter($(this));
                     $(this).parent().parent().parent().removeClass('has-info').addClass('has-error');
                 }
             }else{
