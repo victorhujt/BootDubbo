@@ -109,9 +109,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                                 throw new BusinessException(wrapper.getMessage());
                             }
-                            //校验体积是否符合格式
-                            String volume = ofcDistributionBasicInfo.getCubage();
-                            checkVolume(volume);
+                            //校验运输基本信息
+                            checkDistibutionBaseMsg(ofcDistributionBasicInfo);
+
 
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                             /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
@@ -138,9 +138,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
                         }
-                        //校验体积是否符合格式
-                        String volume = ofcDistributionBasicInfo.getCubage();
-                        checkVolume(volume);
+                        //校验运输基本信息
+                        checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                         //运输订单
                         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
                             String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
@@ -209,9 +208,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
                         }
-                        //校验体积是否符合格式
-                        String volume = ofcDistributionBasicInfo.getCubage();
-                        checkVolume(volume);
+                        //校验运输基本信息
+                        checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                         //如果编辑订单后, 还是需要提供运输, 就要更新运输信息
                         ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
@@ -260,9 +258,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());
                     }
-                    //校验体积是否符合格式
-                    String volume = ofcDistributionBasicInfo.getCubage();
-                    checkVolume(volume);
+                    //校验运输基本信息
+                    checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                     //删除仓配信息
                     OfcWarehouseInformation ofcWarehouseInformationForTrans = new OfcWarehouseInformation();
                     ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -331,9 +328,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());
                     }
-                    //校验体积是否符合格式
-                    String volume = ofcDistributionBasicInfo.getCubage();
-                    checkVolume(volume);
+                    //校验运输基本信息
+                    checkDistibutionBaseMsg(ofcDistributionBasicInfo);
 
                     //运输订单
                     if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
@@ -688,10 +684,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     }
     /**
-     * 校验体积格式
+     * 校验运输基本信息
      */
-
-    public void checkVolume(String volume){
+    public void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
+        String volume = ofcDistributionBasicInfo.getCubage();
         if(!PubUtils.isSEmptyOrNull(volume)){
             boolean matches = volume.matches("\\d{1,10}\\*\\d{1,10}\\*\\d{1,10}");
             if(!matches){
