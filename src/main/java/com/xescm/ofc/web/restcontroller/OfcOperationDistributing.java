@@ -190,7 +190,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!{}",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage());
         }
     }
 
@@ -225,7 +225,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
             }
         }catch (Exception ex){
-            logger.error("查询客户列表失败!异常信息为:{}",ex.getMessage(),ex);
+            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
         }
 
     }
@@ -311,7 +311,9 @@ public class OfcOperationDistributing extends BaseController{
             bis.close();
             outputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("城配开单下载模板出错{}",e.getMessage());
+        } catch (Exception e){
+            logger.error("城配开单下载模板出错{}",e.getMessage());
         }
 
     }

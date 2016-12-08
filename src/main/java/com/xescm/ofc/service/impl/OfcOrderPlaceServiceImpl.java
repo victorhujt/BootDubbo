@@ -694,6 +694,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("您输入的体积不符合规则! 请重新输入!");
             }
         }
+
+
     }
 
 
