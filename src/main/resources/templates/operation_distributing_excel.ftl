@@ -79,8 +79,8 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
-                    <#--<a href="${(OFC_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>-->
-                    <a href="${(OFC_WEB_URL)!}/open/downloadTemplate">批量下单导入模版_商超配送(点击下载)</a>
+                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
+                    <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -385,9 +385,9 @@
 
 
     }//
-    var viewMap = new HashMap();
+    var viewMap = null;
     var loadSheetTag = false;
-    var consigneeList = [];
+    var consigneeList = null;
 
     function uploadFileChange(target) {
 
@@ -488,6 +488,10 @@
         })
 
         $("#loadSheetAndCheckBtn").click(function () {//加载
+//            viewMap = null;
+            viewMap = new HashMap();
+//            consigneeList = null;
+            consigneeList = [];
 
             if($("#uploadExcelSheet option").size() > 0){
 

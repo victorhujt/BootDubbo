@@ -73,11 +73,16 @@
                                     <option value="611">调拨出库</option>
                                     <option value="612">报损出库</option>
                                     <option value="613">其他出库</option>
+                                    <option value="614">分拨出库</option>
                                     <option value="----------">----------</option>
                                     <option value="620">采购入库</option>
                                     <option value="621">调拨入库</option>
                                     <option value="622">退货入库</option>
                                     <option value="623">加工入库</option>
+                                    <option value="624">盘盈入库</option>
+                                    <option value="625">流通入库</option>
+                                    <option value="626">其他入库</option>
+                                    <option value="627">分拨入库</option>
                                 </select>
                             </div>
                         </div>
