@@ -137,8 +137,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
                         //运输订单
                         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                            String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
-                            String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                            String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
+                            String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
                             if(depatrueCode.equals(destinationCode)){
                                 ofcFundamentalInformation.setBusinessType(OrderConstConstant.WITHTHECITY);
                             }else {
@@ -263,8 +263,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcDist.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
                     if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
-                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
                         if(depatrueCode.equals(destinationCode)){
                             ofcFundamentalInformation.setBusinessType(OrderConstConstant.WITHTHECITY);
                         }else {
@@ -321,8 +321,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }
                     //运输订单
                     if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,12);
-                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,12);
+                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
+                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
                         /*if(depatrueCode.equals(destinationCode)){
                             ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
                         }else {

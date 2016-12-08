@@ -107,7 +107,11 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">选择
+                    aria-label="Clicks: activate to sort column ascending" >
+                    <label class="pos-rel">
+                        <input id="selOrder" type="checkbox" class="ace" onchange="selOrder()">
+                        <span class="lbl"></span>
+                    </label>选择
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">订单编号
@@ -155,7 +159,10 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">货品类别
+                    aria-label="Clicks: activate to sort column ascending">货品种类
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">货品小类
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">货品编码
@@ -164,32 +171,27 @@
                     aria-label="Clicks: activate to sort column ascending">货品名称
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">规格
+                    aria-label="Clicks: activate to sort column ascending">货品规格
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">规格
+                    aria-label="Clicks: activate to sort column ascending">单位
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">包装
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量
+                    aria-label="Clicks: activate to sort column ascending">计费方式
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量单价
+                    aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">重量（kg）
+                    aria-label="Clicks: activate to sort column ascending">计费数量
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">重量单价
+                    aria-label="Clicks: activate to sort column ascending">重量(kg)
                 </th>
-                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">体积
-                </th>
-                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">体积单价
-                </th>
+            </tr>
             </thead>
             <tbody id="goodsTbody">
             </tbody>
@@ -205,19 +207,37 @@
     }
     function invoicePrint() {
         var sel = "";
+        var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlets=";
+        var code="";
         $("#dataTbody").find("tr").each(function(index){
             var tdArr = $(this).children();
             if(tdArr.eq(0).find("input").prop("checked")){
                 sel="1";
                 var order_code=tdArr.eq(1).find("a").html();
-                var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlet=ofc/invoices/Invoice.cpt&orderCode="+order_code;
-                window.open(url);
+                code = code+"{reportlet:'/ofc/invoices/Invoice.cpt',orderCode:'"+order_code+"'},";
             }
         });
         if(sel==""){
             alert("请至少选择一个订单！");
+        }else{
+            code=code.substring(0,code.length-1);
+            url=url+"["+code+"]";
+            debugger;
+            window.open(encodeURI(url));
         }
-        //xescm.common.loadPage(url);
+    }
+
+    function selOrder() {
+        debugger;
+        if($("#selOrder").prop("checked")){
+            $("#dataTbody").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',true);
+            });
+        }else{
+            $("#dataTbody").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',false);
+            });
+        }
     }
 </script>
 <script type="text/javascript">
@@ -466,18 +486,17 @@
         var html = "";
         $.each(data.result, function (index, item) {
             html += "<tr>" +
+                    "<td>" + StringUtil.nullToEmpty(item.goodsType) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsCategory) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsCode) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsName) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsSpec) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.unit) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.pack) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.quantity) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.quantityUnitPrice) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.weight) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.weightUnitPrice) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.cubage) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.volumeUnitPrice) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.chargingWays) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.chargingUnitPrice) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.chargingQuantity) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.billingWeight) + "</td>" +
                     "</tr>";
         });
         $("#goodsTbody").empty().append(html);
@@ -573,6 +592,8 @@
         }
         return value;
     }
+
+
 </script>
 
 </body>
