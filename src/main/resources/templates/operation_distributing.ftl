@@ -775,7 +775,8 @@
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
-            if(consigneeChosen < 1){
+            //if(consigneeChosen < 1){
+            if(false){
                 alert("请先添加收货方")
             }/*else if(!ifConsigneeConfirm){
                 alert("请先确认收货方");

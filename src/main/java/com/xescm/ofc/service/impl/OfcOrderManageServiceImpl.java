@@ -481,6 +481,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     public void planCancle(String orderCode,String userId){
+        logger.info("==> orderCode={}",orderCode);
+        logger.info("==> userId={}",userId);
         List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
         for(int i=0;i<ofcTransplanInfoList.size();i++){
             OfcTransplanInfo ofcTransplanInfo = ofcTransplanInfoList.get(i);
