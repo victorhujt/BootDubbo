@@ -493,7 +493,7 @@
                     "<td>" + StringUtil.nullToEmpty(item.goodsSpec) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.unit) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.pack) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.chargingWays) + "</td>" +
+                    "<td>" + getChargingWays(StringUtil.nullToEmpty(item.chargingWays)) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.chargingUnitPrice) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.chargingQuantity) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.billingWeight) + "</td>" +
@@ -589,6 +589,18 @@
             value = "零担"
         } else if (type == "20") {
             value = "整车";
+        }
+        return value;
+    }
+
+    function getChargingWays(type) {
+        var value = "";
+        if (type == "01") {
+            value = "件数"
+        } else if (type == "02") {
+            value = "重量Kg";
+        }else if (type == "03") {
+            value = "体积m³";
         }
         return value;
     }
