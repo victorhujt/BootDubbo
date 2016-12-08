@@ -260,8 +260,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
 
                 if(!PubUtils.isSEmptyOrNull(ofcTransplanInfo.getDeparturePlaceCode()) && ofcTransplanInfo.getDeparturePlaceCode().length() > 12){
-                    String depatrueCode = ofcTransplanInfo.getDeparturePlaceCode().substring(0,12);
-                    String destinationCode = ofcTransplanInfo.getDestinationCode().substring(0,12);
+                    String depatrueCode = ofcTransplanInfo.getDeparturePlaceCode().substring(0,13);
+                    String destinationCode = ofcTransplanInfo.getDestinationCode().substring(0,13);
                     if(depatrueCode.equals(destinationCode)){
                         ofcTransplanInfo.setBusinessType("600");
                         rmcCompanyLineQO.setLineType("2");
