@@ -114,11 +114,12 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				updateByPlanCode(statusCondition);//仓储计划单状态的更新
 				ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewstatus);//仓储计划单最新状态的更新
 			}
-			if(!orderStatus.getStatusDesc().equals(translateStatusToDesc(condition.getStatus(),info.getBusinessType()))){
+			if(orderStatus.getStatusDesc().indexOf(translateStatusToDesc(condition.getStatus(),info.getBusinessType()))<0){
 				status.setLastedOperTime(traceTime);
 				status.setStatusDesc(translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
 				status.setOperator("");
+				status.setOrderStatus(orderStatus.getOrderStatus());
 				status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
 						 +" "+translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);

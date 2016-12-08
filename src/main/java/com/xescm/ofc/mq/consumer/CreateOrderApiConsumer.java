@@ -125,7 +125,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 			} catch (Exception e) {
 				  logger.info(e.getMessage());
 			}
-        }else if(StringUtils.equals(topicName,mqConfig.getOfc2WhcOrderTopic())){
+        }else if(StringUtils.equals(topicName,mqConfig.getWhc2ofcOrderTopic())){
                 logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
                 {
