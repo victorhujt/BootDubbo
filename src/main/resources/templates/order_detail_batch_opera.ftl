@@ -499,7 +499,17 @@
         });
         $("#goodsTbody").empty().append(html);
     }
-
+    function getChargingWays(type) {
+        var value = "";
+        if (type == "01") {
+            value = "件数"
+        } else if (type == "02") {
+            value = "重量Kg";
+        }else if (type == "03") {
+            value = "体积m³";
+        }
+        return value;
+    }
 </script>
 
 <script>
@@ -591,17 +601,7 @@
         return value;
     }
 
-    function getChargingWays(type) {
-        var value = "";
-        if (type == "01") {
-            value = "件数"
-        } else if (type == "02") {
-            value = "重量Kg";
-        }else if (type == "03") {
-            value = "体积m³";
-        }
-        return value;
-    }
+
 
 
 </script>
