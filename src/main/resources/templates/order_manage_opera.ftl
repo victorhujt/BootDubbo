@@ -508,11 +508,19 @@
         }
         //订单详情
         function orderDetailOper(orderCode) {
-            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
+            var url = "/ofc/orderDetailPageByCode/" + orderCode;
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
         }
 
         function queryOrderDetailBatchOpera(orderBatchCode) {
-            xescm.common.loadPage("/ofc/orderDetailBatchOpera/" + orderBatchCode);
+            var url = "/ofc/orderDetailBatchOpera/" + orderBatchCode;
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailBatchOpera/" + orderBatchCode);
         }
 
         //订单审核、反审核

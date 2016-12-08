@@ -652,7 +652,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * @param tag
      * @return
      */
-    private Wrapper<List<String>> checkRepeat(List<String> consigneeOrGoodsList, int sheetNum, String tag){//出错位置也要有 +5
+    private Wrapper<List<String>> checkRepeat(List<String> consigneeOrGoodsList, int sheetNum, String tag){
         List<String> errorConsigneeOrGoodsList = new ArrayList<>();
         Map<String,String> consigneeOrGoodsRepeatMap = new HashMap<>();
         Integer consigneeOrGoodsNum = null;
@@ -697,5 +697,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
         }
     }
+
+    /**
+     * 城配开单必填项后端校验
+     */
+
+
+
 
 }
