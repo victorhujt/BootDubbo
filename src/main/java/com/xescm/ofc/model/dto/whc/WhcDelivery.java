@@ -124,10 +124,26 @@ public class WhcDelivery {
     /************************/
 
     /** 客户订单编号 */
-    private String customerOrderCode;
+    private String customerOrderNo;
+
+    public String getCustomerOrderNo() {
+        return customerOrderNo;
+    }
+
+    public void setCustomerOrderNo(String customerOrderNo) {
+        this.customerOrderNo = customerOrderNo;
+    }
+
+    public String getPlanNo() {
+        return planNo;
+    }
+
+    public void setPlanNo(String planNo) {
+        this.planNo = planNo;
+    }
 
     /** 计划单编号 */
-    private String planCode;
+    private String planNo;
 
     /************************/
 
@@ -437,19 +453,5 @@ public class WhcDelivery {
         this.detailsList = detailsList;
     }
 
-    public String getCustomerOrderCode() {
-        return customerOrderCode;
-    }
 
-    public void setCustomerOrderCode(String customerOrderCode) {
-        this.customerOrderCode = customerOrderCode;
-    }
-
-    public String getPlanCode() {
-        return planCode;
-    }
-
-    public void setPlanCode(String planCode) {
-        this.planCode = planCode;
-    }
 }

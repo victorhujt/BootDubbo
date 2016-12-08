@@ -17,6 +17,7 @@ import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.*;
 
+import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,20 +108,23 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				ofcSiloproNewstatus.setOrderCode(infostatus.getOrderCode());
 				status.setLastedOperTime(traceTime);
 				status.setOrderStatus(OrderConstConstant.IMPLEMENTATIONIN);
-				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+				status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
 	                     +" "+traceStatus);
 				status.setOperator("");
 				updateByPlanCode(statusCondition);//仓储计划单状态的更新
 				ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewstatus);//仓储计划单最新状态的更新
 			}
+			if(orderStatus.getStatusDesc().indexOf(translateStatusToDesc(condition.getStatus(),info.getBusinessType()))<0){
 				status.setLastedOperTime(traceTime);
 				status.setStatusDesc(translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
 				status.setOperator("");
-				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-	                     +" "+translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
+				status.setOrderStatus(orderStatus.getOrderStatus());
+				status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+						 +" "+translateStatusToDesc(condition.getStatus(),info.getBusinessType()));
 				status.setOrderCode(orderCode);
 				ofcOrderStatusService.save(status);
+			}
 		}else{
 			throw new BusinessException("该仓储计划单对应的订单不存在");
 		}
@@ -184,7 +188,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				status.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
 				status.setOrderCode(info.getOrderCode());
 				status.setStatusDesc("已完成");
-				status.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"订单已完成");
+				status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
 				status.setLastedOperTime(new Date());
 				status.setOperator("");
 				ofcOrderStatusService.save(status);

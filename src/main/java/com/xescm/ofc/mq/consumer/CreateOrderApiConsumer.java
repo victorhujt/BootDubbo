@@ -109,7 +109,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 //                logger.error(ex.getMessage(), ex);
             }
          }else if(StringUtils.equals(topicName,mqConfig.getOfcOrderStatusTopic())){
-        	logger.info("仓储计划单状态反馈的消息体为:"+messageBody);
+        	logger.info("仓储计划单状态反馈的消息体为{}:",messageBody);
 			logger.info("仓储计划单状态开始消费");
 			try {
 	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
@@ -120,14 +120,13 @@ public class CreateOrderApiConsumer implements MessageListener {
                          ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
 					 }
 				 } catch (Exception e) {
-					 logger.info(e.getMessage());
-					 e.printStackTrace();
+                     logger.error("仓储计划单状态反馈出现异常{}",e.getMessage());
 				 }
 			} catch (Exception e) {
 				  logger.info(e.getMessage());
 			}
-        }else if(StringUtils.equals(topicName,mqConfig.getOfc2WhcOrderTopic())){
-                logger.info("仓储计划单出入库单反馈的消息体为:"+messageBody);
+        }else if(StringUtils.equals(topicName,mqConfig.getWhc2ofcOrderTopic())){
+                logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
                 {
                     logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
@@ -138,7 +137,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                             ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                         }
                     } catch (Exception e) {
-                        logger.info(e.getMessage());
+                        logger.error("仓储计划单出入库单反馈出现异常{}",e.getMessage());
                     }
                 }
 

@@ -783,7 +783,6 @@
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
                 viewMapIndexOf += 1;
-                console.log("key----" + key + "value --- " + viewMapKeys[key])
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
@@ -799,14 +798,14 @@
                         "<td>" + goodsDetail.unit + "</td>" +
                         "<td>" + goodsDetail.goodsAmount + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
+                        "<td  style='display:none'>" + goodsDetail.goodsTypeParentName + "</td>" +
                         "</tr>");
             }
         }
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
-            //if(consigneeChosen < 1){
-            if(false){
+            if(consigneeChosen < 1){
                 alert("请先添加收货方")
             }/*else if(!ifConsigneeConfirm){
                 alert("请先确认收货方");
@@ -910,7 +909,9 @@
                 var unit = tdArr.eq(5).text();//    单位
                 var sendGoods = tdArr.eq(6).text();//发货数量
                 var goodsSecType = tdArr.eq(7).text();//货品二级类
-                var goodsSecType = tdArr.eq(7).text();//货品二级类
+
+                var goodsFirType = tdArr.eq(8).text();//货品一级类
+
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
@@ -924,6 +925,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                 preIndex = index;
             });
@@ -1017,7 +1019,6 @@
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
             debugger
-            console.log("goodsAmountTotal" + goodsAmountTotal)
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
             if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
@@ -1035,8 +1036,6 @@
                     goodsAmountTotal = goodsAmountTotal - goodsAmount;
                     //对货品列表重新进行展示
                     tdArr.eq(6).text(goodsAmountTotal);
-                    console.log(goodsAmountTotal)
-                    console.log(tdArr.eq(6).text())
                     delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
                     return true;
                 }
@@ -1044,7 +1043,6 @@
             }
         })
         $(obj).parent().parent().remove();
-        console.log("删除完收货方:" + JSON.stringify(goodsAndConsigneeMap));
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
@@ -1866,11 +1864,13 @@
                 var goodsUnit = tdArr.eq(5).text();//单位
                 //var goodsTotalAmount = tdArr.eq(6).text();//总数量
                 var goodsSecType = tdArr.eq(7).text();
+                var goodsFirType = tdArr.eq(8).text();
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
                 goods.goodsCategory = goodsSecType;
+                goods.goodsType = goodsFirType;
                 goods.chargingWays = '01';//计费方式按默认按件数
 
                 var mapKey = goodsCode + "@" + goodsIndex;
@@ -2080,6 +2080,8 @@
             return size;
         }
     }
+
+
 
 
 

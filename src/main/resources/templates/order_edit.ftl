@@ -1327,7 +1327,7 @@
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
 
-        debugger
+
 
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
@@ -1425,7 +1425,7 @@
         cscContact.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        debugger
+
 
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
@@ -1826,9 +1826,9 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
-                    debugger
+
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        debugger
+                        
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             
@@ -1888,7 +1888,7 @@
                             +"&contactName="+$("#supportContactName").val()
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
-                                debugger
+                                
                                 data=eval(data);
                                 var supplierList = "";
                                 $.each(data,function (index,CscSupplierInfoDto) {
@@ -2223,7 +2223,7 @@
                     ,"tag":tag}
                 ,"您确认提交订单吗?"
                 ,function () {
-                    debugger
+                    
                     xescm.common.loadPage("/ofc/orderManage");
                 })
     }
