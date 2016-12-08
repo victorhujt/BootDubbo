@@ -115,7 +115,7 @@
           AND ofi.cust_order_code = #{code}
         </when>
         <when test="'transCode'.toString() == searchType">
-          AND ofd.trans_code = #{code}
+          AND odbi.trans_code = #{code}
         </when>
         <otherwise></otherwise>
       </choose>
