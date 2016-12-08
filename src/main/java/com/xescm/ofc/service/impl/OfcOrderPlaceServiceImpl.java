@@ -109,6 +109,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                                 throw new BusinessException(wrapper.getMessage());
                             }
+                            //校验运输基本信息
+                            checkDistibutionBaseMsg(ofcDistributionBasicInfo);
+
+
                             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                             /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                             saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
@@ -134,7 +138,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
                         }
-
+                        //校验运输基本信息
+                        checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                         //运输订单
                         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
                             String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
@@ -185,10 +190,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
             }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
 
-                //现在订单编辑没有对客户订单编号进行校验
-                if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
+                //现在订单编辑没有对客户订单编号进行校验, 客户订单编号可以不写!
+                /*if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
                     throw new BusinessException("您没有填写客户订单编号!");
-                }
+                }*/
                 /*if (("").equals(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode())) || null == PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode())){
                     ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
                 }*/
@@ -203,6 +208,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
                         }
+                        //校验运输基本信息
+                        checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                         //如果编辑订单后, 还是需要提供运输, 就要更新运输信息
                         ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
@@ -251,6 +258,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());
                     }
+                    //校验运输基本信息
+                    checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                     //删除仓配信息
                     OfcWarehouseInformation ofcWarehouseInformationForTrans = new OfcWarehouseInformation();
                     ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -319,6 +328,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());
                     }
+                    //校验运输基本信息
+                    checkDistibutionBaseMsg(ofcDistributionBasicInfo);
+
                     //运输订单
                     if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
                         String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
@@ -671,7 +683,20 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
 
     }
+    /**
+     * 校验运输基本信息
+     */
+    public void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
+        String volume = ofcDistributionBasicInfo.getCubage();
+        if(!PubUtils.isSEmptyOrNull(volume)){
+            boolean matches = volume.matches("\\d{1,10}\\*\\d{1,10}\\*\\d{1,10}");
+            if(!matches){
+                throw new BusinessException("您输入的体积不符合规则! 请重新输入!");
+            }
+        }
 
+
+    }
 
 
 

@@ -753,7 +753,6 @@
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
                 viewMapIndexOf += 1;
-                console.log("key----" + key + "value --- " + viewMapKeys[key])
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
@@ -834,14 +833,14 @@
 
                     goodsList =goodsList + "<tr role='row' class='odd'>";
                     goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品种类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
-                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
-                    goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeParentName)+"</td>";//货品种类
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeName)+"</td>";//货品小类
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.brand)+"</td>";//品牌
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsCode)+"</td>";//货品编码
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsName)+"</td>";//货品名称
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";//规格
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";//单位
+                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.barCode)+"</td>";//条形码
                     /* goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
                      goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
                     goodsList =goodsList + "</tr>";
@@ -905,7 +904,7 @@
             $("#goodsSelectListTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
-                    debugger;
+
                     var numIndex = parseInt(preIndex);
                     preIndex = numIndex + 1;
                     var goodsFirType = tdArr.eq(1).text();//货品一级类
@@ -990,7 +989,6 @@
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
             debugger
-            console.log("goodsAmountTotal" + goodsAmountTotal)
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
             if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
@@ -1008,8 +1006,6 @@
                     goodsAmountTotal = goodsAmountTotal - goodsAmount;
                     //对货品列表重新进行展示
                     tdArr.eq(6).text(goodsAmountTotal);
-                    console.log(goodsAmountTotal)
-                    console.log(tdArr.eq(6).text())
                     delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
                     return true;
                 }
@@ -1017,7 +1013,6 @@
             }
         })
         $(obj).parent().parent().remove();
-        console.log("删除完收货方:" + JSON.stringify(goodsAndConsigneeMap));
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
@@ -1315,23 +1310,23 @@
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.city+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.area+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.street+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyId)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
                 contactList =contactList + "</tr>";
             });
             $("#contactSelectListTbody2").html(contactList);
@@ -1442,23 +1437,23 @@
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.type+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.contactCompanyId+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.id+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.phone+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.province+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.city+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.area+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.street+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                contactList =contactList + "<td style='display:none'>"+CscContantAndCompanyDto.address+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyId)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
                 contactList =contactList + "</tr>";
                 $("#contactSelectListTbody1").html(contactList);
             });
@@ -1664,12 +1659,12 @@
                 custList =custList + "<tr role='row' class='odd'>";
                 custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='custList' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 custList =custList + "<td>"+(index+1)+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.type+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.type)+"</td>";
+                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.customerName)+"</td>";
                 custList =custList + "<td>"+channel+"</td>";
-                custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
-                custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
-                custList =custList + "<td style='display: none'>"+cscCustomerVo.id+"</td>";
+                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.productType)+"</td>";
+                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.groupId)+"</td>";
+                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.id)+"</td>";
                 custList =custList + "</tr>";
                 $("#custListDivTbody").html(custList);
             });
@@ -2055,6 +2050,8 @@
             return size;
         }
     }
+
+
 
 
 

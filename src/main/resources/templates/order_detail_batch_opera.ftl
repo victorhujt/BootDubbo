@@ -5,10 +5,10 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
-    <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="InvoicePrinting" value="" onclick="invoicePrint()">
+    <button class="btn btn-white btn-info btn-bold" style="float:right;width:105px;height:34px;" id="InvoicePrinting" value="" onclick="invoicePrint()">
         发货单打印
     </button>
-    <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="goBack" value="" onclick="detailBackToHistory()">
+    <button class="btn btn-white btn-info btn-bold filters" style="float:right;margin-right:10px;" id="goBack" value="" onclick="detailBackToHistory()">
         返回
     </button>
     </div>
@@ -222,13 +222,11 @@
         }else{
             code=code.substring(0,code.length-1);
             url=url+"["+code+"]";
-            debugger;
             window.open(encodeURI(url));
         }
     }
 
     function selOrder() {
-        debugger;
         if($("#selOrder").prop("checked")){
             $("#dataTbody").find("tr").each(function(index){
                 $(this).children().eq(0).find("input").prop('checked',true);
@@ -493,7 +491,7 @@
                     "<td>" + StringUtil.nullToEmpty(item.goodsSpec) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.unit) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.pack) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.chargingWays) + "</td>" +
+                    "<td>" + getChargingWays(StringUtil.nullToEmpty(item.chargingWays)) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.chargingUnitPrice) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.chargingQuantity) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.billingWeight) + "</td>" +
@@ -501,7 +499,17 @@
         });
         $("#goodsTbody").empty().append(html);
     }
-
+    function getChargingWays(type) {
+        var value = "";
+        if (type == "01") {
+            value = "件数"
+        } else if (type == "02") {
+            value = "重量Kg";
+        }else if (type == "03") {
+            value = "体积m³";
+        }
+        return value;
+    }
 </script>
 
 <script>
@@ -592,6 +600,8 @@
         }
         return value;
     }
+
+
 
 
 </script>

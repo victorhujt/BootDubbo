@@ -242,7 +242,6 @@
     var ofc_web_url = $("#ofc_web_url").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
-        console.log("0000"+historyUrl)
         xescm.common.loadPage(historyUrl);
     })
 
@@ -361,7 +360,7 @@
             var num = "0";
 
             if(undefined != viewMap.get(mapKey)){
-                debugger
+                
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;

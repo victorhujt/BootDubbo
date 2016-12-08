@@ -1327,7 +1327,7 @@
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
 
-        debugger
+
 
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
@@ -1425,7 +1425,7 @@
         cscContact.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        debugger
+
 
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
@@ -1546,8 +1546,8 @@
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unitPrice)+"</td>";
 
-                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
-                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+StringUtil.nullToEmpty(cscGoodsVo.weight)+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+StringUtil.nullToEmpty(cscGoodsVo.volume)+"</td>";
 
                     goodsList =goodsList + "</tr>";
 
@@ -1584,13 +1584,13 @@
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.fax)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.email)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.postCode)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                     contactList =contactList + "</tr>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
@@ -1618,13 +1618,13 @@
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='suppliersele' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.fax)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.email)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.postCode)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                     contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
@@ -1641,13 +1641,13 @@
                     supplierList =supplierList + "<tr role='row' class='odd' align='center'>";
                     supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='radio' name = 'selGoods' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     supplierList =supplierList + "<td>"+(index+1)+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.contactName)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.fax)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.email)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.postCode)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress)+"</td>";
                     supplierList =supplierList + "</tr>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
@@ -1826,9 +1826,9 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
-                    debugger
+
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        debugger
+                        
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             
@@ -1888,7 +1888,7 @@
                             +"&contactName="+$("#supportContactName").val()
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
-                                debugger
+                                
                                 data=eval(data);
                                 var supplierList = "";
                                 $.each(data,function (index,CscSupplierInfoDto) {
@@ -2223,7 +2223,7 @@
                     ,"tag":tag}
                 ,"您确认提交订单吗?"
                 ,function () {
-                    debugger
+                    
                     xescm.common.loadPage("/ofc/orderManage");
                 })
     }
