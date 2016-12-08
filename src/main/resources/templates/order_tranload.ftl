@@ -1930,7 +1930,6 @@
                 var orderGoods = {};
                 for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
                     var param = goodsTable.rows[tableRows].cells[tableCells];
-                    debugger;
                     switch (tableCells){
                         case 1 :orderGoods.goodsType = param.getElementsByTagName("select")[0].value;break;
                         case 2 :orderGoods.goodsCategory = param.getElementsByTagName("select")[0].value;break;

@@ -222,13 +222,11 @@
         }else{
             code=code.substring(0,code.length-1);
             url=url+"["+code+"]";
-            debugger;
             window.open(encodeURI(url));
         }
     }
 
     function selOrder() {
-        debugger;
         if($("#selOrder").prop("checked")){
             $("#dataTbody").find("tr").each(function(index){
                 $(this).children().eq(0).find("input").prop('checked',true);

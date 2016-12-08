@@ -743,7 +743,7 @@
                         "</tr>");
             })
 
-            debugger
+            
             //先做成死的, 暂时不允许收货方动态增删
             //ifConsigneeConfirm = true;
 
@@ -753,7 +753,6 @@
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
                 viewMapIndexOf += 1;
-                console.log("key----" + key + "value --- " + viewMapKeys[key])
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
@@ -987,7 +986,6 @@
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
             debugger
-            console.log("goodsAmountTotal" + goodsAmountTotal)
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
             if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
@@ -1005,8 +1003,6 @@
                     goodsAmountTotal = goodsAmountTotal - goodsAmount;
                     //对货品列表重新进行展示
                     tdArr.eq(6).text(goodsAmountTotal);
-                    console.log(goodsAmountTotal)
-                    console.log(tdArr.eq(6).text())
                     delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
                     return true;
                 }
@@ -1014,7 +1010,6 @@
             }
         })
         $(obj).parent().parent().remove();
-        console.log("删除完收货方:" + JSON.stringify(goodsAndConsigneeMap));
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
