@@ -326,7 +326,7 @@
             param.pageSize = 10;
             param.custName = $("#custName").val();
             var startDate = $('#startDate').val();
-            var endDate = $('endDate').val();
+            var endDate = $('#endDate').val();
             param.startDate = startDate;
             param.endDate = endDate;
             param.orderCode = $("#orderCode").val();
