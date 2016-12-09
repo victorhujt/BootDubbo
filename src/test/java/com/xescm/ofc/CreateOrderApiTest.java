@@ -37,6 +37,8 @@ public class CreateOrderApiTest {
         DmsTransferRecordDto dmsTransferRecordDto = new DmsTransferRecordDto();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dmsTransferRecordDto.setCreatedTime(sdf.format(new Date()));
+        dmsTransferRecordDto.setTransNo("");
+        dmsTransferRecordDto.setCreator("");
 
         ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
     }
