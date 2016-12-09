@@ -140,18 +140,6 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
 
-        DmsTransferRecordDto dmsTransferRecordDto = new DmsTransferRecordDto();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dmsTransferRecordDto.setCreatedTime(sdf.format(new Date()));
-        dmsTransferRecordDto.setTransNo("transCode001");
-        dmsTransferRecordDto.setCreator("creator001");
-        dmsTransferRecordDto.setRecordTypeCode("10");
-        dmsTransferRecordDto.setRemark("我是Remark001");
-
-        ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
-
-
-
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         map.put("merchandiserList",merchandiserList);
         map.put("currentTime",new Date());
