@@ -236,6 +236,26 @@
         ORDER BY odbi.oper_time DESC limit 1
   </select>
 
+
+  <select id="getKabanOrderCodeByTransCode" parameterType="java.util.Map" resultMap="convTransCode">
+    SELECT
+    odbi.order_code
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    <where>
+      <if test="custCode!=null and custCode!=''">
+        AND ofi.cust_code = #{custCode,jdbcType=VARCHAR}
+      </if>
+      <if test="transCode!=null and transCode!=''">
+        AND odbi.trans_code =#{transCode,jdbcType=VARCHAR}
+      </if>
+      AND ofi.business_type = '602'
+    </where>
+    ORDER BY odbi.oper_time DESC limit 1
+  </select>
+
+
   <select id="checkTransCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" resultType="java.lang.Integer">
     SELECT
     count(order_code) AS countOrderCode
@@ -292,4 +312,6 @@
     AND ofi.order_batch_number = #{orderBatchNumber}
     LIMIT 1
   </select>
+
+
 </mapper>

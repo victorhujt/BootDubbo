@@ -60,7 +60,7 @@ public class OfcTransplanNewstatus {
     /**
      * 描述信息
      */
-    private String desc;
+    private String description;
 
     public String getOperator() {
         return operator;
@@ -217,18 +217,18 @@ public class OfcTransplanNewstatus {
     /**
      * 获取描述信息
      *
-     * @return desc - 描述信息
+     * @return description - 描述信息
      */
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
     /**
      * 设置描述信息
      *
-     * @param desc 描述信息
+     * @param description 描述信息
      */
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

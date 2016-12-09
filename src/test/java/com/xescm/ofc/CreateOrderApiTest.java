@@ -33,15 +33,18 @@ public class CreateOrderApiTest {
     private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
 
     @Test
-    public void tt(){
+    public void t3333333333333333t(){
         DmsTransferRecordDto dmsTransferRecordDto = new DmsTransferRecordDto();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dmsTransferRecordDto.setCreatedTime(sdf.format(new Date()));
-        dmsTransferRecordDto.setTransNo("");
-        dmsTransferRecordDto.setCreator("");
+        dmsTransferRecordDto.setTransNo("transCode001");
+        dmsTransferRecordDto.setCreator("creator001");
+        dmsTransferRecordDto.setRecordTypeCode("10");
+        dmsTransferRecordDto.setRemark("我是Remark001");
 
         ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
     }
+/*
 
 
     @Autowired
@@ -168,5 +171,6 @@ public class CreateOrderApiTest {
         System.out.println("ofcOrderStatus:"+ ToStringBuilder.reflectionToString(ofcOrderStatus));
         System.out.println("ofcGoodsDetailsInfoList:"+ ToStringBuilder.reflectionToString(ofcGoodsDetailsInfoList));
     }
+*/
 
 }
