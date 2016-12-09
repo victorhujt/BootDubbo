@@ -906,7 +906,6 @@
      */
 
     function validateForm() {
-        debugger;
         var ofc_url = $("#ofc_url").html();
         $('#orderFundamentalFormValidate').validate({
             errorElement : 'div',
@@ -1254,6 +1253,7 @@
     }
     function seleGoods(obj) {
         $(obj).attr("id","yangdongxushinanshen");
+        $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
     }
     function onlyNumber(value){
@@ -1419,7 +1419,6 @@
     function  goodsTypeParentChange(obj){
         var typeId=$(obj).val();
         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
-            debugger;
             data=eval(data);
             $(obj).parent().next().children().empty();
             $.each(data,function (index,CscGoodsTypeVo) {
@@ -2014,7 +2013,7 @@
                 for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
                     var param = goodsTable.rows[tableRows].cells[tableCells];
                     switch (tableCells){
-                        case 1 :orderGoods.goodsType = param.getElementsByTagName("select")[0].value;break;
+                        case 1 :orderGoods.goodsType = param.getElementsByTagName("select")[0].options[param.getElementsByTagName("select")[0].selectedIndex].text;break;
                         case 2 :orderGoods.goodsCategory = param.getElementsByTagName("select")[0].value;break;
                         case 3 :orderGoods.goodsCode = param.getElementsByTagName("input")[0].value;break;
                         case 4 :orderGoods.goodsName = param.getElementsByTagName("input")[0].value;break;
@@ -2150,6 +2149,7 @@
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
                     goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
                     goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+                    goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
@@ -2454,7 +2454,8 @@
                 }else{
                     $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        value = $(this).val();
+                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
                     });
 
                 }
@@ -2532,6 +2533,7 @@
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            $("#typeSel").attr("id","");
 
         });
 
@@ -2539,6 +2541,7 @@
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            $("#typeSel").attr("id","");
 
         });
 
@@ -2553,7 +2556,10 @@
                     var goodsName = tdArr.eq(5).text();//货品名称
                     var specification = tdArr.eq(6).text();//规格
                     var unit = tdArr.eq(7).text();//单位
-                    $("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").val(goodsType);
+                    var typeID = tdArr.eq(9).text();//单位
+                    $("#typeSel").val(typeID);
+                    goodsTypeParentChange($("#typeSel"));
+                    //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
@@ -2568,6 +2574,7 @@
             }else{
                 $("#goodsListDiv").fadeOut("slow");
                 $("#yangdongxushinanshen").attr("id","goodCodeSel");
+                $("#typeSel").attr("id","");
             }
         });
 
