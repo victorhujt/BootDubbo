@@ -236,8 +236,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanNewstatus,ofcTransplanInfo);
             ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.ZIYUANFENPEIZ);
-            //ofcTransplanNewstatus.setTransportSingleLatestStatus(ofcTransplanStatus.getPlannedSingleState());
-            //ofcTransplanNewstatus.setTransportSingleUpdateTime(ofcTransplanInfo.getCreationTime());
+//            ofcTransplanNewstatus.setTransportSingleLatestStatus(ofcTransplanStatus.getPlannedSingleState());
+//            ofcTransplanNewstatus.setTransportSingleUpdateTime(ofcTransplanInfo.getCreationTime());
             ofcTraplanSourceStatus.setResourceAllocationStatus(OrderConstConstant.DAIFENPEI);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
@@ -386,15 +386,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.WITHTHEKABAN)){
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                    if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
-                        String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                        ofcDistributionBasicInfo.setCubage(volume.toString());
-                    }
-                    Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
-                    if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                        throw new BusinessException("向分拣中心推送卡班订单失败");
-                    }
+                    pushKabanOrderToDms(ofcDistributionBasicInfo,ofcTransplanInfo);
+
                 }
             }else{
                 if(CollectionUtils.isEmpty(companyList.getResult())){
@@ -416,6 +409,32 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    /**
+     * 订单中心向DMS推送卡班订单
+     * @param ofcDistributionBasicInfo
+     */
+    private void pushKabanOrderToDms(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcTransplanInfo ofcTransplanInfo) {
+        try{
+            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
+                String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
+                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                ofcDistributionBasicInfo.setCubage(volume.toString());
+            }
+            Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
+            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                throw new BusinessException("向分拣中心推送卡班订单失败");
+            }
+            //更新运输计划单状态为已推送, 略过, 因为只更新不记录
+            //一旦向DMS推送过去, 就更新运输计划单状态为执行中
+            OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
+            ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+            ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUZHONG);
+            ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+        }catch (Exception ex){
+            throw new BusinessException(ex.getMessage());
+        }
+
+    }
 
 
     /**

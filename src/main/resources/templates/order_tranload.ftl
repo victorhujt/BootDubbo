@@ -1169,7 +1169,7 @@
             rules : {
                 consignorName:{
                     required:true,
-                    maxlength:10
+                    maxlength:100
                 },
                 consignorContactName:{
                     required:true,
@@ -1757,12 +1757,14 @@
                     $("#city-picker3-consignor").citypicker('refresh');
                     departurePlace();
                     cscContact.purpose = "1";
+                    checkConsignOrEe();
                     outConsignee(cscContact,cscContactCompany,groupId,custId);
                 });
             }else{
                 clearConsignor();
                 cscContact.purpose = "1";
                 outConsignee(cscContact,cscContactCompany,groupId,custId);
+                checkConsignOrEe();
             }
         },"json");
 
@@ -1794,6 +1796,7 @@
                             + "/" + streetName;
                     $("#city-picker3-consignee").val(paramAddressNameToPage);
                     $("#city-picker3-consignee").citypicker('refresh');
+                    checkConsignOrEe();
                     destination();
                 });
             }else{
@@ -1877,6 +1880,33 @@
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
+    }
+
+    function checkConsignOrEe(){
+        if($("#consignorName").val()!=""){
+            $("#consignorName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consignorName-error").remove();
+        }
+        if($("#consignorContactName").val()!=""){
+            $("#consignorContactName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consignorContactName-error").remove();
+        }
+        if($("#consignorPhone").val()!=""){
+            $("#consignorPhone-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consignorPhone-error").remove();
+        }
+        if($("#consigneeName").val()!=""){
+            $("#consigneeName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consigneeName-error").remove();
+        }
+        if($("#consigneeContactName").val()!=""){
+            $("#consigneeContactName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consigneeContactName-error").remove();
+        }
+        if($("#consigneePhone").val()!=""){
+            $("#consigneePhone-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consigneePhone-error").remove();
+        }
     }
 
     $(function(){
@@ -2300,6 +2330,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                checkConsignOrEe();
             }
         });
 
@@ -2357,6 +2388,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                checkConsignOrEe();
             }
         });
 
