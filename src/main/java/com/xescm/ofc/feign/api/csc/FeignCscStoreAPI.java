@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface FeignCscStoreAPI {
     /**
-     * 查询客户所属店铺
+     * 查询客户下店铺
      * @param queryStoreDto
      * @return
      */

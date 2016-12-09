@@ -674,7 +674,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">运费</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="" value="0">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -739,7 +739,7 @@
                         <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:0;margin-right:15px;">现结</label>
                         <div style="float:left;width:130px;">
                         <div class="col-float" style="width:100px;margin-right:15px;">
-                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
                         </div>
                         <label class=" col-float" for="name">元</label></div>
                     </div>
@@ -747,7 +747,7 @@
                         <label class=" col-label-50 col-float" for="name" style="margin-left:25px;margin-right:15px;">到付</label>
                         <div style="width:130px;float:left;">
                             <div class="col-float" style="width:100px;margin-right:15px;">
-                                <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                                <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
                             </div>
                             <label class=" col-float" for="name">元</label>
                         </div>
@@ -756,7 +756,7 @@
                         <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:15px;">回付</label>
                         <div style="width:130px;float:left;">
                             <div class="col-float" style="width:100px;margin-right:15px;">
-                                <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                                <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
                             </div>
                             <label class=" col-float" for="name">元</label>
                         </div>
@@ -765,7 +765,7 @@
                         <label class=" col-label-50" for="name" style="margin-right:15px;">月结</label>
                         <div style="width:130px;float:left;">
                                 <div class="col-float" style="width:100px;margin-right:15px;">
-                                    <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()">
+                                    <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
                                 </div>
                                 <label class=" col-float" for="name">元</label>
                         </div>
@@ -989,6 +989,8 @@
             errorPlacement : function(error, element) {
                 error.insertAfter(element.parent());
             },
+            submitHandler : function(form) {
+            },
             invalidHandler : function(form) {
             }
         });
@@ -1079,6 +1081,8 @@
                 error.insertAfter(element.parent().next());
                 $(error).attr("align","left");
             },
+            submitHandler : function(form) {
+            },
             invalidHandler : function(form) {
             }
         });
@@ -1150,6 +1154,8 @@
             },
             errorPlacement : function(error, element) {
                 error.insertAfter(element.parent().next());
+            },
+            submitHandler : function(form) {
             },
             invalidHandler : function(form) {
             }
@@ -1229,13 +1235,17 @@
                 }
             },
             highlight : function(e) {
-
+                $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
             },
             success : function(e) {
-
+                $(e).parent().parent().removeClass('has-error').addClass('has-success');
+                $(e).remove();
             },
             errorPlacement : function(error, element) {
-                error.insertAfter(element.parent().next());
+                error.insertAfter(element);
+                //error.insertAfter(element.parent().next());
+            },
+            submitHandler : function(form) {
             },
             invalidHandler : function(form) {
             }
@@ -1253,6 +1263,7 @@
     }
     function seleGoods(obj) {
         $(obj).attr("id","yangdongxushinanshen");
+        $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
     }
     function onlyNumber(value){
@@ -1413,6 +1424,24 @@
         if($(obj).val()=="02"){
             $(obj).parent().next().next().next().children().val($(obj).parent().next().next().children().val());
         }
+    }
+
+    function  goodsTypeParentChange(obj){
+        var typeId=$(obj).val();
+        CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
+            data=eval(data);
+            $(obj).parent().next().children().empty();
+            $.each(data,function (index,CscGoodsTypeVo) {
+                $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
+            });
+            if($("#goodsInfoListDiv").find("tr").length==1){
+                $("select option").each(function() {
+                    text = $(this).text();
+                    if($("select option:contains("+text+")").length > 1)
+                        $("select option:contains("+text+"):gt(0)").remove();
+                });
+            }
+        });
     }
 
     function checkBillingWeight(obj){
@@ -1944,7 +1973,10 @@
                     $(this).parent().find("div").remove();
                 }
             });
-            validateForm();
+            $('#orderFundamentalFormValidate').submit();
+            $('#orderFinanceFormValidate').submit();
+            $('#orderFinanceChargeFormValidate').submit();
+            $('#orderInfoTableValidate').submit();
             if($("#orderFundamentalFormValidate").find("div.has-error").length>0
                     || $("#orderFinanceFormValidate").find("div.has-error").length>0
                     || $("#orderFinanceChargeFormValidate").find("div.has-error").length>0
@@ -1991,7 +2023,7 @@
                 for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
                     var param = goodsTable.rows[tableRows].cells[tableCells];
                     switch (tableCells){
-                        case 1 :orderGoods.goodsType = param.getElementsByTagName("select")[0].value;break;
+                        case 1 :orderGoods.goodsType = param.getElementsByTagName("select")[0].options[param.getElementsByTagName("select")[0].selectedIndex].text;break;
                         case 2 :orderGoods.goodsCategory = param.getElementsByTagName("select")[0].value;break;
                         case 3 :orderGoods.goodsCode = param.getElementsByTagName("input")[0].value;break;
                         case 4 :orderGoods.goodsName = param.getElementsByTagName("input")[0].value;break;
@@ -2127,6 +2159,7 @@
                     goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
                     goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
                     goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+                    goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
@@ -2409,18 +2442,16 @@
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger' style='margin-top:5px;'>删除</button></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<select  id='goodsType' name='goodsType'>";
-                /*if($("#goodsInfoListDiv").find("tr").length<1){*/
+                        "<select  id='goodsType' name='goodsType' onchange='goodsTypeParentChange(this)'>";
+                if($("#goodsInfoListDiv").find("tr").length<1){
 
-                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
-                        debugger;
+                    CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(data) {
                         data=eval(data);
-
-                        $.each(data,function (index,goodsType) {
+                        $.each(data,function (index,CscGoodsTypeVo) {
                             if(0 == index){
-                                firstGoodsType = goodsType.id;
+                                firstGoodsType = CscGoodsTypeVo.id;
                             }
-                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + goodsType.goodsTypeName + "'>" + goodsType.goodsTypeName + "</option>";
+                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.id + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                         });
                         if($("#goodsInfoListDiv").find("tr").length==1){
                             $("select option").each(function() {
@@ -2430,42 +2461,42 @@
                             });
                         }
                     });
-                /*}else{
+                }else{
                     $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        value = $(this).val();
+                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
                     });
 
-                }*/
+                }
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                         "<select  id='goodsCategory' name='goodsCategory'>";
-                /*if($("#goodsInfoListDiv").find("tr").length<1){*/
-                if(null != firstGoodsType){
-                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":firstGoodsType},function(data) {
-                        data=eval(data);
-                        $.each(data,function (index,secGoodsType) {
-                            goodsInfoListDiv = goodsInfoListDiv + "<option value='" + secGoodsType.goodsTypeName + "'>" + secGoodsType.goodsTypeName + "</option>";
-                        });
-                        goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
-                        $("#goodsInfoListDiv").append(goodsInfoListDiv);
-                        if($("#goodsInfoListDiv").find("tr").length==1){
-                            $("select option").each(function() {
-                                text = $(this).text();
-                                if($("select option:contains("+text+")").length > 1)
-                                    $("select option:contains("+text+"):gt(0)").remove();
+                if($("#goodsInfoListDiv").find("tr").length<1){
+                    if(null != firstGoodsType){
+                        CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":firstGoodsType},function(data) {
+                            data=eval(data);
+                            $.each(data,function (index,CscGoodsTypeVo) {
+                                goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                             });
-                        }
-                    })
-                }
-
-                /*}else{
+                            goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
+                            $("#goodsInfoListDiv").append(goodsInfoListDiv);
+                            if($("#goodsInfoListDiv").find("tr").length==1){
+                                $("select option").each(function() {
+                                    text = $(this).text();
+                                    if($("select option:contains("+text+")").length > 1)
+                                        $("select option:contains("+text+"):gt(0)").remove();
+                                });
+                            }
+                        });
+                    }
+                }else{
                     $("#goodsInfoListDiv tr:first-child").children().eq(2).find("select:first").find("option").each(function() {
                         text = $(this).text();
                         goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
                     });
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
-                }*/
+                }
             }
         });
 
@@ -2512,6 +2543,7 @@
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            $("#typeSel").attr("id","");
 
         });
 
@@ -2519,6 +2551,7 @@
 
             $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            $("#typeSel").attr("id","");
 
         });
 
@@ -2533,7 +2566,10 @@
                     var goodsName = tdArr.eq(5).text();//货品名称
                     var specification = tdArr.eq(6).text();//规格
                     var unit = tdArr.eq(7).text();//单位
-                    $("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").val(goodsType);
+                    var typeID = tdArr.eq(9).text();//单位
+                    $("#typeSel").val(typeID);
+                    goodsTypeParentChange($("#typeSel"));
+                    //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
@@ -2548,6 +2584,7 @@
             }else{
                 $("#goodsListDiv").fadeOut("slow");
                 $("#yangdongxushinanshen").attr("id","goodCodeSel");
+                $("#typeSel").attr("id","");
             }
         });
 

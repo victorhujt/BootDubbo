@@ -32,7 +32,7 @@ public class DefaultMqProducer {
     Producer producer;
 
     public void toSendTfcTransPlanMQ(String jsonStr,String code) {
-        logger.info(mqConfig.getOfc2TfcOrderTopic()+"开始消费");
+        logger.info(mqConfig.getOfc2TfcOrderTopic()+"开始生产");
         Message message = new Message(mqConfig.getOfc2TfcOrderTopic(), null,jsonStr.getBytes());
         message.setKey(code);
 
