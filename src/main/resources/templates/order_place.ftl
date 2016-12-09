@@ -352,7 +352,7 @@
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
                                <div class="w-width-220 y-float">
                                    <div class="clearfix">
-                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD HH:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
+                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
                                    </div>
                                </div></div>
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
@@ -551,13 +551,13 @@
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">取货时间</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                                                         </div>
                                                                     </div></div>
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">期望送达时间</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                                                         </div>
                                                                     </div></div>
                                                                 </div>
