@@ -78,6 +78,12 @@
           padding:0 12px;
           float:left;
       }
+        .dataTable > thead > tr > th[class*=sort]:hover{
+            color:#707070;
+        }
+        .dataTable > thead > tr > th[class*=sorting_]{
+            color:#707070;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
@@ -237,7 +243,7 @@
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorName1" name="contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -245,7 +251,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -253,7 +259,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber1" name="phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -261,7 +267,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <label class="control-label col-label no-padding-right" for="name"></label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -431,8 +437,11 @@
         <div class="form-group l-bj">
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
             <div class="width-267">
-                <div class="clearfix">
+                <div class="position-relative bk-1 ">
                     <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                    <button type="button" class="btn btn-minier no-padding-right initBtn" id="">
+                        <i class="fa fa-calendar l-cor bigger-130"></i>
+                    </button>
                 </div>
             </div></div>
 
@@ -464,7 +473,7 @@
                     <input class="bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
                     <input class="bk-1" name=""  id="custId" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
-                        <i class="fa fa-user l-cor"></i>
+                        <i class="fa fa-user l-cor bigger-130"></i>
                     </button>
                 </div>
              <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -519,7 +528,7 @@
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
                         <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="" >
-                            <i class="fa fa-user l-cor"></i>
+                            <i class="fa fa-user l-cor bigger-130"></i>
                         </button>
                     </div>
 
@@ -530,7 +539,7 @@
                         <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-left: -6px;margin-right:0">联系电话</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
                 <div class="width-267">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
@@ -583,7 +592,7 @@
                     <!--货品明细-->
                     <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
                     <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
-                           aria-describedby="dynamic-table_info">
+                           aria-describedby="dynamic-table_info" style="margin-top:17px;">
                         <thead>
                         <tr role="row" id="222">
                             <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
@@ -618,7 +627,7 @@
                     <#--<span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>-->
                     <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
                     <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
-                           aria-describedby="dynamic-table_info">
+                           aria-describedby="dynamic-table_info" style="margin-top:17px;">
                         <thead>
                         <tr role="row">
                             <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
@@ -753,7 +762,7 @@
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>"+
                         "<td>" + consignee.contactCompanyName + "</td>" +
-                        "<td><input /></td>" +
+                        "<td><input style='border:1px solid #cacaca'/></td>" +
                         "<td>" + consignee.contactName + "</td>" +
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
