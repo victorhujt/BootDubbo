@@ -43,11 +43,17 @@ public final class OrderConstConstant {
     public static final String CONTACTPURPOSECONSIGNOR = "2"; //联系人用途,发货人
     public static final String CONTACTPURPOSECONSIGNEE = "1"; //联系人用途,收货人
 
+    /**
+     * 运输计划单资源分配状态
+     */
     public static final String DAIFENPEI="10";  //待分配
     public static final String WEIFENPEI="20";  //未分配
     public static final String YIFENPEI="30";   //已分配
     public static final String YIQUEDING="40";  //已确定
 
+    /**
+     * 运输计划单状态
+     */
     public static final String ZIYUANFENPEIZ="10";  //资源分配中
     public static final String YITUISONG="20";  //已推送
     public static final String RENWUZHONG="30";   //任务中
@@ -72,12 +78,34 @@ public final class OrderConstConstant {
     public static final String FINNANCEPAYWAYALIPAY="6840";//支付宝
     public static final String FINNANCEPAYWAYBANK="6850";//银行支付
     public static final String FINNANCEPAYWAYACCOUNT="6860";//账户结算
-
+    /**
+     * 运输中心运输计划单最新状态
+     */
     public static final String YIDIAODU="10";  //已调度
     public static final String YIFAYUN="20";  //已发运
     public static final String YIDAODA="30";   //已到达
     public static final String YIQIANSHOU="40";  //已签收
     public static final String YIHUIDAN="50";  //已回单
+
+    /**
+     分拣中心回传的卡班单状态
+     10=收货、（DMS【到站卸车】线路为『提货入库』）
+     20=发运、（DMS无）
+     30=中转入、（DMS【到站卸车】）
+     40=中转出、（DMS【装车发运】）
+     50=在途、（GPS用）
+     60=签收、（DMS【自提签收】签收）
+     70=回单、（DMS无）
+     99=异常、（DMS【上报异常】保存）
+     */
+    public static final String DMS_STATUS_DELIVERY = "10";
+    public static final String DMS_STATUS_DISPATCH = "20";
+    public static final String DMS_STATUS_TRANSFER_IN = "30";
+    public static final String DMS_STATUS_TRANSFER_OUT = "40";
+    public static final String DMS_STATUS_TRANSIT = "50";
+    public static final String DMS_STATUS_SIGNED = "60";
+    public static final String DMS_STATUS_RECEIPT = "70";
+    public static final String DMS_STATUS_EXCEPTION = "99";
 
     //通过接口创建的订单
     public static final String CREATE_ORDER_BYAPI = "createOrderByApi";

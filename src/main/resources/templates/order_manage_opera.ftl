@@ -56,8 +56,28 @@
             overflow: auto;
             border: solid #7A7A7A 2px;
         }
-        .date_a{
-            line-height:21px !important;
+        .date_a {
+            line-height: 21px !important;
+        }
+
+        .initBtn{
+            height:34px;
+            width:34px;
+            border:1px solid #cacaca;
+            background:#f7f7f7!important;
+            cursor:pointer;
+            outline:none;
+            position:absolute;
+            top:0;
+            right:0
+        }
+        .initBtn:hover{
+            background:#fff !important;
+            border:1px solid #cacaca !important;
+        }
+        .col-label{
+            margin-left:10px;
+
         }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css"/>
@@ -76,20 +96,23 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <input type="hidden" value="${(OFC_URL)!""}">
-                <div class="col-xs-3">
-                    <input readonly="readonly" id="custName" class="w-width-220" name="custName" type="search" placeholder=""
+                <div style="width:310px;margin-right:15px;" class="padding-12 y-float position-relative">
+                    <input readonly="readonly" id="custName" class="y-float" style="width:265px;" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
-                    <button type="button" onclick="selectCust();" style="width:20px;height:20px;">
-                        <span class="glyphicon glyphicon-search" style="color: #0f5f9f;left:-3px;top:0px;"></span>
+                    <button type="button" class="initBtn" onclick="selectCust();">
+                        <i class="fa fa-search"></i>
                     </button>
+                  <#--  <button type="button" style="height:34px;" onclick="selectCust();" class="btn btn-minier no-padding-right initBtn" id="">
+                        <i class="fa fa-user l-cor"></i>
+                    </button>-->
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单编号</label>
-                <div class="col-xs-2">
+                <div class="col-width-168" style="margin:0 12px;">
                     <input id="orderCode" class="col-width-168" name="" type="search" placeholder=""
                            aria-controls="dynamic-table">
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单状态</label>
-                <div class="col-width-168">
+                <div class="col-width-168" style="margin:0 12px;">
                     <select data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus" class=" chosen-select">
                         <option value=""></option>
                         <option value="10">待审核</option>
@@ -102,17 +125,27 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                <div class="col-xs-3">
-                    <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 101px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                    至
-                    <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 101px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                <div class="padding-12 y-float" style="width:325px;">
+                    <div class="y-float position-relative">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <button type="button" class="initBtn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                   <p class="y-float" style="margin:0 3px;line-height:34px;">至</p>
+                    <div class="y-float position-relative">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <button type="button" class="initBtn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
-                <div class="col-xs-2">
+                <div class="col-width-168" style="margin:0 12px;">
                     <div class="col-width-168">
-                        <select data-placeholder="请选择订单类型" style="width: 168px;" id="orderType" class=""
+                        <select data-placeholder="请选择订单类型" style="width: 168px;" id="orderType" class="chosen-select"
                                 name="orderType">
-                            <option value="">----</option>
+                            <option value=""></option>
                             <option value="60">运输订单</option>
                             <option value="61">仓配订单</option>
                         </select>
@@ -120,7 +153,7 @@
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
 
-                <div class="col-width-168">
+                <div class="col-width-168" style="margin:0 12px;">
                     <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class=""
                             name="businessType">
                         <option value=""></option>
@@ -145,7 +178,7 @@
 <!-- div.table-responsive -->
 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
-           aria-describedby="dynamic-table_info">
+           aria-describedby="dynamic-table_info" style="margin-bottom:20px;">
         <thead>
         <th>序号</th>
         <th>操作列</th>
@@ -508,11 +541,19 @@
         }
         //订单详情
         function orderDetailOper(orderCode) {
-            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
+            var url = "/ofc/orderDetailPageByCode/" + orderCode;
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
         }
 
         function queryOrderDetailBatchOpera(orderBatchCode) {
-            xescm.common.loadPage("/ofc/orderDetailBatchOpera/" + orderBatchCode);
+            var url = "/ofc/orderDetailBatchOpera/" + orderBatchCode;
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailBatchOpera/" + orderBatchCode);
         }
 
         //订单审核、反审核

@@ -8,9 +8,9 @@
     <button class="btn btn-white btn-info btn-bold" style="float:right;width:105px;height:34px;" id="InvoicePrinting" value="" onclick="invoicePrint()">
         发货单打印
     </button>
-    <button class="btn btn-white btn-info btn-bold filters" style="float:right;margin-right:10px;" id="goBack" value="" onclick="detailBackToHistory()">
+   <#-- <button class="btn btn-white btn-info btn-bold filters" style="float:right;margin-right:10px;" id="goBack" value="" onclick="detailBackToHistory()">
         返回
-    </button>
+    </button>-->
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -453,7 +453,11 @@
 
     //订单详情
     function orderDetailOper(orderCode) {
-        xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
+        var url = "/ofc/orderDetailPageByCode/" + orderCode;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
     }
 
     function queryOrderDetailBatchOpera(orderBatchCode) {
