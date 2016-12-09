@@ -125,7 +125,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                                 throw new BusinessException(wrapper.getMessage());
                             }
-                            saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                           // saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
 
                         }
                         ofcWarehouseInformationService.save(ofcWarehouseInformation);
@@ -236,7 +236,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
                         }
-                        String saveSupportMessageResult = saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+                        //String saveSupportMessageResult = saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
                     }
                     //出库
                     if("61".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
@@ -539,7 +539,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     /**
      * 下单或编辑时保存供应商及供应商联系人
      */
-    public String saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId,AuthResDto authResDtoByToken){
+   /* public String saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId,AuthResDto authResDtoByToken){
         if(null == cscSupplierInfoDto){
             throw new BusinessException( "未添加供应商信息");
         }
@@ -555,7 +555,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
                     || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
                     || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)
-                    /*|| PubUtils.isSEmptyOrNull(streetCode) || PubUtils.isSEmptyOrNull(streetName)*/){
+                    *//*|| PubUtils.isSEmptyOrNull(streetCode) || PubUtils.isSEmptyOrNull(streetName)*//*){
                 throw new BusinessException("联系人地址不完整");
             }
             cscSupplierInfoDto.setCustomerId(custId);
@@ -582,7 +582,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             throw new BusinessException("添加供应商信息出错!");
         }
         return Wrapper.SUCCESS_MESSAGE;
-    }
+    }*/
     /**
      * 下单或编辑时在订单中心为用户保存订单中的仓库信息
      */
