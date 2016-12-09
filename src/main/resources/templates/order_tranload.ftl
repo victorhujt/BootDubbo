@@ -1238,7 +1238,7 @@
                 $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
             },
             success : function(e) {
-                $(e).parent().parent().removeClass('has-error').addClass('has-success');
+                $(e).parent().parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
             },
             errorPlacement : function(error, element) {
@@ -1530,13 +1530,19 @@
 
     function orderFinanceInfo(jsonStr) {
         //服务项目及费用
+        jsonStr.pickUpGoods = $("#pickUpGoods").val();
         jsonStr.homeDeliveryFee = $("#homeDeliveryFee").val();
+        jsonStr.insure = $("#insure").val();
         jsonStr.cargoInsuranceFee = $("#cargoInsuranceFee").val();
         jsonStr.insureValue = $("#insureValue").val();
+        jsonStr.twoDistribution = $("#twoDistribution").val();
         jsonStr.twoDistributionFee = $("#twoDistributionFee").val();
+        jsonStr.collectFlag = $("#collectFlag").val();
         jsonStr.collectServiceCharge = $("#collectServiceCharge").val();
         jsonStr.collectLoanAmount = $("#collectLoanAmount").val();
+        jsonStr.returnList = $("#returnList").val();
         jsonStr.returnListFee = $("#returnListFee").val();
+        debugger;
         jsonStr.luggage = $("#luggage").val();
         //费用总计
         jsonStr.serviceCharge = $("#serviceCharge").val();
@@ -2554,7 +2560,7 @@
                 $(this).parent().parent().parent().removeClass('has-error').addClass('has-success');
             }
         });
-        $("#consignorPhone,#consigneePhone").blur(function () {
+        /*$("#consignorPhone,#consigneePhone").blur(function () {
             if($(this).val().length>20){
                 if($(this).parent().children().length==1){
                     $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度</div>").insertAfter($(this));
@@ -2569,7 +2575,7 @@
                 $(this).parent().find("div").remove();
                 $(this).parent().parent().parent().removeClass('has-error').addClass('has-success');
             }
-        });
+        });*/
 
         $("#goodsListDivNoneTop").click(function(){
 

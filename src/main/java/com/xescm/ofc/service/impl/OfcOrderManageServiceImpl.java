@@ -48,8 +48,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.xescm.ofc.constant.OrderConstConstant.ALREADYEXAMINE;
-import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATIONIN;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  * Created by ydx on 2016/10/12.
@@ -343,7 +342,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
                 }
-
+                if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")){
+                    //若无值，则使用发货地的省市区 获取覆盖范围的提货类型 的【调度单位】，将返回的调度单位编码，存入计划单信息的【基地ID】字段，计划单序号为1，同时判断订单的货品明细是否存在记录。存在记录创建该运输计划单的对应明细信息。
+                    throw new BusinessException("基地ID（调度单位为空），等待接口中");
+                }
 
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
@@ -984,9 +986,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstConstant.TRANSPORTORDER)){
                     //运输订单
-                    OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-                    ofcTransplanInfo.setProgramSerialNumber("1");
-                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
+                    if(!ofcFundamentalInformation.getBusinessType().equals(WITHTHEKABAN)){//非卡班类型直接创建运输计划单
+                        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                        ofcTransplanInfo.setProgramSerialNumber("1");
+                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
+                    }else {
+                        if(PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI)){
+
+                        }else{
+                            if(PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI)){
+
+                            }else{
+
+                            }
+                        }
+                    }
                 }else {
                     throw new BusinessException("订单类型有误");
                 }
