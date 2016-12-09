@@ -282,7 +282,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //模板固定内容
                                     checkPass = false;
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!建议:" + cellName[cellNum]);
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!建议:" + cellName[cellNum]);
 
                                 }/*else{
                                             //如果校验成功,就不用变
@@ -318,7 +317,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     consigneeNameList.add(new CscContantAndCompanyVo());
                                     consigneeNameListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
                                 }
                             }
                             //校验从第二行开始的体
@@ -340,7 +338,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     goodsApiVoList.add(new CscGoodsApiVo());
                                     goodsCodeListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
                                     break;
                                 }
                                 List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -348,7 +345,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //如果校验成功,就往结果集里堆
                                     CscGoodsApiVo cscGoodsApiVo = result.get(0);
                                     mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
-                                    System.out.println(rowNum - 1);
                                     goodsApiVoList.add(cscGoodsApiVo); //
                                     goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
                                 }else{
@@ -357,7 +353,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     goodsApiVoList.add(new CscGoodsApiVo());
                                     goodsCodeListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品名称在货品档案中不存在!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品名称在货品档案中不存在!");
 
                                 }
                                 //货品名称, 规格, 单位, 单价的数据暂时不需校验
@@ -394,12 +389,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     }else{
                                         checkPass = false;
                                         xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
                                     }
                                     //这里只抓不是数字的情况
                                 }catch (IllegalStateException ex){
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
                                     throw new BusinessException(ex.getMessage());
@@ -503,7 +496,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //模板固定内容
                                     checkPass = false;
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!建议:" + cellName[cellNum]);
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!建议:" + cellName[cellNum]);
 
                                 }/*else{
                                             //如果校验成功,就不用变
@@ -533,8 +525,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                                     CscContantAndCompanyVo cscContantAndCompanyVo = result.get(0);
                                     consigneeNameList.add(cscContantAndCompanyVo);
-                                    System.out.println(cscContantAndCompanyVo.getContactCompanyName());
-                                    System.out.println(cscContantAndCompanyVo.getContactCompanyName());
                                     consigneeNameListForCheck.add(cscContantAndCompanyVo.getContactCompanyName());
                                 }else{
                                     //收货人列表不在联系人档案中,则需要对当前格子进行报错处理
@@ -542,7 +532,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     consigneeNameList.add(new CscContantAndCompanyVo());
                                     consigneeNameListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
                                 }
                             }
                             //校验从第二行开始的体
@@ -564,7 +553,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     goodsApiVoList.add(new CscGoodsApiVo());
                                     goodsCodeListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
                                     break;
                                 }
                                 List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -572,7 +560,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     //如果校验成功,就往结果集里堆
                                     CscGoodsApiVo cscGoodsApiVo = result.get(0);
                                     mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
-                                    System.out.println(rowNum - 1);
                                     goodsApiVoList.add(cscGoodsApiVo); //
                                     goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
                                 }else{
@@ -581,7 +568,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     goodsApiVoList.add(new CscGoodsApiVo());
                                     goodsCodeListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品名称在货品档案中不存在!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品名称在货品档案中不存在!");
 
                                 }
                                 //货品名称, 规格, 单位, 单价的数据暂时不需校验
@@ -618,12 +604,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     }else{
                                         checkPass = false;
                                         xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!最大999999.999!");
-                                        System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!最大999999.999!");
                                     }
                                     //这里只抓不是数字的情况
                                 }catch (IllegalStateException ex){
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
-                                    System.out.println("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
                                     throw new BusinessException(ex.getMessage());

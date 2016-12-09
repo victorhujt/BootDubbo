@@ -222,13 +222,11 @@
         }else{
             code=code.substring(0,code.length-1);
             url=url+"["+code+"]";
-            debugger;
             window.open(encodeURI(url));
         }
     }
 
     function selOrder() {
-        debugger;
         if($("#selOrder").prop("checked")){
             $("#dataTbody").find("tr").each(function(index){
                 $(this).children().eq(0).find("input").prop('checked',true);
@@ -501,7 +499,17 @@
         });
         $("#goodsTbody").empty().append(html);
     }
-
+    function getChargingWays(type) {
+        var value = "";
+        if (type == "01") {
+            value = "件数"
+        } else if (type == "02") {
+            value = "重量Kg";
+        }else if (type == "03") {
+            value = "体积m³";
+        }
+        return value;
+    }
 </script>
 
 <script>
@@ -593,17 +601,7 @@
         return value;
     }
 
-    function getChargingWays(type) {
-        var value = "";
-        if (type == "01") {
-            value = "件数"
-        } else if (type == "02") {
-            value = "重量Kg";
-        }else if (type == "03") {
-            value = "体积m³";
-        }
-        return value;
-    }
+
 
 
 </script>

@@ -13,7 +13,7 @@ public class ofcWarehouseFeedBackCondition {
     /**
      * 仓储作业单号
      */
-    private String whcBillno;
+    private String whcBillNo;
 
     private List<OfcPlannedDetail> plannedDetails;
 
@@ -33,11 +33,11 @@ public class ofcWarehouseFeedBackCondition {
         this.plannedDetails = plannedDetails;
     }
 
-    public String getWhcBillno() {
-        return whcBillno;
+    public String getWhcBillNo() {
+        return whcBillNo;
     }
 
-    public void setWhcBillno(String whcBillno) {
-        this.whcBillno = whcBillno;
+    public void setWhcBillNo(String whcBillNo) {
+        this.whcBillNo = whcBillNo;
     }
 }

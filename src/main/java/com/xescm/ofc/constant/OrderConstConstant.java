@@ -117,6 +117,10 @@ public final class OrderConstConstant {
 
     public static final String TRACE_STATUS_9 = "99";
 
+    public static final String ORDER_TYPE_OUT="CK";
+
+    public static final String ORDER_TYPE_IN="RK";
+
 
 
     public OrderConstConstant() {

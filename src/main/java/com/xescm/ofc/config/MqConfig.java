@@ -64,6 +64,16 @@ public class MqConfig {
      */
     private String ofc2WhcOrderTopic;
 
+    public String getWhc2ofcOrderTopic() {
+        return whc2ofcOrderTopic;
+    }
+
+    public void setWhc2ofcOrderTopic(String whc2ofcOrderTopic) {
+        this.whc2ofcOrderTopic = whc2ofcOrderTopic;
+    }
+
+    private String whc2ofcOrderTopic;
+
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
     private String onsAddr;  //阿里云地址

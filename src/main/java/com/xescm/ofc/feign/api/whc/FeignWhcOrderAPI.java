@@ -10,16 +10,10 @@ import feign.Headers;
 import feign.RequestLine;
 
 /**
- * Created by victor on 2016/12/2.
+ * Created by hujintao on 2016/12/2.
  */
 public interface FeignWhcOrderAPI {
-
-    @RequestLine("POST /epc/inOrder/cancleStatus")
+    @RequestLine("POST /order/cancel/cancelOrder")
     @Headers("Content-Type: application/json")
-    Response inOrderCancel(CancelOrderDTO cancelOrderDTO);
-
-    @RequestLine("POST /epc/outOrder/cancleStatus")
-    @Headers("Content-Type: application/json")
-    Response outOrderCancel(CancelOrderDTO cancelOrderDTO
-    );
+    Response cancelOrder(CancelOrderDTO cancelOrderDTO);
 }
