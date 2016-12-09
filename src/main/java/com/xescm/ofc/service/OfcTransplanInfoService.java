@@ -9,8 +9,7 @@ import java.util.List;
  * Created by lyh on 2016/10/10.
  */
 public interface OfcTransplanInfoService extends IService<OfcTransplanInfo> {
-     List<OfcTransplanInfo> ofcTransplanInfoScreenList(String orderCode);
+    List<OfcTransplanInfo> ofcTransplanInfoScreenList(String orderCode);
     List<OfcTransplanInfoVo> ofcTransplanInfoVoList(String planCode);
-
-
+    int queryNotInvalidAndNotCompleteTransOrder(String orderCode);
 }

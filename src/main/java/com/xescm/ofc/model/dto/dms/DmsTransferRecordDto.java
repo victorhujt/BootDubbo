@@ -12,7 +12,7 @@ public class DmsTransferRecordDto {
     private String serialNo; //记录流水号
     private String transNo;//运单号                                                       // 运输单号
     private String refNo;  //关联业务单据号
-    private String recordTypeCode;//操作类型编码                                         //Type
+    private String recordTypeCode;//操作类型编码                                         //Type 操作类型编码
     private String recordTypeName;//操作类型名称
     private Integer type;//操作类型,1新增-1删除
     private String typeName;//操作类型名称
@@ -24,7 +24,7 @@ public class DmsTransferRecordDto {
     private String arriveStationCode;//到站编码
     private String arriveStationName;//到站名称
     private String transSource;//运单来源
-    private String remark;//备注                                                          //Desp
+    private String remark;//备注
     private String creator;//创建人
     private String creatorId;//创建人ID
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
