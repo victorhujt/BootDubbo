@@ -28,17 +28,19 @@ public interface FeignCscCustomerAPI {
      * @param cscContantAndCompanyDto
      * @return
      */
+    @Deprecated
     @RequestLine("POST /api/csc/customer/addCscContantAndCompany")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto);
 
     /**
-     * 根据GroupId查询客户ID
+     * 根据GroupId查询客户ID 已弃用
      * @param queryCustomerIdDto
      * @return
      */
     @RequestLine("POST /api/csc/customer/queryCustomerIdByGroupId")
     @Headers("Content-Type: application/json")
+    @Deprecated
     public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto);
 
     /**
@@ -57,6 +59,7 @@ public interface FeignCscCustomerAPI {
      */
     @RequestLine("POST /api/csc/customer/queryCustomerByName")
     @Headers("Content-Type: application/json")
+    @Deprecated
     public Wrapper<?> queryCustomerByName(QueryCustomerNameDto queryCustomerNameDto);
 
 

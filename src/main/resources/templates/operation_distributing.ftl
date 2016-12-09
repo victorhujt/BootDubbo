@@ -1849,6 +1849,7 @@
                 var param =contactCompanyId + "@" + contactCode;
                 var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
+                goods.chargingQuantity = goodsAmount;
                 goodsList[index] = goods;
             })
             orderInfo.goodsList  = goodsList;
