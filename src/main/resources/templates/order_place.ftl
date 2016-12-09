@@ -443,6 +443,7 @@
                                         <input id="orderNotes" name="notes" style="color: #000;width:517px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                 </div></div>
                             </div>
+                                </div>
                         </form>
                         <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
                             <div class="col-label2">

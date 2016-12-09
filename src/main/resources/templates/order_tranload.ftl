@@ -57,11 +57,11 @@
         }
         .form-group > label[class*="col-"]{
             margin-top:0;
-            line-height:30px;
+            line-height:34px;
         }
         .form-horizontal .control-label{
             padding-top:0;
-            line-height:30px;
+            line-height:34px;
         }
         input[type=checkbox], input[type=radio]{
             margin:10px 0 0;
@@ -71,6 +71,12 @@
         }
         .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
             color:#393939;
+        }
+        .dataTable > thead > tr > th[class*=sort]:hover{
+            color:#707070;
+        }
+        .dataTable > thead > tr > th[class*=sorting_]{
+            color:#707070;
         }
         .help-block{
             color:#f00 !important;
@@ -93,11 +99,11 @@
             background:#fff!important;
             border:1px solid #cacaca!important;
         }
-        .initBtn:active{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-            outline:none;
-        }
+     .col-label{
+         margin-right:2px;
+         margin-bottom:0;
+     }
+
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -427,7 +433,7 @@
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
-                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock" >
+                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;" >
                                     <i class="fa fa-user l-cor"></i>
                                 </button>
                                <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
@@ -675,8 +681,7 @@
                     </div>
                 </div>
             </form>
-            <div class="page-header">
-            </div>
+
             <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form">
                 <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
                     <div style="width:242px;float:left;margin-left:45px;" >
@@ -684,7 +689,7 @@
                         <div class="col-width-100 padding-15" style="width:130px">
                             <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
-                        <label class="" for="name" >元</label>
+                        <label class="" for="name" style="margin-bottom:0;" >元</label>
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
@@ -704,7 +709,7 @@
                     <input id="transportType" type="hidden" name="transportType"/>
                     <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
                     <div>
-                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;">支付方式</label>
+                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:31px;">支付方式</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-100">
                                 <select class="chosen-select form-control" id="payment" name="payment">
@@ -719,11 +724,11 @@
                         </div>
                     </div>
                     <div style="width:230px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:4px;">
-                            <input id="openInvoicesV" type="checkbox" name="" style="margin-top:4px;" class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
+                        <div class="clearfix col-xs-1" style="margin-top:-6px;">
+                            <input id="openInvoicesV" type="checkbox" name="" class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                             <input id="openInvoices" type="hidden" name="openInvoices"  value="0" />
                         </div>
-                        <label class="control-label col-width-110" for="name" style="padding:7px 15px 0 10px;">是否开发票</label>
+                        <label class="control-label col-width-110" for="name" style="padding:0px 15px;text-align:left">是否开发票</label>
                     </div>
                 </div>
 
@@ -766,8 +771,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="page-header">
-                </div>
+
             </form>
                     <!-- /section:elements.tab.option -->
         </div>
@@ -775,24 +779,30 @@
     </div><!-- /.col -->
 </div><!-- /.row -->
 </div><!-- /.page-content -->
-<div class="page-content">
+<#--<div class="page-content">
     <div class="row">
         <div class="col-xs-12">
         </div>
 
     </div>
+</div>-->
+<div class="page-header" style="clear:left;">
+    <p style="font-size: 14px;font-family:'微软雅黑'">
+        货品信息
+    </p>
 </div>
-
 <div class="col-xs-12">
     <!-- #section:elements.tab.option -->
     <div class="tabbable" style="width:1000px;" >
-        <ul class="nav nav-tabs" id="myTab4">
+       <#-- <ul class="nav nav-tabs" id="myTab4">
             <li class="active">
                 <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
             </li>
-        </ul>
+        </ul>-->
 
-        <div class="tab-content">
+
+
+        <div class="tab-content" style="border:none;">
             <div id="home4" class="tab-pane active">
 
                 <!--货品明细-->
@@ -842,7 +852,7 @@
 </div>
 <div class="col-xs-12" style="margin-top:20px;">
 
-    <button class="btn btn-white btn-info btn-bold btn-interval" id="orderPlaceConTableBtn">
+    <button class="btn btn-white btn-info btn-bold btn-interval" style="margin-left:12px;" id="orderPlaceConTableBtn">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
         确认下单
     </button>
@@ -904,7 +914,7 @@
     /**
      *表单验证
      */
-
+    var mistake="<i class='fa fa-times-circle w-error-icon bigger-130'></i>";
     function validateForm() {
         var ofc_url = $("#ofc_url").html();
         $('#orderFundamentalFormValidate').validate({
@@ -947,18 +957,18 @@
             },
             messages : {
                 merchandiser:{
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请填写开单员"
+                    required:mistake+"请填写开单员"
                 },
                 orderTime:{
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请填写订单日期"
+                    required:mistake+"请填写订单日期"
                 },
                 transCode:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度50",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>只能输入数字和字母",
-                    remote: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>运输单号已存在"
+                    maxlength: mistake+"超过最大长度50",
+                    pattern:mistake+"只能输入数字和字母",
+                    remote: mistake+"运输单号已存在"
                 },
                 custName:{
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    maxlength:mistake+"超过最大长度"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1026,37 +1036,37 @@
             },
             messages : {
                 luggage:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请填写运费",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    required:mistake+"请填写运费",
+                    pattern:mistake+"金额大小有误"
                 },
                 homeDeliveryFee:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 cargoInsuranceFee:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 insureValue:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 twoDistributionFee:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 collectServiceCharge:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 collectLoanAmount:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 returnListFee:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1106,20 +1116,20 @@
             },
             messages : {
                 currentAmount:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 toPayAmount:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 returnAmount:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 },
                 monthlyAmount:{
-                    maxlength: "<i class='fa fa-times-circle w-error-icon bigger-130'></i>最大999999.99元",
-                    pattern:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>金额大小有误"
+                    maxlength: mistake+"最大999999.99元",
+                    pattern:mistake+"金额大小有误"
                 }
             },
             highlight : function(e) {
@@ -1130,7 +1140,7 @@
 
                 if(countSettlement()=="false"){
                     $(e).parent().removeClass('has-info').addClass('has-error');
-                    $(e).html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>结算方式的金额合计应于费用总计一致！");
+                    $(e).html(mistake+"结算方式的金额合计应于费用总计一致！");
                 }else{
                     $("#monthlyAmount-error").parent().removeClass('has-error').addClass('has-success');
                     $("#currentAmount-error").parent().removeClass('has-error').addClass('has-success');
@@ -1159,7 +1169,7 @@
             rules : {
                 consignorName:{
                     required:true,
-                    maxlength:10
+                    maxlength:100
                 },
                 consignorContactName:{
                     required:true,
@@ -1192,36 +1202,36 @@
             },
             messages : {
                 consignorName:{
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    required:mistake+"必须输入",
+                    maxlength:mistake+"超过最大长度"
                 },
                 consignorContactName:{
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    required:mistake+"必须输入",
+                    maxlength:mistake+"超过最大长度"
                 },
                 consignorPhone:{
-                    isPhone:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入正确的手机号",
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    isPhone:mistake+"请输入正确的手机号",
+                    required:mistake+"必须输入",
+                    maxlength:mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    maxlength:mistake+"超过最大长度"
                 },
                 consigneeName:{
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    required:mistake+"必须输入",
+                    maxlength:mistake+"超过最大长度"
                 },
                 consigneeContactName:{
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    required:mistake+"必须输入",
+                    maxlength:mistake+"超过最大长度"
                 },
                 consigneePhone:{
-                    isPhone:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入正确格式的手机号",
-                    required:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>必须输入",
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    isPhone:mistake+"请输入正确格式的手机号",
+                    required:mistake+"必须输入",
+                    maxlength:mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:"<i class='fa fa-times-circle w-error-icon bigger-130'></i>超过最大长度"
+                    maxlength:mistake+"超过最大长度"
                 }
             },
             highlight : function(e) {
@@ -1747,12 +1757,14 @@
                     $("#city-picker3-consignor").citypicker('refresh');
                     departurePlace();
                     cscContact.purpose = "1";
+                    checkConsignOrEe();
                     outConsignee(cscContact,cscContactCompany,groupId,custId);
                 });
             }else{
                 clearConsignor();
                 cscContact.purpose = "1";
                 outConsignee(cscContact,cscContactCompany,groupId,custId);
+                checkConsignOrEe();
             }
         },"json");
 
@@ -1784,6 +1796,7 @@
                             + "/" + streetName;
                     $("#city-picker3-consignee").val(paramAddressNameToPage);
                     $("#city-picker3-consignee").citypicker('refresh');
+                    checkConsignOrEe();
                     destination();
                 });
             }else{
@@ -1867,6 +1880,33 @@
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
+    }
+
+    function checkConsignOrEe(){
+        if($("#consignorName").val()!=""){
+            $("#consignorName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consignorName-error").remove();
+        }
+        if($("#consignorContactName").val()!=""){
+            $("#consignorContactName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consignorContactName-error").remove();
+        }
+        if($("#consignorPhone").val()!=""){
+            $("#consignorPhone-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consignorPhone-error").remove();
+        }
+        if($("#consigneeName").val()!=""){
+            $("#consigneeName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consigneeName-error").remove();
+        }
+        if($("#consigneeContactName").val()!=""){
+            $("#consigneeContactName-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consigneeContactName-error").remove();
+        }
+        if($("#consigneePhone").val()!=""){
+            $("#consigneePhone-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
+            $("#consigneePhone-error").remove();
+        }
     }
 
     $(function(){
@@ -1972,7 +2012,7 @@
                     || $("#orderFinanceChargeFormValidate").find("div.has-error").length>0
                     || $("#orderInfoTableValidate").find("div.has-error").length>0
                     || $("#goodsInfoListDiv").find("div.has-error").length>0){
-                alert("页面中存在错误数据，请检查！",{icon:5});
+                alert("您输入的内容还有一些问题，请仔细检查哦",{icon:5});
                 return false;
             }
             //卡班类型必须输入运输单号
@@ -2290,6 +2330,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                checkConsignOrEe();
             }
         });
 
@@ -2347,6 +2388,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                checkConsignOrEe();
             }
         });
 
