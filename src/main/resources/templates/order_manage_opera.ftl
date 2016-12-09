@@ -56,25 +56,29 @@
             overflow: auto;
             border: solid #7A7A7A 2px;
         }
-        .date_a{
-            line-height:21px !important;
+        .date_a {
+            line-height: 21px !important;
+        }
 
-    /*    .initBtn{
+        .initBtn{
             height:34px;
             width:34px;
             border:1px solid #cacaca;
             background:#f7f7f7!important;
             cursor:pointer;
+            outline:none;
             position:absolute;
             top:0;
             right:0
-
-        }*/
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
         }
+        .initBtn:hover{
+            background:#fff !important;
+            border:1px solid #cacaca !important;
+        }
+        .col-label{
+            margin-left:10px;
 
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css"/>
 </head>
@@ -92,11 +96,11 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <input type="hidden" value="${(OFC_URL)!""}">
-                <div style="width:235px;margin-right:35px;" class="padding-12 y-float position-relative">
-                    <input readonly="readonly" id="custName" class="w-width-220" name="custName" type="search" placeholder=""
+                <div style="width:310px;margin-right:15px;" class="padding-12 y-float position-relative">
+                    <input readonly="readonly" id="custName" class="y-float" style="width:265px;" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
-                    <button type="button" onclick="selectCust();"  class="initBtn" style="width:34px;height:34px;position:absolute;top:0;right:0px;background:#f7f7f7;border:1px solid #cacaca;">
-                        <span class="glyphicon glyphicon-search" style="color: #0f5f9f;"></span>
+                    <button type="button" class="initBtn" onclick="selectCust();">
+                        <i class="fa fa-search"></i>
                     </button>
                   <#--  <button type="button" style="height:34px;" onclick="selectCust();" class="btn btn-minier no-padding-right initBtn" id="">
                         <i class="fa fa-user l-cor"></i>
@@ -121,10 +125,20 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                <div class="padding-12 y-float" style="width:270px;">
-                    <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 101px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                    至
-                    <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 101px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                <div class="padding-12 y-float" style="width:325px;">
+                    <div class="y-float position-relative">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <button type="button" class="initBtn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                   <p class="y-float" style="margin:0 3px;line-height:34px;">至</p>
+                    <div class="y-float position-relative">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <button type="button" class="initBtn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                 <div class="col-width-168" style="margin:0 12px;">
