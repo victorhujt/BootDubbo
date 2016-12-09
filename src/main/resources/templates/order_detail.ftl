@@ -5,9 +5,9 @@
 
                     <div class="col-xs-12">
                         <div class="col-sm-6" style="float: right">
-                            <button class="btn btn-white btn-info btn-bold filters" style="float: right" id="goBack" value="${(historyUrl)!}" onclick="detailBackToHistory()">
+                           <#-- <button class="btn btn-white btn-info btn-bold filters" style="float: right" id="goBack" value="${(historyUrl)!}" onclick="detailBackToHistory()">
                                 返回
-                            </button>
+                            </button>-->
                         </div>
                         <form id="" method="post" class="form-horizontal" role="form" >
                             <div class="page-header">

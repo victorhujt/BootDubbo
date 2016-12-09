@@ -5,12 +5,12 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
-    <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="InvoicePrinting" value="" onclick="invoicePrint()">
+    <button class="btn btn-white btn-info btn-bold" style="float:right;width:105px;height:34px;" id="InvoicePrinting" value="" onclick="invoicePrint()">
         发货单打印
     </button>
-    <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="goBack" value="" onclick="detailBackToHistory()">
+   <#-- <button class="btn btn-white btn-info btn-bold filters" style="float:right;margin-right:10px;" id="goBack" value="" onclick="detailBackToHistory()">
         返回
-    </button>
+    </button>-->
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -222,13 +222,11 @@
         }else{
             code=code.substring(0,code.length-1);
             url=url+"["+code+"]";
-            debugger;
             window.open(encodeURI(url));
         }
     }
 
     function selOrder() {
-        debugger;
         if($("#selOrder").prop("checked")){
             $("#dataTbody").find("tr").each(function(index){
                 $(this).children().eq(0).find("input").prop('checked',true);
@@ -455,7 +453,11 @@
 
     //订单详情
     function orderDetailOper(orderCode) {
-        xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
+        var url = "/ofc/orderDetailPageByCode/" + orderCode;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
     }
 
     function queryOrderDetailBatchOpera(orderBatchCode) {
@@ -502,7 +504,17 @@
         });
         $("#goodsTbody").empty().append(html);
     }
-
+    function getChargingWays(type) {
+        var value = "";
+        if (type == "01") {
+            value = "件数"
+        } else if (type == "02") {
+            value = "重量Kg";
+        }else if (type == "03") {
+            value = "体积m³";
+        }
+        return value;
+    }
 </script>
 
 <script>
@@ -594,17 +606,7 @@
         return value;
     }
 
-    function getChargingWays(type) {
-        var value = "";
-        if (type == "01") {
-            value = "件数"
-        } else if (type == "02") {
-            value = "重量Kg";
-        }else if (type == "03") {
-            value = "体积m³";
-        }
-        return value;
-    }
+
 
 
 </script>

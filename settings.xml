@@ -6,10 +6,17 @@
 	<localRepository>C:\Users\ydx\.m2\repository</localRepository>
 	<mirrors>  <!--ljj local private nexus (1) -->
 		<mirror>
+			<id>alimaven</id>
+			<name>aliyun maven</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<mirrorOf>central</mirrorOf>
+		</mirror>
+		<mirror>
 			<id>nexus-public</id>
 			<mirrorOf>public</mirrorOf>
 			<url>http://60.205.82.135:8081/nexus/content/groups/public</url>
 		</mirror>
+
 	</mirrors>
 	<!-- profile 用来定义仓库的地址和插件仓库的地址，用来发布、获取构件 -->
 	<profiles>

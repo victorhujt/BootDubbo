@@ -7,8 +7,10 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.service.OfcSiloproStatusService;
 import com.xescm.ofc.utils.JSONUtils;
@@ -42,6 +44,9 @@ public class CreateOrderApiConsumer implements MessageListener {
     
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
+
+    @Autowired
+    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
 
     @Autowired
     private MqConfig mqConfig;
@@ -109,7 +114,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 //                logger.error(ex.getMessage(), ex);
             }
          }else if(StringUtils.equals(topicName,mqConfig.getOfcOrderStatusTopic())){
-        	logger.info("仓储计划单状态反馈的消息体为:"+messageBody);
+        	logger.info("仓储计划单状态反馈的消息体为{}:",messageBody);
 			logger.info("仓储计划单状态开始消费");
 			try {
 	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
@@ -120,14 +125,13 @@ public class CreateOrderApiConsumer implements MessageListener {
                          ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
 					 }
 				 } catch (Exception e) {
-					 logger.info(e.getMessage());
-					 e.printStackTrace();
+                     logger.error("仓储计划单状态反馈出现异常{}",e.getMessage());
 				 }
 			} catch (Exception e) {
 				  logger.info(e.getMessage());
 			}
-        }else if(StringUtils.equals(topicName,mqConfig.getOfc2WhcOrderTopic())){
-                logger.info("仓储计划单出入库单反馈的消息体为:"+messageBody);
+        }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
+                logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
                 {
                     logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
@@ -138,10 +142,23 @@ public class CreateOrderApiConsumer implements MessageListener {
                             ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                         }
                     } catch (Exception e) {
-                        logger.info(e.getMessage());
+                        logger.error("仓储计划单出入库单反馈出现异常{}",e.getMessage());
                     }
                 }
 
+        }else if(StringUtils.equals(topicName,mqConfig.getDmsCallbackStatusTopic())){
+            //接收分拣中心回传的状态
+            logger.info("分拣中心状态反馈的消息体:{}",messageBody);
+            logger.info("订单中心消费分拣中心状态反馈开始消费topic:{}",topicName);
+            List<DmsTransferRecordDto> dmsTransferRecordDtoList = null;
+            try {
+                dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
+                for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
+                    ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
+                }
+            }catch (Exception ex){
+                logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage());
+            }
         }
         return Action.CommitMessage;
     }

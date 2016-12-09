@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 public interface OfcDistributionBasicInfoMapper extends MyMapper<OfcDistributionBasicInfo> {
@@ -12,7 +13,7 @@ public interface OfcDistributionBasicInfoMapper extends MyMapper<OfcDistribution
     int updateByOrderCode(Object key);
     int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo);
     OfcDistributionBasicInfo ofcDistributionBasicInfoSelect(Object key);
-    String getOrderCodeByTransCode(Map<String,String> mapperMap);
+    List<String> getOrderCodeByTransCode(Map<String,String> mapperMap);
 
     OfcBatchOrderVo queryByBatchNumber(@Param("orderBatchNumber") String orderBatchNumber);
 }

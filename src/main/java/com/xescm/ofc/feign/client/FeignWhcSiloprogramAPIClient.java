@@ -35,38 +35,16 @@ public class FeignWhcSiloprogramAPIClient {
         return res;
     }
 
-    public Response inOrderCancel(CancelOrderDTO cancelOrderDTO){
+    public Response cancelOrder(CancelOrderDTO cancelOrderDTO){
         Response response = null;
         if(null == cancelOrderDTO){
             throw new BusinessException("参数为空");
         }
         try {
-            response = getApi().inOrderCancel(cancelOrderDTO);
+            response = getApi().cancelOrder(cancelOrderDTO);
         }catch (Exception ex){
             throw new BusinessException(ex.getMessage());
         }
         return response;
     }
-
-    public Response outOrderCancel(CancelOrderDTO cancelOrderDTO){
-        Response response = null;
-        if(null == cancelOrderDTO){
-            throw new BusinessException("参数为空");
-        }
-        try {
-            response = getApi().outOrderCancel(cancelOrderDTO);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
-        }
-        return response;
-    }
-
-
-
-
-
-
-
-
-
 }

@@ -63,6 +63,27 @@ public class MqConfig {
      * 仓储计划单
      */
     private String ofc2WhcOrderTopic;
+    /**
+     * DMS回传状态topic
+     */
+    public String dmsCallbackStatusTopic;
+
+    public String getDmsCallbackStatusTopic() {
+        return dmsCallbackStatusTopic;
+    }
+
+    public void setDmsCallbackStatusTopic(String dmsCallbackStatusTopic) {
+        this.dmsCallbackStatusTopic = dmsCallbackStatusTopic;
+    }
+    public String getWhc2OfcOrderTopic() {
+        return whc2OfcOrderTopic;
+    }
+
+    public void setWhc2OfcOrderTopic(String whc2OfcOrderTopic) {
+        this.whc2OfcOrderTopic = whc2OfcOrderTopic;
+    }
+
+    private String whc2OfcOrderTopic;
 
     private String producerId; //XX发布者
     private String consumerId; //XX消费者

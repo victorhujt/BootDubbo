@@ -10,6 +10,7 @@ import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class FeignTfcTransPlanApiClient {
     }
 
     public Response cancelTransport(TransportNoDTO transportNoDTO){
-        logger.debug("==>订单中心向TFC发送取消运输计划单请求 transportNoDTO={}", transportNoDTO);
+        logger.info("==>订单中心向TFC发送取消运输计划单请求 transportNoDTO={}", ToStringBuilder.reflectionToString(transportNoDTO));
         Response response = null;
         if(null == transportNoDTO){
             throw new BusinessException("参数为空");

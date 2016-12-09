@@ -5,9 +5,9 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
-        <button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
+        <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
             返回
-        </button>
+        </button>-->
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -145,16 +145,12 @@
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.transCode)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">出发地</label>
-                        <div class="w-width-220 col-float">
-                            <input id="departurePlace" name="" type="search" placeholder=""
+                        <div class="col-float padding-15" style="width:460px;">
+                            <input id="departurePlace" name="" type="search" placeholder="" style="width:460px;"
                                    aria-controls="dynamic-table"
                                    value="${(ofcDistributionBasicInfo.departureProvince)!""}${(ofcDistributionBasicInfo.departureCity)!""}${(ofcDistributionBasicInfo.departureDistrict)!""}${(ofcDistributionBasicInfo.departureTowns)!""}${(ofcDistributionBasicInfo.departurePlace)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">目的地</label>
-                        <div class="w-width-220 col-float">
-                            <input id="destination" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
-                        </div>
+
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">车牌号</label>
@@ -162,6 +158,14 @@
                             <input id="plateNumber" name="plateNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.plateNumber)!""}">
                         </div>
+                        <label class="control-label col-label no-padding-right" for="name">目的地</label>
+                        <div class="padding-15 col-float" style="width:460px;">
+                            <input id="destination" name="" type="search" placeholder="" style="width:460px;"
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                         <div class="w-width-220 col-float">
                             <input id="driverName" name="driverName" type="search" placeholder=""
@@ -172,16 +176,17 @@
                             <input id="contactNumber" name="contactNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.contactNumber)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">数量</label>
                         <div class="w-width-220 col-float">
                             <input id="quantity" name="quantity" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.quantity)!""}">
                         </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">重量</label>
                         <div class="w-width-220 col-float">
-                            <input id="weight" name="weight" type="search" placeholder=""
+                            <input id="weight" name="weight" type="search" placeholder="" style="margin-right:5px;"
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.weight)!""}">KG
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">体积</label>
@@ -189,8 +194,6 @@
                             <input id="cubage" name="cubage" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">运输要求</label>
                         <div class="w-width-220 col-float">
                             <input id="transRequire" name="transRequire" type="search" placeholder=""
@@ -230,7 +233,7 @@
 
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
-                        <div class="col-xs-6">
+                        <div class="padding-15 y-float" style="width:492px;">
                             <input id="orderCode" name="custName" type="search" style="width: 100%;" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(ofcDistributionBasicInfo.departureProvince)!""}${(ofcDistributionBasicInfo.departureCity)!""}${(ofcDistributionBasicInfo.departureDistrict)!""}${(ofcDistributionBasicInfo.departureTowns)!""}${(ofcDistributionBasicInfo.departurePlace)!""}">
@@ -270,7 +273,7 @@
 
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
-                        <div class="col-xs-6">
+                        <div class="padding-15 y-float" style="width:492px;">
                             <input id="address" name="address" type="search" style="width: 100%;" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
