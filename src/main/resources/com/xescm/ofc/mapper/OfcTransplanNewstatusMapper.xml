@@ -13,7 +13,7 @@
     <result column="temperature" property="temperature" jdbcType="VARCHAR" />
     <result column="humidity" property="humidity" jdbcType="VARCHAR" />
     <result column="oper_unit" property="operUnit" jdbcType="VARCHAR" />
-    <result column="desc" property="desc" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
 
   <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcTransplanNewstatus" >
@@ -49,8 +49,8 @@
       <if test="operUnit != null" >
         oper_unit = #{operUnit,jdbcType=VARCHAR},
       </if>
-      <if test="desc != null" >
-        desc = #{desc,jdbcType=VARCHAR},
+      <if test="description != null" >
+        description  = #{description,jdbcType=VARCHAR},
       </if>
     </set>
     where plan_code = #{planCode,jdbcType=VARCHAR}

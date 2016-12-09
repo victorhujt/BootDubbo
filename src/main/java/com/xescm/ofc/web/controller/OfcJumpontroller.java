@@ -3,12 +3,14 @@ package com.xescm.ofc.web.controller;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
+import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -26,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -127,6 +130,8 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
+    @Autowired
+    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
     /**
      * 城配开单
      * @param model
@@ -134,6 +139,19 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
+
+        DmsTransferRecordDto dmsTransferRecordDto = new DmsTransferRecordDto();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dmsTransferRecordDto.setCreatedTime(sdf.format(new Date()));
+        dmsTransferRecordDto.setTransNo("transCode001");
+        dmsTransferRecordDto.setCreator("creator001");
+        dmsTransferRecordDto.setRecordTypeCode("10");
+        dmsTransferRecordDto.setRemark("我是Remark001");
+
+        ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
+
+
+
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         map.put("merchandiserList",merchandiserList);
         map.put("currentTime",new Date());
