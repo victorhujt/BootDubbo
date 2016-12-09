@@ -61,7 +61,7 @@
         }
         .form-horizontal .control-label{
             padding-top:0;
-            line-height:34px;
+            line-height:30px;
         }
         input[type=checkbox], input[type=radio]{
             margin:10px 0 0;
@@ -77,6 +77,9 @@
         }
         .dataTable > thead > tr > th[class*=sorting_]{
             color:#707070;
+        }
+        .has-success .form-control{
+            border-color:#cacaca;
         }
         .help-block{
             color:#f00 !important;
@@ -384,28 +387,29 @@
                         </div></div>
 
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
-                        <div class="col-width-168 padding-15">
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
+                                <div class="clearfix">
                                 <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
                                     <#list merchandiserList! as merchandiser>
                                         <option>${(merchandiser.merchandiser)!""}</option>
                                     </#list>
-                                </select>
+                                </select></div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
 
-                        <div class="col-width-50" style="margin-right:10px;">
-                            <div class="clearfix control-label">
-                                <input id="transportTypeV1" type="radio" name="transportTypeV" checked="checked" value="10" style="margin-right:5px;float:left;"/>
-                                <div style="float:left">零担</div>
-                            </div>
+                        <div class="radio y-float">
+                            <label>
+                                <input id="transportTypeV1" type="radio" class="ace" name="transportTypeV" checked="checked" value="10"/>
+                                <span class="lbl">零担</span>
+                            </label>
                         </div>
-                        <div class="col-width-50">
-                            <div class="clearfix control-label">
-                                <input id="transportTypeV2" type="radio" name="transportTypeV" value="20" style="margin-right:5px;float:left;"/>
-                                <div style="float:left;">整车</div>
-                            </div>
+                        <div class="radio y-float">
+                            <label>
+                                <input id="transportTypeV2" type="radio" class="ace" name="transportTypeV" value="20"/>
+                                <span class="lbl">整车</span>
+                            </label>
                         </div>
                         <input id="transportType" type="hidden" name="transportType"/></div>
                 </div>
@@ -420,7 +424,7 @@
                             </div>
                         </div></div>
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>运输单号</label>
-                        <div class="col-width-168 padding-15">
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
                             </div>
@@ -429,7 +433,7 @@
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
-                            <div class="position-relative" style="width:430px;">
+                            <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
@@ -444,8 +448,8 @@
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
                         <div class="col-xs-2">
-                            <div class="position-relative" style="width:430px;">
-                                <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:430px;" />
+                            <div class="position-relative" style="width:433px;">
+                                <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
                                 <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
                             </div>
                         </div></div>
@@ -454,7 +458,7 @@
             </form>
 
             <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:360px;">
-                <div style="width:450px;margin-right:100px;float:left;">
+                <div style="width:530px;margin-right:35px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
                     </div>
@@ -693,18 +697,19 @@
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;">
-                            <div class="clearfix">
-                                <input id="expensePaymentPartyV1" type="radio" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
-                                <div style="float:left;margin-right:5px;">发货方</div>
-                            </div>
+                        <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
+                            <label class="clearfix">
+                                <input id="expensePaymentPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
+                            </label>
                         </div></div>
                     <div>
-                        <div class="col-width-70" style="float:left;background:#eaedf1;">
-                            <div class="clearfix">
-                                <input id="expensePaymentPartyV2" type="radio" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
-                                <div style="float:left;margin-right:5px;">收货方</div>
-                            </div></div>
+                        <div class="col-width-70" style="float:left;background:#eaedf1;padding-top:7px;height:34px;">
+                            <label class="clearfix">
+                                <input id="expensePaymentPartyV2" type="radio" class="ace" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
+                                <span class="lbl" style="float:left;margin-right:5px;">收货方</span>
+                            </label>
+                        </div>
                     </div>
                     <input id="transportType" type="hidden" name="transportType"/>
                     <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
@@ -724,7 +729,7 @@
                         </div>
                     </div>
                     <div style="width:230px;margin:0 0 0 15px;float:left;">
-                        <div class="clearfix col-xs-1" style="margin-top:-6px;">
+                        <div class="clearfix col-xs-1" style="margin-top:-6px;margin-left:5px;">
                             <input id="openInvoicesV" type="checkbox" name="" class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
                             <input id="openInvoices" type="hidden" name="openInvoices"  value="0" />
                         </div>
@@ -802,7 +807,7 @@
 
 
 
-        <div class="tab-content" style="border:none;">
+        <div class="tab-content" style="border:none;padding-top:0;">
             <div id="home4" class="tab-pane active">
 
                 <!--货品明细-->
@@ -1226,7 +1231,7 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consigneePhone:{
-                    isPhone:mistake+"请输入正确格式的手机号",
+                    isPhone:mistake+"请输入正确的手机号",
                     required:mistake+"必须输入",
                     maxlength:mistake+"超过最大长度"
                 },
