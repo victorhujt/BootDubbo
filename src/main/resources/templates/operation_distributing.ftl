@@ -73,11 +73,11 @@
             background:#fff!important;
             border:1px solid #cacaca!important;
         }
-        .initBtn:active{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-            outline:none;
-        }
+      .width-267{
+          width:267px;
+          padding:0 12px;
+          float:left;
+      }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
@@ -302,7 +302,7 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label col-sm-1 no-padding-right" for="name" style="line-height:34px;">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
@@ -430,7 +430,7 @@
     <div class="col-xs-12">
         <div class="form-group l-bj">
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
-            <div class="col-xs-3">
+            <div class="width-267">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                 </div>
@@ -438,7 +438,7 @@
 
 
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
-                <div class="col-xs-3">
+                <div class="width-267">
                     <div class="clearfix">
                         <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="merchandiser" type="text" placeholder="开单员">
                             <#list merchandiserList! as merchandiser>
@@ -448,7 +448,7 @@
                     </div>
                 </div></div>
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
-            <div class="col-xs-3">
+            <div class="width-267">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                 </div>
@@ -458,7 +458,7 @@
     <div class="col-xs-12">
         <div class="form-group">
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>客户名称</label>
-            <div class="col-xs-3">
+            <div class="width-267">
                 <div class="bk-1 position-relative">
                     <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
@@ -474,7 +474,7 @@
 
             </div></div>
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
-            <div class="col-xs-3">
+            <div class="width-267">
                 <div class="clearfix">
                     <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="bk-1">
                         <option value="">无</option>
@@ -483,7 +483,7 @@
                 </div>
             </div></div>
             <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
-            <div class="col-xs-3">
+            <div class="width-267">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="备注"/>
                 </div>
@@ -497,10 +497,10 @@
         <div class="col-xs-12">
             <div class="form-group"style="border-top:1px solid #ccc;">
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">发货方</b></label>
-                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 32px">
+                <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px">
                 </div>
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">出发地:</b></label>
-                <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 32px;">
+                <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px;">
                     <div class="clearfix">
                         <span id="showDepaturePlace" class="l-bj"></span>
                     </div>
@@ -510,8 +510,8 @@
         <div class="col-xs-12">
             <div class="form-group" style="margin-left: 0">
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">名称</label>
-                <div class="col-xs-3">
-                    <div class="bk-1 position-relative">
+                <div class="width-267">
+                    <div class="bk-1 position-relative" style="height:34px;">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorName" id="consignorName" type="text"
                                placeholder="名称"/>
                        <#-- <span style="cursor:pointer" id="consignorListDivBlock">
@@ -525,13 +525,13 @@
 
                 </div>
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系人</label>
-                <div class="col-xs-3">
+                <div class="width-267">
                     <div class="clearfix">
                         <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
                     </div>
                 </div>
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-left: -6px;margin-right:0">联系电话</label>
-                <div class="col-xs-3">
+                <div class="width-267">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
                     </div>
@@ -543,7 +543,7 @@
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">地址</label>
                 <div class="col-xs-9">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12 dz-1"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
+                        <input style="width:506px;"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
                         <input class="col-xs-10 col-xs-12 bk-1" name="consignorType" id="consignorType" type="hidden" />
                         <input class="col-xs-10 col-xs-12 bk-1" name="consignorContactCompanyId" id="consignorContactCompanyId" type="hidden" />
                         <input class="col-xs-10 col-xs-12 bk-1" name="consignorContactCode" id="consignorContactCode" type="hidden" />
@@ -1879,6 +1879,7 @@
                 var param =contactCompanyId + "@" + contactCode;
                 var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
+                goods.chargingQuantity = goodsAmount;
                 goodsList[index] = goods;
             })
             orderInfo.goodsList  = goodsList;
