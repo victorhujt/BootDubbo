@@ -190,9 +190,21 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                         }*/
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
-                    OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-                    if(!(orderStatus.getLastedOperTime().toString().equals(ofcSchedulingSingleFeedbackCondition.getCreateTime().toString()))
-                            || !(orderStatus.getNotes().endsWith("调度"))){
+                    boolean flag = false;
+                    List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
+                    if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
+                        for (OfcOrderStatus status : statusList) {
+                            String statusNote = status.getNotes();
+                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.endsWith("已调度")) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        flag = true;
+                    }
+                    if (!flag) {
+                        OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
                         orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
                                 +" "+"订单已调度");

@@ -33,7 +33,7 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
             mapperMap.put("orderCode",orderCode);
             return ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("运输计划单查询入参为空");
         }
     }
 
@@ -44,7 +44,15 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
             mapperMap.put("planCode",planCode);
             return ofcTransplanInfoMapper.ofcTransplanInfoVoList(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("运输计划单查询入参为空");
         }
     }
+
+    @Override
+    public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
+        int result = ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
+        return result;
+    }
+
+
 }

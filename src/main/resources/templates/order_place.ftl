@@ -384,7 +384,7 @@
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
                                <div class="w-width-220 y-float">
                                    <div class="clearfix">
-                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
+                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD HH:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
                                    </div>
                                </div></div>
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
