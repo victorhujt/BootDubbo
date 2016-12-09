@@ -922,10 +922,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }else{
                             transportDetailDTO.setQty(detail.getQuantity().doubleValue());
                         }
-                        if(null == detail.getWeight()){
+                        if(null == detail.getBillingWeight()){
                             transportDetailDTO.setWeight(0.0);
                         }else{
-                            transportDetailDTO.setWeight(detail.getWeight().doubleValue());
+                            transportDetailDTO.setWeight(detail.getBillingWeight().doubleValue());
                         }
                         if(null == detail.getCubage()){
                             transportDetailDTO.setVolume(0.0);
@@ -939,11 +939,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                         transportDetailDTO.setMoney(0.0);
                         transportDetailDTO.setUom(detail.getUnit());
-                        if(null == detail.getTotalBox()){
-                            detail.setTotalBox(0);
-                        }else{
-                            detail.setTotalBox(detail.getTotalBox());
-                        }
                         transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
                         transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
                         transportDTO.getProductDetail().add(transportDetailDTO);

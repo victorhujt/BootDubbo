@@ -19,6 +19,7 @@
     <result column="weight" property="weight" jdbcType="DECIMAL" />
     <result column="cubage" property="cubage" jdbcType="DECIMAL" />
     <result column="total_box" property="totalBox" jdbcType="INTEGER" />
+    <result column="billing_weight" jdbcType="DECIMAL" property="billingWeight" />
   </resultMap>
 
   <!--计划单明细列表查询-->
