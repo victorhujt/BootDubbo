@@ -11,4 +11,5 @@ public interface OfcTransplanInfoMapper extends Mapper<OfcTransplanInfo> {
     List<OfcTransplanInfo> ofcTransplanInfoScreenList(Map<String,String> mapperMap);
     List<OfcTransplanInfoVo> ofcTransplanInfoVoList(Map<String,String> mapperMap);
 
+    int queryNotInvalidAndNotCompleteTransOrder(String orderCode);
 }

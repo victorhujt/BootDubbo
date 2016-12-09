@@ -220,13 +220,19 @@
   </resultMap>
 
   <select id="getOrderCodeByTransCode" parameterType="java.util.Map" resultMap="convTransCode">
-    select
+    SELECT
     odbi.order_code
-    from
+    FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
-        WHERE odbi.trans_code =#{transCode,jdbcType=VARCHAR}
+    <where>
+      <if test="custCode　!= null and custCode != ''">
         AND ofi.cust_code = #{custCode,jdbcType=VARCHAR}
+      </if>
+      <if test="transCode　!= null and transCode != ''">
+        AND odbi.trans_code =#{transCode,jdbcType=VARCHAR}
+      </if>
+    </where>
         ORDER BY odbi.oper_time DESC limit 1
   </select>
 
