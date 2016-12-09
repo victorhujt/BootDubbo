@@ -3,46 +3,78 @@
     <style type="text/css">
         #goodsListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:85px;
+            margin-left:-400px;
             width:946px;
             height:500px;
-            z-index:3;
+          z-index:3;margin-left:-400px;
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
         #consignorListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
             width:946px;
             height:500px;
-            z-index:3;
+           z-index:3;margin-left:-400px;
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
         #consigneeListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
             width:946px;
             height:500px;
-            z-index:3;
+           z-index:3;margin-left:-400px;
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
         #supportListDiv {
             position:fixed;
-            left:285px;
+            left:50%;
             top:77px;
             width:946px;
             height:500px;
-            z-index:3;
+          z-index:3;margin-left:-400px;
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
         input{
             color: black;
+        }
+        .form-horizontal .control-label{padding-top:0;}
+       #dropdown14 .col-label{
+           margin-left:53px;
+       }
+        .form-group > label[class*="col-"]{
+            margin-right:0;
+        }
+        #dropdown14 .chosen-container{
+            width:220px!important;
+        }
+        #dynamic-table_filter{
+            margin-left:12px;
+        }
+        .city-picker-span{
+            border:1px solid #cacaca;
+        }
+        .help-block{
+            color:#f00 !important;
+        }
+        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+            color:#393939;
+        }
+        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+            color:#393939;
+        }
+        .has-error .form-control{
+            border-color:#cacaca;
+        }
+        .has-success .form-control{
+            border-color:#cacaca;
         }
     </style>
 <#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
@@ -114,7 +146,7 @@
 <!--consignorListDiv-->
 <div class="modal-content" id="consignorListDiv" style="display: none;">
     <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">发货方联系人</h4></div>
+        <p class="w-font">发货方联系人</p></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
@@ -178,12 +210,12 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">取消</button></span><button id="contactinEnter" data-bb-handler="confirm" type="button" style="margin-left:15px;" class="btn btn-primary">确定</button></div>
 </div>
 <!--consigneeListDiv-->
 <div class="modal-content" id="consigneeListDiv" style="display: none;">
     <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title">收货方联系人</h4></div>
+        <h4 class="w-font">收货方联系人</h4></div>
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
@@ -246,7 +278,7 @@
             </form>
         </div>
     </div>
-    <div class="modal-footer"><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button></span><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button></div>
+    <div class="modal-footer"><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default" style="margin:0 15px;">取消</button></span><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认</button></div>
 </div>
 <!--supportListDiv-->
 <div class="modal-content" id="supportListDiv" style="display: none;">
@@ -352,7 +384,7 @@
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
                                <div class="w-width-220 y-float">
                                    <div class="clearfix">
-                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
+                                       <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="订单日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD HH:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
                                    </div>
                                </div></div>
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
@@ -401,10 +433,10 @@
                            </div>-->
                             <div class="form-group" id="businessTypeDiv" style="display: none">
                                 <div><label class="control-label col-label no-padding-right" for="name">业务类型</label>
-                                <div class="col-sm-6">
+                                <div class="padding-12 y-float" style="width:536px;">
                                     <div class="clearfix">
                                     <#--<span id="businessTypeDiv" style="display: none">-->
-                                        <select  id="businessType" name="businessType">
+                                        <select  id="businessType" name="businessType" style="padding-left:0;">
                                             <option value="610">销售出库</option>
                                             <option value="611">调拨出库</option>
                                             <option value="612">报损出库</option>
@@ -427,7 +459,7 @@
 
                             <div class="form-group" id="provideTransportDiv" style="display: none">
                                 <div><label class="control-label col-label no-padding-right" for="name">是否需要运输</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" style="height:34px;line-height:34px;">
                                     <div class="clearfix">
                                     <#-- <span id="provideTransportDiv" style="display: none">-->
                                         <input  id="provideTransport" type="checkbox" name = ""/>
@@ -437,14 +469,15 @@
                                 </div></div>
                             </div>
                             <div class="form-group">
-                                <div><label class="control-label col-label no-padding-right no-padding-top y-float" style="margin-right:20px;" for="name">备注</label>
-                                <div class="col-sm-6">
+                                <div><label class="control-label col-label no-padding-right no-padding-top y-float" for="name">备注</label>
+                                <div class="col-sm-6" style="padding-left:12px;">
                                     <div class="clearfix">
-                                        <input id="orderNotes" name="notes" style="color: #000;width:517px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                        <input id="orderNotes" name="notes" style="color: #000;width:510px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                 </div></div>
                             </div>
+                                </div>
                         </form>
-                        <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" >
+                        <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="margin-top:20px;" >
                             <div class="col-label2">
                                 <!-- #section:elements.tab.option -->
                                 <div class="tabbable" style="width:1000px;float:left;" >
@@ -634,16 +667,16 @@
                                                 </div>
 
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">地址选择</label>
-                                                    <div class="y-float" style="width:518px;">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" style="margin-right:0;" for="name">地址选择</label>
+                                                    <div class="y-float padding-12" style="width:534px;">
                                                         <div class="clearfix position-relative">
                                                             <input id="city-picker3-consignor" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">详细地址</label>
-                                                    <div class="y-float" style="width:518px;">
+                                                    <label class="control-label col-label no-padding-right no-padding-top " style="margin-right:0;"  for="name">详细地址</label>
+                                                    <div class="y-float padding-12" style="width:534px;">
                                                         <div class="clearfix">
                                                             <input id="consignorAddress" name="consignorAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
@@ -692,7 +725,7 @@
 
                                                         </div>
                                                     </div></div>
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
+                                                    <label class="control-label col-label no-padding-right no-padding-top" style="margin-right:0;" for="name">Email</label>
                                                     <div><div class="w-width-220 y-float">
                                                         <div class="clearfix">
                                                             <input id="consigneeEmail" name="consigneeEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -707,16 +740,16 @@
                                                 </div>
 
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">地址选择</label>
-                                                    <div class="y-float" style="width:518px;">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:0;">地址选择</label>
+                                                    <div class="y-float padding-12" style="width:534px;">
                                                         <div class="clearfix position-relative">
                                                             <input id="city-picker3-consignee" class="form-control input-sm" readonly type="text" value="" data-toggle="city-picker">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group" >
-                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:20px;">详细地址</label>
-                                                    <div class="y-float" style="width:518px;">
+                                                    <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-right:0px;">详细地址</label>
+                                                    <div class="y-float padding-12" style="width:534px;">
                                                         <div class="clearfix">
                                                             <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
@@ -729,7 +762,7 @@
                                         <div id="dropdown14" class="tab-pane">
 
                                             <div class="page-header">
-                                                <h4>仓配基本信息</h4>
+                                                <p class="w-font">仓配基本信息</p>
                                             </div>
 
                                             <div class="row">
@@ -740,7 +773,7 @@
                                                         <label class="control-label col-label no-padding-right no-padding-top" for="name">仓库名称</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
-                                                                <select id="warehouseName" name="warehouseName" class="col-xs-3">
+                                                                <select id="warehouseName" name="warehouseName" class="chosen-select" style="width:220px;">
                                                                 <#list rmcWarehouseByCustCode! as warehouse>
                                                                     <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
                                                                 </#list>
@@ -751,10 +784,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group" >
-                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name">入库预计到达时间</label>
+                                                        <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-left:0;width:125px;">入库预计到达时间</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
-                                                                <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" style="width:220px;" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
 
                                                             </div>
                                                         </div>
@@ -763,7 +796,7 @@
                                                         <label class="control-label col-label no-padding-right no-padding-top" for="name">车牌号</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
-                                                                <input id="plateNumber" name="plateNumber" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                <input id="plateNumber" name="plateNumber" type="text" class="form-control input-sm"  style="width:220px;" placeholder="" aria-controls="dynamic-table">
 
                                                             </div>
                                                         </div>
@@ -771,8 +804,8 @@
                                                     <div class="form-group" >
                                                         <label class="control-label col-label no-padding-right no-padding-top" for="name">司机姓名</label>
                                                         <div class="col-sm-6">
-                                                            <div class="clearfix">
-                                                                <input id="driverName" name="driverName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"><br/>
+                                                            <div class="clearfix" style="height:34px;">
+                                                                <input id="driverName" name="driverName" type="text" class="form-control input-sm" style="width:220px;" placeholder="" aria-controls="dynamic-table"><br/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -780,7 +813,7 @@
                                                         <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
-                                                                <input id="contactNumber" name="contactNumber" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                <input id="contactNumber" name="contactNumber" type="text" class="form-control input-sm" style="width:220px;" placeholder="" aria-controls="dynamic-table">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -948,7 +981,7 @@
     /**
      *表单验证
      */
-
+    var mistake="<i class='fa fa-times-circle w-error-icon bigger-130'></i>";
     function validateForm() {
         var ofc_url = $("#ofc_url").html();
         $('#orderFundamentalFormValidate').validate({
@@ -992,11 +1025,11 @@
                 },
                 custOrderCode:{
 
-                    maxlength: "超过最大长度",
-                    remote: "该客户订单编号已经存在"
+                    maxlength:mistake+ "超过最大长度",
+                    remote: mistake+ "该客户订单编号已经存在"
                 },
                 notes:{
-                    maxlength:"超过最大长度"
+                    maxlength:mistake+ "超过最大长度"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1145,120 +1178,120 @@
             },
             messages : {
                 quantity:{
-                    maxlength: "超过最大长度",
-                    integer:"必须输入整数"
+                    maxlength: mistake+"超过最大长度",
+                    integer: mistake+"必须输入整数"
                 },
                 weight:{
-                    maxlength: "超过最大长度"
+                    maxlength: mistake+ "超过最大长度"
                 },
                 cubage:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 },
                 totalStandardBox:{
-                    maxlength: "超过最大长度",
-                    integer:"必须输入整数"
+                    maxlength:  mistake+"超过最大长度",
+                    integer: mistake+"必须输入整数"
                 },
                 transRequire:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorPhone:{
-                    isPhone:"请输入正确的手机号",
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    isPhone: mistake+"请输入正确的手机号",
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorFax:{
-                    isFax:"请输入正确的传真",
-                    maxlength:"超过最大长度"
+                    isFax: mistake+"请输入正确的传真",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorEmail:{
-                    isEmail:"请输入正确格式的邮箱",
-                    maxlength:"超过最大长度"
+                    isEmail: mistake+"请输入正确格式的邮箱",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorPostCode:{
-                    isPostCode:"请输入正确格式的邮编",
-                    maxlength:"超过最大长度"
+                    isPostCode: mistake+"请输入正确格式的邮编",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneeName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneeContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneePhone:{
-                    isPhone:"请输入正确格式的手机号",
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    isPhone: mistake+"请输入正确格式的手机号",
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneeFax:{
-                    isFax:"请输入正确格式的传真",
-                    maxlength:"超过最大长度"
+                    isFax: mistake+"请输入正确格式的传真",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneeEmail:{
-                    isEmail:"请输入正确格式的邮箱",
-                    maxlength:"超过最大长度"
+                    isEmail: mistake+"请输入正确格式的邮箱",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneePostCode:{
-                    isPostCode:"请输入正确格式的邮编",
-                    maxlength:"超过最大长度"
+                    isPostCode: mistake+"请输入正确格式的邮编",
+                    maxlength: mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 },
                 warehouseName:{
-                    required:"必须输入"
+                    required: mistake+"必须输入"
                 },
                 arriveTime:{
-                    required:"必须输入"
+                    required: mistake+"必须输入"
                 },
                 plateNumber:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 },
                 driverName:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 },
                 contactNumber:{
-                    isPhone:"请输入正确格式的手机号",
-                    maxlength:"超过最大长度"
+                    isPhone: mistake+"请输入正确格式的手机号",
+                    maxlength: mistake+"超过最大长度"
                 },
                 supportName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 supportContactName:{
-                    required:"必须输入",
-                    maxlength:"超过最大长度"
+                    required: mistake+"必须输入",
+                    maxlength: mistake+"超过最大长度"
                 },
                 supportPhone:{
-                    required:"必须输入",
-                    isPhone:"请输入正确的手机号"
+                    required: mistake+"必须输入",
+                    isPhone: mistake+"请输入正确的手机号"
                 },
                 supportFax:{
-                    isFax:"请输入正确格式的传真",
-                    maxlength:"超过最大长度"
+                    isFax: mistake+"请输入正确格式的传真",
+                    maxlength: mistake+"超过最大长度"
                 },
                 supportEmail:{
-                    isEmail:"请输入正确格式的邮箱",
-                    maxlength:"超过最大长度"
+                    isEmail: mistake+"请输入正确格式的邮箱",
+                    maxlength: mistake+"超过最大长度"
                 },
                 supportPostCode:{
-                    isPostCode:"请输入正确格式的邮编",
-                    maxlength:"超过最大长度"
+                    isPostCode: mistake+"请输入正确格式的邮编",
+                    maxlength: mistake+"超过最大长度"
                 },
                 supportAddress:{
-                    maxlength:"超过最大长度"
+                    maxlength: mistake+"超过最大长度"
                 }
 
 

@@ -189,7 +189,7 @@
                             </div>
                             <div class="form-group y-float" style="clear:left">
                                 <label class="control-label col-label no-padding-right" for="name">收货地址</label>
-                                <div class="w-width-220 col-float">
+                                <div class="w-width-220 col-float" style="width:517px;">
                                     <div class="clearfix">
                                         <input id="destinationPlace" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
                                     </div>

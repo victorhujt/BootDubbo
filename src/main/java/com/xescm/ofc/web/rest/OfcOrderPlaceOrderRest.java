@@ -15,6 +15,7 @@ import com.xescm.ofc.feign.client.FeignAddressInterfaceClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
+import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
@@ -367,5 +368,25 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             return flag;
         }
 
-
+    /**
+     * 货品筛选(调用客户中心API)
+     */
+    @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
+    @ApiImplicitParams({
+            //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
+    })
+    @RequestMapping(value = "/getCscGoodsTypeList",method = RequestMethod.POST)
+    public void getCscGoodsTypeList(Model model,String cscGoodsType,String groupId, String custId, HttpServletResponse response){
+        //调用外部接口,最低传CustomerCode
+        try{
+            CscGoodsType cscGoodType=new CscGoodsType();
+            if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
+                cscGoodType.setPid(cscGoodsType);
+            }
+            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
+            response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
+        }catch (Exception ex){
+            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
+        }
+    }
 }

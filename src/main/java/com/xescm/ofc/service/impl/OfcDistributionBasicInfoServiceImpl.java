@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,13 +45,13 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public String getOrderCodeByTransCode(String transCode) {
-        String custCode = "001";
+//        String custCode = "001";
        // Map<String,String> mapperMap = new HashMap<String,String>();
         Map<String,String> mapperMap = new HashMap<>();
-        mapperMap.put("custCode",custCode);
+//        mapperMap.put("custCode",custCode);
         mapperMap.put("transCode",transCode);
-        String orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(mapperMap);
-        return orderCode;
+        List<String> orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(mapperMap);
+        return orderCode.get(0);
     }
 
     @Override

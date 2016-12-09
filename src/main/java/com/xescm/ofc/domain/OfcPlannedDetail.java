@@ -77,6 +77,11 @@ public class OfcPlannedDetail {
 
     private Integer totalBox;
 
+    /**
+     * 记账重量
+     */
+    @Column(name = "billing_weight")
+    private BigDecimal billingWeight;
 
     public BigDecimal getWeight() {
         return weight;
@@ -298,5 +303,23 @@ public class OfcPlannedDetail {
      */
     public void setInvalidTime(Date invalidTime) {
         this.invalidTime = invalidTime;
+    }
+
+    /**
+     * 获取记账重量
+     *
+     * @return billing_weight - 记账重量
+     */
+    public BigDecimal getBillingWeight() {
+        return billingWeight;
+    }
+
+    /**
+     * 设置记账重量
+     *
+     * @param billingWeight 记账重量
+     */
+    public void setBillingWeight(BigDecimal billingWeight) {
+        this.billingWeight = billingWeight;
     }
 }
