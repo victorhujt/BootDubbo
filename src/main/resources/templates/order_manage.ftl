@@ -369,7 +369,10 @@
         var followTag = "orderCode";
         var historyUrlTag = "orderManage";
         var url = "/ofc/orderDetails/" + orderCode + "/" + followTag + "/" + historyUrlTag;
-        xescm.common.loadPage(url);
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+//        xescm.common.loadPage(url);
     }
 
     function reviewOrder(ordercode,orderStatus) {

@@ -56,6 +56,28 @@
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
+        .help-block{
+            color:#f00 !important;
+        }
+        .initBtn{
+            line-height:32px;
+            width:34px;
+            border:1px solid #cacaca;
+            background:#f7f7f7!important;
+            cursor:pointer;
+            position:absolute;
+            top:0;
+            right:0;
+        }
+        .initBtn:hover{
+            background:#fff!important;
+            border:1px solid #cacaca!important;
+        }
+        .initBtn:active{
+            background:#fff!important;
+            border:1px solid #cacaca!important;
+            outline:none;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
@@ -407,7 +429,7 @@
 <form id="operationDistributingFormValidate" method="post" class="form-horizontal" role="form">
     <div class="col-xs-12">
         <div class="form-group l-bj">
-            <div><label class="control-label col-label no-padding-right l-bj" for="">订单日期</label>
+            <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
@@ -415,7 +437,7 @@
             </div></div>
 
 
-            <div><label class="control-label col-label no-padding-right l-bj" for="">开单员</label>
+            <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
                 <div class="col-xs-3">
                     <div class="clearfix">
                         <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="merchandiser" type="text" placeholder="开单员">
@@ -435,19 +457,23 @@
     </div>
     <div class="col-xs-12">
         <div class="form-group">
-            <div> <label class="control-label col-label no-padding-right l-bj" for="">客户名称</label>
+            <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>客户名称</label>
             <div class="col-xs-3">
-                <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
-                    <input class="col-xs-10 col-xs-12 bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
-                    <input class="col-xs-10 col-xs-12 bk-1" name=""  id="custId" type="text"  style="display: none"  />
-                    <span style="cursor:pointer" id="custListDivBlock xz-1">
+                <div class="bk-1 position-relative">
+                    <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
+                    <input class="bk-1" name=""  id="custId" type="text"  style="display: none"  />
+                    <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
+                        <i class="fa fa-user l-cor"></i>
+                    </button>
+                </div>
+             <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
                     <button type="button" class="btn btn-minier btn-inverse no-padding-right xz-1"
                             id="custListDivBlock"><i class="fa fa-user l-cor"></i>
-                    </button></span>
-                </div>
+                    </button></span>-->
+
             </div></div>
-            <div> <label class="control-label col-label no-padding-right l-bj" for="">配送仓库</label>
+            <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
             <div class="col-xs-3">
                 <div class="clearfix">
                     <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="bk-1">
@@ -470,10 +496,10 @@
     <div class="row" style="margin-right: -10px">
         <div class="col-xs-12">
             <div class="form-group"style="border-top:1px solid #ccc;">
-                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">发货方</b></label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">发货方</b></label>
                 <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 32px">
                 </div>
-                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px">出发地:</b></label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">出发地:</b></label>
                 <div class="col-xs-3" style="border-bottom: 1px solid #ccc;height: 32px;">
                     <div class="clearfix">
                         <span id="showDepaturePlace" class="l-bj"></span>
@@ -485,14 +511,18 @@
             <div class="form-group" style="margin-left: 0">
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">名称</label>
                 <div class="col-xs-3">
-                    <div class="clearfix">
+                    <div class="bk-1 position-relative">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorName" id="consignorName" type="text"
                                placeholder="名称"/>
-                        <span style="cursor:pointer" id="consignorListDivBlock">
-                        <button type="button" class="btn btn-minier btn-inverse no-padding-right xz-1"
+                       <#-- <span style="cursor:pointer" id="consignorListDivBlock">
+                        <button type="button" class="btn btn-minier btn-inverse no-padding-right y-float"
                                 id=""><i class="fa fa-user l-cor"></i>
-                        </button></span>
+                        </button></span>-->
+                        <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="" >
+                            <i class="fa fa-user l-cor"></i>
+                        </button>
                     </div>
+
                 </div>
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系人</label>
                 <div class="col-xs-3">
@@ -753,7 +783,6 @@
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
                 viewMapIndexOf += 1;
-                console.log("key----" + key + "value --- " + viewMapKeys[key])
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
@@ -769,14 +798,14 @@
                         "<td>" + goodsDetail.unit + "</td>" +
                         "<td>" + goodsDetail.goodsAmount + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
+                        "<td  style='display:none'>" + goodsDetail.goodsTypeParentName + "</td>" +
                         "</tr>");
             }
         }
 
         $("#goodsListDivBlock").click(function () {
             var consigneeChosen =  $("#consigneeInfoListDiv").find("tr").size();
-            //if(consigneeChosen < 1){
-            if(false){
+            if(consigneeChosen < 1){
                 alert("请先添加收货方")
             }/*else if(!ifConsigneeConfirm){
                 alert("请先确认收货方");
@@ -880,7 +909,9 @@
                 var unit = tdArr.eq(5).text();//    单位
                 var sendGoods = tdArr.eq(6).text();//发货数量
                 var goodsSecType = tdArr.eq(7).text();//货品二级类
-                var goodsSecType = tdArr.eq(7).text();//货品二级类
+
+                var goodsFirType = tdArr.eq(8).text();//货品一级类
+
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
@@ -894,6 +925,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                 preIndex = index;
             });
@@ -987,7 +1019,6 @@
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
             debugger
-            console.log("goodsAmountTotal" + goodsAmountTotal)
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
             if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
@@ -1005,8 +1036,6 @@
                     goodsAmountTotal = goodsAmountTotal - goodsAmount;
                     //对货品列表重新进行展示
                     tdArr.eq(6).text(goodsAmountTotal);
-                    console.log(goodsAmountTotal)
-                    console.log(tdArr.eq(6).text())
                     delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
                     return true;
                 }
@@ -1014,7 +1043,6 @@
             }
         })
         $(obj).parent().parent().remove();
-        console.log("删除完收货方:" + JSON.stringify(goodsAndConsigneeMap));
     }
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
@@ -1836,11 +1864,13 @@
                 var goodsUnit = tdArr.eq(5).text();//单位
                 //var goodsTotalAmount = tdArr.eq(6).text();//总数量
                 var goodsSecType = tdArr.eq(7).text();
+                var goodsFirType = tdArr.eq(8).text();
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
                 goods.goodsCategory = goodsSecType;
+                goods.goodsType = goodsFirType;
                 goods.chargingWays = '01';//计费方式按默认按件数
 
                 var mapKey = goodsCode + "@" + goodsIndex;
@@ -1849,6 +1879,7 @@
                 var param =contactCompanyId + "@" + contactCode;
                 var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
+                goods.chargingQuantity = goodsAmount;
                 goodsList[index] = goods;
             })
             orderInfo.goodsList  = goodsList;
@@ -2055,10 +2086,12 @@
 
 
 
+
+
     /**
      *表单验证
      */
-
+    var mistake="<i class='fa fa-times-circle w-error-icon bigger-130'></i>";
     function validateFormData() {
         $('#operationDistributingFormValidate').validate({
             errorElement : 'div',
@@ -2088,31 +2121,32 @@
             },
             messages : {
                 orderTime:{
-                    required:"请输入订单日期"
+                    required:mistake+"请输入订单日期"
                 },
                 merchandiser:{
-                    required:"请选择开单员"
+                    required:mistake+"请选择开单员"
                 },
                 custName: {
-                    required:"请选择客户",
-                    maxlength:"超过最大长度"
+                    required:mistake+"请选择客户",
+                    maxlength:mistake+"超过最大长度"
                 },
                /* warehouseCode : {
-                    required:"请选择仓库"
+                    required:mistake+"请选择仓库"
                 },*/
                 notes:{
-                    maxlength:"超过最大长度"
+                    maxlength:mistake+"超过最大长度"
                 },
                 consignorName:{
-                    required:"请选择发货方"
+                    required:mistake+"请选择发货方"
                 }
 
             },
             highlight : function(e) {
                 $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
+
             },
             success : function(e) {
-                $(e).parent().parent().removeClass('has-error').addClass('has-success');
+                $(e).parent().parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
             },
             errorPlacement : function(error, element) {
@@ -2151,6 +2185,7 @@
         }
 
     }
+
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
