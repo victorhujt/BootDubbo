@@ -64,15 +64,15 @@ public class MqConfig {
      */
     private String ofc2WhcOrderTopic;
 
-    public String getWhc2ofcOrderTopic() {
-        return whc2ofcOrderTopic;
+    public String getWhc2OfcOrderTopic() {
+        return whc2OfcOrderTopic;
     }
 
-    public void setWhc2ofcOrderTopic(String whc2ofcOrderTopic) {
-        this.whc2ofcOrderTopic = whc2ofcOrderTopic;
+    public void setWhc2OfcOrderTopic(String whc2OfcOrderTopic) {
+        this.whc2OfcOrderTopic = whc2OfcOrderTopic;
     }
 
-    private String whc2ofcOrderTopic;
+    private String whc2OfcOrderTopic;
 
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
