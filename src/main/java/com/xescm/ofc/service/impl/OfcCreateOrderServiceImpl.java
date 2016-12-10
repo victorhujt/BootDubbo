@@ -82,7 +82,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
         String custName = createOrderEntity.getCustName();
-        String custId = custCode;
+//        String custId = custCode;
 //        String groupId = null;
         //校验货主编码
         resultModel = CheckUtils.checkCustCode(custCode);
@@ -96,10 +96,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-        queryCustomerCodeDto.setId(custId);
+        queryCustomerCodeDto.setCustomerCode(custCode);
         Wrapper<CscCustomerVo> customerVoWrapper = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
         if (customerVoWrapper.getResult() == null) {
-            logger.debug("获取货主信息失败：custId:{}，{}", custId, customerVoWrapper.getMessage());
+            logger.debug("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
         }
 //        CscCustomerVo cscCustomerVo = customerVoWrapper.getResult();
@@ -131,7 +131,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //店铺名称
         String storeName = null;
         QueryStoreDto storeDto = new QueryStoreDto();
-        storeDto.setCustomerId(custId);
+        storeDto.setCustomerCode(custCode);
         Wrapper<List<CscStorevo>> cscStoreVoList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
         if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
@@ -163,7 +163,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //仓库编码
         String warehouseCode = createOrderEntity.getWarehouseCode();
         CscWarehouse cscWarehouse = new CscWarehouse();
-        cscWarehouse.setCustomerId(custId);
+        cscWarehouse.setCustomerCode(custCode);
         cscWarehouse.setWarehouseCode(warehouseCode);
         Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
         resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
@@ -175,12 +175,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //供应商
         String supportName = createOrderEntity.getSupportName();
         CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-        cscSupplierInfoDto.setCustomerId(custId);
+        cscSupplierInfoDto.setCustomerCode(custCode);
         cscSupplierInfoDto.setSupplierCode(supportName);
         Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
         String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
         if (StringUtils.isBlank(supportCode)) {
-            addSupplier(createOrderEntity, cscSupplierInfoDto, custId);
+            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
         }
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
@@ -188,7 +188,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
             for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-                cscGoods.setCustomerId(custId);
+                cscGoods.setCustomerCode(custCode);
                 Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
                 resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
@@ -220,7 +220,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * 保存供应商信息
      */
     public void addSupplier(CreateOrderEntity createOrderEntity, CscSupplierInfoDto cscSupplierInfoDto, String custId) {
-        cscSupplierInfoDto.setCustomerId(custId);
+        cscSupplierInfoDto.setCustomerCode(custId);
         cscSupplierInfoDto.setUserId(CreateOrderApiConstant.USER_ID);
         cscSupplierInfoDto.setUserName(CreateOrderApiConstant.USER_NAME);
         cscSupplierInfoDto.setProvinceName(createOrderEntity.getSupportProvince());
@@ -243,7 +243,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param custId
      * @param createOrderEntity
      */
-    public void addCscContantAndCompanyDto(String purpose, String custId, CreateOrderEntity createOrderEntity, String groupId) {
+    /*public void addCscContantAndCompanyDto(String purpose, String custId, CreateOrderEntity createOrderEntity, String groupId) {
         CscContantAndCompanyDto cscContantAndCompanyVo = new CscContantAndCompanyDto();
         cscContantAndCompanyVo.setGroupId(groupId);
         cscContantAndCompanyVo.setCustomerId(custId);
@@ -304,7 +304,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyVo);
         logger.info("创建收发货方信息：{}", wrapper.getMessage());
-    }
+    }*/
 
     /**
      * 获取地区编码
@@ -414,9 +414,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList) {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
-        UamUser uamUser = new UamUser();
-        uamUser.setUserName(CREATE_ORDER_BYAPI);
-        authResDto.setUamUser(uamUser);
+        authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
         Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
         logger.info("自动审核操作：" + wrapper.getCode());
     }

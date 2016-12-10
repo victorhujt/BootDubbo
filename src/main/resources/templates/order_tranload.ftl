@@ -436,7 +436,7 @@
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
-                                <input class="col-xs-10 col-xs-12" name=""  id="custId" type="text"  style="display: none"  />
+                                <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
                                 <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;" >
                                     <i class="fa fa-user l-cor"></i>
                                 </button>
@@ -1740,12 +1740,12 @@
         $("#destination").html(destination);
     }
     //带出发货方
-    function outConsignor(cscContact,cscContactCompany,groupId,custId){
+    function outConsignor(cscContact,cscContactCompany,groupId,customerCode){
         var cscContantAndCompanyDto = {};
         cscContantAndCompanyDto.cscContact = cscContact;
         cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
         var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
             if(data.length==1){
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1769,24 +1769,24 @@
                     departurePlace();
                     cscContact.purpose = "1";
                     checkConsignOrEe();
-                    outConsignee(cscContact,cscContactCompany,groupId,custId);
+                    outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 });
             }else{
                 clearConsignor();
                 cscContact.purpose = "1";
-                outConsignee(cscContact,cscContactCompany,groupId,custId);
+                outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 checkConsignOrEe();
             }
         },"json");
 
     }
     //带出收货方
-    function outConsignee(cscContact,cscContactCompany,groupId,custId){
+    function outConsignee(cscContact,cscContactCompany,groupId,customerCode){
         var cscContantAndCompanyDto = {};
         cscContantAndCompanyDto.cscContact = cscContact;
         cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
         var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
             if(data.length==1){
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -2045,7 +2045,7 @@
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
-            jsonStr.custCode = $("#custId").val();//000
+            jsonStr.custCode = $("#customerCode").val();//000
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
@@ -2150,15 +2150,15 @@
                     var channel = tdArr.eq(4).text();//    渠道
                     var productType = tdArr.eq(5).text();//    产品类别
                     var groupId = tdArr.eq(6).text();//    产品类别
-                    var custId = tdArr.eq(7).text();//    产品类别
+                    var customerCode = tdArr.eq(7).text();//    产品类别
                     $("#custName").val(customerName);
                     $("#custGroupId").val(groupId);
-                    $("#custId").val(custId);
+                    $("#customerCode").val(customerCode);
 
                     var cscContact = {};
                     var cscContactCompany = {};
                     cscContact.purpose = "2";
-                    outConsignor(cscContact,cscContactCompany,groupId,custId);
+                    outConsignor(cscContact,cscContactCompany,groupId,customerCode);
                 }
             });
             if(custEnterTag==""){
@@ -2179,13 +2179,13 @@
         $("#goodsSelectFormBtn").click(function () {
             var cscGoods = {};
             var groupId = $("#custGroupId").val();
-            var custId = $("#custId").val();
+            var customerCode = $("#customerCode").val();
             var goodsCode = $("#goodsCodeCondition").val();
             var goodsName = $("#goodsNameCondition").val();
             cscGoods.goodsCode = goodsCode;
             cscGoods.goodsName = goodsName;
             var param = JSON.stringify(cscGoods);
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"groupId":groupId,"custId":custId}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
 
                 var goodsList = "";
@@ -2223,10 +2223,10 @@
 
 
             var groupId = $("#custGroupId").val();
-            var custId = $("#custId").val();
+            var customerCode = $("#customerCode").val();
 
             var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -2258,10 +2258,10 @@
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
 
             var groupId = $("#custGroupId").val();
-            var custId = $("#custId").val();
+            var customerCode = $("#customerCode").val();
 
             var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -2312,9 +2312,9 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
                     var groupId = $("#custGroupId").val();
-                    var custId = $("#custId").val();
+                    var customerCode = $("#customerCode").val();
 
-                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId},function (data) {
+                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
@@ -2372,8 +2372,8 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
                     var groupId = $("#custGroupId").val();
-                    var custId = $("#custId").val();
-                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId},function (data) {
+                    var customerCode = $("#customerCode").val();
+                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
@@ -2480,7 +2480,6 @@
             }else{
                 var goodsInfoListDiv = "";
                 var groupId = $("#custGroupId").val();
-                var custId = $("#custId").val();
                 var firstGoodsType = null;
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger' style='margin-top:5px;'>删除</button></td>";

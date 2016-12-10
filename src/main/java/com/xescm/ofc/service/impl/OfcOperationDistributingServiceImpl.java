@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
@@ -48,6 +49,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    @Autowired
+    private FeignCscContactAPIClient feignCscContactAPIClient;
 
     @Override
     /**
@@ -196,18 +199,18 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * @param uploadFile
      * @param fileName
      * @param authResDto
-     * @param custId
+     * @param customerCode
      * @param staticCell 固定列
      * @return
      * */
     @Override
-    public Wrapper<?> checkExcel(MultipartFile uploadFile, String fileName, String sheetNumChosen, AuthResDto authResDto, String custId, Integer staticCell) {
+    public Wrapper<?> checkExcel(MultipartFile uploadFile, String fileName, String sheetNumChosen, AuthResDto authResDto, String customerCode, Integer staticCell) {
         String suffix = fileName.split("\\.")[1];
         try {
             if("xls".equals(suffix)){
-                return checkXls(uploadFile,sheetNumChosen,custId,staticCell);
+                return checkXls(uploadFile,sheetNumChosen,customerCode,staticCell);
             }else if("xlsx".equals(suffix)){
-                return checkXlsx(uploadFile,sheetNumChosen,custId,staticCell);
+                return checkXlsx(uploadFile,sheetNumChosen,customerCode,staticCell);
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
@@ -219,11 +222,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * 校验XLS格式
      * @param uploadFile
      * @param sheetNumChosen
-     * @param custId
+     * @param customerCode
      * @param staticCell
      * @return
      */
-    private Wrapper<?> checkXls(MultipartFile uploadFile,String sheetNumChosen, String custId, Integer staticCell){
+    private Wrapper<?> checkXls(MultipartFile uploadFile,String sheetNumChosen, String customerCode, Integer staticCell){
         boolean checkPass = true;
         Map<String,JSONArray> resultMap = null;
         List<CscContantAndCompanyVo> consigneeNameList = null;
@@ -297,12 +300,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompany cscContactCompany = new CscContactCompany();
                                 CscContact cscContact = new CscContact();
-                                cscContantAndCompanyDto.setCustomerId(custId);
+                                cscContantAndCompanyDto.setCustomerCode(customerCode);
                                 cscContactCompany.setContactCompanyName(cellValue);
                                 cscContact.setPurpose("1");//用途为收货方
                                 cscContantAndCompanyDto.setCscContact(cscContact);
                                 cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
-                                Wrapper<List<CscContantAndCompanyVo>> queryCscCustomerResult = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                                Wrapper<List<CscContantAndCompanyVo>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
                                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                     throw new BusinessException(queryCscCustomerResult.getMessage());
                                 }
@@ -331,7 +334,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 }
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(goodsCode);
-                                cscGoodsApiDto.setCustomerId(custId);
+                                cscGoodsApiDto.setCustomerCode(customerCode);
                                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
                                 if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                     checkPass = false;
@@ -511,12 +514,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompany cscContactCompany = new CscContactCompany();
                                 CscContact cscContact = new CscContact();
-                                cscContantAndCompanyDto.setCustomerId(custId);
+                                cscContantAndCompanyDto.setCustomerCode(custId);
                                 cscContactCompany.setContactCompanyName(cellValue);
                                 cscContact.setPurpose("1");//用途为收货方
                                 cscContantAndCompanyDto.setCscContact(cscContact);
                                 cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
-                                Wrapper<List<CscContantAndCompanyVo>> queryCscCustomerResult = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                                Wrapper<List<CscContantAndCompanyVo>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
                                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                     throw new BusinessException(queryCscCustomerResult.getMessage());
                                 }
@@ -546,7 +549,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 }
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(goodsCode);
-                                cscGoodsApiDto.setCustomerId(custId);
+                                cscGoodsApiDto.setCustomerCode(custId);
                                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
                                 if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                     checkPass = false;

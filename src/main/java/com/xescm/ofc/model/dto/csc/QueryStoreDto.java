@@ -7,20 +7,13 @@ import java.io.Serializable;
  */
 public class QueryStoreDto implements Serializable {
     private static final long serialVersionUID = -5857295434322193459L;
-    private String customerId;
+    private String customerCode;
 
-    public String getCustomerId() {
-        return customerId;
+    public String getCustomerCode() {
+        return customerCode;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    @Override
-    public String toString() {
-        return "CscStoreDto{" +
-                "customerId='" + customerId + '\'' +
-                '}';
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 }

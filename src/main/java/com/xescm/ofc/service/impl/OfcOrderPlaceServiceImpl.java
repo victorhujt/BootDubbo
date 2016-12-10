@@ -74,10 +74,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcMerchandiser ofcMerchandiser=modelMapper.map(ofcOrderDTO,OfcMerchandiser.class);
         ofcFundamentalInformation.setCreationTime(new Date());
-        ofcFundamentalInformation.setCreator(authResDtoByToken.getUamUser().getUserName());
-        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUamUser().getUserName());
-        ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
-        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUamUser().getUserName());
+        ofcFundamentalInformation.setCreator(authResDtoByToken.getGroupRefName());
+        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getGroupRefName());
+        ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
+        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -96,7 +96,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
                     ofcFundamentalInformation.setCustCode(custId);
                     if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
-                        ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
+                        ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
                     }
                     ofcFundamentalInformation.setAbolishMark(OrderConstConstant.ORDERWASNOTABOLISHED);//未作废
                     if (ofcFundamentalInformation.getOrderType().equals(OrderConstConstant.WAREHOUSEDISTRIBUTIONORDER)){
@@ -306,7 +306,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
 
 
-                ofcFundamentalInformation.setOperator(authResDtoByToken.getUamUser().getUserName());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单已更新");
@@ -320,7 +320,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }
                 }
                 ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
-               // ofcFundamentalInformation.setCustName(authResDtoByToken.getUamUser().getUserName());
+               // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
                 ofcFundamentalInformation.setAbolishMark(OrderConstConstant.ORDERWASNOTABOLISHED);//未作废
                 ofcFundamentalInformation.setOrderType(OrderConstConstant.TRANSPORTORDER);
                 if(ofcFundamentalInformation.getOrderType().equals(OrderConstConstant.TRANSPORTORDER)){
@@ -401,7 +401,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
-        ofcOrderStatus.setOperator(authResDtoByToken.getUamUser().getUserName());
+        ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
@@ -488,7 +488,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     /**
      * 下单或编辑时保存发货方收货方及其联系人
      * saveContactMessage(cscContantAndCompanyDtoConsignee,custId
-     ,authResDtoByToken.getUserId(),authResDtoByToken.getUamUser().getUserName(),authResDtoByToken.getGroupId());
+     ,authResDtoByToken.getUserId(),authResDtoByToken.getGroupRefName(),authResDtoByToken.getGroupId());
      */
     /*public String saveContactMessage(CscContantAndCompanyDto cscContantAndCompanyDto,String custId,AuthResDto authResDtoByToken){//AuthResDto authResDtoByToken,//String custId,String userId,String userName,String groupId
         if(null == cscContantAndCompanyDto){
@@ -501,7 +501,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 return "该联系人信息已在资源中心中存在,无需再次添加!";
             }
             cscContantAndCompanyDto.setUserId(authResDtoByToken.getUserId());
-            cscContantAndCompanyDto.setUserName(authResDtoByToken.getUamUser().getUserName());
+            cscContantAndCompanyDto.setUserName(authResDtoByToken.getGroupRefName());
             cscContantAndCompanyDto.setGroupId(authResDtoByToken.getGroupId());
             *//*cscContantAndCompanyDto.getCscContact().setProvince("ofc001");
             cscContantAndCompanyDto.getCscContact().setCity("ofc001");
@@ -572,7 +572,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
             cscSupplierInfoDto.setSupplierCode("spofc" + System.currentTimeMillis());
             cscSupplierInfoDto.setUserId(authResDtoByToken.getUserId());
-            cscSupplierInfoDto.setUserName(authResDtoByToken.getUamUser().getUserName());
+            cscSupplierInfoDto.setUserName(authResDtoByToken.getGroupRefName());
             cscSupplierInfoDto.setGroupId(authResDtoByToken.getGroupId());
             Wrapper<?> wrapper = feignCscSupplierAPIClient.addSupplierBySupplierCode(cscSupplierInfoDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){

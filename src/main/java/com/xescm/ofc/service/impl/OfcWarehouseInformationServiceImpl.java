@@ -52,10 +52,10 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
 
     @Override
-    public List<RmcWarehouse> getWarehouseListByCustCode(String custId) {///1
+    public List<RmcWarehouse> getWarehouseListByCustCode(String customerCode) {///1
         try{
             CscWarehouse cscWarehouse = new CscWarehouse();
-            cscWarehouse.setCustomerId(custId);
+            cscWarehouse.setCustomerCode(customerCode);
             Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
             if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
@@ -67,7 +67,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             List<RmcWarehouse> warehouseList = new ArrayList<>();
             for(CscWarehouse cscWH : result){
                 RmcWarehouse rmcWarehouse = new RmcWarehouse();
-                rmcWarehouse.setId(cscWH.getWarehouseId());
+                rmcWarehouse.setId(cscWH.getWarehouseCode());
                 Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
                     throw new BusinessException(rmcWarehouseByid.getMessage());

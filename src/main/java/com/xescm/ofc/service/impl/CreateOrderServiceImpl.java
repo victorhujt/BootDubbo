@@ -193,9 +193,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         } else {
             AuthResDto authResDto = new AuthResDto();
-            UamUser uamUser = new UamUser();
-            uamUser.setUserName(CREATE_ORDER_BYAPI);
-            authResDto.setUamUser(uamUser);
+            authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
             String result = ofcOrderManageService.orderCancel(orderCode, orderState, authResDto);
             if (StringUtils.equals("200", result)) {
                 cannelOrderVo.setReason("操作成功");
