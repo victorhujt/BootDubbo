@@ -4,8 +4,6 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
-import com.xescm.ofc.domain.OfcPlanFedBackCondition;
-import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;

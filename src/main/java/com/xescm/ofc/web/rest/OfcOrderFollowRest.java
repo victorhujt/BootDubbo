@@ -1,12 +1,12 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
