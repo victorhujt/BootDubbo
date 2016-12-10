@@ -346,7 +346,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")){
                     //若无值，则使用发货地的省市区 获取覆盖范围的提货类型 的【调度单位】，将返回的调度单位编码，存入计划单信息的【基地ID】字段，计划单序号为1，同时判断订单的货品明细是否存在记录。存在记录创建该运输计划单的对应明细信息。
-                    throw new BusinessException("基地ID（调度单位为空），等待接口中");
+//                    throw new BusinessException("基地ID（调度单位为空），等待接口中");
                 }
 
                 RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);

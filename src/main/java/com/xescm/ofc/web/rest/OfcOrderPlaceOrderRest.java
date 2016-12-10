@@ -266,7 +266,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             result.addAll(resultOfBoth);*/
             response.getWriter().print(JSONUtils.objectToJson(result));
         } catch (Exception ex) {
-            logger.error("订单中心筛选收货方出现异常:{}", ex.getMessage(), ex);
+            logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
         }
     }
 

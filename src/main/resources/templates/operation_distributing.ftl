@@ -526,7 +526,7 @@
                         <button type="button" class="btn btn-minier btn-inverse no-padding-right y-float"
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
-                        <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="" >
+                        <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
                             <i class="fa fa-user l-cor bigger-130"></i>
                         </button>
                     </div>
