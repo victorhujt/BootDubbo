@@ -43,7 +43,7 @@ public class FeignCscContactAPIClient {
         if(null == cscContantAndCompanyDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscContantAndCompanyVo>> wrapper = (Wrapper<List<CscContantAndCompanyVo>>) getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
+        Wrapper<List<CscContantAndCompanyVo>> wrapper =  getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
         return wrapper;
     }
 }

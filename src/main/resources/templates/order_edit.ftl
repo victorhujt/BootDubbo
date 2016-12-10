@@ -1405,10 +1405,10 @@
           data = eval(data);
           $.each(data,function (index,CscContantAndCompanyDto) {
               
-              resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
+              resultConsignorCode = CscContantAndCompanyDto.contactCompanyCode;
               resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
               resultConsignorType = CscContantAndCompanyDto.type;
-              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
               $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
               $("#consignorType").val(CscContantAndCompanyDto.type);
               console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
@@ -1578,7 +1578,7 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyCode;
                     consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
                     consignorTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
@@ -1612,7 +1612,7 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyCode;
                     consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
                     consigneeTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
@@ -1689,7 +1689,7 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
@@ -1832,10 +1832,10 @@
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             
-//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
+//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyCode;
 //                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
 //                            resultConsignorType = CscContantAndCompanyDto.type;
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);

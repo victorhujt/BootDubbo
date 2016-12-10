@@ -854,6 +854,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException("没有查到该收货人的信息!");
             }
         }
+        listWrapper.getResult().get(0);
+        listWrapper.getResult().get(0);
         CscContantAndCompanyVo cscContantAndCompanyVo = listWrapper.getResult().get(0);
         return cscContantAndCompanyVo;
     }
@@ -1127,7 +1129,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-         //       defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
+                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(YITUISONG);
