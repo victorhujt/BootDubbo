@@ -91,12 +91,12 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			
 			OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
 			ofcSiloproNewstatus.setPlanCode(planCode);
-			//仓储计划单状态任务开�
+			//仓储计划单状态任务开始
 			if(TRACE_STATUS_1.equals(traceStatus)){
 				statusCondition.setPlannedSingleState(RENWUZHONG);
 				statusCondition.setPlannedStartTime(condition.getTraceTime());
-				ofcSiloproNewstatus.setJobNewStatus((RENWUZHONG));//仓储计划单最新状�
-				ofcSiloproNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时�
+				ofcSiloproNewstatus.setJobNewStatus((RENWUZHONG));//仓储计划单最新状态
+				ofcSiloproNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时间
 				ofcSiloproNewstatus.setOrderCode(infostatus.getOrderCode());
 				status.setLastedOperTime(traceTime);
 				status.setOrderStatus(IMPLEMENTATIONIN);
@@ -172,6 +172,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 		}
 			statusCondition.setPlannedSingleState(RENWUWANCH);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
+
 		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),condition.getBuniessType());
 		if(infos!=null&&infos.size()>0){
 			String ProgramSerialNumber=infos.get(0);
