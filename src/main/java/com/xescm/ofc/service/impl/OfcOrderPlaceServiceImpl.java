@@ -84,7 +84,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
-        try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
                 int custOrderCode = 0;
                 if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
@@ -377,11 +376,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }else {
                 throw new BusinessException("未知操作!系统无法识别!");
             }
-        } catch (BusinessException e) {
-            throw new BusinessException(e.getMessage(), e);
-        } catch (Exception e){
-            throw new BusinessException(e.getMessage(), e);
-        }
         if("place".equals(tag) || "tranplace".equals(tag)){
             return "您已成功下单!";
         }else if("manage".equals(tag)){

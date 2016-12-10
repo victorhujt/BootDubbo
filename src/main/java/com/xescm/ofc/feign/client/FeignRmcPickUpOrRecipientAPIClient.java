@@ -47,7 +47,7 @@ public class FeignRmcPickUpOrRecipientAPIClient {
         try {
             rmcPickupList = getRmcApi().queryPickUp(rmcDistrictQO);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+            throw new BusinessException("查询上门提货覆盖区域报错", ex);
         }
         return rmcPickupList;
     }
@@ -61,7 +61,7 @@ public class FeignRmcPickUpOrRecipientAPIClient {
         try {
             RmcRecipientList = getRmcApi().queryRecipient(rmcDistrictQO);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+            throw new BusinessException("查询二次派送服务区域报错", ex);
         }
         return RmcRecipientList;
     }
