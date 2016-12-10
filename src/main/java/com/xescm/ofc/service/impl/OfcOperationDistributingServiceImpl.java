@@ -378,7 +378,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
-                                        String consigneeContactCode = cscContantAndCompanyVo.getId();
+                                        String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
                                             throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                         }
@@ -593,7 +593,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
-                                        String consigneeContactCode = cscContantAndCompanyVo.getId();
+                                        String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
                                             throw new BusinessException("收货方编码或收货方联系人编码为空!");
 //                                            continue;

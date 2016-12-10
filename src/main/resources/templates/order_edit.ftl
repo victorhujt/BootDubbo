@@ -625,7 +625,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.contactCompanyId)!?? >value="${(consignorMessage.contactCompanyId)!}"</#if> type="hidden">
+                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.contactCompanyCode)!?? >value="${(consignorMessage.contactCompanyCode)!}"</#if> type="hidden">
                                                                         <input id="consignorType" name="consignorType" <#if (consignorMessage.type)!?? >value="${(consignorMessage.type)!}"</#if> type="hidden">
                                                                         <input id="consignorName"  name="consignorName" readonly <#if (consignorMessage.contactCompanyName)!?? >value="${(consignorMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
@@ -705,7 +705,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.contactCompanyId)!?? >value="${(consigneeMessage.contactCompanyId)!}"</#if> >
+                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.contactCompanyCode)!?? >value="${(consigneeMessage.contactCompanyCode)!}"</#if> >
                                                                         <input id="consigneeType" name="consigneeType" <#if (consigneeMessage.type)!?? >value="${(consigneeMessage.type)!}"</#if> type="hidden">
                                                                         <input id="consigneeName" name="consigneeName" readonly <#if (consigneeMessage.contactCompanyName)!?? >value="${(consigneeMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
@@ -1415,7 +1415,7 @@
           });
       });*/
 
-        cscContact.contactCompanyId = $("#consignorCode").val();
+        cscContact.contactCompanyCode = $("#consignorCode").val();
         cscContact.contactCode = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
         //cscContactCompany.id = $("#consignorCode").val();
@@ -1464,7 +1464,7 @@
         cscContact.purpose = "1";
         cscContact.phone = $("#consigneePhone").val();
 
-        cscContact.contactCompanyId = $("#consigneeCode").val();
+        cscContact.contactCompanyCode = $("#consigneeCode").val();
         cscContact.contactCode = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();
