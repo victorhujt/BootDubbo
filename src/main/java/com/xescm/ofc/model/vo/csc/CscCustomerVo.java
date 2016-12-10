@@ -44,11 +44,6 @@ public class CscCustomerVo implements Serializable {
      */
     private String productType;
 
-    /**
-     * 组织id
-     */
-    private String groupId;
-
     public String getCustomerCode() {
         return customerCode;
     }
@@ -113,11 +108,4 @@ public class CscCustomerVo implements Serializable {
         this.id = id;
     }
 
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
 }

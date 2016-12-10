@@ -31,6 +31,46 @@ public class OfcTransplanNewstatus {
     private Date transportSingleUpdateTime;
 
     /**
+     * 操作人
+     */
+    @Column(name = "operator")
+    private String operator;
+
+    /**
+     * 当前位置
+     */
+    private String location;
+
+    /**
+     * 当前温度
+     */
+    private String temperature;
+
+    /**
+     * 当前湿度
+     */
+    private String humidity;
+
+    /**
+     * 操作单位
+     */
+    @Column(name = "oper_unit")
+    private String operUnit;
+
+    /**
+     * 描述信息
+     */
+    private String description;
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    /**
      * 获取计划单编号
      *
      * @return plan_code - 计划单编号
@@ -100,5 +140,95 @@ public class OfcTransplanNewstatus {
      */
     public void setTransportSingleUpdateTime(Date transportSingleUpdateTime) {
         this.transportSingleUpdateTime = transportSingleUpdateTime;
+    }
+
+    /**
+     * 获取当前位置
+     *
+     * @return location - 当前位置
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * 设置当前位置
+     *
+     * @param location 当前位置
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * 获取当前温度
+     *
+     * @return temperature - 当前温度
+     */
+    public String getTemperature() {
+        return temperature;
+    }
+
+    /**
+     * 设置当前温度
+     *
+     * @param temperature 当前温度
+     */
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
+    }
+
+    /**
+     * 获取当前湿度
+     *
+     * @return humidity - 当前湿度
+     */
+    public String getHumidity() {
+        return humidity;
+    }
+
+    /**
+     * 设置当前湿度
+     *
+     * @param humidity 当前湿度
+     */
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+    }
+
+    /**
+     * 获取操作单位
+     *
+     * @return oper_unit - 操作单位
+     */
+    public String getOperUnit() {
+        return operUnit;
+    }
+
+    /**
+     * 设置操作单位
+     *
+     * @param operUnit 操作单位
+     */
+    public void setOperUnit(String operUnit) {
+        this.operUnit = operUnit;
+    }
+
+    /**
+     * 获取描述信息
+     *
+     * @return description - 描述信息
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * 设置描述信息
+     *
+     * @param description 描述信息
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -12,8 +12,7 @@ import java.io.Serializable;
 @ApiModel("供应商信息DTO")
 public class CscSupplierInfoDto extends AuthDto implements Serializable {
 
-    private static final long serialVersionUID = 1468153499881167236L;
-
+    private static final long serialVersionUID = 5459176940946689162L;
 
     /**
      * 版本号
@@ -34,6 +33,11 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
      * 供应商ID
      */
     private String supplierId;
+
+    /**
+     * 供应商流水号
+     */
+    private String supplierSerialNo;
 
     /**
      * 供应商编码
@@ -126,9 +130,6 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
      */
     private String street;
 
-    /**
-     * 乡镇街道
-     */
     private String streetName;
 
     /**
@@ -156,13 +157,6 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
      */
     private String selfPhone;
 
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
 
     public Long getVersion() {
         return version;
@@ -173,6 +167,16 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
     }
 
     @Override
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    @Override
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    @Override
     public String getCustomerCode() {
         return customerCode;
     }
@@ -180,6 +184,22 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
     @Override
     public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
+    }
+
+    public String getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(String supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getSupplierSerialNo() {
+        return supplierSerialNo;
+    }
+
+    public void setSupplierSerialNo(String supplierSerialNo) {
+        this.supplierSerialNo = supplierSerialNo;
     }
 
     public String getSupplierCode() {
@@ -220,6 +240,14 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
 
     public void setSupplierRemark(String supplierRemark) {
         this.supplierRemark = supplierRemark;
+    }
+
+    public String getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
     }
 
     public String getContactCode() {
@@ -334,6 +362,14 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
         this.street = street;
     }
 
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -350,46 +386,12 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
         this.completeAddress = completeAddress;
     }
 
-    @Override
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    @Override
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
     public String getSelfCode() {
         return selfCode;
     }
 
     public void setSelfCode(String selfCode) {
         this.selfCode = selfCode;
-    }
-
-    public String getSelfPhone() {
-        return selfPhone;
-    }
-
-    public void setSelfPhone(String selfPhone) {
-        this.selfPhone = selfPhone;
-    }
-
-    public String getSupplierId() {
-        return supplierId;
-    }
-
-    public void setSupplierId(String supplierId) {
-        this.supplierId = supplierId;
-    }
-
-    public String getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
     }
 
     public String getSelfName() {
@@ -400,6 +402,14 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
         this.selfName = selfName;
     }
 
+    public String getSelfPhone() {
+        return selfPhone;
+    }
+
+    public void setSelfPhone(String selfPhone) {
+        this.selfPhone = selfPhone;
+    }
+
     @Override
     public String toString() {
         return "CscSupplierInfoDto{" +
@@ -407,6 +417,7 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
                 ", customerId='" + customerId + '\'' +
                 ", customerCode='" + customerCode + '\'' +
                 ", supplierId='" + supplierId + '\'' +
+                ", supplierSerialNo='" + supplierSerialNo + '\'' +
                 ", supplierCode='" + supplierCode + '\'' +
                 ", supplierName='" + supplierName + '\'' +
                 ", supplierIndustry='" + supplierIndustry + '\'' +
@@ -427,6 +438,7 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
                 ", area='" + area + '\'' +
                 ", areaName='" + areaName + '\'' +
                 ", street='" + street + '\'' +
+                ", streetName='" + streetName + '\'' +
                 ", address='" + address + '\'' +
                 ", completeAddress='" + completeAddress + '\'' +
                 ", selfCode='" + selfCode + '\'' +

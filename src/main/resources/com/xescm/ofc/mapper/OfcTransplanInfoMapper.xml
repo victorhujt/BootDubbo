@@ -136,6 +136,9 @@
     </where>
   </select>
 
+
+
+
   <select id="ofcTransplanInfoVoList" parameterType="java.lang.String" resultMap="ofcTransplanInfoVoResultMap">
     SELECT
     tinfo.*,
@@ -152,7 +155,21 @@
   </select>
 
 
+ <select id="queryNotInvalidAndNotCompleteTransOrder" parameterType="java.lang.String" resultType="int">
+  SELECT
+  COUNT(oti.order_code)
+  FROM
+  ofc_transplan_info oti
+  LEFT JOIN ofc_transplan_status ots ON oti.plan_code = ots.plan_code
+  <where>
+    <if test="orderCode != null and orderCode != ''">
+      AND oti.order_code = #{orderCode,jdbcType=VARCHAR}
+    </if>
+    AND ots.planned_single_state !='50'
+    AND ots.planned_single_state !='40'
+  </where>
 
+ </select>
 
 
 

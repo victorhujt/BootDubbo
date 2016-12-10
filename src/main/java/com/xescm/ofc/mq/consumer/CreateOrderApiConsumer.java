@@ -5,14 +5,14 @@ import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.service.OfcSiloproStatusService;
 import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,6 +44,9 @@ public class CreateOrderApiConsumer implements MessageListener {
     private OfcSiloproStatusService ofcSiloproStatusService;
 
     @Autowired
+    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
+
+    @Autowired
     private MqConfig mqConfig;
 
     private List<String> keyList = new ArrayList<>();
@@ -58,21 +61,43 @@ public class CreateOrderApiConsumer implements MessageListener {
         String messageBody = new String(message.getBody());
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
-            logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
-            keyList.add(key);
-            String result = null;
-            try {
-                result = createOrderService.createOrder(messageBody);
-            } catch (Exception ex) {
-                logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
-            } finally {
-                logger.info("创单api消费MQ获取message处理结束");
-                //调用MQ生产者
-                if (StringUtils.isNotBlank(result)) {
-                    String code = String.valueOf(result.hashCode());
-                    createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+            if(message.getTag().equals("xeOrderToOfc")){
+                logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
+                keyList.add(key);
+                String result = null;
+                try {
+                    result = createOrderService.createOrder(messageBody);
+                } catch (Exception ex) {
+                    logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
+                } finally {
+                    logger.info("创单api消费MQ获取message处理结束");
+                    //调用MQ生产者
+                    if (StringUtils.isNotBlank(result)) {
+                        String code = String.valueOf(result.hashCode());
+                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+                    }
+                }
+            }else if(message.getTag().equals("DMS2OFC")){
+                //接收分拣中心回传的状态
+                logger.info("分拣中心状态反馈的消息体:{}",messageBody);
+                logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
+                List<DmsTransferRecordDto> dmsTransferRecordDtoList = null;
+                try {
+                    dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
+                    for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
+                        if(keyList.contains(key)){
+                            ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
+                        }else{
+                            keyList.add(key);
+                        }
+//                        if(){dmsTransferRecordDto.hashCode();};
+
+                    }
+                }catch (Exception ex){
+                    logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage());
                 }
             }
+
         }else if(StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())){
             logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
 
@@ -128,12 +153,24 @@ public class CreateOrderApiConsumer implements MessageListener {
         }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
                 logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
+
+
+
+
                 {
                     logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                     List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
                     try {
                         ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
                         for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
+
+                            if ("61".equals(tag)){
+                                //出库
+                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("出库");
+                            }else if ("62".equals(tag)){
+                                //入库
+                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("入库");
+                            }
                             ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                         }
                     } catch (Exception e) {
@@ -141,7 +178,9 @@ public class CreateOrderApiConsumer implements MessageListener {
                     }
                 }
 
-        }
+        }/*else if(StringUtils.equals(topicName,mqConfig.getDmsCallbackStatusTopic())){
+
+        }*/
         return Action.CommitMessage;
     }
 

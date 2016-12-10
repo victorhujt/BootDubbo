@@ -78,6 +78,12 @@
           padding:0 12px;
           float:left;
       }
+        .dataTable > thead > tr > th[class*=sort]:hover{
+            color:#707070;
+        }
+        .dataTable > thead > tr > th[class*=sorting_]{
+            color:#707070;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
@@ -119,7 +125,7 @@
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
-                            <input id="customerId" name ="customerId" type="hidden"/>
+                            <input id="customerCodeForGoods" name ="customerCode" type="hidden"/>
                         </div>
                     </div>
                 </div>
@@ -237,7 +243,7 @@
             <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorName1" name="contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -245,7 +251,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -253,7 +259,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber1" name="phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -261,7 +267,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                    <label class="control-label col-label no-padding-right" for="name"></label>
                     <div class="col-sm-3">
                         <div class="clearfix">
                             <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -431,8 +437,11 @@
         <div class="form-group l-bj">
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
             <div class="width-267">
-                <div class="clearfix">
+                <div class="position-relative bk-1 ">
                     <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                    <button type="button" class="btn btn-minier no-padding-right initBtn" id="">
+                        <i class="fa fa-calendar l-cor bigger-130"></i>
+                    </button>
                 </div>
             </div></div>
 
@@ -461,10 +470,9 @@
             <div class="width-267">
                 <div class="bk-1 position-relative">
                     <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
-                    <input class="bk-1" name=""  id="custGroupId" type="text" style="display: none"  />
-                    <input class="bk-1" name=""  id="custId" type="text"  style="display: none"  />
+                    <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
-                        <i class="fa fa-user l-cor"></i>
+                        <i class="fa fa-user l-cor bigger-130"></i>
                     </button>
                 </div>
              <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -518,8 +526,8 @@
                         <button type="button" class="btn btn-minier btn-inverse no-padding-right y-float"
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
-                        <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="" >
-                            <i class="fa fa-user l-cor"></i>
+                        <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
+                            <i class="fa fa-user l-cor bigger-130"></i>
                         </button>
                     </div>
 
@@ -530,7 +538,7 @@
                         <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
                     </div>
                 </div>
-                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-left: -6px;margin-right:0">联系电话</label>
+                <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
                 <div class="width-267">
                     <div class="clearfix">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
@@ -583,7 +591,7 @@
                     <!--货品明细-->
                     <span style="cursor:pointer" id="goodsListDivBlock"><button type="button" class="btn btn-info"  id="bootbox-confirm">添加货品</button></span>
                     <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
-                           aria-describedby="dynamic-table_info">
+                           aria-describedby="dynamic-table_info" style="margin-top:17px;">
                         <thead>
                         <tr role="row" id="222">
                             <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
@@ -618,7 +626,7 @@
                     <#--<span style="cursor:pointer" id="consigneeListConfirmDivBlock"><button type="button" class="btn btn-info qrshf" id="">确认收货方</button></span>-->
                     <span style="cursor:pointer" id="consigneeListClearDivBlock"><button type="button" class="btn btn-info" id="">重置收货方</button></span>
                     <table id="consigneeListTable" class="table table-striped table-bordered table-hover dataTable no-footer bg-1" role="grid"
-                           aria-describedby="dynamic-table_info">
+                           aria-describedby="dynamic-table_info" style="margin-top:17px;">
                         <thead>
                         <tr role="row">
                             <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
@@ -719,7 +727,7 @@
 
         var excelImportTag = $("#excelImportTag").html();
         if("confirm" == excelImportTag){ // 如果是Excel导入进入这个页面//先将用户选择的客户显示出来
-            var custId = $("#custIdFromExcelImport").html();
+            var customerCode = $("#customerCodeFromExcelImport").html();
             var custName = $("#custNameFromExcelImport").html();
             //重新从接口里查一遍
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
@@ -727,9 +735,8 @@
                 $.each(data,function (index,cscCustomerVo) {
                     if(index == 0){//只显示第一条
                         $("#custName").val(cscCustomerVo.customerName);
-                        $("#custGroupId").val(cscCustomerVo.groupId);
-                        $("#custId").val(cscCustomerVo.id);
-                        $("#customerId").val(cscCustomerVo.id);
+                        $("#customerCode").val(cscCustomerVo.customerCode);
+                        $("#customerCodeForGoods").val(cscCustomerVo.customerCode);
                     }
                 });
             })
@@ -739,7 +746,7 @@
             //<option value="">无</option>
             /* $("#warehouseCode").append("<option value="">无</option>");*/
             $("#warehouseCode").append("<option value = ''>无</option>");
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
                 data=eval(data);
                 $.each(data,function (index,warehouse) {
                     $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
@@ -753,7 +760,7 @@
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>"+
                         "<td>" + consignee.contactCompanyName + "</td>" +
-                        "<td><input /></td>" +
+                        "<td><input style='border:1px solid #cacaca'/></td>" +
                         "<td>" + consignee.contactName + "</td>" +
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
@@ -811,14 +818,14 @@
                 alert("请先确认收货方");
             }*/else{
                 //加载货品一级种类
-                var custId = $("#custId").val();
+                var customerCode = $("#customerCode").val();
                 $("#goodsTypeId option").remove();
                 $("#goodsSecTypeId option").remove();
                 $("#goodsTypeId").append("<option value = ''>全部</option>");//123//$("#warehouseCode").append("<option value = ''>无</option>");
                 $("#goodsSecTypeId").append("<option value = ''>全部</option>");
 
                 var firstGoodsType = null;
-                CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"custId":custId},function(data) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsTypeByCustId",{"customerCode":customerCode},function(data) {
                     data=eval(data);
                     $.each(data,function (index,goodsType) {
                         if(0 == index){
@@ -831,7 +838,7 @@
                 $("#goodsSecTypeId option").remove();
                 $("#goodsSecTypeId").append("<option value = ''>全部</option>");
                 if(null != firstGoodsType){
-                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":firstGoodsType},function(data) {
+                    CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"customerCode":customerCode,"goodsType":firstGoodsType},function(data) {
                         data=eval(data);
                         $.each(data,function (index,secGoodsType) {
                             $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
@@ -985,12 +992,12 @@
 
     $("#goodsTypeId").change(function () {
         
-        var custId = $("#custId").val();
+        var customerCode = $("#customerCode").val();
         var goodsType = $("#goodsTypeId").val();
         //$("#goodsTypeId option").remove();
         $("#goodsSecTypeId option").remove();
         $("#goodsSecTypeId").append("<option value = ''>全部</option>");
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"custId":custId,"goodsType":goodsType},function(data) {
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"customerCode":customerCode,"goodsType":goodsType},function(data) {
             data=eval(data);
             $.each(data,function (index,secGoodsType) {
                 $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
@@ -1183,8 +1190,8 @@
     //校验是否选了客户
     function validateCustChosen() {
         var custChosen = $("#custName").val();
-        var custId = $("#custId").val();
-        if(StringUtil.isEmpty(custChosen) || StringUtil.isEmpty(custId)){
+        var customerCode = $("#customerCode").val();
+        if(StringUtil.isEmpty(custChosen) || StringUtil.isEmpty(customerCode)){
             return false;
         }else{
             return true;
@@ -1205,8 +1212,7 @@
             cscContact.phone = "";
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-            var groupId = $("#custGroupId").val();
-            var custId = $("#custId").val();
+            var customerCode = $("#customerCode").val();
             var param = JSON.stringify(cscContantAndCompanyDto);
             var contactList = 0;
 
@@ -1228,7 +1234,7 @@
             var streetNameAuto = null;
             var addressAuto = null;
             
-            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
@@ -1238,7 +1244,7 @@
                         //phoneAuto = CscContantAndCompanyDto.phone;
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
-                        contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyId;
+                        contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyCode;
                         contactCodeAuto = CscContantAndCompanyDto.id;//000
                         phoneAuto = CscContantAndCompanyDto.phone;
                         provinceAuto = CscContantAndCompanyDto.province;
@@ -1326,11 +1332,10 @@
         cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
 
 
-        var groupId = $("#custGroupId").val();
-        var custId = $("#custId").val();
+        var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1345,7 +1350,7 @@
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyId)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyCode)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
@@ -1453,11 +1458,10 @@
         cscContantAndCompanyDto.cscContact = cscContact;
         cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
 
-        var groupId = $("#custGroupId").val();
-        var custId = $("#custId").val();
+        var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"groupId":groupId,"custId":custId}, function(data) {
+        CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1472,7 +1476,7 @@
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyId)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyCode)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
@@ -1693,8 +1697,8 @@
                 custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.customerName)+"</td>";
                 custList =custList + "<td>"+channel+"</td>";
                 custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.productType)+"</td>";
-                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.groupId)+"</td>";
-                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.id)+"</td>";
+                custList =custList + "<td style='display: none'></td>";
+                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.customerCode)+"</td>";
                 custList =custList + "</tr>";
                 $("#custListDivTbody").html(custList);
             });
@@ -1715,12 +1719,11 @@
                 var customerName = tdArr.eq(3).text();//公司名称
                 var channel = tdArr.eq(4).text();//    渠道
                 var productType = tdArr.eq(5).text();//    产品类别
-                var groupId = tdArr.eq(6).text();//    产品类别
-                var custId = tdArr.eq(7).text();//    产品类别
+//                var groupId = tdArr.eq(6).text();//    产品类别
+                var customerCode = tdArr.eq(7).text();//    产品类别
                 $("#custName").val(customerName);
-                $("#custGroupId").val(groupId);
-                $("#custId").val(custId);
-                $("#customerId").val(custId);
+                $("#customerCode").val(customerCode);
+                $("#customerCodeForGoods").val(customerCode);
             }
         });
         if(custEnterTag==""){
@@ -1731,10 +1734,10 @@
 
         //加载完客户后自动加载仓库列表, 和货品种类
         //加载仓库列表
-        var custId = $("#custId").val();
+        var customerCode = $("#customerCode").val();
         $("#warehouseCode option").remove();
         $("#warehouseCode").append("<option value = ''>无</option>");
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"custId":custId},function(data) {
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {
                 $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
@@ -1749,9 +1752,9 @@
             alert("请先选择客户");
         }else{
             var historyUrl = "operation_distributing";
-            var custId = $("#custId").val();
+            var customerCode = $("#customerCode").val();
             var custName = $("#custName").val();
-            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + custId + "/" + custName;
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);
         }
     })
@@ -1792,7 +1795,7 @@
             }
 
             orderInfo.custName = $("#custName").val();//后端需特别处理
-            orderInfo.custCode = $("#custId").val();//后端需特别处理
+            orderInfo.custCode = $("#customerCode").val();//后端需特别处理
             orderInfo.warehouseCode = $("#warehouseCode").val();
             orderInfo.warehouseName = $("#warehouseCode option:selected").text();
             orderInfo.notes = $("#notes").val();

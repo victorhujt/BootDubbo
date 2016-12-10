@@ -7,6 +7,8 @@ import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.OfcTransplanInfoService;
 import com.xescm.ofc.utils.PubUtils;
+//import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
             mapperMap.put("orderCode",orderCode);
             return ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("运输计划单查询入参为空");
         }
     }
 
@@ -44,7 +46,15 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
             mapperMap.put("planCode",planCode);
             return ofcTransplanInfoMapper.ofcTransplanInfoVoList(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("运输计划单查询入参为空");
         }
     }
+
+    @Override
+    public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
+        int result = ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
+        return result;
+    }
+
+
 }

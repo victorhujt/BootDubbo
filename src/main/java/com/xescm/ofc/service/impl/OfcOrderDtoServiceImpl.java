@@ -1,6 +1,9 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
@@ -45,6 +48,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
             }else if(dtoTag.equals("transCode")){
                 transCode = code;
                 //然后拿着这个transCode数据库关联基本列表, 找到对应的OrderCode,
+                ///BUG
                 orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
             }
             if(com.xescm.uam.utils.PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.

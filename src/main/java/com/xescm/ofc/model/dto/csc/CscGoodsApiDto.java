@@ -8,9 +8,9 @@ import java.io.Serializable;
 public class CscGoodsApiDto implements Serializable {
 
     /**
-     * 客户id
+     * 客户code
      */
-    private String customerId;
+    private String customerCode;
     /**
      * 货品编码
      */
@@ -32,12 +32,12 @@ public class CscGoodsApiDto implements Serializable {
      */
     private String barCode;
 
-    public String getCustomerId() {
-        return customerId;
+    public String getCustomerCode() {
+        return customerCode;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
     public String getGoodsCode() {
