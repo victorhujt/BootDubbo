@@ -276,17 +276,6 @@ public class OfcDistributionBasicInfo {
     @Transient
     private String selfTransCode;
 
-    //DMS接口专用字段
-    @Transient
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getConsignorContactPhone() {
         return consignorContactPhone;
