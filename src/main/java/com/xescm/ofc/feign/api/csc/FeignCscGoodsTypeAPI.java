@@ -27,6 +27,7 @@ public interface FeignCscGoodsTypeAPI {
      * @param cscGoodsType
      * @return
      */
+    @Deprecated
     @RequestLine("POST /api/csc/goodstype/addCscGoodsType")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addCscGoodsType(CscGoodsType cscGoodsType);

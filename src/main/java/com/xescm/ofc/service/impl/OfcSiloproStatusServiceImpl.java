@@ -168,11 +168,12 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				}
 			}
 		}else{
-			throw new BusinessException("该仓储计划单不存在寄计划单详情");
+			throw new BusinessException("该仓储计划单不存在计划单详情");
 		}
 			statusCondition.setPlannedSingleState(RENWUWANCH);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),OFC_WHC_IN_TYPE);
+
+		List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),condition.getBuniessType());
 		if(infos!=null&&infos.size()>0){
 			String ProgramSerialNumber=infos.get(0);
 			if(ProgramSerialNumber.equals(info.getProgramSerialNumber())){

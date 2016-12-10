@@ -37,31 +37,6 @@ public class FeignCscCustomerAPIClient {
         return res;
     }
 
-    public Wrapper<List<CscContantAndCompanyVo>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
-        logger.debug("==>查询客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
-        if(null == cscContantAndCompanyDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<List<CscContantAndCompanyVo>> wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
-        return wrapper;
-    }
-
-    public Wrapper<?> addCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto){
-        logger.debug("==>添加客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
-        if(null == cscContantAndCompanyDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<?> wrapper = getApi().addCscContantAndCompany(cscContantAndCompanyDto);
-        return wrapper;
-    }
-    public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto){
-        logger.debug("==>通过groupId取客户id queryCustomerIdDto={}", queryCustomerIdDto);
-        if(null == queryCustomerIdDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(queryCustomerIdDto);
-        return wrapper;
-    }
     public Wrapper<?> queryCustomerByName(QueryCustomerNameDto queryCustomerNameDto){
         logger.debug("==>通过客户名称获取客户列表 queryCustomerNameDto={}", queryCustomerNameDto);
         if(null == queryCustomerNameDto){

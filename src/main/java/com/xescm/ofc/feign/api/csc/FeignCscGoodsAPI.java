@@ -30,7 +30,7 @@ public interface FeignCscGoodsAPI {
 
     /**
      * 查询货品类别
-     * @param pid
+     * @param cscGoodsType
      * @return
      */
     @RequestLine("POST api/csc/goodstype/getCscGoodsTypeList")
