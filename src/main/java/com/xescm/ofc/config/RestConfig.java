@@ -83,6 +83,20 @@ public class RestConfig {
      */
     private String whcUrl;
 
+    /**
+     * EPC
+     * @return
+     */
+    private String epcUrl;
+
+    public String getEpcUrl() {
+        return epcUrl;
+    }
+
+    public void setEpcUrl(String epcUrl) {
+        this.epcUrl = epcUrl;
+    }
+
     public String getOfcWebUrl() {
         return ofcWebUrl;
     }
