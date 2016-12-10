@@ -521,7 +521,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
                 String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
-                if(businessType.equals("600") || businessType.equals("601")){
+                if(businessType.equals("600") || businessType.equals("601") || businessType.equals("602")){
                     OrderScreenCondition condition=new OrderScreenCondition();
                     condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
