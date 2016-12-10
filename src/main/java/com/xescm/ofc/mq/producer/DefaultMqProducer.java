@@ -1,28 +1,17 @@
 package com.xescm.ofc.mq.producer;
 
-import com.aliyun.openservices.ons.api.*;
-import com.aliyun.openservices.ons.api.transaction.LocalTransactionExecuter;
-import com.aliyun.openservices.ons.api.transaction.TransactionProducer;
-import com.aliyun.openservices.ons.api.transaction.TransactionStatus;
+import com.aliyun.openservices.ons.api.Message;
+import com.aliyun.openservices.ons.api.Producer;
+import com.aliyun.openservices.ons.api.SendResult;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.domain.OfcPlannedDetail;
 import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
-import com.xescm.ofc.domain.ofcWarehouseFeedBackCondition;
 import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.MQUtil;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by MT on 2016/11/11.
