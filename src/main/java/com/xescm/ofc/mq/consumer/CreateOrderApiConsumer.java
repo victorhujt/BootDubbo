@@ -61,7 +61,7 @@ public class CreateOrderApiConsumer implements MessageListener {
         String messageBody = new String(message.getBody());
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
-            if(message.getTag().equals("exampleTag")){
+            if(message.getTag().equals("xeOrderToOfc")){
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
                 keyList.add(key);
                 String result = null;
