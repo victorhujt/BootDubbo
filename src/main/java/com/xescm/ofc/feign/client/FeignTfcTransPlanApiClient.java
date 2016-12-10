@@ -26,11 +26,12 @@ public class FeignTfcTransPlanApiClient {
 
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignTfcTransPlanApi getApi() {
         FeignTfcTransPlanApi res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(FeignTfcTransPlanApi.class, restConfig.getEpcUrl());
         return res;

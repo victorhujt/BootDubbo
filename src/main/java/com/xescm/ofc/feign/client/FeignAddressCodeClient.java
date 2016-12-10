@@ -22,11 +22,13 @@ public class FeignAddressCodeClient {
 
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
 
     public AddressCodeInterface getApi() {
         AddressCodeInterface res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor())
+                .requestInterceptor(authRequestInterceptor)
                 .encoder(new JacksonEncoder())
                 .target(AddressCodeInterface.class, restConfig.getAddrUrl());
         return res;

@@ -24,10 +24,12 @@ public class FeignCscStoreAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscStoreAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscStoreAPI getApi() {
         FeignCscStoreAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscStoreAPI.class, restConfig.getCscUrl());
         return res;
     }

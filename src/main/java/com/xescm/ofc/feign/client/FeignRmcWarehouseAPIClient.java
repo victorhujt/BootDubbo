@@ -24,6 +24,8 @@ public class FeignRmcWarehouseAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignRmcWarehouseAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
     /*public FeignCscWarehouseAPI getRmcApi() {
         FeignCscWarehouseAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
@@ -32,7 +34,7 @@ public class FeignRmcWarehouseAPIClient {
     }*/
     public FeignRmcWarehouseAPI getRmcApi() {
         FeignRmcWarehouseAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignRmcWarehouseAPI.class,restConfig.getRmcUrl());
         return res;
     }
