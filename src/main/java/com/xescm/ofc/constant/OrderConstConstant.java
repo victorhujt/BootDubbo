@@ -87,25 +87,7 @@ public final class OrderConstConstant {
     public static final String YIQIANSHOU="40";  //已签收
     public static final String YIHUIDAN="50";  //已回单
 
-    /**
-     分拣中心回传的卡班单状态
-     10=收货、（DMS【到站卸车】线路为『提货入库』）
-     20=发运、（DMS无）
-     30=中转入、（DMS【到站卸车】）
-     40=中转出、（DMS【装车发运】）
-     50=在途、（GPS用）
-     60=签收、（DMS【自提签收】签收）
-     70=回单、（DMS无）
-     99=异常、（DMS【上报异常】保存）
-     */
-    public static final String DMS_STATUS_DELIVERY = "10";
-    public static final String DMS_STATUS_DISPATCH = "20";
-    public static final String DMS_STATUS_TRANSFER_IN = "30";
-    public static final String DMS_STATUS_TRANSFER_OUT = "40";
-    public static final String DMS_STATUS_TRANSIT = "50";
-    public static final String DMS_STATUS_SIGNED = "60";
-    public static final String DMS_STATUS_RECEIPT = "70";
-    public static final String DMS_STATUS_EXCEPTION = "99";
+
 
     //通过接口创建的订单
     public static final String CREATE_ORDER_BYAPI = "createOrderByApi";

@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.domain.OfcTransplanNewstatus;
 import com.xescm.ofc.domain.OfcTransplanStatus;
+import com.xescm.ofc.enums.DmsCallbackStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
 import com.xescm.ofc.service.*;
@@ -70,9 +71,9 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             //更新订单状态
             //如果运输单状态为已签收,则将对应的运输计划单状态改为已完成
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-            ofcOrderStatus.setNotes(sdf.format(operTime) + "运输单号:" + transCode + "状态变更:" + ofcTransplanNewstatus.getDescription());
+            ofcOrderStatus.setNotes(sdf.format(operTime) + "运输单号:" + transCode + "状态:"  + ofcTransplanNewstatus.getDescription());
             ofcOrderStatus.setLastedOperTime(operTime);
-            if(StringUtils.equals(OrderConstConstant.DMS_STATUS_SIGNED,dmsTransferRecordDto.getRecordTypeCode())){
+            if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsTransferRecordDto.getRecordTypeCode())){
                 //更新运输计划单状态
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(planCode);
@@ -84,10 +85,11 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 int queryResult = ofcTransplanInfoService.queryNotInvalidAndNotCompleteTransOrder(orderCode);
                 if(queryResult == 0){
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
+                    ofcOrderStatus.setStatusDesc("已完成");
                 }
-            }else if(StringUtils.equals(OrderConstConstant.DMS_STATUS_RECEIPT,dmsTransferRecordDto.getRecordTypeCode())){
+            }else if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_RECEIPT.getCode(),dmsTransferRecordDto.getRecordTypeCode())){
                 //如果是回单状态
-            }else if(StringUtils.equals(OrderConstConstant.DMS_STATUS_EXCEPTION,dmsTransferRecordDto.getRecordTypeCode())){
+            }else if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_EXCEPTION.getCode(),dmsTransferRecordDto.getRecordTypeCode())){
                 //如果是异常状态
             }else{
                 //如果是签收之前的状态,计划单状态不变
@@ -95,6 +97,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             //无论哪种状态都更新订单状态
             ofcOrderStatusService.save(ofcOrderStatus);
         } catch (ParseException e) {
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
 
