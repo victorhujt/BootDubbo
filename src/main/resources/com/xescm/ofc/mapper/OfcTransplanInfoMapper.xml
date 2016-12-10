@@ -155,9 +155,9 @@
   </select>
 
 
- <select id="queryNotInvalidAndNotCompleteTransOrder" parameterType="java.lang.String" >
+ <select id="queryNotInvalidAndNotCompleteTransOrder" parameterType="java.lang.String" resultType="int">
   SELECT
-  *
+  COUNT(oti.order_code)
   FROM
   ofc_transplan_info oti
   LEFT JOIN ofc_transplan_status ots ON oti.plan_code = ots.plan_code
@@ -168,6 +168,7 @@
     AND ots.planned_single_state !='50'
     AND ots.planned_single_state !='40'
   </where>
+
  </select>
 
 
