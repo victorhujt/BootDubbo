@@ -167,8 +167,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
             OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            logger.info(cscContantAndCompanyDtoConsignorStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            logger.info(cscContantAndCompanyDtoConsigneeStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            if(cscContantAndCompanyDtoConsignor!=null){
+                throw new Exception("发货方转换有误");
+            }
+            if(cscContantAndCompanyDtoConsignee!=null){
+                throw new Exception("发货方转换有误");
+            }
             CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
