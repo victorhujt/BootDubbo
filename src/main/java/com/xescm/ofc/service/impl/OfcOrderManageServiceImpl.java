@@ -527,7 +527,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
 
-                if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHECITY)){//卡班拆城配
+                if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHECITY)){//卡班拆城配
                     //向TFC推送
                     logger.debug("计划单最新状态保存成功");
                     ofcTransplanStatusService.save(ofcTransplanStatus);
