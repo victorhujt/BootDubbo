@@ -569,7 +569,7 @@
                                                 "<td>" + data.detailAddress + "</td>" +
                                                 "<td style='display:none'>" + data.type + "</td>" +
                                                 "<td style='display:none'>" + data.contactCompanyCode + "</td>" +
-                                                "<td style='display:none'>" + data.id + "</td>" +
+                                                "<td style='display:none'>" + data.contactCode + "</td>" +
                                                 "</tr>");
                                     }
                                 }

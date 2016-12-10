@@ -766,7 +766,7 @@
                         "<td>" + consignee.detailAddress + "</td>" +
                         "<td style='display:none'>" + consignee.type + "</td>" +
                         "<td style='display:none'>" + consignee.contactCompanyCode + "</td>" +
-                        "<td style='display:none'>" + consignee.id + "</td>" +
+                        "<td style='display:none'>" + consignee.contactCode + "</td>" +
                         "<td style='display:none'>" + consignee.phone + "</td>" +
                         "<td style='display:none'>" + consignee.province + "</td>" +
                         "<td style='display:none'>" + consignee.provinceName + "</td>" +
@@ -1245,7 +1245,7 @@
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
                         contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyCode;
-                        contactCodeAuto = CscContantAndCompanyDto.id;//000
+                        contactCodeAuto = CscContantAndCompanyDto.contactCode;//000
                         phoneAuto = CscContantAndCompanyDto.phone;
                         provinceAuto = CscContantAndCompanyDto.province;
                         provinceNameAuto = CscContantAndCompanyDto.provinceName;
@@ -1351,7 +1351,7 @@
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyCode)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCode)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
@@ -1477,7 +1477,7 @@
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyCode)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.id)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCode)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
