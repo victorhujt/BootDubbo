@@ -70,13 +70,13 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                         BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     }
                 } catch (IllegalAccessException e) {
-                    throw new BusinessException(e.getMessage());
+                    throw new BusinessException(e.getMessage(), e);
                 } catch (InvocationTargetException e) {
-                    throw new BusinessException(e.getMessage());
+                    throw new BusinessException(e.getMessage(), e);
                 } catch (BusinessException ex){
-                    throw new BusinessException(ex.getMessage());
+                    throw new BusinessException(ex.getMessage(), ex);
                 }catch (Exception ex){
-                    throw new BusinessException(ex.getMessage());
+                    throw new BusinessException(ex.getMessage(), ex);
                 }
 
                 return ofcOrderDTO;

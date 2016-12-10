@@ -27,10 +27,12 @@ public class FeignCscGoodsAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscGoodsAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscGoodsAPI getApi() {
         FeignCscGoodsAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscGoodsAPI.class, restConfig.getCscUrl());
         return res;
     }

@@ -28,10 +28,12 @@ import java.util.List;
 public class FeignRmcPickUpOrRecipientAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignRmcPickUpOrRecipientAPI.class);
     @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
+    @Resource
     RestConfig restConfig;
     public FeignRmcPickUpOrRecipientAPI getRmcApi() {
         FeignRmcPickUpOrRecipientAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignRmcPickUpOrRecipientAPI.class,restConfig.getRmcUrl());
         return res;
     }
@@ -45,7 +47,7 @@ public class FeignRmcPickUpOrRecipientAPIClient {
         try {
             rmcPickupList = getRmcApi().queryPickUp(rmcDistrictQO);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return rmcPickupList;
     }
@@ -59,7 +61,7 @@ public class FeignRmcPickUpOrRecipientAPIClient {
         try {
             RmcRecipientList = getRmcApi().queryRecipient(rmcDistrictQO);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return RmcRecipientList;
     }
