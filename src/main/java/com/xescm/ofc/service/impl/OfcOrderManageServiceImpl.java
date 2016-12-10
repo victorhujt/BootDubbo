@@ -170,7 +170,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getUamUser().getUserName());
                     }else if (ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERNOTPROVIDETRANS){
-                    }else if (ofcWarehouseInformation.getProvideTransport()== OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS){
+                    }else if (ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERNOTPROVIDETRANS){
                         logger.info("不需要提供运输");
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
