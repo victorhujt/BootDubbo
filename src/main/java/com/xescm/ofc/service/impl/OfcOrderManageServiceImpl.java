@@ -456,9 +456,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcSiloproSourceStatus ofcSiloproSourceStatus=new OfcSiloproSourceStatus();
         OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
         try {
-            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
-            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcDistributionBasicInfo);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
             planCode=ofcSiloprogramInfo.getPlanCode();

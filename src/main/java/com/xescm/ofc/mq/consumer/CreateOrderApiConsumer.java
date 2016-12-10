@@ -133,12 +133,24 @@ public class CreateOrderApiConsumer implements MessageListener {
         }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
                 logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
+
+
+
+
                 {
                     logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                     List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
                     try {
                         ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
                         for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
+
+                            if ("61".equals(tag)){
+                                //出库
+                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("出库");
+                            }else if ("62".equals(tag)){
+                                //入库
+                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("入库");
+                            }
                             ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                         }
                     } catch (Exception e) {

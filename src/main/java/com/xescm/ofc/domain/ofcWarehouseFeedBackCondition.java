@@ -15,6 +15,16 @@ public class ofcWarehouseFeedBackCondition {
      */
     private String whcBillNo;
 
+    private String buniessType;
+
+    public String getBuniessType() {
+        return buniessType;
+    }
+
+    public void setBuniessType(String buniessType) {
+        this.buniessType = buniessType;
+    }
+
     private List<OfcPlannedDetail> plannedDetails;
 
     public String getPlanCode() {
