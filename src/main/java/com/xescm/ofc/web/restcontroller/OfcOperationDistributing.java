@@ -187,7 +187,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage(),ex);
         }
     }
 
@@ -244,7 +244,7 @@ public class OfcOperationDistributing extends BaseController{
             excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,fileName);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入出错:{}",e.getMessage());
+            logger.error("城配开单Excel导入出错:{}",e.getMessage(),e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"上传成功！",excelSheet);
@@ -282,7 +282,7 @@ public class OfcOperationDistributing extends BaseController{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入校验出错:{}",e.getMessage());
+            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return result;
@@ -308,9 +308,9 @@ public class OfcOperationDistributing extends BaseController{
             bis.close();
             outputStream.close();
         } catch (IOException e) {
-            logger.error("城配开单下载模板出错{}",e.getMessage());
+            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
         } catch (Exception e){
-            logger.error("城配开单下载模板出错{}",e.getMessage());
+            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
         }
 
     }
