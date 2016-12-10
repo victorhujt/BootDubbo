@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
@@ -798,10 +799,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(PENDINGAUDIT))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEENCOMPLETED))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEENCANCELED))){
-            planCancle(orderCode,authResDtoByToken.getUamUser().getUserName());
-        if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstConstant.PENDINGAUDIT))
-                && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstConstant.HASBEENCOMPLETED))
-                && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(OrderConstConstant.HASBEENCANCELED))){
             planCancle(orderCode,authResDtoByToken.getGroupRefName());
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
