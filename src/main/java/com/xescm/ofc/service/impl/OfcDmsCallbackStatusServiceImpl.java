@@ -47,8 +47,11 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             String transCode = dmsTransferRecordDto.getTransNo();
             String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
-            ofcTransplanInfo.setOrderCode(orderCode);
+            ofcTransplanInfo.setOrderCode(orderCode);//SO161210000047
             List<OfcTransplanInfo> ofcTransplanInfoList = ofcTransplanInfoService.select(ofcTransplanInfo);
+            if(ofcTransplanInfoList.size() < 1){
+                throw new BusinessException("查不到相应运输订单");
+            }
             String planCode = ofcTransplanInfoList.get(0).getPlanCode();
             //往运输单最新状态表里更新一条记录
             OfcTransplanNewstatus ofcTransplanNewstatus = new OfcTransplanNewstatus();

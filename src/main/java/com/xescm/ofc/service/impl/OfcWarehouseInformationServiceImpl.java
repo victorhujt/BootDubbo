@@ -67,12 +67,14 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             List<RmcWarehouse> warehouseList = new ArrayList<>();
             for(CscWarehouse cscWH : result){
                 RmcWarehouse rmcWarehouse = new RmcWarehouse();
-                rmcWarehouse.setId(cscWH.getWarehouseCode());
+                rmcWarehouse.setWarehouseCode(cscWH.getWarehouseCode());
+                RmcWarehouse rmcWarehouseResult = new RmcWarehouse();
                 Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
-                    throw new BusinessException(rmcWarehouseByid.getMessage());
+                    //throw new BusinessException(rmcWarehouseByid.getMessage());
+                    continue;
                 }
-                RmcWarehouse rmcWarehouseResult = rmcWarehouseByid.getResult();
+                rmcWarehouseResult = rmcWarehouseByid.getResult();
                 if (null == rmcWarehouseResult) {
                     continue;
                 }

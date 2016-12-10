@@ -63,21 +63,43 @@ public class CreateOrderApiConsumer implements MessageListener {
         String messageBody = new String(message.getBody());
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
-            logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
-            keyList.add(key);
-            String result = null;
-            try {
-                result = createOrderService.createOrder(messageBody);
-            } catch (Exception ex) {
-                logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
-            } finally {
-                logger.info("创单api消费MQ获取message处理结束");
-                //调用MQ生产者
-                if (StringUtils.isNotBlank(result)) {
-                    String code = String.valueOf(result.hashCode());
-                    createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+            if(message.getTag().equals("exampleTag")){
+                logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
+                keyList.add(key);
+                String result = null;
+                try {
+                    result = createOrderService.createOrder(messageBody);
+                } catch (Exception ex) {
+                    logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
+                } finally {
+                    logger.info("创单api消费MQ获取message处理结束");
+                    //调用MQ生产者
+                    if (StringUtils.isNotBlank(result)) {
+                        String code = String.valueOf(result.hashCode());
+                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+                    }
+                }
+            }else if(message.getTag().equals("DMS2OFC")){
+                //接收分拣中心回传的状态
+                logger.info("分拣中心状态反馈的消息体:{}",messageBody);
+                logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
+                List<DmsTransferRecordDto> dmsTransferRecordDtoList = null;
+                try {
+                    dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
+                    for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
+                        if(keyList.contains(key)){
+                            ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
+                        }else{
+                            keyList.add(key);
+                        }
+//                        if(){dmsTransferRecordDto.hashCode();};
+
+                    }
+                }catch (Exception ex){
+                    logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage());
                 }
             }
+
         }else if(StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())){
             logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
 
@@ -146,20 +168,9 @@ public class CreateOrderApiConsumer implements MessageListener {
                     }
                 }
 
-        }else if(StringUtils.equals(topicName,mqConfig.getDmsCallbackStatusTopic())){
-            //接收分拣中心回传的状态
-            logger.info("分拣中心状态反馈的消息体:{}",messageBody);
-            logger.info("订单中心消费分拣中心状态反馈开始消费topic:{}",topicName);
-            List<DmsTransferRecordDto> dmsTransferRecordDtoList = null;
-            try {
-                dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
-                for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
-                    ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
-                }
-            }catch (Exception ex){
-                logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage());
-            }
-        }
+        }/*else if(StringUtils.equals(topicName,mqConfig.getDmsCallbackStatusTopic())){
+
+        }*/
         return Action.CommitMessage;
     }
 

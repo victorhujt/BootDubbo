@@ -2131,7 +2131,7 @@
                     custList =custList + "<td>"+channel+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
                     custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
-                    custList =custList + "<td style='display: none'>"+cscCustomerVo.id+"</td>";
+                    custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
                     custList =custList + "</tr>";
                     $("#custListDivTbody").html(custList);
                 });

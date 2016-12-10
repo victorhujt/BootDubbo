@@ -153,9 +153,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.WITHTHEKABAN)){
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
-                    }
+//                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(OrderConstConstant.WITHTHEKABAN)){
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
+//                    }
 
 
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstConstant.WAREHOUSEDISTRIBUTIONORDER)){
@@ -961,6 +961,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                         transportDetailDTO.setMoney(0.0);
                         transportDetailDTO.setUom(detail.getUnit());
+                        if(detail.getTotalBox() == null){
+                            detail.setTotalBox(0);
+                        }
                         transportDetailDTO.setContainerQty(detail.getTotalBox().toString());
                         transportDetailDTO.setStandard(PubUtils.trimAndNullAsEmpty(detail.getGoodsSpec()));
                         transportDTO.getProductDetail().add(transportDetailDTO);
@@ -968,7 +971,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
+         //       defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.YITUISONG);
@@ -1006,10 +1009,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstConstant.TRANSPORTORDER)){
                     //运输订单
+                    OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+                    ofcTransplanInfo.setProgramSerialNumber("1");
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                     if(!ofcFundamentalInformation.getBusinessType().equals(WITHTHEKABAN)){//非卡班类型直接创建运输计划单
-                        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-                        ofcTransplanInfo.setProgramSerialNumber("1");
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
+
                     }else {
                         if(PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI)){
 
