@@ -366,10 +366,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")){
                     RmcDistrictQO rmcDistrictQO=new RmcDistrictQO();
-                    rmcDistrictQO.setProvinceCode(ofcDistributionBasicInfo.getDepartureProvince());
-                    rmcDistrictQO.setCityCode(ofcDistributionBasicInfo.getDepartureCity());
-                    rmcDistrictQO.setDistrictCode(ofcDistributionBasicInfo.getDepartureDistrict());
-                    rmcDistrictQO.setCountyCode(ofcDistributionBasicInfo.getDepartureTowns());
+                    rmcDistrictQO=copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(),rmcDistrictQO);
                     RmcPickup rmcPickup=(RmcPickup)RmcPickUpOrRecipientByRmcApi(rmcDistrictQO,"Pickup");
                     if(rmcPickup!=null
                             && !PubUtils.trimAndNullAsEmpty(rmcPickup.getDispatchCode()).equals("")){
@@ -416,7 +413,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 创建运输计划单-干线、城配
+     * 创建运输计划单-卡班
      * @param ofcTransplanInfo
      * @param ofcFundamentalInformation
      * @param goodsDetailsList
