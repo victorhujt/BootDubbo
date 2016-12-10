@@ -1325,7 +1325,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                                 }else if(rmcPickup!=null
                                         && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals("")
-                                        && (rmcRecipient!=null
+                                        && (rmcRecipient==null
                                         || PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals(""))){//发货仓有信息，收货仓无
                                     //获取发货TC仓，则获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
                                     RmcWarehouse rmcWarehouse=getWareHouseByCodeToPlan(rmcPickup.getWareHouseCode());
@@ -1350,7 +1350,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                                 }else if(rmcRecipient!=null
                                         && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals("")
-                                        && (rmcPickup!=null
+                                        && (rmcPickup==null
                                         || PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals(""))){//收货仓有信息，发货仓无
                                     //获取收货TC仓信息，则获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
                                     RmcWarehouse rmcWarehouse=getWareHouseByCodeToPlan(rmcRecipient.getWareHouseCode());
@@ -1372,9 +1372,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         throw new BusinessException("获取仓库相关信息失败");
                                     }
 
-                                }else if((rmcPickup!=null
+                                }else if((rmcPickup==null
                                         || PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals(""))
-                                        && (rmcRecipient!=null
+                                        && (rmcRecipient==null
                                         || PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals(""))){//收发货仓都没有信息
                                     //创建一个运输计划单
                                     ofcTransplanInfo.setBusinessType("602");
