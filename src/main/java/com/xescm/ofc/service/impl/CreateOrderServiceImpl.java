@@ -2,9 +2,13 @@ package com.xescm.ofc.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.domain.*;
-import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.coo.*;
+import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.model.dto.coo.CreateOrderResult;
+import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
+import com.xescm.ofc.model.dto.coo.MessageDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
@@ -193,9 +197,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         } else {
             AuthResDto authResDto = new AuthResDto();
-            UamUser uamUser = new UamUser();
-            uamUser.setUserName(CREATE_ORDER_BYAPI);
-            authResDto.setUamUser(uamUser);
+            authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
             String result = ofcOrderManageService.orderCancel(orderCode, orderState, authResDto);
             if (StringUtils.equals("200", result)) {
                 cannelOrderVo.setReason("操作成功");

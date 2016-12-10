@@ -67,18 +67,18 @@
             owi.warehouse_name,
             ots.task_completion_time AS finished_time,
             CONCAT(
-                IFNULL(dbi.departure_province, ''),
-                IFNULL(dbi.departure_city, ''),
-                IFNULL(dbi.departure_district, ''),
-                IFNULL(dbi.departure_towns, ''),
-                IFNULL(dbi.departure_place, '')
+                IFNULL(oti.departure_province, ''),
+                IFNULL(oti.departure_city, ''),
+                IFNULL(oti.departure_district, ''),
+                IFNULL(oti.departure_towns, ''),
+                IFNULL(oti.shipping_address, '')
             ) AS departure,
             CONCAT(
-                IFNULL(dbi.destination_province,''),
-                IFNULL(dbi.destination_city, ''),
-                IFNULL(dbi.destination_district,''),
-                IFNULL(dbi.destination_towns, ''),
-                IFNULL(dbi.destination, '')
+                IFNULL(oti.destination_province,''),
+                IFNULL(oti.destination_city, ''),
+                IFNULL(oti.destination_district,''),
+                IFNULL(oti.destination_town, ''),
+                IFNULL(oti.receiving_customer_address,'')
             ) AS destination
         FROM
             ofc_transplan_info oti
@@ -99,7 +99,7 @@
     </select>
 
     <select id="queryPlanAndStorageTrans" resultMap="BaseResultMap">
-        SELECT
+        SELECT DISTINCT
             oti.order_code,
             oti.plan_code,
             '运输订单' AS type,
@@ -112,24 +112,24 @@
             owi.warehouse_name,
             ots.task_completion_time AS finishedTime,
             CONCAT(
-                IFNULL(dbi.departure_province, ''),
-                IFNULL(dbi.departure_city, ''),
-                IFNULL(dbi.departure_district, ''),
-                IFNULL(dbi.departure_towns, ''),
-                IFNULL(dbi.departure_place, '')
+                IFNULL(oti.departure_province, ''),
+                IFNULL(oti.departure_city, ''),
+                IFNULL(oti.departure_district, ''),
+                IFNULL(oti.departure_towns, ''),
+                IFNULL(oti.shipping_address, '')
             ) AS departure,
             CONCAT(
                 IFNULL(
-                    dbi.destination_province,
+                    oti.destination_province,
                     ''
                 ),
-                IFNULL(dbi.destination_city, ''),
+                IFNULL(oti.destination_city, ''),
                 IFNULL(
-                    dbi.destination_district,
+                    oti.destination_district,
                     ''
                 ),
-                IFNULL(dbi.destination_towns, ''),
-                IFNULL(dbi.destination, '')
+                IFNULL(oti.destination_town, ''),
+                IFNULL(oti.receiving_customer_address, '')
             ) AS destination
         FROM
             ofc_transplan_info oti

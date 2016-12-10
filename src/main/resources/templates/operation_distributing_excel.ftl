@@ -84,7 +84,7 @@
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
-                <input id="custId" value="${custId!""}" hidden/>
+                <input id="customerCode" value="${customerCode!""}" hidden/>
                 <input id="custName" value="${custName!""}" hidden/>
             </div>
         </div>
@@ -434,10 +434,10 @@
             if(uploadFileTag){
                 debugger
                 var formData = new FormData();
-                var custId = $("#custId").val();
+                var customerCode = $("#customerCode").val();
                 formData.append('file',file);
                 formData.append('fileName',fileName);
-                formData.append('custId',custId);
+                formData.append('customerCode',customerCode);
 //                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
                 var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
@@ -498,10 +498,10 @@
 
                 var sheetNum = $("#uploadExcelSheet").val();
                 var formData = new FormData();
-                var custId = $("#custId").val();
+                var customerCode = $("#customerCode").val();
                 formData.append('file',file);
                 formData.append('fileName',fileName);
-                formData.append('custId',custId);
+                formData.append('customerCode',customerCode);
                 formData.append('sheetNum',sheetNum);
 //                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
                 var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
@@ -629,9 +629,9 @@
                     }, function(index){
                         debugger
                         var excelImportTag = "confirm";
-                        var custId = $("#custId").val();
+                        var customerCode = $("#customerCode").val();
                         var custName = $("#custName").val();
-                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + custId + "/" + custName;
+                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
                         xescm.common.loadPage(url);
                         layer.close(index);
                     }, function(index){
@@ -645,8 +645,8 @@
 
         $("#ExcelNoneBtnBottom").click(function () {
             var excelImportTag = "cancel";
-            var custId = $("#custId").val();
-            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + custId;
+            var customerCode = $("#customerCode").val();
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
             xescm.common.loadPage(url);
         })
     })

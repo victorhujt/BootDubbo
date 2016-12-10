@@ -25,17 +25,13 @@ public class CscGoodsType implements Serializable {
     @GeneratedValue(generator = "UUID")
     private String id;
 
+
     /**
      * 货品类别
      */
     @Column(name = "goods_type_name")
     private String goodsTypeName;
 
-    /**
-     * 客户ID
-     */
-    @Column(name = "customer_id")
-    private String customerId;
 
     /**
      * 货品类型编码
@@ -201,13 +197,7 @@ public class CscGoodsType implements Serializable {
                 '}';
     }
 
-    public String getCustomerId() {
-        return customerId;
-    }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
 
     public String getCode() {
         return code;
@@ -232,4 +222,5 @@ public class CscGoodsType implements Serializable {
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
     }
+
 }

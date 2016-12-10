@@ -14,6 +14,11 @@ public class RmcWarehouse {
     private String id;
 
     /**
+     * rmc组织Id
+     */
+    private String rmcGroupId;
+
+    /**
      * 仓库全称
      */
     @Column(name = "warehouse_name")
@@ -32,19 +37,63 @@ public class RmcWarehouse {
     private String warehouseCode;
 
     /**
+     * 联系人
+     */
+    private  String contact;
+
+    /**
+     * 联系人电话
+     */
+    @Column(name = "contact_phone")
+    private String contacthone;
+
+    /**
      * 省
      */
+    @Column(name = "province")
     private String province;
+
+    /**
+     * 省份编码
+     */
+    @Column(name = "province_code")
+    private String provinceCode;
 
     /**
      * 市
      */
+    @Column(name = "city")
     private String city;
+
+    /**
+     * 城市编码
+     */
+    @Column(name = "city_code")
+    private String cityCode;
 
     /**
      * 区县街
      */
+    @Column(name = "area")
     private String area;
+
+    /**
+     * 地区编码
+     */
+    @Column(name = "area_code")
+    private String areaCode;
+
+    /**
+     *街道
+     */
+    @Column(name = "street")
+    private String street;
+
+    /**
+     *街道编码
+     */
+    @Column(name = "street_code")
+    private  String streetCode;
 
     /**
      * 详细地址
@@ -237,6 +286,11 @@ public class RmcWarehouse {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
+    /**
+     * 公司ID
+     */
+    private String companyId;
 
 
     /**
@@ -972,6 +1026,18 @@ public class RmcWarehouse {
     }
 
     /**
+     * 公司ID
+     * @return
+     */
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    /**
      * 设置最后操作人ID
      *
      * @param lastOperatorId 最后操作人ID
@@ -1011,31 +1077,102 @@ public class RmcWarehouse {
         this.groupId = groupId;
     }
 
+    public String getRmcGroupId() {
+        return rmcGroupId;
+    }
+
+    public void setRmcGroupId(String rmcGroupId) {
+        this.rmcGroupId = rmcGroupId;
+    }
+
+    public String getProvinceCode() {
+        return provinceCode;
+    }
+
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getContacthone() {
+        return contacthone;
+    }
+
+    public void setContacthone(String contacthone) {
+        this.contacthone = contacthone;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getStreetCode() {
+        return streetCode;
+    }
+
+    public void setStreetCode(String streetCode) {
+        this.streetCode = streetCode;
+    }
+
     @Override
     public String toString() {
         return "RmcWarehouse{" +
-                "id=" + id +
+                "id='" + id + '\'' +
+                ", rmcGroupId='" + rmcGroupId + '\'' +
                 ", warehouseName='" + warehouseName + '\'' +
                 ", warehouseAbbreviation='" + warehouseAbbreviation + '\'' +
-                ", warehouseCode=" + warehouseCode +
+                ", warehouseCode='" + warehouseCode + '\'' +
+                ", contact='" + contact + '\'' +
+                ", contacthone='" + contacthone + '\'' +
                 ", province='" + province + '\'' +
+                ", provinceCode='" + provinceCode + '\'' +
                 ", city='" + city + '\'' +
+                ", cityCode='" + cityCode + '\'' +
                 ", area='" + area + '\'' +
+                ", areaCode='" + areaCode + '\'' +
+                ", street='" + street + '\'' +
+                ", streetCode='" + streetCode + '\'' +
                 ", detailedAddress='" + detailedAddress + '\'' +
                 ", longitude='" + longitude + '\'' +
                 ", dimension='" + dimension + '\'' +
                 ", type='" + type + '\'' +
-                ", architectureArea=" + architectureArea +
-                ", utilizationArea=" + utilizationArea +
+                ", architectureArea='" + architectureArea + '\'' +
+                ", utilizationArea='" + utilizationArea + '\'' +
                 ", reserves='" + reserves + '\'' +
                 ", attribute='" + attribute + '\'' +
                 ", capacitySquareMetre='" + capacitySquareMetre + '\'' +
                 ", capacityCube='" + capacityCube + '\'' +
                 ", capacityTray='" + capacityTray + '\'' +
-                ", deliveryTime=" + deliveryTime +
-                ", sortingArea=" + sortingArea +
-                ", sortingTime=" + sortingTime +
-                  '\'' +
+                ", deliveryTime='" + deliveryTime + '\'' +
+                ", sortingArea='" + sortingArea + '\'' +
+                ", sortingTime='" + sortingTime + '\'' +
                 ", squareMetre='" + squareMetre + '\'' +
                 ", parkingLot='" + parkingLot + '\'' +
                 ", forklift='" + forklift + '\'' +
@@ -1056,6 +1193,8 @@ public class RmcWarehouse {
                 ", lastOperator='" + lastOperator + '\'' +
                 ", lastOperatorId='" + lastOperatorId + '\'' +
                 ", updateTime=" + updateTime +
+                ", companyId='" + companyId + '\'' +
+                ", yn=" + yn +
                 ", groupId='" + groupId + '\'' +
                 '}';
     }
