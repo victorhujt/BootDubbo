@@ -1,12 +1,12 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
@@ -86,10 +86,10 @@ public class OfcOrderFollowRest extends BaseController{
         logger.debug("==>订单中心订单详情code code={}", code);
         logger.debug("==>订单中心订单详情标志位 followTag={}", followTag);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
+//        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+//        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+//        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+//        String custId = (String) wrapper.getResult();
         OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
         //List<OfcOrderStatus> ofcOrderStatuses = new ArrayList<OfcOrderStatus>();
         List<OfcOrderStatus> ofcOrderStatuses = new ArrayList<>();
@@ -128,7 +128,7 @@ public class OfcOrderFollowRest extends BaseController{
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
                 if("62".equals(businessTypeHead)){
                     if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getSupportName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getSupportContactName()) ){
-                        supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),custId,authResDtoByToken);
+                        supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),authResDtoByToken.getGroupRefCode(),authResDtoByToken);
                     }
                 }
             }
@@ -140,8 +140,6 @@ public class OfcOrderFollowRest extends BaseController{
         map.put("ofcOrderDTO",ofcOrderDTO);
         map.put("orderStatusList",ofcOrderStatuses);
         map.put("goodsDetailsList",goodsDetailsList);
-        //map.put("consignorMessage",consignorMessage);
-        //map.put("consigneeMessage",consigneeMessage);
         map.put("supportMessage",supportMessage);
         if("orderManage".equals(historyUrlTag)){
             map.put("historyUrl",historyUrlTag);

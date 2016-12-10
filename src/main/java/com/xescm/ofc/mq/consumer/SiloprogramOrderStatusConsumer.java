@@ -1,23 +1,20 @@
 package com.xescm.ofc.mq.consumer;
 
-import java.util.List;
-
-import com.xescm.ofc.service.OfcSiloproStatusService;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
-import com.xescm.ofc.service.impl.OfcSiloproStatusServiceImpl;
+import com.xescm.ofc.service.OfcSiloproStatusService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 //@Component
 public class SiloprogramOrderStatusConsumer extends BaseController implements MessageListener{

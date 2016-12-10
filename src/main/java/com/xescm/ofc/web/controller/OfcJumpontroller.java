@@ -1,14 +1,18 @@
 package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.OfcMerchandiser;
-import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.model.dto.csc.QueryStoreDto;
-import com.xescm.ofc.model.vo.csc.CscStorevo;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
+import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
+import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -49,14 +53,6 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
 
-    public String getCustId() {
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
-        return custId;
-    }
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
@@ -64,13 +60,13 @@ public class OfcJumpontroller extends BaseController{
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);
         try{
-
-            String custId = getCustId();
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
             QueryStoreDto queryStoreDto = new QueryStoreDto();
-            queryStoreDto.setCustomerId(custId);
+            String customerCode = authResDtoByToken.getGroupRefCode();
+            queryStoreDto.setCustomerCode(customerCode);
             Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
@@ -127,6 +123,8 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
+    @Autowired
+    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
     /**
      * 城配开单
      * @param model
@@ -134,6 +132,7 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
+
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         map.put("merchandiserList",merchandiserList);
         map.put("currentTime",new Date());
@@ -148,16 +147,16 @@ public class OfcJumpontroller extends BaseController{
      * @param map
      * @return
      */
-    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{custId}/{custName}")
-    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String custId, @PathVariable String custName , Map<String,Object> map){
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{customerCode}/{custName}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String customerCode, @PathVariable String custName , Map<String,Object> map){
         logger.info("城配开单Excel导入==> historyUrl={}", historyUrl);
-        logger.info("城配开单Excel导入==> custId={}", custId);
+        logger.info("城配开单Excel导入==> custId={}", customerCode);
         if("operation_distributing".equals(historyUrl)){
             historyUrl = "/ofc/operationDistributing";
         }
         setDefaultModel(model);
         map.put("historyUrl",historyUrl);
-        map.put("custId",custId);
+        map.put("customerCode",customerCode);
         map.put("custName",custName);
         return "operation_distributing_excel";
     }
@@ -168,14 +167,14 @@ public class OfcJumpontroller extends BaseController{
      * @param excelImportTag
      * @return
      */
-    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{custId}/{custName}")
-    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String custId, @PathVariable String custName){
+    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}/{custName}")
+    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode, @PathVariable String custName){
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         setDefaultModel(model);
         model.addAttribute("merchandiserList",merchandiserList);
         model.addAttribute("currentTime",new Date());
         model.addAttribute("excelImportTag",excelImportTag);
-        model.addAttribute("custIdFromExcelImport",custId);
+        model.addAttribute("custIdFromExcelImport",customerCode);
         model.addAttribute("custNameFromExcelImport",custName);
         return "operation_distributing";
     }

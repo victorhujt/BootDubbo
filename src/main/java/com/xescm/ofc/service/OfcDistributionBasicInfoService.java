@@ -13,4 +13,6 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     OfcDistributionBasicInfo distributionBasicInfoSelect(String code);
 
     String getOrderCodeByTransCode(String transCode);
+
+    String getKabanOrderCodeByTransCode(String transCode);
 }

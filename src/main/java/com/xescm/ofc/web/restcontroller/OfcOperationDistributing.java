@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
@@ -25,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -109,16 +109,16 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据选择的客户查询仓库
-     * @param custId
+     * @param customerCode
      * @param model
      * @param response
      */
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
     @ResponseBody
-    public void queryCustomerByName(String custId,Model model,HttpServletResponse response){
-        logger.info("==> custId={}", custId);
+    public void queryCustomerByName(String customerCode,Model model,HttpServletResponse response){
+        logger.info("==> customerCode={}", customerCode);
         try{
-            List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
         }catch (Exception ex){
             logger.error("城配下单查询仓库列表失败!{}",ex.getMessage(),ex);
@@ -127,18 +127,16 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据选择的客户查询货品一级种类
-     * @param custId
+     * @param customerCode
      * @param model
      * @param response
      */
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsTypeByCustId(String custId,Model model,HttpServletResponse response){
-        logger.info("==> custId={}", custId);
+    public void queryGoodsTypeByCustId(String customerCode,Model model,HttpServletResponse response){
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             CscGoodsType cscGoodsType = new CscGoodsType();
-            cscGoodsType.setCustomerId(custId);
             wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
@@ -149,21 +147,19 @@ public class OfcOperationDistributing extends BaseController{
     }
 
     /**
-     * 根据选择的客户和货品一级种类查询货品小类
-     * @param custId
+     * 根据选择的客户和货品一级种类查询货品二级小类
+     * @param customerCode
      * @param goodsType
      * @param model
      * @param response
      */
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsSecTypeByCAndT(String custId, String goodsType,Model model,HttpServletResponse response){
-        logger.info("==> custId={}", custId);
+    public void queryGoodsSecTypeByCAndT(String customerCode, String goodsType,Model model,HttpServletResponse response){
         logger.info("==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             CscGoodsType cscGoodsType = new CscGoodsType();
-            cscGoodsType.setCustomerId(custId);
             cscGoodsType.setPid(goodsType);
             wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
@@ -178,6 +174,7 @@ public class OfcOperationDistributing extends BaseController{
      * 查询货品列表
      * @param cscGoodsApiDto
      * @param response
+     * 2.0:前端还需再根据未修改的接口再把customerId改了!
      */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
@@ -190,7 +187,7 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage());
+            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage(),ex);
         }
     }
 
@@ -247,7 +244,7 @@ public class OfcOperationDistributing extends BaseController{
             excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,fileName);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入出错:{}",e.getMessage());
+            logger.error("城配开单Excel导入出错:{}",e.getMessage(),e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"上传成功！",excelSheet);
@@ -270,10 +267,10 @@ public class OfcOperationDistributing extends BaseController{
             String[] filePathName = multipartHttpServletRequest.getParameter("fileName").split("\\.");
             String[] split = filePathName[0].split("\\\\");
             String fileName = split[split.length - 1] + "." + filePathName[1];
-            String custId = multipartHttpServletRequest.getParameter("custId");
+            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
             String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
             //校验
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,fileName,sheetNum,authResDto,custId,5);
+            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,fileName,sheetNum,authResDto,customerCode,5);
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
@@ -285,7 +282,7 @@ public class OfcOperationDistributing extends BaseController{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入校验出错:{}",e.getMessage());
+            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return result;
@@ -311,9 +308,9 @@ public class OfcOperationDistributing extends BaseController{
             bis.close();
             outputStream.close();
         } catch (IOException e) {
-            logger.error("城配开单下载模板出错{}",e.getMessage());
+            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
         } catch (Exception e){
-            logger.error("城配开单下载模板出错{}",e.getMessage());
+            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
         }
 
     }

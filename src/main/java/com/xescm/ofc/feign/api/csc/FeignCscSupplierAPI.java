@@ -26,6 +26,7 @@ public interface FeignCscSupplierAPI {
      * @param cscSupplierInfoDto
      * @return
      */
+    @Deprecated
     @RequestLine("POST /api/csc/supplier/addSupplierByCustomerId")
     @Headers("Content-Type: application/json")
     public Wrapper<?> addSupplierBySupplierCode(CscSupplierInfoDto cscSupplierInfoDto);
