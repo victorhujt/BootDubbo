@@ -122,10 +122,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                         String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
                         if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
-                            Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
+                            /*Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
                             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                                 throw new BusinessException(wrapper.getMessage());
-                            }
+                            }*/
                            // saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
 
                         }
@@ -233,10 +233,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                     //入库
                     if("62".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
-                        Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
+                       /* Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
                         if(Wrapper.ERROR_CODE == wrapper.getCode()){
                             throw new BusinessException(wrapper.getMessage());
-                        }
+                        }*/
                         //String saveSupportMessageResult = saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
                     }
                     //出库
