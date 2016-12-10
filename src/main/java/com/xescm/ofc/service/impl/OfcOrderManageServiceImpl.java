@@ -178,6 +178,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
                         siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
                     }else if (ofcWarehouseInformation.getProvideTransport()== OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS){
+                        logger.info("不需要提供运输");
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
                        String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
@@ -185,6 +186,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         List <OfcSiloprogramInfoVo> infos= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,OrderConstConstant.ZIYUANFENPEIZ);
                         List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
                         if(infos!=null&&infos.size()>0){
+                            logger.info("开始推送到仓储计划单");
                         sendToWhc(infos.get(0),pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
                         }else{
                             logger.debug("仓储计划单不存在");
@@ -456,10 +458,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcSiloproSourceStatus ofcSiloproSourceStatus=new OfcSiloproSourceStatus();
         OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
         try {
-            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
-            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
-            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcDistributionBasicInfo);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
+            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
             planCode=ofcSiloprogramInfo.getPlanCode();
             ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());

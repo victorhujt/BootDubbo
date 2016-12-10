@@ -5,7 +5,6 @@ import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
@@ -14,7 +13,6 @@ import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.service.OfcSiloproStatusService;
 import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -155,12 +153,24 @@ public class CreateOrderApiConsumer implements MessageListener {
         }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
                 logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
+
+
+
+
                 {
                     logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                     List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
                     try {
                         ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
                         for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
+
+                            if ("61".equals(tag)){
+                                //出库
+                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("出库");
+                            }else if ("62".equals(tag)){
+                                //入库
+                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("入库");
+                            }
                             ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                         }
                     } catch (Exception e) {
