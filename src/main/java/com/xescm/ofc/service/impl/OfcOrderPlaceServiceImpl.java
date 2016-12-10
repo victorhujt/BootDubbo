@@ -378,9 +378,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("未知操作!系统无法识别!");
             }
         } catch (BusinessException e) {
-            throw new BusinessException(e.getMessage());
+            throw new BusinessException(e.getMessage(), e);
         } catch (Exception e){
-            throw new BusinessException(e.getMessage());
+            throw new BusinessException(e.getMessage(), e);
         }
         if("place".equals(tag) || "tranplace".equals(tag)){
             return "您已成功下单!";
@@ -597,6 +597,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("保存仓库信息失败");
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             throw new BusinessException("保存仓库信息失败!");
         }
         return Wrapper.SUCCESS_MESSAGE;
