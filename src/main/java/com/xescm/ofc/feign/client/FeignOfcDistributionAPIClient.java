@@ -41,7 +41,7 @@ public class FeignOfcDistributionAPIClient {
         try {
             wrapper = getApi().addDistributionBasicInfo(ofcDistributionBasicInfo);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return wrapper;
     }

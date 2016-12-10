@@ -277,7 +277,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 companyList = companySelByApi(rmcCompanyLineQO);
 
             }catch (Exception ex){
-                throw new BusinessException(companyList.getMessage());
+                throw new BusinessException(companyList.getMessage(), ex);
             }
 
             if(companyList.getCode()==200
@@ -401,7 +401,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
 
         }catch (Exception e) {
-            throw new BusinessException(e.getMessage());
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
@@ -478,7 +478,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 companyList = companySelByApi(rmcCompanyLineQO);
 
             }catch (Exception ex){
-                throw new BusinessException(companyList.getMessage());
+                throw new BusinessException(companyList.getMessage(), ex);
             }
 
             if(companyList.getCode()==200
@@ -555,7 +555,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             //更改计划单状态为执行中//###
         }catch (Exception e) {
-            throw new BusinessException(e.getMessage());
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
@@ -581,7 +581,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
             ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
 
     }
@@ -835,7 +835,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException(listWrapper.getMessage());
             }
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         if(listWrapper.getResult().size() < 1 ){
             if(CONTACTPURPOSECONSIGNOR.equals(purpose)){
@@ -863,7 +863,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException("查询供应商接口返回结果为null");
             }
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         if(listWrapper.getResult().size() < 1){
             throw new BusinessException("没有查到该供应商的信息!");
@@ -991,7 +991,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try{
             rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
         }catch (Exception ex){
-            throw new BusinessException("服务商查询出错");
+            throw new BusinessException("服务商查询出错", ex);
         }
         return rmcCompanyLists;
     }
@@ -1387,7 +1387,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 throw new BusinessException("订单信息是否上门提货或是否二次配送传值有误，请检查");
                             }
                         }catch (Exception e){
-                            throw new BusinessException("复制值发生错误");
+                            throw new BusinessException("复制值发生错误", e);
                         }
 
                     }

@@ -598,7 +598,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            throw new BusinessException("保存仓库信息失败!");
+            throw new BusinessException("保存仓库信息失败!", ex);
         }
         return Wrapper.SUCCESS_MESSAGE;
     }
