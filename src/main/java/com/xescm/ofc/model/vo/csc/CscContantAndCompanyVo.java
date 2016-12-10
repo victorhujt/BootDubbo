@@ -12,7 +12,7 @@ public class CscContantAndCompanyVo implements Serializable {
 
     private String contactCompanyName;
     private String type;
-    private String contactCompanyId;
+    private String contactCompanyCode;
     private String contactCode;
     private String id;
     private String version;
@@ -40,6 +40,14 @@ public class CscContantAndCompanyVo implements Serializable {
     private String lastOperatorId;
     private Date updateTime;
 
+    public String getContactCompanyCode() {
+        return contactCompanyCode;
+    }
+
+    public void setContactCompanyCode(String contactCompanyCode) {
+        this.contactCompanyCode = contactCompanyCode;
+    }
+
     public String getStreetName() {
         return streetName;
     }
@@ -64,13 +72,7 @@ public class CscContantAndCompanyVo implements Serializable {
         this.type = type;
     }
 
-    public String getContactCompanyId() {
-        return contactCompanyId;
-    }
 
-    public void setContactCompanyId(String contactCompanyId) {
-        this.contactCompanyId = contactCompanyId;
-    }
 
     public String getContactCode() {
         return contactCode;
@@ -272,37 +274,5 @@ public class CscContantAndCompanyVo implements Serializable {
         this.detailAddress = detailAddress;
     }
 
-    @Override
-    public String toString() {
-        return "CscContantAndCompanyVo{" +
-                "contactCompanyName='" + contactCompanyName + '\'' +
-                ", type='" + type + '\'' +
-                ", contactCompanyId='" + contactCompanyId + '\'' +
-                ", contactCode='" + contactCode + '\'' +
-                ", id='" + id + '\'' +
-                ", version='" + version + '\'' +
-                ", phone='" + phone + '\'' +
-                ", fax='" + fax + '\'' +
-                ", email='" + email + '\'' +
-                ", contactName='" + contactName + '\'' +
-                ", postCode='" + postCode + '\'' +
-                ", province='" + province + '\'' +
-                ", provinceName='" + provinceName + '\'' +
-                ", city='" + city + '\'' +
-                ", cityName='" + cityName + '\'' +
-                ", area='" + area + '\'' +
-                ", areaName='" + areaName + '\'' +
-                ", street='" + street + '\'' +
-                ", address='" + address + '\'' +
-                ", detailAddress='" + detailAddress + '\'' +
-                ", contactJob='" + contactJob + '\'' +
-                ", purpose='" + purpose + '\'' +
-                ", creator='" + creator + '\'' +
-                ", creatorId='" + creatorId + '\'' +
-                ", createdTime=" + createdTime +
-                ", lastOperator='" + lastOperator + '\'' +
-                ", lastOperatorId='" + lastOperatorId + '\'' +
-                ", updateTime=" + updateTime +
-                '}';
-    }
+
 }

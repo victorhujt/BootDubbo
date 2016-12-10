@@ -1752,7 +1752,7 @@
                     $("#consignorName").val(CscContantAndCompanyDto.contactCompanyName);
                     $("#consignorContactName").val(CscContantAndCompanyDto.contactName);
                     $("#consignorPhone").val(CscContantAndCompanyDto.phone);
-                    $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+                    $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
                     $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                     $("#consignorType").val(CscContantAndCompanyDto.type);
                     $("#consignorAddress").val(CscContantAndCompanyDto.address);
@@ -1793,7 +1793,7 @@
                     $("#consigneeName").val(CscContantAndCompanyDto.contactCompanyName);
                     $("#consigneeContactName").val(CscContantAndCompanyDto.contactName);
                     $("#consigneePhone").val(CscContantAndCompanyDto.phone);
-                    $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                    $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
                     $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                     $("#consigneeType").val(CscContantAndCompanyDto.type);
                     $("#consigneeAddress").val(CscContantAndCompanyDto.address);
@@ -2230,7 +2230,7 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyCode;
                     consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
                     consignorTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
@@ -2265,7 +2265,7 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyCode;
                     consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
                     consigneeTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
@@ -2317,7 +2317,7 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
                             $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
@@ -2376,7 +2376,7 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
                             $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);

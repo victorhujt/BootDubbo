@@ -377,10 +377,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
-                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyId();
+                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
                                         String consigneeContactCode = cscContantAndCompanyVo.getId();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            continue;
+                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                         }
                                         String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                         jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
@@ -592,10 +592,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
-                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyId();
+                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
                                         String consigneeContactCode = cscContantAndCompanyVo.getId();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            continue;
+                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
+//                                            continue;
                                         }
                                         String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                         jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
@@ -619,7 +620,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                             }
                         }
                     }
-                    if(rowNum > 0){//避免第一行
+                    if(rowNum > 0){             //避免第一行
                         resultMap.put(mapKey,jsonArray);//一条结果
                     }
                 }
