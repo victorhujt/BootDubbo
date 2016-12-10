@@ -344,7 +344,6 @@
         $("#specificationDiv").val(specification);
         $("#unitDiv").val(unit);
 
-
         //最后提交订单的时候做个校验, 如果货品的需求数量为0就提示!
         //显示收货人信息
         var consignorout = "";
@@ -359,12 +358,15 @@
             var mapKey = goodsCode + "@" + goodsIndex;
             var num = "0";
 
+
             if(undefined != viewMap.get(mapKey)){
                 
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
+                console.log(cadj)
                 num = preGoodsAndConsigneeJsonMsg[cadj];
+                console.log(num)
             }
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -438,8 +440,8 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
-//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
                     url: url,
@@ -503,8 +505,8 @@
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
                 formData.append('sheetNum',sheetNum);
-//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -566,7 +568,7 @@
                                                 "<td>" + data.phone + "</td>" +
                                                 "<td>" + data.detailAddress + "</td>" +
                                                 "<td style='display:none'>" + data.type + "</td>" +
-                                                "<td style='display:none'>" + data.contactCompanyId + "</td>" +
+                                                "<td style='display:none'>" + data.contactCompanyCode + "</td>" +
                                                 "<td style='display:none'>" + data.id + "</td>" +
                                                 "</tr>");
                                     }

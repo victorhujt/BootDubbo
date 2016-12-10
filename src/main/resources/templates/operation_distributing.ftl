@@ -765,7 +765,7 @@
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
                         "<td style='display:none'>" + consignee.type + "</td>" +
-                        "<td style='display:none'>" + consignee.contactCompanyId + "</td>" +
+                        "<td style='display:none'>" + consignee.contactCompanyCode + "</td>" +
                         "<td style='display:none'>" + consignee.id + "</td>" +
                         "<td style='display:none'>" + consignee.phone + "</td>" +
                         "<td style='display:none'>" + consignee.province + "</td>" +
@@ -1380,7 +1380,7 @@
                 var contactsNumber = tdArr.eq(4).text();//    联系电话
                 var detailaddress = tdArr.eq(5).text();//    地址
                 var type = tdArr.eq(6).text();
-                var contactCompanyId = tdArr.eq(7).text();
+                var contactCompanyCode = tdArr.eq(7).text();
                 var contactCode = tdArr.eq(8).text();
                 var phone = tdArr.eq(9).text();
                 var province = tdArr.eq(10).text();
@@ -1398,7 +1398,7 @@
                 $("#consignorContactPhone").val(contactsNumber);
                 $("#consignorContactAddress").val(detailaddress);
                 $("#consignorType").val(type);
-                $("#consignorContactCompanyId").val(contactCompanyId);
+                $("#consignorContactCompanyId").val(contactCompanyCode);
                 $("#consignorContactCode").val(contactCode);
                 $("#consignorPhone").val(phone);
                 $("#consignorProvince").val(province);
