@@ -6,18 +6,12 @@ import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
-import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.dto.csc.*;
-import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignAddressInterfaceClient;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.model.dto.csc.*;
+import com.xescm.ofc.feign.client.*;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
+import com.xescm.ofc.model.dto.csc.CscGoodsType;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
@@ -167,8 +161,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
             OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            logger.info(cscContantAndCompanyDtoConsignorStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            logger.info(cscContantAndCompanyDtoConsigneeStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            if(cscContantAndCompanyDtoConsignor==null){
+                throw new Exception("发货方转换有误");
+            }
+            if(cscContantAndCompanyDtoConsignee==null){
+                throw new Exception("发货方转换有误");
+            }
             CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){

@@ -1,5 +1,6 @@
 package com.xescm.ofc;
 
+import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.domain.feign.FeignUamAPIClient;
 import com.xescm.uam.utils.jwt.AppkeyLoader;
 import com.xescm.uam.utils.jwt.SimpleCORSFilter;
@@ -59,6 +60,9 @@ public class XescmOfcApplication {
 	public AuthViewInterceptor authViewInterceptor(){
 		return new AuthViewInterceptor();
 	}
+
+	@Bean
+	public AuthRequestInterceptor authRequestInterceptor() { return new AuthRequestInterceptor();}
 
 	@Bean
 	public AppkeyLoader appkeyLoader(){

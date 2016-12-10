@@ -21,7 +21,7 @@ public interface FeignRmcPickUpOrRecipientAPI {
      * @param rmcDistrictQO
      * @return
      */
-    @RequestLine("POST /rmc/district/queryPickUp")
+    @RequestLine("POST /api/rmc/district/queryPickUp")
     @Headers("Content-Type: application/json")
     public Wrapper<List<RmcPickup>> queryPickUp(RmcDistrictQO rmcDistrictQO);
 
@@ -30,7 +30,7 @@ public interface FeignRmcPickUpOrRecipientAPI {
      * @param rmcDistrictQO
      * @return
      */
-    @RequestLine("POST /rmc/district/queryRecipient")
+    @RequestLine("POST /api/rmc/district/queryRecipient")
     @Headers("Content-Type: application/json")
     public Wrapper<List<RmcRecipient>> queryRecipient(RmcDistrictQO rmcDistrictQO);
 }

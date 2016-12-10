@@ -26,10 +26,11 @@ public class FeignWhcSiloprogramAPIClient {
 
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
     public FeignWhcOrderAPI getApi() {
         FeignWhcOrderAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(FeignWhcOrderAPI.class, restConfig.getWhcUrl());
         return res;
@@ -43,7 +44,7 @@ public class FeignWhcSiloprogramAPIClient {
         try {
             response = getApi().cancelOrder(cancelOrderDTO);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return response;
     }

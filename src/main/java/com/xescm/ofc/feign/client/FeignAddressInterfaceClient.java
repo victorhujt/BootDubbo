@@ -3,6 +3,7 @@ package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.model.dto.addr.QueryAddress;
 import com.xescm.ofc.feign.api.addr.AddressInterface;
+import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
@@ -23,10 +24,14 @@ public class FeignAddressInterfaceClient {
     @Resource
     RestConfig restConfig;
 
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
+
+
 
     public AddressInterface getApi() {
         AddressInterface res = Feign.builder()
-               /* .requestInterceptor(new AuthRequestInterceptor())*/
+                .requestInterceptor(authRequestInterceptor)
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(AddressInterface.class, restConfig.getAddrUrl());

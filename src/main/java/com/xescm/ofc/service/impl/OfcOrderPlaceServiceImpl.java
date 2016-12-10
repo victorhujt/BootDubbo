@@ -15,7 +15,6 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,38 +27,76 @@ import java.util.List;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
+ * 订单下单相关处理Service
  * Created by ydx on 2016/10/12.
  */
 @Service
 @Transactional//既能注解在方法上,也能注解在类上.当注解在类上的时候,意味着这个类的所有public方法都是开启事务的,如果类级别和方法级别同事使用了该注解,则方法覆盖类.
 //@Transactional(rollbackFor={xxx.class})
 public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-    @Autowired
+    @Resource
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Autowired
+    @Resource
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcMerchandiserService ofcMerchandiserService;
     @Resource
     private CodeGenUtils codeGenUtils;
 
-    ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper = new ModelMapper();
+
+
+    /**
+     * 根据四级判断设置城配或者干线处理
+     * @param ofcDistributionBasicInfo 运输信息
+     * @param ofcFundamentalInformation 基本信息
+     */
+    private void setCityOrTrunk(OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFundamentalInformation ofcFundamentalInformation){
+        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
+            String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
+            String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
+            if(depatrueCode.equals(destinationCode)){
+                ofcFundamentalInformation.setBusinessType(WITHTHECITY);
+            }else {
+                ofcFundamentalInformation.setBusinessType(WITHTHETRUNK);
+            }
+        }else{
+            throw new BusinessException("四级地址编码为空!");
+        }
+    }
+
+    /**
+     * 保存货品详情
+     * @param ofcGoodsDetailsInfos 订单货品明细信息
+     * @param ofcFundamentalInformation 基本信息
+     */
+    private void saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation){
+        for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+            String orderCode = ofcFundamentalInformation.getOrderCode();
+            ofcGoodsDetails.setOrderCode(orderCode);
+            ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+            ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+            ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+            ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+        }
+    }
 
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken, String custId
@@ -84,7 +121,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
-        try {
             if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
                 int custOrderCode = 0;
                 if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
@@ -119,7 +155,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                             saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
                         }
                         // 更新仓配信息
-                        ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                        upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                         String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
                         if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
                             /*Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
@@ -142,17 +178,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         //校验运输基本信息
                         checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                         //运输订单
-                        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                            String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
-                            String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
-                            if(depatrueCode.equals(destinationCode)){
-                                ofcFundamentalInformation.setBusinessType(WITHTHECITY);
-                            }else {
-                                ofcFundamentalInformation.setBusinessType(WITHTHETRUNK);
-                            }
-                        }else{
-                            throw new BusinessException("四级地址编码为空!");
-                        }
+                        //设置城配或者干线 add by wangst
+                        setCityOrTrunk(ofcDistributionBasicInfo,ofcFundamentalInformation);
                        // ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHEKABAN);
 
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
@@ -165,16 +192,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单已创建");
                     upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
-                    //添加该订单的货品信息
-                    for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
-                        String orderCode = ofcFundamentalInformation.getOrderCode();
-                        ofcGoodsDetails.setOrderCode(orderCode);
-                        ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
-                        ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
-                        ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
-                        ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-                        ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
-                    }
+                    //添加该订单的货品信息 modify by wangst 做抽象处理
+                    saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
                     //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                     if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
@@ -212,7 +231,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         //校验运输基本信息
                         checkDistibutionBaseMsg(ofcDistributionBasicInfo);
                         //如果编辑订单后, 还是需要提供运输, 就要更新运输信息
-                        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                        upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                         /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
                         OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
@@ -230,7 +249,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
                     }
                     // 更新仓配信息
-                    ofcWarehouseInformation=upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                    upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                     //入库
                     if("62".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
                        /* Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
@@ -266,23 +285,14 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     ofcWarehouseInformationService.delete(ofcWarehouseInformationForTrans);
                     //更新运输信息
-                    ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+                    upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                     /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                     saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
                     OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
                     ofcDist.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
-                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                        String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
-                        String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
-                        if(depatrueCode.equals(destinationCode)){
-                            ofcFundamentalInformation.setBusinessType(WITHTHECITY);
-                        }else {
-                            ofcFundamentalInformation.setBusinessType(WITHTHETRUNK);
-                        }
-                    }else{
-                        throw new BusinessException("四级地址编码为空!");
-                    }
+                    //设置城配或者干线 add by wangst
+                    setCityOrTrunk(ofcDistributionBasicInfo,ofcFundamentalInformation);
                     if(select.size() > 0){//有运输信息
                         ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     }else if (select.size() < 0){
@@ -295,16 +305,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
                 ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
                 ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
-                //添加该订单的货品信息
-                for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
-                    String orderCode = ofcFundamentalInformation.getOrderCode();
-                    ofcGoodsDetails.setOrderCode(orderCode);
-                    ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
-                    ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
-                    ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
-                    ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-                    ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
-                }
+                //添加该订单的货品信息 modify by wangst 做抽象处理
+                saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
 
 
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
@@ -377,11 +379,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }else {
                 throw new BusinessException("未知操作!系统无法识别!");
             }
-        } catch (BusinessException e) {
-            throw new BusinessException(e.getMessage(), e);
-        } catch (Exception e){
-            throw new BusinessException(e.getMessage(), e);
-        }
         if("place".equals(tag) || "tranplace".equals(tag)){
             return "您已成功下单!";
         }else if("manage".equals(tag)){
@@ -393,11 +390,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     /**
      * 更新并保存订单状态
-     * @param ofcOrderStatus
-     * @param ofcFundamentalInformation
-     * @param authResDtoByToken
+     * @param ofcOrderStatus 订单状态信息
+     * @param ofcFundamentalInformation 基本信息
+     * @param authResDtoByToken 登录的授权DTO
      */
-    public void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
+    private void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
@@ -408,15 +405,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     /**
      * 添加财务信息
-     * @param ofcFinanceInformation
-     * @param ofcFundamentalInformation
+     * @param ofcFinanceInformation 财务信息
+     * @param ofcFundamentalInformation 基本信息
      */
-    public void addFinanceInformation(OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation){
+    private void addFinanceInformation(OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation){
         ofcFinanceInformation=upFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
         ofcFinanceInformationService.save(ofcFinanceInformation);
     }
 
-    public OfcFinanceInformation upFinanceInformation(OfcFinanceInformation ofcFinanceInformation
+    private OfcFinanceInformation upFinanceInformation(OfcFinanceInformation ofcFinanceInformation
             ,OfcFundamentalInformation ofcFundamentalInformation){
 //        ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
         ofcFinanceInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
@@ -429,15 +426,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     /**
      * 添加运输订单
-     * @param ofcDistributionBasicInfo
-     * @param ofcFundamentalInformation
+     * @param ofcDistributionBasicInfo 运输信息
+     * @param ofcFundamentalInformation 订单基本信息
      */
-    public void addDistributionInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation){
-        ofcDistributionBasicInfo=upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+    private void addDistributionInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation){
+        upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
+        ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
         ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
     }
 
-    public OfcDistributionBasicInfo upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo
+    private void upDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo
             ,OfcFundamentalInformation ofcFundamentalInformation){
 //        ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode().replace("SO","TSO"));
 //        ofcFundamentalInformation.setSecCustCode("001");
@@ -456,10 +454,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("向分拣中心推送卡班订单失败");
             }
         }*/
-        return ofcDistributionBasicInfo;
     }
 
-    public OfcWarehouseInformation upOfcWarehouseInformation(OfcWarehouseInformation ofcWarehouseInformation
+    private void upOfcWarehouseInformation(OfcWarehouseInformation ofcWarehouseInformation
             ,OfcFundamentalInformation ofcFundamentalInformation){
         /*ofcWarehouseInformation.setSupportCode("001");
         ofcWarehouseInformation.setSupportName("众品");*/
@@ -468,7 +465,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
         ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOperTime());
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
-        return ofcWarehouseInformation;
     }
 
     /**
@@ -587,7 +583,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     /**
      * 下单或编辑时在订单中心为用户保存订单中的仓库信息
      */
-    public String saveWarehouseMessage(OfcWarehouseInformation ofcWarehouseInformation){
+    private String saveWarehouseMessage(OfcWarehouseInformation ofcWarehouseInformation){
         if(null == ofcWarehouseInformation){
             return "未添加仓库信息";
         }
@@ -598,7 +594,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            throw new BusinessException("保存仓库信息失败!");
+            throw new BusinessException("保存仓库信息失败!", ex);
         }
         return Wrapper.SUCCESS_MESSAGE;
     }
@@ -617,7 +613,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param cscContantAndCompanyDtoConsignee
      * @return
      */
-    public Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
+    private Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
+        if(null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参为空");
+        }
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompany() || null == cscContantAndCompanyDtoConsignee.getCscContactCompany()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方信息为空");
+        }
+        if(null == cscContantAndCompanyDtoConsignor.getCscContact() || null == cscContantAndCompanyDtoConsignee.getCscContact()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方联系人信息为空");
+        }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompany().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
         }
@@ -664,6 +669,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * 校验供应商联系人
      */
     public Wrapper<?> validateSupportContactMessage(CscSupplierInfoDto cscSupplierInfoDto){
+        if(null == cscSupplierInfoDto){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验供应商联系人入参为空");
+        }
+
         if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入供应商信息");
         }
@@ -688,7 +697,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     /**
      * 校验运输基本信息
      */
-    public void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
+    private void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
         String volume = ofcDistributionBasicInfo.getCubage();
         if(!PubUtils.isSEmptyOrNull(volume)){
             boolean matches = volume.matches("\\d{1,10}\\*\\d{1,10}\\*\\d{1,10}");

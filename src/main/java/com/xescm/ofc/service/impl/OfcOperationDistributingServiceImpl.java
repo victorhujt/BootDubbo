@@ -22,6 +22,7 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -69,7 +70,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
             cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsignorContactName());
             cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsignorContactPhone());
-            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsignorCode());
+//            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsignorCode());
             cscContantAndCompanyDto.getCscContact().setContactCode(ofcOrderDTO.getConsignorContactCode());
             cscContantAndCompanyDto.getCscContact().setProvinceName(ofcOrderDTO.getDepartureProvince());
             cscContantAndCompanyDto.getCscContact().setCityName(ofcOrderDTO.getDepartureCity());
@@ -91,7 +92,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
             cscContantAndCompanyDto.getCscContact().setContactName(ofcOrderDTO.getConsigneeContactName());
             cscContantAndCompanyDto.getCscContact().setPhone(ofcOrderDTO.getConsigneeContactPhone());
-            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsigneeCode());
+//            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsigneeCode());
             cscContantAndCompanyDto.getCscContact().setContactCode(ofcOrderDTO.getConsigneeContactCode());
             cscContantAndCompanyDto.getCscContact().setProvinceName(ofcOrderDTO.getDestinationProvince());
             cscContantAndCompanyDto.getCscContact().setCityName(ofcOrderDTO.getDestinationCity());
@@ -141,7 +142,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
             }
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
@@ -269,14 +270,20 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                         HSSFCell hssfCell = hssfRow.getCell(cellNum);
                         //空列
-                        if(null == hssfCell){
+                        if(null == hssfCell || HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
                             //标记当前列出错, 并跳过当前循环
                             break;
                         }
                         //校验第一行,包括固定内容和收货人列表
                         if(rowNum == 0){
                             //第一行全为字符串
-                            String cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+//                            String cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                            String cellValue = "";
+                            if(HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                            }else if(HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                            }
                             //校验模板第一行前5列的固定名称是否被改变
                             if(cellNum >= 0 && cellNum <= (staticCell -1)){
                                 String[] cellName = {"货品编码","货品名称","规格","单位","单价"};
@@ -319,6 +326,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     checkPass = false;
                                     consigneeNameList.add(new CscContantAndCompanyVo());
                                     consigneeNameListForCheck.add("");
+
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
                                 }
                             }
@@ -380,7 +388,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
                                         String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
+                                            checkPass = false;
+                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                            //throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                         }
                                         String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                         jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
@@ -398,7 +408,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
-                                    throw new BusinessException(ex.getMessage());
+                                    throw new BusinessException(ex.getMessage(), ex);
                                 }
                             }
                         }
@@ -483,14 +493,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
                         XSSFCell xssfCell = xssfRow.getCell(cellNum);
                         //空列
-                        if(null == xssfCell){
+                        if(null == xssfCell || XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
                             //标记当前列出错, 并跳过当前循环
                             break;
                         }
                         //校验第一行,包括固定内容和收货人列表
                         if(rowNum == 0){
                             //第一行全为字符串
-                            String cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                            String cellValue = "";
+                            if(HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                            }else if(HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                            }
                             //校验模板第一行前5列的固定名称是否被改变
                             if(cellNum >= 0 && cellNum <= (staticCell -1)){
                                 String[] cellName = {"货品编码","货品名称","规格","单位","单价"};
@@ -595,7 +610,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
                                         String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
+//                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
+                                            checkPass = false;
+                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
 //                                            continue;
                                         }
                                         String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
@@ -614,7 +631,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
-                                    throw new BusinessException(ex.getMessage());
+                                    throw new BusinessException(ex.getMessage(), ex);
 
                                 }
                             }

@@ -28,11 +28,12 @@ public class FeignCscContactAPIClient {
     private String uamUrl;*/
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscContactAPI getApi() {
         FeignCscContactAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(FeignCscContactAPI.class, restConfig.getCscUrl());
         return res;

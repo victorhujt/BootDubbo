@@ -1407,7 +1407,7 @@
         cscContact.purpose = "2";
         cscContact.phone = $("#consignorPhone").val();
 
-        cscContact.contactCompanyCode = $("#consignorCode").val();
+        cscContact.contactCompanyName = $("#consignorName").val();
         cscContact.contactCode = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
         //cscContactCompany.id = $("#consignorCode").val();
@@ -1454,7 +1454,7 @@
         cscContact.purpose = "1";
         cscContact.phone = $("#consigneePhone").val();
 
-        cscContact.contactCompanyCode = $("#consigneeCode").val();
+        cscContact.contactCompanyName = $("#consigneeName").val();
         cscContact.contactCode = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();

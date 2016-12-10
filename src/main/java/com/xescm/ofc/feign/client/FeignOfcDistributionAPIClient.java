@@ -24,10 +24,11 @@ public class FeignOfcDistributionAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscWarehouseAPI.class);
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
     public FeignOfcDistributionAPI getApi() {
         FeignOfcDistributionAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignOfcDistributionAPI.class, restConfig.getDmsUrl());
         return res;
     }
@@ -41,7 +42,7 @@ public class FeignOfcDistributionAPIClient {
         try {
             wrapper = getApi().addDistributionBasicInfo(ofcDistributionBasicInfo);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return wrapper;
     }

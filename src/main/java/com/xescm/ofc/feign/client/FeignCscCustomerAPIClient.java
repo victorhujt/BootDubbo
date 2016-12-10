@@ -27,11 +27,12 @@ public class FeignCscCustomerAPIClient {
     private String uamUrl;*/
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscCustomerAPI getApi() {
         FeignCscCustomerAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(FeignCscCustomerAPI.class, restConfig.getCscUrl());
         return res;

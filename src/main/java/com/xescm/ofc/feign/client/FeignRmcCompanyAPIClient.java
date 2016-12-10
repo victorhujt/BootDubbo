@@ -27,11 +27,12 @@ public class FeignRmcCompanyAPIClient {
     private String uamUrl;*/
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignRmcCompanyAPI getApi() {
         FeignRmcCompanyAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(FeignRmcCompanyAPI.class, restConfig.getRmcUrl());
         return res;
