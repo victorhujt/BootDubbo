@@ -43,7 +43,7 @@ public class FeignWhcSiloprogramAPIClient {
         try {
             response = getApi().cancelOrder(cancelOrderDTO);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return response;
     }

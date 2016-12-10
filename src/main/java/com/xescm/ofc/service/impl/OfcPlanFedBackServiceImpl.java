@@ -121,7 +121,7 @@ public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
                 }
             }catch (Exception e){
-                throw new BusinessException(e.getMessage());
+                throw new BusinessException(e.getMessage(), e);
             }
         }
         return null;

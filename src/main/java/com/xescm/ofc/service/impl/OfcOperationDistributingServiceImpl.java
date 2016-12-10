@@ -142,7 +142,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
             }
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
@@ -408,7 +408,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
-                                    throw new BusinessException(ex.getMessage());
+                                    throw new BusinessException(ex.getMessage(), ex);
                                 }
                             }
                         }
@@ -631,7 +631,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                                 }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                     checkPass = false;
-                                    throw new BusinessException(ex.getMessage());
+                                    throw new BusinessException(ex.getMessage(), ex);
 
                                 }
                             }
