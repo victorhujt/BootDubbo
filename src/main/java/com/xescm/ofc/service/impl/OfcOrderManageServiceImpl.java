@@ -1387,7 +1387,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 throw new BusinessException("订单信息是否上门提货或是否二次配送传值有误，请检查");
                             }
                         }catch (Exception e){
-                            throw new BusinessException("复制值发生错误");
+                            throw new BusinessException("复制值发生错误",e);
                         }
 
                     }
@@ -1395,7 +1395,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     throw new BusinessException("订单类型有误");
                 }
                 logger.debug("计划单创建成功");
-            }else {
+              }else {
                 throw new BusinessException("缺少标志位");
             }
 
