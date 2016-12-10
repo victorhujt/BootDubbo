@@ -165,10 +165,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             logger.info(cscContantAndCompanyDtoConsigneeStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            if(cscContantAndCompanyDtoConsignor!=null){
+            if(cscContantAndCompanyDtoConsignor==null){
                 throw new Exception("发货方转换有误");
             }
-            if(cscContantAndCompanyDtoConsignee!=null){
+            if(cscContantAndCompanyDtoConsignee==null){
                 throw new Exception("发货方转换有误");
             }
             CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
