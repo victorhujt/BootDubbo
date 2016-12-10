@@ -568,55 +568,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 拆分计划单补全计划单信息
-     * @param ofcTransplanInfo
-     * @param ofcTransplanInfoReflection
-     */
-    private void copyOfcTransPlanInfoOfReflect(OfcTransplanInfo ofcTransplanInfo, OfcTransplanInfo ofcTransplanInfoReflection) {
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getBusinessType()).equals("")){
-            ofcTransplanInfo.setBusinessType(ofcTransplanInfoReflection.getBusinessType());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getBaseId()).equals("")){
-            ofcTransplanInfo.setBaseId(ofcTransplanInfoReflection.getBaseId());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getProgramSerialNumber()).equals("")){
-            ofcTransplanInfo.setProgramSerialNumber(ofcTransplanInfoReflection.getProgramSerialNumber());
-        }
-
-
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getReceivingCustomerCode()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerCode(ofcTransplanInfoReflection.getReceivingCustomerCode());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getReceivingCustomerName()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerName(ofcTransplanInfoReflection.getReceivingCustomerName());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getReceivingCustomerAddress()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerAddress(ofcTransplanInfoReflection.getReceivingCustomerAddress());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getReceivingCustomerContact()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerContact(ofcTransplanInfoReflection.getReceivingCustomerContact());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getReceivingCustomerContactPhone()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerContactPhone(ofcTransplanInfoReflection.getReceivingCustomerContactPhone());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getDestinationProvince()).equals("")){
-            ofcTransplanInfo.setDestinationProvince(ofcTransplanInfoReflection.getDestinationProvince());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getDestinationCity()).equals("")){
-            ofcTransplanInfo.setDestinationCity(ofcTransplanInfoReflection.getDestinationCity());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getDestinationDistrict()).equals("")){
-            ofcTransplanInfo.setDestinationDistrict(ofcTransplanInfoReflection.getDestinationDistrict());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getDestinationTown()).equals("")){
-            ofcTransplanInfo.setDestinationTown(ofcTransplanInfoReflection.getDestinationTown());
-        }
-        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfoReflection.getDestinationCode()).equals("")){
-            ofcTransplanInfo.setDestinationCode(ofcTransplanInfoReflection.getDestinationCode());
-        }
-    }
-
-    /**
      * 订单中心向DMS推送卡班订单
      * @param ofcDistributionBasicInfo
      */
