@@ -22,6 +22,7 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -269,14 +270,20 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                         HSSFCell hssfCell = hssfRow.getCell(cellNum);
                         //空列
-                        if(null == hssfCell || PubUtils.isSEmptyOrNull(hssfCell.getStringCellValue())){
+                        if(null == hssfCell || HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
                             //标记当前列出错, 并跳过当前循环
                             break;
                         }
                         //校验第一行,包括固定内容和收货人列表
                         if(rowNum == 0){
                             //第一行全为字符串
-                            String cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+//                            String cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                            String cellValue = "";
+                            if(HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                            }else if(HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                            }
                             //校验模板第一行前5列的固定名称是否被改变
                             if(cellNum >= 0 && cellNum <= (staticCell -1)){
                                 String[] cellName = {"货品编码","货品名称","规格","单位","单价"};
@@ -486,14 +493,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
                         XSSFCell xssfCell = xssfRow.getCell(cellNum);
                         //空列
-                        if(null == xssfCell || PubUtils.isSEmptyOrNull(xssfCell.getStringCellValue())){
+                        if(null == xssfCell || XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
                             //标记当前列出错, 并跳过当前循环
                             break;
                         }
                         //校验第一行,包括固定内容和收货人列表
                         if(rowNum == 0){
                             //第一行全为字符串
-                            String cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                            String cellValue = "";
+                            if(HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                            }else if(HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()){
+                                cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                            }
                             //校验模板第一行前5列的固定名称是否被改变
                             if(cellNum >= 0 && cellNum <= (staticCell -1)){
                                 String[] cellName = {"货品编码","货品名称","规格","单位","单价"};

@@ -618,6 +618,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @return
      */
     public Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
+        if(null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参为空");
+        }
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompany() || null == cscContantAndCompanyDtoConsignee.getCscContactCompany()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方信息为空");
+        }
+        if(null == cscContantAndCompanyDtoConsignor.getCscContact() || null == cscContantAndCompanyDtoConsignee.getCscContact()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方联系人信息为空");
+        }
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompany().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
         }
@@ -664,6 +673,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * 校验供应商联系人
      */
     public Wrapper<?> validateSupportContactMessage(CscSupplierInfoDto cscSupplierInfoDto){
+        if(null == cscSupplierInfoDto){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验供应商联系人入参为空");
+        }
+
         if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入供应商信息");
         }
