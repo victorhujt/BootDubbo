@@ -2023,14 +2023,14 @@
                     || $("#orderFinanceChargeFormValidate").find("div.has-error").length>0
                     || $("#orderInfoTableValidate").find("div.has-error").length>0
                     || $("#goodsInfoListDiv").find("div.has-error").length>0){
-                alert("您输入的内容还有一些问题，请仔细检查哦",{icon:5});
+                alert("您输入的内容还有一些问题，请仔细检查哦");
                 return false;
             }
             //卡班类型必须输入运输单号
             if($("#businessType").val() == "602"){
                 var transCode = $("#transCode").val().trim();
                 if(transCode == null || transCode == "" || transCode == undefined){
-                    alert("业务类型选择卡班，必须输入运输单号！",{icon:5});
+                    alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
             }
