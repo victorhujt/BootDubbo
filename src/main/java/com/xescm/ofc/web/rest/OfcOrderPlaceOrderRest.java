@@ -320,7 +320,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 }
 
             } catch (Exception e) {
-                logger.error("校验客户订单编号出错:　{}", e.getMessage());
+                logger.error("校验客户订单编号出错:　{}", e.getMessage(),e);
             }
             return flag;
         }
@@ -345,7 +345,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 }
 
             } catch (Exception e) {
-                logger.error("校验运输单号出错:{}　", e.getMessage());
+                logger.error("校验运输单号出错:{}　", e.getMessage(),e);
             }
             return flag;
         }

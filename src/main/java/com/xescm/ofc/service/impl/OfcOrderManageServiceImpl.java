@@ -518,7 +518,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
                 String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
-                if(businessType.equals("600") || businessType.equals("601")){
+                if(businessType.equals("600") || businessType.equals("601") || businessType.equals("602")){
                     OrderScreenCondition condition=new OrderScreenCondition();
                     condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
@@ -678,7 +678,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             catch (Exception ex){
                 logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage());
-                throw new BusinessException(ex.getMessage());
+                throw new BusinessException(ex.getMessage(),ex);
             }
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
             ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
@@ -754,8 +754,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
 
                 } catch (Exception e) {
-                    logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage());
-                    throw new BusinessException(e.getMessage());
+                    logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage(),e);
+                    throw new BusinessException(e.getMessage(),e);
                 }
                 if(Response.ERROR_CODE == response.getCode()){
                     throw new BusinessException(response.getMessage());
