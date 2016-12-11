@@ -20,7 +20,7 @@
     </resultMap>
 
     <select id="queryPlanAndStorage" resultMap="BaseResultMap">
-        SELECT
+        SELECT DISTINCT
             osi.order_code,
             osi.plan_code,
             '仓储订单' AS type,
@@ -48,13 +48,13 @@
             ) AS destination
         FROM
             ofc_siloprogram_info osi
-        LEFT JOIN ofc_silopro_status oss ON osi.order_code = oss.order_code
-        LEFT JOIN ofc_silopro_source_status sss ON osi.order_code = sss.order_code
+        LEFT JOIN ofc_silopro_status oss ON osi.plan_code = oss.plan_code
+        LEFT JOIN ofc_silopro_source_status sss ON osi.plan_code = sss.plan_code
         LEFT JOIN ofc_distribution_basic_info dbi ON osi.order_code = dbi.order_code
         LEFT JOIN ofc_warehouse_information owi ON osi.order_code = owi.order_code
         WHERE osi.order_code = #{orderCode}
         UNION
-          SELECT
+          SELECT DISTINCT
             oti.order_code,
             oti.plan_code,
             '运输订单' AS type,
@@ -84,10 +84,10 @@
             ofc_transplan_info oti
         LEFT JOIN
             ofc_traplan_source_status tss
-        ON oti.order_code = tss.order_code
+        ON oti.plan_code = tss.plan_code
         LEFT JOIN
             ofc_transplan_status ots
-        ON oti.order_code = ots.order_code
+        ON oti.plan_code=ots.plan_code
         LEFT JOIN
             ofc_warehouse_information owi
         ON oti.order_code = owi.order_code
