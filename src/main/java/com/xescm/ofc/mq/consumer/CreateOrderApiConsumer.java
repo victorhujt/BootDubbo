@@ -85,7 +85,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                 try {
                     dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
                     for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
-                        if(keyList.contains(key)){
+                        if(!keyList.contains(key)){
                             ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
                         }else{
                             keyList.add(key);
