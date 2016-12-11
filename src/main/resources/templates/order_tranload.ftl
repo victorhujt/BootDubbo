@@ -1438,7 +1438,6 @@
         var typeId=$(obj).val();
         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
             data=eval(data);
-            debugger;
             $(obj).parent().next().children().empty();
             $.each(data,function (index,CscGoodsTypeVo) {
                 $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
@@ -1551,7 +1550,6 @@
         jsonStr.collectLoanAmount = $("#collectLoanAmount").val();
         jsonStr.returnList = $("#returnList").val();
         jsonStr.returnListFee = $("#returnListFee").val();
-        debugger;
         jsonStr.luggage = $("#luggage").val();
         //费用总计
         jsonStr.serviceCharge = $("#serviceCharge").val();
