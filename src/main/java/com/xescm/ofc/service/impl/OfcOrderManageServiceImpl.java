@@ -328,9 +328,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if(cubage.length>=1){
+                    if(cubage.length==3){
                         BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                         ofcTransplanInfo.setVolume(volume);//$$$
+                    }else{
+                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
                     }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
@@ -499,9 +501,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if(cubage.length>=1){
+                    if(cubage.length==3){
                         BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                         ofcTransplanInfo.setVolume(volume);//$$$
+                    }else{
+                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
                     }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
@@ -572,9 +576,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try{
             if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                 String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                if(cubage.length > 1){
+                if(cubage.length == 3){
                     BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                     ofcDistributionBasicInfo.setCubage(volume.toString());
+                }else{
+                    throw new BusinessException("体积串格式不正确,长宽高都必须填入");
                 }
             }
             Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
@@ -934,16 +940,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             try {
-                for(int i=0;i<planCodeList.length;i++){
-                    ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
+                for (String plan_code:planCodeList) {
+
+                    ofcTraplanSourceStatus.setPlanCode(plan_code);
 
                     OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
-                    ofcPlannedDetail.setPlanCode(ofcTraplanSourceStatus.getPlanCode());
+                    ofcPlannedDetail.setPlanCode(plan_code);
                     List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
                     ofcPlannedDetailMap.put(ofcTraplanSourceStatus.getPlanCode(),ofcPlannedDetailList);
                     ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
                     if(planStatus.equals("40")){
-                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(planCodeList[i]);
+                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(plan_code);
                         ofcTransplanInfoList.add(ofcTransplanInfo);
                         String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
                         if(businessType.equals("600") || businessType.equals("601")){
