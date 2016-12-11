@@ -328,8 +328,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                    ofcTransplanInfo.setVolume(volume);//$$$
+                    if(cubage.length>=1){
+                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                        ofcTransplanInfo.setVolume(volume);//$$$
+                    }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -1787,17 +1789,25 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     public RmcDistrictQO copyDestinationPlace(String planeCode,RmcDistrictQO rmcDistrictQO){
         String address[]=planeCode.split(",");
-        if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
-            rmcDistrictQO.setProvinceCode(address[0]);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(address[1]).equals("")){
-            rmcDistrictQO.setCityCode(address[1]);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(address[2]).equals("")){
-            rmcDistrictQO.setDistrictCode(address[2]);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(address[3]).equals("")){
-            rmcDistrictQO.setCountyCode(address[3]);
+        if(address.length>=1){
+            if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
+                rmcDistrictQO.setProvinceCode(address[0]);
+            }
+            if(address.length>=2){
+                if(!PubUtils.trimAndNullAsEmpty(address[1]).equals("")){
+                    rmcDistrictQO.setCityCode(address[1]);
+                }
+                if(address.length>=3){
+                    if(!PubUtils.trimAndNullAsEmpty(address[2]).equals("")){
+                        rmcDistrictQO.setDistrictCode(address[2]);
+                    }
+                    if(address.length==4){
+                        if(!PubUtils.trimAndNullAsEmpty(address[3]).equals("")){
+                            rmcDistrictQO.setCountyCode(address[3]);
+                        }
+                    }
+                }
+            }
         }
         return rmcDistrictQO;
     }
