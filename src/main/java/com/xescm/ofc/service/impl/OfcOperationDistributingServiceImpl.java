@@ -270,9 +270,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                         HSSFCell hssfCell = hssfRow.getCell(cellNum);
                         //空列
-                        if(null == hssfCell || HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                        if(null == hssfCell){
                             //标记当前列出错, 并跳过当前循环
                             break;
+                        }else if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                            continue;
                         }
                         //校验第一行,包括固定内容和收货人列表
                         if(rowNum == 0){
@@ -388,8 +390,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
                                         String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            checkPass = false;
-                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
+                                            //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
                                             //throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                         }
                                         String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
@@ -493,9 +495,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                     for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
                         XSSFCell xssfCell = xssfRow.getCell(cellNum);
                         //空列
-                        if(null == xssfCell || XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                        if(null == xssfCell){
                             //标记当前列出错, 并跳过当前循环
                             break;
+                        }else if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                            continue;
                         }
                         //校验第一行,包括固定内容和收货人列表
                         if(rowNum == 0){
@@ -610,9 +614,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
                                         String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-//                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
-                                            checkPass = false;
-                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                            throw new BusinessException("收货方编码或收货方联系人编码为空!");
+//                                            checkPass = false;
+//                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
 //                                            continue;
                                         }
                                         String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
