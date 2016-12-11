@@ -158,10 +158,10 @@
                             <input id="plateNumber" name="plateNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.plateNumber)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">目的地</label>
+                        <label class="control-label col-label no-padding-right" for="name">目的地</label>1
                         <div class="padding-15 col-float" style="width:460px;">
                             <input id="destination" name="" type="search" placeholder="" style="width:460px;"
-                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destination)!"" }">
                         </div>
 
                     </div>
