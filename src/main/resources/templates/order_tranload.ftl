@@ -2050,7 +2050,7 @@
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
             var cubageAmount ="";
-            if(!$("#cubageCountHidden").html()==""){
+            if($("#cubageCountHidden").html()!=""){
                 cubageAmount = $("#cubageCountHidden").html() + "*1*1";
             }
             jsonStr.cubage = cubageAmount;
