@@ -26,6 +26,7 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,12 +174,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                        String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
                         //仓储计划单生成以后通过MQ推送到仓储中心
                         List <OfcSiloprogramInfoVo> infos= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,ZIYUANFENPEIZ);
+                        if(StringUtils.isEmpty(planCode)){
+                            logger.info("仓储计划单号不能为空");
+                            throw new BusinessException("仓储计划单号不能为空");
+                        }
                         List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
                         if(infos!=null&&infos.size()>0){
                             logger.info("开始推送到仓储计划单");
                         sendToWhc(infos.get(0),pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
                         }else{
-                            logger.debug("仓储计划单不存在");
+                            logger.info("仓储计划单不存在");
                         }
                     }else {
                         throw new BusinessException("无法确定是否需要运输");
@@ -710,10 +715,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
             if(PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YIZUOFEI)){
                 throw new BusinessException("状态错误，该计划单已作废");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)
+            }
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)
                     || PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUWANCH)){
                 throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
+            }
+             if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
+                throw new BusinessException("状态有误");
+            }
+
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
                 try {
                         CancelOrderDTO dto=new CancelOrderDTO();
                         dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
@@ -724,25 +735,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             dto.setBillType(ORDER_TYPE_OUT);
                         }
                         dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
-//                        dto.setCustomerID("CUS0001");
-//                        dto.setOrderNo("SO161128000468");
-//                        dto.setOrderType("610");
-//                        dto.setBillType("CK");
                         dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
-                       // dto.setWarehouseID("WH01");
-//                    {
-//                        "billType": "RK",
-//                            "customerID": "CUS0001",
-//                            "orderNo": "SO161128000468",
-//                            "orderType": "610",
-//                            "reason": ".。。。。。",
-//                            "warehouseID": "WH01",
-//                            "whcBillNo": ""
-//                    }
-
-
-
-
+                    logger.info("==> 仓储计划单号{}开始取消,业务类型为{}",ofcSiloprogramInfo.getPlanCode(),ofcSiloprogramInfo.getDocumentType());
                         //调用接口尝试3次
                         for (int j = 0; j <3; j++) {
                             response=feignWhcSiloprogramAPIClient.cancelOrder(dto);
@@ -750,26 +744,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 break;
                             }
                         }
-
                 } catch (Exception e) {
                     logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage(),e);
                     throw new BusinessException(e.getMessage(),e);
                 }
                 if(Response.ERROR_CODE == response.getCode()){
+                    logger.error("仓储计划单调用WHC响应状态码{}",response.getCode());
                     throw new BusinessException(response.getMessage());
                 }
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
-                throw new BusinessException("状态有误");
             }
-            ofcSiloprogramInfo.setVoidPersonnel(userName);
-            ofcSiloprogramInfo.setVoidTime(new Date());
-            //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-            //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-            ofcSiloproStatus.setPlannedSingleState(YIZUOFEI);
-            //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
-            //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
-            ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
-            ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+            if(Response.SUCCESS_CODE==response.getCode()){
+                ofcSiloprogramInfo.setVoidPersonnel(userName);
+                ofcSiloprogramInfo.setVoidTime(new Date());
+                //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                ofcSiloproStatus.setPlannedSingleState(YIZUOFEI);
+                //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+                ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+            }
         }
     }
 
@@ -1531,10 +1525,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      */
     public void sendToWhc(OfcSiloprogramInfoVo info,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
         try {
-            String documentType=info.getDocumentType();
             String tag="";
             String jsonStr="";
-            if(OFC_WHC_OUT_TYPE.equals(info.getBusinessType())){
+            boolean isSend=false;
+            String documentType=info.getDocumentType();
+            String businessType=info.getBusinessType();
+            if(planDetails==null||planDetails.size()==0){
+                logger.debug("仓储计划单详情不存在");
+                throw new BusinessException("仓储计划单详情不存在");
+            }
+            if(OFC_WHC_OUT_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcDelivery wsv=new WhcDelivery();
                 List<WhcDeliveryDetails> detailList=new ArrayList<>();
@@ -1594,7 +1594,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 wsv.setDetailsList(detailList);
                 jsonStr=JSONUtils.objectToJson(wsv);
-            }else if(OFC_WHC_IN_TYPE.equals(info.getBusinessType())){
+            }else if(OFC_WHC_IN_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcInStock wp=new WhcInStock();
                 List<WhcInStockDetails> detailList=new ArrayList<WhcInStockDetails>();
@@ -1647,8 +1647,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setDetailsList(detailList);
                 jsonStr=JSONUtils.objectToJson(wp);
             }
+            if(!StringUtils.isEmpty(jsonStr)){
             logger.info("send to whc json is :" +jsonStr);
-            boolean isSend=defaultMqProducer.toSendWhc(jsonStr, info.getPlanCode(),tag);
+             isSend=defaultMqProducer.toSendWhc(jsonStr, info.getPlanCode(),tag);
+            }
             if(isSend){
                 //推送成功后将计划单状态更新为已推送
                 OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
