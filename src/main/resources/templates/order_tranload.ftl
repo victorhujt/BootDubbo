@@ -1299,6 +1299,9 @@
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
+            if($(obj).parent().prev().prev().children().val()=="02"){
+                $(obj).parent().next().children().val($(obj).val());
+            }
         };
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
@@ -1435,6 +1438,7 @@
         var typeId=$(obj).val();
         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
             data=eval(data);
+            debugger;
             $(obj).parent().next().children().empty();
             $.each(data,function (index,CscGoodsTypeVo) {
                 $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
