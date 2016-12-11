@@ -333,9 +333,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if(cubage.length>=1){
+                    if(cubage.length==3){
                         BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                         ofcTransplanInfo.setVolume(volume);//$$$
+                    }else{
+                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
                     }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
@@ -504,8 +506,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                    ofcTransplanInfo.setVolume(volume);//$$$
+                    if(cubage.length==3){
+                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                        ofcTransplanInfo.setVolume(volume);//$$$
+                    }else{
+                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
+                    }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -572,28 +578,33 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcDistributionBasicInfo
      */
     private void pushKabanOrderToDms(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcTransplanInfo ofcTransplanInfo) {
-        try{
-            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
-                String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                ofcDistributionBasicInfo.setCubage(volume.toString());
-            }
-            Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
-            if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                throw new BusinessException("向分拣中心推送卡班订单失败");
-            }else if(wrapper.getCode() == 410){
-                throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
-            }
-            //更新运输计划单状态为已推送, 略过, 因为只更新不记录
-            //一旦向DMS推送过去, 就更新运输计划单状态为执行中
-            OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
-            ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-            ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
-            ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+        OfcDistributionBasicInfo pushDistributionBasicInfo = new OfcDistributionBasicInfo();
+        try {
+            BeanUtils.copyProperties(pushDistributionBasicInfo,ofcDistributionBasicInfo);
+        } catch (Exception e) {
+            throw new BusinessException("推送卡班信息拷贝属性错误",e);
         }
-
+        if(!PubUtils.trimAndNullAsEmpty(pushDistributionBasicInfo.getCubage()).equals("")){
+            String[] cubage = pushDistributionBasicInfo.getCubage().split("\\*");
+            if(cubage.length == 3){
+                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                pushDistributionBasicInfo.setCubage(volume.toString());
+            }else{
+                throw new BusinessException("体积串格式不正确,长宽高都必须填入");
+            }
+        }
+        Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
+        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+            throw new BusinessException("向分拣中心推送卡班订单失败");
+        }else if(wrapper.getCode() == 410){
+            throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
+        }
+        //更新运输计划单状态为已推送, 略过, 因为只更新不记录
+        //一旦向DMS推送过去, 就更新运输计划单状态为执行中
+        OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
+        ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+        ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
+        ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
     }
 
 
@@ -924,16 +935,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             try {
-                for(int i=0;i<planCodeList.length;i++){
-                    ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
+                for (String plan_code:planCodeList) {
+
+                    ofcTraplanSourceStatus.setPlanCode(plan_code);
 
                     OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
-                    ofcPlannedDetail.setPlanCode(ofcTraplanSourceStatus.getPlanCode());
+                    ofcPlannedDetail.setPlanCode(plan_code);
                     List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
                     ofcPlannedDetailMap.put(ofcTraplanSourceStatus.getPlanCode(),ofcPlannedDetailList);
                     ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
                     if(planStatus.equals("40")){
-                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(planCodeList[i]);
+                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(plan_code);
                         ofcTransplanInfoList.add(ofcTransplanInfo);
                         String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
                         if(businessType.equals("600") || businessType.equals("601")){
