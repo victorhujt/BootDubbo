@@ -572,8 +572,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try{
             if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                 String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                ofcDistributionBasicInfo.setCubage(volume.toString());
+                if(cubage.length > 1){
+                    BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                    ofcDistributionBasicInfo.setCubage(volume.toString());
+                }
             }
             Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
