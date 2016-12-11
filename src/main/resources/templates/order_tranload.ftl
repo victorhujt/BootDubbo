@@ -1299,6 +1299,9 @@
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
+            if($(obj).parent().prev().prev().children().val()=="02"){
+                $(obj).parent().next().children().val($(obj).val());
+            }
         };
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
@@ -1547,7 +1550,6 @@
         jsonStr.collectLoanAmount = $("#collectLoanAmount").val();
         jsonStr.returnList = $("#returnList").val();
         jsonStr.returnListFee = $("#returnListFee").val();
-        debugger;
         jsonStr.luggage = $("#luggage").val();
         //费用总计
         jsonStr.serviceCharge = $("#serviceCharge").val();
@@ -2051,7 +2053,6 @@
             jsonStr.quantity = $("#quantityCount").html();
             var cubageAmount ="";
             if($("#cubageCountHidden").html()!=""){
-                debugger;
                 cubageAmount = $("#cubageCountHidden").html() + "*1*1";
             }
             jsonStr.cubage = cubageAmount;

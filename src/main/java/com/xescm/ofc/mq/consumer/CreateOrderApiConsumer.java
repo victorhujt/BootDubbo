@@ -140,9 +140,11 @@ public class CreateOrderApiConsumer implements MessageListener {
 				 List<ofcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
 				 try {
 					 ofcSiloprogramStatusFedBackConditions= JSONUtils.jsonToList(messageBody , ofcSiloprogramStatusFedBackCondition.class);
-					 for(int i=0;i<ofcSiloprogramStatusFedBackConditions.size();i++){
-                         ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
-					 }
+					 if(ofcSiloprogramStatusFedBackConditions!=null&&ofcSiloprogramStatusFedBackConditions.size()>0){
+                         for(int i=0;i<ofcSiloprogramStatusFedBackConditions.size();i++){
+                             ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
+                         }
+                     }
 				 } catch (Exception e) {
                      logger.error("仓储计划单状态反馈出现异常{}",e.getMessage(),e);
 				 }
@@ -157,17 +159,20 @@ public class CreateOrderApiConsumer implements MessageListener {
                     List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
                     try {
                         ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
-                        for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
+                        if(ofcWarehouseFeedBackConditions!=null&&ofcWarehouseFeedBackConditions.size()>0){
+                            for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
 
-                            if ("61".equals(tag)){
-                                //出库
-                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("出库");
-                            }else if ("62".equals(tag)){
-                                //入库
-                                ofcWarehouseFeedBackConditions.get(i).setBuniessType("入库");
+                                if ("61".equals(tag)){
+                                    //出库
+                                    ofcWarehouseFeedBackConditions.get(i).setBuniessType("出库");
+                                }else if ("62".equals(tag)){
+                                    //入库
+                                    ofcWarehouseFeedBackConditions.get(i).setBuniessType("入库");
+                                }
+                                ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                             }
-                            ofcSiloproStatusService.ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackConditions.get(i));
                         }
+
                     } catch (Exception e) {
                         logger.error("仓储计划单出入库单反馈出现异常{}",e.getMessage(),e);
                     }
