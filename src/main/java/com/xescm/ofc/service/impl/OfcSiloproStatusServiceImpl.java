@@ -185,24 +185,32 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}
 			statusCondition.setPlannedSingleState(RENWUWANCH);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-				if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(condition.getBuniessType())){
-					List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
-					if(transInfos!=null&&transInfos.size()>0){
-						OfcTransplanInfoVo vo=transInfos.get(0);
-						if(OrderConstConstant.RENWUWANCH.equals(vo.getPlannedSingleState())){
-							OfcOrderStatus status=new OfcOrderStatus();
-							status.setOrderStatus(HASBEENCOMPLETED);
-							status.setOrderCode(info.getOrderCode());
-							status.setStatusDesc("已完成");
-							status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
-							status.setLastedOperTime(new Date());
-							status.setOperator("");
-							ofcOrderStatusService.save(status);
-						}
-					}else{
-						throw new BusinessException("入库需要运输时运输计划单不存在");
+			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(condition.getBuniessType())){
+				List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
+				if(transInfos!=null&&transInfos.size()>0){
+					OfcTransplanInfoVo vo=transInfos.get(0);
+					if(OrderConstConstant.RENWUWANCH.equals(vo.getPlannedSingleState())){
+						OfcOrderStatus status=new OfcOrderStatus();
+						status.setOrderStatus(HASBEENCOMPLETED);
+						status.setOrderCode(info.getOrderCode());
+						status.setStatusDesc("已完成");
+						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+						status.setLastedOperTime(new Date());
+						status.setOperator("");
+						ofcOrderStatusService.save(status);
+						return;
 					}
 				}
+			}
+
+				OfcOrderStatus status=new OfcOrderStatus();
+				status.setOrderStatus(HASBEENCOMPLETED);
+				status.setOrderCode(info.getOrderCode());
+				status.setStatusDesc("已完成");
+				status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+				status.setLastedOperTime(new Date());
+				status.setOperator("");
+				ofcOrderStatusService.save(status);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -31,14 +31,14 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
     @Override
     public int deleteByOrderCode(Object key) {
-        ofcWarehouseInformationMapper.deleteByOrderCode(key);
-        return 0;
+
+        return ofcWarehouseInformationMapper.deleteByOrderCode(key);
     }
 
     @Override
     public int updateByOrderCode(Object key) {
-        ofcWarehouseInformationMapper.updateByOrderCode(key);
-        return 0;
+
+        return ofcWarehouseInformationMapper.updateByOrderCode(key);
     }
 
     @Override

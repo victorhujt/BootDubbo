@@ -26,7 +26,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
  */
 @Service
 @Transactional
-public class OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
+public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
     @Autowired
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
