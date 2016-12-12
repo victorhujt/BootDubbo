@@ -64,6 +64,20 @@ public class MqConfig {
      */
     private String ofc2WhcOrderTopic;
     /**
+     *  /**
+     * 仓储订单状态反馈
+     */
+    private String whc2ofcOrderStatusTopic;
+
+    public String getWhc2ofcOrderStatusTopic() {
+        return whc2ofcOrderStatusTopic;
+    }
+
+    public void setWhc2ofcOrderStatusTopic(String whc2ofcOrderStatusTopic) {
+        this.whc2ofcOrderStatusTopic = whc2ofcOrderStatusTopic;
+    }
+
+    /**
      * DMS回传状态topic
      */
     public String dmsCallbackStatusTopic;
