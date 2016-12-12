@@ -27,13 +27,14 @@ public class CreateOrderApiProducer {
     //发送MQ
     public void sendCreateOrderResultMQ(String data, String code) {
         final String tag = "xeStatusBackTag";
-        logger.info("推送创单api返回信息：{},Topic:{},tag:{}", data, mqConfig.getOfcOrderStatusTopic(), tag);
+        final String topic = mqConfig.getTfcOrderStatusTopic();
+        logger.info("推送创单api返回信息：{},Topic:{},tag:{}", data, topic, tag);
         if (StringUtils.isNotBlank(data)) {
-            Message message = new Message(mqConfig.getOfcOrderStatusTopic(), tag, data.getBytes());
+            Message message = new Message(topic, tag, data.getBytes());
             message.setKey(code);
             SendResult sendResult = producer.send(message);
             if (sendResult != null) {
-                logger.info(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " 发送 mq message 成功! Topic：{},tag:{},message:{}", mqConfig.getOfcOrderStatusTopic(), tag, sendResult.getMessageId());
+                logger.info(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " 发送 mq message 成功! Topic：{},tag:{},message:{}", topic, tag, sendResult.getMessageId());
             }
         }
     }
