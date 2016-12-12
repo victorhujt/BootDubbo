@@ -20,7 +20,7 @@ import java.util.List;
  * 推送订单到结算中心
  * Created by hiyond on 2016/12/11.
  */
-@Service
+//@Service
 public class PushOrderServiceImpl {
     private static final Logger logger = LoggerFactory.getLogger(PushOrderServiceImpl.class);
 
