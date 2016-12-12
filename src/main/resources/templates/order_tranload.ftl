@@ -699,7 +699,7 @@
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePaymentPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
@@ -2427,6 +2427,11 @@
 
         });
 
+
+        var transportTypePub = "10";
+        $("#transportType").val(transportTypePub);
+        var expensePaymentParty = "10";
+        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
