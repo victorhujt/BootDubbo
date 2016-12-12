@@ -602,7 +602,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){
             throw new BusinessException("向分拣中心推送卡班订单失败");
-        }else if(wrapper.getCode() == 410){
+        }else if("100101".equals(wrapper.getCode())){
             throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
         }
         //更新运输计划单状态为已推送, 略过, 因为只更新不记录
