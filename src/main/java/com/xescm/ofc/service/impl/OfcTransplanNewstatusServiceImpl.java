@@ -7,16 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by lyh on 2016/10/10.
- */
 @Service
 @Transactional
 public class OfcTransplanNewstatusServiceImpl extends BaseService<OfcTransplanNewstatus> implements OfcTransplanNewstatusService {
     @Autowired
     private OfcTransplanNewstatusMapper ofcTransplanNewstatusMapper;
     public int updateByPlanCode(Object key){
-        ofcTransplanNewstatusMapper.updateByPlanCode(key);
-        return 0;
+        int num = ofcTransplanNewstatusMapper.updateByPlanCode(key);
+        return num;
     }
 }

@@ -28,8 +28,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public int deleteByOrderCode(Object key) {
-        ofcOrderStatusMapper.deleteByOrderCode(key);
-        return 0;
+        return ofcOrderStatusMapper.deleteByOrderCode(key);
     }
 
     @Override
