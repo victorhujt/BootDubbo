@@ -1,24 +1,11 @@
 package com.xescm.ofc;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.xescm.ofc.domain.*;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
-import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
-import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
-import com.xescm.ofc.service.OfcOrderManageOperService;
-import com.xescm.ofc.utils.JsonUtil;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by hiyond on 2016/11/18.
@@ -32,7 +19,7 @@ public class CreateOrderApiTest {
     @Autowired
     private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
 
-    @Test
+    /*@Test
     public void t3333333333333333t(){
         DmsTransferRecordDto dmsTransferRecordDto = new DmsTransferRecordDto();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -43,7 +30,7 @@ public class CreateOrderApiTest {
         dmsTransferRecordDto.setRemark("我是Remark001");
 
         ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
-    }
+    }*/
 /*
 
 

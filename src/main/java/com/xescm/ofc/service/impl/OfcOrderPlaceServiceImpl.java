@@ -7,7 +7,9 @@ import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.dto.csc.QueryCustomerCodeDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
@@ -48,17 +50,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-    @Resource
-    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Resource
-    private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
-    @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
     private OfcMerchandiserService ofcMerchandiserService;
     @Resource
     private CodeGenUtils codeGenUtils;
+    @Resource
+    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -138,7 +136,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
                     ofcFundamentalInformation.setCustCode(custId);
                     if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
-                        ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
+                        QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                        queryCustomerCodeDto.setCustomerCode(custId);
+                        Wrapper<CscCustomerVo> cscCustomerVo = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                        if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
+                            throw new BusinessException(cscCustomerVo.getMessage());
+                        }else if(null == cscCustomerVo.getResult()){
+                            throw new BusinessException("客户中心没有查到该客户!");
+                        }
+                        ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
                     }
                     ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
                     if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){

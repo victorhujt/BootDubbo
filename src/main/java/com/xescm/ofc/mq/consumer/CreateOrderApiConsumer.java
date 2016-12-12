@@ -1,12 +1,13 @@
 package com.xescm.ofc.mq.consumer;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
+import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
@@ -81,17 +82,14 @@ public class CreateOrderApiConsumer implements MessageListener {
                 //接收分拣中心回传的状态
                 logger.info("分拣中心状态反馈的消息体:{}",messageBody);
                 logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
-                List<DmsTransferRecordDto> dmsTransferRecordDtoList = null;
+                DmsTransferStatusDto dmsTransferStatusDto = null;
+                System.out.println("分拣中心状态反馈的消息体:--------------------" + messageBody);
                 try {
-                    dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
-                    for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
-                        if(!keyList.contains(key)){
-                            ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
-                        }else{
-                            keyList.add(key);
-                        }
-//                        if(){dmsTransferRecordDto.hashCode();};
-
+                    dmsTransferStatusDto = JSON.parseObject(messageBody,DmsTransferStatusDto.class);
+                    if(!keyList.contains(key)){
+                        ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
+                    }else{
+                        keyList.add(key);
                     }
                 }catch (Exception ex){
                     logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage(),ex);
