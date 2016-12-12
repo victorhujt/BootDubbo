@@ -2242,8 +2242,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2285,8 +2285,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2309,8 +2309,8 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var contactCompanyCode = tdArr.eq(6).text();//    发货方编码
-                    var contactCode = tdArr.eq(7).text();//    发货方联系人编码
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
                     var type = tdArr.eq(8).text();//    发货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2321,8 +2321,8 @@
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
-                    $("#consignorCode").val(contactCompanyCode);
-                    $("#consignorContactCode").val(contactCode);
+                    $("#consignorCode").val(contactCompanySerialNo);
+                    $("#consignorContactCode").val(contactSerialNo);
                     $("#consignorType").val(type);
                     $("#consignorAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2352,8 +2352,8 @@
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
 
-                    var contactCompanyCode = tdArr.eq(6).text();//    收货方编码
-                    var contactCode = tdArr.eq(7).text();//    收货方联系人编码
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
                     var type = tdArr.eq(8).text();//    收货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2363,8 +2363,8 @@
                     $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
-                    $("#consigneeCode").val(contactCompanyCode);
-                    $("#consigneeContactCode").val(contactCode);
+                    $("#consigneeCode").val(contactCompanySerialNo);
+                    $("#consigneeContactCode").val(contactSerialNo);
                     $("#consigneeType").val(type);
                     $("#consigneeAddress").val(address);
                     var paramAddressNameToPage = provinceName
