@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
@@ -32,7 +33,7 @@ public class CreateOrderApiProducer {
             message.setKey(code);
             SendResult sendResult = producer.send(message);
             if (sendResult != null) {
-                logger.info(new Date() + " 发送 mq message 成功! Topic：{},tag:{},message:{}", mqConfig.getOfcOrderStatusTopic(), null, sendResult.getMessageId());
+                logger.info(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " 发送 mq message 成功! Topic：{},tag:{},message:{}", mqConfig.getOfcOrderStatusTopic(), tag, sendResult.getMessageId());
             }
         }
     }
