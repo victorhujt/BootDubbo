@@ -1,8 +1,10 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcSiloproStatusMapper;
+import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +40,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 
 	@Autowired
 	private OfcPlannedDetailService ofcPlannedDetailService;
+	@Autowired
+	private OfcTransplanInfoService ofcTransplanInfoService;
 
     public int updateByPlanCode(Object key){
         ofcSiloproStatusMapper.updateByPlanCode(key);
@@ -181,23 +185,26 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}
 			statusCondition.setPlannedSingleState(RENWUWANCH);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-
-			List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),condition.getBuniessType());
-			if(infos!=null&&infos.size()>0){
-				String ProgramSerialNumber=infos.get(0);
-				if(!StringUtils.isEmpty(ProgramSerialNumber)&&ProgramSerialNumber.equals(info.getProgramSerialNumber())){
-					OfcOrderStatus status=new OfcOrderStatus();
-					status.setOrderStatus(HASBEENCOMPLETED);
-					status.setOrderCode(info.getOrderCode());
-					status.setStatusDesc("已完成");
-					status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
-					status.setLastedOperTime(new Date());
-					status.setOperator("");
-					ofcOrderStatusService.save(status);
+				if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(condition.getBuniessType())){
+					List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
+					if(transInfos!=null&&transInfos.size()>0){
+						OfcTransplanInfoVo vo=transInfos.get(0);
+						if(OrderConstConstant.RENWUWANCH.equals(vo.getPlannedSingleState())){
+							OfcOrderStatus status=new OfcOrderStatus();
+							status.setOrderStatus(HASBEENCOMPLETED);
+							status.setOrderCode(info.getOrderCode());
+							status.setStatusDesc("已完成");
+							status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+							status.setLastedOperTime(new Date());
+							status.setOperator("");
+							ofcOrderStatusService.save(status);
+						}
+					}else{
+						throw new BusinessException("入库需要运输时运输计划单不存在");
+					}
 				}
-			}
 		} catch (Exception e) {
-			throw new BusinessException(e.getMessage(), e);
+			e.printStackTrace();
 		}
 
 	}

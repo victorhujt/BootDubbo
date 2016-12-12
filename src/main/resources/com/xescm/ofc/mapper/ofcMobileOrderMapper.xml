@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.ofcMobileOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcMobileOrder" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="mobile_order_code" property="mobileOrderCode" jdbcType="VARCHAR" />
+    <result column="upload_date" property="uploadDate" jdbcType="TIMESTAMP" />
+    <result column="dingding_account_no" property="dingdingAccountNo" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="buniess_type" property="buniessType" jdbcType="VARCHAR" />
+    <result column="tran_code" property="tranCode" jdbcType="VARCHAR" />
+    <result column="mobile_order_status" property="mobileOrderStatus" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="accepter" property="accepter" jdbcType="VARCHAR" />
+    <result column="appcet_date" property="appcetDate" jdbcType="TIMESTAMP" />
+    <result column="img1_url" property="img1Url" jdbcType="VARCHAR" />
+    <result column="img2_url" property="img2Url" jdbcType="VARCHAR" />
+    <result column="img3_url" property="img3Url" jdbcType="VARCHAR" />
+    <result column="img4_url" property="img4Url" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>
