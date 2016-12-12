@@ -77,7 +77,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 					throw new BusinessException("该仓储计划处于单资源分配中");
 				}
 
-				if(RENWUZHONG.equals(infostatus.getPlannedSingleState())){
+				if(RENWUWANCH.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经完成");
 				}
 
