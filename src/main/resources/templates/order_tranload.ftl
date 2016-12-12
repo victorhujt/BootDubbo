@@ -914,7 +914,6 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
-        $("#merchandiser").val(${(merchandiserLast)!""});
         /*//$("#orderTime").val(new Date().toLocaleDateString());*/
     }
     /**
