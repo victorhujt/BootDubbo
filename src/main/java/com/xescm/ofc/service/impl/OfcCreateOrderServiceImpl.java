@@ -10,15 +10,12 @@ import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.model.dto.csc.*;
-import com.xescm.ofc.model.dto.csc.domain.CscContact;
-import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
-import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import net.sf.json.JSONObject;
@@ -82,12 +79,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
         String custName = createOrderEntity.getCustName();
-//        String custId = custCode;
-//        String groupId = null;
         //校验货主编码
         resultModel = CheckUtils.checkCustCode(custCode);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "货主编码", resultModel.getCode());
+            logger.error("校验数据{}失败：{}", "货主编码", resultModel.getCode());
             return resultModel;
         }
         //校验货主名称
@@ -99,31 +94,28 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         queryCustomerCodeDto.setCustomerCode(custCode);
         Wrapper<CscCustomerVo> customerVoWrapper = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
         if (customerVoWrapper.getResult() == null) {
-            logger.debug("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
+            logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
         }
-//        CscCustomerVo cscCustomerVo = customerVoWrapper.getResult();
-//        groupId = cscCustomerVo.getGroupId();
-
 
         //校验数据：订单类型
         String orderType = createOrderEntity.getOrderType();
         resultModel = CheckUtils.checkOrderType(orderType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{},订单类型：{}", "订单类型", resultModel.getCode(), orderType);
+            logger.error("校验数据{}失败：{},订单类型：{}", "订单类型", resultModel.getCode(), orderType);
             return resultModel;
         }
         //校验：业务类型
         String businessType = createOrderEntity.getBusinessType();
         resultModel = CheckUtils.checkBusinessType(orderType, businessType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
+            logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
             return resultModel;
         }
         //check 数量、重量、体积 三选一不能为空
         resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
+            logger.error("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
             return resultModel;
         }
         //校验：店铺编码，获取该客户下的店铺编码
@@ -156,7 +148,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 createOrderEntity.getConsigneeContact(), createOrderEntity.getConsigneePhone(), createOrderEntity.getConsigneeAddress(),
                 createOrderEntity.getProvideTransport());
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
+            logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
             return resultModel;
         }
 
@@ -168,7 +160,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
         resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.info("校验数据{}失败：{}", "仓库编码", resultModel.getCode());
+            logger.error("校验数据{}失败：{}", "仓库编码", resultModel.getCode());
             return resultModel;
         }
 
@@ -192,7 +184,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
                 resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                    logger.info("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
+                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
                     return resultModel;
                 }
             }
