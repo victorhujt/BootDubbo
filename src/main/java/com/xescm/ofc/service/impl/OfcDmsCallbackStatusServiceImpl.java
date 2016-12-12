@@ -48,6 +48,9 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             String transCode = dmsTransferStatusDto.getTransNo();
             String dmsCallbackStatus = dmsTransferStatusDto.getWaybillStatusCode();
             String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
+            if(PubUtils.isSEmptyOrNull(orderCode)){
+                throw new BusinessException("没有查到所属订单");
+            }
             Date operTime = dmsTransferStatusDto.getCreatedTime();
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);//SO161210000047

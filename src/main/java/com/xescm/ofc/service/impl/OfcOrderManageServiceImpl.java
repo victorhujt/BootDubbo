@@ -162,7 +162,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             ofcSiloprogramInfo.setProgramSerialNumber("2");
                         }
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName());
-                        siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
+                       String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
+                        //仓储计划单生成以后通过MQ推送到仓储中心
+                        List <OfcSiloprogramInfoVo> infos= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,ZIYUANFENPEIZ);
+                        List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
+                        if(infos!=null&&infos.size()>0){
+                            logger.info("开始推送到仓储计划单");
+                            sendToWhc(infos.get(0),ofcWarehouseInformation,pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
+                        }else{
+                            logger.info("仓储计划单不存在");
+                        }
                     }else if (ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERNOTPROVIDETRANS){
                         logger.info("不需要提供运输");
                         //不需要提供运输
