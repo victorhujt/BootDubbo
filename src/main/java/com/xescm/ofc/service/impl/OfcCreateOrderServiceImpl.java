@@ -165,15 +165,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //供应商
-        String supportName = createOrderEntity.getSupportName();
-        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-        cscSupplierInfoDto.setCustomerCode(custCode);
-        cscSupplierInfoDto.setSupplierCode(supportName);
-        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
-        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
-        if (StringUtils.isBlank(supportCode)) {
-            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
-        }
+//        String supportName = createOrderEntity.getSupportName();
+//        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+//        cscSupplierInfoDto.setCustomerCode(custCode);
+//        cscSupplierInfoDto.setSupplierCode(supportName);
+//        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+//        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
+//        if (StringUtils.isBlank(supportCode)) {
+//            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
+//        }
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
         if (!StringUtils.equals("60", orderType)) {
