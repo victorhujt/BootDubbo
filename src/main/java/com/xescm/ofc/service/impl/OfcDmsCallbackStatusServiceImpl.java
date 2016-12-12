@@ -75,14 +75,14 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             ofcTransplanNewstatus.setTransportSingleUpdateTime(operTime);//操作时间
             ofcTransplanNewstatus.setDescription(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getDesp()));//描述信息
             //无论回传哪种状态, 都向运输单最新状态表里更新
-            int ofcTransplanNewstatusUpdateNum   =ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+            int ofcTransplanNewstatusUpdateNum  = ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
             if(ofcTransplanNewstatusUpdateNum == 0){
                 throw new BusinessException("无法更新相应的运输单状态!");
             }
             //更新订单状态
             //如果运输单状态为已签收,则将对应的运输计划单状态改为已完成
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-            ofcOrderStatus.setNotes(sdf.format(operTime) + "运输单号:" + transCode + "状态:"  + description);
+            ofcOrderStatus.setNotes(sdf.format(operTime) + " " + description);
             ofcOrderStatus.setLastedOperTime(operTime);
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
                 //更新运输计划单状态
