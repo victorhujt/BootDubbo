@@ -1,5 +1,6 @@
 package com.xescm.ofc.mq.consumer;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
@@ -81,15 +82,14 @@ public class CreateOrderApiConsumer implements MessageListener {
                 //接收分拣中心回传的状态
                 logger.info("分拣中心状态反馈的消息体:{}",messageBody);
                 logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
-                List<DmsTransferStatusDto> dmsTransferStatusDtoList = null;
+                DmsTransferStatusDto dmsTransferStatusDto = null;
+                System.out.println("分拣中心状态反馈的消息体:--------------------" + messageBody);
                 try {
-                    dmsTransferStatusDtoList = JSONUtils.jsonToList(messageBody,DmsTransferStatusDto.class);
-                    for(DmsTransferStatusDto dmsTransferStatusDto : dmsTransferStatusDtoList){
-                        if(!keyList.contains(key)){
-                            ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
-                        }else{
-                            keyList.add(key);
-                        }
+                    dmsTransferStatusDto = JSON.parseObject(messageBody,DmsTransferStatusDto.class);
+                    if(!keyList.contains(key)){
+                        ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
+                    }else{
+                        keyList.add(key);
                     }
                 }catch (Exception ex){
                     logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage(),ex);
