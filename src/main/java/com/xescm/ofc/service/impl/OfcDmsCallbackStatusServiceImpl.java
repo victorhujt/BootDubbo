@@ -47,11 +47,15 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             //根据Dto提供的运输单号和卡班类型查询对应的计划单号, 需要运输基本信息表和运输计划单表联查到对应的运输计划单号
             String transCode = dmsTransferStatusDto.getTransNo();
             String dmsCallbackStatus = dmsTransferStatusDto.getWaybillStatusCode();
+            Date operTime = dmsTransferStatusDto.getCreatedTime();
+            String description = dmsTransferStatusDto.getDesp();
+            if(PubUtils.isSEmptyOrNull(transCode) || PubUtils.isSEmptyOrNull(dmsCallbackStatus) || null == operTime || PubUtils.isSEmptyOrNull(description)){
+                throw new BusinessException("DMS回传状态信息不完整!");
+            }
             String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
             if(PubUtils.isSEmptyOrNull(orderCode)){
                 throw new BusinessException("没有查到所属订单");
             }
-            Date operTime = dmsTransferStatusDto.getCreatedTime();
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);//SO161210000047
             ofcTransplanInfo.setBusinessType("602");
@@ -65,17 +69,20 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             BeanUtils.copyProperties(ofcTransplanNewstatus,dmsTransferStatusDto);
             ofcTransplanNewstatus.setPlanCode(planCode);//运输计划单号
             ofcTransplanNewstatus.setTransportSingleLatestStatus(dmsCallbackStatus);//操作类型
-            ofcTransplanNewstatus.setOperator(dmsTransferStatusDto.getCreator());//操作员
-            ofcTransplanNewstatus.setOperUnit(dmsTransferStatusDto.getUnit());//操作单位
+            ofcTransplanNewstatus.setOperator(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getCreator()));//操作员
+            ofcTransplanNewstatus.setOperUnit(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getUnit()));//操作单位
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ofcTransplanNewstatus.setTransportSingleUpdateTime(operTime);//操作时间
-            ofcTransplanNewstatus.setDescription(dmsTransferStatusDto.getDesp());//描述信息
+            ofcTransplanNewstatus.setDescription(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getDesp()));//描述信息
             //无论回传哪种状态, 都向运输单最新状态表里更新
-            ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+            int ofcTransplanNewstatusUpdateNum   =ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+            if(ofcTransplanNewstatusUpdateNum == 0){
+                throw new BusinessException("无法更新相应的运输单状态!");
+            }
             //更新订单状态
             //如果运输单状态为已签收,则将对应的运输计划单状态改为已完成
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-            ofcOrderStatus.setNotes(sdf.format(operTime) + "运输单号:" + transCode + "状态:"  + ofcTransplanNewstatus.getDescription());
+            ofcOrderStatus.setNotes(sdf.format(operTime) + "运输单号:" + transCode + "状态:"  + description);
             ofcOrderStatus.setLastedOperTime(operTime);
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
                 //更新运输计划单状态
