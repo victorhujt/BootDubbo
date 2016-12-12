@@ -85,6 +85,6 @@
                 </if>
                 AND ots.planned_single_state !='50'
         </where>
-
+        ORDER BY otp.plan_code DESC
     </select>
 </mapper>

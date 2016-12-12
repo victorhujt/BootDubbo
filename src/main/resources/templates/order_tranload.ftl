@@ -1442,13 +1442,12 @@
             $.each(data,function (index,CscGoodsTypeVo) {
                 $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
-            if($("#goodsInfoListDiv").find("tr").length==1){
-                $("select option").each(function() {
-                    text = $(this).text();
-                    if($("select option:contains("+text+")").length > 1)
-                        $("select option:contains("+text+"):gt(0)").remove();
-                });
-            }
+            $(obj).parent().next().children().find("option").each(function() {
+                text = $(this).text();
+                if($(obj).parent().next().children().find("option:contains("+text+")")){
+                    $(obj).parent().next().children().find("option:contains("+text+"):gt(0)").remove();
+                }
+            });
         });
     }
 
