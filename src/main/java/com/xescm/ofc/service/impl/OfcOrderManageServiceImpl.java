@@ -181,7 +181,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
                         if(infos!=null&&infos.size()>0){
                             logger.info("开始推送到仓储计划单");
-                        sendToWhc(infos.get(0),pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
+                        sendToWhc(infos.get(0),ofcWarehouseInformation,pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
                         }else{
                             logger.info("仓储计划单不存在");
                         }
@@ -1536,7 +1536,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param info
      * @param planDetails
      */
-    public void sendToWhc(OfcSiloprogramInfoVo info,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
+    public void sendToWhc(OfcSiloprogramInfoVo info,OfcWarehouseInformation ofcWarehouseInformation,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
         try {
             String tag="";
             String jsonStr="";
@@ -1627,8 +1627,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setExpectedArriveTime(info.getArriveTime());//预计货物到达时间
                 wp.setWmsNo("");//wms单号
                 wp.setNotes("");//备注
-                wp.setSupplierCode(PubUtils.trimAndNullAsEmpty(info.getSupportCode()));//供应商编码
-                wp.setSupplierName(PubUtils.trimAndNullAsEmpty(info.getSupportName()));//供应商名称
+                wp.setSupplierCode(PubUtils.trimAndNullAsEmpty(ofcWarehouseInformation.getSupportCode()));//供应商编码
+                wp.setSupplierName(PubUtils.trimAndNullAsEmpty(ofcWarehouseInformation.getSupportName()));//供应商名称
                 wp.setSupplierContact("");//供应商联系人
                 wp.setSupplierAddr("");//供应商地址
                 wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
