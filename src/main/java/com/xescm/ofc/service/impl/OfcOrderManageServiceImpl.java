@@ -4,6 +4,7 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
@@ -14,7 +15,6 @@ import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.model.dto.whc.*;
-import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.model.vo.rmc.RmcPickup;
@@ -92,22 +92,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
     @Resource
     private CodeGenUtils codeGenUtils;
-
     @Autowired
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
     @Autowired
     private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
-
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
     @Autowired
     private DefaultMqProducer defaultMqProducer;
-
     @Autowired
     private FeignCscContactAPIClient feignCscContactAPIClient;
-
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
@@ -181,7 +177,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
                         if(infos!=null&&infos.size()>0){
                             logger.info("开始推送到仓储计划单");
-                        sendToWhc(infos.get(0),pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
+                        sendToWhc(infos.get(0),ofcWarehouseInformation,pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
                         }else{
                             logger.info("仓储计划单不存在");
                         }
@@ -826,7 +822,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String customerCode,AuthResDto authResDtoByToken) {
+    public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose,String customerCode,AuthResDto authResDtoByToken) {
         //Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
@@ -836,7 +832,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.getCscContact().setContactName(contactName);
         cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setCustomerCode(customerCode);
-        Wrapper<List<CscContantAndCompanyVo>> listWrapper = null;
+        Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
         try {
             listWrapper = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
@@ -857,8 +853,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         listWrapper.getResult().get(0);
         listWrapper.getResult().get(0);
-        CscContantAndCompanyVo cscContantAndCompanyVo = listWrapper.getResult().get(0);
-        return cscContantAndCompanyVo;
+        CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = listWrapper.getResult().get(0);
+        return cscContantAndCompanyResponseDto;
     }
 
     @Override
@@ -1449,7 +1445,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+            throw new BusinessException("订单类型既非“已审核”，也非“未审核”，请检查！");
         }
     }
 
@@ -1524,7 +1520,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             //return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+            throw new BusinessException("订单类型既非“已审核”，也非“未审核”，请检查！");
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
@@ -1536,7 +1532,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param info
      * @param planDetails
      */
-    public void sendToWhc(OfcSiloprogramInfoVo info,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
+    public void sendToWhc(OfcSiloprogramInfoVo info,OfcWarehouseInformation ofcWarehouseInformation,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
         try {
             String tag="";
             String jsonStr="";
@@ -1627,8 +1623,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setExpectedArriveTime(info.getArriveTime());//预计货物到达时间
                 wp.setWmsNo("");//wms单号
                 wp.setNotes("");//备注
-                wp.setSupplierCode(PubUtils.trimAndNullAsEmpty(info.getSupportCode()));//供应商编码
-                wp.setSupplierName(PubUtils.trimAndNullAsEmpty(info.getSupportName()));//供应商名称
+                wp.setSupplierCode(PubUtils.trimAndNullAsEmpty(ofcWarehouseInformation.getSupportCode()));//供应商编码
+                wp.setSupplierName(PubUtils.trimAndNullAsEmpty(ofcWarehouseInformation.getSupportName()));//供应商名称
                 wp.setSupplierContact("");//供应商联系人
                 wp.setSupplierAddr("");//供应商地址
                 wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码

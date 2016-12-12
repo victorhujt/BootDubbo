@@ -354,7 +354,7 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#transportType").val(getTransportType(orderDTO.transportType));
-        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)+StringUtil.nullToEmpty(orderDTO.departureCity)+StringUtil.nullToEmpty(orderDTO.departureDistrict)+StringUtil.nullToEmpty(orderDTO.DistrictTowns)+StringUtil.nullToEmpty(orderDTO.departurePlace));
+        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)+StringUtil.nullToEmpty(orderDTO.departureCity)+StringUtil.nullToEmpty(orderDTO.departureDistrict)+StringUtil.nullToEmpty(orderDTO.departureTowns)+StringUtil.nullToEmpty(orderDTO.departurePlace));
         $("#departurePlace").val(departurePlace);
         $("#transCode").val(StringUtil.nullToEmpty(orderDTO.transCode));
         $("#transCode").val(StringUtil.nullToEmpty(orderDTO.transCode));
