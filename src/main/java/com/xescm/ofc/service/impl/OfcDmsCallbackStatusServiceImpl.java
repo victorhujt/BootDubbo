@@ -48,6 +48,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);//SO161210000047
+            ofcTransplanInfo.setBusinessType("602");
             List<OfcTransplanInfo> ofcTransplanInfoList = ofcTransplanInfoService.select(ofcTransplanInfo);
             if(ofcTransplanInfoList.size() < 1){
                 throw new BusinessException("查不到相应运输订单");

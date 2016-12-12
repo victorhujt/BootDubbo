@@ -185,7 +185,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			List<String> infos=ofcSiloprogramInfoService.ofcMaxSiloprogramInfoSerialNumberScreenList(info.getOrderCode(),condition.getBuniessType());
 			if(infos!=null&&infos.size()>0){
 				String ProgramSerialNumber=infos.get(0);
-				if(ProgramSerialNumber.equals(info.getProgramSerialNumber())){
+				if(!StringUtils.isEmpty(ProgramSerialNumber)&&ProgramSerialNumber.equals(info.getProgramSerialNumber())){
 					OfcOrderStatus status=new OfcOrderStatus();
 					status.setOrderStatus(HASBEENCOMPLETED);
 					status.setOrderCode(info.getOrderCode());

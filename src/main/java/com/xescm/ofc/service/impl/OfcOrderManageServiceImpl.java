@@ -26,6 +26,7 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,12 +174,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                        String planCode=siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
                         //仓储计划单生成以后通过MQ推送到仓储中心
                         List <OfcSiloprogramInfoVo> infos= ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode,ZIYUANFENPEIZ);
+                        if(StringUtils.isEmpty(planCode)){
+                            logger.info("仓储计划单号不能为空");
+                            throw new BusinessException("仓储计划单号不能为空");
+                        }
                         List<OfcPlannedDetail> pds=ofcPlannedDetailService.planDetailsScreenList(planCode,"planCode");
                         if(infos!=null&&infos.size()>0){
                             logger.info("开始推送到仓储计划单");
                         sendToWhc(infos.get(0),pds,ofcDistributionBasicInfo,ofcFinanceInformation,ofcFundamentalInformation,authResDtoByToken);
                         }else{
-                            logger.debug("仓储计划单不存在");
+                            logger.info("仓储计划单不存在");
                         }
                     }else {
                         throw new BusinessException("无法确定是否需要运输");
@@ -328,8 +333,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                    ofcTransplanInfo.setVolume(volume);//$$$
+                    if(cubage.length==3){
+                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                        ofcTransplanInfo.setVolume(volume);//$$$
+                    }else{
+                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
+                    }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -497,8 +506,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                    ofcTransplanInfo.setVolume(volume);//$$$
+                    if(cubage.length==3){
+                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                        ofcTransplanInfo.setVolume(volume);//$$$
+                    }else{
+                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
+                    }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -529,12 +542,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHECITY)){//卡班拆城配
                     //向TFC推送
-                    logger.debug("计划单最新状态保存成功");
+                    logger.debug("计划单状态保存成功");
                     ofcTransplanStatusService.save(ofcTransplanStatus);
                     ofcTransplanInfoList.add(ofcTransplanInfo);
                     ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
                 }else if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHEKABAN)){//卡班拆卡班
                     //如果是卡班订单,则应该向DMS推送卡班订单
+                    ofcTransplanStatusService.save(ofcTransplanStatus);
                     pushKabanOrderToDms(ofcDistributionBasicInfo,ofcTransplanInfo);
                 }
                 ofcTransplanInfoService.save(ofcTransplanInfo);
@@ -565,26 +579,33 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcDistributionBasicInfo
      */
     private void pushKabanOrderToDms(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcTransplanInfo ofcTransplanInfo) {
-        try{
-            if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
-                String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                ofcDistributionBasicInfo.setCubage(volume.toString());
-            }
-            Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(ofcDistributionBasicInfo);
-            if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                throw new BusinessException("向分拣中心推送卡班订单失败");
-            }
-            //更新运输计划单状态为已推送, 略过, 因为只更新不记录
-            //一旦向DMS推送过去, 就更新运输计划单状态为执行中
-            OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
-            ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-            ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
-            ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+        OfcDistributionBasicInfo pushDistributionBasicInfo = new OfcDistributionBasicInfo();
+        try {
+            BeanUtils.copyProperties(pushDistributionBasicInfo,ofcDistributionBasicInfo);
+        } catch (Exception e) {
+            throw new BusinessException("推送卡班信息拷贝属性错误",e);
         }
-
+        if(!PubUtils.trimAndNullAsEmpty(pushDistributionBasicInfo.getCubage()).equals("")){
+            String[] cubage = pushDistributionBasicInfo.getCubage().split("\\*");
+            if(cubage.length == 3){
+                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
+                pushDistributionBasicInfo.setCubage(volume.toString());
+            }else{
+                throw new BusinessException("体积串格式不正确,长宽高都必须填入");
+            }
+        }
+        Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
+        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+            throw new BusinessException("向分拣中心推送卡班订单失败");
+        }else if(wrapper.getCode() == 410){
+            throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
+        }
+        //更新运输计划单状态为已推送, 略过, 因为只更新不记录
+        //一旦向DMS推送过去, 就更新运输计划单状态为执行中
+        OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
+        ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+        ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
+        ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
     }
 
 
@@ -706,10 +727,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
             if(PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YIZUOFEI)){
                 throw new BusinessException("状态错误，该计划单已作废");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)
+            }
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUZHONG)
                     || PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(RENWUWANCH)){
                 throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
+            }
+             if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
+                throw new BusinessException("状态有误");
+            }
+
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
                 try {
                         CancelOrderDTO dto=new CancelOrderDTO();
                         dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
@@ -720,25 +747,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             dto.setBillType(ORDER_TYPE_OUT);
                         }
                         dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
-//                        dto.setCustomerID("CUS0001");
-//                        dto.setOrderNo("SO161128000468");
-//                        dto.setOrderType("610");
-//                        dto.setBillType("CK");
                         dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
-                       // dto.setWarehouseID("WH01");
-//                    {
-//                        "billType": "RK",
-//                            "customerID": "CUS0001",
-//                            "orderNo": "SO161128000468",
-//                            "orderType": "610",
-//                            "reason": ".。。。。。",
-//                            "warehouseID": "WH01",
-//                            "whcBillNo": ""
-//                    }
-
-
-
-
+                    logger.info("==> 仓储计划单号{}开始取消,业务类型为{}",ofcSiloprogramInfo.getPlanCode(),ofcSiloprogramInfo.getDocumentType());
                         //调用接口尝试3次
                         for (int j = 0; j <3; j++) {
                             response=feignWhcSiloprogramAPIClient.cancelOrder(dto);
@@ -746,26 +756,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 break;
                             }
                         }
-
                 } catch (Exception e) {
                     logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage(),e);
                     throw new BusinessException(e.getMessage(),e);
                 }
                 if(Response.ERROR_CODE == response.getCode()){
+                    logger.error("仓储计划单调用WHC响应状态码{}",response.getCode());
                     throw new BusinessException(response.getMessage());
                 }
-            }else if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
-                throw new BusinessException("状态有误");
             }
-            ofcSiloprogramInfo.setVoidPersonnel(userName);
-            ofcSiloprogramInfo.setVoidTime(new Date());
-            //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-            //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-            ofcSiloproStatus.setPlannedSingleState(YIZUOFEI);
-            //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
-            //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
-            ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
-            ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+            if(Response.SUCCESS_CODE==response.getCode()){
+                ofcSiloprogramInfo.setVoidPersonnel(userName);
+                ofcSiloprogramInfo.setVoidTime(new Date());
+                //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
+                //ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                ofcSiloproStatus.setPlannedSingleState(YIZUOFEI);
+                //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+                ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
+            }
         }
     }
 
@@ -926,16 +936,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             try {
-                for(int i=0;i<planCodeList.length;i++){
-                    ofcTraplanSourceStatus.setPlanCode(planCodeList[i]);
+                for (String plan_code:planCodeList) {
+
+                    ofcTraplanSourceStatus.setPlanCode(plan_code);
 
                     OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
-                    ofcPlannedDetail.setPlanCode(ofcTraplanSourceStatus.getPlanCode());
+                    ofcPlannedDetail.setPlanCode(plan_code);
                     List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
                     ofcPlannedDetailMap.put(ofcTraplanSourceStatus.getPlanCode(),ofcPlannedDetailList);
                     ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
                     if(planStatus.equals("40")){
-                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(planCodeList[i]);
+                        OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(plan_code);
                         ofcTransplanInfoList.add(ofcTransplanInfo);
                         String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
                         if(businessType.equals("600") || businessType.equals("601")){
@@ -1527,10 +1538,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      */
     public void sendToWhc(OfcSiloprogramInfoVo info,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
         try {
-            String documentType=info.getDocumentType();
             String tag="";
             String jsonStr="";
-            if(OFC_WHC_OUT_TYPE.equals(info.getBusinessType())){
+            boolean isSend=false;
+            String documentType=info.getDocumentType();
+            String businessType=info.getBusinessType();
+            if(planDetails==null||planDetails.size()==0){
+                logger.debug("仓储计划单详情不存在");
+                throw new BusinessException("仓储计划单详情不存在");
+            }
+            if(OFC_WHC_OUT_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcDelivery wsv=new WhcDelivery();
                 List<WhcDeliveryDetails> detailList=new ArrayList<>();
@@ -1590,7 +1607,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 wsv.setDetailsList(detailList);
                 jsonStr=JSONUtils.objectToJson(wsv);
-            }else if(OFC_WHC_IN_TYPE.equals(info.getBusinessType())){
+            }else if(OFC_WHC_IN_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcInStock wp=new WhcInStock();
                 List<WhcInStockDetails> detailList=new ArrayList<WhcInStockDetails>();
@@ -1643,8 +1660,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setDetailsList(detailList);
                 jsonStr=JSONUtils.objectToJson(wp);
             }
+            if(!StringUtils.isEmpty(jsonStr)){
             logger.info("send to whc json is :" +jsonStr);
-            boolean isSend=defaultMqProducer.toSendWhc(jsonStr, info.getPlanCode(),tag);
+             isSend=defaultMqProducer.toSendWhc(jsonStr, info.getPlanCode(),tag);
+            }
             if(isSend){
                 //推送成功后将计划单状态更新为已推送
                 OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
@@ -1785,17 +1804,25 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     public RmcDistrictQO copyDestinationPlace(String planeCode,RmcDistrictQO rmcDistrictQO){
         String address[]=planeCode.split(",");
-        if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
-            rmcDistrictQO.setProvinceCode(address[0]);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(address[1]).equals("")){
-            rmcDistrictQO.setCityCode(address[1]);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(address[2]).equals("")){
-            rmcDistrictQO.setDistrictCode(address[2]);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(address[3]).equals("")){
-            rmcDistrictQO.setCountyCode(address[3]);
+        if(address.length>=1){
+            if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
+                rmcDistrictQO.setProvinceCode(address[0]);
+            }
+            if(address.length>=2){
+                if(!PubUtils.trimAndNullAsEmpty(address[1]).equals("")){
+                    rmcDistrictQO.setCityCode(address[1]);
+                }
+                if(address.length>=3){
+                    if(!PubUtils.trimAndNullAsEmpty(address[2]).equals("")){
+                        rmcDistrictQO.setDistrictCode(address[2]);
+                    }
+                    if(address.length==4){
+                        if(!PubUtils.trimAndNullAsEmpty(address[3]).equals("")){
+                            rmcDistrictQO.setCountyCode(address[3]);
+                        }
+                    }
+                }
+            }
         }
         return rmcDistrictQO;
     }

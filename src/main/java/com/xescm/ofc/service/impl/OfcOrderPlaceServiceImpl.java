@@ -12,6 +12,7 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
@@ -109,6 +110,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcFinanceInformation  ofcFinanceInformation =modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+        if (count > 0){
+            throw new BusinessException("运输订单编号重复");
+        }
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcMerchandiser ofcMerchandiser=modelMapper.map(ofcOrderDTO,OfcMerchandiser.class);
         ofcFundamentalInformation.setCreationTime(new Date());
@@ -181,7 +186,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         //设置城配或者干线 add by wangst
                         setCityOrTrunk(ofcDistributionBasicInfo,ofcFundamentalInformation);
                        // ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHEKABAN);
-
+                        //保存运输信息
                         addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                         /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                         saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
@@ -284,8 +289,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     OfcWarehouseInformation ofcWarehouseInformationForTrans = new OfcWarehouseInformation();
                     ofcWarehouseInformationForTrans.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     ofcWarehouseInformationService.delete(ofcWarehouseInformationForTrans);
-                    //更新运输信息
-                    upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
                     /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
                     saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
                     OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
@@ -431,7 +434,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     private void addDistributionInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation){
         upDistributionBasicInfo(ofcDistributionBasicInfo,ofcFundamentalInformation);
-        ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
         ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
     }
 
