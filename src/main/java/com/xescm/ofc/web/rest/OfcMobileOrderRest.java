@@ -33,7 +33,7 @@ public class OfcMobileOrderRest extends BaseController {
         return null;
     }
 
-    @RequestMapping("/orderPlaceCon")
+    @RequestMapping("/saveMobileOrder")
     @ResponseBody
     public ModelAndView saveMobileOrder(OfcMobileOrder mobileOrder){
         ModelAndView modelAndView = new ModelAndView("");
@@ -41,9 +41,7 @@ public class OfcMobileOrderRest extends BaseController {
             if(mobileOrder!=null){
                 ofcMobileOrderService.saveOfcMobileOrder(mobileOrder);
             }
-
-
-
+            modelAndView.addObject("mobileOrder",mobileOrder);
         } catch (Exception ex) {
         }
             return modelAndView;
