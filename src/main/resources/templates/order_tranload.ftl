@@ -1476,17 +1476,11 @@
         if($("#cargoInsuranceFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#cargoInsuranceFee").val()))){
             count=count+parseFloat($("#cargoInsuranceFee").val());
         }
-        if($("#insureValue").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#insureValue").val()))){
-            count=count+parseFloat($("#insureValue").val());
-        }
         if($("#twoDistributionFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#twoDistributionFee").val()))){
             count=count+parseFloat($("#twoDistributionFee").val());
         }
         if($("#collectServiceCharge").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectServiceCharge").val()))){
             count=count+parseFloat($("#collectServiceCharge").val());
-        }
-        if($("#collectLoanAmount").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectLoanAmount").val()))){
-            count=count+parseFloat($("#collectLoanAmount").val());
         }
         if($("#returnListFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#returnListFee").val()))){
             count=count+parseFloat($("#returnListFee").val());
