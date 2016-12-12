@@ -55,11 +55,14 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
         logger.info("OFC消费MQ开始。。。");
+
+
         String topicName = message.getTopic();
         String tag=message.getTag();
         String userName ="";
         String key = message.getKey();
         String messageBody = new String(message.getBody());
+        logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
             if(message.getTag().equals("xeOrderToOfc")){

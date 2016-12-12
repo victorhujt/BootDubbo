@@ -591,7 +591,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">上门提货:费用</label>
                         <div style="width:140px;float:left;">
                             <div class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "" />
+                                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCostCheck()" />
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -606,7 +606,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">货物保险:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
-                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -615,7 +615,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">声明价值</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -630,7 +630,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">二次配送:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -645,7 +645,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">代收货款:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15" >
-                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -654,7 +654,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">代收金额</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -669,7 +669,7 @@
                         <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">签单返回:费用</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="">
+                                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -678,7 +678,7 @@
                         <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">运费</label>
                         <div style="width:140px;float:left;">
                             <div  class="col-width-100 margin-right-15">
-                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="" value="0">
+                                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="0">
                             </div>
                             <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
                         </div>
@@ -1080,7 +1080,7 @@
             success : function(e) {
                 $(e).parent().parent().removeClass('has-error').addClass('has-success');
                 $(e).remove();
-                countCostCheck();
+                //countCostCheck();
             },
             errorPlacement : function(error, element) {
                 error.insertAfter(element.parent().next());
@@ -1470,28 +1470,28 @@
 
     function countCostCheck() {
         var count=0;
-        if($("#homeDeliveryFee").val()!=""){
+        if($("#homeDeliveryFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#homeDeliveryFee").val()))){
             count=count+parseFloat($("#homeDeliveryFee").val());
         }
-        if($("#cargoInsuranceFee").val()!=""){
+        if($("#cargoInsuranceFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#cargoInsuranceFee").val()))){
             count=count+parseFloat($("#cargoInsuranceFee").val());
         }
-        if($("#insureValue").val()!=""){
+        if($("#insureValue").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#insureValue").val()))){
             count=count+parseFloat($("#insureValue").val());
         }
-        if($("#twoDistributionFee").val()!=""){
+        if($("#twoDistributionFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#twoDistributionFee").val()))){
             count=count+parseFloat($("#twoDistributionFee").val());
         }
-        if($("#collectServiceCharge").val()!=""){
+        if($("#collectServiceCharge").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectServiceCharge").val()))){
             count=count+parseFloat($("#collectServiceCharge").val());
         }
-        if($("#collectLoanAmount").val()!=""){
+        if($("#collectLoanAmount").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectLoanAmount").val()))){
             count=count+parseFloat($("#collectLoanAmount").val());
         }
-        if($("#returnListFee").val()!=""){
+        if($("#returnListFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#returnListFee").val()))){
             count=count+parseFloat($("#returnListFee").val());
         }
-        if($("#luggage").val()!=""){
+        if($("#luggage").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#luggage").val()))){
             count=count+parseFloat($("#luggage").val());
         }
         if((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test(count)){
@@ -1826,8 +1826,8 @@
         $("#consignorContactCode").val("");
         $("#consignorType").val("");
         $("#consignorAddress").val("");
-        $("#city-picker3-consignee").val("");
-        $("#city-picker3-consignee").citypicker('refresh');
+        $("#city-picker3-consignor").val(" / / / ");
+        $("#city-picker3-consignor").citypicker('refresh');
         departurePlace();
     }
     //清空收货方
@@ -1839,7 +1839,7 @@
         $("#consigneeContactCode").val("");
         $("#consigneeType").val("");
         $("#consigneeAddress").val("");
-        $("#city-picker3-consignee").val("");
+        $("#city-picker3-consignee").val(" / / / ");
         $("#city-picker3-consignee").citypicker('refresh');
         destination();
     }
@@ -2147,20 +2147,23 @@
                 var tdArr = $(this).children();
                 if(tdArr.eq(0).find("input").prop("checked")){
                     custEnterTag = "1";
-                    var type = tdArr.eq(2).text();//类型
-                    var customerName = tdArr.eq(3).text();//公司名称
-                    var channel = tdArr.eq(4).text();//    渠道
-                    var productType = tdArr.eq(5).text();//    产品类别
-                    var groupId = tdArr.eq(6).text();//    产品类别
-                    var customerCode = tdArr.eq(7).text();//    产品类别
-                    $("#custName").val(customerName);
-                    $("#custGroupId").val(groupId);
-                    $("#customerCode").val(customerCode);
+                    if($("#customerCode").val()!=tdArr.eq(7).text()){
+                        var type = tdArr.eq(2).text();//类型
+                        var customerName = tdArr.eq(3).text();//公司名称
+                        var channel = tdArr.eq(4).text();//    渠道
+                        var productType = tdArr.eq(5).text();//    产品类别
+                        var groupId = tdArr.eq(6).text();//    产品类别
+                        var customerCode = tdArr.eq(7).text();//    产品类别
+                        $("#custName").val(customerName);
+                        $("#custGroupId").val(groupId);
+                        $("#customerCode").val(customerCode);
 
-                    var cscContact = {};
-                    var cscContactCompany = {};
-                    cscContact.purpose = "2";
-                    outConsignor(cscContact,cscContactCompany,groupId,customerCode);
+                        var cscContact = {};
+                        var cscContactCompany = {};
+                        cscContact.purpose = "2";
+                        outConsignor(cscContact,cscContactCompany,groupId,customerCode);
+                        $("#goodsInfoListDiv").html("");
+                    }
                 }
             });
             if(custEnterTag==""){
@@ -2222,9 +2225,6 @@
             cscContact.phone = $("#consignorPhoneNumber2").val();
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-
-
-            var groupId = $("#custGroupId").val();
             var customerCode = $("#customerCode").val();
 
             var param = JSON.stringify(cscContantAndCompanyDto);
@@ -2242,6 +2242,14 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
                     contactList =contactList + "</tr>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
@@ -2277,6 +2285,14 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
                     contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
@@ -2293,50 +2309,29 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var address = tdArr.eq(5).text();//    邮编
+                    var contactCompanyCode = tdArr.eq(6).text();//    发货方编码
+                    var contactCode = tdArr.eq(7).text();//    发货方联系人编码
+                    var type = tdArr.eq(8).text();//    发货方类型
+                    var address = tdArr.eq(9).text();//    门牌号
+                    var provinceName = tdArr.eq(10).text();//    省
+                    var cityName = tdArr.eq(11).text();//    市
+                    var areaName = tdArr.eq(12).text();//    区
+                    var streetName = tdArr.eq(13).text();//    县
 
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
+                    $("#consignorCode").val(contactCompanyCode);
+                    $("#consignorContactCode").val(contactCode);
+                    $("#consignorType").val(type);
                     $("#consignorAddress").val(address);
-
-                    //在这里将所有的信息补全!!
-                    var paramConsignor = {};
-                    var paramConsignee = {};
-                    var cscContact = {};
-                    var cscContactCompany = {};
-                    cscContactCompany.contactCompanyName = consignorName;
-                    cscContact.contactName = contacts;
-                    cscContact.purpose = "2";
-                    cscContact.phone = contactsNumber;
-                    var cscContantAndCompanyDto = {};
-                    cscContantAndCompanyDto.cscContact = cscContact;
-                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-                    var param = JSON.stringify(cscContantAndCompanyDto);
-                    var groupId = $("#custGroupId").val();
-                    var customerCode = $("#customerCode").val();
-
-                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
-                        data = eval(data);
-                        $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
-                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
-                            $("#consignorType").val(CscContantAndCompanyDto.type);
-                            $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                            var provinceName = CscContantAndCompanyDto.provinceName;
-                            var cityName = CscContantAndCompanyDto.cityName;
-                            var areaName = CscContantAndCompanyDto.areaName;
-                            var streetName = CscContantAndCompanyDto.streetName;
-                            var paramAddressNameToPage = provinceName
-                                    + "/" + cityName
-                                    + "/" + areaName
-                                    + "/" + streetName;
-                            $("#city-picker3-consignor").val(paramAddressNameToPage);
-                            $("#city-picker3-consignor").citypicker('refresh');
-                            departurePlace();
-                        });
-                    });
-
+                    var paramAddressNameToPage = provinceName
+                            + "/" + cityName
+                            + "/" + areaName
+                            + "/" + streetName;
+                    $("#city-picker3-consignor").val(paramAddressNameToPage);
+                    $("#city-picker3-consignor").citypicker('refresh');
+                    departurePlace();
                 }
             });
             if(consignorin==""){
@@ -2356,45 +2351,29 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var address = tdArr.eq(5).text();//    地址
+
+                    var contactCompanyCode = tdArr.eq(6).text();//    收货方编码
+                    var contactCode = tdArr.eq(7).text();//    收货方联系人编码
+                    var type = tdArr.eq(8).text();//    收货方类型
+                    var address = tdArr.eq(9).text();//    门牌号
+                    var provinceName = tdArr.eq(10).text();//    省
+                    var cityName = tdArr.eq(11).text();//    市
+                    var areaName = tdArr.eq(12).text();//    区
+                    var streetName = tdArr.eq(13).text();//    县
                     $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
+                    $("#consigneeCode").val(contactCompanyCode);
+                    $("#consigneeContactCode").val(contactCode);
+                    $("#consigneeType").val(type);
                     $("#consigneeAddress").val(address);
-                    var paramConsignor = {};
-                    var paramConsignee = {};
-                    var cscContact = {};
-                    var cscContactCompany = {};
-                    cscContactCompany.contactCompanyName = $("#consigneeName").val();
-                    cscContact.contactName = $("#consigneeContactName").val();
-                    cscContact.purpose = "1";
-                    cscContact.phone = $("#consigneePhone").val();
-                    var cscContantAndCompanyDto = {};
-                    cscContantAndCompanyDto.cscContact = cscContact;
-                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-                    var param = JSON.stringify(cscContantAndCompanyDto);
-                    var groupId = $("#custGroupId").val();
-                    var customerCode = $("#customerCode").val();
-                    CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
-                        data = eval(data);
-                        $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
-                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
-                            $("#consigneeType").val(CscContantAndCompanyDto.type);
-                            $("#consigneeAddress").val(CscContantAndCompanyDto.address);
-                            var provinceName = CscContantAndCompanyDto.provinceName;
-                            var cityName = CscContantAndCompanyDto.cityName;
-                            var areaName = CscContantAndCompanyDto.areaName;
-                            var streetName = CscContantAndCompanyDto.streetName;
-                            var paramAddressNameToPage = provinceName
-                                    + "/" + cityName
-                                    + "/" + areaName
-                                    + "/" + streetName;
-                            $("#city-picker3-consignee").val(paramAddressNameToPage);
-                            $("#city-picker3-consignee").citypicker('refresh');
-                            destination();
-                        });
-                    });
+                    var paramAddressNameToPage = provinceName
+                            + "/" + cityName
+                            + "/" + areaName
+                            + "/" + streetName;
+                    $("#city-picker3-consignee").val(paramAddressNameToPage);
+                    $("#city-picker3-consignee").citypicker('refresh');
+                    destination();
                 }
             });
             if(consignorout==""){
@@ -2409,6 +2388,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
         });
@@ -2429,6 +2409,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
             }
 
@@ -2446,29 +2427,6 @@
 
         });
 
-        $("#supportListDivBlock").click(function(){
-
-            $("#supportListDiv").fadeIn("slow");//淡入淡出效果 显示div
-
-        });
-
-        $("#supportListDivNoneTop").click(function(){
-
-            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-        });
-
-        $("#supportListDivNoneBottom").click(function(){
-
-            $("#supportListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
-
-        });
-
-
-        var transportTypePub = "10";
-        $("#transportType").val(transportTypePub);
-        var expensePaymentParty = "10";
-        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
