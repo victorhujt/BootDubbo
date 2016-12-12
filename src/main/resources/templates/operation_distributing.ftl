@@ -765,8 +765,8 @@
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
                         "<td style='display:none'>" + consignee.type + "</td>" +
-                        "<td style='display:none'>" + consignee.contactCompanyCode + "</td>" +
-                        "<td style='display:none'>" + consignee.contactCode + "</td>" +
+                        "<td style='display:none'>" + consignee.contactCompanySerialNo + "</td>" +
+                        "<td style='display:none'>" + consignee.contactSerialNo + "</td>" +
                         "<td style='display:none'>" + consignee.phone + "</td>" +
                         "<td style='display:none'>" + consignee.province + "</td>" +
                         "<td style='display:none'>" + consignee.provinceName + "</td>" +
