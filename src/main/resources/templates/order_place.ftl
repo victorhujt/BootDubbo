@@ -583,13 +583,13 @@
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">取货时间</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                                                            <input id="pickupTime" name="pickupTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                                                                         </div>
                                                                     </div></div>
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">期望送达时间</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                                                                         </div>
                                                                     </div></div>
                                                                 </div>
@@ -1579,10 +1579,16 @@
             jsonStr.orderType = $("#orderTypeSel").val();
             jsonStr.businessType = $("#businessType").val();
             jsonStr.provideTransport = $("#provideTransportHel").val();
-            var pageStoreMessage = $("#storeCode").val().split("/");
-            jsonStr.storeCode = pageStoreMessage[0];
-            jsonStr.storeName = $("#storeCode option:selected").text();
-            jsonStr.platformType = pageStoreMessage[1];
+            var storeMsg = $("#storeCode").val();
+            if(!StringUtil.isEmpty(storeMsg)){
+                var pageStoreMessage = $("#storeCode").val().split("/");
+                jsonStr.storeCode = pageStoreMessage[0];
+                jsonStr.storeName = $("#storeCode option:selected").text();
+                jsonStr.platformType = pageStoreMessage[1];
+            }else{
+                alert('没有店铺信息!');
+                return;
+            }
             jsonStr.notes = $("#orderNotes").val();
 
             //货品添加
@@ -1700,8 +1706,8 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyCode;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consignorTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -1734,8 +1740,8 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyCode;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consigneeTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -1814,8 +1820,8 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+quantity+"'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_batch+"'></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_time+"' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+invalid_time+"' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_time+"' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+invalid_time+"' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1842,8 +1848,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1901,8 +1907,8 @@
 
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;
@@ -1964,8 +1970,8 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;

@@ -14,7 +14,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.utils.JsonUtil;
-import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;

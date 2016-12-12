@@ -4,6 +4,7 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
@@ -14,7 +15,6 @@ import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.model.dto.whc.*;
-import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.model.vo.rmc.RmcPickup;
@@ -92,22 +92,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
     @Resource
     private CodeGenUtils codeGenUtils;
-
     @Autowired
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
     @Autowired
     private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
-
     @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
     @Autowired
     private DefaultMqProducer defaultMqProducer;
-
     @Autowired
     private FeignCscContactAPIClient feignCscContactAPIClient;
-
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
@@ -835,7 +831,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String customerCode,AuthResDto authResDtoByToken) {
+    public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose,String customerCode,AuthResDto authResDtoByToken) {
         //Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
@@ -845,7 +841,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.getCscContact().setContactName(contactName);
         cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setCustomerCode(customerCode);
-        Wrapper<List<CscContantAndCompanyVo>> listWrapper = null;
+        Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
         try {
             listWrapper = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
@@ -866,8 +862,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         listWrapper.getResult().get(0);
         listWrapper.getResult().get(0);
-        CscContantAndCompanyVo cscContantAndCompanyVo = listWrapper.getResult().get(0);
-        return cscContantAndCompanyVo;
+        CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = listWrapper.getResult().get(0);
+        return cscContantAndCompanyResponseDto;
     }
 
     @Override
@@ -1458,7 +1454,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+            throw new BusinessException("订单类型既非“已审核”，也非“未审核”，请检查！");
         }
     }
 
@@ -1533,7 +1529,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             //return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
-            throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
+            throw new BusinessException("订单类型既非“已审核”，也非“未审核”，请检查！");
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);

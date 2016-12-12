@@ -158,7 +158,7 @@
                             <input id="plateNumber" name="plateNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.plateNumber)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">目的地</label>1
+                        <label class="control-label col-label no-padding-right" for="name">目的地</label>
                         <div class="padding-15 col-float" style="width:460px;">
                             <input id="destination" name="" type="search" placeholder="" style="width:460px;"
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destination)!"" }">
@@ -276,7 +276,7 @@
                         <div class="padding-15 y-float" style="width:492px;">
                             <input id="address" name="address" type="search" style="width: 100%;" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
+                                   value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destination)!"" }">
                         </div>
                     </div>
                 </form>
@@ -733,7 +733,7 @@
             value = "其他出库";
         } else if (businessType == "620") {
             value = "采购入库";
-        } else if (order.businessType == "621") {
+        } else if (businessType == "621") {
             value = "调拨入库";
         } else if (businessType == "622") {
             value = "退货入库";

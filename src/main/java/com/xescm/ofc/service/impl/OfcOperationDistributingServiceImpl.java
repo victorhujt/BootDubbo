@@ -8,11 +8,11 @@ import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
@@ -22,7 +22,6 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -230,7 +229,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     private Wrapper<?> checkXls(MultipartFile uploadFile,String sheetNumChosen, String customerCode, Integer staticCell){
         boolean checkPass = true;
         Map<String,JSONArray> resultMap = null;
-        List<CscContantAndCompanyVo> consigneeNameList = null;
+        List<CscContantAndCompanyResponseDto> consigneeNameList = null;
         List<String> consigneeNameListForCheck = null;
         List<CscGoodsApiVo> goodsApiVoList = null;
         List<String> goodsCodeListForCheck = null;
@@ -301,7 +300,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 //校验5列之后的收货人名称是否在客户中心收发货档案中维护了
                             }else if(cellNum > (staticCell -1)){//   第一个收货人cellNum是5 > 5 - 1
                                 if(PubUtils.isSEmptyOrNull(cellValue)){
-                                    consigneeNameList.add(new CscContantAndCompanyVo());
+                                    consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                     consigneeNameListForCheck.add("");
                                     continue;
                                 }
@@ -314,11 +313,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 cscContact.setPurpose("1");//用途为收货方
                                 cscContantAndCompanyDto.setCscContact(cscContact);
                                 cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
-                                Wrapper<List<CscContantAndCompanyVo>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
                                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                     throw new BusinessException(queryCscCustomerResult.getMessage());
                                 }
-                                List<CscContantAndCompanyVo> result = queryCscCustomerResult.getResult();
+                                List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
                                 if(null != result && result.size() > 0){
                                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                                     consigneeNameList.add(result.get(0));
@@ -326,7 +325,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 }else{
                                     //收货人列表不在联系人档案中,则需要对当前格子进行报错处理
                                     checkPass = false;
-                                    consigneeNameList.add(new CscContantAndCompanyVo());
+                                    consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                     consigneeNameListForCheck.add("");
 
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
@@ -381,14 +380,14 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
                                     //如果校验成功,就往结果集里堆
                                     if(matches){
-                                        CscContantAndCompanyVo cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
+                                        CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                         CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                         goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                         cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
-                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
-                                        String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
+                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanySerialNo();
+                                        String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
                                             throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                             //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
@@ -455,7 +454,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     private Wrapper<?> checkXlsx(MultipartFile uploadFile,String sheetNumChosen, String custId, Integer staticCell){
         boolean checkPass = true;
         Map<String,JSONArray> resultMap = null;
-        List<CscContantAndCompanyVo> consigneeNameList = null;
+        List<CscContantAndCompanyResponseDto> consigneeNameList = null;
         List<String> consigneeNameListForCheck = null;
         List<CscGoodsApiVo> goodsApiVoList = null;
         List<String> goodsCodeListForCheck = null;
@@ -525,7 +524,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 //校验5列之后的收货人名称是否在客户中心收发货档案中维护了
                             }else if(cellNum > (staticCell -1)){//   第一个收货人cellNum是5 > 5 - 1
                                 if(PubUtils.isSEmptyOrNull(cellValue)){
-                                    consigneeNameList.add(new CscContantAndCompanyVo());
+                                    consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                     consigneeNameListForCheck.add("");
                                     continue;
                                 }
@@ -538,20 +537,20 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                 cscContact.setPurpose("1");//用途为收货方
                                 cscContantAndCompanyDto.setCscContact(cscContact);
                                 cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
-                                Wrapper<List<CscContantAndCompanyVo>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
                                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                     throw new BusinessException(queryCscCustomerResult.getMessage());
                                 }
-                                List<CscContantAndCompanyVo> result = queryCscCustomerResult.getResult();
+                                List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
                                 if(null != result && result.size() > 0){
                                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
-                                    CscContantAndCompanyVo cscContantAndCompanyVo = result.get(0);
+                                    CscContantAndCompanyResponseDto cscContantAndCompanyVo = result.get(0);
                                     consigneeNameList.add(cscContantAndCompanyVo);
                                     consigneeNameListForCheck.add(cscContantAndCompanyVo.getContactCompanyName());
                                 }else{
                                     //收货人列表不在联系人档案中,则需要对当前格子进行报错处理
                                     checkPass = false;
-                                    consigneeNameList.add(new CscContantAndCompanyVo());
+                                    consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                     consigneeNameListForCheck.add("");
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
                                 }
@@ -605,14 +604,14 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
                                     //如果校验成功,就往结果集里堆
                                     if(matches){
-                                        CscContantAndCompanyVo cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
+                                        CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                         CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                         goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                         cscGoodsApiVo.setGoodsAmount(goodsAmount);
                                         goodsApiVoList.remove(rowNum - 1);
                                         goodsApiVoList.add(rowNum-1,cscGoodsApiVo);
-                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanyCode();
-                                        String consigneeContactCode = cscContantAndCompanyVo.getContactCode();
+                                        String consigneeCode = cscContantAndCompanyVo.getContactCompanySerialNo();
+                                        String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
                                             throw new BusinessException("收货方编码或收货方联系人编码为空!");
 //                                            checkPass = false;
