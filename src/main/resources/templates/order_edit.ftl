@@ -583,7 +583,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                            <input id="pickupTime" name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -591,7 +591,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1405,11 +1405,11 @@
           data = eval(data);
           $.each(data,function (index,CscContantAndCompanyDto) {
               
-              resultConsignorCode = CscContantAndCompanyDto.contactCompanyCode;
-              resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+              resultConsignorCode = CscContantAndCompanyDto.contactCompanySerialNo;
+              resultConsignorContactCode = CscContantAndCompanyDto.contactSerialNo;
               resultConsignorType = CscContantAndCompanyDto.type;
-              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
-              $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+              $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
               $("#consignorType").val(CscContantAndCompanyDto.type);
               console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
           });
@@ -1578,8 +1578,8 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyCode;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consignorTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -1612,8 +1612,8 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyCode;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consigneeTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='suppliersele' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -1689,8 +1689,8 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
 
@@ -1745,8 +1745,8 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+quantity+"></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_batch+"></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1773,8 +1773,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1832,11 +1832,11 @@
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             
-//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyCode;
-//                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanySerialNo;
+//                            resultConsignorContactCode = CscContantAndCompanyDto.contactSerialNo;
 //                            resultConsignorType = CscContantAndCompanyDto.type;
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;

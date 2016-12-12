@@ -1244,8 +1244,8 @@
                         //phoneAuto = CscContantAndCompanyDto.phone;
                         detailAddressAuto = CscContantAndCompanyDto.detailAddress;
                         typeAuto = CscContantAndCompanyDto.type;
-                        contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanyCode;
-                        contactCodeAuto = CscContantAndCompanyDto.contactCode;//000
+                        contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanySerialNo;
+                        contactCodeAuto = CscContantAndCompanyDto.contactSerialNo;//000
                         phoneAuto = CscContantAndCompanyDto.phone;
                         provinceAuto = CscContantAndCompanyDto.province;
                         provinceNameAuto = CscContantAndCompanyDto.provinceName;
@@ -1340,7 +1340,7 @@
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
                 /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                 consignorTypeHide = CscContantAndCompanyDto.type;*/
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -1350,8 +1350,8 @@
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyCode)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCode)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
@@ -1466,7 +1466,7 @@
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
                 /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                 consigneeTypeHide = CscContantAndCompanyDto.type;*/
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -1476,8 +1476,8 @@
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyCode)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCode)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo)+"</td>";
+                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
                 contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";

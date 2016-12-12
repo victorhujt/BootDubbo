@@ -1,8 +1,8 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -21,7 +21,7 @@ public interface OfcOrderManageService {
 
     String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
     String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
-    CscContantAndCompanyVo getContactMessage(String contactCompanyName, String contactName, String purpose,String custId, AuthResDto authResDtoByToken);
+    CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String custId, AuthResDto authResDtoByToken);
     CscSupplierInfoDto getSupportMessage(String suppulierName, String suppulierContactName,String custId, AuthResDto authResDtoByToken);
     String planUpdate(String planCode, String planStatus,String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userId);
     Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO);

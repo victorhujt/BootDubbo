@@ -8,12 +8,8 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
-import com.xescm.ofc.model.dto.csc.CscGoodsType;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.csc.CscContantAndCompanyVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
@@ -268,8 +264,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
-            Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoList(csc);
-            List<CscContantAndCompanyVo> result = cscReceivingInfoList.getResult();
+            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoList(csc);
+            List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
             /*
             csc.getCscContact().setPurpose("3");
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);

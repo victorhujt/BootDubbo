@@ -6,7 +6,7 @@ import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.model.dto.dms.DmsTransferRecordDto;
+import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
@@ -81,17 +81,15 @@ public class CreateOrderApiConsumer implements MessageListener {
                 //接收分拣中心回传的状态
                 logger.info("分拣中心状态反馈的消息体:{}",messageBody);
                 logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
-                List<DmsTransferRecordDto> dmsTransferRecordDtoList = null;
+                List<DmsTransferStatusDto> dmsTransferStatusDtoList = null;
                 try {
-                    dmsTransferRecordDtoList = JSONUtils.jsonToList(messageBody,DmsTransferRecordDto.class);
-                    for(DmsTransferRecordDto dmsTransferRecordDto : dmsTransferRecordDtoList){
+                    dmsTransferStatusDtoList = JSONUtils.jsonToList(messageBody,DmsTransferStatusDto.class);
+                    for(DmsTransferStatusDto dmsTransferStatusDto : dmsTransferStatusDtoList){
                         if(!keyList.contains(key)){
-                            ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferRecordDto);
+                            ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
                         }else{
                             keyList.add(key);
                         }
-//                        if(){dmsTransferRecordDto.hashCode();};
-
                     }
                 }catch (Exception ex){
                     logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage(),ex);

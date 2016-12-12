@@ -1754,8 +1754,8 @@
                     $("#consignorName").val(CscContantAndCompanyDto.contactCompanyName);
                     $("#consignorContactName").val(CscContantAndCompanyDto.contactName);
                     $("#consignorPhone").val(CscContantAndCompanyDto.phone);
-                    $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                    $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                    $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                    $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                     $("#consignorType").val(CscContantAndCompanyDto.type);
                     $("#consignorAddress").val(CscContantAndCompanyDto.address);
                     var provinceName = CscContantAndCompanyDto.provinceName;
@@ -1795,8 +1795,8 @@
                     $("#consigneeName").val(CscContantAndCompanyDto.contactCompanyName);
                     $("#consigneeContactName").val(CscContantAndCompanyDto.contactName);
                     $("#consigneePhone").val(CscContantAndCompanyDto.phone);
-                    $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                    $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                    $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                    $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                     $("#consigneeType").val(CscContantAndCompanyDto.type);
                     $("#consigneeAddress").val(CscContantAndCompanyDto.address);
                     var provinceName = CscContantAndCompanyDto.provinceName;
@@ -2232,8 +2232,8 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyCode;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consignorTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -2267,8 +2267,8 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyCode;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consigneeTypeHide = CscContantAndCompanyDto.type;*/
                     contactList =contactList + "<tr role='row' class='odd'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
@@ -2319,8 +2319,8 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;
@@ -2378,8 +2378,8 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyCode);
-                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;

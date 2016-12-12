@@ -417,7 +417,7 @@
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                         + "<td>" + [index + 1] + "</td>"
                         + "<td class=\"center\">" + getOperatorByStatusOper(order, index) + "</td>"
-                        + "<td class=\"center\">" + order.custName + "</td>"
+                        + "<td class=\"center\">" + StringUtil.nullToEmpty(order.custName) + "</td>"
                         + "<td>"
                         + "<a onclick=\"orderDetailOper('" + order.orderCode + "')\">" + StringUtil.nullToEmpty(order.orderCode) + "</a>"
                         + "</td>"
