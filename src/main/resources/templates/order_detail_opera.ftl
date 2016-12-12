@@ -733,7 +733,7 @@
             value = "其他出库";
         } else if (businessType == "620") {
             value = "采购入库";
-        } else if (order.businessType == "621") {
+        } else if (businessType == "621") {
             value = "调拨入库";
         } else if (businessType == "622") {
             value = "退货入库";

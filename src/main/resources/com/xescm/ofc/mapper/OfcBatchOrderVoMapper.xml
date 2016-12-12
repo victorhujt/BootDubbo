@@ -36,11 +36,11 @@
             dbi.consignor_contact_phone,
             oos.order_status,
             CONCAT(
-                IFNULL(dbi.departure_province, ""),
-                IFNULL(dbi.departure_city, ""),
-                IFNULL(dbi.departure_district, ""),
-                IFNULL(dbi.departure_towns, ""),
-                IFNULL(dbi.departure_place, "")
+                IFNULL(dbi.departure_province, ' '),
+                IFNULL(dbi.departure_city, ' '),
+                IFNULL(dbi.departure_district, ' '),
+                IFNULL(dbi.departure_towns, ' '),
+                IFNULL(dbi.departure_place, ' ')
             ) AS departure
                 FROM
                     ofc_fundamental_information ofi
