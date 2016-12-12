@@ -1,5 +1,6 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -13,6 +14,7 @@ import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
+import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -52,6 +54,8 @@ public class OfcJumpontroller extends BaseController{
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
+    @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
 
 
     @RequestMapping(value="/ofc/orderPlace")
@@ -190,9 +194,16 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         try{
+            OfcFundamentalInformation ofcFundamentalInformation
+                    = ofcFundamentalInformationService.getLastMerchandiser(getAuthResDtoByToken().getGroupRefName());
+            logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
+            if(ofcFundamentalInformation != null){
+                logger.info("开单员为为{}",ofcFundamentalInformation.getMerchandiser());
+            }
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
+            map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
             setDefaultModel(model);
         }catch (Exception ex){
             ex.printStackTrace();

@@ -20,4 +20,5 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
 
     OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode);
 
+    OfcFundamentalInformation getLastMerchandiser(String operatorName);
 }

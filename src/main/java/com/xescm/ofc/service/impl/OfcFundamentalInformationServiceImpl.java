@@ -44,4 +44,9 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     public OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode) {
         return ofcFundamentalInformationMapper.queryDataByCustOrderCode(custOrderCode);
     }
+
+    @Override
+    public OfcFundamentalInformation getLastMerchandiser(String operatorName) {
+        return ofcFundamentalInformationMapper.getLastMerchandiser(operatorName);
+    }
 }

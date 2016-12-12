@@ -392,7 +392,7 @@
                                 <div class="clearfix">
                                 <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
                                     <#list merchandiserList! as merchandiser>
-                                        <option>${(merchandiser.merchandiser)!""}</option>
+                                        <option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>
                                     </#list>
                                 </select></div>
                             </div>
@@ -699,7 +699,7 @@
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePaymentPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
@@ -914,6 +914,7 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
+        $("#merchandiser").val(${(merchandiserLast)!""});
         /*//$("#orderTime").val(new Date().toLocaleDateString());*/
     }
     /**
@@ -1442,12 +1443,13 @@
             $.each(data,function (index,CscGoodsTypeVo) {
                 $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
-            $(obj).parent().next().children().find("option").each(function() {
-                text = $(this).text();
-                if($(obj).parent().next().children().find("option:contains("+text+")")){
-                    $(obj).parent().next().children().find("option:contains("+text+"):gt(0)").remove();
-                }
-            });
+            if($("#goodsInfoListDiv").find("tr").length==1){
+                $("select option").each(function() {
+                    text = $(this).text();
+                    if($("select option:contains("+text+")").length > 1)
+                        $("select option:contains("+text+"):gt(0)").remove();
+                });
+            }
         });
     }
 
@@ -1475,11 +1477,17 @@
         if($("#cargoInsuranceFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#cargoInsuranceFee").val()))){
             count=count+parseFloat($("#cargoInsuranceFee").val());
         }
+        if($("#insureValue").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#insureValue").val()))){
+            count=count+parseFloat($("#insureValue").val());
+        }
         if($("#twoDistributionFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#twoDistributionFee").val()))){
             count=count+parseFloat($("#twoDistributionFee").val());
         }
         if($("#collectServiceCharge").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectServiceCharge").val()))){
             count=count+parseFloat($("#collectServiceCharge").val());
+        }
+        if($("#collectLoanAmount").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectLoanAmount").val()))){
+            count=count+parseFloat($("#collectLoanAmount").val());
         }
         if($("#returnListFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#returnListFee").val()))){
             count=count+parseFloat($("#returnListFee").val());
@@ -2235,8 +2243,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2278,8 +2286,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2302,8 +2310,8 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
-                    var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
+                    var contactCompanyCode = tdArr.eq(6).text();//    发货方编码
+                    var contactCode = tdArr.eq(7).text();//    发货方联系人编码
                     var type = tdArr.eq(8).text();//    发货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2314,8 +2322,8 @@
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
-                    $("#consignorCode").val(contactCompanySerialNo);
-                    $("#consignorContactCode").val(contactSerialNo);
+                    $("#consignorCode").val(contactCompanyCode);
+                    $("#consignorContactCode").val(contactCode);
                     $("#consignorType").val(type);
                     $("#consignorAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2345,8 +2353,8 @@
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
 
-                    var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
-                    var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
+                    var contactCompanyCode = tdArr.eq(6).text();//    收货方编码
+                    var contactCode = tdArr.eq(7).text();//    收货方联系人编码
                     var type = tdArr.eq(8).text();//    收货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2356,8 +2364,8 @@
                     $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
-                    $("#consigneeCode").val(contactCompanySerialNo);
-                    $("#consigneeContactCode").val(contactSerialNo);
+                    $("#consigneeCode").val(contactCompanyCode);
+                    $("#consigneeContactCode").val(contactCode);
                     $("#consigneeType").val(type);
                     $("#consigneeAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2420,11 +2428,6 @@
 
         });
 
-
-        var transportTypePub = "10";
-        $("#transportType").val(transportTypePub);
-        var expensePaymentParty = "10";
-        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
