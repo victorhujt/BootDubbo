@@ -366,6 +366,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.info("################根据货品大类查小类，所用PID为{}############",cscGoodsType);
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
             response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
+            CscGoodsTypeVo cscGoodsTypeVo=new CscGoodsTypeVo();
+            for (int i=0;i<CscGoodsType.getResult().size();i++){
+                logger.info("##############所返回的结果集为{}############", CscGoodsType.getResult().get(i).getGoodsTypeName());
+            }
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
