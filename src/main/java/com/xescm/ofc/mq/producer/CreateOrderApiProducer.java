@@ -27,7 +27,7 @@ public class CreateOrderApiProducer {
     //发送MQ
     public void sendCreateOrderResultMQ(String data, String code) {
         final String tag = "xeStatusBackTag";
-        logger.info("推送创单api返回信息：{}", data);
+        logger.info("推送创单api返回信息：{},Topic:{},tag:{}", data, mqConfig.getOfcOrderStatusTopic(), tag);
         if (StringUtils.isNotBlank(data)) {
             Message message = new Message(mqConfig.getOfcOrderStatusTopic(), tag, data.getBytes());
             message.setKey(code);
