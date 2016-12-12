@@ -1438,6 +1438,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 }
                                 ofcTransplanInfo.setProgramSerialNumber("1");
                                 ofcTransplanInfo.setBusinessType("602");//卡班计划单
+
                                 transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFundamentalInformation.getCustName());
                             } else {
                                 throw new BusinessException("订单信息是否上门提货或是否二次配送传值有误，请检查");
