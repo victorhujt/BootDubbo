@@ -363,6 +363,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
                 cscGoodType.setPid(cscGoodsType);
             }
+            logger.info("################根据货品大类查小类，所用PID为{}############",cscGoodsType);
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
             response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
         }catch (Exception ex){
