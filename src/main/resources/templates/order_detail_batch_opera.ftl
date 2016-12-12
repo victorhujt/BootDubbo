@@ -461,6 +461,7 @@
     }
 
     function queryOrderDetailBatchOpera(orderBatchCode) {
+        console.log(orderBatchCode);
         xescm.common.loadPage("/ofc/orderDetailBatchOpera/" + orderBatchCode);
     }
 
