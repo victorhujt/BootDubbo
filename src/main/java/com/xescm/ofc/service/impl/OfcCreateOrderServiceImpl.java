@@ -356,12 +356,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
 
         //根据客户订单编号与货主代码查询是否已经存在订单
-        int existResult = createOrdersMapper.queryCountByOrderStatus(custOrderCode, custCode);
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
         if (information != null) {
             orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
-            if (queryOrderStatus != null && StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
+            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
                 logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);
                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
             }
