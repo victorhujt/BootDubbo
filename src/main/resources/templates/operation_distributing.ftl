@@ -490,8 +490,8 @@
             </div></div>
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
             <div class="width-267">
-                <div class="clearfix">
-                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class=" bk-1">
+                <div class="clearfix col-width-168">
+                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="chosen-select">
                         <option value="">无</option>
 
                     </select>
@@ -1762,9 +1762,8 @@
             $.each(data,function (index,warehouse) {
                 $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
             });
+            $("#warehouseCode").trigger("chosen:updated");
         })
-
-
     });
 
     $("#to_operation_distributing_excel").click(function () {
