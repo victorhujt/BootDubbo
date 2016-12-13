@@ -238,14 +238,20 @@ public class OfcOperationDistributing extends BaseController{
         try {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
-            String[] filePathName = multipartHttpServletRequest.getParameter("fileName").split("\\.");
-            String[] split = filePathName[0].split("\\\\");
-            String fileName = split[split.length - 1] + "." + filePathName[1];
-            excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,fileName);
-        } catch (Exception e) {
+            String fileName = multipartHttpServletRequest.getParameter("fileName");
+            int potIndex = fileName.lastIndexOf(".") + 1;
+            if(-1 == potIndex){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
+            }
+            String suffix = fileName.substring(potIndex, fileName.length());
+            excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,suffix);
+        }catch (BusinessException e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入出错:{}",e.getMessage(),e);
+            logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        }catch (Exception e) {
+            logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"内部异常");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"上传成功！",excelSheet);
     }
@@ -264,13 +270,16 @@ public class OfcOperationDistributing extends BaseController{
             AuthResDto authResDto = getAuthResDtoByToken();
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
-            String[] filePathName = multipartHttpServletRequest.getParameter("fileName").split("\\.");
-            String[] split = filePathName[0].split("\\\\");
-            String fileName = split[split.length - 1] + "." + filePathName[1];
+            String fileName = multipartHttpServletRequest.getParameter("fileName");
+            int potIndex = fileName.lastIndexOf(".") + 1;
+            if(-1 == potIndex){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
+            }
+            String suffix = fileName.substring(potIndex, fileName.length());
             String customerCode = multipartHttpServletRequest.getParameter("customerCode");
             String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
             //校验
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,fileName,sheetNum,authResDto,customerCode,5);
+            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,5);
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
@@ -280,10 +289,14 @@ public class OfcOperationDistributing extends BaseController{
                 String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
                 result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
             }
-        } catch (Exception e) {
+        } catch (BusinessException e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
+            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"内部异常");
         }
         return result;
     }
@@ -292,6 +305,7 @@ public class OfcOperationDistributing extends BaseController{
      * @param response
      */
     @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
+    @Deprecated
     public void downloadTemplate( HttpServletResponse response){
         try {
             File f = ResourceUtils.getFile("classpath:templates/xlsx/template_for_cp.xlsx");

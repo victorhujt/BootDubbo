@@ -128,6 +128,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,result);
     }
 
+    /**
+     *
+     * @param model
+     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
+     * @param orderGoodsListStr     货品信息
+     * @param cscContantAndCompanyDtoConsignorStr   发货人信息
+     * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
+     * @param cscSupplierInfoDtoStr                 供应商信息
+     * @param tag           标识下单、编辑、运输开单
+     * @param response
+     * @return
+     */
     @RequestMapping("/orderPlaceCon")
     @ResponseBody
     public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
@@ -162,10 +174,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.info(cscContantAndCompanyDtoConsigneeStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             if(cscContantAndCompanyDtoConsignor==null){
-                throw new Exception("发货方转换有误");
+                throw new BusinessException("发货人信息不允许为空！");
             }
             if(cscContantAndCompanyDtoConsignee==null){
-                throw new Exception("发货方转换有误");
+                throw new BusinessException("收货人信息不允许为空！");
             }
             CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号

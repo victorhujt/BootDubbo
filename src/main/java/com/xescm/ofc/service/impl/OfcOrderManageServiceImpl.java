@@ -556,10 +556,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanStatusService.save(ofcTransplanStatus);
                     pushKabanOrderToDms(ofcDistributionBasicInfo,ofcTransplanInfo);
                 }
-                ofcTransplanInfoService.save(ofcTransplanInfo);
-                logger.debug("计划单信息保存成功");
+                try {
+                    ofcTransplanInfoService.save(ofcTransplanInfo);
+                    logger.debug("计划单信息保存成功");
+                } catch (Exception ex) {
+                    if (ex.getMessage().trim().startsWith("Duplicate entry")) {
+                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
+                    } else {
+                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                    }
+                }
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
-
                 logger.debug("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
                 logger.debug("计划单资源状态保存成功");
@@ -574,7 +581,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&*/
 
             //更改计划单状态为执行中//###
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
@@ -691,9 +698,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
                 if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getMessage());
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getResult());
-                    throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
+                    //运单号不存在,没有发现该订单
+                    //该订单已经取消, 取消失败
+                    logger.error("您无法取消,请联系管理员!{}",response.getMessage());
+                    logger.error("您无法取消,请联系管理员!{}",response.getResult());
+                    throw new BusinessException("您无法取消," + response.getResult());
                 }
             }
             catch (Exception ex){
@@ -1136,6 +1145,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
+                logger.info("###################推送TFC的最终JSON为{}",json);
                 defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());

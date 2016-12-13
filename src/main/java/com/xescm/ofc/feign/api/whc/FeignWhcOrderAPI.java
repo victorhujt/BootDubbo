@@ -13,7 +13,7 @@ import feign.RequestLine;
  * Created by hujintao on 2016/12/2.
  */
 public interface FeignWhcOrderAPI {
-    @RequestLine("POST /order/cancel/cancelOrder")
+    @RequestLine("POST  /api/whc/order/cancel")
     @Headers("Content-Type: application/json")
     Response cancelOrder(CancelOrderDTO cancelOrderDTO);
 }

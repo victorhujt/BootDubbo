@@ -15,6 +15,6 @@ import java.util.List;
 public interface OfcOperationDistributingService {
     CscContantAndCompanyDto switchOrderDtoToCscCAndCDto(OfcOrderDTO ofcOrderDTO, String purpose);
     Wrapper<?> validateCustOrderCode(JSONArray jsonArray);
-    Wrapper<?> checkExcel(MultipartFile uploadFile, String fileName, String sheetNumChosen, AuthResDto authResDto, String customerCode, Integer staticCell);
-    List<String> getExcelSheet(MultipartFile uploadFile, String fileName);
+    Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, AuthResDto authResDto, String customerCode, Integer staticCell);
+    List<String> getExcelSheet(MultipartFile uploadFile, String suffix);
 }

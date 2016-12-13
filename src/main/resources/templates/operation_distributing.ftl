@@ -716,9 +716,10 @@
     })
     //创建新客户
     $("#to_csc_createCustBtn").click(function () {
-        var csc_url = $("#csc_url").html();
-        var url = csc_url + "/csc/customer/toAddCustomerPage";
-        xescm.common.loadPage(url);
+        var url = "/csc/customer/toAddCustomerPage";
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
     })
     var goodsAndConsigneeMap = new HashMap();
     var couldChangeCust = true;
@@ -1400,6 +1401,8 @@
                 $("#consignorType").val(type);
                 $("#consignorContactCompanyId").val(contactCompanyCode);
                 $("#consignorContactCode").val(contactCode);
+                console.log("2222"+$("#consignorContactCompanyId").val());
+                console.log("2222"+$("#consignorContactCode").val());
                 $("#consignorPhone").val(phone);
                 $("#consignorProvince").val(province);
                 $("#consignorProvinceName").val(provinceName);
@@ -1520,6 +1523,8 @@
             var type = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             var contactCode = tdArr.eq(8).text();
+            console.log(contactCompanyId);
+            console.log(contactCode);
             var phone = tdArr.eq(9).text();
             var province = tdArr.eq(10).text();
             var provinceName = tdArr.eq(11).text();
@@ -1693,7 +1698,14 @@
                 custList =custList + "<tr role='row' class='odd'>";
                 custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='custList' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 custList =custList + "<td>"+(index+1)+"</td>";
-                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.type)+"</td>";
+                var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+                if(custType == '1'){
+                    custList =custList + "<td>公司</td>";
+                }else if (custType == '2'){
+                    custList =custList + "<td>个人</td>";
+                }else{
+                    custList =custList + "<td>"+custType+"</td>";
+                }
                 custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.customerName)+"</td>";
                 custList =custList + "<td>"+channel+"</td>";
                 custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.productType)+"</td>";
