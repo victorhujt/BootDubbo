@@ -1401,6 +1401,8 @@
                 $("#consignorType").val(type);
                 $("#consignorContactCompanyId").val(contactCompanyCode);
                 $("#consignorContactCode").val(contactCode);
+                console.log("2222"+$("#consignorContactCompanyId").val());
+                console.log("2222"+$("#consignorContactCode").val());
                 $("#consignorPhone").val(phone);
                 $("#consignorProvince").val(province);
                 $("#consignorProvinceName").val(provinceName);
@@ -1521,6 +1523,8 @@
             var type = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             var contactCode = tdArr.eq(8).text();
+            console.log(contactCompanyId);
+            console.log(contactCode);
             var phone = tdArr.eq(9).text();
             var province = tdArr.eq(10).text();
             var provinceName = tdArr.eq(11).text();

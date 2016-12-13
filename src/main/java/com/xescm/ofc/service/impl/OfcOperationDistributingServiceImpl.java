@@ -121,7 +121,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      */
     @Override
     public Wrapper<?> validateCustOrderCode(JSONArray jsonArray) {
-        String pageCustOrderCode = "";
+        List<String> custOrderCodeList = new ArrayList<>();
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = null;
@@ -132,8 +132,30 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 throw new BusinessException("校验客户订单编号转换异常",e);
             }
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
-            if(PubUtils.isSEmptyOrNull(custOrderCode)){
-                if(!PubUtils.isSEmptyOrNull(custOrderCode) && pageCustOrderCode.equals(custOrderCode)){
+            if(!PubUtils.isSEmptyOrNull(custOrderCode)){
+                if(custOrderCodeList.contains(custOrderCode)){
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
+                }
+                custOrderCodeList.add(custOrderCode);
+            }
+        }
+        /*for(String custOrderCode : custOrderCodeList){
+
+        }*/
+        /*String pageCustOrderCode = "";
+
+        for(int i = 0; i < jsonArray.size(); i ++) {
+            String json = jsonArray.get(i).toString();
+            OfcOrderDTO ofcOrderDTO = null;
+            try {
+                ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new BusinessException("校验客户订单编号转换异常",e);
+            }
+            String custOrderCode = ofcOrderDTO.getCustOrderCode();
+            if(!PubUtils.isSEmptyOrNull(custOrderCode)){
+                if(pageCustOrderCode.equals(custOrderCode)){
                     return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
                 }
                 pageCustOrderCode = custOrderCode;
@@ -145,7 +167,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 }
             }
 
-        }
+        }*/
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
