@@ -2598,9 +2598,13 @@
         //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
-            var csc_url = $("#csc_url").html();
+            /*var csc_url = $("#csc_url").html();
             var url = csc_url + "/csc/customer/toAddCustomerPage";
-            xescm.common.loadPage(url);
+            xescm.common.loadPage(url);*/
+            var url = "/csc/customer/toAddCustomerPage";
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
         });
     })
     $("#custListDivBlock").click(function () {
