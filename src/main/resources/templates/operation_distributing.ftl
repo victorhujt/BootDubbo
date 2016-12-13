@@ -479,7 +479,7 @@
                     <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
-                        <i class="fa fa-user l-cor bigger-130"></i>
+                        <i class="fa fa-user l-cor"></i>
                     </button>
                 </div>
              <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -534,7 +534,7 @@
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
                         <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
-                            <i class="fa fa-user l-cor bigger-130"></i>
+                            <i class="fa fa-user l-cor"></i>
                         </button>
                     </div>
 
