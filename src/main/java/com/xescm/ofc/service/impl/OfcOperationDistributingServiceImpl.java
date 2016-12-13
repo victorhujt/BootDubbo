@@ -319,7 +319,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     throw new BusinessException(queryCscCustomerResult.getMessage());
                                 }
                                 List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
-                                System.out.println("查到的xlsx" + JSONUtils.objectToJson(result));
                                 if(null != result && result.size() > 0){
                                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                                     consigneeNameList.add(result.get(0));
@@ -391,8 +390,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanySerialNo();
                                         String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            System.out.println("consigneeCode :" + consigneeCode);
-                                            System.out.println("consigneeContactCode :" + consigneeContactCode);
                                             throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                             //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
                                             //throw new BusinessException("收货方编码或收货方联系人编码为空!");
@@ -546,7 +543,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                     throw new BusinessException(queryCscCustomerResult.getMessage());
                                 }
                                 List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
-                                System.out.println("查到的xlsx" + JSONUtils.objectToJson(result));
                                 if(null != result && result.size() > 0){
                                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = result.get(0);
@@ -618,8 +614,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                                         String consigneeCode = cscContantAndCompanyVo.getContactCompanySerialNo();
                                         String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                         if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                            System.out.println("consigneeCode xlsx:" + consigneeCode);
-                                            System.out.println("consigneeContactCode xlsx:" + consigneeContactCode);
                                             throw new BusinessException("收货方编码或收货方联系人编码为空!");
 //                                            checkPass = false;
 //                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
