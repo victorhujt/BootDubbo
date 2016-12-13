@@ -81,6 +81,7 @@ public class OfcOperationDistributing extends BaseController{
             }
             JSONArray jsonArray = JSON.parseArray(orderLists);
             String batchNumber = codeGenUtils.getNewWaterCode("BN",4);//生成订单批次号,保证一批单子属于一个批次
+
             Wrapper<?> validateCustOrderCodeResult =  ofcOperationDistributingService.validateCustOrderCode(jsonArray);
             if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
                 return validateCustOrderCodeResult;
@@ -88,6 +89,7 @@ public class OfcOperationDistributing extends BaseController{
             for(int i = 0; i < jsonArray.size(); i ++){
                 String json = jsonArray.get(i).toString();
                 OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+                ofcOperationDistributingService.validateOperationDistributingMsg(ofcOrderDTO);
                 String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
                 List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
@@ -100,9 +102,12 @@ public class OfcOperationDistributing extends BaseController{
                 resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,ofcOrderDTO.getCustCode()
                         ,consignor,consignee,new CscSupplierInfoDto());
             }
-        }catch (Exception ex){
+        }catch (BusinessException ex){
             logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        } catch (Exception ex){
+            logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"运营中心城配开单批量下单失败!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
