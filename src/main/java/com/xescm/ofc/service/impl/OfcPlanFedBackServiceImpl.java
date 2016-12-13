@@ -139,7 +139,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 if(ofcSchedulingSingleFeedbackCondition.getDeliveryNo().equals("")){
                     throw new BusinessException("调度单号不可以为空");
                 }else {
-                    String tranNo=ofcTraplanSourceStatusService.selectOne(ofcTraplanSourceStatus).getTransCode();
+                    logger.info("##################transPortNo为：{}",transPortNo);
+                    OfcTraplanSourceStatus traplanSourceStatus=ofcTraplanSourceStatusService.selectOne(ofcTraplanSourceStatus);
+                    if(traplanSourceStatus==null){
+                        logger.info("##################traplanSourceStatus为：{}",traplanSourceStatus);
+                        throw new BusinessException("获取transSourceStatus实体异常，NULL");
+                    }else{
+                        String tranNo=traplanSourceStatus.getTransCode();
+                        logger.info("##################tranNo为：{}",tranNo);
+                    }
                 /*if(PubUtils.trimAndNullAsEmpty(tranNo).equals("")){
                     ofcTraplanSourceStatus.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                 }*/
