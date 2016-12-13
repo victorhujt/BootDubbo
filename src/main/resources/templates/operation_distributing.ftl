@@ -1693,7 +1693,14 @@
                 custList =custList + "<tr role='row' class='odd'>";
                 custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='custList' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 custList =custList + "<td>"+(index+1)+"</td>";
-                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.type)+"</td>";
+                var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+                if(custType == '1'){
+                    custList =custList + "<td>公司</td>";
+                }else if (custType == '2'){
+                    custList =custList + "<td>个人</td>";
+                }else{
+                    custList =custList + "<td>"+custType+"</td>";
+                }
                 custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.customerName)+"</td>";
                 custList =custList + "<td>"+channel+"</td>";
                 custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.productType)+"</td>";

@@ -834,7 +834,7 @@
                     </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品类别</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
@@ -2121,7 +2121,14 @@
                     custList =custList + "<tr role='row' class='odd'>";
                     custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     custList =custList + "<td>"+(index+1)+"</td>";
-                    custList =custList + "<td>"+cscCustomerVo.type+"</td>";
+                    var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+                    if(custType == '1'){
+                        custList =custList + "<td>公司</td>";
+                    }else if (custType == '2'){
+                        custList =custList + "<td>个人</td>";
+                    }else{
+                        custList =custList + "<td>"+custType+"</td>";
+                    }
                     custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
                     custList =custList + "<td>"+channel+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
