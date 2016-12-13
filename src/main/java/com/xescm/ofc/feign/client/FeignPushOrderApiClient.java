@@ -38,7 +38,7 @@ public class FeignPushOrderApiClient {
         PushOrderApi res = Feign.builder()
                 .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
-                .target(PushOrderApi.class, restConfig.getWhcUrl());
+                .target(PushOrderApi.class, restConfig.getAcUrl());
         return res;
     }
 
