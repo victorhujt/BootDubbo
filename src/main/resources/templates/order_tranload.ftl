@@ -102,10 +102,10 @@
             background:#fff!important;
             border:1px solid #cacaca!important;
         }
-     .col-label{
-         margin-right:2px;
-         margin-bottom:0;
-     }
+        .col-label{
+            margin-right:2px;
+            margin-bottom:0;
+        }
 
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
@@ -327,7 +327,7 @@
                             <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
                         </div>
                     </div>
-                 </div>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -390,11 +390,11 @@
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
+                                    <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
                                     <#list merchandiserList! as merchandiser>
                                         <option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>
                                     </#list>
-                                </select></div>
+                                    </select></div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
@@ -418,8 +418,8 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                        <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                                  <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                    <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
                         </div></div>
@@ -440,7 +440,7 @@
                                 <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;" >
                                     <i class="fa fa-user l-cor"></i>
                                 </button>
-                               <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
+                            <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
                         </div></div>
 
@@ -450,7 +450,7 @@
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
-                                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                            <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
                             </div>
                         </div></div>
                 </div>
@@ -699,7 +699,7 @@
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePaymentPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
@@ -743,10 +743,10 @@
                         <label class=" col-label col-float" for="name" >结算方式</label>
                         <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:0;margin-right:15px;">现结</label>
                         <div style="float:left;width:130px;">
-                        <div class="col-float" style="width:100px;margin-right:15px;">
-                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
-                        </div>
-                        <label class=" col-float" for="name">元</label></div>
+                            <div class="col-float" style="width:100px;margin-right:15px;">
+                                <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
+                            </div>
+                            <label class=" col-float" for="name">元</label></div>
                     </div>
                     <div >
                         <label class=" col-label-50 col-float" for="name" style="margin-left:25px;margin-right:15px;">到付</label>
@@ -769,16 +769,16 @@
                     <div>
                         <label class=" col-label-50" for="name" style="margin-right:15px;">月结</label>
                         <div style="width:130px;float:left;">
-                                <div class="col-float" style="width:100px;margin-right:15px;">
-                                    <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
-                                </div>
-                                <label class=" col-float" for="name">元</label>
+                            <div class="col-float" style="width:100px;margin-right:15px;">
+                                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
                     </div>
                 </div>
 
             </form>
-                    <!-- /section:elements.tab.option -->
+            <!-- /section:elements.tab.option -->
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
@@ -799,11 +799,11 @@
 <div class="col-xs-12">
     <!-- #section:elements.tab.option -->
     <div class="tabbable" style="width:1000px;" >
-       <#-- <ul class="nav nav-tabs" id="myTab4">
-            <li class="active">
-                <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-            </li>
-        </ul>-->
+    <#-- <ul class="nav nav-tabs" id="myTab4">
+         <li class="active">
+             <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+         </li>
+     </ul>-->
 
 
 
@@ -1442,13 +1442,12 @@
             $.each(data,function (index,CscGoodsTypeVo) {
                 $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
-            if($("#goodsInfoListDiv").find("tr").length==1){
-                $("select option").each(function() {
-                    text = $(this).text();
-                    if($("select option:contains("+text+")").length > 1)
-                        $("select option:contains("+text+"):gt(0)").remove();
-                });
-            }
+            $(obj).parent().next().children().find("option").each(function() {
+                text = $(this).text();
+                if($(obj).parent().next().children().find("option:contains("+text+")")){
+                    $(obj).parent().next().children().find("option:contains("+text+"):gt(0)").remove();
+                }
+            });
         });
     }
 
@@ -1476,17 +1475,11 @@
         if($("#cargoInsuranceFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#cargoInsuranceFee").val()))){
             count=count+parseFloat($("#cargoInsuranceFee").val());
         }
-        if($("#insureValue").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#insureValue").val()))){
-            count=count+parseFloat($("#insureValue").val());
-        }
         if($("#twoDistributionFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#twoDistributionFee").val()))){
             count=count+parseFloat($("#twoDistributionFee").val());
         }
         if($("#collectServiceCharge").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectServiceCharge").val()))){
             count=count+parseFloat($("#collectServiceCharge").val());
-        }
-        if($("#collectLoanAmount").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectLoanAmount").val()))){
-            count=count+parseFloat($("#collectLoanAmount").val());
         }
         if($("#returnListFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#returnListFee").val()))){
             count=count+parseFloat($("#returnListFee").val());
@@ -2242,8 +2235,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2285,8 +2278,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2309,8 +2302,8 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var contactCompanyCode = tdArr.eq(6).text();//    发货方编码
-                    var contactCode = tdArr.eq(7).text();//    发货方联系人编码
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
                     var type = tdArr.eq(8).text();//    发货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2321,8 +2314,8 @@
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
-                    $("#consignorCode").val(contactCompanyCode);
-                    $("#consignorContactCode").val(contactCode);
+                    $("#consignorCode").val(contactCompanySerialNo);
+                    $("#consignorContactCode").val(contactSerialNo);
                     $("#consignorType").val(type);
                     $("#consignorAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2352,8 +2345,8 @@
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
 
-                    var contactCompanyCode = tdArr.eq(6).text();//    收货方编码
-                    var contactCode = tdArr.eq(7).text();//    收货方联系人编码
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
                     var type = tdArr.eq(8).text();//    收货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2363,8 +2356,8 @@
                     $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
-                    $("#consigneeCode").val(contactCompanyCode);
-                    $("#consigneeContactCode").val(contactCode);
+                    $("#consigneeCode").val(contactCompanySerialNo);
+                    $("#consigneeContactCode").val(contactSerialNo);
                     $("#consigneeType").val(type);
                     $("#consigneeAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2427,6 +2420,11 @@
 
         });
 
+
+        var transportTypePub = "10";
+        $("#transportType").val(transportTypePub);
+        var expensePaymentParty = "10";
+        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
