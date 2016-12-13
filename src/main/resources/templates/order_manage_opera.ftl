@@ -1,60 +1,16 @@
 <head>
     <title>订单管理</title>
     <style type="text/css">
-        #goodsListDiv {
-            position: fixed;
-            left: 285px;
-            top: 85px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
+        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+            position:fixed;
+            left:50%;
+            top:85px;
+            margin-left:-400px;
+            width:946px;
+            height:500px;
+            z-index:3;
             overflow: auto;
-            border: solid #7A7A7A 2px;
-        }
-
-        #consignorListDiv {
-            position: fixed;
-            left: 285px;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
-        }
-
-        #consigneeListDiv {
-            position: fixed;
-            left: 285px;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
-        }
-
-        #custListDiv {
-            position: fixed;
-            left: 50%;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
-            margin-left: -400px;
-        }
-
-        #goodsAndConsigneeDiv {
-            position: fixed;
-            left: 285px;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
+            border:solid #7A7A7A 1px;
         }
         .date_a {
             line-height: 21px !important;
@@ -297,17 +253,16 @@
         var scripts = [null, "../components/chosen/chosen.jquery.js", null]
         $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
             $(document).ready(main);
+        });
+        function initChosen() {
             $('.chosen-select').chosen({allow_single_deselect: true});
             //resize the chosen on window resize
-
-            $(window)
-                    .off('resize.chosen')
-                    .on('resize.chosen', function () {
-                        $('.chosen-select').each(function () {
-                            var $this = $(this);
-                            $this.next().css({'width': $this.parent().width()});
-                        })
-                    }).trigger('resize.chosen');
+            $(window).off('resize.chosen').on('resize.chosen', function () {
+                $('.chosen-select').each(function () {
+                    var $this = $(this);
+                    $this.next().css({'width': $this.parent().width()});
+                })
+            }).trigger('resize.chosen');
             //resize chosen on sidebar collapse/expand
             $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
                 if (event_name != 'sidebar_collapsed') return;
@@ -316,14 +271,13 @@
                     $this.next().css({'width': $this.parent().width()});
                 })
             });
-        });
-
+        }
         function main() {
             //初始化页面数据
             initPageDataOrder();
             // 查询
 //            queryOrderData(1);
-
+            initChosen();
             $("#doSearch").click(function () {
                 queryOrderData(1);
             });
@@ -655,6 +609,7 @@
                 return html
                 initChosen();
             }
+//            $("#businessType").trigger("chosen:updated");
             return null;
 
         }
