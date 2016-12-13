@@ -716,9 +716,10 @@
     })
     //创建新客户
     $("#to_csc_createCustBtn").click(function () {
-        var csc_url = $("#csc_url").html();
-        var url = csc_url + "/csc/customer/toAddCustomerPage";
-        xescm.common.loadPage(url);
+        var url = "/csc/customer/toAddCustomerPage";
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
     })
     var goodsAndConsigneeMap = new HashMap();
     var couldChangeCust = true;

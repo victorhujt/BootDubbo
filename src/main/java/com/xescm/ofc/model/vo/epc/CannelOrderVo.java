@@ -1,11 +1,14 @@
 package com.xescm.ofc.model.vo.epc;
 
+import java.io.Serializable;
+
 /**
  * 鲜易网订单取消返回
  * Created by hiyond on 2016/11/21.
  */
-public class CannelOrderVo {
+public class CannelOrderVo implements Serializable {
 
+    private static final long serialVersionUID = 4613899483360238209L;
     /**
      * 客户订单编号
      */
