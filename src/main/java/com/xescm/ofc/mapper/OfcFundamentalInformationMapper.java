@@ -22,4 +22,5 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
 
     OfcFundamentalInformation queryDataByCustOrderCode(@Param("custOrderCode") String custOrderCode);
 
+    OfcFundamentalInformation getLastMerchandiser(@Param("operatorName") String operatorName);
 }

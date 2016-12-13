@@ -24,14 +24,14 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public int deleteByOrderCode(Object key) {
-        ofcDistributionBasicInfoMapper.deleteByOrderCode(key);
-        return 0;
+
+        return ofcDistributionBasicInfoMapper.deleteByOrderCode(key);
     }
 
     @Override
     public int updateByOrderCode(Object key) {
-        ofcDistributionBasicInfoMapper.updateByOrderCode(key);
-        return 0;
+
+        return ofcDistributionBasicInfoMapper.updateByOrderCode(key);
     }
 
     @Override
@@ -69,7 +69,6 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        int result =  ofcDistributionBasicInfoMapper.checkTransCode(ofcDistributionBasicInfo);
-        return result;
+        return ofcDistributionBasicInfoMapper.checkTransCode(ofcDistributionBasicInfo);
     }
 }

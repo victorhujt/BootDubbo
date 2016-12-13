@@ -44,8 +44,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	private OfcTransplanInfoService ofcTransplanInfoService;
 
     public int updateByPlanCode(Object key){
-        ofcSiloproStatusMapper.updateByPlanCode(key);
-        return 0;
+
+        return ofcSiloproStatusMapper.updateByPlanCode(key);
     }
 
 	@Override

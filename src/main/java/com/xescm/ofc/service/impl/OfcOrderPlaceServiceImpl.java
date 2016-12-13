@@ -257,7 +257,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     }else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSEORDERNOTPROVIDETRANS){
                         ofcFundamentalInformation.setSecCustCode("");
                         ofcFundamentalInformation.setSecCustName("");
-                        ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
+                        int result = ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
+
                     }
                     // 更新仓配信息
                     upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
