@@ -1003,35 +1003,35 @@
                 luggage:{
                     maxlength: mistake+"最大999999.99元",
                     required:mistake+"请填写运费",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 homeDeliveryFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 cargoInsuranceFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 insureValue:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 twoDistributionFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 collectServiceCharge:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 collectLoanAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 returnListFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 }
             },
             highlight : function(e) {
@@ -1082,19 +1082,19 @@
             messages : {
                 currentAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 toPayAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 returnAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 monthlyAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 }
             },
             highlight : function(e) {
