@@ -21,6 +21,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,10 +127,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         storeDto.setCustomerCode(custCode);
         Wrapper<List<CscStorevo>> cscStoreVoList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
         if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
+            logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}",custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
             storeCode = cscStorevo.getStoreCode();
             storeName = cscStorevo.getStoreName();
         } else {
+            logger.error("获取该客户下的店铺编码接口返回失败，custCode:{},接口返回值:{}",custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
             return resultModel;
         }
@@ -165,15 +168,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //供应商
-        String supportName = createOrderEntity.getSupportName();
-        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-        cscSupplierInfoDto.setCustomerCode(custCode);
-        cscSupplierInfoDto.setSupplierCode(supportName);
-        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
-        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
-        if (StringUtils.isBlank(supportCode)) {
-            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
-        }
+//        String supportName = createOrderEntity.getSupportName();
+//        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+//        cscSupplierInfoDto.setCustomerCode(custCode);
+//        cscSupplierInfoDto.setSupplierCode(supportName);
+//        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+//        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
+//        if (StringUtils.isBlank(supportCode)) {
+//            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
+//        }
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
         if (!StringUtils.equals("60", orderType)) {
