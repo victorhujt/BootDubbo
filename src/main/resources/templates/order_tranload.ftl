@@ -1,56 +1,16 @@
 <head>
     <title>运输开单</title>
     <style type="text/css">
-        #goodsListDiv {
-            position:fixed;
-            left:285px;
-            top:85px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #consignorListDiv {
-            position:fixed;
-            left:285px;
-            top:77px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #consigneeListDiv {
-            position:fixed;
-            left:285px;
-            top:77px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #custListDiv{
+        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
             left:50%;
-            top:77px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
+            top:85px;
             margin-left:-400px;
-        }
-        #goodsAndConsigneeDiv{
-            position:fixed;
-            left:285px;
-            top:77px;
             width:946px;
             height:500px;
             z-index:3;
             overflow: auto;
-            border:solid #7A7A7A 2px;
+            border:solid #7A7A7A 1px;
         }
         .date_a{
             line-height:21px !important;
@@ -423,7 +383,7 @@
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>运输单号</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon toggle">*</span>运输单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
@@ -437,7 +397,7 @@
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
-                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;" >
+                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;color: #666 !important;" >
                                     <i class="fa fa-user l-cor"></i>
                                 </button>
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
@@ -1269,8 +1229,17 @@
     function seleGoods(obj) {
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
-        $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
     }
+
+    $("#businessType").change(function(){
+        if($("#businessType").val() == 602){
+            $(".toggle").css({"display":"inline-block"})
+        }else{
+          $(".toggle").css({"display":"none"});
+        };
+    })
+
     function onlyNumber(value){
         //先把非数字的都替换掉，除了数字和.
         value = value.replace(/[^\d\.]/g,'');
@@ -2169,7 +2138,7 @@
             if(custEnterTag==""){
                 alert("请至少选择一行");
             }else{
-                $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             }
         });
 
@@ -2337,7 +2306,7 @@
             if(consignorin==""){
                 alert("请至少选择一行");
             }else{
-                $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
                 checkConsignOrEe();
             }
         });
@@ -2379,7 +2348,7 @@
             if(consignorout==""){
                 alert("请至少选择一行");
             }else{
-                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
                 checkConsignOrEe();
             }
         });
@@ -2389,19 +2358,19 @@
                 alert("请先选择客户")
             }else{
                 $("#contactSelectListTbody2").html("");
-                $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
+                $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
         });
 
         $("#consignorListDivNoneTop").click(function(){
 
-            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
         $("#consignorListDivNoneBottom").click(function(){
 
-            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
@@ -2410,20 +2379,20 @@
                 alert("请先选择客户")
             }else{
                 $("#contactSelectListTbody1").html("");
-                $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
+                $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
 
         });
 
         $("#consigneeListDivNoneTop").click(function(){
 
-            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
         $("#consigneeListDivNoneBottom").click(function(){
 
-            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
@@ -2548,7 +2517,7 @@
 
         $("#goodsListDivNoneTop").click(function(){
 
-            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
             $("#typeSel").attr("id","");
 
@@ -2556,7 +2525,7 @@
 
         $("#goodsListDivNoneBottom").click(function(){
 
-            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
             $("#typeSel").attr("id","");
 
@@ -2589,7 +2558,7 @@
             if(goodsInfoListDiv==""){
                 alert("请至少选择一行");
             }else{
-                $("#goodsListDiv").fadeOut("slow");
+                $("#goodsListDiv").fadeOut(0);
                 $("#yangdongxushinanshen").attr("id","goodCodeSel");
                 $("#typeSel").attr("id","");
             }
@@ -2608,13 +2577,13 @@
         });
     })
     $("#custListDivBlock").click(function () {
-        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
     });
     $("#custListDivNoneBottom").click(function () {
-        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
     $("#custListDivNoneTop").click(function () {
-        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
 
     $("#merchandiser").editableSelect();

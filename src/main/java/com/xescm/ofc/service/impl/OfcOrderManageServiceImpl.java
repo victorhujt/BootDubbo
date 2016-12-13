@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
@@ -104,6 +105,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
     @Autowired
     private FeignCscContactAPIClient feignCscContactAPIClient;
+    @Autowired
+    private FeignPushOrderApiClient feignPushOrderApiClient;
+
+    /**
+     * 订单审核和反审核
+     * @param orderCode
+     * @param orderStatus
+     * @param reviewTag
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
@@ -621,6 +633,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
 
+
+
     /**
      * 创建仓储计划单
      * @param ofcSiloprogramInfo
@@ -686,6 +700,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return planCode;
     }
 
+    /**
+     * 计划单取消
+     * @param orderCode
+     * @param userName
+     */
     public void planCancle(String orderCode,String userName){
         logger.info("==> orderCode={}",orderCode);
         logger.info("==> userName={}",userName);
@@ -793,6 +812,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    /**
+     * 订单删除
+     * @param orderCode
+     * @param orderStatus
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if(orderStatus.equals(PENDINGAUDIT)){
@@ -809,6 +835,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
        }
     }
 
+    /**
+     * 客户中心订单取消
+     * @param orderCode
+     * @param orderStatus
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(PENDINGAUDIT))
@@ -1547,6 +1580,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
 
+
+
     /**
      * 发送到仓储中心
      * @param info
@@ -1842,4 +1877,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         return rmcDistrictQO;
     }
+
+    /**
+     * 订单信息推送结算中心
+     * @param ofcFundamentalInformation
+     * @param ofcFinanceInformation
+     * @param ofcDistributionBasicInfo
+     * @param ofcGoodsDetailsInfos
+     */
+    @Override
+    public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+        //暂时只推卡班订单
+        if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
+                && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
+            Wrapper<?> wrapper = feignPushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                throw new BusinessException(wrapper.getMessage());
+            }
+        }else{
+            throw new BusinessException("结算中心暂时不支持该类型的订单");
+        }
+    }
+
 }

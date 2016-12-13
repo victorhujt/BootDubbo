@@ -64,6 +64,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
         cscContantAndCompanyDto.setCscContact(new CscContact());
+        //发货方
         if(StringUtils.equals("2",purpose)){
             cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
             cscContantAndCompanyDto.getCscContactCompany().setType(ofcOrderDTO.getConsignorType());
@@ -78,11 +79,18 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
                 cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDepartureTowns());
             }
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getDeparturePlaceCode())){
+                throw new BusinessException("四级地址编码为空");
+            }
             String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
             cscContantAndCompanyDto.getCscContact().setProvince(departureCode[0]);
-            cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
-            cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
-            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureCity()) && departureCode.length > 0){
+                cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureDistrict()) && departureCode.length > 1){
+                cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns()) && departureCode.length > 2){
                 cscContantAndCompanyDto.getCscContact().setStreet(departureCode[3]);
             }
             cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDeparturePlace());
@@ -100,12 +108,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDestinationTowns())){
                 cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDestinationTowns());
             }
-            String[] destinationCode = ofcOrderDTO.getDestinationCode().split(",");
-            cscContantAndCompanyDto.getCscContact().setProvince(destinationCode[0]);
-            cscContantAndCompanyDto.getCscContact().setCity(destinationCode[1]);
-            cscContantAndCompanyDto.getCscContact().setArea(destinationCode[2]);
-            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
-                cscContantAndCompanyDto.getCscContact().setStreet(destinationCode[3]);
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getDeparturePlaceCode())){
+                throw new BusinessException("四级地址编码为空");
+            }
+            String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
+            cscContantAndCompanyDto.getCscContact().setProvince(departureCode[0]);
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureCity()) && departureCode.length > 0){
+                cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureDistrict()) && departureCode.length > 1){
+                cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns()) && departureCode.length > 2){
+                cscContantAndCompanyDto.getCscContact().setStreet(departureCode[3]);
             }
             cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDestination());
         }
