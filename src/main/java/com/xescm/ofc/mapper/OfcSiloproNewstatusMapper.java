@@ -5,5 +5,5 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface OfcSiloproNewstatusMapper extends Mapper<OfcSiloproNewstatus> {
 
-	void updateByPlanCode(Object key);
+	int updateByPlanCode(Object key);
 }

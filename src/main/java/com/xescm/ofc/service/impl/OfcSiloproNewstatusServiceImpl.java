@@ -14,12 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OfcSiloproNewstatusServiceImpl extends BaseService<OfcSiloproNewstatus> implements OfcSiloproNewstatusService {
 
-	
-	 @Autowired
-	    private OfcSiloproNewstatusMapper ofcSiloproNewStatusMapper;
+	@Autowired
+	private OfcSiloproNewstatusMapper ofcSiloproNewStatusMapper;
+
 	@Override
 	public int updateByPlanCode(Object key) {
-		ofcSiloproNewStatusMapper.updateByPlanCode(key);
-		  return 0;
+		return ofcSiloproNewStatusMapper.updateByPlanCode(key);
 	}
 }
