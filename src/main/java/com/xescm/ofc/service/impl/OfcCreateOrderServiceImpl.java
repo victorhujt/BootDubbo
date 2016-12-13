@@ -354,14 +354,17 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //插入或更新订单中心基本信息
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
         String custCode = ofcFundamentalInformation.getCustCode();
-        //判断订单是否已经审核
-        OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
-        if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
-            return new ResultModel(ResultModel.ResultEnum.CODE_1001);
-        }
+
         //根据客户订单编号与货主代码查询是否已经存在订单
         int existResult = createOrdersMapper.queryCountByOrderStatus(custOrderCode, custCode);
-        if (existResult > 0) {
+        OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+        if (information != null) {
+            orderCode = information.getOrderCode();
+            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+            if (queryOrderStatus != null && StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
+                logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);
+                return new ResultModel(ResultModel.ResultEnum.CODE_1001);
+            }
             //订单已存在,获取订单的最新状态,只有待审核的才能更新
             //更新订单中心基本信息
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
@@ -384,6 +387,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
             }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         } else {
             //新增订单中心基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
@@ -406,8 +410,26 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
             }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
-        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
+
+    /**
+     * 根据客户订单编号与客户编号查询订单
+     *
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode) {
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+        ofcFundamentalInformation.setCustCode(custCode);
+        List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationService.select(ofcFundamentalInformation);
+        if (CollectionUtils.isNotEmpty(ofcFundamentalInformations)) {
+            return ofcFundamentalInformations.get(0);
+        }
+        return null;
     }
 
     public void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
