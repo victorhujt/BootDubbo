@@ -951,6 +951,8 @@
             value = "城配"
         }else if(status == '601'){
             value = "干线"
+        }else if(status == '602'){
+            value = "卡班"
         }else{
             value = "类型有误"
         }
