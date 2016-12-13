@@ -354,6 +354,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //插入或更新订单中心基本信息
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
         String custCode = ofcFundamentalInformation.getCustCode();
+        //判断订单是否已经审核
         OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
         if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
             return new ResultModel(ResultModel.ResultEnum.CODE_1001);
