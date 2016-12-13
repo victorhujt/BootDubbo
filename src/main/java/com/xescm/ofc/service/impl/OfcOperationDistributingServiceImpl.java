@@ -64,6 +64,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
         cscContantAndCompanyDto.setCscContact(new CscContact());
+        //发货方
         if(StringUtils.equals("2",purpose)){
             cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(ofcOrderDTO.getConsignorName());
             cscContantAndCompanyDto.getCscContactCompany().setType(ofcOrderDTO.getConsignorType());
@@ -78,11 +79,18 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
                 cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDepartureTowns());
             }
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getDeparturePlaceCode())){
+                throw new BusinessException("四级地址编码为空");
+            }
             String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
             cscContantAndCompanyDto.getCscContact().setProvince(departureCode[0]);
-            cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
-            cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
-            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureCity()) && departureCode.length > 0){
+                cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureDistrict()) && departureCode.length > 1){
+                cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns()) && departureCode.length > 2){
                 cscContantAndCompanyDto.getCscContact().setStreet(departureCode[3]);
             }
             cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDeparturePlace());
@@ -100,12 +108,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDestinationTowns())){
                 cscContantAndCompanyDto.getCscContact().setStreetName(ofcOrderDTO.getDestinationTowns());
             }
-            String[] destinationCode = ofcOrderDTO.getDestinationCode().split(",");
-            cscContantAndCompanyDto.getCscContact().setProvince(destinationCode[0]);
-            cscContantAndCompanyDto.getCscContact().setCity(destinationCode[1]);
-            cscContantAndCompanyDto.getCscContact().setArea(destinationCode[2]);
-            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns())){
-                cscContantAndCompanyDto.getCscContact().setStreet(destinationCode[3]);
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getDeparturePlaceCode())){
+                throw new BusinessException("四级地址编码为空");
+            }
+            String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
+            cscContantAndCompanyDto.getCscContact().setProvince(departureCode[0]);
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureCity()) && departureCode.length > 0){
+                cscContantAndCompanyDto.getCscContact().setCity(departureCode[1]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureDistrict()) && departureCode.length > 1){
+                cscContantAndCompanyDto.getCscContact().setArea(departureCode[2]);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getDepartureTowns()) && departureCode.length > 2){
+                cscContantAndCompanyDto.getCscContact().setStreet(departureCode[3]);
             }
             cscContantAndCompanyDto.getCscContact().setAddress(ofcOrderDTO.getDestination());
         }
@@ -139,36 +154,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 custOrderCodeList.add(custOrderCode);
             }
         }
-        /*for(String custOrderCode : custOrderCodeList){
-
-        }*/
-        /*String pageCustOrderCode = "";
-
-        for(int i = 0; i < jsonArray.size(); i ++) {
-            String json = jsonArray.get(i).toString();
-            OfcOrderDTO ofcOrderDTO = null;
-            try {
-                ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new BusinessException("校验客户订单编号转换异常",e);
-            }
-            String custOrderCode = ofcOrderDTO.getCustOrderCode();
-            if(!PubUtils.isSEmptyOrNull(custOrderCode)){
-                if(pageCustOrderCode.equals(custOrderCode)){
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
-                }
-                pageCustOrderCode = custOrderCode;
-                OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-                ofcFundamentalInformation.setCustOrderCode(custOrderCode);
-                int checkCustOrderCodeResult = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
-                if (checkCustOrderCodeResult > 0) {
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
-                }
-            }
-
-        }*/
-
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
@@ -221,6 +206,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
         return sheetMsgList;
     }
+
+
 
     /**
      * 校验用户上传的Excel是否符合我们的格式
@@ -748,7 +735,22 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     /**
      * 城配开单必填项后端校验
      */
+    @Override
+    public void validateOperationDistributingMsg(OfcOrderDTO ofcOrderDTO) {
+        if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getMerchandiser())){
+            throw new BusinessException("开单员未填写!");
+        }
+        if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getCustName())){
+            throw new BusinessException("客户名称未填写!");
+        }
+        if(null == ofcOrderDTO.getGoodsList()){
+            throw new BusinessException("货品信息有误!");
+        }
+        if(ofcOrderDTO.getGoodsList().size() < 1){
+            throw new BusinessException("货品列表为空!");
+        }
 
+    }
 
 
 

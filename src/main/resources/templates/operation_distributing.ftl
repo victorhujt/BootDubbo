@@ -1,7 +1,7 @@
 <head>
     <title>城配下单</title>
     <style type="text/css">
-        #goodsListDiv {
+        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
             left:50%;
             top:85px;
@@ -10,51 +10,7 @@
             height:500px;
             z-index:3;
             overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #consignorListDiv {
-            position:fixed;
-            left:50%;
-            top:77px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #consigneeListDiv {
-            position:fixed;
-            left:50%;
-            top:77px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #custListDiv{
-            position:fixed;
-            left:50%;
-            top:77px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #goodsAndConsigneeDiv{
-            position:fixed;
-            left:50%;
-            top:77px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
+            border:solid #7A7A7A 1px;
         }
         .help-block{
             color:#f00 !important;
@@ -73,16 +29,64 @@
             background:#fff!important;
             border:1px solid #cacaca!important;
         }
-      .width-267{
-          width:267px;
-          padding:0 12px;
-          float:left;
-      }
-        .dataTable > thead > tr > th[class*=sort]:hover{
+        .width-267{
+            width:267px;
+            padding:0 12px;
+            float:left;
+        }
+        .dataTable > thead > tr > th[class*=sorting_],.dataTable > thead > tr > th[class*=sort]:hover{
             color:#707070;
         }
-        .dataTable > thead > tr > th[class*=sorting_]{
-            color:#707070;
+        .tp-1{
+            margin-left: 10px;
+        }
+        .bk-1{
+            width: 168px;
+        }
+        .dz-1{
+            width: 376px;
+        }
+        .l-bj{
+            margin-left: 0;!important;
+        }
+        .db-1{
+            margin-top: 10px;
+        }
+        .l-cor{
+            color: #666;
+        }
+        .bg-1{
+            margin-top: 5px;
+        }
+        .xz-1{
+            margin-left: -33px;
+            background-color: #F5F5F5 !important;
+            border:none;
+            margin-left: -20px;
+            margin-top: 7px;
+        }
+        .xz-1:hover{
+            background: #F5F5F5;
+            background-color: #F5F5F5 !important;
+        }
+        .tktp-1{
+            width: 168px;
+        }
+        .qrshf{
+            margin: 0 10px;
+        }
+        .l_dbx{
+            padding-bottom: 11px;
+            border-bottom:1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .l-dw{
+            position: absolute;
+            left: 278px;
+            top: 16px;
+        }
+        .disabled:hover{
+            background-color: #fff !important;
         }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
@@ -97,32 +101,32 @@
         <div class="bootbox-body">
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品种类</label>
-                    <div class="col-sm-3 tktp-1">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">货品种类</label>
+                    <div class="col-xs-3 tktp-1">
                         <div class="clearfix">
                             <select id="goodsTypeId" name="goodsTypeId" class="bk-1"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品小类</label>
-                    <div class="col-sm-3 tktp-1">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">货品小类</label>
+                    <div class="col-xs-3 tktp-1">
                         <div class="clearfix">
                             <select id="goodsSecTypeId" name="goodsTypeSonId" class="bk-1"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "goodsName" name="goodsName" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">条形码</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">条形码</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
                             <input id="customerCodeForGoods" name ="customerCode" type="hidden"/>
@@ -130,8 +134,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
@@ -177,32 +181,32 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                    <div class="col-xs-3">
                         <div class="clearfix" >
                             <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
@@ -244,7 +248,7 @@
             <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">名称</label>
-                    <div class="col-sm-3">
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorName1" name="contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -252,7 +256,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">联系人</label>
-                    <div class="col-sm-3">
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -260,7 +264,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
-                    <div class="col-sm-3">
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber1" name="phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -268,7 +272,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name"></label>
-                    <div class="col-sm-3">
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
@@ -308,16 +312,16 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name" style="line-height:34px;">名称</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name" style="line-height:34px;">名称</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name"></label>
-                    <div class="col-sm-3 l-dw">
+                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <div class="col-xs-3 l-dw">
                         <div class="clearfix">
                             <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
@@ -356,8 +360,8 @@
             <form class="form-horizontal" role="form">
 
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">货品编码</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input id="goodsIndexDivHidden" type="hidden"/>
                             <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -365,24 +369,24 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">货品名称</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">规格</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">规格</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-1 no-padding-right" for="name">单位</label>
-                    <div class="col-sm-3">
+                    <label class="control-label col-xs-1 no-padding-right" for="name">单位</label>
+                    <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "unitDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -410,8 +414,8 @@
 
 <br/>
 <div class="col-xs-9">
-    <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="">
-        <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
+    <button class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
+        <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
         历史订单选择
     </button>
 
@@ -458,8 +462,11 @@
                 </div></div>
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="width-267">
-                <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
+                <div class="bk-1 position-relative">
+                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
+                    <button type="button" class="btn btn-minier no-padding-right initBtn" id="">
+                        <i class="fa fa-calendar l-cor bigger-130"></i>
+                    </button>
                 </div>
             </div></div>
         </div>
@@ -484,7 +491,7 @@
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
             <div class="width-267">
                 <div class="clearfix">
-                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="bk-1">
+                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class=" bk-1">
                         <option value="">无</option>
 
                     </select>
@@ -573,7 +580,7 @@
     </div>
 <#--</form>-->
     <br/>
-    <div class="col-sm-12">
+    <div class="col-xs-12">
         <div class="tabbable" style="width:1000px;">
             <ul class="nav nav-tabs" id="myTab4">
                 <li class="goodsLi disable" >
@@ -752,6 +759,7 @@
                 $.each(data,function (index,warehouse) {
                     $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
                 });
+                $("#warehouseCode").trigger("chosen:updated")
             })
 
             //将用户选择的客户以及连带的仓库显示出来后,再在页面上展示用户插入的数据
@@ -848,17 +856,17 @@
                 }
 
 
-                $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+                $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
         });
         $("#goodsListDivNoneTop").click(function(){
 
-            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
         $("#goodsListDivNoneBottom").click(function(){
 
-            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
         $("#goodsSelectFormBtn").click(function () {
@@ -978,7 +986,7 @@
                 alert("请至少选择一行");
             }else{
                 $("#goodsInfoListDiv").html(goodsInfoListDiv);
-                $("#goodsListDiv").fadeOut("slow");
+                $("#goodsListDiv").fadeOut(0);
             }
 
         });
@@ -1011,7 +1019,7 @@
 
 
     $("#goodsAndConsigneeDivNoneBottom").click(function () {
-        $("#goodsAndConsigneeDiv").fadeOut("slow");
+        $("#goodsAndConsigneeDiv").fadeOut(0);
     });
 
 
@@ -1076,7 +1084,7 @@
     }
 
     function goodsAndConsignee(obj){
-       $("#goodsAndConsigneeDiv").fadeIn("slow");
+       $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
@@ -1183,7 +1191,7 @@
         mapValue[1] = consigneeAndGoodsJson;
         goodsAndConsigneeMap.put(mapKey,mapValue);
 
-        $("#goodsAndConsigneeDiv").fadeOut("slow");
+        $("#goodsAndConsigneeDiv").fadeOut(0);
     })
 
 
@@ -1300,7 +1308,7 @@
                 alert("您还未添加任何联系人,请在收发货档案中进行添加操作！");
                 return;
             }else {
-                $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
+                $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
 
         }
@@ -1310,13 +1318,13 @@
 
     $("#consignorListDivNoneTop").click(function(){
 
-        $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
     });
 
     $("#consignorListDivNoneBottom").click(function(){
 
-        $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
     });
 
@@ -1420,7 +1428,7 @@
         if(consignorin==""){
             alert("请至少选择一行");
         }else{
-            $("#consignorListDiv").fadeOut("slow");
+            $("#consignorListDiv").fadeOut(0);
         }
     });
 
@@ -1433,20 +1441,20 @@
             return;
         }*/else{
             //$("#contactSelectListTbody1").html("");
-            $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
+            $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
         }
     });
 
 
     $("#consigneeListDivNoneTop").click(function(){
 
-        $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
     });
 
     $("#consigneeListDivNoneBottom").click(function(){
 
-        $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
     });
 
@@ -1621,7 +1629,7 @@
             alert("请至少选择一行");
         }else{
             $("#consigneeInfoListDiv").html(consignorout);
-            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             //遍历货品和收货人列表,将新增的收货人在map集合中增加对应的货品中收货人的信息,设初始收货数量为0
 
             $("#consigneeInfoListDiv").find("tr").each(function (index) {
@@ -1653,16 +1661,16 @@
     });//custListDiv
     $("#custListDivBlock").click(function () {
         if(couldChangeCust){
-            $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }else{
             alert("您不能再选择客户!")
         }
     });
     $("#custListDivNoneBottom").click(function () {
-        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
     $("#custListDivNoneTop").click(function () {
-        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
 
     $("#consigneeListClearDivBlock").click(function () {
@@ -1741,7 +1749,7 @@
         if(custEnterTag==""){
             alert("请至少选择一行");
         }else{
-            $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
         }
 
         //加载完客户后自动加载仓库列表, 和货品种类
@@ -1820,14 +1828,14 @@
             orderInfo.consignorCode = $("#consignorContactCompanyId").val();
             orderInfo.consignorContactCode = $("#consignorContactCode").val();
             orderInfo.consignorContactPhone = $("#consignorPhone").val();
-            var provinceCode = $("#consignorProvince").val();
-            orderInfo.departureProvince = $("#consignorProvinceName").val();
-            var cityCode = $("#consignorCity").val();
-            orderInfo.departureCity = $("#consignorCityName").val();
-            var areaCode = $("#consignorArea").val();
-            orderInfo.departureDistrict = $("#consignorAreaName").val();
-            var streetCode = $("#consignorStreet").val();
-            orderInfo.departureTowns = $("#consignorStreetName").val();
+            var provinceCode = StringUtil.nullToEmpty($("#consignorProvince").val());
+            orderInfo.departureProvince = StringUtil.nullToEmpty($("#consignorProvinceName").val());
+            var cityCode = StringUtil.nullToEmpty($("#consignorCity").val());
+            orderInfo.departureCity = StringUtil.nullToEmpty($("#consignorCityName").val());
+            var areaCode = StringUtil.nullToEmpty($("#consignorArea").val());
+            orderInfo.departureDistrict = StringUtil.nullToEmpty($("#consignorAreaName").val());
+            var streetCode = StringUtil.nullToEmpty($("#consignorStreet").val());
+            orderInfo.departureTowns = StringUtil.nullToEmpty($("#consignorStreetName").val());
             orderInfo.departurePlaceCode = provinceCode + "," + cityCode + "," + areaCode + "," + streetCode;
                  //orderInfo.departurePlace = $("#consignorAddress").val();
 
@@ -1841,14 +1849,14 @@
             var contactCompanyId = tdArr.eq(7).text();
             var contactCode = tdArr.eq(8).text();
             var phone = tdArr.eq(9).text();
-            var province = tdArr.eq(10).text();
-            var provinceName = tdArr.eq(11).text();
-            var city = tdArr.eq(12).text();
-            var cityName = tdArr.eq(13).text();
-            var area = tdArr.eq(14).text();
-            var areaName = tdArr.eq(15).text();
-            var street = tdArr.eq(16).text();
-            var streetName = tdArr.eq(17).text();
+            var province = tdArr.eq(10).text().replace('null','');
+            var provinceName = tdArr.eq(11).text().replace('null','');
+            var city = tdArr.eq(12).text().replace('null','');
+            var cityName = tdArr.eq(13).text().replace('null','');
+            var area = tdArr.eq(14).text().replace('null','');
+            var areaName = tdArr.eq(15).text().replace('null','');
+            var street = tdArr.eq(16).text().replace('null','');
+            var streetName = tdArr.eq(17).text().replace('null','');
             var address = tdArr.eq(18).text();
             orderInfo.consigneeName = consigneeName;
             orderInfo.custOrderCode = custOrderCode;

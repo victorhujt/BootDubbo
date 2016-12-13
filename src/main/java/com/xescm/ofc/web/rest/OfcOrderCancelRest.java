@@ -8,6 +8,7 @@ import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,11 +31,11 @@ public class OfcOrderCancelRest extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping("/api/epc/order/orderCancel")
+    @RequestMapping(value = "/api/epc/order/orderCancel", produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     @ApiOperation(value = "鲜易网取消接口", notes = "返回是否成功", response = Wrapper.class)
-    public Wrapper<?> orderCancel(@RequestBody CancelOrderDto cancelOrderDto) {
-        logger.info("取消订单接口参数：custOrderCode：{}", cancelOrderDto);
+    public Wrapper<CannelOrderVo> orderCancel(@RequestBody CancelOrderDto cancelOrderDto) {
+        logger.info("取消订单接口参数：custOrderCode：{}", ToStringBuilder.reflectionToString(cancelOrderDto));
         Wrapper<CannelOrderVo> wrapper = null;
         try {
             if (cancelOrderDto == null) {

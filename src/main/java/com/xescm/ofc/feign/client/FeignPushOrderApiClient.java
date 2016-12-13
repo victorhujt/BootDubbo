@@ -16,7 +16,6 @@ import feign.jackson.JacksonEncoder;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,8 +26,8 @@ import java.util.List;
  * Created by hiyond on 2016/12/11.
  */
 @Service
-public class PushOrderApiClient {
-    private static final Logger logger = LoggerFactory.getLogger(PushOrderApiClient.class);
+public class FeignPushOrderApiClient {
+    private static final Logger logger = LoggerFactory.getLogger(FeignPushOrderApiClient.class);
 
     @Resource
     RestConfig restConfig;
@@ -39,7 +38,7 @@ public class PushOrderApiClient {
         PushOrderApi res = Feign.builder()
                 .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
-                .target(PushOrderApi.class, restConfig.getWhcUrl());
+                .target(PushOrderApi.class, restConfig.getAcUrl());
         return res;
     }
 
