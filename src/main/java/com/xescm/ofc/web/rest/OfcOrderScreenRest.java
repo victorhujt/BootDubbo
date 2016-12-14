@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.domain.OrderScreenResult;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcOrderScreenService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
@@ -77,9 +78,12 @@ public class OfcOrderScreenRest extends BaseController {
            // pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
-        }catch (Exception ex){
+        }catch (BusinessException ex){
             logger.error("分页查询订单列表出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }catch (Exception ex){
+            logger.error("分页查询订单列表出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
     }

@@ -414,7 +414,7 @@
 
 <br/>
 <div class="col-xs-9">
-    <button class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
+    <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
         历史订单选择
     </button>

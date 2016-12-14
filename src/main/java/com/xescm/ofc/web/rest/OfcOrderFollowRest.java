@@ -3,6 +3,7 @@ package com.xescm.ofc.web.rest;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
@@ -73,9 +74,12 @@ public class OfcOrderFollowRest extends BaseController{
 
             map.put("ofcOrderDTO",ofcOrderDTO);
             map.put("ofcOrderStatus",ofcOrderStatuses);
-        }catch (Exception ex){
+        }catch (BusinessException ex) {
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }catch (Exception ex){
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,map);
     }
