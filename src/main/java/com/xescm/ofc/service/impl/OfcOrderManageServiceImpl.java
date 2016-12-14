@@ -781,6 +781,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                         dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
                         dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
+                        dto.setReason("");
                     logger.info("==> 仓储计划单号{}开始取消,业务类型为{}",ofcSiloprogramInfo.getPlanCode(),ofcSiloprogramInfo.getDocumentType());
                         //调用接口尝试3次
                         for (int j = 0; j <3; j++) {
@@ -791,7 +792,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }
                 } catch (Exception e) {
                     logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage(),e);
+                    e.printStackTrace();
                     throw new BusinessException(e.getMessage(),e);
+
                 }
                 if(Response.ERROR_CODE == response.getCode()){
                     logger.error("仓储计划单调用WHC响应状态码{}",response.getCode());

@@ -72,7 +72,7 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
-        logger.info("==> orderLists={}", orderLists);
+        logger.info("城配开单确认下单==> orderLists={}", orderLists);
         String resultMessage = null;
         try{
             if(PubUtils.isSEmptyOrNull(orderLists)){
@@ -121,7 +121,7 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
     @ResponseBody
     public void queryCustomerByName(String customerCode,Model model,HttpServletResponse response){
-        logger.info("==> customerCode={}", customerCode);
+        logger.info("城配开单根据选择的客户查询仓库==> customerCode={}", customerCode);
         try{
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
@@ -161,7 +161,7 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
     @ResponseBody
     public void queryGoodsSecTypeByCAndT(String customerCode, String goodsType,Model model,HttpServletResponse response){
-        logger.info("==> goodsType={}", goodsType);
+        logger.info("城配开单根据选择的客户和货品一级种类查询货品二级小类==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             CscGoodsType cscGoodsType = new CscGoodsType();
@@ -184,7 +184,7 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
     public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
-        logger.info("==> cscGoodsApiDto={}", cscGoodsApiDto);
+        logger.info("城配开单查询货品列表==> cscGoodsApiDto={}", cscGoodsApiDto);
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
             wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
@@ -206,8 +206,8 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
     @ResponseBody
     public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
-        logger.info("==> queryCustomerName={}", queryCustomerName);
-        logger.info("==> currPage={}", currPage);
+        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
+        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
         try{
             QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
             if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
@@ -326,8 +326,6 @@ public class OfcOperationDistributing extends BaseController{
             }
             bis.close();
             outputStream.close();
-        } catch (IOException e) {
-            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
         } catch (Exception e){
             logger.error("城配开单下载模板出错{}",e.getMessage(),e);
         }

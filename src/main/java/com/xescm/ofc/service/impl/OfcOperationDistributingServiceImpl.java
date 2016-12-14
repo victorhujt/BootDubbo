@@ -294,15 +294,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                         continue;
                     }
                     //校验第一行,包括固定内容和收货人列表
+                    String cellValue = null;
+                    if(HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()){
+                        cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                    }else if(HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()){
+                        cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                    }
                     if(rowNum == 0){
                         //第一行全为字符串
 //                            String cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
-                        String cellValue = "";
-                        if(HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()){
-                            cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
-                        }else if(HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()){
-                            cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
-                        }
+
                         //校验模板第一行前5列的固定名称是否被改变
                         if(cellNum >= 0 && cellNum <= (staticCell -1)){
                             String[] cellName = {"货品编码","货品名称","规格","单位","单价"};
@@ -355,7 +356,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
                         JSONObject jsonObject = new JSONObject();
                         if(cellNum == 0){
-                            String goodsCode = hssfCell.getStringCellValue();
+                            String goodsCode = cellValue;
                             if(PubUtils.isSEmptyOrNull(goodsCode)){
                                 continue;
                             }
@@ -517,14 +518,15 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                         continue;
                     }
                     //校验第一行,包括固定内容和收货人列表
+                    String cellValue = null;
+                    if(HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()){
+                        cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                    }else if(HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()){
+                        cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                    }
                     if(rowNum == 0){
                         //第一行全为字符串
-                        String cellValue = "";
-                        if(HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()){
-                            cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
-                        }else if(HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()){
-                            cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
-                        }
+
                         //校验模板第一行前5列的固定名称是否被改变
                         if(cellNum >= 0 && cellNum <= (staticCell -1)){
                             String[] cellName = {"货品编码","货品名称","规格","单位","单价"};
@@ -577,7 +579,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
                         JSONObject jsonObject = new JSONObject();
                         if(cellNum == 0){
-                            String goodsCode = xssfCell.getStringCellValue();
+                            String goodsCode = cellValue;
                             if(PubUtils.isSEmptyOrNull(goodsCode)){
                                 continue;
                             }

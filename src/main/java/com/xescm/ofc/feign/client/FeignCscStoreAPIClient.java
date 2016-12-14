@@ -34,6 +34,7 @@ public class FeignCscStoreAPIClient {
         return res;
     }
     public Wrapper<List<CscStorevo>> getStoreByCustomerId(QueryStoreDto queryStoreDto){
+        logger.info("==>queryStoreDto={}",queryStoreDto);
         Wrapper<List<CscStorevo>> storeByCustomerId = getApi().getStoreByCustomerId(queryStoreDto);
         return  storeByCustomerId;
     }

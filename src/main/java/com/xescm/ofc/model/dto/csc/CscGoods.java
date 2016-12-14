@@ -3,10 +3,7 @@ package com.xescm.ofc.model.dto.csc;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,22 +17,24 @@ public class CscGoods implements Serializable{
     @GeneratedValue(generator = "UUID")
     private String id;
 
+    @Column(name="serial_no")
+    private String serialNo;
+
     /**
      * 版本号
      */
     private Long version;
 
     /**
-     * 客户编码
-     */
-    @Column(name = "customer_code")
-    private String customerCode;
-
-    /**
      * 货品类型
      */
     @Column(name = "goods_type")
     private String goodsType;
+    /**
+     * 货品类型id
+     */
+    @Column(name = "goods_type_id")
+    private String goodsTypeId;
 
     /**
      * 货品编码
@@ -70,6 +69,8 @@ public class CscGoods implements Serializable{
      */
     @Column(name = "unit_price")
     private String unitPrice;
+
+
 
     /**
      * 创建人
@@ -118,15 +119,15 @@ public class CscGoods implements Serializable{
     /**
      * 客户ID
      */
-    @Column(name = "customer_id")
-    private String customerId;
+    @Column(name = "customer_code")
+    private String customerCode;
     /**
      * 条形码
      * */
     @Column(name = "bar_code")
     private String barCode;
     /**
-     * 状态
+     * 状态(0-停用；1-正常)
      * */
     private String state;
     /**
@@ -160,6 +161,43 @@ public class CscGoods implements Serializable{
     private String description;
 
     /**
+     * 品牌
+     */
+    private String brand;
+
+    /**
+     * 温度带
+     */
+    private String keeptemperate;
+
+
+    /**
+     * 货品大类id
+     */
+    @Transient
+    private String gtpid;
+
+
+    /**
+     * 货品大类名称
+     */
+    @Transient
+    private String goodsTypeName;
+
+    /**
+     * 货品小类id
+     */
+    @Transient
+    private String gtid;
+
+    /**
+     * 货品小类名称
+     */
+    @Transient
+    private String smallGoodsTypeName;
+
+
+    /**
      * 获取主键
      *
      * @return id - 主键
@@ -175,24 +213,6 @@ public class CscGoods implements Serializable{
      */
     public void setId(String id) {
         this.id = id;
-    }
-
-    /**
-     * 获取客户编码
-     *
-     * @return customer_code - 客户编码
-     */
-    public String getCustomerCode() {
-        return customerCode;
-    }
-
-    /**
-     * 设置客户编码
-     *
-     * @param customerCode 客户编码
-     */
-    public void setCustomerCode(String customerCode) {
-        this.customerCode = customerCode;
     }
 
     /**
@@ -447,23 +467,15 @@ public class CscGoods implements Serializable{
         this.yn = yn;
     }
 
-    /**
-     * 获取客户ID
-     *
-     * @return customer_id - 客户ID
-     */
-    public String getCustomerId() {
-        return customerId;
+
+    public String getGoodsTypeId() {
+        return goodsTypeId;
     }
 
-    /**
-     * 设置客户ID
-     *
-     * @param customerId 客户ID
-     */
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setGoodsTypeId(String goodsTypeId) {
+        this.goodsTypeId = goodsTypeId;
     }
+
 
     public Long getVersion() {
         return version;
@@ -554,7 +566,6 @@ public class CscGoods implements Serializable{
         return "CscGoods{" +
                 "id='" + id + '\'' +
                 ", version=" + version +
-                ", customerCode='" + customerCode + '\'' +
                 ", goodsType='" + goodsType + '\'' +
                 ", goodsCode='" + goodsCode + '\'' +
                 ", goodsName='" + goodsName + '\'' +
@@ -569,7 +580,7 @@ public class CscGoods implements Serializable{
                 ", lastOperatorId='" + lastOperatorId + '\'' +
                 ", updateTime=" + updateTime +
                 ", yn=" + yn +
-                ", customerId='" + customerId + '\'' +
+                ", customerCode='" + customerCode + '\'' +
                 ", barCode='" + barCode + '\'' +
                 ", state='" + state + '\'' +
                 ", expiryDate='" + expiryDate + '\'' +
@@ -580,5 +591,69 @@ public class CscGoods implements Serializable{
                 ", weight='" + weight + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public String getKeeptemperate() {
+        return keeptemperate;
+    }
+
+    public void setKeeptemperate(String keeptemperate) {
+        this.keeptemperate = keeptemperate;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getGtpid() {
+        return gtpid;
+    }
+
+    public void setGtpid(String gtpid) {
+        this.gtpid = gtpid;
+    }
+
+    public String getGtid() {
+        return gtid;
+    }
+
+    public void setGtid(String gtid) {
+        this.gtid = gtid;
+    }
+
+    public String getSmallGoodsTypeName() {
+        return smallGoodsTypeName;
+    }
+
+    public void setSmallGoodsTypeName(String smallGoodsTypeName) {
+        this.smallGoodsTypeName = smallGoodsTypeName;
+    }
+
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 }
