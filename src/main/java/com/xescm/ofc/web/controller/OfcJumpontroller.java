@@ -3,6 +3,7 @@ package com.xescm.ofc.web.controller;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
 
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -77,8 +78,7 @@ public class OfcJumpontroller extends BaseController{
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
-            
+            logger.error("订单中心跳转下单页面出现异常:{}", ex.getMessage(), ex);
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
@@ -136,10 +136,15 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
 
-        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
-        map.put("merchandiserList",merchandiserList);
-        map.put("currentTime",new Date());
-        setDefaultModel(model);
+        try {
+            List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+            map.put("merchandiserList",merchandiserList);
+            map.put("currentTime",new Date());
+            setDefaultModel(model);
+        } catch (Exception ex) {
+            logger.error("跳转城配开单页面出错!",ex.getMessage(),ex);
+            throw new BusinessException(ResultCodeEnum.UNDEFINED.getType(),ResultCodeEnum.UNDEFINED.getName());
+        }
         return "operation_distributing";
     }
 
