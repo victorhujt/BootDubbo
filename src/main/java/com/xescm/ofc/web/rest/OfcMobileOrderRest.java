@@ -5,6 +5,8 @@ import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.utils.PubUtils;
+import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hujintao on 2016/12/12.
@@ -46,4 +51,24 @@ public class OfcMobileOrderRest extends BaseController {
         }
             return modelAndView;
     }
+
+    /**
+     * 获取录单记录
+     * @return
+     */
+    @RequestMapping(value="/queryOrderNotes", method = RequestMethod.POST)
+    @ResponseBody
+    public List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus){
+        ModelAndView modelAndView = new ModelAndView("");
+        List<OfcMobileOrder> ofcMobileOrder=new ArrayList<>();
+        try {
+            mobileOrderStatus=PubUtils.trimAndNullAsEmpty(mobileOrderStatus);
+            ofcMobileOrder=ofcMobileOrderService.queryOrderNotes(mobileOrderStatus);
+        }catch (Exception e){
+            modelAndView.addObject("info","查询失败");
+            logger.info("查询历史订单异常，{}",e.getMessage(),e);
+        }
+        return ofcMobileOrder;
+    }
+
 }
