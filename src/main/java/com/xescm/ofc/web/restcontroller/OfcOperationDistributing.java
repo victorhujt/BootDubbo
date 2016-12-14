@@ -99,10 +99,10 @@ public class OfcOperationDistributing extends BaseController{
                 CscContantAndCompanyDto consignor = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
                 CscContantAndCompanyDto consignee = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
                 ofcOrderDTO.setOrderBatchNumber(batchNumber);
-                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,ofcOrderDTO.getCustCode()
+                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
                         ,consignor,consignee,new CscSupplierInfoDto());
             }
-        }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex){

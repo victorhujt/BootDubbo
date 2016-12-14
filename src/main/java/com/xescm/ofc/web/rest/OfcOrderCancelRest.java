@@ -1,5 +1,6 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.CreateOrderService;
@@ -46,9 +47,12 @@ public class OfcOrderCancelRest extends BaseController {
             }
             wrapper = createOrderService.cancelOrderStateByOrderCode(cancelOrderDto.getCustOrderCode());
             return wrapper;
-        } catch (Exception ex) {
+        } catch (BusinessException ex) {
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 

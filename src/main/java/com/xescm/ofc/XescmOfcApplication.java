@@ -2,6 +2,7 @@ package com.xescm.ofc;
 
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.domain.feign.FeignUamAPIClient;
+import com.xescm.uam.exception.MyHandlerExceptionResolver;
 import com.xescm.uam.utils.jwt.AppkeyLoader;
 import com.xescm.uam.utils.jwt.SimpleCORSFilter;
 import com.xescm.uam.utils.jwt.TokenUtils;
@@ -81,8 +82,11 @@ public class XescmOfcApplication {
 		}
 		return tokenUtils;
 	}
-
+	@Bean
+	public MyHandlerExceptionResolver myHandlerExceptionResolver() {
+		return new MyHandlerExceptionResolver();
+	}
 	public static void main(String[] args) {
-		SpringApplication.run(XescmOfcApplication.class, args);
+ 		SpringApplication.run(XescmOfcApplication.class, args);
 	}
 }

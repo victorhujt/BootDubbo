@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -382,10 +383,14 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
                 ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
                         "review",authResDtoByToken);
-            }else {
+            } else if(PubUtils.trimAndNullAsEmpty(tag).equals("distributionPlace")){
+                distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
+                        ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
+                        ,ofcOrderStatus,ofcMerchandiser);
+            } else {
                 throw new BusinessException("未知操作!系统无法识别!");
             }
-        if("place".equals(tag) || "tranplace".equals(tag)){
+        if("place".equals(tag) || "tranplace".equals(tag) || "distributionPlace".equals(tag)){
             return "您已成功下单!";
         }else if("manage".equals(tag)){
             return "您的订单修改成功!";
@@ -393,6 +398,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return "异常";
         }
     }
+
+
 
     /**
      * 更新并保存订单状态
@@ -610,6 +617,114 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请选择订单日期");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+    /**
+     * 城配开单下单
+     */
+    private void distributionOrderPlace(OfcFundamentalInformation ofcFundamentalInformation,
+                                        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,
+                                        OfcDistributionBasicInfo ofcDistributionBasicInfo,
+                                        OfcWarehouseInformation ofcWarehouseInformation,
+                                        OfcFinanceInformation ofcFinanceInformation,String custId,
+                                        CscContantAndCompanyDto cscContantAndCompanyDtoConsignor,
+                                        CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,
+                                        AuthResDto authResDtoByToken,
+                                        OfcOrderStatus ofcOrderStatus,
+                                        OfcMerchandiser ofcMerchandiser) {
+        int custOrderCode = 0;
+        if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
+            custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+        }
+
+        if (custOrderCode < 1){//根据客户订单编号查询唯一性
+            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+            //"SO"+ PrimaryGenerater.getInstance()
+            //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
+            ofcFundamentalInformation.setCustCode(custId);
+            if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
+                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                queryCustomerCodeDto.setCustomerCode(custId);
+                Wrapper<CscCustomerVo> cscCustomerVo = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
+                    throw new BusinessException(cscCustomerVo.getMessage());
+                }else if(null == cscCustomerVo.getResult()){
+                    throw new BusinessException("客户中心没有查到该客户!");
+                }
+                ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
+            }
+            ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+            if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){
+
+                if(null == ofcWarehouseInformation.getProvideTransport()){
+                    ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
+                }
+                if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
+                    Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                        throw new BusinessException(wrapper.getMessage());
+                    }
+                    //校验运输基本信息
+                    checkDistibutionBaseMsg(ofcDistributionBasicInfo);
+
+
+                    addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
+                            /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
+                            saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
+                }
+                // 更新仓配信息
+                upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
+                String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
+                if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
+                            /*Wrapper<?> wrapper = validateSupportContactMessage(cscSupplierInfoDto);
+                            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                                throw new BusinessException(wrapper.getMessage());
+                            }*/
+                    // saveSupportMessage(cscSupplierInfoDto,custId,authResDtoByToken);
+
+                }
+                ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                if("61".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿是出库
+                    ofcWarehouseInformation.setSupportCode("");
+                    ofcWarehouseInformation.setSupportName("");
+                }
+            }else if(ofcFundamentalInformation.getOrderType().equals(TRANSPORTORDER)){
+                Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                    throw new BusinessException(wrapper.getMessage());
+                }
+                //校验运输基本信息
+                checkDistibutionBaseMsg(ofcDistributionBasicInfo);
+                //运输订单
+                //设置城配
+                ofcFundamentalInformation.setBusinessType(OrderConstConstant.WITHTHECITY);
+                // ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHEKABAN);
+                //保存运输信息
+                addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
+                        /*saveContactMessage(cscContantAndCompanyDtoConsignor,custId,authResDtoByToken);
+                        saveContactMessage(cscContantAndCompanyDtoConsignee,custId,authResDtoByToken);*/
+            }else{
+                throw new BusinessException("您选择的订单类型系统无法识别!");
+            }
+
+            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                    +" "+"订单已创建");
+            upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
+            //添加该订单的货品信息 modify by wangst 做抽象处理
+            saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+            //添加基本信息
+            ofcFundamentalInformationService.save(ofcFundamentalInformation);
+            if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
+                ofcMerchandiserService.save(ofcMerchandiser);
+            }
+            if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
+                //进行自动审核
+                ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
+                        ofcWarehouseInformation,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
+            }
+
+        }else{
+            throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
+        }
     }
 
     /**
