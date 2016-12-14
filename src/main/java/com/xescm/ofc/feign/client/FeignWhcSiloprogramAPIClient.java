@@ -37,6 +37,7 @@ public class FeignWhcSiloprogramAPIClient {
     }
 
     public Response cancelOrder(CancelOrderDTO cancelOrderDTO){
+        logger.info("==>cancelOrderDTO={}",cancelOrderDTO);
         Response response = null;
         if(null == cancelOrderDTO){
             throw new BusinessException("参数为空");

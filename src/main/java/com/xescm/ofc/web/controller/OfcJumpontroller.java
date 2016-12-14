@@ -2,15 +2,10 @@ package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
-
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.model.dto.csc.QueryStoreDto;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.model.vo.csc.CscStorevo;
-import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
@@ -75,12 +70,9 @@ public class OfcJumpontroller extends BaseController{
 
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
+            logger.error("订单中心跳转下单页面出现异常:{}", ex.getMessage(), ex);
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
@@ -138,10 +130,14 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
 
-        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
-        map.put("merchandiserList",merchandiserList);
-        map.put("currentTime",new Date());
-        setDefaultModel(model);
+        try {
+            List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+            map.put("merchandiserList",merchandiserList);
+            map.put("currentTime",new Date());
+            setDefaultModel(model);
+        } catch (Exception ex) {
+            logger.error("跳转城配开单页面出错!",ex.getMessage(),ex);
+        }
         return "operation_distributing";
     }
 
@@ -174,6 +170,9 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}/{custName}")
     public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode, @PathVariable String custName){
+        logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", excelImportTag);
+        logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", customerCode);
+        logger.info("Excel确认导入,跳转城配开单==> custName={}", custName);
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         setDefaultModel(model);
         model.addAttribute("merchandiserList",merchandiserList);
@@ -207,7 +206,7 @@ public class OfcJumpontroller extends BaseController{
             map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
             setDefaultModel(model);
         }catch (Exception ex){
-            ex.printStackTrace();
+            logger.error("跳转运输开单页面出错!",ex.getMessage(),ex);
         }
         return new ModelAndView("order_tranload");
     }

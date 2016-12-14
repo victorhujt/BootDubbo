@@ -1,6 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.feign.api.wms.AddressCodeInterface;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -35,6 +36,10 @@ public class FeignAddressCodeClient {
     }
 
     public String findCodeByName(AddressDto addressDto) {
+        logger.debug("==>根据省市区名称获取编码 addressDto={}", addressDto);
+        if(null == addressDto){
+            throw new BusinessException("参数为空");
+        }
         return getApi().findCodeByName(addressDto);
     }
 
