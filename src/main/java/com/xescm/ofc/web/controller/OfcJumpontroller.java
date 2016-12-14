@@ -2,16 +2,10 @@ package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
-
-import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.model.dto.csc.QueryStoreDto;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.model.vo.csc.CscStorevo;
-import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
@@ -143,7 +137,6 @@ public class OfcJumpontroller extends BaseController{
             setDefaultModel(model);
         } catch (Exception ex) {
             logger.error("跳转城配开单页面出错!",ex.getMessage(),ex);
-            throw new BusinessException(ResultCodeEnum.UNDEFINED.getType(),ResultCodeEnum.UNDEFINED.getName());
         }
         return "operation_distributing";
     }
