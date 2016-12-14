@@ -1,60 +1,16 @@
 <head>
     <title>订单管理</title>
     <style type="text/css">
-        #goodsListDiv {
-            position: fixed;
-            left: 285px;
-            top: 85px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
+        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+            position:fixed;
+            left:50%;
+            top:85px;
+            margin-left:-400px;
+            width:946px;
+            height:500px;
+            z-index:3;
             overflow: auto;
-            border: solid #7A7A7A 2px;
-        }
-
-        #consignorListDiv {
-            position: fixed;
-            left: 285px;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
-        }
-
-        #consigneeListDiv {
-            position: fixed;
-            left: 285px;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
-        }
-
-        #custListDiv {
-            position: fixed;
-            left: 50%;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
-            margin-left: -400px;
-        }
-
-        #goodsAndConsigneeDiv {
-            position: fixed;
-            left: 285px;
-            top: 77px;
-            width: 946px;
-            height: 500px;
-            z-index: 3;
-            overflow: auto;
-            border: solid #7A7A7A 2px;
+            border:solid #7A7A7A 1px;
         }
         .date_a {
             line-height: 21px !important;
@@ -154,7 +110,7 @@
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
 
                 <div class="col-width-168" style="margin:0 12px;">
-                    <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class=""
+                    <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class="chosen-select"
                             name="businessType">
                         <option value=""></option>
                         <option value="600">城配</option>
@@ -297,17 +253,16 @@
         var scripts = [null, "../components/chosen/chosen.jquery.js", null]
         $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
             $(document).ready(main);
+        });
+        function initChosen() {
             $('.chosen-select').chosen({allow_single_deselect: true});
             //resize the chosen on window resize
-
-            $(window)
-                    .off('resize.chosen')
-                    .on('resize.chosen', function () {
-                        $('.chosen-select').each(function () {
-                            var $this = $(this);
-                            $this.next().css({'width': $this.parent().width()});
-                        })
-                    }).trigger('resize.chosen');
+            $(window).off('resize.chosen').on('resize.chosen', function () {
+                $('.chosen-select').each(function () {
+                    var $this = $(this);
+                    $this.next().css({'width': $this.parent().width()});
+                })
+            }).trigger('resize.chosen');
             //resize chosen on sidebar collapse/expand
             $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
                 if (event_name != 'sidebar_collapsed') return;
@@ -316,14 +271,13 @@
                     $this.next().css({'width': $this.parent().width()});
                 })
             });
-        });
-
+        }
         function main() {
             //初始化页面数据
             initPageDataOrder();
             // 查询
 //            queryOrderData(1);
-
+            initChosen();
             $("#doSearch").click(function () {
                 queryOrderData(1);
             });
@@ -635,10 +589,10 @@
 
         function appendSelect(type) {
             if (type == "60") {
-                return "<option value=''>----</option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
+                return "<option value=''></option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
             } else if (type == "61") {
                 var html = "";
-                html += "<option value=''>----------</option>";
+                html += "<option value=''></option>";
                 html += "<option value='610'>销售出库</option>";
                 html += "<option value='611'>调拨出库</option>";
                 html += "<option value='612'>报损出库</option>";
@@ -652,14 +606,16 @@
                 html += "<option value='625'>流通入库</option>";
                 html += "<option value='626'>其他入库</option>";
                 html += "<option value='627'>分拨入库</option>";
-                return html;
+                return html
             }
             return null;
+
         }
         $("#orderType").on("change", function () {
             var type = $(this).val();
             if (type == "60" || type == "61") {
                 $("#businessType").empty().append(appendSelect(type));
+                $("#businessType").trigger("chosen:updated");
             }
         });
 

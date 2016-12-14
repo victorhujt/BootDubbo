@@ -2,6 +2,7 @@ package com.xescm.ofc.service;
 
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 
@@ -21,4 +22,12 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
     OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode);
 
     OfcFundamentalInformation getLastMerchandiser(String operatorName);
+
+    /**
+     * 根据客户订单编号与客户编号查询订单
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
 }

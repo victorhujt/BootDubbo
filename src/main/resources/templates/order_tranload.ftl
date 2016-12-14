@@ -1,56 +1,16 @@
 <head>
     <title>运输开单</title>
     <style type="text/css">
-        #goodsListDiv {
-            position:fixed;
-            left:285px;
-            top:85px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #consignorListDiv {
-            position:fixed;
-            left:285px;
-            top:77px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #consigneeListDiv {
-            position:fixed;
-            left:285px;
-            top:77px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
-        #custListDiv{
+        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
             left:50%;
-            top:77px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
+            top:85px;
             margin-left:-400px;
-        }
-        #goodsAndConsigneeDiv{
-            position:fixed;
-            left:285px;
-            top:77px;
             width:946px;
             height:500px;
             z-index:3;
             overflow: auto;
-            border:solid #7A7A7A 2px;
+            border:solid #7A7A7A 1px;
         }
         .date_a{
             line-height:21px !important;
@@ -102,10 +62,10 @@
             background:#fff!important;
             border:1px solid #cacaca!important;
         }
-     .col-label{
-         margin-right:2px;
-         margin-bottom:0;
-     }
+        .col-label{
+            margin-right:2px;
+            margin-bottom:0;
+        }
 
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
@@ -327,7 +287,7 @@
                             <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
                         </div>
                     </div>
-                 </div>
+                </div>
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -390,11 +350,11 @@
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
+                                    <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
                                     <#list merchandiserList! as merchandiser>
                                         <option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>
                                     </#list>
-                                </select></div>
+                                    </select></div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
@@ -418,12 +378,12 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                        <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                                  <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                    <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>运输单号</label>
+                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon toggle">*</span>运输单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
@@ -437,10 +397,10 @@
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
-                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;" >
+                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;color: #666 !important;" >
                                     <i class="fa fa-user l-cor"></i>
                                 </button>
-                               <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
+                            <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
                         </div></div>
 
@@ -450,7 +410,7 @@
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
-                                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                            <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
                             </div>
                         </div></div>
                 </div>
@@ -699,7 +659,7 @@
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
                         <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePaymentPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
@@ -743,10 +703,10 @@
                         <label class=" col-label col-float" for="name" >结算方式</label>
                         <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:0;margin-right:15px;">现结</label>
                         <div style="float:left;width:130px;">
-                        <div class="col-float" style="width:100px;margin-right:15px;">
-                            <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
-                        </div>
-                        <label class=" col-float" for="name">元</label></div>
+                            <div class="col-float" style="width:100px;margin-right:15px;">
+                                <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
+                            </div>
+                            <label class=" col-float" for="name">元</label></div>
                     </div>
                     <div >
                         <label class=" col-label-50 col-float" for="name" style="margin-left:25px;margin-right:15px;">到付</label>
@@ -769,16 +729,16 @@
                     <div>
                         <label class=" col-label-50" for="name" style="margin-right:15px;">月结</label>
                         <div style="width:130px;float:left;">
-                                <div class="col-float" style="width:100px;margin-right:15px;">
-                                    <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
-                                </div>
-                                <label class=" col-float" for="name">元</label>
+                            <div class="col-float" style="width:100px;margin-right:15px;">
+                                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
+                            </div>
+                            <label class=" col-float" for="name">元</label>
                         </div>
                     </div>
                 </div>
 
             </form>
-                    <!-- /section:elements.tab.option -->
+            <!-- /section:elements.tab.option -->
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
@@ -799,11 +759,11 @@
 <div class="col-xs-12">
     <!-- #section:elements.tab.option -->
     <div class="tabbable" style="width:1000px;" >
-       <#-- <ul class="nav nav-tabs" id="myTab4">
-            <li class="active">
-                <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-            </li>
-        </ul>-->
+    <#-- <ul class="nav nav-tabs" id="myTab4">
+         <li class="active">
+             <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+         </li>
+     </ul>-->
 
 
 
@@ -834,7 +794,7 @@
                     </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品类别</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
@@ -1043,35 +1003,35 @@
                 luggage:{
                     maxlength: mistake+"最大999999.99元",
                     required:mistake+"请填写运费",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 homeDeliveryFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 cargoInsuranceFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 insureValue:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 twoDistributionFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 collectServiceCharge:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 collectLoanAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 returnListFee:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 }
             },
             highlight : function(e) {
@@ -1122,19 +1082,19 @@
             messages : {
                 currentAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 toPayAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 returnAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 },
                 monthlyAmount:{
                     maxlength: mistake+"最大999999.99元",
-                    pattern:mistake+"金额大小有误"
+                    pattern:mistake+"最大999999.99元"
                 }
             },
             highlight : function(e) {
@@ -1269,8 +1229,17 @@
     function seleGoods(obj) {
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
-        $("#goodsListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
     }
+
+    $("#businessType").change(function(){
+        if($("#businessType").val() == 602){
+            $(".toggle").css({"display":"inline-block"})
+        }else{
+          $(".toggle").css({"display":"none"});
+        };
+    })
+
     function onlyNumber(value){
         //先把非数字的都替换掉，除了数字和.
         value = value.replace(/[^\d\.]/g,'');
@@ -1442,13 +1411,12 @@
             $.each(data,function (index,CscGoodsTypeVo) {
                 $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
-            if($("#goodsInfoListDiv").find("tr").length==1){
-                $("select option").each(function() {
-                    text = $(this).text();
-                    if($("select option:contains("+text+")").length > 1)
-                        $("select option:contains("+text+"):gt(0)").remove();
-                });
-            }
+            $(obj).parent().next().children().find("option").each(function() {
+                text = $(this).text();
+                if($(obj).parent().next().children().find("option:contains("+text+")")){
+                    $(obj).parent().next().children().find("option:contains("+text+"):gt(0)").remove();
+                }
+            });
         });
     }
 
@@ -1476,17 +1444,11 @@
         if($("#cargoInsuranceFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#cargoInsuranceFee").val()))){
             count=count+parseFloat($("#cargoInsuranceFee").val());
         }
-        if($("#insureValue").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#insureValue").val()))){
-            count=count+parseFloat($("#insureValue").val());
-        }
         if($("#twoDistributionFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#twoDistributionFee").val()))){
             count=count+parseFloat($("#twoDistributionFee").val());
         }
         if($("#collectServiceCharge").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectServiceCharge").val()))){
             count=count+parseFloat($("#collectServiceCharge").val());
-        }
-        if($("#collectLoanAmount").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#collectLoanAmount").val()))){
-            count=count+parseFloat($("#collectLoanAmount").val());
         }
         if($("#returnListFee").val()!="" && ((/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/).test($("#returnListFee").val()))){
             count=count+parseFloat($("#returnListFee").val());
@@ -2128,7 +2090,14 @@
                     custList =custList + "<tr role='row' class='odd'>";
                     custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     custList =custList + "<td>"+(index+1)+"</td>";
-                    custList =custList + "<td>"+cscCustomerVo.type+"</td>";
+                    var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+                    if(custType == '1'){
+                        custList =custList + "<td>公司</td>";
+                    }else if (custType == '2'){
+                        custList =custList + "<td>个人</td>";
+                    }else{
+                        custList =custList + "<td>"+custType+"</td>";
+                    }
                     custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
                     custList =custList + "<td>"+channel+"</td>";
                     custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
@@ -2169,7 +2138,7 @@
             if(custEnterTag==""){
                 alert("请至少选择一行");
             }else{
-                $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             }
         });
 
@@ -2242,8 +2211,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2285,8 +2254,8 @@
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
                     contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanyCode+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCode+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
                     contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
@@ -2309,8 +2278,8 @@
                     var consignorName = tdArr.eq(2).text();//名称
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
-                    var contactCompanyCode = tdArr.eq(6).text();//    发货方编码
-                    var contactCode = tdArr.eq(7).text();//    发货方联系人编码
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
                     var type = tdArr.eq(8).text();//    发货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2321,8 +2290,8 @@
                     $("#consignorName").val(consignorName);
                     $("#consignorContactName").val(contacts);
                     $("#consignorPhone").val(contactsNumber);
-                    $("#consignorCode").val(contactCompanyCode);
-                    $("#consignorContactCode").val(contactCode);
+                    $("#consignorCode").val(contactCompanySerialNo);
+                    $("#consignorContactCode").val(contactSerialNo);
                     $("#consignorType").val(type);
                     $("#consignorAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2337,7 +2306,7 @@
             if(consignorin==""){
                 alert("请至少选择一行");
             }else{
-                $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
                 checkConsignOrEe();
             }
         });
@@ -2352,8 +2321,8 @@
                     var contacts = tdArr.eq(3).text();//联系人
                     var contactsNumber = tdArr.eq(4).text();//    联系电话
 
-                    var contactCompanyCode = tdArr.eq(6).text();//    收货方编码
-                    var contactCode = tdArr.eq(7).text();//    收货方联系人编码
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
                     var type = tdArr.eq(8).text();//    收货方类型
                     var address = tdArr.eq(9).text();//    门牌号
                     var provinceName = tdArr.eq(10).text();//    省
@@ -2363,8 +2332,8 @@
                     $("#consigneeName").val(consignorName);
                     $("#consigneeContactName").val(contacts);
                     $("#consigneePhone").val(contactsNumber);
-                    $("#consigneeCode").val(contactCompanyCode);
-                    $("#consigneeContactCode").val(contactCode);
+                    $("#consigneeCode").val(contactCompanySerialNo);
+                    $("#consigneeContactCode").val(contactSerialNo);
                     $("#consigneeType").val(type);
                     $("#consigneeAddress").val(address);
                     var paramAddressNameToPage = provinceName
@@ -2379,7 +2348,7 @@
             if(consignorout==""){
                 alert("请至少选择一行");
             }else{
-                $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+                $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
                 checkConsignOrEe();
             }
         });
@@ -2389,19 +2358,19 @@
                 alert("请先选择客户")
             }else{
                 $("#contactSelectListTbody2").html("");
-                $("#consignorListDiv").fadeIn("slow");//淡入淡出效果 显示div
+                $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
         });
 
         $("#consignorListDivNoneTop").click(function(){
 
-            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
         $("#consignorListDivNoneBottom").click(function(){
 
-            $("#consignorListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
@@ -2410,23 +2379,28 @@
                 alert("请先选择客户")
             }else{
                 $("#contactSelectListTbody1").html("");
-                $("#consigneeListDiv").fadeIn("slow");//淡入淡出效果 显示div
+                $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
 
         });
 
         $("#consigneeListDivNoneTop").click(function(){
 
-            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
         $("#consigneeListDivNoneBottom").click(function(){
 
-            $("#consigneeListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
 
+
+        var transportTypePub = "10";
+        $("#transportType").val(transportTypePub);
+        var expensePaymentParty = "10";
+        $("#expensePaymentParty").val(expensePaymentParty)
         $("input[name=transportTypeV]").change(function () {
             $("#transportType").val($("input[name=transportTypeV]:checked").val());
         });
@@ -2543,7 +2517,7 @@
 
         $("#goodsListDivNoneTop").click(function(){
 
-            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
             $("#typeSel").attr("id","");
 
@@ -2551,7 +2525,7 @@
 
         $("#goodsListDivNoneBottom").click(function(){
 
-            $("#goodsListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+            $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             $("#yangdongxushinanshen").attr("id","goodCodeSel");
             $("#typeSel").attr("id","");
 
@@ -2584,7 +2558,7 @@
             if(goodsInfoListDiv==""){
                 alert("请至少选择一行");
             }else{
-                $("#goodsListDiv").fadeOut("slow");
+                $("#goodsListDiv").fadeOut(0);
                 $("#yangdongxushinanshen").attr("id","goodCodeSel");
                 $("#typeSel").attr("id","");
             }
@@ -2593,19 +2567,23 @@
         //$('#merchandiser').editableSelect();
 
         $("#createCustBtn").click(function () {
-            var csc_url = $("#csc_url").html();
+            /*var csc_url = $("#csc_url").html();
             var url = csc_url + "/csc/customer/toAddCustomerPage";
-            xescm.common.loadPage(url);
+            xescm.common.loadPage(url);*/
+            var url = "/csc/customer/toAddCustomerPage";
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
         });
     })
     $("#custListDivBlock").click(function () {
-        $("#custListDiv").fadeIn("slow");//淡入淡出效果 显示div
+        $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
     });
     $("#custListDivNoneBottom").click(function () {
-        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
     $("#custListDivNoneTop").click(function () {
-        $("#custListDiv").fadeOut("slow");//淡入淡出效果 隐藏div
+        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
 
     $("#merchandiser").editableSelect();

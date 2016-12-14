@@ -76,6 +76,10 @@
         .has-success .form-control{
             border-color:#cacaca;
         }
+        #businessTypeDiv .chosen-container{
+            width:510px!important;
+        }
+        .city-picker-span{width:510px;}
     </style>
 <#--<script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>-->
 
@@ -436,7 +440,7 @@
                                 <div class="padding-12 y-float" style="width:536px;">
                                     <div class="clearfix">
                                     <#--<span id="businessTypeDiv" style="display: none">-->
-                                        <select  id="businessType" name="businessType" style="padding-left:0;">
+                                        <select class="chosen-select"  id="businessType" name="businessType" style="padding-left:0;">
                                             <option value="610">销售出库</option>
                                             <option value="611">调拨出库</option>
                                             <option value="612">报损出库</option>
@@ -823,7 +827,7 @@
 
                                             <div id="supportMessageShowDiv" class="" style="display: none">
                                                 <div class="page-header">
-                                                    <h4>供应商信息</h4>
+                                                    <h4 class="w-font">供应商信息</h4>
                                                 </div>
                                                 <span style="cursor:pointer" id="supportListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm">选择</button></span>
 
@@ -835,7 +839,7 @@
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
                                                             <input id="supportCode" name="supportCode" type="hidden">
-                                                            <input id="supportName"  name="supportName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportName"  name="supportName" type="text" class="form-control input-sm" style="width:220px;" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
@@ -844,7 +848,7 @@
                                                     <label class="control-label col-label no-padding-right no-padding-top" for="name">联系人</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
-                                                            <input id="supportContactName" name="supportContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportContactName" name="supportContactName" type="text" style="width:220px;"  class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -852,7 +856,7 @@
                                                     <label class="control-label col-label no-padding-right no-padding-top" for="name">联系电话</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
-                                                            <input id="supportPhone" name="supportPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportPhone" name="supportPhone" type="text" style="width:220px;"  class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
@@ -861,7 +865,7 @@
                                                     <label class="control-label col-label no-padding-right no-padding-top" for="name">传真</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
-                                                            <input id="supportFax" name="supportFax" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportFax" name="supportFax" type="text" style="width:220px;"  class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                         </div>
                                                     </div>
@@ -870,7 +874,7 @@
                                                     <label class="control-label col-label no-padding-right no-padding-top" for="name">Email</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
-                                                            <input id="supportEmail" name="supportEmail" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportEmail" name="supportEmail" type="text"  style="width:220px;" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -878,7 +882,7 @@
                                                     <label class="control-label col-label no-padding-right no-padding-top" for="name">邮编</label>
                                                     <div class="col-sm-6">
                                                         <div class="clearfix">
-                                                            <input id="supportPostCode" name="supportPostCode" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportPostCode" name="supportPostCode" type="text" style="width:220px;"  class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -890,8 +894,8 @@
                                                                 <form class="form-inline">
                                                                     <div id="distpicker">
                                                                         <div class="form-group">
-                                                                            <div style="position: relative;">
-                                                                                <input id="city-picker3-support" class="form-control" readonly type="text" value="" data-toggle="city-picker">
+                                                                            <div style="position: relative;margin-left:15px;">
+                                                                                <input id="city-picker3-support" class="form-control" style="width:220px;margin-left:15px;"  readonly type="text" value="" data-toggle="city-picker">
                                                                                 <input type="hidden" id="city-picker-hidden"/>
                                                                             </div>
                                                                         </div>
@@ -899,7 +903,7 @@
                                                                 </form>
                                                             </div>
 
-                                                            <input id="supportAddress" name="supportAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                            <input id="supportAddress" name="supportAddress" style="width:510px;"  type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1818,7 +1822,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+quantity+"'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' onkeyup='onlyNumber(this)' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+quantity+"'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_batch+"'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+production_time+"' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value='"+invalid_time+"' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
@@ -1846,7 +1850,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' onkeyup='onlyNumber(this)' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";

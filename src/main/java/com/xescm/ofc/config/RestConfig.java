@@ -89,6 +89,19 @@ public class RestConfig {
      */
     private String epcUrl;
 
+    /**
+     * 结算中心
+     */
+    private String acUrl;
+
+    public String getAcUrl() {
+        return acUrl;
+    }
+
+    public void setAcUrl(String acUrl) {
+        this.acUrl = acUrl;
+    }
+
     public String getEpcUrl() {
         return epcUrl;
     }

@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
@@ -104,6 +105,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
     @Autowired
     private FeignCscContactAPIClient feignCscContactAPIClient;
+    @Autowired
+    private FeignPushOrderApiClient feignPushOrderApiClient;
+
+    /**
+     * 订单审核和反审核
+     * @param orderCode
+     * @param orderStatus
+     * @param reviewTag
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
@@ -556,10 +568,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanStatusService.save(ofcTransplanStatus);
                     pushKabanOrderToDms(ofcDistributionBasicInfo,ofcTransplanInfo);
                 }
-                ofcTransplanInfoService.save(ofcTransplanInfo);
-                logger.debug("计划单信息保存成功");
+                try {
+                    ofcTransplanInfoService.save(ofcTransplanInfo);
+                    logger.debug("计划单信息保存成功");
+                } catch (Exception ex) {
+                    if (ex.getMessage().trim().startsWith("Duplicate entry")) {
+                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
+                    } else {
+                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                    }
+                }
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
-
                 logger.debug("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
                 logger.debug("计划单资源状态保存成功");
@@ -574,7 +593,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&*/
 
             //更改计划单状态为执行中//###
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
@@ -612,6 +631,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
     }
+
+
 
 
     /**
@@ -679,6 +700,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return planCode;
     }
 
+    /**
+     * 计划单取消
+     * @param orderCode
+     * @param userName
+     */
     public void planCancle(String orderCode,String userName){
         logger.info("==> orderCode={}",orderCode);
         logger.info("==> userName={}",userName);
@@ -691,9 +717,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                 Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
                 if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getMessage());
-                    logger.error("TMS已经在执行,您无法取消,请联系管理员!{}",response.getResult());
-                    throw new BusinessException("TMS已经在执行,您无法取消,请联系管理员!");
+                    //运单号不存在,没有发现该订单
+                    //该订单已经取消, 取消失败
+                    logger.error("您无法取消,请联系管理员!{}",response.getMessage());
+                    logger.error("您无法取消,请联系管理员!{}",response.getResult());
+                    throw new BusinessException("您无法取消," + response.getResult());
                 }
             }
             catch (Exception ex){
@@ -784,6 +812,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    /**
+     * 订单删除
+     * @param orderCode
+     * @param orderStatus
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if(orderStatus.equals(PENDINGAUDIT)){
@@ -800,6 +835,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
        }
     }
 
+    /**
+     * 客户中心订单取消
+     * @param orderCode
+     * @param orderStatus
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
         if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(PENDINGAUDIT))
@@ -1136,6 +1178,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 transportDTOList.add(transportDTO);
                 String json = JacksonUtil.toJsonWithFormat(transportDTO);
+                logger.info("###################推送TFC的最终JSON为{}",json);
                 defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
@@ -1537,6 +1580,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
 
+
+
     /**
      * 发送到仓储中心
      * @param info
@@ -1832,4 +1877,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         return rmcDistrictQO;
     }
+
+    /**
+     * 订单信息推送结算中心
+     * @param ofcFundamentalInformation
+     * @param ofcFinanceInformation
+     * @param ofcDistributionBasicInfo
+     * @param ofcGoodsDetailsInfos
+     */
+    @Override
+    public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+        //暂时只推卡班订单
+        if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
+                && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
+            Wrapper<?> wrapper = feignPushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                throw new BusinessException(wrapper.getMessage());
+            }
+        }else{
+            throw new BusinessException("结算中心暂时不支持该类型的订单");
+        }
+    }
+
 }

@@ -21,6 +21,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,10 +127,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         storeDto.setCustomerCode(custCode);
         Wrapper<List<CscStorevo>> cscStoreVoList = feignCscStoreAPIClient.getStoreByCustomerId(storeDto);
         if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
+            logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
             storeCode = cscStorevo.getStoreCode();
             storeName = cscStorevo.getStoreName();
         } else {
+            logger.error("获取该客户下的店铺编码接口返回失败，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
             return resultModel;
         }
@@ -165,15 +168,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //供应商
-        String supportName = createOrderEntity.getSupportName();
-        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-        cscSupplierInfoDto.setCustomerCode(custCode);
-        cscSupplierInfoDto.setSupplierCode(supportName);
-        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
-        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
-        if (StringUtils.isBlank(supportCode)) {
-            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
-        }
+//        String supportName = createOrderEntity.getSupportName();
+//        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+//        cscSupplierInfoDto.setCustomerCode(custCode);
+//        cscSupplierInfoDto.setSupplierCode(supportName);
+//        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+//        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
+//        if (StringUtils.isBlank(supportCode)) {
+//            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
+//        }
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
         if (!StringUtils.equals("60", orderType)) {
@@ -351,29 +354,40 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //插入或更新订单中心基本信息
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
         String custCode = ofcFundamentalInformation.getCustCode();
-        //根据客户订单编号与货主代码查询是否已经存在订单
-        int existResult = createOrdersMapper.queryCountByOrderStatus(custOrderCode, custCode);
-        if (existResult > 0) {
-            //订单已存在,获取订单的最新状态,只有待审核的才能更新
-            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
-            if (queryOrderStatus != null && StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
-                //更新订单中心基本信息
-                ofcFundamentalInformationService.update(ofcFundamentalInformation);
-                //订单中心配送基本信息
-                ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
-                //仓配信息
-                ofcWarehouseInformationService.update(ofcWarehouseInformation);
-                //财务信息
-                ofcFinanceInformationService.update(ofcFinanceInformation);
-                //更新货品明细信息 →先根据orderCode删除所有数据，再新增
-                ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
-                for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
-                    ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
-                }
-                ofcOrderStatusService.save(ofcOrderStatus);
-            }
 
-        } else if (existResult == 0) {
+        //根据客户订单编号与货主代码查询是否已经存在订单
+        OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+        if (information != null) {
+            orderCode = information.getOrderCode();
+            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
+                logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);
+                return new ResultModel(ResultModel.ResultEnum.CODE_1001);
+            }
+            //订单已存在,获取订单的最新状态,只有待审核的才能更新
+            //更新订单中心基本信息
+            ofcFundamentalInformationService.update(ofcFundamentalInformation);
+            //订单中心配送基本信息
+            ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
+            //仓配信息
+            ofcWarehouseInformationService.update(ofcWarehouseInformation);
+            //财务信息
+            ofcFinanceInformationService.update(ofcFinanceInformation);
+            //更新货品明细信息 →先根据orderCode删除所有数据，再新增
+            ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
+            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
+                ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
+            }
+            ofcOrderStatusService.save(ofcOrderStatus);
+            //自动审核通过 review:审核；rereview:反审核
+            try {
+                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+            } catch (BusinessException ex) {
+                logger.error("自动审核异常，{}", ex);
+                throw new BusinessException("自动审核异常", ex);
+            }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        } else {
             //新增订单中心基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
             //订单中心配送基本信息
@@ -388,15 +402,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderStatusService.save(ofcOrderStatus);
+            //自动审核通过 review:审核；rereview:反审核
+            try {
+                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+            } catch (BusinessException ex) {
+                logger.error("自动审核异常，{}", ex);
+                throw new BusinessException("自动审核异常", ex);
+            }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
-        //自动审核通过 review:审核；rereview:反审核
-        try {
-            orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
-        } catch (RuntimeException ex) {
-            logger.error("自动审核异常，{}", ex);
-            return new ResultModel(ResultModel.ResultEnum.CODE_1000);
+    }
+
+    /**
+     * 根据客户订单编号与客户编号查询订单
+     *
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode) {
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+        ofcFundamentalInformation.setCustCode(custCode);
+        List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationService.select(ofcFundamentalInformation);
+        if (CollectionUtils.isNotEmpty(ofcFundamentalInformations)) {
+            return ofcFundamentalInformations.get(0);
         }
-        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        return null;
     }
 
     public void orderApply(OfcFundamentalInformation ofcFundamentalInformation,

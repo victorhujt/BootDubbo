@@ -1,16 +1,20 @@
 package com.xescm.ofc.web.controller;
 
+import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.domain.OfcFinanceInformation;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.feign.client.FeignAddressCodeClient;
+import com.xescm.ofc.feign.client.FeignPushOrderApiClient;
 import com.xescm.ofc.model.dto.wms.AddressDto;
-import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.service.OfcOrderDtoService;
-import com.xescm.ofc.service.OfcOrderManageOperService;
-import com.xescm.ofc.service.OfcOrderStatusService;
+import com.xescm.ofc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by hiyond on 2016/11/19.
@@ -30,6 +34,17 @@ public class TestOrder extends BaseController {
     private OfcOrderDtoService ofcOrderDtoService;
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
+
+    @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private OfcFinanceInformationService ofcFinanceInformationService;
+    @Autowired
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Autowired
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Autowired
+    private FeignPushOrderApiClient pushOrderApiClient;
 
     @RequestMapping(value = "/order", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
@@ -234,7 +249,7 @@ public class TestOrder extends BaseController {
     private FeignAddressCodeClient feignAddressCodeClient;
 
     @RequestMapping(value = "address")
-    public String testAddress(){
+    public String testAddress() {
         String provi = "北京";
         String city = "北京";
         String coun = "海淀区";
@@ -245,6 +260,22 @@ public class TestOrder extends BaseController {
         String result = feignAddressCodeClient.findCodeByName(addressDto);
         logger.info(result);
         return result;
+    }
+
+
+    //测试推送结算中心
+    @RequestMapping(value = "test/pushAc", method = {RequestMethod.POST, RequestMethod.GET})
+    public void testPushAcOrder() {
+        final String orderCode = "SO161202000014";
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
+        ofcDistributionBasicInfo.setOrderCode(orderCode);
+        ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
+        OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+        ofcGoodsDetailsInfo.setOrderCode(orderCode);
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+        pushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
     }
 
 }
