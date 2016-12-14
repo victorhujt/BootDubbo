@@ -605,7 +605,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("保存仓库信息失败");
             }
         }catch (Exception ex){
-            ex.printStackTrace();
             throw new BusinessException("保存仓库信息失败!", ex);
         }
         return Wrapper.SUCCESS_MESSAGE;
@@ -759,9 +758,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
+        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
-        }
+        }*/
 
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompany().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
@@ -778,9 +777,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
+        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
-        }
+        }*/
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
@@ -808,9 +807,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
         }
-        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getAreaName())){
+        /*if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
-        }
+        }*/
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
 
     }

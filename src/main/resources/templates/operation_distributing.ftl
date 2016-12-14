@@ -443,9 +443,9 @@
             <div class="width-267">
                 <div class="position-relative bk-1 ">
                     <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                    <button type="button" class="btn btn-minier no-padding-right initBtn" id="">
+                    <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
-                    </button>
+                    </label>
                 </div>
             </div></div>
 
@@ -464,9 +464,9 @@
             <div class="width-267">
                 <div class="bk-1 position-relative">
                     <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
-                    <button type="button" class="btn btn-minier no-padding-right initBtn" id="">
+                    <label class="btn btn-minier no-padding-right initBtn" id="" for="expectedArrivedTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
-                    </button>
+                    </label>
                 </div>
             </div></div>
         </div>

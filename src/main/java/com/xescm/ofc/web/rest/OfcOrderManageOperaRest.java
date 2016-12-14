@@ -302,9 +302,9 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param orderCode
      * @return Object
      */
-    @RequestMapping(value = "/queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
+    @RequestMapping(value = "queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
-    private Object queryGoodsInfoByOrderCode(String orderCode) {
+    public Object queryGoodsInfoByOrderCode(String orderCode) {
         try {
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单号不能为空");
