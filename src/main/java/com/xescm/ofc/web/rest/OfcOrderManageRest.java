@@ -76,10 +76,12 @@ public class OfcOrderManageRest extends BaseController{
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
-        } catch (Exception ex) {
+        }catch (BusinessException ex){
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
@@ -98,10 +100,12 @@ public class OfcOrderManageRest extends BaseController{
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderDelete(orderCode,orderStatus,authResDtoByToken);
+        } catch (BusinessException ex){
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
@@ -120,9 +124,12 @@ public class OfcOrderManageRest extends BaseController{
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
+        } catch (BusinessException ex){
+            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(),ex);
-            //ex.printStackTrace();
+            //
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
@@ -185,7 +192,6 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
         }catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
         }
         if (ofcOrderDTO!=null){
             map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
@@ -213,8 +219,8 @@ public class OfcOrderManageRest extends BaseController{
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
             response.getWriter().print(result);
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
         }
     }
 
@@ -282,10 +288,12 @@ public class OfcOrderManageRest extends BaseController{
 
         try {
             result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,serviceProviderContact,serviceProviderContactPhone,userName);
+        } catch (BusinessException ex) {
+            logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
             logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
