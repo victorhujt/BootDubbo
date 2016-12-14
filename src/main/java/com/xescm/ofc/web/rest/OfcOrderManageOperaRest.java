@@ -68,8 +68,8 @@ public class OfcOrderManageOperaRest extends BaseController {
             PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
-            logger.error("运营平台查询订单出错：{}", ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -99,7 +99,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -124,7 +124,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -149,7 +149,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -272,12 +272,13 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (Exception ex) {
             logger.info("订单批次号查询出错：orderBatchNumer{},{}", orderBatchNumber, ex);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
     /**
-     *根据订单编号查询货品信息
+     * 根据订单编号查询货品信息
+     *
      * @param orderCode
      * @return Object
      */
@@ -294,7 +295,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcBatchOrderVos);
         } catch (Exception ex) {
             logger.info("订单号查询出错：orderCode{},{}", orderCode, ex);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 

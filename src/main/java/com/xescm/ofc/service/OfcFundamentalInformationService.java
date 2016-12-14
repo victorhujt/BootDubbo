@@ -29,5 +29,5 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
      * @param custCode
      * @return
      */
-    public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
+    OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
 }
