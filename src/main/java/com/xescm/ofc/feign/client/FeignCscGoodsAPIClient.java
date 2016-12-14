@@ -49,6 +49,9 @@ public class FeignCscGoodsAPIClient {
 
     public Wrapper<List<CscGoodsTypeVo>> getCscGoodsTypeList(CscGoodsType cscGoodsType){
         logger.debug("==>查询货品 cscGoods={}", cscGoodsType);
+        if(null == cscGoodsType){
+            throw new BusinessException("参数为空");
+        }
         Wrapper<List<CscGoodsTypeVo>> listWrapper = getApi().getCscGoodsTypeList(cscGoodsType);
         return listWrapper;
     }

@@ -66,7 +66,7 @@ public class FeignCscCustomerAPIClient {
      */
     public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto) {
         logger.debug("通过QueryCustomerCodeDto查询客户信息:{}",queryCustomerNameDto);
-        if(queryCustomerNameDto == null){
+        if(null == queryCustomerNameDto){
             throw new BusinessException("参数为空");
         }
         Wrapper<?> wrapper = getApi().QueryCustomerByNameAvgue(queryCustomerNameDto);

@@ -1,6 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.feign.api.csc.FeignCscStoreAPI;
@@ -35,6 +36,9 @@ public class FeignCscStoreAPIClient {
     }
     public Wrapper<List<CscStorevo>> getStoreByCustomerId(QueryStoreDto queryStoreDto){
         logger.info("==>queryStoreDto={}",queryStoreDto);
+        if(null == queryStoreDto){
+            throw new BusinessException("参数为空");
+        }
         Wrapper<List<CscStorevo>> storeByCustomerId = getApi().getStoreByCustomerId(queryStoreDto);
         return  storeByCustomerId;
     }
