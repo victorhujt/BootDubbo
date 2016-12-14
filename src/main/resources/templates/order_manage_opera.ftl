@@ -589,10 +589,10 @@
 
         function appendSelect(type) {
             if (type == "60") {
-                return "<option value=''>----</option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
+                return "<option value=''></option><option value='600'>城配</option><option value='601'>干线</option><option value='602'>卡班</option>";
             } else if (type == "61") {
                 var html = "";
-                html += "<option value=''>----------</option>";
+                html += "<option value=''></option>";
                 html += "<option value='610'>销售出库</option>";
                 html += "<option value='611'>调拨出库</option>";
                 html += "<option value='612'>报损出库</option>";
@@ -607,9 +607,7 @@
                 html += "<option value='626'>其他入库</option>";
                 html += "<option value='627'>分拨入库</option>";
                 return html
-                initChosen();
             }
-//            $("#businessType").trigger("chosen:updated");
             return null;
 
         }
@@ -617,6 +615,7 @@
             var type = $(this).val();
             if (type == "60" || type == "61") {
                 $("#businessType").empty().append(appendSelect(type));
+                $("#businessType").trigger("chosen:updated");
             }
         });
 
