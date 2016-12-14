@@ -75,7 +75,10 @@ public class FeignPushOrderApiClient {
         Wrapper<?> wrapper = null;
         try {
             wrapper = getApi().pullOfcOrder(acOrderDto);
-        } catch (Exception ex) {
+        } catch (BusinessException ex) {
+            logger.error("推送订单信息到结算中心失败：", ex.getMessage(), ex);
+            throw new BusinessException(ex.getMessage(), ex);
+        }catch (Exception ex) {
             logger.error("推送订单信息到结算中心失败：", ex.getMessage(), ex);
             throw new BusinessException(ex.getMessage(), ex);
         }
