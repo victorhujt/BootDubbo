@@ -206,7 +206,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
         catch (Exception ex) {
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
+            
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);

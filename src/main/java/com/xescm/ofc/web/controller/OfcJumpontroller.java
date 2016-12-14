@@ -75,12 +75,10 @@ public class OfcJumpontroller extends BaseController{
 
         }catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
             logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
+            
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
@@ -207,7 +205,7 @@ public class OfcJumpontroller extends BaseController{
             map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
             setDefaultModel(model);
         }catch (Exception ex){
-            ex.printStackTrace();
+            logger.error("跳转运输开单页面出错!",ex.getMessage(),ex);
         }
         return new ModelAndView("order_tranload");
     }
