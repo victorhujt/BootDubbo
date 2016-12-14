@@ -197,13 +197,15 @@ public class OfcJumpontroller extends BaseController{
             OfcFundamentalInformation ofcFundamentalInformation
                     = ofcFundamentalInformationService.getLastMerchandiser(getAuthResDtoByToken().getGroupRefName());
             logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
-            if(ofcFundamentalInformation != null){
-                logger.info("开单员为为{}",ofcFundamentalInformation.getMerchandiser());
-            }
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
-            map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
+            if(ofcFundamentalInformation != null){
+                map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
+                logger.info("开单员为为{}",ofcFundamentalInformation.getMerchandiser());
+            } else {
+                map.put("merchandiserLast","");
+            }
             setDefaultModel(model);
         }catch (Exception ex){
             logger.error("跳转运输开单页面出错!",ex.getMessage(),ex);
