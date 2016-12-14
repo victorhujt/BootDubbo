@@ -33,7 +33,7 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
             mapperMap.put("orderCode",orderCode);
             return ofcGoodsDetailsInfoMapper.goodsDetailsScreen(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("获取货品列表有误");
         }
     }
 

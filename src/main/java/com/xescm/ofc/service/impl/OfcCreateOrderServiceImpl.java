@@ -88,6 +88,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         //校验货主名称
         if (StringUtils.isBlank(custName)) {
+            logger.error("校验数据{}失败：{}", "货主名称", custName);
             return new ResultModel(ResultModel.ResultEnum.CODE_0008);
         }
 
@@ -138,13 +139,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         createOrderEntity.setStoreCode(storeCode);
 
-//          不校验店铺编码 date:2016-11
-//        resultModel = CheckUtils.checkStoreCode(cscStoreVoList, storeCode);
-//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-//            logger.info("校验数据{}失败：{},店铺编码:{}", "店铺编码", resultModel.getCode(), storeCode);
-//            return resultModel;
-//        }
-
         //校验：【发货方】与【收货方】
         resultModel = CheckUtils.checkWaresDist(orderType, createOrderEntity.getConsignorName(), createOrderEntity.getConsignorContact(),
                 createOrderEntity.getConsignorPhone(), createOrderEntity.getConsignorAddress(), createOrderEntity.getConsigneeName(),
@@ -168,15 +162,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //供应商
-//        String supportName = createOrderEntity.getSupportName();
-//        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-//        cscSupplierInfoDto.setCustomerCode(custCode);
-//        cscSupplierInfoDto.setSupplierCode(supportName);
-//        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
-//        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
-//        if (StringUtils.isBlank(supportCode)) {
-//            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
-//        }
+        //checkSupport(createOrderEntity, custCode);
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
         if (!StringUtils.equals("60", orderType)) {
@@ -194,7 +180,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //转换 dto → do
-
         CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
         ofcFundamentalInformation.setStoreName(storeName);
@@ -209,6 +194,26 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
         }
         return resultModel;
+    }
+
+    /**
+     * 校验供应商是否寻在
+     * 不存在添加供应商
+     *
+     * @param createOrderEntity
+     * @param custCode
+     */
+    public void checkSupport(CreateOrderEntity createOrderEntity, String custCode) {
+        String supportName = createOrderEntity.getSupportName();
+        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+        cscSupplierInfoDto.setCustomerCode(custCode);
+        cscSupplierInfoDto.setSupplierCode(supportName);
+        Wrapper<List<CscSupplierInfoDto>> listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
+        if (StringUtils.isBlank(supportCode)) {
+            logger.info("查询不到供应商信息，添加供应商");
+            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
+        }
     }
 
     /**
@@ -301,31 +306,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         logger.info("创建收发货方信息：{}", wrapper.getMessage());
     }*/
 
-    /**
-     * 获取地区编码
-     *
-     * @param addressDto
-     * @return
-     */
-    public Map<String, String> getAddressCode(AddressDto addressDto) {
-        if (StringUtils.isBlank(addressDto.getProvinceName()) || StringUtils.isBlank(addressDto.getCityName())
-                || StringUtils.isBlank(addressDto.getDistrictName())) {
-            throw new BusinessException("收货方省市区地址不全");
-        }
-        Map<String, String> resuteMap = new HashMap<>();
-        String result = feignAddressCodeClient.findCodeByName(addressDto);
-        if (StringUtils.isBlank(result)) {
-            throw new BusinessException("无法获取收货方省市区地址编码");
-        }
-        JSONObject jsonObject = JSONObject.fromObject(JSONObject.fromObject(result).getString("result"));
-        String provinceCode = jsonObject.getString("provinceCode");
-        String cityCode = jsonObject.getString("cityCode");
-        String districtCode = jsonObject.getString("districtCode");
-        resuteMap.put("provinceCode", provinceCode);
-        resuteMap.put("cityCode", cityCode);
-        resuteMap.put("districtCode", districtCode);
-        return resuteMap;
-    }
+
 
     /**
      * 保存到数据库
@@ -349,39 +330,35 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     OfcFinanceInformation ofcFinanceInformation,
                                     OfcWarehouseInformation ofcWarehouseInformation,
                                     List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList, OfcOrderStatus ofcOrderStatus) throws BusinessException {
-        String orderCode = ofcFundamentalInformation.getOrderCode();
         //订单记录表只添加不修改
         //插入或更新订单中心基本信息
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
         String custCode = ofcFundamentalInformation.getCustCode();
-
         //根据客户订单编号与货主代码查询是否已经存在订单
-        int existResult = createOrdersMapper.queryCountByOrderStatus(custOrderCode, custCode);
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
         if (information != null) {
-            orderCode = information.getOrderCode();
+            String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
-            if (queryOrderStatus != null && StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
+            //订单已存在,获取订单的最新状态,只有待审核的才能更新
+            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
                 logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);
                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
             }
-            //订单已存在,获取订单的最新状态,只有待审核的才能更新
-            //更新订单中心基本信息
+            ofcFundamentalInformation.setOrderCode(orderCode);
+            ofcDistributionBasicInfo.setOrderCode(orderCode);
+            ofcWarehouseInformation.setOrderCode(orderCode);
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
-            //订单中心配送基本信息
             ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
-            //仓配信息
             ofcWarehouseInformationService.update(ofcWarehouseInformation);
-            //财务信息
             ofcFinanceInformationService.update(ofcFinanceInformation);
-            //更新货品明细信息 →先根据orderCode删除所有数据，再新增
             ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
+                ofcGoodsDetailsInfo.setOrderCode(orderCode);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderStatusService.save(ofcOrderStatus);
-            //自动审核通过 review:审核；rereview:反审核
             try {
+                //自动审核通过 review:审核；rereview:反审核
                 orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
@@ -389,22 +366,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         } else {
-            //新增订单中心基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
-            //订单中心配送基本信息
             ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
-            //仓配信息
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
-            //财务信息
             ofcFinanceInformationService.save(ofcFinanceInformation);
-
-            //货品明细信息
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderStatusService.save(ofcOrderStatus);
-            //自动审核通过 review:审核；rereview:反审核
             try {
+                //自动审核通过 review:审核；rereview:反审核
                 orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
@@ -415,23 +386,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     }
 
     /**
-     * 根据客户订单编号与客户编号查询订单
-     *
-     * @param custOrderCode
-     * @param custCode
-     * @return
+     * 自动审核
+     * @param ofcFundamentalInformation
+     * @param ofcDistributionBasicInfo
+     * @param ofcFinanceInformation
+     * @param ofcWarehouseInformation
+     * @param ofcGoodsDetailsInfoList
      */
-    public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode) {
-        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-        ofcFundamentalInformation.setCustOrderCode(custOrderCode);
-        ofcFundamentalInformation.setCustCode(custCode);
-        List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationService.select(ofcFundamentalInformation);
-        if (CollectionUtils.isNotEmpty(ofcFundamentalInformations)) {
-            return ofcFundamentalInformations.get(0);
-        }
-        return null;
-    }
-
     public void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
                            OfcDistributionBasicInfo ofcDistributionBasicInfo,
                            OfcFinanceInformation ofcFinanceInformation,
@@ -442,6 +403,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
         Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
         logger.info("自动审核操作：" + wrapper.getCode());
+    }
+
+    /**
+     * 根据省市区名称获取编码
+     *
+     * @param addressDto
+     * @return
+     */
+    public Map<String, String> getAddressCode(AddressDto addressDto) {
+        if (StringUtils.isBlank(addressDto.getProvinceName())
+                || StringUtils.isBlank(addressDto.getCityName())
+                || StringUtils.isBlank(addressDto.getDistrictName())) {
+            throw new BusinessException("省市区地址信息不全");
+        }
+        Map<String, String> resuteMap = new HashMap<>();
+        String result = feignAddressCodeClient.findCodeByName(addressDto);
+        if (StringUtils.isBlank(result)) {
+            throw new BusinessException("无法获取收货方省市区地址编码");
+        }
+        JSONObject jsonObject = JSONObject.fromObject(JSONObject.fromObject(result).getString("result"));
+        String provinceCode = jsonObject.getString("provinceCode");
+        String cityCode = jsonObject.getString("cityCode");
+        String districtCode = jsonObject.getString("districtCode");
+        resuteMap.put("provinceCode", provinceCode);
+        resuteMap.put("cityCode", cityCode);
+        resuteMap.put("districtCode", districtCode);
+        return resuteMap;
     }
 
 }

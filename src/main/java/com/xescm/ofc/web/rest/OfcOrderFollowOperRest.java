@@ -2,6 +2,7 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.domain.OrderFollowOperResult;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OrderFollowOperService;
 import com.xescm.ofc.web.controller.BaseController;
@@ -75,9 +76,12 @@ public class OfcOrderFollowOperRest extends BaseController {
                 map.put("ofcOrderStatus", ofcOrderStatuses);
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
-        } catch (Exception ex) {
+        } catch (BusinessException ex){
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }catch (Exception ex) {
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -104,9 +108,12 @@ public class OfcOrderFollowOperRest extends BaseController {
             map.put("ofcOrderDTO", ofcFundamentalInformation);
             map.put("ofcOrderStatus", ofcOrderStatuses);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
-        } catch (Exception ex) {
+        } catch (BusinessException ex) {
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 

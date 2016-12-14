@@ -99,10 +99,10 @@ public class OfcOperationDistributing extends BaseController{
                 CscContantAndCompanyDto consignor = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
                 CscContantAndCompanyDto consignee = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
                 ofcOrderDTO.setOrderBatchNumber(batchNumber);
-                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"place",authResDtoByToken,ofcOrderDTO.getCustCode()
+                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
                         ,consignor,consignee,new CscSupplierInfoDto());
             }
-        }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex){
@@ -256,7 +256,7 @@ public class OfcOperationDistributing extends BaseController{
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }catch (Exception e) {
             logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"内部异常");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"上传成功！",excelSheet);
     }
@@ -301,7 +301,7 @@ public class OfcOperationDistributing extends BaseController{
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
-            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"内部异常");
+            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return result;
     }

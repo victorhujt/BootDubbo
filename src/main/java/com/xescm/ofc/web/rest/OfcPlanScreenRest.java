@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.OfcPlanScreenCondition;
 import com.xescm.ofc.domain.OfcPlanScreenResult;
 import com.xescm.ofc.domain.OrderScreenCondition;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcPlanScreenService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -43,9 +44,12 @@ public class OfcPlanScreenRest extends BaseController {
            // pageInfo = new PageInfo<OfcPlanScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
-        }catch (Exception ex){
+        }catch (BusinessException ex){
             logger.error("分页查询供应商集合出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }catch (Exception ex){
+            logger.error("分页查询供应商集合出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
     }

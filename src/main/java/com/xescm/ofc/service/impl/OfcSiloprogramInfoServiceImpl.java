@@ -34,7 +34,7 @@ public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInf
             ofcTransplanInfo.setOrderCode(orderCode);*/
             return ofcSiloprogramInfoMapper.ofcSiloprogramInfoScreenList(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("仓储计划单查询有误");
         }
     }
 

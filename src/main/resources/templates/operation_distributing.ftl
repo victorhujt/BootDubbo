@@ -414,7 +414,7 @@
 
 <br/>
 <div class="col-xs-9">
-    <button class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
+    <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
         历史订单选择
     </button>
@@ -479,7 +479,7 @@
                     <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
                     <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
-                        <i class="fa fa-user l-cor bigger-130"></i>
+                        <i class="fa fa-user l-cor"></i>
                     </button>
                 </div>
              <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -490,8 +490,8 @@
             </div></div>
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
             <div class="width-267">
-                <div class="clearfix">
-                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class=" bk-1">
+                <div class="clearfix col-width-168">
+                    <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="chosen-select">
                         <option value="">无</option>
 
                     </select>
@@ -534,7 +534,7 @@
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
                         <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
-                            <i class="fa fa-user l-cor bigger-130"></i>
+                            <i class="fa fa-user l-cor"></i>
                         </button>
                     </div>
 
@@ -1762,9 +1762,8 @@
             $.each(data,function (index,warehouse) {
                 $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
             });
+            $("#warehouseCode").trigger("chosen:updated");
         })
-
-
     });
 
     $("#to_operation_distributing_excel").click(function () {

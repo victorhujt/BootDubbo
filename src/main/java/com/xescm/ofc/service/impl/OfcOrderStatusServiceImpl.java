@@ -51,7 +51,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             mapperMap.put("transCode", transCode);
             return ofcOrderStatusMapper.orderStatusScreen(mapperMap);
         } else {
-            throw new BusinessException();
+            throw new BusinessException("订单状态查询有误");
         }
     }
 
@@ -80,7 +80,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
             return ofcOrderStatus;
         } else {
-            throw new BusinessException();
+            throw new BusinessException("订单状态查询有误");
         }
 
     }

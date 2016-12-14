@@ -2,6 +2,7 @@ package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
+
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -232,5 +233,8 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
-
+    @RequestMapping(value = "/ofc/operDistiExcelAdditions")
+    public String excelAdditions(){
+        return "oper_distri_excel_additions";
+    }
 }

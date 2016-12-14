@@ -35,7 +35,7 @@ public class OfcPlannedDetailServiceImpl extends BaseService<OfcPlannedDetail> i
             mapperMap.put("planCode",planCode);
             return ofcPlannedDetailMapper.plannedDetailsScreen(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("");
         }
     }
 
