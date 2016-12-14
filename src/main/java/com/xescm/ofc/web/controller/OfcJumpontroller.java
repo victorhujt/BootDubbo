@@ -172,6 +172,9 @@ public class OfcJumpontroller extends BaseController{
      */
     @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}/{custName}")
     public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode, @PathVariable String custName){
+        logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", excelImportTag);
+        logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", customerCode);
+        logger.info("Excel确认导入,跳转城配开单==> custName={}", custName);
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         setDefaultModel(model);
         model.addAttribute("merchandiserList",merchandiserList);
