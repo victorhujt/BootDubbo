@@ -1,6 +1,5 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFinanceInformation;
 
 /**

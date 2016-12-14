@@ -1,8 +1,7 @@
 package com.xescm.ofc.feign.client;
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.*;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscCustomerVo;
+import com.xescm.ofc.model.dto.csc.*;
+import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -10,13 +9,11 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * Created by lyh on 2016/10/19.
@@ -28,41 +25,17 @@ public class FeignCscCustomerAPIClient {
     private String uamUrl;*/
     @Resource
     RestConfig restConfig;
-
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscCustomerAPI getApi() {
         FeignCscCustomerAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(FeignCscCustomerAPI.class, restConfig.getCscUrl());
         return res;
     }
 
-    public Wrapper<List<CscContantAndCompanyVo>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
-        logger.debug("==>查询客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
-        if(null == cscContantAndCompanyDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<List<CscContantAndCompanyVo>> wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
-        return wrapper;
-    }
-
-    public Wrapper<?> addCscContantAndCompany(CscContantAndCompanyDto cscContantAndCompanyDto){
-        logger.debug("==>添加客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
-        if(null == cscContantAndCompanyDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<?> wrapper = getApi().addCscContantAndCompany(cscContantAndCompanyDto);
-        return wrapper;
-    }
-    public Wrapper<?> queryCustomerIdByGroupId(QueryCustomerIdDto queryCustomerIdDto){
-        logger.debug("==>通过groupId取客户id queryCustomerIdDto={}", queryCustomerIdDto);
-        if(null == queryCustomerIdDto){
-            throw new BusinessException("参数为空");
-        }
-        Wrapper<?> wrapper = getApi().queryCustomerIdByGroupId(queryCustomerIdDto);
-        return wrapper;
-    }
     public Wrapper<?> queryCustomerByName(QueryCustomerNameDto queryCustomerNameDto){
         logger.debug("==>通过客户名称获取客户列表 queryCustomerNameDto={}", queryCustomerNameDto);
         if(null == queryCustomerNameDto){
@@ -93,7 +66,7 @@ public class FeignCscCustomerAPIClient {
      */
     public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto) {
         logger.debug("通过QueryCustomerCodeDto查询客户信息:{}",queryCustomerNameDto);
-        if(queryCustomerNameDto == null){
+        if(null == queryCustomerNameDto){
             throw new BusinessException("参数为空");
         }
         Wrapper<?> wrapper = getApi().QueryCustomerByNameAvgue(queryCustomerNameDto);

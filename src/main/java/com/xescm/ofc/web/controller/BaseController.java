@@ -10,7 +10,7 @@
 package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.enums.OrderConstEnum;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.uam.constant.UamConstant;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.exception.BusinessException;
@@ -36,9 +36,10 @@ public class BaseController {
 	RestConfig restConfig;
 
 	public void setDefaultModel(Model model){
-		model.addAttribute(OrderConstEnum.CROSS_DOMAIN_URL, restConfig.getUamUrl());
-		model.addAttribute(OrderConstEnum.OFC_URL, restConfig.getOfcUrl());
-		model.addAttribute(OrderConstEnum.CSC_URL, restConfig.getCscWebUrl());
+		model.addAttribute(OrderConstConstant.CROSS_DOMAIN_URL, restConfig.getUamUrl());
+		model.addAttribute(OrderConstConstant.OFC_URL, restConfig.getOfcUrl());
+		model.addAttribute(OrderConstConstant.CSC_URL, restConfig.getCscWebUrl());
+		model.addAttribute(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
 	}
 	protected AuthResDto getAuthResDtoByToken(){
 		AuthResDto authResDto = (AuthResDto) ThreadLocalMap.get(UamConstant.TOKEN_AUTH_DTO);

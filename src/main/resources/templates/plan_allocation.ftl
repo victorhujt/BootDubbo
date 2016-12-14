@@ -27,6 +27,10 @@
             overflow: auto;
             border:solid #7A7A7A 2px;
         }
+        .col-label{
+            padding-top:0 !important;
+            line-height:34px;
+        }
     </style>
 </head>
 
@@ -204,7 +208,7 @@
                     <div class="col-xs-12">
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">资源分配状态</label>
+                                <label class="control-label col-label no-padding-right" for="name">资源分配状态</label>
                                 <div class="col-width-168 padding-15">
                                     <div class="clearfix">
                                         <select multiple="" style="height:34px;" class="chosen-select form-control" id="resourceAllocationStatues" name="resourceAllocationStatues" data-placeholder="请选择一个状态..." style="display: none;">
@@ -215,16 +219,22 @@
                                         </select>
                                     </div>
                                 </div>
-                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">客户名称</label>
+                                <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                                 <div class="col-width-168 padding-15">
                                     <div class="clearfix">
                                         <input id="custName" name="custName" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单批次号</label>
-                                <div class="col-width-168 padding-15">
+                                <label class="control-label col-label no-padding-right" for="name">订单日期</label>
+                                <div class="padding-15" style="float:left;">
                                     <div class="clearfix">
-                                        <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                        <input id="orderTimePre" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                    </div>
+                                </div>
+                                <label class="control-label no-padding-right y-float" style="text-align:center;width:30px;" for="name">至</label>
+                                <div class="padding-15" style="float:left;">
+                                    <div class="clearfix">
+                                        <input id="orderTimeSuf" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                                     </div>
                                 </div>
                             </div>
@@ -235,21 +245,27 @@
 
                             </div>-->
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;" for="name">订单日期</label>
-                                <div class="padding-15" style="float:left;">
+                                <label class="control-label col-label no-padding-right" for="name">订单编号</label>
+                                <div class="col-width-168 padding-15">
                                     <div class="clearfix">
-                                        <input id="orderTimePre" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                        <input id="orderCode" name="orderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                                <label class="control-label col-sm-1 no-padding-right" style="margin-top:0;text-align:center;" for="name">至</label>
-                                <div class="padding-15" style="float:left;">
+                                <label class="control-label col-label no-padding-right" for="name">计划单编号</label>
+                                <div class="col-width-168 padding-15">
                                     <div class="clearfix">
-                                        <input id="orderTimeSuf" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                        <input id="planCode" name="planCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                               </div>
+                                <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
+                                <div class="col-width-168 padding-15">
+                                    <div class="clearfix">
+                                        <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-1 no-padding-right" for="name"></label>
+                                <label class="control-label col-label no-padding-right" for="name"></label>
                                 <div class="col-width-376 padding-15">
                                     <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
                                         筛选
@@ -837,6 +853,8 @@
         param.orderTimeSuf = orderTimeSuf;
         param.custName = $("#custName").val();
         param.orderBatchNumber = $("#orderBatchNumber").val();
+        param.orderCode = $("#orderCode").val();
+        param.planCode = $("#planCode").val();
         var rsa = $("#resourceAllocationStatues").val();
         //alert($("#resourceAllocationStatus").val());
 
@@ -933,6 +951,8 @@
             value = "城配"
         }else if(status == '601'){
             value = "干线"
+        }else if(status == '602'){
+            value = "卡班"
         }else{
             value = "类型有误"
         }

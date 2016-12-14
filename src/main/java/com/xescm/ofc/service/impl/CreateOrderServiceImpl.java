@@ -2,22 +2,18 @@ package com.xescm.ofc.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.domain.*;
-import com.xescm.ofc.domain.dto.coo.*;
-import com.xescm.ofc.domain.dto.csc.*;
-import com.xescm.ofc.domain.dto.csc.domain.CscContact;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
-import com.xescm.ofc.domain.dto.epc.CannelOrderVo;
-import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.mapper.OfcCreateOrderMapper;
+import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.model.dto.coo.CreateOrderResult;
+import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
+import com.xescm.ofc.model.dto.coo.MessageDto;
+import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.utils.JsonUtil;
-import com.xescm.uam.domain.UamUser;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -27,13 +23,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.xescm.ofc.enums.OrderConstEnum.*;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  * 订单api
@@ -77,30 +72,36 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             List<CreateOrderEntity> createOrderEntityList = (List<CreateOrderEntity>) JsonUtil.json2List(data, new TypeReference<List<CreateOrderEntity>>() {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
-
-                //createOrderResultList = new ArrayList<CreateOrderResult>();
                 createOrderResultList = new ArrayList<>();
                 ResultModel resultModel;
-                //返回结果
                 boolean result = false;
-                //原因
                 String reason = null;
-                //客户订单编号
                 String custOrderCode = null;
-                //订单编号
-                for (int index = 0; index < createOrderEntityList.size(); index++) {
-                    CreateOrderEntity createOrderEntity = createOrderEntityList.get(index);
+                for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
                     try {
                         custOrderCode = createOrderEntity.getCustOrderCode();
+                        String custCode = createOrderEntity.getCustCode();
+                        OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+                        if (information != null) {
+                            String orderCode = information.getOrderCode();
+                            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+                            //订单已存在,获取订单的最新状态,只有待审核的才能更新
+                            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
+                                logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
+                                addCreateOrderEntityList(true, reason, custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                return "";
+                            }
+                        }
                         String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                            logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
                         } else {
                             result = true;
                             addCreateOrderEntityList(true, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{}", custOrderCode, custCode);
                         }
-                        logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
                     } catch (Exception ex) {
                         addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
                         saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
@@ -115,7 +116,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             if (!CollectionUtils.isEmpty(createOrderResultList)) {
                 String code = "200";
                 StringBuffer reason = new StringBuffer();
-                //List<MessageDto> typeIdList = new ArrayList<MessageDto>();
                 List<MessageDto> typeIdList = new ArrayList<>();
                 for (int index = 0; index < createOrderResultList.size(); index++) {
                     CreateOrderResult orderResult = createOrderResultList.get(index);
@@ -165,40 +165,57 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     }
 
 
+    /**
+     * 取消订单
+     * @param custOrderCode
+     * @return
+     */
     @Transactional
     @Override
-    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode, String orderCode, String custCode) {
+    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode) {
         CannelOrderVo cannelOrderVo = new CannelOrderVo();
         cannelOrderVo.setCustOrderCode(custOrderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation = ofcFundamentalInformationService.queryDataByCustOrderCode(custOrderCode);
+        if (ofcFundamentalInformation == null) {
+            cannelOrderVo.setReason("发货单号不存在");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
+        }
+        String custCode = ofcFundamentalInformation.getCustCode();
+        String orderCode = ofcFundamentalInformation.getOrderCode();
         cannelOrderVo.setCustCode(custCode);
         cannelOrderVo.setResultCode("0");
         if (StringUtils.isBlank(orderCode)) {
             cannelOrderVo.setReason("发货单号不存在");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         }
-        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
+        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+        if (null == ofcOrderStatus) {
+            cannelOrderVo.setReason("发货单号不存在");
+            cannelOrderVo.setResultCode("0");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
+        }
         String orderState = ofcOrderStatus.getOrderStatus();
         if (StringUtils.equals(orderState, HASBEENCOMPLETED)) {
             cannelOrderVo.setReason("已完成的订单");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         } else if (StringUtils.equals(orderState, HASBEENCANCELED)) {
             cannelOrderVo.setReason("已取消的订单");
             cannelOrderVo.setResultCode("0");
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         } else {
             AuthResDto authResDto = new AuthResDto();
-            UamUser uamUser = new UamUser();
-            uamUser.setUserName(CREATE_ORDER_BYAPI);
-            authResDto.setUamUser(uamUser);
+            authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
             String result = ofcOrderManageService.orderCancel(orderCode, orderState, authResDto);
-            if(StringUtils.equals("200",result)){
+            if (StringUtils.equals("200", result)) {
                 cannelOrderVo.setReason("操作成功");
                 cannelOrderVo.setResultCode("1");
-                return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
             }
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,cannelOrderVo);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cannelOrderVo);
         }
     }
 

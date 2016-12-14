@@ -28,8 +28,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public int deleteByOrderCode(Object key) {
-        ofcOrderStatusMapper.deleteByOrderCode(key);
-        return 0;
+        return ofcOrderStatusMapper.deleteByOrderCode(key);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             mapperMap.put("transCode", transCode);
             return ofcOrderStatusMapper.orderStatusScreen(mapperMap);
         } else {
-            throw new BusinessException();
+            throw new BusinessException("订单状态查询有误");
         }
     }
 
@@ -70,9 +69,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             } else if (followTag.equals("transCode")) {
                 transCode = code;
             }
-            logger.debug("`````````````" + orderCode);
-            logger.debug("`````````````" + custOrderCode);
-            logger.debug("`````````````" + transCode);
             // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String, String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode", orderCode);
@@ -84,7 +80,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
             return ofcOrderStatus;
         } else {
-            throw new BusinessException();
+            throw new BusinessException("订单状态查询有误");
         }
 
     }
@@ -100,7 +96,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public OfcOrderStatus queryOrderByOrderCode(String orderCode) {
-        return ofcOrderStatusMapper.queryOrderByOrderCode(orderCode);
+    public OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode) {
+        return ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
     }
 }

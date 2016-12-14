@@ -4,4 +4,6 @@ import com.xescm.ofc.domain.OfcSiloproNewstatus;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface OfcSiloproNewstatusMapper extends Mapper<OfcSiloproNewstatus> {
+
+	int updateByPlanCode(Object key);
 }

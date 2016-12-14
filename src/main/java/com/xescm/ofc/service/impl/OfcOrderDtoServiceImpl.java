@@ -1,7 +1,11 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -30,7 +34,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
-    public OfcOrderDTO orderDtoSelect(String code,String dtoTag) {
+    public OfcOrderDTO orderDtoSelect(String code, String dtoTag) {
         String orderCode = null;
         String custOrderCode =null;
         String transCode = null;
@@ -44,6 +48,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
             }else if(dtoTag.equals("transCode")){
                 transCode = code;
                 //然后拿着这个transCode数据库关联基本列表, 找到对应的OrderCode,
+                ///BUG
                 orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
             }
             if(com.xescm.uam.utils.PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
@@ -55,9 +60,9 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-
                     BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
                     BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                    ofcOrderDTO.setOrderStatus(ofcOrderStatus.getOrderStatus());
                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
                     }
@@ -65,14 +70,15 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                         BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     }
                 } catch (IllegalAccessException e) {
-                    throw new BusinessException(e.getMessage());
+                    throw new BusinessException(e.getMessage(), e);
                 } catch (InvocationTargetException e) {
-                    throw new BusinessException(e.getMessage());
+                    throw new BusinessException(e.getMessage(), e);
                 } catch (BusinessException ex){
-                    throw new BusinessException(ex.getMessage());
+                    throw new BusinessException(ex.getMessage(), ex);
                 }catch (Exception ex){
-                    throw new BusinessException(ex.getMessage());
+                    throw new BusinessException(ex.getMessage(), ex);
                 }
+
                 return ofcOrderDTO;
             }
         }else{

@@ -1,8 +1,9 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
+import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.feign.api.csc.FeignCscStoreAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -24,14 +25,20 @@ public class FeignCscStoreAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscStoreAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscStoreAPI getApi() {
         FeignCscStoreAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscStoreAPI.class, restConfig.getCscUrl());
         return res;
     }
     public Wrapper<List<CscStorevo>> getStoreByCustomerId(QueryStoreDto queryStoreDto){
+        logger.info("==>queryStoreDto={}",queryStoreDto);
+        if(null == queryStoreDto){
+            throw new BusinessException("参数为空");
+        }
         Wrapper<List<CscStorevo>> storeByCustomerId = getApi().getStoreByCustomerId(queryStoreDto);
         return  storeByCustomerId;
     }

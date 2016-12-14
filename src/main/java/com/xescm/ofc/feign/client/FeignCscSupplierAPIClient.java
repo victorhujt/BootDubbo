@@ -1,7 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscSupplierAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -25,10 +25,12 @@ public class FeignCscSupplierAPIClient {
 
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscSupplierAPI getApi() {
         FeignCscSupplierAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscSupplierAPI.class, restConfig.getCscUrl());
         return res;
     }

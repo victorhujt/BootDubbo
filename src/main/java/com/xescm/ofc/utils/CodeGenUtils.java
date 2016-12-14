@@ -1,5 +1,7 @@
 package com.xescm.ofc.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -9,13 +11,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.xescm.ofc.enums.OrderConstEnum.OFC_ENV;
+import static com.xescm.ofc.constant.OrderConstConstant.OFC_ENV;
 
 /**
  * Created by Ptrk on 2015/11/25.
  */
 @Component
 public class CodeGenUtils {
+
+	private Logger logger = LoggerFactory.getLogger(CodeGenUtils.class);
+
 	@Autowired
 	private StringRedisTemplate rt;
 
@@ -35,19 +40,25 @@ public class CodeGenUtils {
 //		dateStr = dateStr.substring(2);
 		String key = envLock+ prefix +dateStr;
 		String valuePrefix = prefix +dateStr;
-		ValueOperations<String,String> ops  = rt.opsForValue();
 		Long newValue =1L;
-		if(!rt.hasKey(key)){
-			ops.set(key,String.valueOf(1L));
-			rt.expire(key,1L,TimeUnit.DAYS); //一天过期
-		}else{
-			newValue = ops.increment(key,1L);
+		try {
+			synchronized (this) {
+				ValueOperations<String,String> ops  = rt.opsForValue();
+				if (!rt.hasKey(key)) {
+					ops.set(key, String.valueOf(1L));
+					rt.expire(key, 1L, TimeUnit.DAYS); //一天过期
+				} else {
+					newValue = ops.increment(key, 1L);
+				}
+			}
+		} catch (Exception ex) {
+			logger.error("Redis生成单号发生错误！", ex);
 		}
 		String zeroStr = "";
 		//补零处理
-		if(!PubUtils.isNull(newValue) && prefixLen >0 && String.valueOf(newValue).length()< prefixLen){
-			for (int i = 0; i < prefixLen -String.valueOf(newValue).length(); i++) {
-				zeroStr+="0";
+		if (!PubUtils.isNull(newValue) && prefixLen > 0 && String.valueOf(newValue).length() < prefixLen) {
+			for (int i = 0; i < prefixLen - String.valueOf(newValue).length(); i++) {
+				zeroStr += "0";
 			}
 		}
 		return valuePrefix+zeroStr+newValue;

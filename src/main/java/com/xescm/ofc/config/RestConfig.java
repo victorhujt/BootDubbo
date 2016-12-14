@@ -47,6 +47,11 @@ public class RestConfig {
     private String cscWebUrl;
 
     /**
+     * 订单中心前端URL
+     */
+    private String ofcWebUrl;
+
+    /**
      * 地址库地址
      * @return
      */
@@ -63,6 +68,55 @@ public class RestConfig {
      * @return
      */
     private String tfcUrl;
+
+    public String getWhcUrl() {
+        return whcUrl;
+    }
+
+    public void setWhcUrl(String whcUrl) {
+        this.whcUrl = whcUrl;
+    }
+
+    /**
+     * 仓储中心的地址
+
+     */
+    private String whcUrl;
+
+    /**
+     * EPC
+     * @return
+     */
+    private String epcUrl;
+
+    /**
+     * 结算中心
+     */
+    private String acUrl;
+
+    public String getAcUrl() {
+        return acUrl;
+    }
+
+    public void setAcUrl(String acUrl) {
+        this.acUrl = acUrl;
+    }
+
+    public String getEpcUrl() {
+        return epcUrl;
+    }
+
+    public void setEpcUrl(String epcUrl) {
+        this.epcUrl = epcUrl;
+    }
+
+    public String getOfcWebUrl() {
+        return ofcWebUrl;
+    }
+
+    public void setOfcWebUrl(String ofcWebUrl) {
+        this.ofcWebUrl = ofcWebUrl;
+    }
 
     public String getTfcUrl() {
         return tfcUrl;

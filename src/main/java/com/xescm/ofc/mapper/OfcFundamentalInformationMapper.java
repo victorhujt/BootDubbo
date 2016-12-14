@@ -1,8 +1,7 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.domain.OfcBatchOrderVo;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,4 +20,7 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
 
     List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(@Param("orderBatchNumber") String orderBatchNumber);
 
+    OfcFundamentalInformation queryDataByCustOrderCode(@Param("custOrderCode") String custOrderCode);
+
+    OfcFundamentalInformation getLastMerchandiser(@Param("operatorName") String operatorName);
 }

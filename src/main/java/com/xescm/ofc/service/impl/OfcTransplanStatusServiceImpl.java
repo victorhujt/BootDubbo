@@ -17,7 +17,7 @@ public class OfcTransplanStatusServiceImpl extends BaseService<OfcTransplanStatu
     private OfcTransplanStatusMapper ofcTransplanStatusMapper;
 
     public int updateByPlanCode(Object key){
-        ofcTransplanStatusMapper.updateByPlanCode(key);
-        return 0;
+
+        return ofcTransplanStatusMapper.updateByPlanCode(key);
     }
 }

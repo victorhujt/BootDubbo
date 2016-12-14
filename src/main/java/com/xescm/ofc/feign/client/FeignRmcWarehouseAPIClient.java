@@ -1,7 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.rmc.FeignRmcWarehouseAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -24,6 +24,8 @@ public class FeignRmcWarehouseAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignRmcWarehouseAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
     /*public FeignCscWarehouseAPI getRmcApi() {
         FeignCscWarehouseAPI res = Feign.builder()
                 .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
@@ -32,7 +34,7 @@ public class FeignRmcWarehouseAPIClient {
     }*/
     public FeignRmcWarehouseAPI getRmcApi() {
         FeignRmcWarehouseAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignRmcWarehouseAPI.class,restConfig.getRmcUrl());
         return res;
     }
@@ -58,7 +60,7 @@ public class FeignRmcWarehouseAPIClient {
         try {
             rmcWarehouseByid = getRmcApi().queryRmcWarehouseById(warehouse);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(), ex);
         }
         return rmcWarehouseByid;
     }

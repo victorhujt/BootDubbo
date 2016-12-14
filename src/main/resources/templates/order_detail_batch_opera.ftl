@@ -5,9 +5,12 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
-    <button class="btn btn-white btn-info btn-bold filters" style="float:right;" id="goBack" value="" onclick="detailBackToHistory()">
-        返回
+    <button class="btn btn-white btn-info btn-bold" style="float:right;width:105px;height:34px;" id="InvoicePrinting" value="" onclick="invoicePrint()">
+        发货单打印
     </button>
+   <#-- <button class="btn btn-white btn-info btn-bold filters" style="float:right;margin-right:10px;" id="goBack" value="" onclick="detailBackToHistory()">
+        返回
+    </button>-->
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -104,7 +107,11 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">选择
+                    aria-label="Clicks: activate to sort column ascending" >
+                    <label class="pos-rel">
+                        <input id="selOrder" type="checkbox" class="ace" onchange="selOrder()">
+                        <span class="lbl"></span>
+                    </label>选择
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">订单编号
@@ -152,7 +159,10 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">货品类别
+                    aria-label="Clicks: activate to sort column ascending">货品种类
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">货品小类
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">货品编码
@@ -161,32 +171,27 @@
                     aria-label="Clicks: activate to sort column ascending">货品名称
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">规格
+                    aria-label="Clicks: activate to sort column ascending">货品规格
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">规格
+                    aria-label="Clicks: activate to sort column ascending">单位
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">包装
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量
+                    aria-label="Clicks: activate to sort column ascending">计费方式
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量单价
+                    aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">重量（kg）
+                    aria-label="Clicks: activate to sort column ascending">计费数量
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">重量单价
+                    aria-label="Clicks: activate to sort column ascending">重量(kg)
                 </th>
-                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">体积
-                </th>
-                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">体积单价
-                </th>
+            </tr>
             </thead>
             <tbody id="goodsTbody">
             </tbody>
@@ -199,6 +204,38 @@
 <script type="text/javascript">
     function detailBackToHistory() {
         xescm.common.loadPage("/ofc/orderManageOpera");
+    }
+    function invoicePrint() {
+        var sel = "";
+        var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlets=";
+        var code="";
+        $("#dataTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+                sel="1";
+                var order_code=tdArr.eq(1).find("a").html();
+                code = code+"{reportlet:'/ofc/invoices/Invoice.cpt',orderCode:'"+order_code+"'},";
+            }
+        });
+        if(sel==""){
+            alert("请至少选择一个订单！");
+        }else{
+            code=code.substring(0,code.length-1);
+            url=url+"["+code+"]";
+            window.open(encodeURI(url));
+        }
+    }
+
+    function selOrder() {
+        if($("#selOrder").prop("checked")){
+            $("#dataTbody").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',true);
+            });
+        }else{
+            $("#dataTbody").find("tr").each(function(index){
+                $(this).children().eq(0).find("input").prop('checked',false);
+            });
+        }
     }
 </script>
 <script type="text/javascript">
@@ -317,17 +354,17 @@
             }
             htmlText += "<tr onclick=\"queryGoodsData('" + order.orderCode + "')\" role='row' class='odd' >"
                     + "<td>" + "<input type='checkbox'>" + "</td>"
-                    + "<td>"
+                    + "<td class='center'>"
                     + "<a onclick=\"orderDetailOper('" + order.orderCode + "')\">" + StringUtil.nullToEmpty(order.orderCode) + "</a>"
                     + "</td>"
-                    + "<td class=\"center\">" + StringUtil.nullToEmpty(order.custOrderCode) + "</td>"
-                    + "<td class=\"hidden-480\">" + subTimeString(StringUtil.nullToEmpty(order.orderTime)) + "</td>"
-                    + "<td class=\"hidden-480\">" + getOrderType(order) + "</td>"
-                    + "<td class=\"hidden-480\">" + getBusiType(order) + "</td>"
-                    + "<td class=\"hidden-480\">" + getOrderStatus(order.orderStatus) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.consigneeName) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.notes) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.custOrderCode) + "</td>"
+                    + "<td class='center'>" + subTimeString(StringUtil.nullToEmpty(order.orderTime)) + "</td>"
+                    + "<td class='center'>" + getOrderType(order) + "</td>"
+                    + "<td class='center'>" + getBusiType(order) + "</td>"
+                    + "<td class='center'>" + getOrderStatus(order.orderStatus) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.consigneeName) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
+                    + "<td class='center'>" + StringUtil.nullToEmpty(order.notes) + "</td>"
                     + "</tr>";
         })
         $("#dataTbody").html(htmlText);
@@ -416,10 +453,15 @@
 
     //订单详情
     function orderDetailOper(orderCode) {
-        xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
+        var url = "/ofc/orderDetailPageByCode/" + orderCode;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
     }
 
     function queryOrderDetailBatchOpera(orderBatchCode) {
+        console.log(orderBatchCode);
         xescm.common.loadPage("/ofc/orderDetailBatchOpera/" + orderBatchCode);
     }
 
@@ -447,30 +489,38 @@
         var html = "";
         $.each(data.result, function (index, item) {
             html += "<tr>" +
+                    "<td>" + StringUtil.nullToEmpty(item.goodsType) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsCategory) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsCode) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsName) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.goodsSpec) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.unit) + "</td>" +
                     "<td>" + StringUtil.nullToEmpty(item.pack) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.quantity) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.quantityUnitPrice) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.weight) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.weightUnitPrice) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.cubage) + "</td>" +
-                    "<td>" + StringUtil.nullToEmpty(item.volumeUnitPrice) + "</td>" +
+                    "<td>" + getChargingWays(StringUtil.nullToEmpty(item.chargingWays)) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.chargingUnitPrice) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.chargingQuantity) + "</td>" +
+                    "<td>" + StringUtil.nullToEmpty(item.billingWeight) + "</td>" +
                     "</tr>";
         });
         $("#goodsTbody").empty().append(html);
     }
-
+    function getChargingWays(type) {
+        var value = "";
+        if (type == "01") {
+            value = "件数"
+        } else if (type == "02") {
+            value = "重量Kg";
+        }else if (type == "03") {
+            value = "体积m³";
+        }
+        return value;
+    }
 </script>
 
 <script>
     $(function () {
         $("input[type='search']").attr("readonly", "readonly");
     })
-
     $(function () {
         var orderType = "${(ofcFundamentalInformation.orderType)!""}";
         $("#orderType").val(getOrderType(orderType));
@@ -555,6 +605,10 @@
         }
         return value;
     }
+
+
+
+
 </script>
 
 </body>

@@ -10,7 +10,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-label no-padding-right" for="followTag"></label>
+        <label class="control-label col-label no-padding-right" style="margin-right:-5px;" for="followTag"></label>
         <div class="w-width-220 col-float">
             <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
                 <option value="orderCode">订单编号</option>
@@ -327,9 +327,11 @@
         var orderStatusList = data.ofcOrderStatus;
         if (orderStatusList != null && orderStatusList != "" && orderStatusList != undefined) {
             $.each(orderStatusList, function (index, orderStatus) {
-                htmlText += "<tr role=\"row\" class=\"odd\">"
-                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(orderStatus.notes) + "</td>"
-                        + "</tr>";
+                if(orderStatus != null && orderStatus != "" && orderStatus != undefined ){
+                    htmlText += "<tr role=\"row\" class=\"odd\">"
+                            + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(orderStatus.notes) + "</td>"
+                            + "</tr>";
+                }
             })
         }
         $("#orderFollowStatusListTBody").html(htmlText);
@@ -352,7 +354,7 @@
         var businessType = getBusiType(orderDTO.businessType);
         $("#businessType").val(businessType);
         $("#transportType").val(getTransportType(orderDTO.transportType));
-        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)+StringUtil.nullToEmpty(orderDTO.departureCity)+StringUtil.nullToEmpty(orderDTO.departureDistrict)+StringUtil.nullToEmpty(orderDTO.DistrictTowns)+StringUtil.nullToEmpty(orderDTO.departurePlace));
+        var departurePlace = (StringUtil.nullToEmpty(orderDTO.departureProvince)+StringUtil.nullToEmpty(orderDTO.departureCity)+StringUtil.nullToEmpty(orderDTO.departureDistrict)+StringUtil.nullToEmpty(orderDTO.departureTowns)+StringUtil.nullToEmpty(orderDTO.departurePlace));
         $("#departurePlace").val(departurePlace);
         $("#transCode").val(StringUtil.nullToEmpty(orderDTO.transCode));
         $("#transCode").val(StringUtil.nullToEmpty(orderDTO.transCode));

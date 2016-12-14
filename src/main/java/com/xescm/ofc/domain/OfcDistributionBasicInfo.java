@@ -276,6 +276,7 @@ public class OfcDistributionBasicInfo {
     @Transient
     private String selfTransCode;
 
+
     public String getConsignorContactPhone() {
         return consignorContactPhone;
     }

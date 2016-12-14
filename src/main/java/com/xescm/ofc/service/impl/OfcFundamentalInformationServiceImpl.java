@@ -1,9 +1,10 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +39,34 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     }
 
     @Override
-    public List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber) {
-        return ofcFundamentalInformationMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
+    public OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber) {
+        return ofcFundamentalInformationMapper.queryByBatchNumber(orderBatchNumber);
     }
 
     @Override
-    public OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber) {
-        return ofcFundamentalInformationMapper.queryByBatchNumber(orderBatchNumber);
+    public OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode) {
+        return ofcFundamentalInformationMapper.queryDataByCustOrderCode(custOrderCode);
+    }
+
+    @Override
+    public OfcFundamentalInformation getLastMerchandiser(String operatorName) {
+        return ofcFundamentalInformationMapper.getLastMerchandiser(operatorName);
+    }
+
+    /**
+     * 根据客户订单编号与客户编号查询订单
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode){
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+        ofcFundamentalInformation.setCustCode(custCode);
+        List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationMapper.select(ofcFundamentalInformation);
+        if(CollectionUtils.isNotEmpty(ofcFundamentalInformations)){
+            return ofcFundamentalInformations.get(0);
+        }
+        return null;
     }
 }

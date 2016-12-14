@@ -193,6 +193,12 @@ public class OfcFinanceInformation {
     private BigDecimal luggage;
 
     /**
+     * 是否开发票(货主)
+     */
+    @Column(name = "open_invoices")
+    private String openInvoices;
+
+    /**
      * 获取服务费
      *
      * @return service_charge - 服务费
@@ -766,5 +772,23 @@ public class OfcFinanceInformation {
      */
     public void setLuggage(BigDecimal luggage) {
         this.luggage = luggage;
+    }
+
+    /**
+     * 获取是否开发票(货主)
+     *
+     * @return open_invoices - 是否开发票(货主)
+     */
+    public String getOpenInvoices() {
+        return openInvoices;
+    }
+
+    /**
+     * 设置是否开发票(货主)
+     *
+     * @param openInvoices 是否开发票(货主)
+     */
+    public void setOpenInvoices(String openInvoices) {
+        this.openInvoices = openInvoices;
     }
 }

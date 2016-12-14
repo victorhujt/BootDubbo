@@ -5,9 +5,9 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
-        <button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
+        <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
             返回
-        </button>
+        </button>-->
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -101,8 +101,6 @@
                             <input id="merchandiser" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.merchandiser)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">备注</label>
                         <div class="w-width-220 col-float">
                             <input id="notes" name="custName" type="search" placeholder=""
@@ -147,16 +145,12 @@
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.transCode)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">出发地</label>
-                        <div class="w-width-220 col-float">
-                            <input id="departurePlace" name="" type="search" placeholder=""
+                        <div class="col-float padding-15" style="width:460px;">
+                            <input id="departurePlace" name="" type="search" placeholder="" style="width:460px;"
                                    aria-controls="dynamic-table"
                                    value="${(ofcDistributionBasicInfo.departureProvince)!""}${(ofcDistributionBasicInfo.departureCity)!""}${(ofcDistributionBasicInfo.departureDistrict)!""}${(ofcDistributionBasicInfo.departureTowns)!""}${(ofcDistributionBasicInfo.departurePlace)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">目的地</label>
-                        <div class="w-width-220 col-float">
-                            <input id="destination" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
-                        </div>
+
                     </div>
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">车牌号</label>
@@ -164,6 +158,14 @@
                             <input id="plateNumber" name="plateNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.plateNumber)!""}">
                         </div>
+                        <label class="control-label col-label no-padding-right" for="name">目的地</label>
+                        <div class="padding-15 col-float" style="width:460px;">
+                            <input id="destination" name="" type="search" placeholder="" style="width:460px;"
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destination)!"" }">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                         <div class="w-width-220 col-float">
                             <input id="driverName" name="driverName" type="search" placeholder=""
@@ -174,16 +176,17 @@
                             <input id="contactNumber" name="contactNumber" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.contactNumber)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">数量</label>
                         <div class="w-width-220 col-float">
                             <input id="quantity" name="quantity" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.quantity)!""}">
                         </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">重量</label>
                         <div class="w-width-220 col-float">
-                            <input id="weight" name="weight" type="search" placeholder=""
+                            <input id="weight" name="weight" type="search" placeholder="" style="margin-right:5px;"
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.weight)!""}">KG
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">体积</label>
@@ -191,8 +194,6 @@
                             <input id="cubage" name="cubage" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">运输要求</label>
                         <div class="w-width-220 col-float">
                             <input id="transRequire" name="transRequire" type="search" placeholder=""
@@ -229,26 +230,10 @@
                                    value="${(ofcDistributionBasicInfo.consignorContactPhone)!""}">
                         </div>
                     </div>
-                    <#--<div class="form-group">-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">传真</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">Email</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">邮编</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="" name="" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                    <#--</div>-->
+
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
-                        <div class="col-xs-6">
+                        <div class="padding-15 y-float" style="width:492px;">
                             <input id="orderCode" name="custName" type="search" style="width: 100%;" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(ofcDistributionBasicInfo.departureProvince)!""}${(ofcDistributionBasicInfo.departureCity)!""}${(ofcDistributionBasicInfo.departureDistrict)!""}${(ofcDistributionBasicInfo.departureTowns)!""}${(ofcDistributionBasicInfo.departurePlace)!""}">
@@ -285,29 +270,13 @@
                                    value="${(ofcDistributionBasicInfo.consigneeContactPhone)!""}">
                         </div>
                     </div>
-                    <#--<div class="form-group">-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">传真</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">Email</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                        <#--<label class="control-label col-label no-padding-right" for="name">邮编</label>-->
-                        <#--<div class="col-xs-3">-->
-                            <#--<input id="orderCode" name="custName" type="search" placeholder=""-->
-                                   <#--aria-controls="dynamic-table">-->
-                        <#--</div>-->
-                    <#--</div>-->
+
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">地址</label>
-                        <div class="col-xs-6">
+                        <div class="padding-15 y-float" style="width:492px;">
                             <input id="address" name="address" type="search" style="width: 100%;" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destinationPlace)!"" }">
+                                   value="${(ofcDistributionBasicInfo.destinationProvince)!""}${(ofcDistributionBasicInfo.destinationCity)!""}${(ofcDistributionBasicInfo.destinationDistrict)!""}${(ofcDistributionBasicInfo.destinationTowns)!""}${(ofcDistributionBasicInfo.destination)!"" }">
                         </div>
                     </div>
                 </form>
@@ -367,6 +336,11 @@
                         <div class="w-width-220 col-float">
                             <input id="monthlyAmount" name="monthlyAmount" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFinanceInformation.monthlyAmount)!"0.00"}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">是否开发票</label>
+                        <div class="w-width-220 col-float">
+                            <input id="openInvoices" name="openInvoices" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFinanceInformation.openInvoices)!""}" >
                         </div>
                     </div>
                     <div class="form-group">
@@ -497,43 +471,43 @@
             <#if storageList ?? && (storageList?size > 0) >
                 <#list storageList as stroage>
                 <tr>
-                    <td>
+                    <td class="center">
                     ${stroage_index+1}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.planCode!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.type!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.businessType!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.resourceAllocationStatus!""}
-                    </td>
+                    </td class="center">
                     <td>
                     ${stroage.serviceProviderName!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.serviceProviderContact!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.serviceProviderContactPhone!""}
                     </td>
                     <td>
                     ${stroage.plannedSingleState!""}
-                    </td>
+                    </td class="center">
                     <td>
                     ${stroage.departure!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.destination!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${stroage.warehouseName!""}
                     </td>
-                    <td>
+                    <td class="center">
                     ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
                     </td>
                 </tr>
@@ -552,7 +526,10 @@
             <thead>
             <tr role="row">
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">获取类别
+                    aria-label="Clicks: activate to sort column ascending">货品种类
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">货品小类
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">货品编码
@@ -567,31 +544,75 @@
                     aria-label="Clicks: activate to sort column ascending">单位
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">生产批次
+                    aria-label="Clicks: activate to sort column ascending">包装
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">生产日期
+                    aria-label="Clicks: activate to sort column ascending">计费方式
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">失效日期
+                    aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">数量
+                    aria-label="Clicks: activate to sort column ascending">计费数量
                 </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">重量(kg)
+                </th>
+            </tr>
             </thead>
             <tbody>
             <#if ofcGoodsDetailsInfoList ?? && (ofcGoodsDetailsInfoList?size > 0) >
                 <#list ofcGoodsDetailsInfoList as goods>
                 <tr>
-                    <td>${(goods.goodsCategory)!"" }</td>
-                    <td>${(goods.goodsCode)!"" }</td>
-                    <td>${(goods.goodsName)!"" }</td>
-                    <td>${(goods.goodsSpec)!"" }</td>
-                    <td>${goods.unit!"" }</td>
-                    <td>${goods.productionBatch!"" }</td>
-                    <td>${(goods.productionTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td>${(goods.invalidTime?string("yyyy-MM-dd HH:mm:SS"))!"" }</td>
-                    <td>${goods.quantity!"" }</td>
+                    <td class="center">${(goods.goodsType)!"" }</td>
+                    <td class="center">${(goods.goodsCategory)!"" }</td>
+                    <td class="center">${(goods.goodsCode)!"" }</td>
+                    <td class="center">${(goods.goodsName)!"" }</td>
+                    <td class="center">${(goods.goodsSpec)!"" }</td>
+                    <td class="center">${goods.unit!"" }</td>
+                    <td class="center">
+                        <#if (goods.pack)! == '01'>
+                            纸箱
+                        <#elseif (goods.pack)! == '02'>
+                            木箱
+                        <#elseif (goods.pack)! == '03'>
+                            桶
+                        <#elseif (goods.pack)! == '04'>
+                            混包
+                        <#elseif (goods.pack)! == '05'>
+                            裸装
+                        <#elseif (goods.pack)! == '06'>
+                            编袋
+                        <#elseif (goods.pack)! == '07'>
+                            托盘
+                        <#elseif (goods.pack)! == '08'>
+                            木框架
+                        <#elseif (goods.pack)! == '09'>
+                            泡沫箱
+                        <#elseif (goods.pack)! == '10'>
+                            缠绕膜
+                        <#elseif (goods.pack)! == '11'>
+                            盘
+                        <#elseif (goods.pack)! == '12'>
+                            铁框
+                        <#elseif (goods.pack)! == '13'>
+                            布袋
+                        <#else>
+                        </#if>
+                    </td>
+                    <td class="center">
+                        <#if (goods.chargingWays)! == '01'>
+                            件数
+                        <#elseif (goods.chargingWays)! == '02'>
+                            重量Kg
+                        <#elseif (goods.chargingWays)! == '03'>
+                            体积m³
+                        <#else>
+                        </#if>
+                    </td>
+                    <td class="center">${goods.chargingUnitPrice!"" }</td>
+                    <td class="center">${goods.chargingQuantity!"" }</td>
+                    <td class="center">${goods.billingWeight!"" }</td>
                 </tr>
                 </#list>
             </#if>
@@ -712,7 +733,7 @@
             value = "其他出库";
         } else if (businessType == "620") {
             value = "采购入库";
-        } else if (order.businessType == "621") {
+        } else if (businessType == "621") {
             value = "调拨入库";
         } else if (businessType == "622") {
             value = "退货入库";

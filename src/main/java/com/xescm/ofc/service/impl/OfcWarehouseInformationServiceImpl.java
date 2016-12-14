@@ -1,12 +1,12 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
-import com.xescm.ofc.domain.dto.csc.CscWarehouse;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
+import com.xescm.ofc.model.dto.csc.CscWarehouse;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,14 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
     @Override
     public int deleteByOrderCode(Object key) {
-        ofcWarehouseInformationMapper.deleteByOrderCode(key);
-        return 0;
+
+        return ofcWarehouseInformationMapper.deleteByOrderCode(key);
     }
 
     @Override
     public int updateByOrderCode(Object key) {
-        ofcWarehouseInformationMapper.updateByOrderCode(key);
-        return 0;
+
+        return ofcWarehouseInformationMapper.updateByOrderCode(key);
     }
 
     @Override
@@ -52,10 +52,10 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
 
     @Override
-    public List<RmcWarehouse> getWarehouseListByCustCode(String custId) {///1
+    public List<RmcWarehouse> getWarehouseListByCustCode(String customerCode) {///1
         try{
             CscWarehouse cscWarehouse = new CscWarehouse();
-            cscWarehouse.setCustomerId(custId);
+            cscWarehouse.setCustomerCode(customerCode);
             Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
             if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
@@ -67,12 +67,14 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             List<RmcWarehouse> warehouseList = new ArrayList<>();
             for(CscWarehouse cscWH : result){
                 RmcWarehouse rmcWarehouse = new RmcWarehouse();
-                rmcWarehouse.setId(cscWH.getWarehouseId());
+                rmcWarehouse.setWarehouseCode(cscWH.getWarehouseCode());
+                RmcWarehouse rmcWarehouseResult = new RmcWarehouse();
                 Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
-                    throw new BusinessException(rmcWarehouseByid.getMessage());
+                    //throw new BusinessException(rmcWarehouseByid.getMessage());
+                    continue;
                 }
-                RmcWarehouse rmcWarehouseResult = rmcWarehouseByid.getResult();
+                rmcWarehouseResult = rmcWarehouseByid.getResult();
                 if (null == rmcWarehouseResult) {
                     continue;
                 }
@@ -87,7 +89,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             throw new BusinessException(ex.getMessage());
         }
         catch (Exception ex){
-            throw new BusinessException("下单页面抓取仓库信息失败");
+            throw new BusinessException("下单页面抓取仓库信息失败",ex);
         }
 
     }

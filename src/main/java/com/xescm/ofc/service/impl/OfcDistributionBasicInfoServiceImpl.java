@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,14 +24,14 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public int deleteByOrderCode(Object key) {
-        ofcDistributionBasicInfoMapper.deleteByOrderCode(key);
-        return 0;
+
+        return ofcDistributionBasicInfoMapper.deleteByOrderCode(key);
     }
 
     @Override
     public int updateByOrderCode(Object key) {
-        ofcDistributionBasicInfoMapper.updateByOrderCode(key);
-        return 0;
+
+        return ofcDistributionBasicInfoMapper.updateByOrderCode(key);
     }
 
     @Override
@@ -44,18 +45,30 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public String getOrderCodeByTransCode(String transCode) {
-        String custCode = "001";
+//        String custCode = "001";
        // Map<String,String> mapperMap = new HashMap<String,String>();
         Map<String,String> mapperMap = new HashMap<>();
-        mapperMap.put("custCode",custCode);
+//        mapperMap.put("custCode",custCode);
         mapperMap.put("transCode",transCode);
-        String orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(mapperMap);
-        return orderCode;
+        List<String> orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(mapperMap);
+        return orderCode.get(0);
     }
 
     @Override
+    public String getKabanOrderCodeByTransCode(String transCode) {
+        Map<String,String> mapperMap = new HashMap<>();
+        mapperMap.put("transCode",transCode);
+        List<String> orderCode = ofcDistributionBasicInfoMapper.getKabanOrderCodeByTransCode(mapperMap);
+        if(orderCode.size() > 0){
+            return orderCode.get(0);
+        }else{
+            return null;
+        }
+    }
+
+
+    @Override
     public int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        int result =  ofcDistributionBasicInfoMapper.checkTransCode(ofcDistributionBasicInfo);
-        return result;
+        return ofcDistributionBasicInfoMapper.checkTransCode(ofcDistributionBasicInfo);
     }
 }

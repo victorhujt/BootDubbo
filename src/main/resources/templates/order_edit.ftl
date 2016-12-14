@@ -347,7 +347,7 @@
                                             <div class="col-sm-6">
                                                 <div class="clearfix">
                                                 <input type="hidden" id="orderCode" name="orderCode" <#if orderInfo.orderCode?? >value="${orderInfo.orderCode}"</#if>">
-                                                    <input id="orderTime" name="orderTime" <#if orderInfo.orderTime?? >value="${((orderInfo.orderTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                                    <input id="orderTime" name="orderTime" <#if orderInfo.orderTime?? >value="${((orderInfo.orderTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                                 </div>
                                             </div>
                                         </div>
@@ -389,11 +389,16 @@
                                                         <option value="611" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '611')>selected="selected"</#if></#if>>调拨出库</option>
                                                         <option value="612" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '612')>selected="selected"</#if></#if>>报损出库</option>
                                                         <option value="613" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '613')>selected="selected"</#if></#if>>其他出库</option>
+                                                        <option value="614" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '614')>selected="selected"</#if></#if>>分拨出库</option>
                                                         <option value="----------">----------</option>
                                                         <option value="620" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '620')>selected="selected"</#if></#if>>采购入库</option>
                                                         <option value="621" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '621')>selected="selected"</#if></#if>>调拨入库</option>
                                                         <option value="622" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '622')>selected="selected"</#if></#if>>退货入库</option>
                                                         <option value="623" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '623')>selected="selected"</#if></#if>>加工入库</option>
+                                                        <option value="624" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '624')>selected="selected"</#if></#if>>盘盈入库</option>
+                                                        <option value="625" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '625')>selected="selected"</#if></#if>>流通入库</option>
+                                                        <option value="626" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '626')>selected="selected"</#if></#if>>其他入库</option>
+                                                        <option value="627" <#if orderInfo.businessType?? ><#if ((orderInfo.businessType)! == '627')>selected="selected"</#if></#if>>分拨入库</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -578,7 +583,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">取货时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="pickupTime" name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                            <input id="pickupTime" name="pickupTime" <#if orderInfo.pickupTime?? >value="${((orderInfo.pickupTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table"onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -586,7 +591,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">期望送达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                            <input id="expectedArrivedTime" name="expectedArrivedTime" <#if orderInfo.expectedArrivedTime?? >value="${((orderInfo.expectedArrivedTime)?string('yyyy-MM-dd HH:mm:ss'))!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -620,9 +625,9 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.contactCompanyId)!?? >value="${(consignorMessage.contactCompanyId)!}"</#if> type="hidden">
+                                                                        <input id="consignorCode" name="consignorCode" <#if (consignorMessage.contactCompanyCode)!?? >value="${(consignorMessage.contactCompanyCode)!}"</#if> type="hidden">
                                                                         <input id="consignorType" name="consignorType" <#if (consignorMessage.type)!?? >value="${(consignorMessage.type)!}"</#if> type="hidden">
-                                                                        <input id="consignorName"  name="consignorName" <#if (consignorMessage.contactCompanyName)!?? >value="${(consignorMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorName"  name="consignorName" readonly <#if (consignorMessage.contactCompanyName)!?? >value="${(consignorMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -632,7 +637,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="consignorContactCode"   name="consignorContactCode" <#if (consignorMessage.contactCode)!?? >value="${(consignorMessage.contactCode)!}"</#if>  type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                                        <input id="consignorContactName" name="consignorContactName" <#if (consignorMessage.contactName)!?? >value="${(consignorMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorContactName" name="consignorContactName" readonly <#if (consignorMessage.contactName)!?? >value="${(consignorMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -641,7 +646,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorPhone" name="consignorPhone" <#if (consignorMessage.phone)!?? >value="${(consignorMessage.phone)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorPhone" name="consignorPhone" readonly <#if (consignorMessage.phone)!?? >value="${(consignorMessage.phone)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -650,7 +655,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorFax" name="consignorFax" <#if (consignorMessage.fax)!?? >value="${(consignorMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorFax" name="consignorFax" readonly <#if (consignorMessage.fax)!?? >value="${(consignorMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -659,7 +664,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorEmail" name="consignorEmail" <#if (consignorMessage.email)!?? >value="${(consignorMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorEmail" name="consignorEmail" readonly <#if (consignorMessage.email)!?? >value="${(consignorMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -667,7 +672,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorPostCode" name="consignorPostCode" <#if (consignorMessage.postCode)!?? >value="${(consignorMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorPostCode" name="consignorPostCode" readonly <#if (consignorMessage.postCode)!?? >value="${(consignorMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -684,7 +689,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consignorAddress" name="consignorAddress" <#if (orderInfo.departurePlace)!?? >value="${(orderInfo.departurePlace)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consignorAddress" name="consignorAddress" readonly <#if (orderInfo.departurePlace)!?? >value="${(orderInfo.departurePlace)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -700,9 +705,9 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">名称</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.contactCompanyId)!?? >value="${(consigneeMessage.contactCompanyId)!}"</#if> >
+                                                                        <input id="cosigneeCode" name="cosigneeCode" type="hidden" <#if (consigneeMessage.contactCompanyCode)!?? >value="${(consigneeMessage.contactCompanyCode)!}"</#if> >
                                                                         <input id="consigneeType" name="consigneeType" <#if (consigneeMessage.type)!?? >value="${(consigneeMessage.type)!}"</#if> type="hidden">
-                                                                        <input id="consigneeName" name="consigneeName" <#if (consigneeMessage.contactCompanyName)!?? >value="${(consigneeMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeName" name="consigneeName" readonly <#if (consigneeMessage.contactCompanyName)!?? >value="${(consigneeMessage.contactCompanyName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -713,7 +718,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="consigneeContactCode" name="consigneeContactCode" <#if (consigneeMessage.contactCode)!?? >value="${(consigneeMessage.contactCode)!}"</#if> type="hidden" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-                                                                        <input id="consigneeContactName" name="consigneeContactName" <#if (consigneeMessage.contactName)!?? >value="${(consigneeMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeContactName" name="consigneeContactName" readonly <#if (consigneeMessage.contactName)!?? >value="${(consigneeMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -721,7 +726,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneePhone" name="consigneePhone" <#if (consigneeMessage.phone)!?? >value="${(consigneeMessage.phone)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneePhone" name="consigneePhone" readonly <#if (consigneeMessage.phone)!?? >value="${(consigneeMessage.phone)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -729,7 +734,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneeFax" name="consigneeFax" <#if (consigneeMessage.fax)!?? >value="${(consigneeMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeFax" name="consigneeFax" readonly <#if (consigneeMessage.fax)!?? >value="${(consigneeMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -737,7 +742,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneeEmail" name="consigneeEmail" <#if (consigneeMessage.email)!?? >value="${(consigneeMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeEmail" name="consigneeEmail" readonly <#if (consigneeMessage.email)!?? >value="${(consigneeMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -745,7 +750,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneePostCode" name="consigneePostCode" <#if (consigneeMessage.postCode)!?? >value="${(consigneeMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneePostCode" name="consigneePostCode" readonly <#if (consigneeMessage.postCode)!?? >value="${(consigneeMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -762,7 +767,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="consigneeAddress" name="consigneeAddress" <#if (orderInfo.destination)!?? >value="${(orderInfo.destination)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="consigneeAddress" name="consigneeAddress" readonly <#if (orderInfo.destination)!?? >value="${(orderInfo.destination)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -802,7 +807,7 @@
                                                                     <label class="control-label col-sm-1 no-padding-right" for="name">入库预计到达时间</label>
                                                                     <div class="col-sm-6">
                                                                         <div class="clearfix">
-                                                                            <input id="arriveTime" name="arriveTime" <#if orderInfo.arriveTime?? >value="${((orderInfo.arriveTime)?string('yyyy-MM-dd HH:mm'))!}"</#if>  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                            <input id="arriveTime" name="arriveTime" <#if orderInfo.arriveTime?? >value="${((orderInfo.arriveTime)?string('yyyy-MM-dd HH:mm'))!}"</#if>  type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
 
                                                                         </div>
                                                                     </div>
@@ -846,7 +851,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
                                                                         <input id="supportCode" name="supportCode" type="hidden" <#if (supportMessage.supplierCode)!?? >value="${(supportMessage.supplierCode)!}"</#if>>
-                                                                        <input id="supportName" name="supportName" <#if (supportMessage.supplierName)!?? >value="${(supportMessage.supplierName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportName" name="supportName" readonly <#if (supportMessage.supplierName)!?? >value="${(supportMessage.supplierName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -854,7 +859,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系人</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportContactName" name="supportContactName" <#if (supportMessage.contactName)!?? >value="${(supportMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportContactName" name="supportContactName" readonly <#if (supportMessage.contactName)!?? >value="${(supportMessage.contactName)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -863,7 +868,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">联系电话</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportPhone" name="supportPhone" <#if (supportMessage.contactPhone)!?? >value="${(supportMessage.contactPhone)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportPhone" name="supportPhone" readonly <#if (supportMessage.contactPhone)!?? >value="${(supportMessage.contactPhone)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -872,7 +877,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">传真</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportFax" name="supportFax" <#if (supportMessage.fax)!?? >value="${(supportMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportFax" name="supportFax" readonly <#if (supportMessage.fax)!?? >value="${(supportMessage.fax)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -881,7 +886,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">Email</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportEmail" name="supportEmail" <#if (supportMessage.email)!?? >value="${(supportMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportEmail" name="supportEmail" readonly <#if (supportMessage.email)!?? >value="${(supportMessage.email)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
                                                                     </div>
                                                                 </div>
@@ -890,7 +895,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">邮编</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportPostCode" name="supportPostCode" <#if (supportMessage.postCode)!?? >value="${(supportMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportPostCode" name="supportPostCode" readonly <#if (supportMessage.postCode)!?? >value="${(supportMessage.postCode)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -899,7 +904,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
 
-                                                                        <input id="city-picker3-support" class="form-control" value="${(supportMessage.provinceName)!}/${(supportMessage.cityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
+                                                                        <input id="city-picker3-support" class="form-control"  value="${(supportMessage.provinceName)!}/${(supportMessage.cityName)!}/${(supportMessage.areaName)!}/${(supportMessage.streetName)!}" readonly type="text" value="" data-toggle="city-picker">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -907,7 +912,7 @@
                                                                 <label class="control-label col-sm-1 no-padding-right" for="name">详细地址</label>
                                                                 <div class="col-sm-6">
                                                                     <div class="clearfix">
-                                                                        <input id="supportAddress" name="supportAddress" <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                                                        <input id="supportAddress" name="supportAddress" readonly <#if (supportMessage.address)!?? >value="${(supportMessage.address)!}"</#if> type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1322,7 +1327,7 @@
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
 
-        debugger
+
 
 
         jsonStr.departureProvince = consignorAddressNameMessage[0];
@@ -1400,17 +1405,17 @@
           data = eval(data);
           $.each(data,function (index,CscContantAndCompanyDto) {
               
-              resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
-              resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+              resultConsignorCode = CscContantAndCompanyDto.contactCompanySerialNo;
+              resultConsignorContactCode = CscContantAndCompanyDto.contactSerialNo;
               resultConsignorType = CscContantAndCompanyDto.type;
-              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
-              $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+              $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+              $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
               $("#consignorType").val(CscContantAndCompanyDto.type);
               console.log("consignorCode'val()=  inininin  ="+$("#consignorCode").val());
           });
       });*/
 
-        cscContact.contactCompanyId = $("#consignorCode").val();
+        cscContact.contactCompanyCode = $("#consignorCode").val();
         cscContact.contactCode = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
         //cscContactCompany.id = $("#consignorCode").val();
@@ -1420,7 +1425,7 @@
         cscContact.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
-        debugger
+
 
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
@@ -1459,7 +1464,7 @@
         cscContact.purpose = "1";
         cscContact.phone = $("#consigneePhone").val();
 
-        cscContact.contactCompanyId = $("#consigneeCode").val();
+        cscContact.contactCompanyCode = $("#consigneeCode").val();
         cscContact.contactCode = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();
@@ -1541,8 +1546,8 @@
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unitPrice)+"</td>";
 
-                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
-                    goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+StringUtil.nullToEmpty(cscGoodsVo.weight)+"</td>";
+                    goodsList =goodsList + "<td style='display:none'>"+StringUtil.nullToEmpty(cscGoodsVo.volume)+"</td>";
 
                     goodsList =goodsList + "</tr>";
 
@@ -1573,19 +1578,19 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consignorTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.fax)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.email)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.postCode)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                     contactList =contactList + "</tr>";
                 });
                 $("#contactSelectListTbody2").html(contactList);
@@ -1607,19 +1612,19 @@
                 data=eval(data);
                 var contactList = "";
                 $.each(data,function (index,CscContantAndCompanyDto) {
-                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactCode;
+                    consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
+                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
                     consigneeTypeHide = CscContantAndCompanyDto.type;
                     contactList =contactList + "<tr role='row' class='odd' align='center'>";
                     contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='suppliersele' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.fax+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.email+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.postCode+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.fax)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.email)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.postCode)+"</td>";
+                    contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
                     contactList =contactList + "</tr>";
                     $("#contactSelectListTbody1").html(contactList);
                 });
@@ -1636,13 +1641,13 @@
                     supplierList =supplierList + "<tr role='row' class='odd' align='center'>";
                     supplierList =supplierList + "<td class='center'> "+"<label class='pos-rel'>"+"<input id='selGoods' type='radio' name = 'selGoods' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                     supplierList =supplierList + "<td>"+(index+1)+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.supplierName+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactName+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.contactPhone+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.fax+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.email+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.postCode+"</td>";
-                    supplierList =supplierList + "<td>"+CscSupplierInfoDto.completeAddress+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.contactName)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.fax)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.email)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.postCode)+"</td>";
+                    supplierList =supplierList + "<td>"+StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress)+"</td>";
                     supplierList =supplierList + "</tr>";
                     $("#supplierSelectListTbody").html(supplierList);
                 });
@@ -1684,8 +1689,8 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
-                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanyId);
-                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consigneeType").val(CscContantAndCompanyDto.type);
                             $("#consigneeAddress").val(CscContantAndCompanyDto.address);
 
@@ -1740,8 +1745,8 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+quantity+"></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' value="+production_batch+"></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1768,8 +1773,8 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListQuantity' name = 'goodsListQuantity' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input  id='goodsListProductionBatch' name = 'goodsListProductionBatch' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' ></td>";/*WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})*/
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onClick='WdatePicker({isShowClear:true,readOnly:true,dateFmt:\"yyyy-MM-dd\"})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1821,17 +1826,17 @@
                     cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
-                    debugger
+
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
-                        debugger
+                        
                         data = eval(data);
                         $.each(data,function (index,CscContantAndCompanyDto) {
                             
-//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanyId;
-//                            resultConsignorContactCode = CscContantAndCompanyDto.contactCode;
+//                            resultConsignorCode = CscContantAndCompanyDto.contactCompanySerialNo;
+//                            resultConsignorContactCode = CscContantAndCompanyDto.contactSerialNo;
 //                            resultConsignorType = CscContantAndCompanyDto.type;
-                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanyId);
-                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactCode);
+                            $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                            $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
                             $("#consignorType").val(CscContantAndCompanyDto.type);
                             $("#consignorAddress").val(CscContantAndCompanyDto.address);
                             var provinceName = CscContantAndCompanyDto.provinceName;
@@ -1883,7 +1888,7 @@
                             +"&contactName="+$("#supportContactName").val()
                             +"&contactPhone"+$("#supportPhone").val()
                             , function(data) {
-                                debugger
+                                
                                 data=eval(data);
                                 var supplierList = "";
                                 $.each(data,function (index,CscSupplierInfoDto) {
@@ -2218,7 +2223,7 @@
                     ,"tag":tag}
                 ,"您确认提交订单吗?"
                 ,function () {
-                    debugger
+                    
                     xescm.common.loadPage("/ofc/orderManage");
                 })
     }

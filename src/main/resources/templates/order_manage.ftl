@@ -16,9 +16,9 @@
                         <label class="control-label col-label no-padding-right" style="margin-right:20px;" for="name">订单日期</label>
                         <div class="y-float">
                             <div class="clearfix">
-                                <input id="orderTimePre" name="orderTimePre" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                <input id="orderTimePre" name="orderTimePre" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                 <label class="control-label col-label no-padding-right y-float" style="margin:0 20px;text-align:center;" for="name">至</label>
-                                <input id="orderTimeSuf" name="orderTimeSuf" type="search" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                <input id="orderTimeSuf" name="orderTimeSuf" type="search" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                             </div>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单编号</label>
@@ -73,11 +73,16 @@
                                     <option value="611">调拨出库</option>
                                     <option value="612">报损出库</option>
                                     <option value="613">其他出库</option>
+                                    <option value="614">分拨出库</option>
                                     <option value="----------">----------</option>
                                     <option value="620">采购入库</option>
                                     <option value="621">调拨入库</option>
                                     <option value="622">退货入库</option>
                                     <option value="623">加工入库</option>
+                                    <option value="624">盘盈入库</option>
+                                    <option value="625">流通入库</option>
+                                    <option value="626">其他入库</option>
+                                    <option value="627">分拨入库</option>
                                 </select>
                             </div>
                         </div>
@@ -194,8 +199,8 @@
         var param = {};
         param.pageNum = pageNum;
         param.pageSize = 10;
-        var orderTimePre = $dp.$('orderTimePre').value;
-        var orderTimeSuf = $dp.$('orderTimeSuf').value;
+        var orderTimePre = $('#orderTimePre').val();
+        var orderTimeSuf = $('#orderTimeSuf').val();
         param.orderTimePre = orderTimePre;
         param.orderTimeSuf = orderTimeSuf;
         param.orderCode = $("#orderCode").val();
@@ -364,7 +369,10 @@
         var followTag = "orderCode";
         var historyUrlTag = "orderManage";
         var url = "/ofc/orderDetails/" + orderCode + "/" + followTag + "/" + historyUrlTag;
-        xescm.common.loadPage(url);
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+//        xescm.common.loadPage(url);
     }
 
     function reviewOrder(ordercode,orderStatus) {

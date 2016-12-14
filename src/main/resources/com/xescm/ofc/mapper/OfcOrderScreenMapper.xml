@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xescm.ofc.mapper.OfcOrderScreenMapper" >
-    <resultMap id="orderSearchResult_resultMap" type="com.xescm.ofc.domain.OrderScreenResult">
+    <resultMap id="orderSearchResultMap" type="com.xescm.ofc.domain.OrderScreenResult">
         <!--配置映射关系-->
         <!--column是结果集中的列名,property是pojo的属性-->
         <result property="orderCode" column="order_code"></result>
@@ -36,7 +36,7 @@
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
     LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     -->
-    <select id="orderScreen" parameterType="orderScreenCondition" resultMap="orderSearchResult_resultMap">
+    <select id="orderScreen" parameterType="orderScreenCondition" resultMap="orderSearchResultMap">
         SELECT
         ofi.order_code orderCode,
         ofi.cust_order_code custOrderCode,
@@ -75,7 +75,7 @@
         s.order_code = b.order_code
         AND s.lasted_oper_time = b.val
         ORDER BY
-        s.order_code
+        s.order_code DESC
         ) oos ON ofi.order_code = oos.order_code
         LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
         LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
@@ -102,81 +102,12 @@
                     AND ofi.business_type = #{businessType}
                 </if>
         </where>
+        ORDER BY ofi.order_code DESC
         <!--GROUP BY ofi.order_code-->
     </select>
 
-    <select id="queryOrderOper_BACK" resultMap="orderSearchResult_resultMap">
-        SELECT
-            ofi.cust_name custName,
-            ofi.order_code orderCode,
-            ofi.cust_order_code custOrderCode,
-            ofi.order_batch_number,
-            ofi.order_time orderTime,
-            ofi.order_type orderType,
-            ofi.business_type businessType,
-            oos.order_status orderStatus,
-            odbi.consignee_type consigneeType,
-            odbi.consignee_name consigneeName,
-            odbi.consignee_contact_name consigneeContactName,
-            owi.warehouse_name warehouseName,
-            ofi.notes notes,
-            ofi.store_name storeName
-        FROM
-        ofc_fundamental_information ofi
-        LEFT JOIN (
-        SELECT
-        s.order_code,
-        s.order_status,
-        s.status_desc,
-        s.lasted_oper_time,
-        s.notes,
-        s.operator
-        FROM
-        ofc_order_status s,
-        (
-        SELECT
-        s.order_code,
-        max(s.lasted_oper_time) val
-        FROM
-        ofc_order_status s
-        GROUP BY
-        s.order_code
-        ) b
-        WHERE
-        s.order_code = b.order_code
-        AND s.lasted_oper_time = b.val
-        ORDER BY
-        s.order_code
-        ) oos ON ofi.order_code = oos.order_code
-        LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
-        LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
-        <where>
-            <if test="form.startDate!=null and form.startDate!=''">
-                AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
-            </if>
-            <if test="form.endDate!=null and form.endDate!=''">
-                AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
-            </if>
-            <if test="form.orderCode!=null and form.orderCode!=''">
-                AND ofi.order_code = #{form.orderCode}
-            </if>
-            <if test="form.custName!=null and form.custName!=''">
-                AND ofi.cust_name = #{form.custName}
-            </if>
-            <if test="form.orderState!=null and form.orderState!=''">
-                AND oos.order_status = #{form.orderState}
-            </if>
-            <if test="form.orderType!=null and form.orderType!=''">
-                AND ofi.order_type = #{form.orderType}
-            </if>
-            <if test="form.businessType!=null and form.businessType!=''">
-                AND ofi.business_type = #{form.businessType}
-            </if>
-        </where>
-        GROUP BY ofi.order_code
-    </select>
 
-    <select id="queryOrderOper" resultMap="orderSearchResult_resultMap">
+    <select id="queryOrderOper" resultMap="orderSearchResultMap">
         SELECT
         ofi.cust_name custName,
         ofi.order_code orderCode,

@@ -16,4 +16,11 @@ public class TransportNoDTO implements Serializable {
     public void setTransportNo(String transportNo) {
         this.transportNo = transportNo;
     }
+
+    @Override
+    public String toString() {
+        return "TransportNoDTO{" +
+                "transportNo='" + transportNo + '\'' +
+                '}';
+    }
 }

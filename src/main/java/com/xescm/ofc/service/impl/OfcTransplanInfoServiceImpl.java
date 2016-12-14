@@ -4,8 +4,11 @@ import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
+import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.OfcTransplanInfoService;
 import com.xescm.ofc.utils.PubUtils;
+//import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +30,31 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
     @Override
     public List<OfcTransplanInfo> ofcTransplanInfoScreenList(String orderCode) {
-        if(!PubUtils.trimAndNullAsEmpty(orderCode).equals("")){
-            //List<OfcTransplanInfo> ofcTransplanInfoList=new ArrayList<OfcTransplanInfo>();
-           // Map<String,String> mapperMap = new HashMap<String,String>();
+        if(!"".equals(PubUtils.trimAndNullAsEmpty(orderCode))){
             Map<String,String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode",orderCode);
-            /*OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-            ofcTransplanInfo.setOrderCode(orderCode);*/
             return ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
         }else {
-            throw new BusinessException();
+            throw new BusinessException("运输计划单查询入参为空");
         }
     }
+
+    @Override
+    public List<OfcTransplanInfoVo> ofcTransplanInfoVoList(String planCode) {
+        if(!"".equals(PubUtils.trimAndNullAsEmpty(planCode))){
+            Map<String,String> mapperMap = new HashMap<>();
+            mapperMap.put("planCode",planCode);
+            return ofcTransplanInfoMapper.ofcTransplanInfoVoList(mapperMap);
+        }else {
+            throw new BusinessException("运输计划单查询入参为空");
+        }
+    }
+
+    @Override
+    public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
+        int result = ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
+        return result;
+    }
+
+
 }

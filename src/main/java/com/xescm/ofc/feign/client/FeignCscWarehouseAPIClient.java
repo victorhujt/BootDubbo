@@ -1,7 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscWarehouse;
+import com.xescm.ofc.model.dto.csc.CscWarehouse;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscWarehouseAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
@@ -24,10 +24,12 @@ public class FeignCscWarehouseAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscWarehouseAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscWarehouseAPI getCscApi() {
         FeignCscWarehouseAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscWarehouseAPI.class, restConfig.getCscUrl());
         return res;
     }
@@ -41,7 +43,7 @@ public class FeignCscWarehouseAPIClient {
         try {
             cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(cscWarehouse);
         }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
+            throw new BusinessException(ex.getMessage(),ex);
         }
         return cscWarehouseByCustomerId;
     }

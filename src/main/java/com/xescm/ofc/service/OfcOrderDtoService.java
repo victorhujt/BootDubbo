@@ -1,6 +1,6 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 
 import java.lang.reflect.InvocationTargetException;
 

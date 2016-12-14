@@ -1,31 +1,22 @@
 package com.xescm.ofc.web.rest;
 
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.enums.OrderConstEnum;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.domain.OrderFollowOperResult;
+import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OrderFollowOperService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.SetUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -35,13 +26,11 @@ import java.util.*;
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderFollowOperRest extends BaseController {
-    @Autowired
-    private OfcOrderDtoService ofcOrderDtoService;
-    @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
 
     @Autowired
     private OrderFollowOperService orderFollowOperService;
+    @Autowired
+    private OfcOrderManageOperService ofcOrderManageOperService;
 
     @RequestMapping(value = "/orderFollowOpera")
     public String orderFollowOpera() {
@@ -63,7 +52,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (StringUtils.isBlank(searchType)) {
                 throw new Exception("搜索类型不能为空");
             }
-            // Set<String> searchTypes = new HashSet<String>();
             Set<String> searchTypes = new HashSet<>();
             searchTypes.add("orderCode");
             searchTypes.add("custOrderCode");
@@ -71,9 +59,9 @@ public class OfcOrderFollowOperRest extends BaseController {
             if (!searchTypes.contains(searchType)) {
                 throw new Exception("搜索类型错误！");
             }
-            //Map<String, Object> map = new HashMap<String, Object>();
             Map<String, Object> map = new HashMap<>();
-            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
+            List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
+//            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
                 if (ofcOrderDTOs.size() == 1) {
@@ -88,9 +76,12 @@ public class OfcOrderFollowOperRest extends BaseController {
                 map.put("ofcOrderStatus", ofcOrderStatuses);
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
-        } catch (Exception ex) {
+        } catch (BusinessException ex){
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }catch (Exception ex) {
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -105,20 +96,24 @@ public class OfcOrderFollowOperRest extends BaseController {
     public Object queryOrderFollowByCode(String code) {
         try {
             final String searchType = "orderCode";
-            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
+//            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
+            List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
-            // Map<String, Object> map = new HashMap<String, Object>();
+
             Map<String, Object> map = new HashMap<>();
-            OfcFundamentalInformation ofcFundamentalInformation = null;
+            OrderFollowOperResult ofcFundamentalInformation = null;
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
                 ofcFundamentalInformation = ofcOrderDTOs.get(0);
             }
             map.put("ofcOrderDTO", ofcFundamentalInformation);
             map.put("ofcOrderStatus", ofcOrderStatuses);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
-        } catch (Exception ex) {
+        } catch (BusinessException ex) {
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 

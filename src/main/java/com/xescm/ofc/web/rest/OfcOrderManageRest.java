@@ -1,21 +1,20 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcOrderDTO;
 import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.domain.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.domain.dto.csc.QueryCustomerIdDto;
-import com.xescm.ofc.domain.dto.csc.QueryStoreDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscContantAndCompanyVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscStorevo;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.domain.dto.rmc.RmcCompanyLineVo;
-import com.xescm.ofc.domain.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.enums.OrderConstEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
+import com.xescm.ofc.model.dto.csc.QueryStoreDto;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
+import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
+import com.xescm.ofc.model.vo.csc.CscStorevo;
+import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;
@@ -77,10 +76,12 @@ public class OfcOrderManageRest extends BaseController{
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
-        } catch (Exception ex) {
+        }catch (BusinessException ex){
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
@@ -99,10 +100,12 @@ public class OfcOrderManageRest extends BaseController{
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderDelete(orderCode,orderStatus,authResDtoByToken);
+        } catch (BusinessException ex){
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
@@ -121,9 +124,12 @@ public class OfcOrderManageRest extends BaseController{
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
+        } catch (BusinessException ex){
+            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage());
-            //ex.printStackTrace();
+            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(),ex);
+            //
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
@@ -141,15 +147,16 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         setDefaultModel(model);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-        String custId = (String) wrapper.getResult();
+//        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
+//        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
+//        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
+//        String custId = (String) wrapper.getResult();
+        String customerCode = authResDtoByToken.getGroupRefCode();
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
         orderCode=orderCode.replace(",","");
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
-        CscContantAndCompanyVo consignorMessage = null;
-        CscContantAndCompanyVo consigneeMessage = null;
+        CscContantAndCompanyResponseDto consignorMessage = null;
+        CscContantAndCompanyResponseDto consigneeMessage = null;
         CscSupplierInfoDto supportMessage = null;
         List<RmcWarehouse> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
@@ -157,35 +164,34 @@ public class OfcOrderManageRest extends BaseController{
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);
+            rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             //如果是运输订单,就去找收发货方联系人的信息
-            if(OrderConstEnum.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
-                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
-                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+            if(OrderConstConstant.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
+                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
+                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
             }
             //仓配订单
-            if(OrderConstEnum.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
+            if(OrderConstConstant.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
 
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
-                if(OrderConstEnum.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
-                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
-                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+                if(OrderConstConstant.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
+                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
+                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
                 }
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
                 if("62".equals(businessTypeHead)){
-                    supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),custId,authResDtoByToken);
+                    supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),customerCode,authResDtoByToken);
                 }
             }
             QueryStoreDto queryStoreDto = new QueryStoreDto();
-            queryStoreDto.setCustomerId(custId);
+            queryStoreDto.setCustomerCode(customerCode);
             storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
         }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
         }catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
         }
         if (ofcOrderDTO!=null){
             map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
@@ -213,8 +219,8 @@ public class OfcOrderManageRest extends BaseController{
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
             response.getWriter().print(result);
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
         }
     }
 
@@ -278,14 +284,16 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>服务商名称", serviceProviderName);
         String result = null;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        String userName=authResDtoByToken.getUamUser().getUserName();
-        
+        String userName=authResDtoByToken.getGroupRefName();
+
         try {
             result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,serviceProviderContact,serviceProviderContactPhone,userName);
+        } catch (BusinessException ex) {
+            logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
             logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
-            ex.printStackTrace();
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);

@@ -1,10 +1,8 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscGoodsApiDto;
-import com.xescm.ofc.domain.dto.csc.CscGoodsType;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsTypeVo;
+import com.xescm.ofc.model.dto.csc.CscGoodsType;
+import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscGoodsAPI;
 import com.xescm.ofc.feign.api.csc.FeignCscGoodsTypeAPI;
@@ -28,10 +26,12 @@ public class FeignCscGoodsTypeAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscGoodsAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscGoodsTypeAPI getApi() {
         FeignCscGoodsTypeAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscGoodsTypeAPI.class, restConfig.getCscUrl());
         return res;
     }

@@ -1,12 +1,12 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.domain.dto.csc.CscGoods;
-import com.xescm.ofc.domain.dto.csc.CscGoodsApiDto;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsApiVo;
-import com.xescm.ofc.domain.dto.csc.vo.CscGoodsVo;
+import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
+import com.xescm.ofc.model.dto.csc.CscGoodsType;
+import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscGoodsAPI;
+import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
@@ -27,10 +27,12 @@ public class FeignCscGoodsAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscGoodsAPI.class);
     @Resource
     RestConfig restConfig;
+    @Resource
+    private AuthRequestInterceptor authRequestInterceptor;
 
     public FeignCscGoodsAPI getApi() {
         FeignCscGoodsAPI res = Feign.builder()
-                .requestInterceptor(new AuthRequestInterceptor()).encoder(new JacksonEncoder())
+                .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder()).target(FeignCscGoodsAPI.class, restConfig.getCscUrl());
         return res;
     }
@@ -42,6 +44,15 @@ public class FeignCscGoodsAPIClient {
             throw new BusinessException("参数为空");
         }
         Wrapper<List<CscGoodsApiVo>> listWrapper = getApi().queryCscGoodsList(cscGoods);
+        return listWrapper;
+    }
+
+    public Wrapper<List<CscGoodsTypeVo>> getCscGoodsTypeList(CscGoodsType cscGoodsType){
+        logger.debug("==>查询货品 cscGoods={}", cscGoodsType);
+        if(null == cscGoodsType){
+            throw new BusinessException("参数为空");
+        }
+        Wrapper<List<CscGoodsTypeVo>> listWrapper = getApi().getCscGoodsTypeList(cscGoodsType);
         return listWrapper;
     }
 }

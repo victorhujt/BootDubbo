@@ -1,15 +1,15 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ofc.domain.OfcBatchOrderVo;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
-import org.apache.ibatis.annotations.Param;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 
 /**
  * Created by lyh on 2016/10/10.
  */
-public interface OfcFundamentalInformationService extends IService<OfcFundamentalInformation>{
+public interface OfcFundamentalInformationService extends IService<OfcFundamentalInformation> {
     String getOrderCodeByCustOrderCode(String custOrderCode);
 
 
@@ -17,8 +17,17 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
 
     String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
 
-    List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(String orderBatchNumber);
-
     OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber);
 
+    OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode);
+
+    OfcFundamentalInformation getLastMerchandiser(String operatorName);
+
+    /**
+     * 根据客户订单编号与客户编号查询订单
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
 }

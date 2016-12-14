@@ -16,8 +16,12 @@ public class OfcPlanScreenCondition {
                 "orderTimePre=" + orderTimePre +
                 ", orderTimeSuf=" + orderTimeSuf +
                 ", custName='" + custName + '\'' +
+                ", custCode='" + custCode + '\'' +
                 ", orderBatchNumber='" + orderBatchNumber + '\'' +
+                ", orderCode='" + orderCode + '\'' +
+                ", planCode='" + planCode + '\'' +
                 ", resourceAllocationStatus='" + resourceAllocationStatus + '\'' +
+                ", resourceAllocationStatues=" + resourceAllocationStatues +
                 '}';
     }
 
@@ -30,6 +34,8 @@ public class OfcPlanScreenCondition {
     private String custName;
     private String custCode;
     private String orderBatchNumber;
+    private String orderCode;
+    private String planCode;
     private String resourceAllocationStatus;
     private List<String> resourceAllocationStatues;
 
@@ -63,6 +69,22 @@ public class OfcPlanScreenCondition {
 
     public void setOrderBatchNumber(String orderBatchNumber) {
         this.orderBatchNumber = orderBatchNumber;
+    }
+
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+
+    public String getPlanCode() {
+        return planCode;
+    }
+
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
     }
 
     public String getResourceAllocationStatus() {
