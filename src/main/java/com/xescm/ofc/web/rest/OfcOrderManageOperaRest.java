@@ -7,6 +7,7 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.*;
@@ -67,9 +68,12 @@ public class OfcOrderManageOperaRest extends BaseController {
             List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderList(form);
             PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
-        } catch (Exception ex) {
-            logger.error("运营平台查询订单出错：{}", ex);
+        } catch (BusinessException ex) {
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -97,9 +101,12 @@ public class OfcOrderManageOperaRest extends BaseController {
             }
             String result = ofcOrderManageService.orderAudit(orderCode, orderStatus, reviewTag, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
-        } catch (Exception ex) {
+        } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -122,9 +129,12 @@ public class OfcOrderManageOperaRest extends BaseController {
             }
             String result = ofcOrderManageService.orderDelete(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
-        } catch (Exception ex) {
+        } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -147,9 +157,12 @@ public class OfcOrderManageOperaRest extends BaseController {
             }
             String result = ofcOrderManageService.orderCancel(orderCode, orderStatus, authResDtoByToken);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
@@ -217,8 +230,10 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
 
             return modelAndView;
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex);
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
         }
         return null;
     }
@@ -243,8 +258,10 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcBatchOrderVo ofcBatchOrderVo = ofcBatchOrderVoService.queryByBatchNumber(orderBatchCode);
             modelAndView.addObject("ofcBatchOrderVo", ofcBatchOrderVo);
             modelAndView.addObject("orderBatchNumber", orderBatchCode);
+        } catch (BusinessException ex) {
+            logger.error("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
         } catch (Exception ex) {
-            logger.info("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex);
+            logger.error("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
         }
         return modelAndView;
     }
@@ -270,14 +287,18 @@ public class OfcOrderManageOperaRest extends BaseController {
             List<OrderSearchOperResult> ofcBatchOrderVos = ofcOrderManageOperService.queryOrderByOrderBatchNumber(orderBatchNumber);
             PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(ofcBatchOrderVos);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
+        } catch (BusinessException ex) {
+            logger.info("订单批次号查询出错：orderBatchNumer{},{}", orderBatchNumber, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
-            logger.info("订单批次号查询出错：orderBatchNumer{},{}", orderBatchNumber, ex);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+            logger.info("订单批次号查询出错：orderBatchNumer{},{}", orderBatchNumber, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
     /**
-     *根据订单编号查询货品信息
+     * 根据订单编号查询货品信息
+     *
      * @param orderCode
      * @return Object
      */
@@ -292,9 +313,12 @@ public class OfcOrderManageOperaRest extends BaseController {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcBatchOrderVos = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcBatchOrderVos);
+        } catch (BusinessException ex) {
+            logger.info("订单号查询出错：orderCode{},{}", orderCode, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
-            logger.info("订单号查询出错：orderCode{},{}", orderCode, ex);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ex.getMessage());
+            logger.info("订单号查询出错：orderCode{},{}", orderCode, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
 
