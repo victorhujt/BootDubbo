@@ -232,5 +232,8 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
-
+    @RequestMapping(value = "/ofc/operDistiExcelAdditions")
+    public String excelAdditions(){
+        return "oper_distri_excel_additions";
+    }
 }
