@@ -66,7 +66,9 @@
             margin-right:2px;
             margin-bottom:0;
         }
-
+        #goodsInfoListDiv .help-block{
+            line-height:20px;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -398,7 +400,7 @@
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
                                 <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;color: #666 !important;" >
-                                    <i class="fa fa-user l-cor"></i>
+                                    <i class="fa fa-user l-cor bigger-130"></i>
                                 </button>
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
@@ -418,7 +420,7 @@
             </form>
 
             <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:360px;">
-                <div style="width:530px;margin-right:35px;float:left;">
+                <div style="width:515px;margin-right:35px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
                     </div>
@@ -657,14 +659,14 @@
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="margin-right:10px;float:left;padding-top:7px;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
                     <div>
-                        <div class="col-width-70" style="float:left;background:#eaedf1;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="float:left;padding-top:7px;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePaymentPartyV2" type="radio" class="ace" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">收货方</span>
@@ -674,7 +676,7 @@
                     <input id="transportType" type="hidden" name="transportType"/>
                     <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
                     <div>
-                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:31px;">支付方式</label>
+                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:34px;">支付方式</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-100">
                                 <select class="chosen-select form-control" id="payment" name="payment">
@@ -758,7 +760,7 @@
 </div>
 <div class="col-xs-12">
     <!-- #section:elements.tab.option -->
-    <div class="tabbable" style="width:1000px;" >
+    <div class="tabbable" >
     <#-- <ul class="nav nav-tabs" id="myTab4">
          <li class="active">
              <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
@@ -789,19 +791,19 @@
             <#--dynamic-table-->
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                    <tr role="row"><th class="center sorting_disabled" style="width:45px;" rowspan="1" colspan="1" aria-label="">
                         操作
                     </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
+                        <th class="" tabindex="0" style="width:120px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
+                        <th class="" tabindex="0" style="width:98px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
                         </th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
+                        <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
+                        <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费数量</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
@@ -871,6 +873,7 @@
     });
 
     function main(){
+        initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
@@ -1256,7 +1259,7 @@
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1277,7 +1280,7 @@
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="") || parseFloat($(obj).val())>9999){
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'>请检查相关金额</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1407,16 +1410,17 @@
         var typeId=$(obj).val();
         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
             data=eval(data);
-            $(obj).parent().next().children().empty();
+            $(obj).parent().next().children("select").empty();
             $.each(data,function (index,CscGoodsTypeVo) {
-                $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
+                $(obj).parent().next().children("select").append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
-            $(obj).parent().next().children().find("option").each(function() {
+            $(obj).parent().next().children("select").find("option").each(function() {
                 text = $(this).text();
-                if($(obj).parent().next().children().find("option:contains("+text+")")){
-                    $(obj).parent().next().children().find("option:contains("+text+"):gt(0)").remove();
+                if($(obj).parent().next().children("select").find("option:contains("+text+")")){
+                    $(obj).parent().next().children("select").find("option:contains("+text+"):gt(0)").remove();
                 }
             });
+            $(obj).parent().next().children("select").trigger("chosen:updated");
         });
     }
 
@@ -1424,7 +1428,7 @@
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value))) || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
             }else{
@@ -1811,19 +1815,19 @@
         goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                 "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
-                "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</button>"
+                "<a  class='blue no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</a>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
+                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
+                "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='unit' id='unit' type='text'/>"
+                "<input class='col-xs-12'  name='unit' id='unit' type='text'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<select  id='pack' name='pack'>"+
+                "<select  id='pack' class='chosen-select form-control' name='pack' style='width:80px;'>"+
                 "<option value='01'>纸箱</option>"+
                 "<option value='02'>木箱</option>"+
                 "<option value='03'>桶</option>"+
@@ -1839,22 +1843,23 @@
                 "<option value='13'>布袋</option></select>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<select  id='chargingWays' name='chargingWays' onchange='chargingWaysChange(this)'>"+
+                "<select  id='chargingWays' name='chargingWays' class='chosen-select form-control' style='width:75px;' onchange='chargingWaysChange(this)'>"+
                 "<option value='01'>件数</option>"+
                 "<option value='02'>重量Kg</option>"+
                 "<option value='03'>体积m³</option>"+
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='' id='' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
+                "<input class='col-xs-12'  name='' id='' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                "<input class=' col-xs-12'  name='' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                "<input class='col-xs-10 col-xs-12'  name='billingWeight' id='' type='text' onblur='checkBillingWeight(this)'/>"
+                "<input class='col-xs-12'  name='billingWeight' id='' type='text' onblur='checkBillingWeight(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
+        initChosen();
     }
 
     function checkConsignOrEe(){
@@ -1967,7 +1972,7 @@
                 var value=onlyNumber($(this).val());
                 if(value==""){
                     if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(this));
+                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(this));
                         $(this).parent().removeClass('has-info').addClass('has-error');
                         $(this).val("");
                     }else{
@@ -2416,9 +2421,9 @@
                 var groupId = $("#custGroupId").val();
                 var firstGoodsType = null;
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger' style='margin-top:5px;'>删除</button></td>";
+                goodsInfoListDiv = goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red' style='margin-top:5px;'>删除</a></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<select  id='goodsType' name='goodsType' onchange='goodsTypeParentChange(this)'>";
+                        "<select  id='goodsType' name='goodsType' class='chosen-select' style='width:100px;' onchange='goodsTypeParentChange(this)'>";
                 if($("#goodsInfoListDiv").find("tr").length<1){
 
                     CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(data) {
@@ -2443,10 +2448,11 @@
                         value = $(this).val();
                         goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
                     });
-
                 }
+                initChosen();
+
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<select  id='goodsCategory' name='goodsCategory'>";
+                        "<select  id='goodsCategory' name='goodsCategory' class='chosen-select form-control' style='width:80px;'>";
                 if($("#goodsInfoListDiv").find("tr").length<1){
                     if(null != firstGoodsType){
                         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":firstGoodsType},function(data) {
@@ -2472,8 +2478,12 @@
                     });
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
+
                 }
+
             }
+            initChosen();
+
         });
 
         $("#consignorName,#consigneeName").blur(function () {
@@ -2588,6 +2598,24 @@
 
     $("#merchandiser").editableSelect();
 
+    function initChosen() {
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        //resize the chosen on window resize
+        $(window).off('resize.chosen').on('resize.chosen', function () {
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
 </body>
