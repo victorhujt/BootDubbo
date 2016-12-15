@@ -64,11 +64,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
-    @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Autowired
-    private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     @Autowired
     private OfcPlannedDetailService ofcPlannedDetailService;
     @Autowired
@@ -97,8 +93,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
     @Autowired
     private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
-    @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
     @Autowired
@@ -508,7 +502,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException(companyList.getMessage(), ex);
             }
 
-            if(companyList.getCode()==200
+            if(companyList.getCode()==200 && companyList!=null
                     && !CollectionUtils.isEmpty(companyList.getResult())){
                 /**
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
@@ -1741,14 +1735,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //先判断是上门提货还是二次配送
         if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
             Wrapper<List<RmcPickup>> rmcPickupList = feignRmcPickUpOrRecipientAPIClient.queryPickUp(rmcDistrictQO);
-            if(rmcPickupList.getResult().size()>0){
+            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
                 return rmcPickupList.getResult().get(0);
             }else {
                 return null;
             }
         }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
             Wrapper<List<RmcRecipient>> RmcRecipientList = feignRmcPickUpOrRecipientAPIClient.queryRecipient(rmcDistrictQO);
-            if(RmcRecipientList.getResult().size()>0){
+            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
                 return RmcRecipientList.getResult().get(0);
             }else{
                 return null;

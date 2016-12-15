@@ -1,11 +1,14 @@
 package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcMobileOrder;
+import com.xescm.ofc.enums.OssFileUrlEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcMobileOrderDto;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.WrapMapper;
+import com.xescm.uam.utils.PubUtils;
+import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -13,9 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Created by hujintao on 2016/12/12.
@@ -74,5 +80,24 @@ public class OfcMobileOrderRest extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE,e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+    }
+
+    /**
+     * 获取录单记录
+     * @return
+     */
+    @RequestMapping(value="/queryOrderNotes", method = RequestMethod.POST)
+    @ResponseBody
+    public List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus){
+        ModelAndView modelAndView = new ModelAndView("");
+        List<OfcMobileOrder> ofcMobileOrder=new ArrayList<>();
+        try {
+            mobileOrderStatus=PubUtils.trimAndNullAsEmpty(mobileOrderStatus);
+            ofcMobileOrder=ofcMobileOrderService.queryOrderNotes(mobileOrderStatus);
+        }catch (Exception e){
+            modelAndView.addObject("info","查询失败");
+            logger.info("查询历史订单异常，{}",e.getMessage(),e);
+        }
+        return ofcMobileOrder;
     }
 }

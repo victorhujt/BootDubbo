@@ -7,14 +7,15 @@ import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.*;
+import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
+import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
+import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
@@ -49,19 +50,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Autowired
     private OfcOrderPlaceService ofcOrderPlaceService;
     @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-    @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Autowired
-    private FeignAddressInterfaceClient feignAddressInterfaceClient;
     @Autowired
     private FeignCscContactAPIClient feignCscContactAPIClient;
 
