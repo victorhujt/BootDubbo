@@ -1,11 +1,9 @@
 package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcMobileOrder;
-import com.xescm.ofc.enums.OssFileUrlEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcMobileOrderDto;
 import com.xescm.ofc.service.OfcMobileOrderService;
-import com.xescm.ofc.service.OssManagerService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.PubUtils;
@@ -17,13 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +26,6 @@ import java.util.List;
 @RestController
 public class OfcMobileOrderRest extends BaseController {
 
-  //  @Autowired
-   // private OfcMobileOrderService ofcMobileOrderService;
-
-    @Autowired
-    private OssManagerService ossManagerService;
 
     @Autowired
     private OfcMobileOrderService ofcMobileOrderService;
