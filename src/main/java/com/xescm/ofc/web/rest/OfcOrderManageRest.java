@@ -4,7 +4,6 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
@@ -52,8 +51,6 @@ public class OfcOrderManageRest extends BaseController{
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
     private FeignRmcCompanyAPIClient feignRmcCompanyAPIClient;
-    @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired

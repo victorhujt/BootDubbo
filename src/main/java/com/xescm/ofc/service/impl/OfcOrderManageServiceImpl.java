@@ -64,11 +64,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
-    @Autowired
     private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
-    @Autowired
-    private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
     @Autowired
     private OfcPlannedDetailService ofcPlannedDetailService;
     @Autowired
@@ -97,8 +93,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
     @Autowired
     private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
-    @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
     @Autowired

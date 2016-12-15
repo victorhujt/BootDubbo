@@ -2,12 +2,10 @@ package com.xescm.ofc.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
@@ -17,10 +15,8 @@ import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
-import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
@@ -50,11 +46,7 @@ import java.util.*;
 public class OfcOperationDistributingServiceImpl implements OfcOperationDistributingService {
 
     @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
     private OfcOrderPlaceService ofcOrderPlaceService;
-    @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
