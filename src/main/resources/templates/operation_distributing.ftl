@@ -769,7 +769,7 @@
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>"+
                         "<td>" + consignee.contactCompanyName + "</td>" +
-                        "<td><input style='border:1px solid #cacaca'/></td>" +
+                        "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca'/></td>" +//===
                         "<td>" + consignee.contactName + "</td>" +
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
@@ -1248,23 +1248,23 @@
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
                     if(contactList == 1){
-                        contactCompanyNameAuto = CscContantAndCompanyDto.contactCompanyName;
-                        contactNameAuto = CscContantAndCompanyDto.contactName;
+                        contactCompanyNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName);
+                        contactNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName);
                         //phoneAuto = CscContantAndCompanyDto.phone;
-                        detailAddressAuto = CscContantAndCompanyDto.detailAddress;
-                        typeAuto = CscContantAndCompanyDto.type;
-                        contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanySerialNo;
-                        contactCodeAuto = CscContantAndCompanyDto.contactSerialNo;//000
-                        phoneAuto = CscContantAndCompanyDto.phone;
-                        provinceAuto = CscContantAndCompanyDto.province;
-                        provinceNameAuto = CscContantAndCompanyDto.provinceName;
-                        cityAuto = CscContantAndCompanyDto.city;
-                        cityNameAuto = CscContantAndCompanyDto.cityName;
-                        areaAuto = CscContantAndCompanyDto.area;
-                        areaNameAuto = CscContantAndCompanyDto.areaName;
-                        streetAuto = CscContantAndCompanyDto.street;
-                        streetNameAuto = CscContantAndCompanyDto.streetName;
-                        addressAuto = CscContantAndCompanyDto.address;
+                        detailAddressAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress);
+                        typeAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.type);
+                        contactCompanyIdAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo);
+                        contactCodeAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo);//000
+                        phoneAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.phone);
+                        provinceAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.province);
+                        provinceNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName);
+                        cityAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.city);
+                        cityNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName);
+                        areaAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.area);
+                        areaNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName);
+                        streetAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.street);
+                        streetNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName);
+                        addressAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.address);
                     }
                     if(contactList > 1){
                         return true;
@@ -1551,7 +1551,7 @@
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='" + consigneeCustOrderCode + "' /></td>";
+            consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1604,7 +1604,7 @@
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
                 consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
-                consignorout =consignorout + "<td><input /></td>";
+                consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)'  /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -2206,6 +2206,10 @@
             obj.value = obj.value.replace(/\d$/gi,'');
         }
 
+    }
+
+    function onlyNumAndAbc(value){
+        return value = value.replace(/[^\w]/ig,'');
     }
 
 </script>

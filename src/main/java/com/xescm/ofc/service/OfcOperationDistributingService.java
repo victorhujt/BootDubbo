@@ -17,6 +17,6 @@ public interface OfcOperationDistributingService {
     Wrapper<?> validateCustOrderCode(JSONArray jsonArray);
     Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, AuthResDto authResDto, String customerCode, Integer staticCell);
     List<String> getExcelSheet(MultipartFile uploadFile, String suffix);
-
     void validateOperationDistributingMsg(OfcOrderDTO ofcOrderDTO);
+    String distributingOrderPlace(JSONArray jsonArray,AuthResDto authResDtoByToken,String batchNumber);
 }

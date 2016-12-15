@@ -43,11 +43,7 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-    @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
-    @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
     @Autowired

@@ -2,10 +2,9 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerCodeDto;
@@ -15,7 +14,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
@@ -395,7 +393,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else if("manage".equals(tag)){
             return "您的订单修改成功!";
         }else {
-            return "异常";
+            return ResultCodeEnum.ERROROPER.getName();
         }
     }
 

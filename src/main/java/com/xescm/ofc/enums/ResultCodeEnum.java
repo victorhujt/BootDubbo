@@ -1,9 +1,10 @@
 package com.xescm.ofc.enums;
 
 public enum ResultCodeEnum {
-	UNDEFINED("EC000000", "未定义错误."),
+	UNDEFINED("UEC000000", "未定义错误."),
 
 	//系统异常
+	ERROROPER("SEC000001","用户操作异常"),
 
 
 	//业务异常
