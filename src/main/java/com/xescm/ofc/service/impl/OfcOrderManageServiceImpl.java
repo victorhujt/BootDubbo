@@ -508,7 +508,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException(companyList.getMessage(), ex);
             }
 
-            if(companyList.getCode()==200
+            if(companyList.getCode()==200 && companyList!=null
                     && !CollectionUtils.isEmpty(companyList.getResult())){
                 /**
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
