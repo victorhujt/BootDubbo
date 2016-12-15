@@ -25,7 +25,8 @@
             outline:none;
             position:absolute;
             top:0;
-            right:0
+            right:0;
+            padding:7px 9px;
         }
         .initBtn:hover{
             background:#fff !important;
@@ -55,9 +56,9 @@
                 <div style="width:310px;margin-right:15px;" class="padding-12 y-float position-relative">
                     <input readonly="readonly" id="custName" class="y-float" style="width:265px;" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
-                    <button type="button" class="initBtn" onclick="selectCust();">
-                        <i class="fa fa-search"></i>
-                    </button>
+                    <label for="custName" class="initBtn" onclick="selectCust();">
+                        <i class="fa fa-user bigger-130"></i>
+                    </label>
                   <#--  <button type="button" style="height:34px;" onclick="selectCust();" class="btn btn-minier no-padding-right initBtn" id="">
                         <i class="fa fa-user l-cor"></i>
                     </button>-->
@@ -84,16 +85,16 @@
                 <div class="padding-12 y-float" style="width:325px;">
                     <div class="y-float position-relative">
                         <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <button type="button" class="initBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <label for="startDate" class="initBtn">
+                            <i class="fa fa-calendar bigger-130"></i>
+                        </label>
                     </div>
                    <p class="y-float" style="margin:0 3px;line-height:34px;">至</p>
                     <div class="y-float position-relative">
                         <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <button type="button" class="initBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <label for="endDate" class="initBtn">
+                            <i class="fa fa-calendar bigger-130"></i>
+                        </label>
                     </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
