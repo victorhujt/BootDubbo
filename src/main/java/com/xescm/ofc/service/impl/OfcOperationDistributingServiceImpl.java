@@ -3,6 +3,8 @@ package com.xescm.ofc.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
@@ -10,12 +12,14 @@ import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
+import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.JsonUtil;
 import com.xescm.ofc.utils.PubUtils;
@@ -33,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -47,11 +52,14 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
+    private OfcOrderPlaceService ofcOrderPlaceService;
+    @Autowired
     private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private FeignCscContactAPIClient feignCscContactAPIClient;
+
 
     @Override
     /**
@@ -754,6 +762,45 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     }
 
+    /**
+     * 城配开单批量下单入口
+     * @param jsonArray
+     * @return
+     */
+    @Override
+    @Transactional
+    public String distributingOrderPlace(JSONArray jsonArray,AuthResDto authResDtoByToken,String batchNumber) {
+        String resultMessage = null;
+        for(int i = 0; i < jsonArray.size(); i ++){
+            String json = jsonArray.get(i).toString();
+            OfcOrderDTO ofcOrderDTO = null;
+            try {
+                ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            validateOperationDistributingMsg(ofcOrderDTO);
+            String orderGoodsListStr = null;
+            try {
+                orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
+            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
+                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
+            }
+            CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
+            CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
+            ofcOrderDTO.setOrderBatchNumber(batchNumber);
+            resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
+                    ,consignor,consignee,new CscSupplierInfoDto());
+            if(ResultCodeEnum.ERROROPER.getName().equals(resultMessage)){
+                return resultMessage;
+            }
+        }
+        return resultMessage;
+    }
 
 
 }

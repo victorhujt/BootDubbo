@@ -86,22 +86,7 @@ public class OfcOperationDistributing extends BaseController{
             if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
                 return validateCustOrderCodeResult;
             }
-            for(int i = 0; i < jsonArray.size(); i ++){
-                String json = jsonArray.get(i).toString();
-                OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
-                ofcOperationDistributingService.validateOperationDistributingMsg(ofcOrderDTO);
-                String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
-                AuthResDto authResDtoByToken = getAuthResDtoByToken();
-                List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
-                    ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
-                }
-                CscContantAndCompanyDto consignor = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
-                CscContantAndCompanyDto consignee = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
-                ofcOrderDTO.setOrderBatchNumber(batchNumber);
-                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
-                        ,consignor,consignee,new CscSupplierInfoDto());
-            }
+            resultMessage = ofcOperationDistributingService.distributingOrderPlace(jsonArray,getAuthResDtoByToken(),batchNumber);
         } catch (BusinessException ex){
             logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());

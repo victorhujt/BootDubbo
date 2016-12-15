@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
@@ -395,7 +396,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else if("manage".equals(tag)){
             return "您的订单修改成功!";
         }else {
-            return "异常";
+            return ResultCodeEnum.ERROROPER.getName();
         }
     }
 
