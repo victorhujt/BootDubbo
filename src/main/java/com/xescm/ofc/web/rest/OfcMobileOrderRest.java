@@ -1,14 +1,12 @@
 package com.xescm.ofc.web.rest;
 
 import com.xescm.ofc.domain.OfcMobileOrder;
-import com.xescm.ofc.enums.OssFileUrlEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcMobileOrderDto;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.PubUtils;
-import com.xescm.uam.utils.PublicUtil;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,12 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hujintao on 2016/12/12.
@@ -34,7 +30,7 @@ public class OfcMobileOrderRest extends BaseController {
     @Autowired
     private OfcMobileOrderService ofcMobileOrderService;
 
-    @RequestMapping(value = "mobileOrder/saveMobileOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "/mobileOrder/saveMobileOrder", method = RequestMethod.POST)
     @ApiOperation(value = "保存手机订单信息", response = Wrapper.class)
     public Wrapper<?> saveMobileOrder(@ApiParam(name = "ofcMobileOrderDto", value = "手机订单信息") @RequestBody  OfcMobileOrderDto ofcMobileOrderDto) {
         logger.debug("==>保存拍照录单信息 mobileOrder={}", ofcMobileOrderDto);
@@ -60,7 +56,7 @@ public class OfcMobileOrderRest extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value="mobileOrder/queryMobileOrderByCode", method = RequestMethod.POST)
+    @RequestMapping(value="/mobileOrder/queryMobileOrderByCode", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "通过流水号查询手机订单信息", notes = "返回包装手机订单信息json", response = Wrapper.class)
     private Wrapper<?> queryMobileOrderByCode(@ApiParam(name ="ofcMobileOrderDto", value = "手机订单信息") @RequestBody OfcMobileOrderDto ofcMobileOrderDto){
@@ -87,8 +83,10 @@ public class OfcMobileOrderRest extends BaseController {
      * @return
      */
     @RequestMapping(value="/queryOrderNotes", method = RequestMethod.POST)
+    @ApiOperation(value = "根据状态查询手机订单",response = Wrapper.class)
     @ResponseBody
-    public List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus){
+    public List<OfcMobileOrder> queryOrderNotes( @ApiParam(name="mobileOrderStatus", value = "手机订单状态")  String mobileOrderStatus){
+
         ModelAndView modelAndView = new ModelAndView("");
         List<OfcMobileOrder> ofcMobileOrder=new ArrayList<>();
         try {
