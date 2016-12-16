@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class FeignOfcDistributionAPIClient {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscWarehouseAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeignOfcDistributionAPIClient.class);
     @Resource
     RestConfig restConfig;
     @Resource

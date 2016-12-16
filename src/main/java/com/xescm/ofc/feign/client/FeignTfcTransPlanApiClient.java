@@ -8,6 +8,7 @@ import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.utils.Response;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.net.ConnectException;
 
 /**
  * Created by lyh on 2016/11/15.
@@ -45,8 +47,12 @@ public class FeignTfcTransPlanApiClient {
         }
         try {
             response = getApi().cancelTransport(transportNoDTO);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+        } catch (RetryableException ex) {
+            logger.error("调用TFC取消运输计划单发生异常！", ex);
+            throw new BusinessException("调用TFC取消运输计划单发生异常！");
+        } catch (Exception ex){
+            logger.error("调用TFC取消运输计划单发生未知异常", ex);
+            throw new BusinessException("调用TFC取消运输计划单发生未知异常");
         }
 
         return response;
