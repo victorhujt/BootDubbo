@@ -159,7 +159,7 @@ public class OfcJumpontroller extends BaseController{
         map.put("historyUrl",historyUrl);
         map.put("customerCode",customerCode);
         map.put("custName",custName);
-        List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        /*List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
         CscGoodsImportDto cscGoodsImportDto = null;
         cscGoodsImportDto = new CscGoodsImportDto();
         cscGoodsImportDto.setGoodsCode("GN0001");
@@ -194,7 +194,7 @@ public class OfcJumpontroller extends BaseController{
         cscContantAndCompanyInportDto.setCustCode(customerCode);
         cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
         String cscContantAndCompanyInportDtos = JSONUtils.objectToJson(cscContantAndCompanyInportDtoList);
-        map.put("cscContantAndCompanyInportDtos",cscContantAndCompanyInportDtos);
+        map.put("cscContantAndCompanyInportDtos",cscContantAndCompanyInportDtos);*/
         return "operation_distributing_excel";
     }
 
