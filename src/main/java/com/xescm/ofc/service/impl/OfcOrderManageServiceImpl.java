@@ -671,7 +671,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcPlannedDetail ofcPlannedDetail=new OfcPlannedDetail();
         try {
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcDistributionBasicInfo);
-            BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
+            if (ofcFinanceInformation != null) {
+                BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFinanceInformation);
+            }
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
             ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
