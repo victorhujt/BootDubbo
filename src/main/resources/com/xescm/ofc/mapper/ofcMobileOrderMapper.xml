@@ -21,4 +21,12 @@
     <result column="img3_url" property="img3Url" jdbcType="VARCHAR" />
     <result column="img4_url" property="img4Url" jdbcType="VARCHAR" />
   </resultMap>
+
+  <select id="queryOrderNotes" resultType="com.xescm.ofc.domain.OfcMobileOrder">
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.buniess_type,
+    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
+    omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
+    FROM ofc_mobile_order omo where omo.mobile_order_status=#{mobileOrderStatus}
+    ORDER BY omo.upload_date DESC LIMIT 20
+  </select>
 </mapper>

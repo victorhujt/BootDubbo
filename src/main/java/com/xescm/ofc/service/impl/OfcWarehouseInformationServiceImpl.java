@@ -56,11 +56,13 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
         try{
             CscWarehouse cscWarehouse = new CscWarehouse();
             cscWarehouse.setCustomerCode(customerCode);
+            logger.info("###################################当前的客户编码为："+customerCode);
             Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
             if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
             }
             List<CscWarehouse> result = cscWarehouseByCustomerId.getResult();
+            logger.info("###############################查询该客户对应的仓库信息为："+result+"###########");
             if(null == result){
                 return new ArrayList<>();
             }
