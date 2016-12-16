@@ -1773,14 +1773,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseName()).equals("")){
             ofcTransplanInfo.setShippinCustomerName(rmcWarehouse.getWarehouseName());
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getDetailedAddress()).equals("")){
-            ofcTransplanInfo.setShippingAddress(rmcWarehouse.getDetailedAddress());
+        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getDetailAddress()).equals("")){
+            ofcTransplanInfo.setShippingAddress(rmcWarehouse.getDetailAddress());
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getContact()).equals("")){
-            ofcTransplanInfo.setShippingCustomerContact(rmcWarehouse.getContact());
+        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getContactName()).equals("")){
+            ofcTransplanInfo.setShippingCustomerContact(rmcWarehouse.getContactName());
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getContacthone()).equals("")){
-            ofcTransplanInfo.setCustomerContactPhone(rmcWarehouse.getContacthone());
+        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getPhone()).equals("")){
+            ofcTransplanInfo.setCustomerContactPhone(rmcWarehouse.getPhone());
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getProvince()).equals("")){
             ofcTransplanInfo.setDepartureProvince(rmcWarehouse.getProvince());
@@ -1815,14 +1815,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseName()).equals("")){
             ofcTransplanInfo.setReceivingCustomerName(rmcWarehouse.getWarehouseName());
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getDetailedAddress()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerAddress(rmcWarehouse.getDetailedAddress());
+        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getDetailAddress()).equals("")){
+            ofcTransplanInfo.setReceivingCustomerAddress(rmcWarehouse.getDetailAddress());
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getContact()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerContact(rmcWarehouse.getContact());
+        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getContactName()).equals("")){
+            ofcTransplanInfo.setReceivingCustomerContact(rmcWarehouse.getContactName());
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getContacthone()).equals("")){
-            ofcTransplanInfo.setReceivingCustomerContactPhone(rmcWarehouse.getContacthone());
+        if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getPhone()).equals("")){
+            ofcTransplanInfo.setReceivingCustomerContactPhone(rmcWarehouse.getPhone());
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getProvince()).equals("")){
             ofcTransplanInfo.setDestinationProvince(rmcWarehouse.getProvince());
