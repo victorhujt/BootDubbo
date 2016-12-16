@@ -16,6 +16,7 @@
     </style>
     <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
 </head>
+<span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
 <!--goods&Consigee-->
 <div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
     <div class="modal-body">
@@ -208,6 +209,14 @@
 </div>
 
 
+<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" id="goodsJsonStr">${goodsJsonStr!""}</textarea>
+    <button type="submit">货品批量添加测试</button>
+</form>
+<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchCustomerImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos">${cscContantAndCompanyInportDtos!""}</textarea>
+    <button type="submit">收货方批量添加测试</button>
+</form>
 <script type="text/javascript">
     var scripts = [null,
         "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -239,6 +248,7 @@
     }
 
     var ofc_url = $("#ofc_url").html();
+    var csc_url = $("#csc_url").html();
     var ofc_web_url = $("#ofc_web_url").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
