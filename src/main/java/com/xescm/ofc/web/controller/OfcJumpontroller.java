@@ -3,8 +3,6 @@ package com.xescm.ofc.web.controller;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
@@ -229,6 +227,18 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    @RequestMapping(value = "ofc/mobileOrderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView mobileOrderManageOpera(Model model) {
+        ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+
+
+
+
 
     @RequestMapping(value = "/ofc/operDistiExcelAdditions")
     public String excelAdditions(){
