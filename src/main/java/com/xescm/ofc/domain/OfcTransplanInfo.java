@@ -318,6 +318,12 @@ public class OfcTransplanInfo {
     private String transportType;
 
     /**
+     * 基地名称(电商)
+     */
+    @Column(name = "base_name")
+    private String baseName;
+
+    /**
      * 获取计划单编号
      *
      * @return plan_code - 计划单编号
@@ -1242,5 +1248,23 @@ public class OfcTransplanInfo {
      */
     public void setTransportType(String transportType) {
         this.transportType = transportType;
+    }
+
+    /**
+     * 获取基地名称(电商)
+     *
+     * @return base_name - 基地名称(电商)
+     */
+    public String getBaseName() {
+        return baseName;
+    }
+
+    /**
+     * 设置基地名称(电商)
+     *
+     * @param baseName 基地名称(电商)
+     */
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
     }
 }
