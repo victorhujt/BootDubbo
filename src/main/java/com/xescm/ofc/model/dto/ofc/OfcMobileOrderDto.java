@@ -33,7 +33,7 @@ private String mobileOrderCode;
     /**
      * 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    private String buniessType;
+    private String businessType;
 
     /**
      * 运输单号
@@ -175,17 +175,17 @@ private String mobileOrderCode;
      *
      * @return buniess_type - 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    public String getBuniessType() {
-        return buniessType;
+    public String getBusinessType() {
+        return businessType;
     }
 
     /**
      * 设置业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      *
-     * @param buniessType 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
+     * @param businessType 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    public void setBuniessType(String buniessType) {
-        this.buniessType = buniessType;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     /**

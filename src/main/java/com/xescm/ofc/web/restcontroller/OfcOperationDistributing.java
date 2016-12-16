@@ -95,7 +95,12 @@ public class OfcOperationDistributing extends BaseController{
             logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex){
-            logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
+            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                logger.error("运营中心城配开单批量下单由于单号发生重复导致失败!{}",ex.getMessage(),ex);
+                throw new BusinessException("运营中心城配开单批量下单由于单号发生重复导致失败!", ex);
+            } else {
+                logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
+            }
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"运营中心城配开单批量下单失败!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);

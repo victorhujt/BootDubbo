@@ -237,130 +237,128 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
         OfcPlannedDetail ofcPlannedDetail=null;
         try {
-            BeanUtils.copyProperties(ofcTransplanInfo,ofcFundamentalInformation);
-            BeanUtils.copyProperties(ofcTransplanInfo,ofcDistributionBasicInfo);
-            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
+            BeanUtils.copyProperties(ofcTransplanInfo, ofcFundamentalInformation);
+            BeanUtils.copyProperties(ofcTransplanInfo, ofcDistributionBasicInfo);
+            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP", 6));
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userName);
             ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
-            BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);//$$$$
-            BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
-            BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
-            BeanUtils.copyProperties(ofcTransplanNewstatus,ofcTransplanInfo);
+            BeanUtils.copyProperties(ofcTraplanSourceStatus, ofcDistributionBasicInfo);//$$$$
+            BeanUtils.copyProperties(ofcTraplanSourceStatus, ofcTransplanInfo);
+            BeanUtils.copyProperties(ofcTransplanStatus, ofcTransplanInfo);
+            BeanUtils.copyProperties(ofcTransplanNewstatus, ofcTransplanInfo);
             ofcTransplanStatus.setPlannedSingleState(ZIYUANFENPEIZ);
 //            ofcTransplanNewstatus.setTransportSingleLatestStatus(ofcTransplanStatus.getPlannedSingleState());
 //            ofcTransplanNewstatus.setTransportSingleUpdateTime(ofcTransplanInfo.getCreationTime());
             ofcTraplanSourceStatus.setResourceAllocationStatus(DAIFENPEI);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
-            Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
-            List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
-            while(iter.hasNext())
-            {
-                ofcPlannedDetail=new OfcPlannedDetail();
+            Map<String, List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
+            List<OfcPlannedDetail> ofcPlannedDetailList = new ArrayList<>();
+            while (iter.hasNext()) {
+                ofcPlannedDetail = new OfcPlannedDetail();
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
+                BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
+                BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
                 ofcPlannedDetailList.add(ofcPlannedDetail);
                 ofcPlannedDetailService.save(ofcPlannedDetail);
                 logger.debug("计划单明细保存成功");
             }
-            if(ofcPlannedDetailList.size()>0){
-                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
+            if (ofcPlannedDetailList.size() > 0) {
+                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(), ofcPlannedDetailList);
             }
-            RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
-            if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
-                    && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")){
+            RmcCompanyLineQO rmcCompanyLineQO = new RmcCompanyLineQO();
+            if (!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
+                && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("601")) {
 
-                if(!PubUtils.isSEmptyOrNull(ofcTransplanInfo.getDeparturePlaceCode()) && ofcTransplanInfo.getDeparturePlaceCode().length() > 12){
-                    String depatrueCode = ofcTransplanInfo.getDeparturePlaceCode().substring(0,13);
-                    String destinationCode = ofcTransplanInfo.getDestinationCode().substring(0,13);
-                    if(depatrueCode.equals(destinationCode)){
+                if (!PubUtils.isSEmptyOrNull(ofcTransplanInfo.getDeparturePlaceCode()) && ofcTransplanInfo.getDeparturePlaceCode().length() > 12) {
+                    String depatrueCode = ofcTransplanInfo.getDeparturePlaceCode().substring(0, 13);
+                    String destinationCode = ofcTransplanInfo.getDestinationCode().substring(0, 13);
+                    if (depatrueCode.equals(destinationCode)) {
                         ofcTransplanInfo.setBusinessType("600");
                         rmcCompanyLineQO.setLineType("2");
-                    }else {
+                    } else {
                         ofcTransplanInfo.setBusinessType("601");
                         rmcCompanyLineQO.setLineType("1");
                     }
-                }else{
+                } else {
                     throw new BusinessException("四级地址编码为空!");
                 }
-            }else if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")){
+            } else if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")) {
                 rmcCompanyLineQO.setLineType("2");
-            }else{
+            } else {
                 rmcCompanyLineQO.setLineType("1");
             }
             rmcCompanyLineQO.setBeginCityName(ofcTransplanInfo.getDepartureCity());
             rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
             Wrapper<List<RmcCompanyLineVo>> companyList = null;
-            try{
+            try {
                 companyList = companySelByApi(rmcCompanyLineQO);
 
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 throw new BusinessException(companyList.getMessage(), ex);
             }
 
-            if(companyList.getCode()==200
-                    && !CollectionUtils.isEmpty(companyList.getResult())){
+            if (companyList.getCode() == 200
+                && !CollectionUtils.isEmpty(companyList.getResult())) {
                 /**
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
                  */
-                if("4".equals(ofcFundamentalInformation.getPlatformType())){
+                if ("4".equals(ofcFundamentalInformation.getPlatformType())) {
                     ofcTransplanInfo.setSingleSourceOfTransport("6001");
-                }else if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())){
+                } else if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())) {
                     ofcTransplanInfo.setSingleSourceOfTransport("6003");
-                }else{
+                } else {
                     ofcTransplanInfo.setSingleSourceOfTransport("6003");
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()).equals("")) {
                     ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorName()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorName()).equals("")) {
                     ofcTransplanInfo.setShippinCustomerName(ofcDistributionBasicInfo.getConsignorName());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactName()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactName()).equals("")) {
                     ofcTransplanInfo.setShippingCustomerContact(ofcDistributionBasicInfo.getConsignorContactName());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactPhone()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactPhone()).equals("")) {
                     ofcTransplanInfo.setCustomerContactPhone(ofcDistributionBasicInfo.getConsignorContactPhone());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()).equals("")) {
                     ofcTransplanInfo.setReceivingCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()).equals("")) {
                     ofcTransplanInfo.setReceivingCustomerName(ofcDistributionBasicInfo.getConsigneeName());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()).equals("")) {
                     ofcTransplanInfo.setReceivingCustomerContact(ofcDistributionBasicInfo.getConsigneeContactName());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()).equals("")) {
                     ofcTransplanInfo.setReceivingCustomerContactPhone(ofcDistributionBasicInfo.getConsigneeContactPhone());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDeparturePlace()).equals("")) {
                     ofcTransplanInfo.setShippingAddress(ofcDistributionBasicInfo.getDeparturePlace());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()).equals("")) {
                     ofcTransplanInfo.setReceivingCustomerAddress(ofcDistributionBasicInfo.getDestination());
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()).equals("")) {
                     ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
                 }
-
-                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")) {
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if(cubage.length==3){
+                    if (cubage.length == 3) {
                         BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
                         ofcTransplanInfo.setVolume(volume);//$$$
-                    }else{
+                    } else {
                         throw new BusinessException("体积串格式不正确,长宽高都必须填入");
                     }
                 }
-                if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
+                if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")) {
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
                 }
 
-                RmcCompanyLineVo rmcCompanyLineVo=companyList.getResult().get(0);
+                RmcCompanyLineVo rmcCompanyLineVo = companyList.getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
@@ -368,41 +366,41 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatus.setResourceConfirmation(ofcFundamentalInformation.getCustName());
                 ofcTraplanSourceStatus.setResourceConfirmationTime(new Date());
 
-                String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
-                if(businessType.equals("600") || businessType.equals("601")){
-                    OrderScreenCondition condition=new OrderScreenCondition();
+                String businessType = PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
+                if (businessType.equals("600") || businessType.equals("601")) {
+                    OrderScreenCondition condition = new OrderScreenCondition();
                     condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
-                    OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+                    OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
                     ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
                     ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                     ofcOrderStatus.setStatusDesc("执行中");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                            +" "+"订单开始执行");
+                        + " " + "订单开始执行");
                     ofcOrderStatus.setOperator(userName);
                     ofcOrderStatus.setLastedOperTime(new Date());
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
-                if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")){
-                    RmcDistrictQO rmcDistrictQO=new RmcDistrictQO();
-                    rmcDistrictQO=copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(),rmcDistrictQO);
-                    RmcPickup rmcPickup=(RmcPickup)RmcPickUpOrRecipientByRmcApi(rmcDistrictQO,"Pickup");
-                    if(rmcPickup!=null
-                            && !PubUtils.trimAndNullAsEmpty(rmcPickup.getDispatchCode()).equals("")){
+                if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")) {
+                    RmcDistrictQO rmcDistrictQO = new RmcDistrictQO();
+                    rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcDistrictQO);
+                    RmcPickup rmcPickup = (RmcPickup) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "Pickup");
+                    if (rmcPickup != null
+                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getDispatchCode()).equals("")) {
                         ofcTransplanInfo.setBaseId(rmcPickup.getDispatchCode());
                     }
                 }
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
                 ofcTransplanInfoList.add(ofcTransplanInfo);
-                if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)){
+                if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)) {
                     //向TFC推送
                     logger.debug("计划单最新状态保存成功");
                     ofcTransplanStatusService.save(ofcTransplanStatus);
-                    ofcTransplanInfoToTfc(ofcTransplanInfoList,ofcPlannedDetailMap,userName);
-                }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)){
+                    ofcTransplanInfoToTfc(ofcTransplanInfoList, ofcPlannedDetailMap, userName);
+                } else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)) {
                     //如果是卡班订单,则应该向DMS推送卡班订单
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
-                    pushKabanOrderToDms(ofcDistributionBasicInfo,ofcTransplanInfo);
+                    pushKabanOrderToDms(ofcDistributionBasicInfo, ofcTransplanInfo);
                     //订单推送结算中心, 这期不上
                     //pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
 
@@ -414,8 +412,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 logger.debug("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
                 logger.debug("计划单资源状态保存成功");
-            }else{
-                if(CollectionUtils.isEmpty(companyList.getResult())){
+            } else {
+                if (CollectionUtils.isEmpty(companyList.getResult())) {
                     throw new BusinessException("没有查询到相关服务商!");
                 }
                 throw new BusinessException(companyList.getMessage());
@@ -428,9 +426,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             //更改计划单状态为执行中//###
 
 
-
-        }catch (Exception e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (BusinessException ex ) {
+            throw ex;
+        } catch (Exception ex) {
+            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
+            } else {
+                throw new BusinessException("保存计划单信息发生错误！", ex);
+            }
         }
     }
 
@@ -581,7 +584,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanInfoService.save(ofcTransplanInfo);
                     logger.debug("计划单信息保存成功");
                 } catch (Exception ex) {
-                    if (ex.getMessage().trim().startsWith("Duplicate entry")) {
+                    if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                         throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
                     } else {
                         throw new BusinessException("保存计划单信息发生错误！", ex);
@@ -602,6 +605,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&*/
 
             //更改计划单状态为执行中//###
+        } catch (BusinessException ex) {
+            throw ex;
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -710,7 +715,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcSiloproSourceStatusService.save(ofcSiloproSourceStatus);
             logger.debug("计划单资源状态保存成功");
         } catch (Exception e) {
-            throw new BusinessException(e.getMessage());
+            throw new BusinessException(e.getMessage(), e);
         }
         return planCode;
     }

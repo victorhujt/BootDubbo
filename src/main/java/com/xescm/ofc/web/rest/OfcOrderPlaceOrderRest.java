@@ -195,11 +195,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             }
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
-       }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
             
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
