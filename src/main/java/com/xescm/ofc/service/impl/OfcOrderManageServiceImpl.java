@@ -699,7 +699,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcSiloproSourceStatusService.save(ofcSiloproSourceStatus);
             logger.debug("计划单资源状态保存成功");
         } catch (Exception e) {
-            throw new BusinessException(e.getMessage());
+            throw new BusinessException(e.getMessage(), e);
         }
         return planCode;
     }
