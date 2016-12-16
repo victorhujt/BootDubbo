@@ -1246,7 +1246,7 @@
         if($("#businessType").val() == 602){
             $(".toggle").css({"display":"inline-block"})
         }else{
-          $(".toggle").css({"display":"none"});
+            $(".toggle").css({"display":"none"});
         };
     })
 
@@ -2053,7 +2053,7 @@
                         case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
-                    if(tableRows = 1 && tableCells = 1){
+                    if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = orderGoods.goodsType;
                     }
                 }
