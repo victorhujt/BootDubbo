@@ -324,6 +324,18 @@ public class OfcTransplanInfo {
     private String baseName;
 
     /**
+     * 货品种类
+     */
+    @Column(name = "goods_type")
+    private String goodsType;
+
+    /**
+     * 货主名称
+     */
+    @Column(name = "cust_name")
+    private String custName;
+
+    /**
      * 获取计划单编号
      *
      * @return plan_code - 计划单编号
@@ -1266,5 +1278,41 @@ public class OfcTransplanInfo {
      */
     public void setBaseName(String baseName) {
         this.baseName = baseName;
+    }
+
+    /**
+     * 获取货品种类
+     *
+     * @return goods_type - 货品种类
+     */
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    /**
+     * 设置货品种类
+     *
+     * @param goodsType 货品种类
+     */
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    /**
+     * 获取货主名称
+     *
+     * @return cust_name - 货主名称
+     */
+    public String getCustName() {
+        return custName;
+    }
+
+    /**
+     * 设置货主名称
+     *
+     * @param custName 货主名称
+     */
+    public void setCustName(String custName) {
+        this.custName = custName;
     }
 }

@@ -57,6 +57,8 @@
     <result column="merchandiser" jdbcType="VARCHAR" property="merchandiser" />
     <result column="transport_type" jdbcType="VARCHAR" property="transportType" />
     <result column="base_name" jdbcType="VARCHAR" property="baseName" />
+    <result column="goods_type" jdbcType="VARCHAR" property="goodsType" />
+    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
   </resultMap>
 
 

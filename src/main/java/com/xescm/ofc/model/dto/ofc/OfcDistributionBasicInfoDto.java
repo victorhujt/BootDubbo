@@ -21,6 +21,16 @@ public class OfcDistributionBasicInfoDto implements Serializable{
     private String custName;
 
     /**
+     * 货品类别,第一个货品的大类
+     */
+    private String goodsType;
+
+    /**
+     * 备注
+     */
+    private String notes;
+
+    /**
      * 运输单号
      */
     private String transCode;
@@ -241,11 +251,11 @@ public class OfcDistributionBasicInfoDto implements Serializable{
     private Date operTime;
 
     /**
-     * 收货方联系人电话
+     * 发货方联系人电话
      */
     private String consignorContactPhone;
     /**
-     * 发货方联系人电话
+     * 收货方联系人电话
      */
     private String consigneeContactPhone;
 
@@ -615,5 +625,21 @@ public class OfcDistributionBasicInfoDto implements Serializable{
 
     public void setConsigneeContactPhone(String consigneeContactPhone) {
         this.consigneeContactPhone = consigneeContactPhone;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
