@@ -2045,6 +2045,9 @@
                         case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
+                    if(tableRows = 1 && tableCells = 1){
+                        jsonStr.goodsType = orderGoods.goodsType;
+                    }
                 }
                 if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;

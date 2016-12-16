@@ -9,6 +9,7 @@ import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
+import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
@@ -345,6 +346,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()).equals("")){
                     ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
                 }
+
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
                     String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
                     if(cubage.length==3){
@@ -556,7 +558,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setLastedOperTime(new Date());
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
-
+                if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getNotes()).equals("")){
+                    ofcTransplanInfo.setNotes(ofcFundamentalInformation.getNotes());
+                }
+                if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()).equals("")){
+                    ofcTransplanInfo.setGoodsType(ofcDistributionBasicInfo.getGoodsType());
+                }
                 if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHECITY)){//卡班拆城配
                     //向TFC推送
                     logger.debug("计划单状态保存成功");
@@ -605,7 +612,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcDistributionBasicInfo
      */
     private void pushKabanOrderToDms(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcTransplanInfo ofcTransplanInfo) {
-        OfcDistributionBasicInfo pushDistributionBasicInfo = new OfcDistributionBasicInfo();
+        OfcDistributionBasicInfoDto pushDistributionBasicInfo = new OfcDistributionBasicInfoDto();
         try {
             BeanUtils.copyProperties(pushDistributionBasicInfo,ofcDistributionBasicInfo);
         } catch (Exception e) {
@@ -619,6 +626,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else{
                 throw new BusinessException("体积串格式不正确,长宽高都必须填入");
             }
+        }
+        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getNotes()).equals("")){
+            pushDistributionBasicInfo.setNotes(ofcTransplanInfo.getNotes());
+        }
+        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustName()).equals("")){
+            pushDistributionBasicInfo.setCustName(ofcTransplanInfo.getCustName());
         }
         Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){
