@@ -16,9 +16,9 @@
                 <label class="control-label col-label no-padding-right" style="margin-right:20px;" for="name">上传日期</label>
                 <div class="y-float">
                     <div class="clearfix">
-                        <input id="orderTimePre" name="orderTimePre" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <input id="orderTimePre" name="startDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                         <label class="control-label col-label no-padding-right y-float" style="margin:0 20px;text-align:center;" for="name">至</label>
-                        <input id="orderTimeSuf" name="orderTimeSuf" type="search" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                     </div>
                 </div>
                 <div class="form-group">
@@ -181,8 +181,8 @@
             param.pageSize = 10;
             var orderTimePre = $('#orderTimePre').val();
             var orderTimeSuf = $('#orderTimeSuf').val();
-            param.orderTimePre = orderTimePre;
-            param.orderTimeSuf = orderTimeSuf;
+            param.startDate = orderTimePre;
+            param.endDate = orderTimeSuf;
             param.mobileOrderStatus = $("#mobileOrderStatus").val();
             param.businessType= $("#businessType option:selected").val();
 
@@ -246,7 +246,7 @@
         function getOperatorByStatus(order,index) {
             var value = "";
             if (order.mobileOrderStatus == "0") {
-                 value = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"orderDetailOper('"+order.mobileOrderCode+")\" class=\"hidden-480\">未处理</button>"
+                 value = "<button type=\"button\" id=\"review\" onclick=\"orderDetailOper('" + order.mobileOrderCode + "')\" class=\"hidden-480\">未处理</button>"
             }else{
                 value = "<span class=\"hidden-480\">已处理</span>"
             }
@@ -290,6 +290,7 @@
 
         //订单详情
         function orderDetailOper(orderCode) {
+            debugger;
             var url = "/ofc/mobileOrderDetails/" + orderCode;
             var html = window.location.href;
             var index = html.indexOf("/index#");
