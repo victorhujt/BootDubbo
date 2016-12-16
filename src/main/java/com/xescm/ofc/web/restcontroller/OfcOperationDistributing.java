@@ -25,6 +25,7 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,7 +120,7 @@ public class OfcOperationDistributing extends BaseController{
     }
 
     /**
-     * 根据选择的客户查询货品一级种类
+     * 查询货品一级种类
      * @param customerCode
      * @param model
      * @param response
@@ -140,7 +141,7 @@ public class OfcOperationDistributing extends BaseController{
     }
 
     /**
-     * 根据选择的客户和货品一级种类查询货品二级小类
+     * 根据货品一级种类查询货品二级小类
      * @param customerCode
      * @param goodsType
      * @param model
@@ -171,7 +172,7 @@ public class OfcOperationDistributing extends BaseController{
      */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
+    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto, HttpServletResponse response){
         logger.info("城配开单查询货品列表==> cscGoodsApiDto={}", cscGoodsApiDto);
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
@@ -220,9 +221,10 @@ public class OfcOperationDistributing extends BaseController{
 
     }
 
-     /**
-     * Excel导入,展示Sheet页
+    /**
+     * Excel导入,上传,展示Sheet页
      * @param paramHttpServletRequest
+     * @return
      */
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
     @ResponseBody
@@ -252,12 +254,13 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
      * @param paramHttpServletRequest
-     * @param response
+     * @param modelType 模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+     * @param modelMappingCode 模板映射: 标准, 呷哺呷哺, 尹乐宝等
      * @return
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest, HttpServletResponse response){
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest,String modelType,String modelMappingCode){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
@@ -271,8 +274,8 @@ public class OfcOperationDistributing extends BaseController{
             String suffix = fileName.substring(potIndex, fileName.length());
             String customerCode = multipartHttpServletRequest.getParameter("customerCode");
             String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
-            //校验
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,5);
+            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,modelType,modelMappingCode);
+
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
