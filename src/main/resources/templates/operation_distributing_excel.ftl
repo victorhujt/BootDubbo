@@ -208,7 +208,7 @@
 
 </div>
 
-
+<#--
 <form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
     <textarea rows="30" cols="30" id="goodsJsonStr">${goodsJsonStr!""}</textarea>
     <button type="submit">货品批量添加测试</button>
@@ -216,7 +216,7 @@
 <form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchCustomerImportPage" target="_blank" method="post">
     <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos">${cscContantAndCompanyInportDtos!""}</textarea>
     <button type="submit">收货方批量添加测试</button>
-</form>
+</form>-->
 <script type="text/javascript">
     var scripts = [null,
         "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -450,8 +450,8 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
-//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
                     url: url,
@@ -515,8 +515,8 @@
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
                 formData.append('sheetNum',sheetNum);
-//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',
