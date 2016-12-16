@@ -716,8 +716,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.debug("计划单状态保存成功");
             ofcSiloproSourceStatusService.save(ofcSiloproSourceStatus);
             logger.debug("计划单资源状态保存成功");
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (Exception ex) {
+            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                logger.error("获取单号发生重复！");
+                throw new BusinessException("获取单号发生重复！");
+            } else {
+                logger.error("创建仓储计划单发生异常：{}", ex);
+                throw new BusinessException("创建仓储计划单发生异常！", ex);
+            }
         }
         return planCode;
     }
@@ -745,8 +751,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     logger.error("您无法取消,请联系管理员!{}",response.getResult());
                     throw new BusinessException("您无法取消," + response.getResult());
                 }
-            }
-            catch (Exception ex){
+            } catch (BusinessException ex) {
+                throw ex;
+            } catch (Exception ex){
                 logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage());
                 throw new BusinessException(ex.getMessage(),ex);
             }
