@@ -42,6 +42,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcTraplanSourceStatusService ofcTraplanSourceStatusService;
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
 
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> planFedBack(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
@@ -61,6 +63,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 ofcTransplanStatus.setPlanCode(ofcPlanFedBackCondition.getTransportNo());
                 ofcTransplanNewstatus.setPlanCode(ofcPlanFedBackCondition.getTransportNo());
                 String orderCode=ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo()).getOrderCode();
+                OfcDistributionBasicInfo ofcDistributionBasicInfo
+                        =ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 if(status.equals("")){
                     throw new BusinessException("跟踪状态不可以为空");
                 }else {
@@ -184,24 +188,48 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     String orderCode=ofcTransplanInfoService.selectByKey(transPortNo).getOrderCode();
                     OfcDistributionBasicInfo ofcDistributionBasicInfo
                             =ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
+
+                    ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                    OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
+                    OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(transPortNo);
+                    String info="订单";
+                    String tag="";
+                    if((ofcFundamentalInformation!=null
+                            && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN))
+                            && (ofcTransplanInfo!=null
+                            && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHEKABAN))){
+                        if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("1")){
+                            info+="上门提货";
+                            tag="上门提货";
+                        }else if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("2")
+                                || PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("3")){
+                            info+="二次配送";
+                            tag="二次配送";
+                        }else{
+                            throw new BusinessException("计划单序号存在问题，调度失败");
+                        }
+                    }
+                    info+="调度完成";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")){
                         ofcDistributionBasicInfo.setPlateNumber(ofcSchedulingSingleFeedbackCondition.getVehical());
+                        info+="，安排车辆车牌号：【"+ofcSchedulingSingleFeedbackCondition.getVehical()+"】";
                     }
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")){
                         ofcDistributionBasicInfo.setDriverName(ofcSchedulingSingleFeedbackCondition.getDriver());
+                        info+="，司机姓名：【"+ofcSchedulingSingleFeedbackCondition.getDriver()+"】";
                     }
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")){
                         ofcDistributionBasicInfo.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
+                        info+="，联系电话：【"+ofcSchedulingSingleFeedbackCondition.getTel()+"】";
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
-                        ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
-                        }*/
-                    ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+                            ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
+                            }*/
                     boolean flag = false;
                     List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
                     if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
                         for (OfcOrderStatus status : statusList) {
                             String statusNote = status.getNotes();
-                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.endsWith("已调度")) {
+                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.startsWith("订单"+tag+"调度完成")) {
                                 flag = true;
                                 break;
                             }
@@ -213,7 +241,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
                         orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
-                                +" "+"订单已调度");
+                                +" "+info);
                         ofcOrderStatusService.save(orderStatus);
                     }
                 /*}*/
