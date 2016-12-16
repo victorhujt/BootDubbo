@@ -1,14 +1,9 @@
 package com.xescm.ofc.web.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyInportDto;
-import com.xescm.ofc.model.dto.csc.CscGoodsImportDto;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
@@ -16,8 +11,8 @@ import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.MD5Util;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -236,12 +231,9 @@ public class OfcJumpontroller extends BaseController{
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
-            if(ofcFundamentalInformation != null){
-                map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
-                logger.info("开单员为为{}",ofcFundamentalInformation.getMerchandiser());
-            } else {
-                map.put("merchandiserLast","");
-            }
+            // 加密登录用户名，用于前端缓存cookie的key
+            String loginUser = MD5Util.encodeByAES(getAuthResDtoByToken().getUserName());
+            map.put("loginUser", loginUser);
             setDefaultModel(model);
         }catch (Exception ex){
             logger.error("跳转运输开单页面出错!",ex.getMessage(),ex);

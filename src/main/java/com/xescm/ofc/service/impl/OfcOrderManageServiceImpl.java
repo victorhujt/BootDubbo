@@ -574,7 +574,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanInfoService.save(ofcTransplanInfo);
                     logger.debug("计划单信息保存成功");
                 } catch (Exception ex) {
-                    if (ex.getMessage().trim().startsWith("Duplicate entry")) {
+                    if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                         throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
                     } else {
                         throw new BusinessException("保存计划单信息发生错误！", ex);
@@ -595,6 +595,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&*/
 
             //更改计划单状态为执行中//###
+        } catch (BusinessException ex) {
+            throw ex;
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
         }

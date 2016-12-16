@@ -330,6 +330,7 @@
                     基本信息
                     <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                     <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
+                    <span hidden="true" id = "login_user">${(loginUser)!}</span>
                 <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
                 <#--<#import "address.ftl" as apiAddrFtl>-->
                 </p>
@@ -353,8 +354,11 @@
                             <div class="col-width-168">
                                 <div class="clearfix">
                                     <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
+                                    <#--<#list merchandiserList! as merchandiser>-->
+                                    <#--<option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>-->
+                                    <#--</#list>-->
                                     <#list merchandiserList! as merchandiser>
-                                        <option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>
+                                        <option>${(merchandiser.merchandiser)!""}</option>
                                     </#list>
                                     </select></div>
                             </div>
@@ -877,6 +881,9 @@
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
+
+        // 上次选择的开单员
+        setLastUserData();
         /*//$("#orderTime").val(new Date().toLocaleDateString());*/
     }
     /**
@@ -1740,7 +1747,8 @@
                     outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 });
             }else{
-                clearConsignor();
+                // 如果发货方条数大于1条，默认带出cookie中上次选择的
+//                clearConsignor();
                 cscContact.purpose = "1";
                 outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 checkConsignOrEe();
@@ -2074,6 +2082,8 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
+                        // 更新开单员
+                        updateLastUserData();
                         location.reload();
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
@@ -2147,10 +2157,12 @@
             }
         });
 
+        // 发货方地址选择
         $("#city-picker-consignor").click(function () {
             departurePlace();
         });
 
+        // 收货方地址选择
         $("#city-picker-consignee").click(function () {
             destination();
         });
@@ -2615,6 +2627,102 @@
                 $this.next().css({'width': $this.parent().width()});
             })
         });
+    }
+
+    // 设置当前用户上次选择的开单员
+    function setLastUserData() {
+        // 设置当前用户上次选择的开单员
+        var loginUser = $('#login_user').html();
+        var lastSelMer = getCookie(loginUser);
+        var lastSelConsignor = getCookie(loginUser+"@consignor");
+        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
+        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
+
+        if (lastSelMer != '') {
+            $("#merchandiser").val(lastSelMer);
+//            $("#merchandiser").find("option[text='"+lastSelMer+"']").attr("selected",true);
+        }
+
+        // 发货方地址
+        if (lastSelConsignor != '') {
+            var consignor = lastSelConsignor.split('~');
+            $("#city-picker3-consignor").val(consignor[0]);
+            $("#city-picker3-consignor").citypicker('refresh');
+        }
+
+    }
+
+    // 更新开单员
+    function updateLastUserData() {
+        var loginUser = $('#login_user').html();
+
+        // 设置上次开单员
+        var merchandiser = $("#merchandiser").val();
+        checkAndSetCookie(loginUser, merchandiser);
+
+        // 发货方地址
+        var consignor = $("#city-picker3-consignor").val();
+        checkAndSetCookie(loginUser+"@consignor" ,consignor);
+
+    }
+
+    // 检查cookie是否存在旧值，如果不存在则创建，
+    // 如果存在则判断新旧值是否相同，不同的更新
+    function checkAndSetCookie(keyName, value) {
+        var oldVal = getCookie(keyName);
+        if(oldVal != '') {
+            if (oldVal != value) {
+                editCookie(keyName, value, -1);
+            }
+        } else {
+            addCookie(keyName, value, -1)
+        }
+    }
+
+    // 添加cookie
+    function addCookie(name,value,expiresHours){
+        var cookieString=name+"="+escape(value);
+        //判断是否设置过期时间,0代表关闭浏览器时失效
+        if(expiresHours>0){
+            var date=new Date();
+            date.setTime(date.getTime+expiresHours*3600*1000);
+            cookieString=cookieString+"; expires="+date.toGMTString();
+        }
+        document.cookie=cookieString;
+    }
+
+    // 根据指定名称的cookie修改cookie的值
+    function editCookie(name,value,expiresHours){
+        var cookieString=name+"="+escape(value);
+        //判断是否设置过期时间,0代表关闭浏览器时失效
+        if(expiresHours>0){
+            var date=new Date();
+            date.setTime(date.getTime+expiresHours*3600*1000); //单位是多少小时后失效
+            cookieString=cookieString+"; expires="+date.toGMTString();
+        }
+        document.cookie=cookieString;
+    }
+
+    // 获取指定名称的cookie值
+    function getCookie(name){
+        var strCookie=document.cookie;
+        var arrCookie=strCookie.split("; ");
+        for(var i=0;i<arrCookie.length;i++){
+            var arr=arrCookie[i].split("=");
+            if(arr[0]==name){
+                return unescape(arr[1]);
+            } else{
+                continue;
+            }
+        }
+        return "";
+    }
+
+    // 删除指定名称的cookie
+    function deleteCookie(name){
+        var date=new Date();
+        date.setTime(-1); //设定一个过去的时间即可
+        document.cookie=name+"=v; expires="+date.toGMTString();
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>

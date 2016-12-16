@@ -374,8 +374,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
                     goodsDetailsList.add(ofcGoodsDetails);
                 }
-                //添加基本信息
-                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                try {
+                    //添加基本信息
+                    ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                } catch (Exception ex) {
+                    if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                        throw new BusinessException("获取订单号发生重复，导致保存计划单基本信息发生错误！");
+                    } else {
+                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                    }
+                }
                 if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
                     ofcMerchandiserService.save(ofcMerchandiser);
                 }
