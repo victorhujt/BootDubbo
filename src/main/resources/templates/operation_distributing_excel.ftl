@@ -209,7 +209,7 @@
 </div>
 
 
-<form action="${(CSC_URL_LOCAL)!}/open/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
+<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
     <textarea rows="30" cols="30" id="goodsJsonStr">${goodsJsonStr!""}</textarea>
     <button type="submit">货品批量添加测试</button>
 </form>
