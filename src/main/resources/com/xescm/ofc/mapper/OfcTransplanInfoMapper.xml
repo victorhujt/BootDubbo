@@ -60,6 +60,7 @@
     <result column="goods_type" jdbcType="VARCHAR" property="goodsType" />
     <result column="goods_type_name" jdbcType="VARCHAR" property="goodsTypeName" />
     <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+    <result column="two_distribution" property="twoDistribution" jdbcType="VARCHAR" />
   </resultMap>
 
 

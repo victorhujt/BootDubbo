@@ -342,6 +342,12 @@ public class OfcTransplanInfo {
     private String custName;
 
     /**
+     * 是否二次配送
+     */
+    @Column(name = "two_distribution")
+    private String twoDistribution;
+
+    /**
      * 获取计划单编号
      *
      * @return plan_code - 计划单编号
@@ -1338,5 +1344,23 @@ public class OfcTransplanInfo {
      */
     public void setCustName(String custName) {
         this.custName = custName;
+    }
+
+    /**
+     * 获取是否二次配送
+     *
+     * @return two_distribution - 是否二次配送
+     */
+    public String getTwoDistribution() {
+        return twoDistribution;
+    }
+
+    /**
+     * 设置是否二次配送
+     *
+     * @param twoDistribution 是否二次配送
+     */
+    public void setTwoDistribution(String twoDistribution) {
+        this.twoDistribution = twoDistribution;
     }
 }
