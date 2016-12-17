@@ -1837,7 +1837,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
+            if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 return rmcPickupList.getResult().get(0);
             }else {
                 return null;
@@ -1846,7 +1846,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             Wrapper<List<RmcServiceCoverageForOrderVo>> RmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
+            if(RmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(RmcRecipientList.getResult(), 0)){
                 return RmcRecipientList.getResult().get(0);
             }else{
                 return null;
