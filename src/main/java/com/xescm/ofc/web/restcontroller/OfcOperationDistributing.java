@@ -6,10 +6,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
-import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
-import com.xescm.ofc.model.dto.csc.CscGoodsType;
-import com.xescm.ofc.model.dto.csc.QueryCustomerNameAvgueDto;
-import com.xescm.ofc.model.dto.csc.QueryCustomerNameDto;
+import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
@@ -28,6 +25,8 @@ import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -44,6 +43,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /*
 *
@@ -65,6 +65,8 @@ public class OfcOperationDistributing extends BaseController{
     private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    @Autowired
+    private StringRedisTemplate rt;
     @Resource
     private CodeGenUtils codeGenUtils;
 
@@ -282,6 +284,22 @@ public class OfcOperationDistributing extends BaseController{
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
+                List<CscGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
+                List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
+                if(cscGoodsImportDtoList.size() > 0){
+                    String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime();
+                    ValueOperations<String,String> ops  = rt.opsForValue();
+                    ops.set(batchgoodsKey, JSONUtils.objectToJson(cscGoodsImportDtoList));
+                    rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey);
+                }
+                if(cscContantAndCompanyInportDtoList.size() > 0){
+                    String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime();
+                    ValueOperations<String,String> ops  = rt.opsForValue();
+                    ops.set(batchconsingeeKey, JSONUtils.objectToJson(cscContantAndCompanyInportDtoList));
+                    rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey);
+                }
                 result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
                 Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();

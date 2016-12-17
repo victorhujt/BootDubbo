@@ -16,7 +16,25 @@ public class OfcCheckExcelErrorVo {
     private List<String> xlsErrorMsg = new ArrayList<>();
     private List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
     private List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+    private String batchconsingeeKey;
+    private String batchgoodsKey;
 
+
+    public String getBatchconsingeeKey() {
+        return batchconsingeeKey;
+    }
+
+    public void setBatchconsingeeKey(String batchconsingeeKey) {
+        this.batchconsingeeKey = batchconsingeeKey;
+    }
+
+    public String getBatchgoodsKey() {
+        return batchgoodsKey;
+    }
+
+    public void setBatchgoodsKey(String batchgoodsKey) {
+        this.batchgoodsKey = batchgoodsKey;
+    }
 
     public List<String> getXlsErrorMsg() {
         return xlsErrorMsg;
