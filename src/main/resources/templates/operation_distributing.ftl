@@ -1828,7 +1828,7 @@
 
 
     function distributingOrderPlaceCon() {
-
+        console.log("这儿都进不来?");
         if(!validateForm()){
             return;
         }
@@ -1839,7 +1839,7 @@
         var orderInfo = null;
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
-
+            console.log("遍历收货方列表进来了");
 
             orderInfo = {};
 
@@ -1922,7 +1922,7 @@
             //遍历货品信息
 
             $("#goodsInfoListDiv").find("tr").each(function(index) {//&&&
-
+                console.log("货品遍历进来了");
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1942,8 +1942,10 @@
                 goods.chargingWays = '01';//计费方式按默认按件数
 
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
-                var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+//                var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
+                debugger
+                console.log("mapKey啊" + mapKey)
+                var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息 ///====================
                 var param =contactCompanyId + "@" + contactCode;
                 var goodsAmount = consigneeAndGoodsMsgJson[param];
                 goods.quantity = goodsAmount;
@@ -1993,6 +1995,8 @@
             var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
             var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
             var goodsNum = 0;//货品列表数量
+            var goodsAndConsigneeTag = true;
+            var consigneeAndGoodsMsgJson = null;
             $("#goodsInfoListDiv").find("tr").each(function(index) {
                 goodsNum += 1;
                 
@@ -2009,9 +2013,11 @@
                     return false;
                 }
                 var mapKey = goodsCode + "@" + goodsIndex;
-                var consigneeAndGoodsMsgJson = null;
+
                 if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
-                    consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                    if(goodsAndConsigneeTag){
+                        consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                    }
                 }
                 var goodsAmount = 0;
                 if(null != consigneeAndGoodsMsgJson){
@@ -2024,6 +2030,7 @@
                     consigneeGoodsIsEmpty = false;
                     //return false;
                 }
+                goodsAndConsigneeTag = false;
             })
             if(0 == goodsNum){
                 goodsNumTag = false;
