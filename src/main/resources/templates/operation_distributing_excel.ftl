@@ -75,12 +75,42 @@
         <div class="modal-footer"><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
+
+<div id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
+     aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close" id="errorExcelImportCloseBtn">×</button>
+                <h4 class="modal-title">提示</h4></div>
+            <div class="modal-body">
+                <div class="bootbox-body">
+                    <div class="form-group">
+                         导入源数据中收货方名称与货品档案在系统中不存在,您可以进行批量创建:
+                    </div>
+                    <div class="form-group">
+                        创建成功后请重新加载Excel
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-xs-3 tktp-1">
+                            <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">收货方档案</button>
+                        </div>
+                        <div class="col-xs-3 tktp-1">
+                            <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
                     <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
+                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a>
                     <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
@@ -90,10 +120,26 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">模板类型</label>
+            <div class="col-xs-3">
+                <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked type="radio"/>交叉
+                <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio"/>明细列表
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">模板映射</label>
+            <div class="col-xs-3">
+                <select class="col-xs-12" id="templatesMapping">
+                    <option value="standard">标准</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">上传文件</label>
             <div class="col-xs-3">
                 <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
+                <span hidden="true" id = "csc_url_local">${(CSC_URL_LOCAL)!}</span>
                 <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
             <div class="col-xs-3">
@@ -208,15 +254,13 @@
 
 </div>
 
-<#--
-<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
-    <textarea rows="30" cols="30" id="goodsJsonStr">${goodsJsonStr!""}</textarea>
-    <button type="submit">货品批量添加测试</button>
+
+<form action="/index#/open/csc/batchimport/toMaintainBatchGoodsImportPage" id="toMaintainBatchGoodsImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" id="goodsJsonStr" name="goodsJsonStr"></textarea>
 </form>
-<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchCustomerImportPage" target="_blank" method="post">
-    <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos">${cscContantAndCompanyInportDtos!""}</textarea>
-    <button type="submit">收货方批量添加测试</button>
-</form>-->
+<form action="/index#/open/csc/batchimport/toMaintainBatchCustomerImportPage" id="toMaintainBatchCustomerImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos" name="cscContantAndCompanyInportDtos"></textarea>
+</form>
 <script type="text/javascript">
     var scripts = [null,
         "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -250,6 +294,7 @@
     var ofc_url = $("#ofc_url").html();
     var csc_url = $("#csc_url").html();
     var ofc_web_url = $("#ofc_web_url").html();
+    var csc_url_local = $("#csc_url_local").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
         xescm.common.loadPage(historyUrl);
@@ -399,6 +444,8 @@
     var viewMap = null;
     var loadSheetTag = false;
     var consigneeList = null;
+    var batchconsingeeKey = null;
+    var batchgoodsKey = '';
 
     function uploadFileChange(target) {
 
@@ -511,10 +558,14 @@
                 var sheetNum = $("#uploadExcelSheet").val();
                 var formData = new FormData();
                 var customerCode = $("#customerCode").val();
+                var templatesMapping = $("#templatesMapping").val();
+                var templatesType = $('input[name="templatesType"]:checked ').val();
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
                 formData.append('sheetNum',sheetNum);
+                formData.append('templatesType',templatesType);
+                formData.append('templatesMapping',templatesMapping);
 //                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
                 var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
@@ -544,6 +595,7 @@
                             var resultMap =  JSON.parse(result.result);
 
                             var consigneeTag = true;
+                           // var goodsAndEETag = true;
                             var indexView = 0;
                             for(var key in resultMap){
                                 indexView += 1;
@@ -566,7 +618,9 @@
                                                 "<td>" + data.unit + "</td>" +
                                                 "<td>" + data.goodsAmount + "</td>" +
                                                 "</tr>");
+//                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
                                     }else if(index % 3 == 1){//收货人和货品需求量
+//                                        debugger
                                         for(var inkey in data){
                                             consigeeMsg[inkey] = data[inkey];
                                         }
@@ -598,10 +652,26 @@
                             $("#goodsListDiv").hide();
                             $("#errorMsgDiv").show();
                             $("#errorMsgTbody").html("");
-                            var errorMsgList = result.result;
+                            var errorMsgList = result.result.xlsErrorMsg;
                             $.each(errorMsgList,function (index, errorMsg) {
                                 $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
                             })
+                            var cscContantAndCompanyInportDtoList = result.result.cscContantAndCompanyInportDtoList;
+                            var errorEEsNum = cscContantAndCompanyInportDtoList.length;
+                            var cscGoodsImportDtoList = result.result.cscGoodsImportDtoList;
+                            var errorGoodsNum = cscGoodsImportDtoList.length;
+                            if(errorEEsNum > 0 || errorGoodsNum > 0){
+                                $("#errorExcelImport").show();
+                                if(errorGoodsNum > 0){
+                                    console.log('batchgoodsKey' + result.result.batchgoodsKey)
+                                    batchgoodsKey = result.result.batchgoodsKey;
+                                    console.log("全局变量" + batchgoodsKey)
+                                }else if (errorEEsNum > 0){
+                                    batchconsingeeKey = result.result.batchconsingeeKey;
+                                }
+
+                            }
+
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
@@ -658,9 +728,27 @@
         $("#ExcelNoneBtnBottom").click(function () {
             var excelImportTag = "cancel";
             var customerCode = $("#customerCode").val();
-            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
+            var custName = $("#custName").val();
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);
         })
+        $("#errorExcelImportCloseBtn").click(function () {
+            $("#errorExcelImport").hide()
+        })
+        $("#errorExcelImportEEBtn").click(function(){
+
+//            $("#toMaintainBatchCustomerImportPage").submit();//
+//            $("#errorExcelImport").hide();
+        })
+
     })
+    $("#errorExcelImportGoodsBtn").click(function () {
+        console.log("......" + batchgoodsKey)
+        var url = "/csc/batchimport/toMaintainBatchGoodsImportPage/" + batchgoodsKey;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+    })
+
 
 </script>

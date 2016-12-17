@@ -15,6 +15,10 @@ public class CscContantAndCompanyInportDto implements Serializable {
 
     private static final long serialVersionUID = 5167203485913781536L;
     /**
+     * 客户编码
+     */
+    private String custCode;
+    /**
      * 类型。1、企业公司；2、个人。默认企业
      */
     private String type;
@@ -95,10 +99,12 @@ public class CscContantAndCompanyInportDto implements Serializable {
      * 地址
      */
     private String address;
-
     /**
-     * 客户编码
+     * 四级地址
      */
-    private String custCode;
+    private String citypickers;
+
+    private String userId;
+    private String userName;
 
 }

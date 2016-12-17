@@ -154,42 +154,6 @@ public class OfcJumpontroller extends BaseController{
         map.put("historyUrl",historyUrl);
         map.put("customerCode",customerCode);
         map.put("custName",custName);
-        /*List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
-        CscGoodsImportDto cscGoodsImportDto = null;
-        cscGoodsImportDto = new CscGoodsImportDto();
-        cscGoodsImportDto.setGoodsCode("GN0001");
-        cscGoodsImportDto.setGoodsName("伊利大果粒");
-        cscGoodsImportDto.setSpecification("400ml");
-        cscGoodsImportDto.setUnit("盒");
-        cscGoodsImportDto.setCustomerCode(customerCode);
-        cscGoodsImportDtoList.add(cscGoodsImportDto);
-        cscGoodsImportDto = new CscGoodsImportDto();
-        cscGoodsImportDto.setGoodsCode("GN0002");
-        cscGoodsImportDto.setGoodsName("蒙牛纯牛奶");
-        cscGoodsImportDto.setSpecification("600ml");
-        cscGoodsImportDto.setUnit("袋");
-        cscGoodsImportDto.setCustomerCode(customerCode);
-        cscGoodsImportDtoList.add(cscGoodsImportDto);
-        String goodsJsonStr = JSONUtils.objectToJson(cscGoodsImportDtoList);
-        map.put("goodsJsonStr",goodsJsonStr);
-        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
-        CscContantAndCompanyInportDto cscContantAndCompanyInportDto = null;
-        cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
-        cscContantAndCompanyInportDto.setContactCompanyName("北京北大");
-        cscContantAndCompanyInportDto.setContactName("老王");
-        cscContantAndCompanyInportDto.setPhone("13123456789");
-        cscContantAndCompanyInportDto.setAddress("北京市北京市海淀区中关村街道北大街110号");
-        cscContantAndCompanyInportDto.setCustCode(customerCode);
-        cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
-        cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
-        cscContantAndCompanyInportDto.setContactCompanyName("河南河大");
-        cscContantAndCompanyInportDto.setContactName("老刘");
-        cscContantAndCompanyInportDto.setPhone("13987654321");
-        cscContantAndCompanyInportDto.setAddress("河南省许昌市许昌县将官池镇河大街110号");
-        cscContantAndCompanyInportDto.setCustCode(customerCode);
-        cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
-        String cscContantAndCompanyInportDtos = JSONUtils.objectToJson(cscContantAndCompanyInportDtoList);
-        map.put("cscContantAndCompanyInportDtos",cscContantAndCompanyInportDtos);*/
         return "operation_distributing_excel";
     }
 

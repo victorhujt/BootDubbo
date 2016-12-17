@@ -14,10 +14,12 @@ import com.xescm.ofc.model.dto.csc.CscGoodsType;
 import com.xescm.ofc.model.dto.csc.QueryCustomerNameAvgueDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerNameDto;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
+import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
@@ -30,6 +32,8 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -46,6 +50,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /*
 *
@@ -67,6 +72,8 @@ public class OfcOperationDistributing extends BaseController{
     private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
     @Autowired
     private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    @Autowired
+    private StringRedisTemplate rt;
     @Resource
     private CodeGenUtils codeGenUtils;
 
@@ -295,19 +302,21 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
      * @param paramHttpServletRequest
-     * @param modelType 模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
-     * @param modelMappingCode 模板映射: 标准, 呷哺呷哺, 尹乐宝等
      * @return
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest,String modelType,String modelMappingCode){
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
             String fileName = multipartHttpServletRequest.getParameter("fileName");
+            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+            String modelType = multipartHttpServletRequest.getParameter("templatesType");
+            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
+            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
             int potIndex = fileName.lastIndexOf(".") + 1;
             if(-1 == potIndex){
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
@@ -319,8 +328,26 @@ public class OfcOperationDistributing extends BaseController{
 
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
-                List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),xlsErrorMsg);
+                OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
+                List<CscGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
+                List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
+                if(cscGoodsImportDtoList.size() > 0){
+                    String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime();
+                    ValueOperations<String,String> ops  = rt.opsForValue();
+                    ops.set(batchgoodsKey, JSONUtils.objectToJson(cscGoodsImportDtoList));
+                    rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
+                    String s = ops.get(batchgoodsKey);
+                    String s1 = ops.get(batchgoodsKey);
+                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey);
+                }
+                if(cscContantAndCompanyInportDtoList.size() > 0){
+                    String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime();
+                    ValueOperations<String,String> ops  = rt.opsForValue();
+                    ops.set(batchconsingeeKey, JSONUtils.objectToJson(cscContantAndCompanyInportDtoList));
+                    rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey);
+                }
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
                 Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
                 String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
