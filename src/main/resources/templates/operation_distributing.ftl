@@ -426,7 +426,7 @@
     <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_distributing_excel">
         <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
         <span hidden="true" id = "excelImportTag">${(excelImportTag)!}</span>
-        <span hidden="true" id = "custIdFromExcelImport">${(custIdFromExcelImport)!}</span>
+        <span hidden="true" id = "customerCodeFromExcelImport">${(custIdFromExcelImport)!}</span>
         <span hidden="true" id = "custNameFromExcelImport">${(custNameFromExcelImport)!}</span>
         Excel导入
     </button>
@@ -740,6 +740,8 @@
         var excelImportTag = $("#excelImportTag").html();
         if("confirm" == excelImportTag){ // 如果是Excel导入进入这个页面//先将用户选择的客户显示出来
             var customerCode = $("#customerCodeFromExcelImport").html();
+            console.log("consigneeList"+JSON.stringify(consigneeList))
+
             var custName = $("#custNameFromExcelImport").html();
             //重新从接口里查一遍
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"custName":custName,"pageNum":1, "pageSize":1}, function(data) {
@@ -763,7 +765,7 @@
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
                 data=eval(data);
                 $.each(data,function (index,warehouse) {
-                    $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
+                    $("#warehouseCode").append("<option value='"+warehouse.warehouseCode+"'>"+warehouse.warehouseName+"</option>");
                 });
                 $("#warehouseCode").trigger("chosen:updated")
             })
@@ -773,9 +775,9 @@
             $("#consigneeInfoListDiv").html("");
             $.each(consigneeList,function(index,consignee){
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
-                        "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>"+
+                        "<td><button type='button' onclick='deleteConsignee(this)'  class='btn btn-minier btn-danger'>删除</button></td>"+
                         "<td>" + consignee.contactCompanyName + "</td>" +
-                        "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca'/></td>" +//===
+                        "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
                         "<td>" + consignee.contactName + "</td>" +
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
@@ -1804,7 +1806,7 @@
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
             data=eval(data);
             $.each(data,function (index,warehouse) {
-                $("#warehouseCode").append("<option value='"+warehouse.id+"'>"+warehouse.warehouseName+"</option>");
+                $("#warehouseCode").append("<option value='"+warehouse.warehouseCode+"'>"+warehouse.warehouseName+"</option>");
             });
             $("#warehouseCode").trigger("chosen:updated");
         })

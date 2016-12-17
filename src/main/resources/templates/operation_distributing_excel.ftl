@@ -413,12 +413,10 @@
             var mapKey = goodsCode + "@" + goodsIndex;
             var num = "0";
 
-            console.log(""+mapKey)
 
             if(undefined != viewMap.get(mapKey)){
-
+                
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
-                console.log("preGoodsAndConsigneeJsonMsg" + JSON.stringify(preGoodsAndConsigneeJsonMsg));
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
                 console.log(cadj)
@@ -499,8 +497,8 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
-                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-//                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
                     url: url,
@@ -568,8 +566,8 @@
                 formData.append('sheetNum',sheetNum);
                 formData.append('templatesType',templatesType);
                 formData.append('templatesMapping',templatesMapping);
-                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-//                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -622,7 +620,6 @@
                                                 "</tr>");
 //                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
                                     }else if(index % 3 == 1){//收货人和货品需求量
-                                        debugger
                                         for(var inkey in data){
                                             consigeeMsg[inkey] = data[inkey];
                                         }
@@ -639,11 +636,8 @@
                                                 "</tr>");
                                     }
                                 }
-//                                goodsAndEETag = false;
                                 consigneeTag = false;
                                 viewMapValue[1] = consigeeMsg;
-                                console.log("源"+key)
-                                console.log("源"+JSON.stringify(viewMapValue))
                                 viewMap.put(key,viewMapValue);
                             }
 
@@ -671,7 +665,8 @@
                                     console.log('batchgoodsKey' + result.result.batchgoodsKey)
                                     batchgoodsKey = result.result.batchgoodsKey;
                                     console.log("全局变量" + batchgoodsKey)
-                                }else if (errorEEsNum > 0){
+                                }
+                                if (errorEEsNum > 0){
                                     batchconsingeeKey = result.result.batchconsingeeKey;
                                 }
 
@@ -718,7 +713,6 @@
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
                         var custName = $("#custName").val();
-                        console.log("customerCode" + customerCode)
                         var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
                         xescm.common.loadPage(url);
                         layer.close(index);

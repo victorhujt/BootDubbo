@@ -197,7 +197,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
-            ofcOrderStatusList = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatusList);
+//            ofcOrderStatusList = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatusList);
             //最新订单状态
             ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
             //货品信息
@@ -205,6 +205,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
 //            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+
             //相关计划单
             List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
             for (PlanAndStorage planAndStorage : storageList) {
