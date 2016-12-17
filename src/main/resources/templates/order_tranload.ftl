@@ -2446,7 +2446,7 @@
         });
 
         $("#addGoods").click(function () {
-            if(!validateCustChosen()){
+            if(validateCustChosen()){
                 alert("请先选择客户")
             }else{
                 var goodsInfoListDiv = "";
@@ -2475,13 +2475,20 @@
                         }
                     });
                 }else{
-                    $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
+                    $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option").each(function() {
+                        var provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
                         text = $(this).text();
                         value = $(this).val();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
+                        if(provale==value){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
+                        }
+
                     });
                 }
-                initChosen();
+                goodsInfoListDiv = goodsInfoListDiv + "</select>";
+
 
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                         "<select  id='goodsCategory' name='goodsCategory' class='chosen-select form-control' style='width:80px;'>";
@@ -2492,6 +2499,7 @@
                             $.each(data,function (index,CscGoodsTypeVo) {
                                 goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                             });
+                            goodsInfoListDiv = goodsInfoListDiv + "</select>";
                             goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
@@ -2504,15 +2512,16 @@
                         });
                     }
                 }else{
-                    $("#goodsInfoListDiv tr:first-child").children().eq(2).find("select:first").find("option").each(function() {
+                    $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
                         text = $(this).text();
                         goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
                     });
+                    goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
-
+                initChosen();
             }
             initChosen();
 

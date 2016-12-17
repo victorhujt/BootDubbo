@@ -21,6 +21,7 @@ import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.model.vo.rmc.RmcPickup;
 import com.xescm.ofc.model.vo.rmc.RmcRecipient;
+import com.xescm.ofc.model.vo.rmc.RmcServiceCoverageForOrderVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.*;
@@ -88,6 +89,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcSiloproStatusService ofcSiloproStatusService;
     @Autowired
     private FeignRmcPickUpOrRecipientAPIClient feignRmcPickUpOrRecipientAPIClient;
+    @Autowired
+    private FeignRMcServiceCoverageAPIClient feignRMcServiceCoverageAPIClient;
     @Autowired
     private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
     @Resource
@@ -390,12 +393,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatusService.save(ofcOrderStatus);
                 }
                 if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")) {
-                    RmcDistrictQO rmcDistrictQO = new RmcDistrictQO();
-                    rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcDistrictQO);
-                    RmcPickup rmcPickup = (RmcPickup) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "Pickup");
-                    if (rmcPickup != null
-                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getDispatchCode()).equals("")) {
-                        ofcTransplanInfo.setBaseId(rmcPickup.getDispatchCode());
+                    RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
+                    rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+                    RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
+                    if (rmcPickup != null){
+                        if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseCode()).equals("")){
+                            ofcTransplanInfo.setBaseId(rmcPickup.getBaseCode());
+                        }
+                        if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseName()).equals("")){
+                            ofcTransplanInfo.setBaseName(rmcPickup.getBaseName());
+                        }
                     }
                 }
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
@@ -1283,7 +1290,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         ofcTransplanInfo.setProgramSerialNumber("1");
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName(),ofcFinanceInformation);
                     }else {
-                        RmcDistrictQO rmcDistrictQO=new RmcDistrictQO();
+                        RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
                             try {
                                 BeanUtils.copyProperties(ofcTransplanInfo, ofcFundamentalInformation);
                                 BeanUtils.copyProperties(ofcTransplanInfo, ofcDistributionBasicInfo);
@@ -1326,12 +1333,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI.toString())
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
-                                rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcDistrictQO);
-                                RmcPickup rmcPickup = (RmcPickup) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "Pickup");
+                                rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 if (rmcPickup != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals("")) {//有返回值
+                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {//有返回值
                                     //获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
-                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcPickup.getWareHouseCode());
+                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcPickup.getWarehouseCode());
                                     if (rmcWarehouse != null) {
                                         //创建第一个城配计划单
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
@@ -1343,12 +1350,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         ofcTransplanInfo.setBusinessType("600");
                                         //收货方信息更改为已获取的发货TC 仓信息，收货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDestinationPlace(ofcTransplanInfo, rmcWarehouse);
-                                        ofcTransplanInfo.setBaseId(rmcPickup.getWareHouseCode());
+                                        ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                         //创建第二个卡班计划单
                                         ofcTransplanInfoReflect.setBusinessType("602");
-                                        ofcTransplanInfoReflect.setBaseId(rmcPickup.getWareHouseCode());
+                                        ofcTransplanInfoReflect.setBaseId(rmcPickup.getWarehouseCode());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1363,15 +1370,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             } else if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(FOU.toString())
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
-                                rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcDistrictQO);
-                                RmcPickup rmcPickup = (RmcPickup) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "Pickup");
+                                rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【配送】、【收货地地址编码】。获取收货TC仓信息
-                                rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcDistrictQO);
-                                RmcRecipient rmcRecipient = (RmcRecipient) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "TwoDistribution");
+                                rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcServiceCoverageForOrderVo);
+                                RmcServiceCoverageForOrderVo rmcRecipient = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "TwoDistribution");
                                 if (rmcRecipient != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals("")) {//有返回值
+                                        && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWarehouseCode()).equals("")) {//有返回值
                                     //获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
-                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcRecipient.getWareHouseCode());
+                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcRecipient.getWarehouseCode());
                                     if (rmcWarehouse != null) {
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
                                         try {
@@ -1385,8 +1392,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         }
                                         //创建第一个卡班单
                                         ofcTransplanInfo.setBusinessType("602");
-                                        if (!PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals("")) {
-                                            ofcTransplanInfo.setBaseId(rmcPickup.getWareHouseCode());
+                                        if (!PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {
+                                            ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
                                         }
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
@@ -1394,7 +1401,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         ofcTransplanInfoReflect.setBusinessType("600");
                                         //发货方信息更改为已获取的收货TC 仓信息，发货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDarturePlace(ofcTransplanInfoReflect, rmcWarehouse);
-                                        ofcTransplanInfoReflect.setBaseId(rmcRecipient.getWareHouseCode());
+                                        ofcTransplanInfoReflect.setBaseId(rmcRecipient.getWarehouseCode());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo,ofcFinanceInformation, ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1409,18 +1416,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             } else if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI.toString())
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
-                                rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcDistrictQO);
-                                RmcPickup rmcPickup = (RmcPickup) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "Pickup");
+                                rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【配送】、【收货地地址编码】。获取收货TC仓信息
-                                rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcDistrictQO);
-                                RmcRecipient rmcRecipient = (RmcRecipient) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "TwoDistribution");
+                                rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcServiceCoverageForOrderVo);
+                                RmcServiceCoverageForOrderVo rmcRecipient = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "TwoDistribution");
                                 if (rmcPickup != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals("")
+                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
                                         && rmcRecipient != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals("")) {//收发货仓都有返回值
+                                        && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWarehouseCode()).equals("")) {//收发货仓都有返回值
                                     //获取发货TC仓，则获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
-                                    RmcWarehouse rmcWarehouseor = getWareHouseByCodeToPlan(rmcPickup.getWareHouseCode());//发货仓
-                                    RmcWarehouse rmcWarehouseee = getWareHouseByCodeToPlan(rmcRecipient.getWareHouseCode());//收货仓
+                                    RmcWarehouse rmcWarehouseor = getWareHouseByCodeToPlan(rmcPickup.getWarehouseCode());//发货仓
+                                    RmcWarehouse rmcWarehouseee = getWareHouseByCodeToPlan(rmcRecipient.getWarehouseCode());//收货仓
                                     if (rmcWarehouseor != null && rmcWarehouseee != null) {
                                         OfcTransplanInfo ofcTransplanInfoReflect1 = new OfcTransplanInfo();
                                         OfcTransplanInfo ofcTransplanInfoReflect2 = new OfcTransplanInfo();
@@ -1438,19 +1445,19 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         ofcTransplanInfo.setBusinessType("600");
                                         //收货方信息更改为已获取的发货TC 仓信息，收货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDestinationPlace(ofcTransplanInfo, rmcWarehouseor);
-                                        ofcTransplanInfo.setBaseId(rmcPickup.getWareHouseCode());
+                                        ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo,ofcFinanceInformation, ofcFundamentalInformation.getCustName());
                                         //创建第二个卡班计划单
                                         ofcTransplanInfoReflect1.setBusinessType("602");
-                                        ofcTransplanInfoReflect1.setBaseId(rmcPickup.getWareHouseCode());
+                                        ofcTransplanInfoReflect1.setBaseId(rmcPickup.getWarehouseCode());
                                         ofcTransplanInfoReflect1.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect1, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                         //创建第三个城配计划单
                                         ofcTransplanInfoReflect2.setBusinessType("600");
                                         //发货方信息更改为已获取的收货TC 仓信息，发货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDarturePlace(ofcTransplanInfoReflect2, rmcWarehouseee);
-                                        ofcTransplanInfoReflect2.setBaseId(rmcRecipient.getWareHouseCode());
+                                        ofcTransplanInfoReflect2.setBaseId(rmcRecipient.getWarehouseCode());
                                         ofcTransplanInfoReflect2.setProgramSerialNumber("3");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect2, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1458,11 +1465,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     }
 
                                 } else if (rmcPickup != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals("")
+                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
                                         && (rmcRecipient == null
-                                        || PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals(""))) {//发货仓有信息，收货仓无
+                                        || PubUtils.trimAndNullAsEmpty(rmcRecipient.getWarehouseCode()).equals(""))) {//发货仓有信息，收货仓无
                                     //获取发货TC仓，则获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
-                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcPickup.getWareHouseCode());
+                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcPickup.getWarehouseCode());
                                     if (rmcWarehouse != null) {
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
                                         try {
@@ -1478,12 +1485,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         ofcTransplanInfo.setBusinessType("600");
                                         //收货方信息更改为已获取的发货TC 仓信息，收货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDestinationPlace(ofcTransplanInfo, rmcWarehouse);
-                                        ofcTransplanInfo.setBaseId(rmcPickup.getWareHouseCode());
+                                        ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                         //创建第二个卡班计划单
                                         ofcTransplanInfoReflect.setBusinessType("602");
-                                        ofcTransplanInfoReflect.setBaseId(rmcPickup.getWareHouseCode());
+                                        ofcTransplanInfoReflect.setBaseId(rmcPickup.getWarehouseCode());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1491,11 +1498,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     }
 
                                 } else if (rmcRecipient != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals("")
+                                        && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWarehouseCode()).equals("")
                                         && (rmcPickup == null
-                                        || PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals(""))) {//收货仓有信息，发货仓无
+                                        || PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals(""))) {//收货仓有信息，发货仓无
                                     //获取收货TC仓信息，则获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
-                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcRecipient.getWareHouseCode());
+                                    RmcWarehouse rmcWarehouse = getWareHouseByCodeToPlan(rmcRecipient.getWarehouseCode());
                                     if (rmcWarehouse != null) {
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
                                         try {
@@ -1515,7 +1522,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         ofcTransplanInfoReflect.setBusinessType("600");
                                         //发货方信息更改为已获取的收货TC 仓信息，发货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDarturePlace(ofcTransplanInfoReflect, rmcWarehouse);
-                                        ofcTransplanInfoReflect.setBaseId(rmcRecipient.getWareHouseCode());
+                                        ofcTransplanInfoReflect.setBaseId(rmcRecipient.getWarehouseCode());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1523,9 +1530,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     }
 
                                 } else if ((rmcPickup == null
-                                        || PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals(""))
+                                        || PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals(""))
                                         && (rmcRecipient == null
-                                        || PubUtils.trimAndNullAsEmpty(rmcRecipient.getWareHouseCode()).equals(""))) {//收发货仓都没有信息
+                                        || PubUtils.trimAndNullAsEmpty(rmcRecipient.getWarehouseCode()).equals(""))) {//收发货仓都没有信息
                                     //创建一个运输计划单
                                     ofcTransplanInfo.setBusinessType("602");
                                     ofcTransplanInfo.setProgramSerialNumber("1");
@@ -1534,10 +1541,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             } else if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(FOU.toString())
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
                                 //使用发货地省市区街道 获取覆范围的提货类型的【发货TC库编码】,传入计划单信息的【基地ID】字段, 计划单序号为1
-                                rmcDistrictQO = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcDistrictQO);
-                                RmcPickup rmcPickup = (RmcPickup) RmcPickUpOrRecipientByRmcApi(rmcDistrictQO, "Pickup");
+                                rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 if (rmcPickup != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWareHouseCode()).equals("")) {
+                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {
                                     ofcTransplanInfo.setBaseId("");
                                 }
                                 ofcTransplanInfo.setProgramSerialNumber("1");
@@ -1817,6 +1824,33 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
+    public RmcServiceCoverageForOrderVo FeignRMcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
+        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
+        //先判断是上门提货还是二次配送
+        if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
+            rmcServiceCoverageForOrderVo.setIsPickup(1);
+            rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
+                return rmcPickupList.getResult().get(0);
+            }else {
+                return null;
+            }
+        }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
+            rmcServiceCoverageForOrderVo.setIsPickup(2);
+            rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
+            Wrapper<List<RmcServiceCoverageForOrderVo>> RmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
+                return RmcRecipientList.getResult().get(0);
+            }else{
+                return null;
+            }
+        }else{
+            throw new BusinessException("缺少提货或配送标志位");
+        }
+
+    }
+
     public RmcWarehouse getWareHouseByCodeToPlan(String wareHouseCode){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         RmcWarehouse rmcWarehouse=new RmcWarehouse();
@@ -1914,29 +1948,29 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return ofcTransplanInfo;
     }
 
-    public RmcDistrictQO copyDestinationPlace(String planeCode,RmcDistrictQO rmcDistrictQO){
+    public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
         String address[]=planeCode.split(",");
         if(address.length>=1){
             if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
-                rmcDistrictQO.setProvinceCode(address[0]);
+                rmcServiceCoverageForOrderVo.setProvinceCode(address[0]);
             }
             if(address.length>=2){
                 if(!PubUtils.trimAndNullAsEmpty(address[1]).equals("")){
-                    rmcDistrictQO.setCityCode(address[1]);
+                    rmcServiceCoverageForOrderVo.setCityCode(address[1]);
                 }
                 if(address.length>=3){
                     if(!PubUtils.trimAndNullAsEmpty(address[2]).equals("")){
-                        rmcDistrictQO.setDistrictCode(address[2]);
+                        rmcServiceCoverageForOrderVo.setDistrictCode(address[2]);
                     }
                     if(address.length==4){
                         if(!PubUtils.trimAndNullAsEmpty(address[3]).equals("")){
-                            rmcDistrictQO.setCountyCode(address[3]);
+                            rmcServiceCoverageForOrderVo.setStreetCode(address[3]);
                         }
                     }
                 }
             }
         }
-        return rmcDistrictQO;
+        return rmcServiceCoverageForOrderVo;
     }
 
     /**
