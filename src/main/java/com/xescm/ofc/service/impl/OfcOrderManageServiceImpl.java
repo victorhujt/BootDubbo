@@ -605,7 +605,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     logger.debug("计划单信息保存成功");
                 } catch (Exception ex) {
                     if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
-                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
+                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！");
                     } else {
                         throw new BusinessException("保存计划单信息发生错误！", ex);
                     }
