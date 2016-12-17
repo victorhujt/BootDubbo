@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.api;
 
 import com.xescm.ofc.domain.OfcMobileOrder;
 import com.xescm.ofc.exception.BusinessException;
@@ -21,7 +21,7 @@ import java.util.List;
  * Created by hujintao on 2016/12/12.
  */
 @RestController
-@RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
+@RequestMapping(value = "/api", produces = {"application/json;charset=UTF-8"})
 public class OfcMobileOrderAPIRest extends BaseController {
 
 
