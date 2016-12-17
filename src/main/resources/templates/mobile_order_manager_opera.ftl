@@ -7,6 +7,28 @@
         td{
             text-align: center;
         }
+        .page-content{
+            max-width: 1250px;
+            min-width: 1250px;
+        }
+        .filters{
+            padding: 0;
+        }
+        .initBtn{
+            line-height:32px;
+            width:34px;
+            border:1px solid #cacaca;
+            background:#f7f7f7!important;
+            cursor:pointer;
+            position:absolute;
+            top:0;
+            right:0;
+            color:#393939!important;
+        }
+        .initBtn:hover{
+            background:#fff!important;
+            border:1px solid #cacaca!important;
+        }
     </style>
 </head>
 <body class="no-skin">
@@ -17,19 +39,27 @@
         订单筛选
     </p>
 </div>
-<div class="row">
-    <div class="col-xs-12">
+
         <div class="form-horizontal">
-            <div class="form-group">
-                <label class="control-label col-label no-padding-right" style="margin-right:20px;" for="name">上传日期</label>
-                <div class="y-float">
-                    <div class="clearfix">
-                        <input id="orderTimePre" name="startDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <label class="control-label col-label no-padding-right y-float" style="margin:0 20px;text-align:center;" for="name">至</label>
-                        <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                <div class="form-group y-float">
+                    <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+                    <div class="w-width-220 y-float">
+                        <div class="clearfix position-relative">
+                            <input id="orderTimePre" name="startDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                            <label for="orderTimePre" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group y-float">
+                    <label class="control-label col-label no-padding-right" for="name" style="margin-left: 33px">至</label>
+                    <div class="w-width-220 y-float">
+                        <div class="clearfix position-relative">
+                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                            <label for="orderTimeSuf" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group y-float" style="clear:left;">
                     <label class="control-label col-label no-padding-right" for="name">受理状态</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix">
@@ -41,7 +71,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" style="padding-left: 12px">
+                <div class="form-group" style="padding-left: 12px;">
                     <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix">
@@ -54,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
 
 
 
@@ -67,8 +97,7 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
 <div class="page-header">
     <p>
         订单列表
@@ -256,7 +285,7 @@
         function getOperatorByStatus(order,index) {
             var value = "";
             if (order.mobileOrderStatus == "0") {
-                 value = "<button type=\"button\" id=\"review\" onclick=\"acceptMobileOrder('" + order.mobileOrderCode + "')\" class=\"hidden-480\">未处理</button>"
+                 value = "<a  id=\"review\" onclick=\"acceptMobileOrder('" + order.mobileOrderCode + "')\" class=\"hidden-480\">未处理</a>"
             }else{
                 value = "<span class=\"hidden-480\">已处理</span>"
             }
