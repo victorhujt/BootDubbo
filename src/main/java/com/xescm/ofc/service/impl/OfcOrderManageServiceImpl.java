@@ -584,6 +584,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()).equals("")){
                     ofcTransplanInfo.setGoodsType(ofcDistributionBasicInfo.getGoodsType());
                 }
+                if(!PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals("")){
+                    ofcTransplanInfo.setTwoDistribution(ofcFinanceInformation.getTwoDistribution());
+                }
                 if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHECITY)){//卡班拆城配
                     //向TFC推送
                     logger.debug("计划单状态保存成功");
