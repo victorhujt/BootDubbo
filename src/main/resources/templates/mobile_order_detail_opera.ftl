@@ -85,7 +85,7 @@
         }
         .laypage_curr{
             margin-top: 24px;
-            width: 1134px;
+            width: 1143px;
             float: left;
         }
         .laypage_curr a{
@@ -181,7 +181,10 @@
                                    value="${(mobileOrder.appcetDate?string("yyyy-MM-dd"))!""}">
                         </div>
                         <div class="laypage_curr">
-                            <a href="index#/ofc/mobileOrderManageOpera">返回</a>
+                            <a href="index#/ofc/mobileOrderManageOpera" class="btn btn-white btn-info btn-bold y-rt-btn">
+                                <i class="ace-icon fa fa-arrow-left"></i>
+                                返回
+                            </a>
 
                         </div>
                         <div class="imgClass  imgone">
