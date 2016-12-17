@@ -1183,10 +1183,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         }else{
                             transportDetailDTO.setQty(detail.getQuantity().doubleValue());
                         }
-                        if(null == detail.getBillingWeight()){
+                        if(null == detail.getWeight()){
                             transportDetailDTO.setWeight(0.0);
                         }else{
-                            transportDetailDTO.setWeight(detail.getBillingWeight().doubleValue());
+                            transportDetailDTO.setWeight(detail.getWeight().doubleValue());
                         }
                         if(null == detail.getCubage()){
                             transportDetailDTO.setVolume(0.0);
