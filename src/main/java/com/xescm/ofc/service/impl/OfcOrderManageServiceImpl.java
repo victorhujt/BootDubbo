@@ -556,18 +556,20 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
                 String businessType=PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType());
                 if(businessType.equals("600") || businessType.equals("601") || businessType.equals("602")){
-                    OrderScreenCondition condition=new OrderScreenCondition();
-                    condition.setOrderCode(ofcTransplanInfo.getOrderCode());
+                    //OrderScreenCondition condition=new OrderScreenCondition();
+                    //condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
-                    OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-                    ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
-                    ofcOrderStatus.setStatusDesc("执行中");
-                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                            +" "+"订单开始执行");
-                    ofcOrderStatus.setOperator(userName);
-                    ofcOrderStatus.setLastedOperTime(new Date());
-                    ofcOrderStatusService.save(ofcOrderStatus);
+                    if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("1")){
+                        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+                        ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
+                        ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
+                        ofcOrderStatus.setStatusDesc("执行中");
+                        ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                +" "+"订单开始执行");
+                        ofcOrderStatus.setOperator(userName);
+                        ofcOrderStatus.setLastedOperTime(new Date());
+                        ofcOrderStatusService.save(ofcOrderStatus);
+                    }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getNotes()).equals("")){
                     ofcTransplanInfo.setNotes(ofcFundamentalInformation.getNotes());
@@ -750,46 +752,51 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
         for(int i=0;i<ofcTransplanInfoList.size();i++){
             OfcTransplanInfo ofcTransplanInfo = ofcTransplanInfoList.get(i);
-            try {
-                //defaultMqProducer.toSendMQTfcCancelPlanOrder(JacksonUtil.toJsonWithFormat(ofcTransplanInfo.getPlanCode()));
-                TransportNoDTO transportNoDTO = new TransportNoDTO();
-                transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
-                Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
-                if(Response.ERROR_CODE == response.getCode()){
-                    //运单号不存在,没有发现该订单
-                    //该订单已经取消, 取消失败
-                    logger.error("您无法取消,请联系管理员!{}",response.getMessage());
-                    logger.error("您无法取消,请联系管理员!{}",response.getResult());
-                    throw new BusinessException("您无法取消," + response.getResult());
+            if(ofcTransplanInfo!=null){
+                OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+                ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
+                ofcTransplanStatus=ofcTransplanStatusService.selectOne(ofcTransplanStatus);
+                if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHEKABAN)){
+                    try {
+                        //defaultMqProducer.toSendMQTfcCancelPlanOrder(JacksonUtil.toJsonWithFormat(ofcTransplanInfo.getPlanCode()));
+                        TransportNoDTO transportNoDTO = new TransportNoDTO();
+                        transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
+                        Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
+                        if(Response.ERROR_CODE == response.getCode()){
+                            //运单号不存在,没有发现该订单
+                            //该订单已经取消, 取消失败
+                            logger.error("您无法取消,请联系管理员!{}",response.getMessage());
+                            logger.error("您无法取消,请联系管理员!{}",response.getResult());
+                            throw new BusinessException("您无法取消,{}",response.getResult().toString());
+                        }
+                    } catch (BusinessException ex) {
+                        throw ex;
+                    } catch (Exception ex){
+                        logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage(),ex);
+                        throw new BusinessException("运输计划单调用TFC取消端口出现异常{}",ex.getMessage(),ex);
+                    }
+                    if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUZHONG)
+                            || PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUWANCH)){
+                        throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
+                    }
                 }
-            } catch (BusinessException ex) {
-                throw ex;
-            } catch (Exception ex){
-                logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage());
-                throw new BusinessException(ex.getMessage(),ex);
-            }
-            OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
-            ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-            ofcTransplanStatus=ofcTransplanStatusService.selectOne(ofcTransplanStatus);
-            if(PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YIZUOFEI)){
-                throw new BusinessException("状态错误，该计划单已作废");
-            }else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUZHONG)
-                    || PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(RENWUWANCH)){
-                throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
-            }/*else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YITUISONG)){
+                if(PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YIZUOFEI)){
+                    throw new BusinessException("状态错误，该计划单已作废");
+                }/*else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(YITUISONG)){
                 throw new BusinessException("其是运输计划单，需调用【配送中心】运单取消接口");
-            }*/else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")){
-                throw new BusinessException("状态有误");
-            }
-            ofcTransplanInfo.setVoidPersonnel(userName);
-            ofcTransplanInfo.setVoidTime(new Date());
+                }*/else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")){
+                    throw new BusinessException("状态有误");
+                }
+                ofcTransplanInfo.setVoidPersonnel(userName);
+                ofcTransplanInfo.setVoidTime(new Date());
                     /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
                     ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
-            ofcTransplanStatus.setPlannedSingleState("50");
-            //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
-            //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
-            ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-            ofcTransplanInfoService.update(ofcTransplanInfo);
+                ofcTransplanStatus.setPlannedSingleState("50");
+                //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
+                //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
+                ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+                ofcTransplanInfoService.update(ofcTransplanInfo);
+            }
         }
         List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
         for(int i=0;i<ofcSiloprogramInfoList.size();i++){
