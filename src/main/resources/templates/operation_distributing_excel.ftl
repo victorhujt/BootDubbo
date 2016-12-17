@@ -666,7 +666,8 @@
                                     console.log('batchgoodsKey' + result.result.batchgoodsKey)
                                     batchgoodsKey = result.result.batchgoodsKey;
                                     console.log("全局变量" + batchgoodsKey)
-                                }else if (errorEEsNum > 0){
+                                }
+                                if (errorEEsNum > 0){
                                     batchconsingeeKey = result.result.batchconsingeeKey;
                                 }
 
@@ -735,12 +736,16 @@
         $("#errorExcelImportCloseBtn").click(function () {
             $("#errorExcelImport").hide()
         })
-        $("#errorExcelImportEEBtn").click(function(){
 
+
+    })
+    $("#errorExcelImportEEBtn").click(function(){//toMaintainBatchCustomerImportPage
+        var url = "/csc/batchimport/toMaintainBatchCustomerImportPage/" + batchconsingeeKey;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
 //            $("#toMaintainBatchCustomerImportPage").submit();//
 //            $("#errorExcelImport").hide();
-        })
-
     })
     $("#errorExcelImportGoodsBtn").click(function () {
         console.log("......" + batchgoodsKey)
