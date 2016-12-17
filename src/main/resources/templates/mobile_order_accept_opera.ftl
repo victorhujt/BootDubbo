@@ -70,6 +70,13 @@
         #goodsInfoListDiv .help-block{
             line-height:20px;
         }
+        .imgClass{
+            width:50px;
+            height:50px;
+            border:1px solid #cacaca;
+            margin-top:120px;
+            margin-left: 100px;
+        }
     </style>
 </head>
 <body class="no-skin">
@@ -123,6 +130,18 @@
                             <input id="tranCode" name="tranCode" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.tranCode)!""}">
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img1Url)!""}"/>
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img2Url)!""}"/>
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img3Url)!""}"/>
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img4Url)!""}"/>
                         </div>
                     </div>
                 </form>
