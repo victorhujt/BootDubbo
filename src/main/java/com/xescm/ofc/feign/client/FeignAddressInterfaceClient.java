@@ -1,11 +1,14 @@
 package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.addr.QueryAddress;
 import com.xescm.ofc.feign.api.addr.AddressInterface;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -38,8 +41,18 @@ public class FeignAddressInterfaceClient {
         return res;
     }
     public Wrapper<?> queryAddressByCodeAndType(QueryAddress queryAddress){
+        Wrapper<?> wrapper = null;
         logger.debug("==>查询四级地址 queryAddress={}", queryAddress);
-        Wrapper<?> wrapper = getApi().queryAddressByCodeAndType(queryAddress);
+        try {
+            wrapper = getApi().queryAddressByCodeAndType(queryAddress);
+        }  catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询四级地址接口(/api/addr/citypicker/findByCodeAndType)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询四级地址接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：调用查询四级地址接口(/api/addr/citypicker/findByCodeAndType). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询四级地址接口异常！");
+        }
+
         return wrapper;
     }
 }

@@ -2,15 +2,8 @@ package com.xescm.ofc.web.controller;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
-
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.model.dto.csc.QueryStoreDto;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.model.vo.csc.CscStorevo;
-import com.xescm.ofc.model.dto.csc.QueryCustomerIdDto;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
@@ -19,6 +12,7 @@ import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.MD5Util;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -48,11 +42,7 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-    @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
-    @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
     @Autowired
@@ -73,12 +63,11 @@ public class OfcJumpontroller extends BaseController{
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
-        }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
-            logger.error("订单中心下单出现异常:{}", ex.getMessage(), ex);
-            
+            logger.error("订单中心跳转下单页面出现异常:{}", ex.getMessage(), ex);
             //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
@@ -136,10 +125,14 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/operationDistributing")
     public String operationDistributing(Model model,Map<String,Object> map){
 
-        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
-        map.put("merchandiserList",merchandiserList);
-        map.put("currentTime",new Date());
-        setDefaultModel(model);
+        try {
+            List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+            map.put("merchandiserList",merchandiserList);
+            map.put("currentTime",new Date());
+            setDefaultModel(model);
+        } catch (Exception ex) {
+            logger.error("跳转城配开单页面出错!",ex.getMessage(),ex);
+        }
         return "operation_distributing";
     }
 
@@ -161,6 +154,42 @@ public class OfcJumpontroller extends BaseController{
         map.put("historyUrl",historyUrl);
         map.put("customerCode",customerCode);
         map.put("custName",custName);
+        /*List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        CscGoodsImportDto cscGoodsImportDto = null;
+        cscGoodsImportDto = new CscGoodsImportDto();
+        cscGoodsImportDto.setGoodsCode("GN0001");
+        cscGoodsImportDto.setGoodsName("伊利大果粒");
+        cscGoodsImportDto.setSpecification("400ml");
+        cscGoodsImportDto.setUnit("盒");
+        cscGoodsImportDto.setCustomerCode(customerCode);
+        cscGoodsImportDtoList.add(cscGoodsImportDto);
+        cscGoodsImportDto = new CscGoodsImportDto();
+        cscGoodsImportDto.setGoodsCode("GN0002");
+        cscGoodsImportDto.setGoodsName("蒙牛纯牛奶");
+        cscGoodsImportDto.setSpecification("600ml");
+        cscGoodsImportDto.setUnit("袋");
+        cscGoodsImportDto.setCustomerCode(customerCode);
+        cscGoodsImportDtoList.add(cscGoodsImportDto);
+        String goodsJsonStr = JSONUtils.objectToJson(cscGoodsImportDtoList);
+        map.put("goodsJsonStr",goodsJsonStr);
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
+        CscContantAndCompanyInportDto cscContantAndCompanyInportDto = null;
+        cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+        cscContantAndCompanyInportDto.setContactCompanyName("北京北大");
+        cscContantAndCompanyInportDto.setContactName("老王");
+        cscContantAndCompanyInportDto.setPhone("13123456789");
+        cscContantAndCompanyInportDto.setAddress("北京市北京市海淀区中关村街道北大街110号");
+        cscContantAndCompanyInportDto.setCustCode(customerCode);
+        cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
+        cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+        cscContantAndCompanyInportDto.setContactCompanyName("河南河大");
+        cscContantAndCompanyInportDto.setContactName("老刘");
+        cscContantAndCompanyInportDto.setPhone("13987654321");
+        cscContantAndCompanyInportDto.setAddress("河南省许昌市许昌县将官池镇河大街110号");
+        cscContantAndCompanyInportDto.setCustCode(customerCode);
+        cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
+        String cscContantAndCompanyInportDtos = JSONUtils.objectToJson(cscContantAndCompanyInportDtoList);
+        map.put("cscContantAndCompanyInportDtos",cscContantAndCompanyInportDtos);*/
         return "operation_distributing_excel";
     }
 
@@ -196,16 +225,13 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         try{
-            OfcFundamentalInformation ofcFundamentalInformation
-                    = ofcFundamentalInformationService.getLastMerchandiser(getAuthResDtoByToken().getGroupRefName());
             logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
-            if(ofcFundamentalInformation != null){
-                logger.info("开单员为为{}",ofcFundamentalInformation.getMerchandiser());
-            }
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
-            map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
+            // 加密登录用户名，用于前端缓存cookie的key
+            String loginUser = MD5Util.encodeByAES(getAuthResDtoByToken().getUserName());
+            map.put("loginUser", loginUser);
             setDefaultModel(model);
         }catch (Exception ex){
             logger.error("跳转运输开单页面出错!",ex.getMessage(),ex);
@@ -233,6 +259,18 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    @RequestMapping(value = "ofc/mobileOrderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView mobileOrderManageOpera(Model model) {
+        ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+
+
+
+
 
     @RequestMapping(value = "/ofc/operDistiExcelAdditions")
     public String excelAdditions(){

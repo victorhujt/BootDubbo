@@ -345,12 +345,16 @@
                     </thead>
                     <tbody id="custListDivTbody"></tbody>
                 </table>
+                <div class="row">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    </div>
+                </div>
             </form>
 
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer"><button style="float: left" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+        <div class="modal-footer"><button style="float: left;display: none;" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
 <!--goods&Consigee-->
@@ -738,15 +742,17 @@
             var customerCode = $("#customerCodeFromExcelImport").html();
             var custName = $("#custNameFromExcelImport").html();
             //重新从接口里查一遍
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
-                data=eval(data);
-                $.each(data,function (index,cscCustomerVo) {
-                    if(index == 0){//只显示第一条
-                        $("#custName").val(cscCustomerVo.customerName);
-                        $("#customerCode").val(cscCustomerVo.customerCode);
-                        $("#customerCodeForGoods").val(cscCustomerVo.customerCode);
-                    }
-                });
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"custName":custName,"pageNum":1, "pageSize":1}, function(data) {
+                if (data != null && data != '' && data != undefined && data.result.list.length > 0) {
+//                    data=eval(data);
+                    $.each(data.result.list,function (index,cscCustomerVo) {
+                        if(index == 0){//只显示第一条
+                            $("#custName").val(cscCustomerVo.customerName);
+                            $("#customerCode").val(cscCustomerVo.customerCode);
+                            $("#customerCodeForGoods").val(cscCustomerVo.customerCode);
+                        }
+                    });
+                }
             })
             //加载完客户后自动加载仓库列表, 和货品种类
             //加载仓库列表
@@ -769,7 +775,7 @@
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>"+
                         "<td>" + consignee.contactCompanyName + "</td>" +
-                        "<td><input style='border:1px solid #cacaca'/></td>" +
+                        "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca'/></td>" +//===
                         "<td>" + consignee.contactName + "</td>" +
                         "<td>" + consignee.phone + "</td>" +
                         "<td>" + consignee.detailAddress + "</td>" +
@@ -1248,23 +1254,23 @@
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
                     if(contactList == 1){
-                        contactCompanyNameAuto = CscContantAndCompanyDto.contactCompanyName;
-                        contactNameAuto = CscContantAndCompanyDto.contactName;
+                        contactCompanyNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName);
+                        contactNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName);
                         //phoneAuto = CscContantAndCompanyDto.phone;
-                        detailAddressAuto = CscContantAndCompanyDto.detailAddress;
-                        typeAuto = CscContantAndCompanyDto.type;
-                        contactCompanyIdAuto = CscContantAndCompanyDto.contactCompanySerialNo;
-                        contactCodeAuto = CscContantAndCompanyDto.contactSerialNo;//000
-                        phoneAuto = CscContantAndCompanyDto.phone;
-                        provinceAuto = CscContantAndCompanyDto.province;
-                        provinceNameAuto = CscContantAndCompanyDto.provinceName;
-                        cityAuto = CscContantAndCompanyDto.city;
-                        cityNameAuto = CscContantAndCompanyDto.cityName;
-                        areaAuto = CscContantAndCompanyDto.area;
-                        areaNameAuto = CscContantAndCompanyDto.areaName;
-                        streetAuto = CscContantAndCompanyDto.street;
-                        streetNameAuto = CscContantAndCompanyDto.streetName;
-                        addressAuto = CscContantAndCompanyDto.address;
+                        detailAddressAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress);
+                        typeAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.type);
+                        contactCompanyIdAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo);
+                        contactCodeAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo);//000
+                        phoneAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.phone);
+                        provinceAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.province);
+                        provinceNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName);
+                        cityAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.city);
+                        cityNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName);
+                        areaAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.area);
+                        areaNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName);
+                        streetAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.street);
+                        streetNameAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName);
+                        addressAuto = StringUtil.nullToEmpty(CscContantAndCompanyDto.address);
                     }
                     if(contactList > 1){
                         return true;
@@ -1551,7 +1557,7 @@
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
             consignorout =consignorout + "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input value='" + consigneeCustOrderCode + "' /></td>";
+            consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1604,7 +1610,7 @@
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
                 consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
-                consignorout =consignorout + "<td><input /></td>";
+                consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)'  /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1693,38 +1699,76 @@
 
     })
 
-    $("#custSelectFormBtn").click(function () {
-        var custName = $("#custNameDiv").val();
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
-            data=eval(data);
-            var custList = "";
-            $.each(data,function (index,cscCustomerVo) {
-                var channel = cscCustomerVo.channel;
-                if(null == channel){
-                    channel = "";
-                }
-                custList =custList + "<tr role='row' class='odd'>";
-                custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='custList' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                custList =custList + "<td>"+(index+1)+"</td>";
-                var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
-                if(custType == '1'){
-                    custList =custList + "<td>公司</td>";
-                }else if (custType == '2'){
-                    custList =custList + "<td>个人</td>";
-                }else{
-                    custList =custList + "<td>"+custType+"</td>";
-                }
-                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.customerName)+"</td>";
-                custList =custList + "<td>"+channel+"</td>";
-                custList =custList + "<td>"+StringUtil.nullToEmpty(cscCustomerVo.productType)+"</td>";
-                custList =custList + "<td style='display: none'></td>";
-                custList =custList + "<td style='display: none'>"+StringUtil.nullToEmpty(cscCustomerVo.customerCode)+"</td>";
-                custList =custList + "</tr>";
-                $("#custListDivTbody").html(custList);
-            });
-        },"json");
-
+    // 分页查询客户
+    $("#custSelectFormBtn").click(function() {
+        queryCustomerData(1);
     });
+
+    // 分页查询客户列表
+    function queryCustomerData(pageNum) {
+        var custName = $("#custNameDiv").val();
+        var param = {};
+        param.pageNum = pageNum;
+        param.pageSize = 10;
+        param.custName = custName;
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
+            if (result == undefined || result == null) {
+                alert("未查询到客户信息！");
+            } else if (result.code == 200) {
+                loadCustomer(result);
+                laypage({
+                    cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: result.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: result.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryCustomerData(obj.curr);
+                        }
+                    }
+                });
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#custListDivTbody").html("");
+            }
+        },"json");
+    }
+
+    // 加载客户列表
+    function loadCustomer(data) {
+        if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
+            $("#custListDivTbody").html("");
+            return;
+        }
+        var custList = "";
+        $.each(data.result.list,function (index,cscCustomerVo) {
+            var channel = cscCustomerVo.channel;
+            if(null == channel){
+                channel = "";
+            }
+            custList =custList + "<tr role='row' class='odd'>";
+            custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            custList =custList + "<td>"+(index+1)+"</td>";
+            var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+            if(custType == '1'){
+                custList =custList + "<td>公司</td>";
+            }else if (custType == '2'){
+                custList =custList + "<td>个人</td>";
+            }else{
+                custList =custList + "<td>"+custType+"</td>";
+            }
+            custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+            custList =custList + "<td>"+channel+"</td>";
+            custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+            custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
+            custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
+            custList =custList + "</tr>";
+            $("#custListDivTbody").html(custList);
+        });
+    }
 
     $("#custEnter").click(function () {
 
@@ -2206,6 +2250,10 @@
             obj.value = obj.value.replace(/\d$/gi,'');
         }
 
+    }
+
+    function onlyNumAndAbc(value){
+        return value = value.replace(/[^\w]/ig,'');
     }
 
 </script>

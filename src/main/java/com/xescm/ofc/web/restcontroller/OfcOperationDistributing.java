@@ -2,14 +2,18 @@ package com.xescm.ofc.web.restcontroller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
-import com.xescm.ofc.model.dto.csc.*;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
+import com.xescm.ofc.model.dto.csc.CscGoodsType;
+import com.xescm.ofc.model.dto.csc.QueryCustomerNameAvgueDto;
+import com.xescm.ofc.model.dto.csc.QueryCustomerNameDto;
+import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
@@ -17,7 +21,10 @@ import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.ofc.utils.*;
+import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.JacksonUtil;
+import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -86,27 +93,17 @@ public class OfcOperationDistributing extends BaseController{
             if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
                 return validateCustOrderCodeResult;
             }
-            for(int i = 0; i < jsonArray.size(); i ++){
-                String json = jsonArray.get(i).toString();
-                OfcOrderDTO ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
-                ofcOperationDistributingService.validateOperationDistributingMsg(ofcOrderDTO);
-                String orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
-                AuthResDto authResDtoByToken = getAuthResDtoByToken();
-                List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-                if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
-                    ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
-                }
-                CscContantAndCompanyDto consignor = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
-                CscContantAndCompanyDto consignee = ofcOperationDistributingService.switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
-                ofcOrderDTO.setOrderBatchNumber(batchNumber);
-                resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
-                        ,consignor,consignee,new CscSupplierInfoDto());
-            }
+            resultMessage = ofcOperationDistributingService.distributingOrderPlace(jsonArray,getAuthResDtoByToken(),batchNumber);
         } catch (BusinessException ex){
             logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex){
-            logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
+            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                logger.error("运营中心城配开单批量下单由于单号发生重复导致失败!{}",ex.getMessage(),ex);
+                throw new BusinessException("运营中心城配开单批量下单由于单号发生重复导致失败!", ex);
+            } else {
+                logger.error("运营中心城配开单批量下单失败!{}",ex.getMessage(),ex);
+            }
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"运营中心城配开单批量下单失败!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
@@ -131,7 +128,7 @@ public class OfcOperationDistributing extends BaseController{
     }
 
     /**
-     * 根据选择的客户查询货品一级种类
+     * 查询货品一级种类
      * @param customerCode
      * @param model
      * @param response
@@ -152,7 +149,7 @@ public class OfcOperationDistributing extends BaseController{
     }
 
     /**
-     * 根据选择的客户和货品一级种类查询货品二级小类
+     * 根据货品一级种类查询货品二级小类
      * @param customerCode
      * @param goodsType
      * @param model
@@ -183,7 +180,7 @@ public class OfcOperationDistributing extends BaseController{
      */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto,HttpServletResponse response){
+    public void queryGoodsListInDistrbuting(CscGoodsApiDto cscGoodsApiDto, HttpServletResponse response){
         logger.info("城配开单查询货品列表==> cscGoodsApiDto={}", cscGoodsApiDto);
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
@@ -197,44 +194,78 @@ public class OfcOperationDistributing extends BaseController{
     }
 
 
+//    /**
+//     * 根据客户名称查询客户
+//     * @param queryCustomerName
+//     * @param currPage
+//     * @param response
+//     */
+//    @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
+//    @ResponseBody
+//    public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
+//        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
+//        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
+//        try{
+//            QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
+//            if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
+//                queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
+//                queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
+//            }
+//            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
+//            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
+//            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
+//            if(wrapper.getCode() == Wrapper.ERROR_CODE){
+//                logger.error("查询客户列表失败,查询结果有误!");
+//            }
+//            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
+//            if(null == cscCustomerVoList){
+//                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
+//            }else{
+//                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
+//            }
+//        }catch (Exception ex){
+//            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
+//        }
+//
+//    }
+
     /**
-     * 根据客户名称查询客户
-     * @param queryCustomerName
-     * @param currPage
-     * @param response
+     * 根据客户名称分页查询客户
+     * @param custName  客户名称
+     * @param pageNum   页数
+     * @param pageSize  每页大小
+     * @return
      */
     @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
     @ResponseBody
-    public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
-        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
-        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
-        try{
-            QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
-            if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
-                queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
-                queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
-            }
-            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
-            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
-            if(wrapper.getCode() == Wrapper.ERROR_CODE){
+    public Object queryCustomerByName(String custName, int pageNum, int pageSize) {
+        logger.info("城配开单根据客户名称查询客户==> custName={}", custName);
+        logger.info("城配开单根据客户名称查询客户==> pageNum={}", pageNum);
+        Wrapper<PageInfo<CscCustomerVo>> result;
+        try {
+            PageHelper.startPage(pageNum, pageSize);
+            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
+            queryParam.setCustomerName(custName);
+            queryParam.setPageNum(pageNum);
+            queryParam.setPageSize(pageSize);
+            result = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryParam);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询客户列表失败,查询结果有误!");
             }
-            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
-            if(null == cscCustomerVoList){
-                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
-            }else{
-                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
-            }
-        }catch (Exception ex){
-            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
+        } catch (BusinessException ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
         }
-
+        return result;
     }
 
-     /**
-     * Excel导入,展示Sheet页
+    /**
+     * Excel导入,上传,展示Sheet页
      * @param paramHttpServletRequest
+     * @return
      */
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
     @ResponseBody
@@ -264,12 +295,13 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
      * @param paramHttpServletRequest
-     * @param response
+     * @param modelType 模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+     * @param modelMappingCode 模板映射: 标准, 呷哺呷哺, 尹乐宝等
      * @return
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest, HttpServletResponse response){
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest,String modelType,String modelMappingCode){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
@@ -283,8 +315,8 @@ public class OfcOperationDistributing extends BaseController{
             String suffix = fileName.substring(potIndex, fileName.length());
             String customerCode = multipartHttpServletRequest.getParameter("customerCode");
             String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
-            //校验
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,5);
+            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,modelType,modelMappingCode);
+
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 List<String> xlsErrorMsg = (List<String>) checkResult.getResult();

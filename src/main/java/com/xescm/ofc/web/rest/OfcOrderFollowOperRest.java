@@ -80,7 +80,7 @@ public class OfcOrderFollowOperRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
         } catch (BusinessException ex){
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }catch (Exception ex) {
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);

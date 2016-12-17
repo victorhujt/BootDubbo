@@ -25,8 +25,6 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;

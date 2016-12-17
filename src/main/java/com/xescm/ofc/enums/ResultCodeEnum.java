@@ -1,30 +1,28 @@
 package com.xescm.ofc.enums;
-/**
- * 
- * <p>Title:	  ResultCodeEnum </p>
- * <p>Description 异常编码枚举 </p>
- * <p>Company:    http://www.hnxianyi.com  </p>
- * @Author        <a href="liu_zhaoming@sina.cn"/>刘兆明</a>
- * @CreateDate    2016年10月5日 上午11:23:53 <br/>
- * @version       
- * @since         JDK 1.7
- */
-public enum ResultCodeEnum {
-	UNDEFINED(0, "未定义错误.");
 
-	int type;
+public enum ResultCodeEnum {
+	UNDEFINED("UEC000000", "未定义错误."),
+
+	//系统异常
+	ERROROPER("SEC000001","用户操作异常"),
+
+
+	//业务异常
+	JUMPPAGEERROR("BEC000001","页面跳转出错");
+
+	String type;
 	String name;
 
-	ResultCodeEnum(int type, String name) {
+	ResultCodeEnum(String type, String name) {
 		this.type = type;
 		this.name = name;
 	}
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
@@ -36,7 +34,7 @@ public enum ResultCodeEnum {
 		this.name = name;
 	}
 
-	public static String getName(int type) {
+	public static String getName(String type) {
 		for (ResultCodeEnum ele : ResultCodeEnum.values()) {
 			if (ele.getType() == type)
 				return ele.getName();
@@ -44,7 +42,7 @@ public enum ResultCodeEnum {
 		return null;
 	}
 
-	public static ResultCodeEnum getEnum(int type) {
+	public static ResultCodeEnum getEnum(String type) {
 		for (ResultCodeEnum ele : ResultCodeEnum.values()) {
 			if (ele.getType() == type)
 				return ele;

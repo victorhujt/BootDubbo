@@ -2,10 +2,9 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerCodeDto;
@@ -15,10 +14,11 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,9 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Transactional//既能注解在方法上,也能注解在类上.当注解在类上的时候,意味着这个类的所有public方法都是开启事务的,如果类级别和方法级别同事使用了该注解,则方法覆盖类.
 //@Transactional(rollbackFor={xxx.class})
 public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
     @Resource
@@ -376,8 +379,18 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
                     goodsDetailsList.add(ofcGoodsDetails);
                 }
-                //添加基本信息
-                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                try {
+                    //添加基本信息
+                    ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                } catch (Exception ex) {
+                    if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                        logger.error("获取订单号发生重复，导致保存计划单基本信息发生错误！{}", ex);
+                        throw new BusinessException("获取订单号发生重复，导致保存计划单基本信息发生错误！");
+                    } else {
+                        logger.error("保存计划单信息发生错误！", ex);
+                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                    }
+                }
                 if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
                     ofcMerchandiserService.save(ofcMerchandiser);
                 }
@@ -395,7 +408,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else if("manage".equals(tag)){
             return "您的订单修改成功!";
         }else {
-            return "异常";
+            return ResultCodeEnum.ERROROPER.getName();
         }
     }
 
@@ -758,9 +771,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
+        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
-        }
+        }*/
 
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompany().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
@@ -777,9 +790,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
+        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
-        }
+        }*/
 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
@@ -807,9 +820,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
         }
-        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getAreaName())){
+        /*if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
-        }
+        }*/
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
 
     }

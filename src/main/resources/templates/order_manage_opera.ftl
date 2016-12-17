@@ -25,7 +25,8 @@
             outline:none;
             position:absolute;
             top:0;
-            right:0
+            right:0;
+            padding:7px 9px;
         }
         .initBtn:hover{
             background:#fff !important;
@@ -55,9 +56,9 @@
                 <div style="width:310px;margin-right:15px;" class="padding-12 y-float position-relative">
                     <input readonly="readonly" id="custName" class="y-float" style="width:265px;" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
-                    <button type="button" class="initBtn" onclick="selectCust();">
-                        <i class="fa fa-search"></i>
-                    </button>
+                    <label for="custName" class="initBtn" onclick="selectCust();">
+                        <i class="fa fa-user bigger-130"></i>
+                    </label>
                   <#--  <button type="button" style="height:34px;" onclick="selectCust();" class="btn btn-minier no-padding-right initBtn" id="">
                         <i class="fa fa-user l-cor"></i>
                     </button>-->
@@ -84,16 +85,16 @@
                 <div class="padding-12 y-float" style="width:325px;">
                     <div class="y-float position-relative">
                         <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <button type="button" class="initBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <label for="startDate" class="initBtn">
+                            <i class="fa fa-calendar bigger-130"></i>
+                        </label>
                     </div>
                    <p class="y-float" style="margin:0 3px;line-height:34px;">至</p>
                     <div class="y-float position-relative">
                         <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <button type="button" class="initBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <label for="endDate" class="initBtn">
+                            <i class="fa fa-calendar bigger-130"></i>
+                        </label>
                     </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
@@ -217,6 +218,7 @@
                                     <span class="lbl"></span>
                                 </label>
                             </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Price: activate to sort column ascending">类型
                             </th>
@@ -241,7 +243,7 @@
             </div>
         </div>
         <div class="form-group" style="width:100%;">
-            <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+            <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
                 <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
                 <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
         </div>
@@ -550,31 +552,71 @@
 
         $("#custSelectFormBtn").on("click", function () {
             var custName = $("#custNameDiv").val();
-            loadCust(custName);
+            queryCustomerData(custName, 1);
         });
 
-        function loadCust(custName) {
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {
-                "queryCustomerName": custName,
-                "currPage": "1"
-            }, function (data) {
-                data = eval(data);
-                var custList = "";
-                $.each(data, function (index, cscCustomerVo) {
-                    var channel = cscCustomerVo.channel;
-                    if (null == channel) {
-                        channel = "";
-                    }
-                    custList = custList + "<tr role='row' class='odd'>";
-                    custList = custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
-                    custList = custList + "<td>" + (cscCustomerVo.type == "1" ? "个人" : "企业") + "</td>";
-                    custList = custList + "<td>" + cscCustomerVo.customerName + "</td>";
-                    custList = custList + "<td>" + channel + "</td>";
-                    custList = custList + "<td>" + cscCustomerVo.productType + "</td>";
-                    custList = custList + "</tr>";
-                    $("#custListDivTbody").empty().html(custList);
-                });
-            }, "json");
+        // 分页查询客户列表
+        function queryCustomerData(custName, pageNum) {
+            var custName = $("#custNameDiv").val();
+            var param = {};
+            param.pageNum = pageNum;
+            param.pageSize = 10;
+            param.custName = custName;
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
+                if (result == undefined || result == null) {
+                    alert("未查询到客户信息！");
+                } else if (result.code == 200) {
+                    loadCustomer(result);
+                    laypage({
+                        cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                        pages: result.result.pages, // 总页数
+                        skip: true, // 是否开启跳页
+                        skin: "molv",
+                        groups: 3, // 连续显示分页数
+                        curr: result.result.pageNum, // 当前页
+                        jump: function (obj, first) { // 触发分页后的回调
+                            if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                                queryCustomerData(obj.curr);
+                            }
+                        }
+                    });
+                } else if (result.code == 403) {
+                    alert("没有权限")
+                } else {
+                    $("#custListDivTbody").html("");
+                }
+            },"json");
+        }
+
+        // 加载客户列表
+        function loadCustomer(data) {
+            if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
+                $("#custListDivTbody").html("");
+                return;
+            }
+            var custList = "";
+            $.each(data.result.list,function (index,cscCustomerVo) {
+                var channel = cscCustomerVo.channel;
+                if(null == channel){
+                    channel = "";
+                }
+                custList =custList + "<tr role='row' class='odd'>";
+                custList =custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
+                custList =custList + "<td>"+(index+1)+"</td>";
+                var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+                if(custType == '1'){
+                    custList =custList + "<td>公司</td>";
+                }else if (custType == '2'){
+                    custList =custList + "<td>个人</td>";
+                }else{
+                    custList =custList + "<td>"+custType+"</td>";
+                }
+                custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+                custList =custList + "<td>"+channel+"</td>";
+                custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+                custList =custList + "</tr>";
+                $("#custListDivTbody").html(custList);
+            });
         }
 
         $("#custEnter").on("click", function () {

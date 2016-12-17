@@ -1,5 +1,6 @@
 package com.xescm.ofc.feign.api.csc;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -19,6 +20,7 @@ public interface FeignCscCustomerAPI {
      */
     @RequestLine("POST /api/csc/customer/queryCustomerByCustomerCodeOrId")
     @Headers("Content-Type: application/json")
+
     Wrapper<CscCustomerVo> queryCustomerByCustomerCodeOrId(QueryCustomerCodeDto queryCustomerCodeDto);
 
     /**
@@ -39,5 +41,5 @@ public interface FeignCscCustomerAPI {
      */
     @RequestLine("POST /api/csc/customer/QueryCustomerByNameAvgue")
     @Headers("Content-Type: application/json")
-    public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto);
+    public Wrapper<PageInfo<CscCustomerVo>> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto);
 }

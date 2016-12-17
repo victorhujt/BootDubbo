@@ -122,7 +122,8 @@ public class OfcOrderDTO {
     private String consigneeType;
     private String consignorContactPhone;
     private String consigneeContactPhone;
-
+    private String goodsType;
+    private String goodsTypeName;
    // private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<OfcGoodsDetailsInfo>();
     private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
 
@@ -1075,5 +1076,21 @@ public class OfcOrderDTO {
 
     public void setOpenInvoices(String openInvoices) {
         this.openInvoices = openInvoices;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
     }
 }

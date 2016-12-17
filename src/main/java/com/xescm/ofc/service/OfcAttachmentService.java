@@ -1,12 +1,11 @@
 package com.xescm.ofc.service;
 
-import com.xescm.uam.domain.dto.AuthResDto;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import com.xescm.ofc.domain.OfcAttachment;
 
 /**
- * Created by hujintao on 2016/12/12.
+ * Created by hujintao on 2016/12/17.
  */
 public interface OfcAttachmentService {
 
-    public  String uploadFile(MultipartHttpServletRequest multipartRequest, AuthResDto authResDto);
+    public OfcAttachment saveAttachment(OfcAttachment attachment);
 }

@@ -7,6 +7,7 @@ import com.xescm.ofc.feign.api.rmc.FeignRmcWarehouseAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -59,8 +60,12 @@ public class FeignRmcWarehouseAPIClient {
         Wrapper<RmcWarehouse> rmcWarehouseByid = null;
         try {
             rmcWarehouseByid = getRmcApi().queryRmcWarehouseById(warehouse);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用根据仓库ID获取仓库信息(/api/rmc/warehouse/queryRmcWarehouseById)无法连接或超时. {}", ex);
+            throw new BusinessException("根据仓库ID获取仓库信息无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：根据仓库ID获取仓库信息(/api/rmc/warehouse/queryRmcWarehouseById)发生异常. {}", ex);
+            throw new BusinessException("获取仓库信息发生错误！");
         }
         return rmcWarehouseByid;
     }

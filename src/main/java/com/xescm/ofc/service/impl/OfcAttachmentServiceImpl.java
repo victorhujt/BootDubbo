@@ -1,19 +1,28 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ofc.domain.OfcAttachment;
+import com.xescm.ofc.mapper.OfcAttachmentMapper;
 import com.xescm.ofc.service.OfcAttachmentService;
-import com.xescm.uam.domain.dto.AuthResDto;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import java.util.List;
+import com.xescm.ofc.utils.CodeGenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * Created by hujintao on 2016/12/12.
+ * Created by hujintao on 2016/12/17.
  */
-public class OfcAttachmentServiceImpl implements OfcAttachmentService {
-    @Override
-    public String uploadFile(MultipartHttpServletRequest multipartRequest, AuthResDto authResDto) {
+@Service
+public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implements OfcAttachmentService {
 
-        return null;
+    @Autowired
+    private OfcAttachmentMapper ofcAttachmentMapper;
+
+    @Autowired
+    private CodeGenUtils codeGenUtils;
+
+    @Override
+    public OfcAttachment saveAttachment(OfcAttachment attachment) {
+        attachment.setSerialNo(codeGenUtils.getNewWaterCode("AT",6));
+        save(attachment);
+        return attachment;
     }
 }

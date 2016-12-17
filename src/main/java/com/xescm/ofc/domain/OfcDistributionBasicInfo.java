@@ -269,29 +269,35 @@ public class OfcDistributionBasicInfo {
     @Column(name = "oper_time")
     private Date operTime;
 
+    /**
+     * 发货方联系人电话
+     */
+    @Column(name = "consignor_contact_phone")
     private String consignorContactPhone;
+
+    /**
+     * 收货方联系人电话
+     */
+    @Column(name = "consignee_contact_phone")
     private String consigneeContactPhone;
+
+    /**
+     * 货品种类
+     */
+    @Column(name = "goods_type")
+    private String goodsType;
+
+    /**
+     * 货品种类名称
+     */
+    @Column(name = "goods_type_name")
+    private String goodsTypeName;
 
     //校验运输单号专用字段
     @Transient
     private String selfTransCode;
 
 
-    public String getConsignorContactPhone() {
-        return consignorContactPhone;
-    }
-
-    public void setConsignorContactPhone(String consignorContactPhone) {
-        this.consignorContactPhone = consignorContactPhone;
-    }
-
-    public String getConsigneeContactPhone() {
-        return consigneeContactPhone;
-    }
-
-    public void setConsigneeContactPhone(String consigneeContactPhone) {
-        this.consigneeContactPhone = consigneeContactPhone;
-    }
 
     public String getConsignorType() {
         return consignorType;
@@ -996,5 +1002,77 @@ public class OfcDistributionBasicInfo {
 
     public void setSelfTransCode(String selfTransCode) {
         this.selfTransCode = selfTransCode;
+    }
+
+    /**
+     * 获取发货方联系人电话
+     *
+     * @return consignor_contact_phone - 发货方联系人电话
+     */
+    public String getConsignorContactPhone() {
+        return consignorContactPhone;
+    }
+
+    /**
+     * 设置发货方联系人电话
+     *
+     * @param consignorContactPhone 发货方联系人电话
+     */
+    public void setConsignorContactPhone(String consignorContactPhone) {
+        this.consignorContactPhone = consignorContactPhone;
+    }
+
+    /**
+     * 获取收货方联系人电话
+     *
+     * @return consignee_contact_phone - 收货方联系人电话
+     */
+    public String getConsigneeContactPhone() {
+        return consigneeContactPhone;
+    }
+
+    /**
+     * 设置收货方联系人电话
+     *
+     * @param consigneeContactPhone 收货方联系人电话
+     */
+    public void setConsigneeContactPhone(String consigneeContactPhone) {
+        this.consigneeContactPhone = consigneeContactPhone;
+    }
+
+    /**
+     * 获取货品种类
+     *
+     * @return goods_type - 货品种类
+     */
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    /**
+     * 设置货品种类
+     *
+     * @param goodsType 货品种类
+     */
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    /**
+     * 获取货品种类名称
+     *
+     * @return goods_type_name - 货品种类名称
+     */
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    /**
+     * 设置货品种类名称
+     *
+     * @param goodsTypeName 货品种类名称
+     */
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
     }
 }

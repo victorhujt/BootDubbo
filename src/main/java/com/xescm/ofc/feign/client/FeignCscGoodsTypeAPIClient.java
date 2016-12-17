@@ -9,6 +9,7 @@ import com.xescm.ofc.feign.api.csc.FeignCscGoodsTypeAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -39,19 +40,38 @@ public class FeignCscGoodsTypeAPIClient {
 
 
     public Wrapper<List<CscGoodsTypeVo>> queryCscGoodsTypeList(CscGoodsType cscGoodsType){
+        Wrapper<List<CscGoodsTypeVo>> listWrapper = null;
         logger.debug("==>查询货品类别 cscGoodsType={}", cscGoodsType);
         if(null == cscGoodsType){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscGoodsTypeVo>> listWrapper = (Wrapper<List<CscGoodsTypeVo>>) getApi().queryCscGoodsTypeList(cscGoodsType);
+        try {
+            listWrapper = (Wrapper<List<CscGoodsTypeVo>>) getApi().queryCscGoodsTypeList(cscGoodsType);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询货品种类接口(/api/csc/goodstype/queryCscGoodsTypeList)无法连接或超时. {}", ex);
+            throw new BusinessException("调用查询货品种类接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：通过查询货品种类接口(/api/csc/goodstype/queryCscGoodsTypeList). {}", ex);
+            throw new BusinessException("调用查询货品种类接口异常！");
+        }
         return listWrapper;
     }
+
     public Wrapper<?> addCscGoodsType(CscGoodsType cscGoodsType){
+        Wrapper<?> listWrapper = null;
         logger.debug("==>查询货品类别 cscGoodsType={}", cscGoodsType);
         if(null == cscGoodsType){
             throw new BusinessException("参数为空");
         }
-        Wrapper<?> listWrapper = getApi().addCscGoodsType(cscGoodsType);
+        try {
+            listWrapper = getApi().addCscGoodsType(cscGoodsType);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询货品种类接口(/api/csc/goodstype/addCscGoodsType)无法连接或超时. {}", ex);
+            throw new BusinessException("调用查询货品种类接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：通过查询货品种类接口(/api/csc/goodstype/addCscGoodsType). {}", ex);
+            throw new BusinessException("调用查询货品种类接口异常！");
+        }
         return listWrapper;
     }
 }
