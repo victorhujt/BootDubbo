@@ -1,4 +1,5 @@
 package com.xescm.ofc.feign.client;
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
@@ -71,12 +72,12 @@ public class FeignCscCustomerAPIClient {
     }
 
     /**
-     * 模糊匹配，查询客户
+     * 分页模糊匹配，查询客户
      * @param queryCustomerNameDto
      * @return
      */
-    public Wrapper<?> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto) {
-        Wrapper<?> wrapper = null;
+    public Wrapper<PageInfo<CscCustomerVo>> QueryCustomerByNameAvgue(QueryCustomerNameAvgueDto queryCustomerNameDto) {
+        Wrapper<PageInfo<CscCustomerVo>> wrapper = null;
         logger.debug("通过QueryCustomerCodeDto查询客户信息:{}",queryCustomerNameDto);
         if(null == queryCustomerNameDto){
             throw new BusinessException("参数为空");

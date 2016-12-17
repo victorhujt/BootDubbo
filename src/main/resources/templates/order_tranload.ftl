@@ -308,12 +308,16 @@
                     </thead>
                     <tbody id="custListDivTbody"></tbody>
                 </table>
+                <div class="row">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    </div>
+                </div>
             </form>
 
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+        <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
             <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
             <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
@@ -1913,6 +1917,72 @@
         }
     }
 
+    // 分页查询客户列表
+    function queryCustomerData(pageNum) {
+        var custName = $("#custNameDiv").val();
+        var param = {};
+        param.pageNum = pageNum;
+        param.pageSize = 10;
+        param.custName = custName;
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
+            if (result == undefined || result == null) {
+                alert("未查询到客户信息！");
+            } else if (result.code == 200) {
+                loadCustomer(result);
+                laypage({
+                    cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: result.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: result.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryCustomerData(obj.curr);
+                        }
+                    }
+                });
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#custListDivTbody").html("");
+            }
+        },"json");
+    }
+
+    // 加载客户列表
+    function loadCustomer(data) {
+        if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
+            $("#custListDivTbody").html("");
+            return;
+        }
+        var custList = "";
+        $.each(data.result.list,function (index,cscCustomerVo) {
+            var channel = cscCustomerVo.channel;
+            if(null == channel){
+                channel = "";
+            }
+            custList =custList + "<tr role='row' class='odd'>";
+            custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            custList =custList + "<td>"+(index+1)+"</td>";
+            var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+            if(custType == '1'){
+                custList =custList + "<td>公司</td>";
+            }else if (custType == '2'){
+                custList =custList + "<td>个人</td>";
+            }else{
+                custList =custList + "<td>"+custType+"</td>";
+            }
+            custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+            custList =custList + "<td>"+channel+"</td>";
+            custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+            custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
+            custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
+            custList =custList + "</tr>";
+            $("#custListDivTbody").html(custList);
+        });
+    }
+
     $(function(){
 
         $("#pickUpGoodsV").change(function(){
@@ -2111,38 +2181,9 @@
         });
 
 
-
-        $("#custSelectFormBtn").click(function () {
-            var custName = $("#custNameDiv").val();
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
-                data=eval(data);
-                var custList = "";
-                $.each(data,function (index,cscCustomerVo) {
-                    var channel = cscCustomerVo.channel;
-                    if(null == channel){
-                        channel = "";
-                    }
-                    custList =custList + "<tr role='row' class='odd'>";
-                    custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    custList =custList + "<td>"+(index+1)+"</td>";
-                    var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
-                    if(custType == '1'){
-                        custList =custList + "<td>公司</td>";
-                    }else if (custType == '2'){
-                        custList =custList + "<td>个人</td>";
-                    }else{
-                        custList =custList + "<td>"+custType+"</td>";
-                    }
-                    custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
-                    custList =custList + "<td>"+channel+"</td>";
-                    custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
-                    custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
-                    custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
-                    custList =custList + "</tr>";
-                    $("#custListDivTbody").html(custList);
-                });
-            },"json");
-
+        // 分页查询客户
+        $("#custSelectFormBtn").click(function() {
+            queryCustomerData(1);
         });
 
         $("#custEnter").click(function () {

@@ -225,8 +225,6 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value="/ofc/tranLoad")
     public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
         try{
-            OfcFundamentalInformation ofcFundamentalInformation
-                    = ofcFundamentalInformationService.getLastMerchandiser(getAuthResDtoByToken().getGroupRefName());
             logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);

@@ -2,6 +2,9 @@ package com.xescm.ofc.web.restcontroller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
@@ -10,6 +13,7 @@ import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
 import com.xescm.ofc.model.dto.csc.CscGoodsType;
 import com.xescm.ofc.model.dto.csc.QueryCustomerNameAvgueDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerNameDto;
+import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
@@ -25,7 +29,6 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -191,39 +194,72 @@ public class OfcOperationDistributing extends BaseController{
     }
 
 
+//    /**
+//     * 根据客户名称查询客户
+//     * @param queryCustomerName
+//     * @param currPage
+//     * @param response
+//     */
+//    @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
+//    @ResponseBody
+//    public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
+//        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
+//        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
+//        try{
+//            QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
+//            if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
+//                queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
+//                queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
+//            }
+//            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
+//            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
+//            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
+//            if(wrapper.getCode() == Wrapper.ERROR_CODE){
+//                logger.error("查询客户列表失败,查询结果有误!");
+//            }
+//            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
+//            if(null == cscCustomerVoList){
+//                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
+//            }else{
+//                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
+//            }
+//        }catch (Exception ex){
+//            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
+//        }
+//
+//    }
+
     /**
-     * 根据客户名称查询客户
-     * @param queryCustomerName
-     * @param currPage
-     * @param response
+     * 根据客户名称分页查询客户
+     * @param custName  客户名称
+     * @param pageNum   页数
+     * @param pageSize  每页大小
+     * @return
      */
     @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
     @ResponseBody
-    public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
-        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
-        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
-        try{
-            QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
-            if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
-                queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
-                queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
-            }
-            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
-            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
-            if(wrapper.getCode() == Wrapper.ERROR_CODE){
+    public Object queryCustomerByName(String custName, int pageNum, int pageSize) {
+        logger.info("城配开单根据客户名称查询客户==> custName={}", custName);
+        logger.info("城配开单根据客户名称查询客户==> pageNum={}", pageNum);
+        Wrapper<PageInfo<CscCustomerVo>> result;
+        try {
+            PageHelper.startPage(pageNum, pageSize);
+            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
+            queryParam.setCustomerName(custName);
+            queryParam.setPageNum(pageNum);
+            queryParam.setPageSize(pageSize);
+            result = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryParam);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询客户列表失败,查询结果有误!");
             }
-            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
-            if(null == cscCustomerVoList){
-                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
-            }else{
-                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
-            }
-        }catch (Exception ex){
-            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
+        } catch (BusinessException ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
         }
-
+        return result;
     }
 
     /**

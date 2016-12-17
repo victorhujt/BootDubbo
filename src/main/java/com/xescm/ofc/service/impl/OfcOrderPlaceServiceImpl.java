@@ -17,6 +17,8 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,9 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Transactional//既能注解在方法上,也能注解在类上.当注解在类上的时候,意味着这个类的所有public方法都是开启事务的,如果类级别和方法级别同事使用了该注解,则方法覆盖类.
 //@Transactional(rollbackFor={xxx.class})
 public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
     @Resource
@@ -379,8 +384,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                 } catch (Exception ex) {
                     if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                        logger.error("获取订单号发生重复，导致保存计划单基本信息发生错误！{}", ex);
                         throw new BusinessException("获取订单号发生重复，导致保存计划单基本信息发生错误！");
                     } else {
+                        logger.error("保存计划单信息发生错误！", ex);
                         throw new BusinessException("保存计划单信息发生错误！", ex);
                     }
                 }
