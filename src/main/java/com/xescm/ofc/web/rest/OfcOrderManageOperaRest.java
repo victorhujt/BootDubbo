@@ -53,6 +53,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     private PlanAndStorageService planAndStorageService;
     @Autowired
     private OfcBatchOrderVoService ofcBatchOrderVoService;
+    @Autowired
+    private OrderFollowOperService orderFollowOperService;
 
     /**
      * 查询订单
@@ -194,6 +196,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
+            List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
             ofcOrderStatusList = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatusList);
             //最新订单状态
             ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
