@@ -248,7 +248,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                             resultMap.put(mapKey,jsonArray);
                             //校验两个不同的客户订单编号对应了同一个收货方//判断JSONArray的第二个格子是否有该收货方了,如果有就提示出错!
-                        }else{
+                        }/*else{//如果货品既没在Map中也不在档案中
                             //如果没维护,就输出错误信息,并向cscGoodsImportDtoList中添加,checkPass=false
                             //如果校验失败,就标记该单元格
                             checkPass = false;
@@ -261,7 +261,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
                             cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
                             cscGoodsImportDtoList.add(cscGoodsImportDto);
-                        }
+                        }*/
                     }else{
                         //如果在Map中已经存在,则存对应收货方和数量
                         JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
