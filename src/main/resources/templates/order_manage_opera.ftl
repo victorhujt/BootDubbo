@@ -174,7 +174,7 @@
         </tbody>
     </table>
     <div class="row">
-        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+        <div id="DataPageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
         </div>
     </div>
 
@@ -329,7 +329,7 @@
                 } else if (result.code == 200) {// 1:normal
                     reloadGrid(result);// 刷新页面数据
                     laypage({
-                        cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                        cont: $("#DataPageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
                         pages: result.result.pages, // 总页数
                         skip: true, // 是否开启跳页
                         skin: "molv",
