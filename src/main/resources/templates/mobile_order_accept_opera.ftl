@@ -71,67 +71,82 @@
             line-height:20px;
         }
         .imgClass{
+            float: left;
             width:50px;
             height:50px;
             border:1px solid #cacaca;
             margin-top:120px;
             margin-left: 100px;
         }
+        .row{
+            max-width: 1250px;
+            min-width: 1250px;
+        }
+        .col-label{
+            margin-left: 100px;
+        }
+        .col-float{
+            margin-top: 24px;
+        }
+        .imgone{
+            margin-left: 135px;
+        }
     </style>
 </head>
-<body class="no-skin">
 
+<body class="no-skin">
+<div class="page-header">
+    <p>
+        订单详情
+    </p>
+</div>
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
     <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
             返回
         </button>-->
     </div>
+
     <form id="" method="post" class="form-horizontal" role="form">
-        <div class="page-header">
-            <p>
-                订单详情
-            </p>
-        </div>
         <div class="row">
             <div class="col-xs-12">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-label no-padding-right" for="name">流水号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">流水号</label>
                         <div class="w-width-220 col-float">
                             <input id="orderCode" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">上传日期</label>
                         <div class="w-width-220 col-float">
                             <input id="uploadDate" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">钉钉账号</label>
                         <div class="w-width-220 col-float">
                             <input id="dingdingAccountNo" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.dingdingAccountNo)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">开单员</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">开单员</label>
                         <div class="w-width-220 col-float">
                             <input id="operator" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.operator)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">业务类型</label>
                         <div class="w-width-220 col-float">
                             <input id="businessType" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(mobileOrder.businessType)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">运输单号</label>
                         <div class="w-width-220 col-float">
                             <input id="tranCode" name="tranCode" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.tranCode)!""}">
                         </div>
-                        <div class="imgClass">
+                        <div class="imgClass imgone">
                             <img src="${(mobileOrder.img1Url)!""}"/>
                         </div>
                         <div class="imgClass">
