@@ -453,7 +453,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userName);
-            ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
+            //ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcDistributionBasicInfo);//$$$$
             BeanUtils.copyProperties(ofcTraplanSourceStatus,ofcTransplanInfo);
             BeanUtils.copyProperties(ofcTransplanStatus,ofcTransplanInfo);
@@ -637,6 +637,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustName()).equals("")){
             pushDistributionBasicInfo.setCustName(ofcTransplanInfo.getCustName());
+        }
+        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustCode()).equals("")){
+            pushDistributionBasicInfo.setCustCode(ofcTransplanInfo.getCustCode());
         }
         Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){

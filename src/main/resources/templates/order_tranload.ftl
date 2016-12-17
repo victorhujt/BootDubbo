@@ -2070,8 +2070,8 @@
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
                     if(tableRows == 1 && tableCells == 1){
-                        jsonStr.goodsType = orderGoods.goodsType;
-                        jsonStr.goodsTypeName=param.getElementsByTagName("select")[0].value;
+                        jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
+                        jsonStr.goodsTypeName=orderGoods.goodsType;
                     }
                 }
                 if(orderGoods.chargingWays=="01"){
