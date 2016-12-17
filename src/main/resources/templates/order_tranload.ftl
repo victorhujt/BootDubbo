@@ -2446,7 +2446,7 @@
         });
 
         $("#addGoods").click(function () {
-            if(validateCustChosen()){
+            if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
                 var goodsInfoListDiv = "";
