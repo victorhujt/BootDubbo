@@ -81,12 +81,28 @@
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-3">
                     <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
+                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a>
                     <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
                 <input id="customerCode" value="${customerCode!""}" hidden/>
                 <input id="custName" value="${custName!""}" hidden/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">模板类型</label>
+            <div class="col-xs-3">
+                <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked type="radio"/>交叉
+                <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio"/>明细列表
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">模板映射</label>
+            <div class="col-xs-3">
+                <select class="col-xs-12" id="templatesMapping">
+                    <option value="standard">标准</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -208,15 +224,15 @@
 
 </div>
 
-<#--
-<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
-    <textarea rows="30" cols="30" id="goodsJsonStr">${goodsJsonStr!""}</textarea>
+
+<form action="${(CSC_URL_LOCAL)!}/open/csc/batchimport/toMaintainBatchGoodsImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" name="goodsJsonStr">${goodsJsonStr!""}</textarea>
     <button type="submit">货品批量添加测试</button>
 </form>
-<form action="${(CSC_URL_LOCAL)!}/csc/batchimport/toMaintainBatchCustomerImportPage" target="_blank" method="post">
-    <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos">${cscContantAndCompanyInportDtos!""}</textarea>
+<form action="${(CSC_URL_LOCAL)!}/open/csc/batchimport/toMaintainBatchCustomerImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" name="cscContantAndCompanyInportDtos">${cscContantAndCompanyInportDtos!""}</textarea>
     <button type="submit">收货方批量添加测试</button>
-</form>-->
+</form>
 <script type="text/javascript">
     var scripts = [null,
         "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -368,9 +384,10 @@
             var mapKey = goodsCode + "@" + goodsIndex;
             var num = "0";
 
+            console.log(""+mapKey)
 
             if(undefined != viewMap.get(mapKey)){
-                
+
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
@@ -511,10 +528,14 @@
                 var sheetNum = $("#uploadExcelSheet").val();
                 var formData = new FormData();
                 var customerCode = $("#customerCode").val();
+                var templatesMapping = $("#templatesMapping").val();
+                var templatesType = $('input[name="templatesType"]:checked ').val();
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
                 formData.append('sheetNum',sheetNum);
+                formData.append('templatesType',templatesType);
+                formData.append('templatesMapping',templatesMapping);
                 var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
 //                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
@@ -544,6 +565,7 @@
                             var resultMap =  JSON.parse(result.result);
 
                             var consigneeTag = true;
+                            var goodsAndEETag = true;
                             var indexView = 0;
                             for(var key in resultMap){
                                 indexView += 1;
@@ -566,7 +588,8 @@
                                                 "<td>" + data.unit + "</td>" +
                                                 "<td>" + data.goodsAmount + "</td>" +
                                                 "</tr>");
-                                    }else if(index % 3 == 1){//收货人和货品需求量
+                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
+                                        debugger
                                         for(var inkey in data){
                                             consigeeMsg[inkey] = data[inkey];
                                         }
@@ -583,8 +606,11 @@
                                                 "</tr>");
                                     }
                                 }
+                                goodsAndEETag = false;
                                 consigneeTag = false;
                                 viewMapValue[1] = consigeeMsg;
+                                console.log("源"+key)
+                                console.log("源"+viewMapValue)
                                 viewMap.put(key,viewMapValue);
                             }
 
@@ -658,7 +684,8 @@
         $("#ExcelNoneBtnBottom").click(function () {
             var excelImportTag = "cancel";
             var customerCode = $("#customerCode").val();
-            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
+            var custName = $("#custName").val();
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);
         })
     })

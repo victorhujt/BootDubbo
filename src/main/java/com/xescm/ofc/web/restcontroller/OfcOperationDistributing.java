@@ -14,6 +14,7 @@ import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
+import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
@@ -254,19 +255,21 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
      * @param paramHttpServletRequest
-     * @param modelType 模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
-     * @param modelMappingCode 模板映射: 标准, 呷哺呷哺, 尹乐宝等
      * @return
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest,String modelType,String modelMappingCode){
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
             String fileName = multipartHttpServletRequest.getParameter("fileName");
+            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+            String modelType = multipartHttpServletRequest.getParameter("templatesType");
+            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
+            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
             int potIndex = fileName.lastIndexOf(".") + 1;
             if(-1 == potIndex){
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
@@ -278,8 +281,8 @@ public class OfcOperationDistributing extends BaseController{
 
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
-                List<String> xlsErrorMsg = (List<String>) checkResult.getResult();
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),xlsErrorMsg);
+                OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo.getXlsErrorMsg());
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
                 Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
                 String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);

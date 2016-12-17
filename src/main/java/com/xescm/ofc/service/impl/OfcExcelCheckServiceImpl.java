@@ -5,12 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
-import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
+import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.csc.domain.CscContact;
 import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
+import com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
+import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcExcelCheckService;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -52,14 +54,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      */
     @Override
     public Wrapper<?> checkXlsBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell) {
-        boolean checkPass = true;
-        Map<String,JSONArray> resultMap = null;
-        List<CscContantAndCompanyResponseDto> consigneeNameList = null;
-        List<String> consigneeNameListForCheck = null;
-        List<CscGoodsApiVo> goodsApiVoList = null;
-        List<String> goodsCodeListForCheck = null;
-        List<String> xlsErrorMsg = null;
+
         HSSFWorkbook hssfWorkbook = null;
+        Map<Integer,String> modelNameStr = new HashMap<>();
+        Class clazz = null;
+        List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
+        try {
+            clazz = Class.forName("com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         try {
             hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
         } catch (IOException e) {
@@ -74,12 +78,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 continue;
             }
             HSSFSheet sheet = hssfWorkbook.getSheetAt(sheetNum);
-            resultMap = new LinkedHashMap<>();
-            consigneeNameList = new ArrayList<>();
-            consigneeNameListForCheck = new ArrayList<>();
-            goodsApiVoList = new ArrayList<>();
-            goodsCodeListForCheck = new ArrayList<>();
-            xlsErrorMsg = new ArrayList<>();
+
             //遍历row
             if(sheet.getLastRowNum() == 0){
                 throw new BusinessException("请先上传Excel导入数据，再加载后执行导入！");
@@ -89,9 +88,20 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 HSSFRow hssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 JSONArray jsonArray = new JSONArray();
+                OfcExcelBoradwise ofcExcelBoradwise = null;
+                try {
+                    ofcExcelBoradwise = (OfcExcelBoradwise) clazz.newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
                 //空行
                 HSSFCell cell = hssfRow.getCell(0);
-                if (null == hssfRow || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()) {
+                if(null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
+                    continue;
+                }
+                if (null == hssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
@@ -111,19 +121,300 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                     } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
-                    }
-                    //至此, 已经能拿到每一列的值
+                    } /*else if(HSSFCell.Cell){
 
+                    }*/
+                    //至此, 已经能拿到每一列的值
+                    if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
+                        String refCellValue = cellReflectToDomain(cellValue); //标准表字段映射成对应实体的字段的值
+                        modelNameStr.put(cellNum,refCellValue);
+                    }else if(rowNum > 0){ // 表格的数据体
+                        String cellNumName = modelNameStr.get(cellNum); //拿到当前列对应的字段的值
+                        try {
+                            if("orderTime".equals(cellNumName)){
+                                //对订单日期进行特殊处理
+                            }else if("goodsAmount".equals(cellNumName)){//货品数量
+                                BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,bigDecimal);
+                            }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
+                                BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,bigDecimal);
+                            }else{
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
+                            }
+                        } catch (NoSuchFieldException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if(rowNum > 0){
+                    ofcExcelBoradwiseList.add(ofcExcelBoradwise);
+                }
+            }
+        }
+        //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
+        //无法再按照之前的方法进行
+        boolean checkPass = true;
+
+        Map<String,JSONArray> resultMap = new LinkedHashMap<>();
+        Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
+        Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
+        List<String> xlsErrorMsg = new ArrayList<>();
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
+        List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+
+
+        for(OfcExcelBoradwise ofcExcelBoradwise : ofcExcelBoradwiseList){
+            String custOrderCode = ofcExcelBoradwise.getCustOrderCode();
+            String mapKey = null;
+            //如果该客户订单编号是第一次出现
+            if(null == orderByCustOrderCode.get(custOrderCode) || orderByCustOrderCode.get(custOrderCode)){
+                orderByCustOrderCode.put(custOrderCode,false);
+
+                //取客户订单编号, 订单日期, 收货方名称, 联系人, 联系电话, 地址, 货品编码,货品名称,规格,单位,数量,单价, 往设定好的数据结构里放
+                //去接口查该收货方名称是否在客户中心维护
+                CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+                CscContactCompany cscContactCompany = new CscContactCompany();
+                CscContact cscContact = new CscContact();
+                cscContantAndCompanyDto.setCustomerCode(customerCode);
+                cscContactCompany.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
+                cscContact.setPurpose("1");//用途为收货方
+                cscContantAndCompanyDto.setCscContact(cscContact);
+                cscContantAndCompanyDto.setCscContactCompany(cscContactCompany);
+                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
+                    throw new BusinessException(queryCscCustomerResult.getMessage());
+                }
+                List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
+                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = null;
+                //如果存在
+                if(null != result && result.size() > 0){
+                    orderByCustOrderCode.put(custOrderCode,true);
+                    //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
+                    cscContantAndCompanyResponseDto = result.get(0);
+                    getEEByCustOrderCode.put(ofcExcelBoradwise.getCustOrderCode(),cscContantAndCompanyResponseDto);
+                    String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+
+                    //其中货品编码要判断一下是否在Map中存在,
+                    if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
+                        //如果不存在则去接口判断该货品是否在客户中心中进行维护了
+                        CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
+                        cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
+                        cscGoodsApiDto.setCustomerCode(customerCode);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+                        resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
+                        if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
+                            checkPass = false;
+                            xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode() + "】在货品档案中不存在!请维护!");
+                        }
+                        List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
+                        if(null != cscGoodsApiVoResult && cscGoodsApiVoResult.size() > 0){
+                            JSONArray jsonArray = new JSONArray();
+                            //如果维护了就只取收货方和数量
+                            CscGoodsApiVo cscGoodsApiVo = cscGoodsApiVoResult.get(0);
+//                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
+                            mapKey = cscGoodsApiVo.getGoodsCode();
+                            JSONObject jsonObject = new JSONObject();
+
+                            jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                            jsonArray.add(cscGoodsApiVo);
+                            jsonArray.add(jsonObject);
+                            jsonArray.add(cscContantAndCompanyResponseDto);
+
+                            resultMap.put(mapKey,jsonArray);
+                            //校验两个不同的客户订单编号对应了同一个收货方//判断JSONArray的第二个格子是否有该收货方了,如果有就提示出错!
+                        }else{
+                            //如果没维护,就输出错误信息,并向cscGoodsImportDtoList中添加,checkPass=false
+                            //如果校验失败,就标记该单元格
+                            checkPass = false;
+                            resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
+                            xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode() + "】在货品档案中不存在!请维护!");
+                            CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+                            cscGoodsImportDto.setCustomerCode(customerCode);
+                            cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
+                            cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
+                            cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
+                            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                            cscGoodsImportDtoList.add(cscGoodsImportDto);
+                        }
+                    }else{
+                        //如果在Map中已经存在,则存对应收货方和数量
+                        JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
+                        JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
+                        jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        jsonArrayExistGoods.remove(1);
+                        jsonArrayExistGoods.add(1,jsonObjectExistGoods);
+                        resultMap.put(ofcExcelBoradwise.getGoodsCode(),jsonArrayExistGoods);
+                        //
+                    }
+                }else{
+                    //收货人列表不在联系人档案中,则需要对当前格子进行报错处理
+                    //如果不存在,就输出错误信息,并向cscContantAndCompanyInportDtoList中添加,checkPass=false
+                    checkPass = false;
+                    xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】在联系人档案中不存在!");
+                    CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+                    cscContantAndCompanyInportDto.setCustCode(customerCode);
+                    cscContantAndCompanyInportDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeContactName());
+                    cscContantAndCompanyInportDto.setContactName(ofcExcelBoradwise.getConsigneeName());
+                    cscContantAndCompanyInportDto.setPhone(ofcExcelBoradwise.getConsigneeContactPhone());
+                    cscContantAndCompanyInportDto.setAddress(ofcExcelBoradwise.getConsigneeAddress());
+                    cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
+                    //即使当前收货方没有维护, 也要继续校验货品档案
+                    if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
+                        resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
+                        CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
+                        cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
+                        cscGoodsApiDto.setCustomerCode(customerCode);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+                        if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
+                            checkPass = false;
+                            xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode() + "】在货品档案中不存在!请维护!");
+                        }
+
+                    }
+                }
+                //如果该客户订单编号不是第一次出现
+            }else{
+                //只取货品编码,货品名称,规格,单位,数量,单价,往设定好的数据结构里放
+                if(!orderByCustOrderCode.get(custOrderCode)){//
+                    if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
+                        resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
+                        CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
+                        cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
+                        cscGoodsApiDto.setCustomerCode(customerCode);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+                        if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
+                            checkPass = false;
+                            xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode() + "】在货品档案中不存在!请维护!");
+                        }
+
+                    }
+
+                    continue;
+                }
+                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
+
+                String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+                //其中货品编码要判断一下是否在Map中存在,
+                if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
+                    //如果不存在则去接口判断该货品是否在客户中心中进行维护了
+                    CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
+                    cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
+                    cscGoodsApiDto.setCustomerCode(customerCode);
+                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+                    if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
+                        checkPass = false;
+                        xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode() + "】在货品档案中不存在!请维护!");
+                        continue;
+                    }
+                    List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
+                    if(null != cscGoodsApiVoResult && cscGoodsApiVoResult.size() > 0){
+                        //如果维护了就只取收货方和数量
+                        JSONArray jsonArray = new JSONArray();
+                        CscGoodsApiVo cscGoodsApiVo = cscGoodsApiVoResult.get(0);
+//                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
+                        mapKey = cscGoodsApiVo.getGoodsCode();
+                        JSONObject jsonObject = new JSONObject();
+
+                        jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        jsonArray.add(cscGoodsApiVo);
+                        jsonArray.add(jsonObject);
+                        jsonArray.add(cscContantAndCompanyResponseDto);
+
+                        resultMap.put(mapKey,jsonArray);
+                        //校验两个不同的客户订单编号对应了同一个收货方//判断JSONArray的第二个格子是否有该收货方了,如果有就提示出错!
+                    }else{
+                        //如果没维护,就输出错误信息,并向cscGoodsImportDtoList中添加,checkPass=false
+                        //如果校验失败,就标记该单元格
+                        checkPass = false;
+                        xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode() + "】在货品档案中不存在!请维护!");
+                        CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+                        cscGoodsImportDto.setCustomerCode(customerCode);
+                        cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
+                        cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
+                        cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
+                        cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                        cscGoodsImportDtoList.add(cscGoodsImportDto);
+                    }
+
+                }else{
+                    //如果在Map中已经存在,则报错!
+                    JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
+                    JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
+                    if(null != jsonObjectExistGoods){
+                        checkPass = false;
+                        xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】匹配到两个客户订单编号!请检查!");
+                    }else{
+                        jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                    }
                 }
             }
         }
 
         if(checkPass){
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
+            int goodsRowNum = 1;
+            //将MapKey更改为适合前端模板的格式
+            Map<String,JSONArray> afterResultMap = new HashMap<>();
+            Boolean consigneeTag = false;
+            int consigneeNum = 1;
+            for(String mapKey : resultMap.keySet()){
+                JSONArray jsonArray = resultMap.get(mapKey);
+
+                for(String custOrderCode : getEEByCustOrderCode.keySet()){
+                    //第一个3
+                    if(1 == consigneeNum){
+                        //所有的货品, 每个收货人都应该有, 如果没有就置为0, 而且要将3个一循环的数据堆齐
+                        CscGoodsApiVo cscGoodsApiVo = (CscGoodsApiVo) jsonArray.get(0);
+                        Double goodsAmout = cscGoodsApiVo.getGoodsAmount();
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(1);
+                        for(String custOrderCodeIn : getEEByCustOrderCode.keySet()){
+                            CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(custOrderCodeIn);
+                            String consigneeAndGoodsKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+                            if(null == jsonObject.get(consigneeAndGoodsKey)){
+                                jsonObject.put(consigneeAndGoodsKey,new BigDecimal(0));
+                            }else{
+                                BigDecimal bigDecimal = (BigDecimal) jsonObject.get(consigneeAndGoodsKey);
+                                goodsAmout = bigDecimal.doubleValue() + goodsAmout;
+                            }
+                        }
+                        cscGoodsApiVo.setGoodsAmount(goodsAmout);
+                        jsonArray.remove(1);
+                        jsonArray.add(1,jsonObject);
+                        jsonArray.remove(2);
+                        jsonArray.add(2,getEEByCustOrderCode.get(custOrderCode));
+                        resultMap.put(mapKey,jsonArray);
+
+                    }else{
+                        jsonArray.add(null);//cscGoodsApiVo
+                        jsonArray.add(null);//jsonObject
+                        jsonArray.add(getEEByCustOrderCode.get(custOrderCode));
+                        resultMap.put(mapKey,jsonArray);
+                    }
+                    consigneeNum ++;
+                }
+                afterResultMap.put(mapKey + "@" + goodsRowNum++,resultMap.get(mapKey));
+                goodsRowNum++;
+            }
+
+
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",afterResultMap );
         }else{
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",xlsErrorMsg);
+            OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
+            ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
+
 
     /**
      * 校验XLSX格式
@@ -138,6 +429,43 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     public Wrapper<?> checkXlsxBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell) {
         return null;
     }
+
+    /**
+     * 列名和实体的映射
+     */
+    private String cellReflectToDomain(String cellName){
+        if(cellName.equals("客户订单号")){
+            return "custOrderCode";
+        }else if(cellName.equals("订单日期")){
+            return "orderTime";
+        }else if(cellName.equals("收货方名称")){
+            return "consigneeName";
+        }else if(cellName.equals("联系人")){
+            return "consigneeContactName";
+        }else if(cellName.equals("联系电话")){
+            return "consigneeContactPhone";
+        }else if(cellName.equals("地址")){
+            return "consigneeAddress";
+        }else if(cellName.equals("货品编码")){
+            return "goodsCode";
+        }else if(cellName.equals("货品名称")){
+            return "goodsName";
+        }else if(cellName.equals("规格")){
+            return "goodsSpec";
+        }else if(cellName.equals("单位")){
+            return "goodsUnit";
+        }else if(cellName.equals("数量")){
+            return "goodsAmount";
+        }else if(cellName.equals("单价")){
+            return "goodsUnitPirce";
+        }else{
+            throw new BusinessException("字段错误");
+        }
+
+    }
+
+
+
     /**
      * 校验XLS格式
      * 交叉
@@ -359,7 +687,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         if(checkPass){
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
         }else{
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",xlsErrorMsg);
+            OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
+            ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
 
     }
@@ -587,7 +917,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         if(checkPass){
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",resultMap);
         }else{
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",xlsErrorMsg);
+            OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
+            ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
 

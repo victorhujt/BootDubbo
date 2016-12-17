@@ -284,8 +284,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     public Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNum, AuthResDto authResDto, String customerCode,  String modelType, String modelMappingCode) {
         Wrapper<?> checkResult = null;
         //交叉
-        //if(OrderConstConstant.MODEL_TYPE_ACROSS.equals(modelType)){
-        if(true){
+        if(OrderConstConstant.MODEL_TYPE_ACROSS.equals(modelType)){
             //根据modelMappingCode查询数据库,将用户的Excel表格跟我们的标准模板进行映射
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
             int staticCell = 5;
