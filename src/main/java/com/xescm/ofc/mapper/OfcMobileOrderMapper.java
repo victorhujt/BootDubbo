@@ -7,7 +7,6 @@ import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.uam.domain.dto.AuthResDto;
-import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
 /**
  * Created by hujintao on 2016/12/17.
  */
-@Repository
 public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
     OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder);
