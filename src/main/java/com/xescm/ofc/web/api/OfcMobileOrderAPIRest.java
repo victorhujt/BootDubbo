@@ -131,16 +131,4 @@ public class OfcMobileOrderAPIRest extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }
