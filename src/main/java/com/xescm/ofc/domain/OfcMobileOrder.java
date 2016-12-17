@@ -1,5 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,6 +21,8 @@ public class OfcMobileOrder {
      * 上传日期
      */
     @Column(name = "upload_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date uploadDate;
 
     /**
@@ -40,8 +45,8 @@ public class OfcMobileOrder {
     /**
      * 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    @Column(name = "buniess_type")
-    private String buniessType;
+    @Column(name = "business_type")
+    private String businessType;
 
     /**
      * 运输单号
@@ -70,6 +75,8 @@ public class OfcMobileOrder {
      * 受理时间
      */
     @Column(name = "appcet_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date appcetDate;
 
     /**
@@ -191,17 +198,17 @@ public class OfcMobileOrder {
      *
      * @return buniess_type - 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    public String getBuniessType() {
-        return buniessType;
+    public String getBusinessType() {
+        return businessType;
     }
 
     /**
      * 设置业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      *
-     * @param buniessType 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
+     * @param businessType 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    public void setBuniessType(String buniessType) {
-        this.buniessType = buniessType;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     /**

@@ -1,5 +1,6 @@
 <head>
-    <title>运输开单</title>
+    <title>订单详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
     <style type="text/css">
         #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
@@ -69,11 +70,85 @@
         #goodsInfoListDiv .help-block{
             line-height:20px;
         }
+        .imgClass{
+            width:50px;
+            height:50px;
+            border:1px solid #cacaca;
+            margin-top:120px;
+            margin-left: 100px;
+        }
     </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
-
 <body class="no-skin">
+
+<div class="col-xs-12">
+    <div class="col-sm-6" style="float: right">
+    <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
+            返回
+        </button>-->
+    </div>
+    <form id="" method="post" class="form-horizontal" role="form">
+        <div class="page-header">
+            <p>
+                订单详情
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-label no-padding-right" for="name">流水号</label>
+                        <div class="w-width-220 col-float">
+                            <input id="orderCode" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+                        <div class="w-width-220 col-float">
+                            <input id="uploadDate" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
+                        <div class="w-width-220 col-float">
+                            <input id="dingdingAccountNo" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(mobileOrder.dingdingAccountNo)!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">开单员</label>
+                        <div class="w-width-220 col-float">
+                            <input id="operator" name="" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(mobileOrder.operator)!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                        <div class="w-width-220 col-float">
+                            <input id="businessType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(mobileOrder.businessType)!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+                        <div class="w-width-220 col-float">
+                            <input id="tranCode" name="tranCode" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(mobileOrder.tranCode)!""}">
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img1Url)!""}"/>
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img2Url)!""}"/>
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img3Url)!""}"/>
+                        </div>
+                        <div class="imgClass">
+                            <img src="${(mobileOrder.img4Url)!""}"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </form>
+</div><!-- /.col -->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
@@ -342,9 +417,19 @@
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-168">
                                 <select  id="businessType" name="businessType" class="chosen-select form-control ">
-                                    <option value="602">卡班</option>
+                                <#if mobileOrder.businessType  =="602">
+                                    <option value="602" select="selected">卡班</option>
                                     <option value="600">城配</option>
                                     <option value="601">干线</option>
+                                <#elseif  mobileOrder.businessType =="600">
+                                    <option value="602">卡班</option>
+                                    <option value="600" select="selected">城配</option>
+                                    <option value="601">干线</option>
+                                <#elseif  mobileOrder.businessType =="601">
+                                    <option value="602">卡班</option>
+                                    <option value="600">城配</option>
+                                    <option value="601" select="selected">干线</option>
+                                </#if>
                                 </select>
                             </div>
                         </div></div>
@@ -2053,9 +2138,6 @@
                         case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
-                    if(tableRows == 1 && tableCells == 1){
-                        jsonStr.goodsType = orderGoods.goodsType;
-                    }
                 }
                 if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
@@ -2729,4 +2811,44 @@
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
+
+
+
+<script>
+    $(function () {
+        $("input[type='search']").attr("readonly", "readonly")
+    })
+
+    $(function () {
+        var businessType = "${(mobileOrder.businessType)!""}"
+        $("#businessType").val(getBusiType(businessType));
+    });
+    function getBusiType(businessType) {
+        var value = "";
+        if (businessType == '600') {
+            value = "城配"
+        } else if (businessType == "601") {
+            value = "干线";
+        } else if (businessType == "602") {
+            value = "卡班";
+        } else if (businessType == "610") {
+            value = "销售出库";
+        } else if (businessType == "611") {
+            value = "调拨出库";
+        } else if (businessType == "612") {
+            value = "报损出库";
+        } else if (businessType == "613") {
+            value = "其他出库";
+        } else if (businessType == "620") {
+            value = "采购入库";
+        } else if (businessType == "621") {
+            value = "调拨入库";
+        } else if (businessType == "622") {
+            value = "退货入库";
+        } else if (businessType == "623") {
+            value = "加工入库";
+        }
+        return value;
+    }
+</script>
 </body>

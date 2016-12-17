@@ -9,8 +9,10 @@ import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.rmc.RmcPickup;
 import com.xescm.ofc.model.vo.rmc.RmcRecipient;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -46,8 +48,12 @@ public class FeignRmcPickUpOrRecipientAPIClient {
         Wrapper<List<RmcPickup>> rmcPickupList = null;
         try {
             rmcPickupList = getRmcApi().queryPickUp(rmcDistrictQO);
-        }catch (Exception ex){
-            throw new BusinessException("查询上门提货覆盖区域报错", ex);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询上门提货覆盖区域接口(/api/rmc/district/queryPickUp)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询上门提货覆盖区域接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：查询上门提货覆盖区域接口(/api/rmc/district/queryPickUp). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询上门提货覆盖区域接口发生异常！");
         }
         return rmcPickupList;
     }
@@ -60,8 +66,12 @@ public class FeignRmcPickUpOrRecipientAPIClient {
         Wrapper<List<RmcRecipient>> RmcRecipientList = null;
         try {
             RmcRecipientList = getRmcApi().queryRecipient(rmcDistrictQO);
-        }catch (Exception ex){
-            throw new BusinessException("查询二次派送服务区域报错", ex);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询二次派送服务区域接口(/api/rmc/district/queryRecipient)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询二次派送服务区域接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：查询二次派送服务区域接口(/api/rmc/district/queryRecipient). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询二次派送服务区域接口发生异常！");
         }
         return RmcRecipientList;
     }

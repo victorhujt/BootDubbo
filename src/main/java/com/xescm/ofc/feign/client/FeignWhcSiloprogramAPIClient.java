@@ -2,6 +2,7 @@ package com.xescm.ofc.feign.client;
 
 import javax.annotation.Resource;
 
+import feign.RetryableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,12 @@ public class FeignWhcSiloprogramAPIClient {
         }
         try {
             response = getApi().cancelOrder(cancelOrderDTO);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(), ex);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用取消仓储订单接口(/api/whc/order/cancel/cancelOrder)无法连接或超时. {} ", ex);
+            throw new BusinessException("调用取消仓储订单接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：取消仓储订单接口(/api/whc/order/cancel/cancelOrder). {}", ex);
+            throw new BusinessException("调用取消仓储订单接口发生异常");
         }
         return response;
     }

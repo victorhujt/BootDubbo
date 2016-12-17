@@ -63,7 +63,7 @@ public class OfcJumpontroller extends BaseController{
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
-        }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
@@ -261,6 +261,18 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    @RequestMapping(value = "ofc/mobileOrderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView mobileOrderManageOpera(Model model) {
+        ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+
+
+
+
 
     @RequestMapping(value = "/ofc/operDistiExcelAdditions")
     public String excelAdditions(){

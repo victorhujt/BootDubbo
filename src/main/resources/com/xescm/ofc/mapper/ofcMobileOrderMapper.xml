@@ -10,7 +10,7 @@
     <result column="dingding_account_no" property="dingdingAccountNo" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="order_type" property="orderType" jdbcType="VARCHAR" />
-    <result column="buniess_type" property="buniessType" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
     <result column="tran_code" property="tranCode" jdbcType="VARCHAR" />
     <result column="mobile_order_status" property="mobileOrderStatus" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
@@ -23,10 +23,42 @@
   </resultMap>
 
   <select id="queryOrderNotes" resultType="com.xescm.ofc.domain.OfcMobileOrder">
-    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.buniess_type,
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
     omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
     omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
     FROM ofc_mobile_order omo where omo.mobile_order_status=#{mobileOrderStatus}
     ORDER BY omo.upload_date DESC LIMIT 20
   </select>
+
+  <!-- 运营-订单管理查询 -->
+  <select id="queryOrderList" resultMap="BaseResultMap">
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
+    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
+    omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
+    FROM ofc_mobile_order omo
+    <where>
+       1 = 1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND omo.upload_date <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND omo.upload_date <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.mobileOrderStatus!=null and form.mobileOrderStatus!=''">
+        AND omo.mobile_order_status = #{form.mobileOrderStatus}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND omo.business_type = #{form.businessType}
+
+      </if>
+    </where>
+    ORDER BY omo.mobile_order_code DESC
+  </select>
+
+
+
+
+
+
+
 </mapper>

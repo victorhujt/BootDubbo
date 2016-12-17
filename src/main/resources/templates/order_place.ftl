@@ -779,7 +779,7 @@
                                                             <div class="clearfix">
                                                                 <select id="warehouseName" name="warehouseName" class="chosen-select" style="width:220px;">
                                                                 <#list rmcWarehouseByCustCode! as warehouse>
-                                                                    <option value="${(warehouse.id)!}">${(warehouse.warehouseName)!""}</option>
+                                                                    <option value="${(warehouse.warehouseCode)!}">${(warehouse.warehouseName)!""}</option>
                                                                 </#list>
 
                                                                 </select>
@@ -791,7 +791,7 @@
                                                         <label class="control-label col-label no-padding-right no-padding-top" for="name" style="margin-left:0;width:125px;">入库预计到达时间</label>
                                                         <div class="col-sm-6">
                                                             <div class="clearfix">
-                                                                <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" style="width:220px;" placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})">
+                                                                <input id="arriveTime" name="arriveTime"  type="text" class="form-control input-sm" style="width:220px;" placeholder="" aria-controls="dynamic-table" onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
 
                                                             </div>
                                                         </div>

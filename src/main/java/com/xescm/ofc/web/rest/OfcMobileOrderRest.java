@@ -1,103 +1,74 @@
 package com.xescm.ofc.web.rest;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
-import com.xescm.ofc.enums.OssFileUrlEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.ofc.OfcMobileOrderDto;
+import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.PubUtils;
-import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.Wrapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
 
 /**
- * Created by hujintao on 2016/12/12.
+ * 手机订单
+ * Created by hujintao on 2016/12/15.
  */
-@RequestMapping(value = "/ofc/api", produces = {"application/json;charset=UTF-8"})
-@RestController
+@RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
+@Controller
 public class OfcMobileOrderRest extends BaseController {
-
-
     @Autowired
     private OfcMobileOrderService ofcMobileOrderService;
 
-    @RequestMapping(value = "mobileOrder/saveMobileOrder", method = RequestMethod.POST)
-    @ApiOperation(value = "保存手机订单信息", response = Wrapper.class)
-    public Wrapper<?> saveMobileOrder(@ApiParam(name = "ofcMobileOrderDto", value = "手机订单信息") @RequestBody  OfcMobileOrderDto ofcMobileOrderDto) {
-        logger.debug("==>保存拍照录单信息 mobileOrder={}", ofcMobileOrderDto);
+    @RequestMapping(value = "/queryMobileOrderData", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<?> queryMobileOrderData(Page<MobileOrderOperForm> page, MobileOrderOperForm form) {
         try {
-            if(ofcMobileOrderDto == null){
-                throw new BusinessException("参数不能为空");
-            }
-            OfcMobileOrder ofcMobileOrder=new OfcMobileOrder();
-            BeanUtils.copyProperties(ofcMobileOrderDto,ofcMobileOrder);
-            ofcMobileOrderService.save(ofcMobileOrder);
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            List<OfcMobileOrder> dataList = ofcMobileOrderService.queryOrderList(form);
+            PageInfo<OfcMobileOrder> pageInfo = new PageInfo<>(dataList);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (BusinessException ex) {
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception e) {
-            logger.debug("保存拍照录单信息={}", e.getMessage(), e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
+        } catch (Exception ex) {
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+    @RequestMapping(value = "/mobileOrderDetails/{orderCode}")
+    public ModelAndView orderDetailByOrderCode(@PathVariable("orderCode") String code) {
+        logger.debug("==>手机订单详情code code={}", code);
+        ModelAndView modelAndView = new ModelAndView("mobile_order_detail_opera");
+        OfcMobileOrder condition = new OfcMobileOrder();
+        condition.setMobileOrderCode(code);
+        OfcMobileOrder mobileOrder = ofcMobileOrderService.selectOne(condition);
+        modelAndView.addObject("mobileOrder", mobileOrder);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/acceptMobileOrder/{orderCode}")
+    public ModelAndView acceptMobileOrder(@PathVariable("orderCode") String code) {
+        logger.debug("==>手机订单详情code code={}", code);
+        ModelAndView modelAndView = new ModelAndView("mobile_order_accept_opera");
+        OfcMobileOrder condition = new OfcMobileOrder();
+        condition.setMobileOrderCode(code);
+        OfcMobileOrder mobileOrder = ofcMobileOrderService.selectOne(condition);
+        modelAndView.addObject("mobileOrder", mobileOrder);
+        return modelAndView;
     }
 
 
-    /**
-     * 流水号查询拍照录单订单
-     * @param
-     * @return
-     */
-    @RequestMapping(value="mobileOrder/queryMobileOrderByCode", method = RequestMethod.POST)
-    @ResponseBody
-    @ApiOperation(value = "通过流水号查询手机订单信息", notes = "返回包装手机订单信息json", response = Wrapper.class)
-    private Wrapper<?> queryMobileOrderByCode(@ApiParam(name ="ofcMobileOrderDto", value = "手机订单信息") @RequestBody OfcMobileOrderDto ofcMobileOrderDto){
-        OfcMobileOrder result=null;
-        try {
-            if(ofcMobileOrderDto == null){
-                throw new BusinessException("参数不能为空");
-            }
-            if (StringUtils.isBlank(ofcMobileOrderDto.getMobileOrderCode())){
-                throw new BusinessException("流水号不能为空!");
-            }
-            OfcMobileOrder condition=new OfcMobileOrder();
-            BeanUtils.copyProperties(ofcMobileOrderDto,condition);
-             result= ofcMobileOrderService.selectOne(condition);
-        } catch (Exception e) {
-            logger.error("订单号查询出错：orderCode{},{}", ofcMobileOrderDto.getMobileOrderCode(), e.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE,e.getMessage());
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
-    }
 
-    /**
-     * 获取录单记录
-     * @return
-     */
-    @RequestMapping(value="/queryOrderNotes", method = RequestMethod.POST)
-    @ResponseBody
-    public List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus){
-        ModelAndView modelAndView = new ModelAndView("");
-        List<OfcMobileOrder> ofcMobileOrder=new ArrayList<>();
-        try {
-            mobileOrderStatus=PubUtils.trimAndNullAsEmpty(mobileOrderStatus);
-            ofcMobileOrder=ofcMobileOrderService.queryOrderNotes(mobileOrderStatus);
-        }catch (Exception e){
-            modelAndView.addObject("info","查询失败");
-            logger.info("查询历史订单异常，{}",e.getMessage(),e);
-        }
-        return ofcMobileOrder;
-    }
 }
