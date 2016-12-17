@@ -330,6 +330,12 @@ public class OfcTransplanInfo {
     private String goodsType;
 
     /**
+     * 货品种类名称
+     */
+    @Column(name = "goods_type_name")
+    private String goodsTypeName;
+
+    /**
      * 货主名称
      */
     @Column(name = "cust_name")
@@ -1296,6 +1302,24 @@ public class OfcTransplanInfo {
      */
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    /**
+     * 获取货品种类名称
+     *
+     * @return goods_type_name - 货品种类名称
+     */
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    /**
+     * 设置货品种类名称
+     *
+     * @param goodsTypeName 货品种类名称
+     */
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
     }
 
     /**

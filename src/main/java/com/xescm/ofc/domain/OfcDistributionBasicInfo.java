@@ -287,6 +287,12 @@ public class OfcDistributionBasicInfo {
     @Column(name = "goods_type")
     private String goodsType;
 
+    /**
+     * 货品种类名称
+     */
+    @Column(name = "goods_type_name")
+    private String goodsTypeName;
+
     //校验运输单号专用字段
     @Transient
     private String selfTransCode;
@@ -1050,5 +1056,23 @@ public class OfcDistributionBasicInfo {
      */
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    /**
+     * 获取货品种类名称
+     *
+     * @return goods_type_name - 货品种类名称
+     */
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    /**
+     * 设置货品种类名称
+     *
+     * @param goodsTypeName 货品种类名称
+     */
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
     }
 }

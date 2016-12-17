@@ -809,8 +809,9 @@
                         <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
                         <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费数量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
                     </thead>
                 <#--货品明细-->
 
@@ -1070,22 +1071,18 @@
             rules : {
                 currentAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 toPayAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 returnAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 monthlyAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 }
             },
@@ -1364,7 +1361,6 @@
             var st=tdArr.eq(10).find("input").val();
             if(chargingways=="01"){
                 if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    quantityCount=quantityCount+parseFloat(tdArr.eq(10).find("input").val());
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
                         luggage=luggage+parseFloat(tdArr.eq(10).find("input").val())*parseFloat(tdArr.eq(9).find("input").val());
                     }else{
@@ -1374,10 +1370,9 @@
                     flg1="error";
                 }
             }else if(chargingways=="02"){
-                if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    weightCount=weightCount+parseFloat(tdArr.eq(10).find("input").val());
+                if(tdArr.eq(12).find("input").val()!="" && tdArr.eq(12).find("input").val()!="0"){
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
-                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(10).find("input").val());
+                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(12).find("input").val());
                     }else{
                         flg2="error";
                     }
@@ -1385,10 +1380,9 @@
                     flg2="error";
                 }
             }else if(chargingways=="03"){
-                if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    cubageCount=cubageCount+parseFloat(tdArr.eq(10).find("input").val());
+                if(tdArr.eq(13).find("input").val()!="" && tdArr.eq(13).find("input").val()!="0"){
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
-                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(10).find("input").val());
+                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(13).find("input").val());
                     }else{
                         flg3="error";
                     }
@@ -1399,6 +1393,22 @@
                 alert("计费方式有问题");
             }
         });
+        $('input[name="quantity"]').each(function(){
+            if($(this).val()!=""){
+                quantityCount=quantityCount+parseFloat($(this).val());
+            }
+        });
+        $('input[name="weight"]').each(function(){
+            if($(this).val()!=""){
+                weightCount=weightCount+parseFloat($(this).val());
+            }
+        });
+        $('input[name="cubage"]').each(function(){
+            if($(this).val()!=""){
+                cubageCount=cubageCount+parseFloat($(this).val());
+            }
+        });
+
         if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val(luggage)}
         countCostCheck();
         $("#weightCount").html(weightCount);
@@ -1860,10 +1870,16 @@
                 "<input class='col-xs-12'  name='' id='' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class=' col-xs-12'  name='' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                "<input class='col-xs-12'  name='quantity' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
-        goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                "<input class='col-xs-12'  name='billingWeight' id='' type='text' onblur='checkBillingWeight(this)'/>"
+        goodsInfoListDiv = goodsInfoListDiv + "<td id='1' style=\"display:none\">"+
+                "<input class='col-xs-12'  name='billingWeight' id='' type='hidden' onblur='checkBillingWeight(this)'/>"
+                +"</td>";
+        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                "<input class='col-xs-12'  name='weight' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                +"</td>";
+        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                "<input class='col-xs-12'  name='cubage' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
@@ -1976,7 +1992,7 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            $("input[name='billingWeight']").each(function(){
+            /*$("input[name='billingWeight']").each(function(){
                 var value=onlyNumber($(this).val());
                 if(value==""){
                     if($(this).parent().children().length<2){
@@ -1990,7 +2006,7 @@
                     $(this).val(value);
                     $(this).parent().find("div").remove();
                 }
-            });
+            });*/
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
             $('#orderFinanceChargeFormValidate').submit();
@@ -2055,6 +2071,7 @@
                     }
                     if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = orderGoods.goodsType;
+                        jsonStr.goodsTypeName=param.getElementsByTagName("select")[0].value;
                     }
                 }
                 if(orderGoods.chargingWays=="01"){

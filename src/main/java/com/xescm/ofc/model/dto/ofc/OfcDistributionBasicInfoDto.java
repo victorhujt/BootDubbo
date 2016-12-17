@@ -26,6 +26,11 @@ public class OfcDistributionBasicInfoDto implements Serializable{
     private String goodsType;
 
     /**
+     * 货品类别,第一个货品的大类
+     */
+    private String goodsTypeName;
+
+    /**
      * 备注
      */
     private String notes;
@@ -641,5 +646,13 @@ public class OfcDistributionBasicInfoDto implements Serializable{
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
     }
 }
