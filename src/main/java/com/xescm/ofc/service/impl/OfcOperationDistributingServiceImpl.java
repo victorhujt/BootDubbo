@@ -288,14 +288,14 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             //根据modelMappingCode查询数据库,将用户的Excel表格跟我们的标准模板进行映射
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
             int staticCell = 5;
-            checkResult = acrossCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell);
+            checkResult = acrossCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
 
             //明细列表
         }else if(OrderConstConstant.MODEL_TYPE_BORADWISE.equals(modelType)){
             //根据modelMappingCode查询数据库,将用户的Excel表格跟我们的标准模板进行映射
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
             int staticCell = 5;
-            checkResult = boradwiseCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell);
+            checkResult = boradwiseCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
         }
         return checkResult;
     }
@@ -309,11 +309,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * @param staticCell 固定列
      * @return
      * */
-    private Wrapper<?> acrossCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen,  String customerCode, Integer staticCell) {
+    private Wrapper<?> acrossCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen,  String customerCode, Integer staticCell,AuthResDto authResDto) {
         if("xls".equals(suffix)){
-            return ofcExcelCheckService.checkXlsAcross(uploadFile,sheetNumChosen,customerCode,staticCell);
+            return ofcExcelCheckService.checkXlsAcross(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }else if("xlsx".equals(suffix)){
-            return ofcExcelCheckService.checkXlsxAcross(uploadFile,sheetNumChosen,customerCode,staticCell);
+            return ofcExcelCheckService.checkXlsxAcross(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
@@ -328,11 +328,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * @param staticCell
      * @return
      */
-    private Wrapper<?> boradwiseCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell) {
+    private Wrapper<?> boradwiseCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         if("xls".equals(suffix)){
-            return ofcExcelCheckService.checkXlsBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell);
+            return ofcExcelCheckService.checkXlsBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }else if("xlsx".equals(suffix)){
-            return ofcExcelCheckService.checkXlsxBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell);
+            return ofcExcelCheckService.checkXlsxBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }

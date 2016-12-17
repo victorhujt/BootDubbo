@@ -291,6 +291,8 @@ public class OfcOperationDistributing extends BaseController{
                     ValueOperations<String,String> ops  = rt.opsForValue();
                     ops.set(batchgoodsKey, JSONUtils.objectToJson(cscGoodsImportDtoList));
                     rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
+                    String s = ops.get(batchgoodsKey);
+                    String s1 = ops.get(batchgoodsKey);
                     ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey);
                 }
                 if(cscContantAndCompanyInportDtoList.size() > 0){

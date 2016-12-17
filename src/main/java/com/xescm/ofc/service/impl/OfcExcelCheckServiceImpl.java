@@ -13,6 +13,7 @@ import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcExcelCheckService;
 import com.xescm.ofc.utils.PubUtils;
+import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -53,7 +55,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      * @return
      */
     @Override
-    public Wrapper<?> checkXlsBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell) {
+    public Wrapper<?> checkXlsBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
 
         HSSFWorkbook hssfWorkbook = null;
         Map<Integer,String> modelNameStr = new HashMap<>();
@@ -143,6 +145,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
+                            }else if("consigneeContactPhone".equals(cellNumName)){//电话
+                                DecimalFormat df = new DecimalFormat("0");
+                                String format = df.format(Double.valueOf(cellValue));
+                                BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,format);
                             }else{
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
@@ -270,10 +279,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】在联系人档案中不存在!");
                     CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
                     cscContantAndCompanyInportDto.setCustCode(customerCode);
-                    cscContantAndCompanyInportDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeContactName());
-                    cscContantAndCompanyInportDto.setContactName(ofcExcelBoradwise.getConsigneeName());
+                    cscContantAndCompanyInportDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
+                    cscContantAndCompanyInportDto.setContactName(ofcExcelBoradwise.getConsigneeContactName());
                     cscContantAndCompanyInportDto.setPhone(ofcExcelBoradwise.getConsigneeContactPhone());
                     cscContantAndCompanyInportDto.setAddress(ofcExcelBoradwise.getConsigneeAddress());
+                    cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+                    cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
                     cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                     //即使当前收货方没有维护, 也要继续校验货品档案
                     if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
@@ -455,7 +466,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      * @return
      */
     @Override
-    public Wrapper<?> checkXlsxBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell) {
+    public Wrapper<?> checkXlsxBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         return null;
     }
 
@@ -505,7 +516,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      * @return
      */
     @Override
-    public Wrapper<?> checkXlsAcross(MultipartFile uploadFile,String sheetNumChosen, String customerCode, Integer staticCell){
+    public Wrapper<?> checkXlsAcross(MultipartFile uploadFile,String sheetNumChosen, String customerCode, Integer staticCell,AuthResDto authResDto){
         boolean checkPass = true;
         Map<String,JSONArray> resultMap = null;
         List<CscContantAndCompanyResponseDto> consigneeNameList = null;
@@ -733,7 +744,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      * @param staticCell
      * @return
      */
-    public Wrapper<?> checkXlsxAcross(MultipartFile uploadFile,String sheetNumChosen, String custId, Integer staticCell){
+    public Wrapper<?> checkXlsxAcross(MultipartFile uploadFile,String sheetNumChosen, String custId, Integer staticCell,AuthResDto authResDto){
         boolean checkPass = true;
         Map<String,JSONArray> resultMap = null;
         List<CscContantAndCompanyResponseDto> consigneeNameList = null;
