@@ -70,7 +70,7 @@
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单状态</label>
                 <div class="col-width-168" style="margin:0 12px;">
-                    <select data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus" class=" chosen-select">
+                    <select data-placeholder="请选择订单状态" id="orderState" name="orderState" class=" chosen-select">
                         <option value=""></option>
                         <option value="10">待审核</option>
                         <option value="20">已审核</option>
@@ -319,7 +319,7 @@
             param.startDate = startDate;
             param.endDate = endDate;
             param.orderCode = $("#orderCode").val();
-            param.orderStatus = $("#orderStatus").val();
+            param.orderState= $("#orderState").val();
             param.orderType = $("#orderType").val();
             param.businessType = $("#businessType").val();
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
