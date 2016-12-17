@@ -3,6 +3,7 @@ package com.xescm.ofc.model.dto.ofc;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -263,6 +264,11 @@ public class OfcDistributionBasicInfoDto implements Serializable{
      * 收货方联系人电话
      */
     private String consigneeContactPhone;
+
+    /**
+     * 是否二次配送
+     */
+    private String twoDistribution;
 
     public String getCustCode() {
         return custCode;
@@ -654,5 +660,13 @@ public class OfcDistributionBasicInfoDto implements Serializable{
 
     public void setGoodsTypeName(String goodsTypeName) {
         this.goodsTypeName = goodsTypeName;
+    }
+
+    public String getTwoDistribution() {
+        return twoDistribution;
+    }
+
+    public void setTwoDistribution(String twoDistribution) {
+        this.twoDistribution = twoDistribution;
     }
 }

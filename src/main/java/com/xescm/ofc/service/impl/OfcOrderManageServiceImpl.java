@@ -661,6 +661,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustCode()).equals("")){
             pushDistributionBasicInfo.setCustCode(ofcTransplanInfo.getCustCode());
         }
+        if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getTwoDistribution()).equals("")){
+            pushDistributionBasicInfo.setTwoDistribution(ofcTransplanInfo.getTwoDistribution());
+        }
         Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){
             throw new BusinessException("向分拣中心推送卡班订单失败");
