@@ -56,6 +56,33 @@
   </select>
 
 
+  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcMobileOrder" >
+    <!--
+      根据计划单号进行修改
+    -->
+    update ofc_mobile_order
+    <set >
+      <if test="mobileOrderStatus != null" >
+        mobile_order_status = #{mobileOrderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accepter != null" >
+        accepter = #{accepter,jdbcType=VARCHAR},
+      </if>
+      <if test="appcetDate != null" >
+        appcet_date = #{appcetDate,jdbcType=INTEGER},
+      </if>
+    </set>
+    where mobile_order_code = #{mobileOrderCode,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+
+
 
 
 
