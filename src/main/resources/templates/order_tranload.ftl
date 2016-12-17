@@ -2167,6 +2167,7 @@
                         cscContact.purpose = "2";
                         outConsignor(cscContact,cscContactCompany,groupId,customerCode);
                         $("#goodsInfoListDiv").html("");
+                        countQuantityOrWeightOrCubageCheck();
                     }
                 }
             });
