@@ -3,7 +3,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcMobileOrder;
-import com.xescm.ofc.mapper.ofcMobileOrderMapper;
+import com.xescm.ofc.mapper.OfcMobileOrderMapper;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.utils.CodeGenUtils;
@@ -25,7 +25,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     private static final Logger logger = LoggerFactory.getLogger(OfcOrderManageServiceImpl.class);
     @Autowired
-    private ofcMobileOrderMapper ofcMobileOrderMapper;
+    private OfcMobileOrderMapper ofcMobileOrderMapper;
     @Autowired
     private CodeGenUtils codeGenUtils;
     @Override
