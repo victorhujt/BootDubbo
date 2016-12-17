@@ -49,7 +49,7 @@ public class FeignRmcCompanyAPIClient {
         try {
             wrapper = getApi().queryCompanyLine(rmcCompanyLineQO);
         } catch (RetryableException ex) {
-            logger.error("==>调用接口发生异常：线路资源查询接口(/api/rmc/company/queryCompanyLine)无法连接或超时. {}", ex);
+            logger.error("==>调用接口发生异常：调用线路资源查询接口(/api/rmc/company/queryCompanyLine)无法连接或超时. {}", ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用线路资源查询接口无法连接或超时！");
         } catch (Exception ex){
             logger.error("==>调用接口发生异常：线路资源查询接口(/api/rmc/company/queryCompanyLine). {}", ex);

@@ -61,7 +61,7 @@ public class FeignRmcWarehouseAPIClient {
         try {
             rmcWarehouseByid = getRmcApi().queryRmcWarehouseById(warehouse);
         } catch (RetryableException ex) {
-            logger.error("==>调用接口发生异常：根据仓库ID获取仓库信息(/api/rmc/warehouse/queryRmcWarehouseById)无法连接或超时. {}", ex);
+            logger.error("==>调用接口发生异常：调用根据仓库ID获取仓库信息(/api/rmc/warehouse/queryRmcWarehouseById)无法连接或超时. {}", ex);
             throw new BusinessException("根据仓库ID获取仓库信息无法连接或超时！");
         } catch (Exception ex){
             logger.error("==>调用接口发生异常：根据仓库ID获取仓库信息(/api/rmc/warehouse/queryRmcWarehouseById)发生异常. {}", ex);

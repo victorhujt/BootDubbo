@@ -7,8 +7,10 @@ import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -40,11 +42,20 @@ public class FeignCscContactAPIClient {
     }
 
     public Wrapper<List<CscContantAndCompanyResponseDto>> queryCscReceivingInfoList(CscContantAndCompanyDto cscContantAndCompanyDto){
+        Wrapper<List<CscContantAndCompanyResponseDto>> wrapper = null;
         logger.debug("==>查询客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
         if(null == cscContantAndCompanyDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscContantAndCompanyResponseDto>> wrapper =  getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
+        try {
+            wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询客户联系人接口(/api/csc/contact/queryCscReceivingInfoList)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询客户联系人接口无法连接或超时！");
+        } catch (Exception ex) {
+            logger.error("==>调用接口发生异常：查询客户联系人接口(/api/csc/contact/queryCscReceivingInfoList). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询客户联系人接口异常！");
+        }
         return wrapper;
     }
 }
