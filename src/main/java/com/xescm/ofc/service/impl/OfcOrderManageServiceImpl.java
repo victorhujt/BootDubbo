@@ -605,9 +605,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     logger.debug("计划单信息保存成功");
                 } catch (Exception ex) {
                     if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
-                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
+                        logger.error("获取单号发生重复，导致保存计划单信息发生错误！{}", ex);
+                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！");
                     } else {
-                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                        logger.error("保存计划单信息发生错误！", ex);
+                        throw ex;
                     }
                 }
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -626,9 +628,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             //更改计划单状态为执行中//###
         } catch (BusinessException ex) {
+            logger.error("创建卡班运输计划单发生异常: {}", ex);
             throw ex;
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (Exception ex) {
+            logger.error("创建卡班运输计划单发生异常: {}", ex);
+            throw new BusinessException("创建卡班运输计划单发生异常! ");
         }
     }
 
