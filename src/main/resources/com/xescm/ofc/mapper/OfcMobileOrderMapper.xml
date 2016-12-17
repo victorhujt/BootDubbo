@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.ofcMobileOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcMobileOrder" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="mobile_order_code" property="mobileOrderCode" jdbcType="VARCHAR" />
+    <result column="upload_date" property="uploadDate" jdbcType="TIMESTAMP" />
+    <result column="dingding_account_no" property="dingdingAccountNo" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="tran_code" property="tranCode" jdbcType="VARCHAR" />
+    <result column="mobile_order_status" property="mobileOrderStatus" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="accepter" property="accepter" jdbcType="VARCHAR" />
+    <result column="appcet_date" property="appcetDate" jdbcType="TIMESTAMP" />
+    <result column="img1_url" property="img1Url" jdbcType="VARCHAR" />
+    <result column="img2_url" property="img2Url" jdbcType="VARCHAR" />
+    <result column="img3_url" property="img3Url" jdbcType="VARCHAR" />
+    <result column="img4_url" property="img4Url" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="queryOrderNotes" resultType="com.xescm.ofc.domain.OfcMobileOrder">
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
+    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
+    omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
+    FROM ofc_mobile_order omo where omo.mobile_order_status=#{mobileOrderStatus}
+    ORDER BY omo.upload_date DESC LIMIT 20
+  </select>
+
+  <!-- 运营-订单管理查询 -->
+  <select id="queryOrderList" resultMap="BaseResultMap">
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
+    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
+    omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
+    FROM ofc_mobile_order omo
+    <where>
+       1 = 1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND omo.upload_date <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND omo.upload_date <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.mobileOrderStatus!=null and form.mobileOrderStatus!=''">
+        AND omo.mobile_order_status = #{form.mobileOrderStatus}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND omo.business_type = #{form.businessType}
+
+      </if>
+    </where>
+    ORDER BY omo.mobile_order_code DESC
+  </select>
+
+
+
+
+
+
+
+</mapper>
