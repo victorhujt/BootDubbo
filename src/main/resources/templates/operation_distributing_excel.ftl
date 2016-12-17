@@ -108,9 +108,31 @@
     <form class="form-horizontal" role="form">
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
-            <div class="col-xs-3">
-                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
-                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a>
+            <div class="col-xs-6">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">模板类型</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">模板名称</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>交叉</td>
+                        <td><a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>明细列表</td>
+                        <td><a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
                     <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
@@ -254,13 +276,13 @@
 
 </div>
 
-
+<#--
 <form action="/index#/open/csc/batchimport/toMaintainBatchGoodsImportPage" id="toMaintainBatchGoodsImportPage" target="_blank" method="post">
     <textarea rows="30" cols="30" id="goodsJsonStr" name="goodsJsonStr"></textarea>
 </form>
 <form action="/index#/open/csc/batchimport/toMaintainBatchCustomerImportPage" id="toMaintainBatchCustomerImportPage" target="_blank" method="post">
     <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos" name="cscContantAndCompanyInportDtos"></textarea>
-</form>
+</form>-->
 <script type="text/javascript">
     var scripts = [null,
         "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -446,8 +468,11 @@
     var consigneeList = null;
     var batchconsingeeKey = null;
     var batchgoodsKey = '';
+    var errorEEsNum = 0;
+    var errorGoodsNum = 0;
 
-    function uploadFileChange(target) {
+
+            function uploadFileChange(target) {
 
     }
     $(function () {
@@ -626,13 +651,13 @@
                                     }else if(index % 3 == 2 && consigneeTag){//收货人详细信息
                                         consigneeList.push(data);
                                         $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
-                                                "<td>" + data.contactCompanyName + "</td>" +
-                                                "<td>" + data.contactName + "</td>" +
-                                                "<td>" + data.phone + "</td>" +
-                                                "<td>" + data.detailAddress + "</td>" +
-                                                "<td style='display:none'>" + data.type + "</td>" +
-                                                "<td style='display:none'>" + data.contactCompanySerialNo + "</td>" +
-                                                "<td style='display:none'>" + data.contactSerialNo + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.contactCompanyName) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.contactName) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.phone) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.detailAddress) + "</td>" +
+                                                "<td style='display:none'>" + StringUtil.nullToEmpty(data.type) + "</td>" +
+                                                "<td style='display:none'>" + StringUtil.nullToEmpty(data.contactCompanySerialNo) + "</td>" +
+                                                "<td style='display:none'>" + StringUtil.nullToEmpty(data.contactSerialNo) + "</td>" +
                                                 "</tr>");
                                     }
                                 }
@@ -656,9 +681,13 @@
                                 $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
                             })
                             var cscContantAndCompanyInportDtoList = result.result.cscContantAndCompanyInportDtoList;
-                            var errorEEsNum = cscContantAndCompanyInportDtoList.length;
                             var cscGoodsImportDtoList = result.result.cscGoodsImportDtoList;
-                            var errorGoodsNum = cscGoodsImportDtoList.length;
+                            if(null != cscContantAndCompanyInportDtoList){
+                                errorEEsNum = cscContantAndCompanyInportDtoList.length;
+                            }
+                            if(null != cscGoodsImportDtoList){
+                                errorGoodsNum = cscGoodsImportDtoList.length;
+                            }
                             if(errorEEsNum > 0 || errorGoodsNum > 0){
                                 $("#errorExcelImport").show();
                                 if(errorGoodsNum > 0){
@@ -739,6 +768,10 @@
 
     })
     $("#errorExcelImportEEBtn").click(function(){//toMaintainBatchCustomerImportPage
+        if(errorEEsNum < 1){
+            alert("您无需添加收货人")
+            return;
+        }
         var url = "/csc/batchimport/toMaintainBatchCustomerImportPage/" + batchconsingeeKey;
         var html = window.location.href;
         var index = html.indexOf("/index#");
@@ -747,6 +780,10 @@
 //            $("#errorExcelImport").hide();
     })
     $("#errorExcelImportGoodsBtn").click(function () {
+        if(errorGoodsNum < 1){
+            alert("您无需添加货品")
+            return;
+        }
         console.log("......" + batchgoodsKey)
         var url = "/csc/batchimport/toMaintainBatchGoodsImportPage/" + batchgoodsKey;
         var html = window.location.href;
