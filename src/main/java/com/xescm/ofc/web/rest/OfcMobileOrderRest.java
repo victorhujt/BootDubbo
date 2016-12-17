@@ -57,4 +57,18 @@ public class OfcMobileOrderRest extends BaseController {
         modelAndView.addObject("mobileOrder", mobileOrder);
         return modelAndView;
     }
+
+    @RequestMapping(value = "/acceptMobileOrder/{orderCode}")
+    public ModelAndView acceptMobileOrder(@PathVariable("orderCode") String code) {
+        logger.debug("==>手机订单详情code code={}", code);
+        ModelAndView modelAndView = new ModelAndView("mobile_order_accept_opera");
+        OfcMobileOrder condition = new OfcMobileOrder();
+        condition.setMobileOrderCode(code);
+        OfcMobileOrder mobileOrder = ofcMobileOrderService.selectOne(condition);
+        modelAndView.addObject("mobileOrder", mobileOrder);
+        return modelAndView;
+    }
+
+
+
 }
