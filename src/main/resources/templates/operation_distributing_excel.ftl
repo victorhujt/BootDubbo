@@ -389,6 +389,7 @@
             if(undefined != viewMap.get(mapKey)){
 
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
+                console.log("preGoodsAndConsigneeJsonMsg" + JSON.stringify(preGoodsAndConsigneeJsonMsg));
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
                 console.log(cadj)
@@ -565,7 +566,7 @@
                             var resultMap =  JSON.parse(result.result);
 
                             var consigneeTag = true;
-                            var goodsAndEETag = true;
+                           // var goodsAndEETag = true;
                             var indexView = 0;
                             for(var key in resultMap){
                                 indexView += 1;
@@ -588,7 +589,8 @@
                                                 "<td>" + data.unit + "</td>" +
                                                 "<td>" + data.goodsAmount + "</td>" +
                                                 "</tr>");
-                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
+//                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
+                                    }else if(index % 3 == 1){//收货人和货品需求量
                                         debugger
                                         for(var inkey in data){
                                             consigeeMsg[inkey] = data[inkey];
@@ -606,11 +608,11 @@
                                                 "</tr>");
                                     }
                                 }
-                                goodsAndEETag = false;
+//                                goodsAndEETag = false;
                                 consigneeTag = false;
                                 viewMapValue[1] = consigeeMsg;
                                 console.log("源"+key)
-                                console.log("源"+viewMapValue)
+                                console.log("源"+JSON.stringify(viewMapValue))
                                 viewMap.put(key,viewMapValue);
                             }
 
@@ -624,10 +626,14 @@
                             $("#goodsListDiv").hide();
                             $("#errorMsgDiv").show();
                             $("#errorMsgTbody").html("");
-                            var errorMsgList = result.result;
+                            var errorMsgList = result.result.xlsErrorMsg;
                             $.each(errorMsgList,function (index, errorMsg) {
                                 $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
                             })
+                            var cscContantAndCompanyInportDtoList = result.result.cscContantAndCompanyInportDtoList;
+                            var errorEEsNum = cscContantAndCompanyInportDtoList.length;
+                            var cscGoodsImportDtoList = result.result.cscGoodsImportDtoList;
+                            var errorGoodsNum = cscGoodsImportDtoList.length;
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
@@ -669,6 +675,7 @@
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
                         var custName = $("#custName").val();
+                        console.log("customerCode" + customerCode)
                         var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
                         xescm.common.loadPage(url);
                         layer.close(index);

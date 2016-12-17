@@ -20,6 +20,9 @@ public class CscContantAndCompanyResponseDto implements Serializable {
 
 
     private static final long serialVersionUID = -5252320843657865674L;
+
+    private String custOrderCode;
+
     private String customerCode;
     private String contactCompanyName;
     private String contactCompanySerialNo;//

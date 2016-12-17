@@ -282,7 +282,7 @@ public class OfcOperationDistributing extends BaseController{
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo.getXlsErrorMsg());
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
                 Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
                 String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
