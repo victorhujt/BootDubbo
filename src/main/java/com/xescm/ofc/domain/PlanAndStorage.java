@@ -34,6 +34,16 @@ public class PlanAndStorage {
 
     private Date finishedTime;
 
+    private String baseName;
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
+    }
+
     public String getOrderCode() {
         return orderCode;
     }

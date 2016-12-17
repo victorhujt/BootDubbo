@@ -464,6 +464,9 @@
                     aria-label="Clicks: activate to sort column ascending">仓库名称
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">调度单位
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">完成时间
                 </th>
             </thead>
@@ -506,6 +509,9 @@
                     </td>
                     <td class="center">
                     ${stroage.warehouseName!""}
+                    </td>
+                    <td class="center">
+                    ${stroage.baseName!""}
                     </td>
                     <td class="center">
                     ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
