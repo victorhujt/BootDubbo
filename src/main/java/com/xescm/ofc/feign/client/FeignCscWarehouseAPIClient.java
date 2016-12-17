@@ -7,6 +7,7 @@ import com.xescm.ofc.feign.api.csc.FeignCscWarehouseAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -42,8 +43,12 @@ public class FeignCscWarehouseAPIClient {
         Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = null;
         try {
             cscWarehouseByCustomerId = getCscApi().getCscWarehouseByCustomerId(cscWarehouse);
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage(),ex);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：通过客户编码获取仓库接口(/api/csc/warehouse/queryWarehouseByGroupId)无法连接或超时. {}", ex);
+            throw new BusinessException("调用客户编码获取仓库接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：通过客户编码获取仓库接口(/api/csc/warehouse/queryWarehouseByGroupId). {}", ex);
+            throw new BusinessException("根据客户编码获取仓库异常！");
         }
         return cscWarehouseByCustomerId;
     }

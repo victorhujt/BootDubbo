@@ -6,8 +6,10 @@ import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.rmc.FeignRmcCompanyAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -39,11 +41,20 @@ public class FeignRmcCompanyAPIClient {
     }
 
     public Wrapper<List<RmcCompanyLineVo>> queryCompanyLine(RmcCompanyLineQO rmcCompanyLineQO){
+        Wrapper<List<RmcCompanyLineVo>> wrapper = null;
         logger.debug("==>查询供应商 cscSupplierInfoDto={}", rmcCompanyLineQO);
         if(null == rmcCompanyLineQO){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<RmcCompanyLineVo>> wrapper = getApi().queryCompanyLine(rmcCompanyLineQO);
+        try {
+            wrapper = getApi().queryCompanyLine(rmcCompanyLineQO);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：线路资源查询接口(/api/rmc/company/queryCompanyLine)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用线路资源查询接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：线路资源查询接口(/api/rmc/company/queryCompanyLine). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用线路资源查询接口发生异常！");
+        }
         return wrapper;
     }
 }

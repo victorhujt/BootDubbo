@@ -63,7 +63,7 @@ public class OfcJumpontroller extends BaseController{
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
-        }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
