@@ -227,7 +227,9 @@
                 var order = data.result.list[i];
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                     + "<td>" + [ i + 1] + "</td>"
-                    + "<td class=\"center\">" + StringUtil.nullToEmpty(order.mobileOrderCode) + "</td>"
+                        + "<td>"
+                        + "<a onclick=\"orderDetailOper('" + order.mobileOrderCode + "')\">" + StringUtil.nullToEmpty(order.mobileOrderCode) + "</a>"
+                        + "</td>"
                     + "<td class=\"hidden-480\">" + subTimeString(StringUtil.nullToEmpty(order.uploadDate)) + "</td>"
                     + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.dcustOrderCodeingdingAccountNo) + "</td>"
                     + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.operator) + "</td>"
@@ -246,7 +248,7 @@
         function getOperatorByStatus(order,index) {
             var value = "";
             if (order.mobileOrderStatus == "0") {
-                 value = "<button type=\"button\" id=\"review\" onclick=\"orderDetailOper('" + order.mobileOrderCode + "')\" class=\"hidden-480\">未处理</button>"
+                 value = "<button type=\"button\" id=\"review\" onclick=\"acceptMobileOrder('" + order.mobileOrderCode + "')\" class=\"hidden-480\">未处理</button>"
             }else{
                 value = "<span class=\"hidden-480\">已处理</span>"
             }
@@ -297,6 +299,24 @@
             window.open(html.substring(0,index) + "/index#" + url);
 //            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
         }
+
+        //订单受理
+        function acceptMobileOrder(orderCode) {
+            debugger;
+            var url = "/ofc/acceptMobileOrder/" + orderCode;
+            var html = window.location.href;
+            var index = html.indexOf("/index#");
+            window.open(html.substring(0,index) + "/index#" + url);
+//            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
+        }
+
+
+
+
+
+
+
+
     </script>
 
 </body>
