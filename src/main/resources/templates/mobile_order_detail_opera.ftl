@@ -71,11 +71,34 @@
             line-height:20px;
         }
         .imgClass{
+            float: left;
             width:50px;
             height:50px;
             border:1px solid #cacaca;
-            margin-top:120px;
+            margin-top: 50px;
             margin-left: 100px;
+        }
+        .row{
+            max-width: 1250px;
+            min-width: 1250px;
+
+        }
+        .laypage_curr{
+            margin-top: 24px;
+            width: 1134px;
+            float: left;
+        }
+        .laypage_curr a{
+            float: right;
+        }
+        .col-label{
+            margin-left: 100px;
+        }
+        .col-float{
+            margin-top: 24px;
+        }
+        .imgone{
+            margin-left: 130px;
         }
     </style>
 </head>
@@ -97,30 +120,30 @@
             <div class="col-xs-12">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-label no-padding-right" for="name">流水号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">流水号</label>
                         <div class="w-width-220 col-float">
                             <input id="orderCode" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">上传日期</label>
                         <div class="w-width-220 col-float">
                             <input id="uploadDate" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">钉钉账号</label>
                         <div class="w-width-220 col-float">
                             <input id="dingdingAccountNo" name="dingdingAccountNo" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.dingdingAccountNo)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">开单员</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">开单员</label>
                         <div class="w-width-220 col-float">
                             <input id="operator" name="operator" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.operator)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">业务类型</label>
                         <div class="w-width-220 col-float">
                         <#if mobileOrder.businessType  =="602">
                             <input id="businessType" name="businessType" type="search" placeholder=""
@@ -133,31 +156,35 @@
                                    aria-controls="dynamic-table" value="干线">
                         </#if>
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">运输单号</label>
                         <div class="w-width-220 col-float">
                             <input id="tranCode" name="tranCode" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.tranCode)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">订单编号</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">订单编号</label>
                         <div class="w-width-220 col-float">
                             <input id="tranCode" name="OrderCode" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.OrderCode)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">受理人</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">受理人</label>
                         <div class="w-width-220 col-float">
                             <input id="tranCode" name="accepter" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.accepter)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name">受理时间</label>
+                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">受理时间</label>
                         <div class="w-width-220 col-float">
                             <input id="uploadDate" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.appcetDate?string("yyyy-MM-dd"))!""}">
                         </div>
-                        <div class="imgClass">
+                        <div class="laypage_curr">
+                            <a href="index#/ofc/mobileOrderManageOpera">返回</a>
+
+                        </div>
+                        <div class="imgClass  imgone">
                             <img src="${(mobileOrder.img1Url)!""}"/>
                         </div>
                         <div class="imgClass">
@@ -169,10 +196,7 @@
                         <div class="imgClass">
                             <img src="${(mobileOrder.img4Url)!""}"/>
                         </div>
-                        <div class="laypage_curr">
-                            <a href="index#/ofc/mobileOrderManageOpera">返回</a>
 
-                        </div>
                     </div>
                 </form>
             </div>

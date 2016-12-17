@@ -1,5 +1,13 @@
 <head>
     <title>拍照开单</title>
+    <style>
+        input{
+            width: 240px;
+        }
+        td{
+            text-align: center;
+        }
+    </style>
 </head>
 <body class="no-skin">
 
@@ -33,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="padding-left: 12px">
                     <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix">
@@ -143,7 +151,7 @@
             //  queryData(1);
 
             $("#doSearch").click(function () {
-                debugger;
+//                debugger;
                 queryData(1);
             });
         }
@@ -152,7 +160,7 @@
 
         //页面数据初始化
         function initPageData(){
-            debugger;
+//            debugger;
             var active_class = "active";
             $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
                 var th_checked = this.checked;//checkbox inside "TH" table header
@@ -292,7 +300,7 @@
 
         //订单详情
         function orderDetailOper(orderCode) {
-            debugger;
+//            debugger;
             var url = "/ofc/mobileOrderDetails/" + orderCode;
             var html = window.location.href;
             var index = html.indexOf("/index#");
@@ -302,7 +310,7 @@
 
         //订单受理
         function acceptMobileOrder(orderCode) {
-            debugger;
+//            debugger;
             var url = "/ofc/acceptMobileOrder/" + orderCode;
             var html = window.location.href;
             var index = html.indexOf("/index#");
