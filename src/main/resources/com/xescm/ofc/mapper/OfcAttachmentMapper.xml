@@ -5,7 +5,6 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
     <result column="ref_no" property="refNo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />

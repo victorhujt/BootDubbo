@@ -1,10 +1,12 @@
 package com.xescm.ofc.model.dto.form;
 
 /**
- * Created by victor on 2016/12/15.
+ * Created by hujintao on 2016/12/15.
  */
 public class MobileOrderOperForm extends BaseForm{
     private String mobileOrderStatus;
+    private String businessType;
+
 
     public String getMobileOrderStatus() {
         return mobileOrderStatus;
@@ -21,7 +23,4 @@ public class MobileOrderOperForm extends BaseForm{
     public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
-
-    private String businessType;
-
 }

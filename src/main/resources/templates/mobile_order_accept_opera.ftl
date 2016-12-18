@@ -146,18 +146,13 @@
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.tranCode)!""}">
                         </div>
-                        <div class="imgClass imgone">
-                            <img src="${(mobileOrder.img1Url)!""}"/>
-                        </div>
-                        <div class="imgClass">
-                            <img src="${(mobileOrder.img2Url)!""}"/>
-                        </div>
-                        <div class="imgClass">
-                            <img src="${(mobileOrder.img3Url)!""}"/>
-                        </div>
-                        <div class="imgClass">
-                            <img src="${(mobileOrder.img4Url)!""}"/>
-                        </div>
+                    <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
+                        <#list mobileOrder.urls as url>
+                            <div class="imgClass  imgone">
+                                <img src="${url!""}"/>
+                            </div>
+                        </#list>
+                    </#if>
                     </div>
                 </form>
             </div>
@@ -433,17 +428,17 @@
                             <div class="clearfix col-width-168">
                                 <select  id="businessType" name="businessType" class="chosen-select form-control ">
                                 <#if mobileOrder.businessType  =="602">
-                                    <option value="602" select="selected">卡班</option>
+                                    <option value="602" selected="selected">卡班</option>
                                     <option value="600">城配</option>
                                     <option value="601">干线</option>
                                 <#elseif  mobileOrder.businessType =="600">
                                     <option value="602">卡班</option>
-                                    <option value="600" select="selected">城配</option>
+                                    <option value="600" selected="selected">城配</option>
                                     <option value="601">干线</option>
                                 <#elseif  mobileOrder.businessType =="601">
                                     <option value="602">卡班</option>
                                     <option value="600">城配</option>
-                                    <option value="601" select="selected">干线</option>
+                                    <option value="601" selected="selected">干线</option>
                                 </#if>
                                 </select>
                             </div>
@@ -2171,8 +2166,14 @@
             //卡班类型必须输入运输单号
             if($("#businessType").val() == "602"){
                 var transCode = $("#transCode").val().trim();
+                var mobileTranCode=$("#tranCode").val().trim();
                 if(transCode == null || transCode == "" || transCode == undefined){
                     alert("业务类型选择卡班，必须输入运输单号！");
+                    return false;
+                }
+
+                if(transCode!=mobileTranCode){
+                    alert("运输单号必须和拍照订单的运输单号一致！");
                     return false;
                 }
             }
@@ -2238,7 +2239,7 @@
             var cscContantAndCompanyDtoConsigneeStr;
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
-            xescm.common.submit("/ofc/orderPlaceCon"
+            xescm.common.submit("/ofc/mobileorderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
                         ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr

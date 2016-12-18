@@ -1,17 +1,12 @@
 package com.xescm.ofc.domain;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Table(name = "ofc_attachment")
 public class OfcAttachment {
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
+
 
     /**
      * 附件流水号
@@ -95,23 +90,6 @@ public class OfcAttachment {
      */
     private Integer yn;
 
-    /**
-     * 获取主键
-     *
-     * @return id - 主键
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * 设置主键
-     *
-     * @param id 主键
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      * 获取附件流水号

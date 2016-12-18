@@ -65,7 +65,7 @@
                         <div class="clearfix">
                             <select class="chosen-select form-control" data-placeholder="请选择订单类型" id="mobileOrderStatus" name="mobileOrderStatus">
                                 <option value=""></option>
-                                <option value="0">未受理</option>
+                                <option value="0" selected="selected">未受理</option>
                                 <option value="1">已受理</option>
                             </select>
                         </div>

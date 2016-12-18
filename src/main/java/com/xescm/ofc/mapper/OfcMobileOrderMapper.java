@@ -7,6 +7,7 @@ import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.uam.domain.dto.AuthResDto;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
     OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder);
 
-    List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus);
+    List<OfcMobileOrder> queryOrderNotes(OfcMobileOrder ofcMobileOrder);
 
-    List<OfcMobileOrder> queryOrderList(MobileOrderOperForm form);
+    List<OfcMobileOrder> queryOrderList(@Param(value = "form") MobileOrderOperForm form);
 
     String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken
             , String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor

@@ -1,7 +1,13 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
+import com.xescm.uam.domain.dto.AuthResDto;
 
 import java.util.List;
 
@@ -13,8 +19,17 @@ public interface OfcMobileOrderService extends IService<OfcMobileOrder>{
 
      OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder);
 
-      List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus);
+      List<OfcMobileOrder> queryOrderNotes(OfcMobileOrder ofcMobileOrder);
 
     List<OfcMobileOrder> queryOrderList(MobileOrderOperForm form);
 
+    OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder);
+
+    String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken
+            , String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
+            , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto,String orderCode);
+
+
+
+    int updateByMobileCode(OfcMobileOrder mobileOrder);
 }

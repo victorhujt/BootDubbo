@@ -1,23 +1,39 @@
 package com.xescm.ofc.web.rest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
+import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
+import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcMobileOrderService;
+import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +45,7 @@ import java.util.List;
 public class OfcMobileOrderRest extends BaseController {
     @Autowired
     private OfcMobileOrderService ofcMobileOrderService;
+
 
     @RequestMapping(value = "/queryMobileOrderData", method = {RequestMethod.POST})
     @ResponseBody
@@ -53,7 +70,7 @@ public class OfcMobileOrderRest extends BaseController {
         ModelAndView modelAndView = new ModelAndView("mobile_order_detail_opera");
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
-        OfcMobileOrder mobileOrder = ofcMobileOrderService.selectOne(condition);
+        OfcMobileOrderVo mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
         modelAndView.addObject("mobileOrder", mobileOrder);
         return modelAndView;
     }
@@ -69,6 +86,103 @@ public class OfcMobileOrderRest extends BaseController {
         return modelAndView;
     }
 
+    /**
+     *
+     * @param model
+     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
+     * @param orderGoodsListStr     货品信息
+     * @param cscContantAndCompanyDtoConsignorStr   发货人信息
+     * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
+     * @param cscSupplierInfoDtoStr                 供应商信息
+     * @param tag           标识下单、编辑、运输开单
+     * @param response
+     * @return
+     */
+    @RequestMapping("/mobileorderPlaceCon")
+    @ResponseBody
+    public Wrapper<?> mobileOrderPlace(Model model, String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, HttpServletResponse response, String mobileOrderCode){
+        logger.debug("==>拍照下单订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        logger.debug("==>拍照下单订单中心下单或编辑标志位 tag={}", tag);
+        String resultMessage = null;
+        String orderCode="";
+        try {
+            orderGoodsListStr = orderGoodsListStr.replace("~`","");
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
+                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+            }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
+                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
+                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
+                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+            }
+            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
+            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
+            }
+            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            logger.info(cscContantAndCompanyDtoConsignorStr);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            logger.info(cscContantAndCompanyDtoConsigneeStr);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            if(cscContantAndCompanyDtoConsignor==null){
+                throw new BusinessException("发货人信息不允许为空！");
+            }
+            if(cscContantAndCompanyDtoConsignee==null){
+                throw new BusinessException("收货人信息不允许为空！");
+            }
+            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            //校验业务类型，如果是卡班，必须要有运输单号
+            if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
+                if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
+                    throw new Exception("业务类型是卡班，运输单号是必填项");
+                }
+            }
+            if(null !=ofcOrderDTO){
+                if (null == ofcOrderDTO.getProvideTransport()){
+                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                }
+                if (null == ofcOrderDTO.getUrgent()){
+                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
+                }
+            }else{
+                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
+            }
+            resultMessage = ofcMobileOrderService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
+                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto,orderCode);
+
+            if("未定义错误".equals(resultMessage)||"用户操作异常".equals(resultMessage)||"页面跳转出错".equals(resultMessage)){
+                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
+            }
+            //更新拍照订单的状态，订单号
+            OfcMobileOrder order=new OfcMobileOrder();
+            order.setMobileOrderCode(mobileOrderCode);
+            order.setAccepter(authResDtoByToken.getUserName());
+            order.setAppcetDate(new Date());
+            order.setMobileOrderStatus("1");//已处理
+            order.setOrderCode(orderCode);
+            ofcMobileOrderService.updateByMobileCode(order);
+        } catch (BusinessException ex){
+            logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
+            return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        } catch (Exception ex) {
+            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
+                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
+            } else {
+                logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
+                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+            }
+        }
+        return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
+    }
 
 
 }
