@@ -1814,8 +1814,12 @@
     });
 
     $("#to_operation_distributing_excel").click(function () {
-        if(!validateCustChosen()){
+        var custChosen = $("#custName").val();
+        var customerCode = $("#customerCode").val();
+        if(StringUtil.isEmpty(custChosen) || ){
             alert("请先选择客户");
+        }else if(StringUtil.isEmpty(customerCode)){
+            alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
             var customerCode = $("#customerCode").val();
