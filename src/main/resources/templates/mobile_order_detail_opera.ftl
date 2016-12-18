@@ -78,6 +78,11 @@
             margin-top: 50px;
             margin-left: 100px;
         }
+        .imgClass img{
+            width: 50px;
+            height:50px;
+            background-size: 50px 50px;
+        }
         .row{
             max-width: 1250px;
             min-width: 1250px;
@@ -85,21 +90,25 @@
         }
         .laypage_curr{
             margin-top: 24px;
-            width: 1143px;
+            width: 100%;
             float: left;
+        }
+        .laypage_curr a{
+            margin-right: 204px;
         }
         .laypage_curr a{
             float: right;
         }
         .col-label{
-            margin-left: 100px;
+            margin-left: 71px;
         }
         .col-float{
             margin-top: 24px;
         }
         .imgone{
-            margin-left: 130px;
+           margin-right: 148px;
         }
+
     </style>
 </head>
 <body class="no-skin">

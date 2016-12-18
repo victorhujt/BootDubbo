@@ -70,26 +70,38 @@
         #goodsInfoListDiv .help-block{
             line-height:20px;
         }
+
         .imgClass{
             float: left;
             width:50px;
             height:50px;
             border:1px solid #cacaca;
-            margin-top:120px;
+            margin-top: 50px;
             margin-left: 100px;
+        }
+        .imgClass img{
+            width: 50px;
+            height:50px;
+            background-size: 50px 50px;
         }
         .row{
             max-width: 1250px;
             min-width: 1250px;
+            margin-left: -21px;
         }
-        .col-label{
-            margin-left: 100px;
+        .no-padding-right{
+            margin-left: 71px;
+
         }
-        .col-float{
+        .w-width-220{
             margin-top: 24px;
         }
         .imgone{
-            margin-left: 135px;
+            margin-right: 148px;
+        }
+        .col-width-376{
+            float: left;
+            width:220px;
         }
     </style>
 </head>
