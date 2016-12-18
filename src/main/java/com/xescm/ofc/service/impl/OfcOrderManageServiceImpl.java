@@ -1840,19 +1840,25 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
+            logger.info("#################################取货不配送,调用区域覆盖接口#######################");
             Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
+                logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0));
                 return rmcPickupList.getResult().get(0);
             }else {
+                logger.info("#####################接口返回数据为：{}###########################","");
                 return null;
             }
         }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
-            Wrapper<List<RmcServiceCoverageForOrderVo>> RmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(RmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(RmcRecipientList.getResult(), 0)){
-                return RmcRecipientList.getResult().get(0);
+            logger.info("#################################配送不提货,调用区域覆盖接口#######################");
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
+                logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0));
+                return rmcRecipientList.getResult().get(0);
             }else{
+                logger.info("#####################接口返回数据为：{}###########################","");
                 return null;
             }
         }else{
