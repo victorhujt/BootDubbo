@@ -59,26 +59,32 @@ private String mobileOrderCode;
      * 受理时间
      */
     private Date appcetDate;
+    /**
+     * 附件流水号
+     */
+    private String serialNo;
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public String getPicParam() {
+        return picParam;
+    }
+
+    public void setPicParam(String picParam) {
+        this.picParam = picParam;
+    }
 
     /**
-     * 图片1路径
-     */
-    private String img1Url;
 
-    /**
-     * 图片2的路径
+     * 图片处理命令
      */
-    private String img2Url;
-
-    /**
-     * 图片3的路径
-     */
-    private String img3Url;
-
-    /**
-     * 图片4路径
-     */
-    private String img4Url;
+    private String picParam;
 
     /**
      * 获取流水号
@@ -277,78 +283,4 @@ private String mobileOrderCode;
     public void setAppcetDate(Date appcetDate) {
         this.appcetDate = appcetDate;
     }
-
-    /**
-     * 获取图片1路径
-     *
-     * @return img1_url - 图片1路径
-     */
-    public String getImg1Url() {
-        return img1Url;
-    }
-
-    /**
-     * 设置图片1路径
-     *
-     * @param img1Url 图片1路径
-     */
-    public void setImg1Url(String img1Url) {
-        this.img1Url = img1Url;
-    }
-
-    /**
-     * 获取图片2的路径
-     *
-     * @return img2_url - 图片2的路径
-     */
-    public String getImg2Url() {
-        return img2Url;
-    }
-
-    /**
-     * 设置图片2的路径
-     *
-     * @param img2Url 图片2的路径
-     */
-    public void setImg2Url(String img2Url) {
-        this.img2Url = img2Url;
-    }
-
-    /**
-     * 获取图片3的路径
-     *
-     * @return img3_url - 图片3的路径
-     */
-    public String getImg3Url() {
-        return img3Url;
-    }
-
-    /**
-     * 设置图片3的路径
-     *
-     * @param img3Url 图片3的路径
-     */
-    public void setImg3Url(String img3Url) {
-        this.img3Url = img3Url;
-    }
-
-    /**
-     * 获取图片4路径
-     *
-     * @return img4_url - 图片4路径
-     */
-    public String getImg4Url() {
-        return img4Url;
-    }
-
-    /**
-     * 设置图片4路径
-     *
-     * @param img4Url 图片4路径
-     */
-    public void setImg4Url(String img4Url) {
-        this.img4Url = img4Url;
-    }
-
-
 }

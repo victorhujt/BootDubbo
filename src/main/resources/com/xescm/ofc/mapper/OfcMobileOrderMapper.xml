@@ -16,17 +16,18 @@
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="accepter" property="accepter" jdbcType="VARCHAR" />
     <result column="appcet_date" property="appcetDate" jdbcType="TIMESTAMP" />
-    <result column="img1_url" property="img1Url" jdbcType="VARCHAR" />
-    <result column="img2_url" property="img2Url" jdbcType="VARCHAR" />
-    <result column="img3_url" property="img3Url" jdbcType="VARCHAR" />
-    <result column="img4_url" property="img4Url" jdbcType="VARCHAR" />
+    <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
+    <result column="pic_param" property="picParam" jdbcType="VARCHAR" />
   </resultMap>
 
   <select id="queryOrderNotes" resultType="com.xescm.ofc.domain.OfcMobileOrder">
     SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
-    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
-    omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
-    FROM ofc_mobile_order omo where omo.mobile_order_status=#{mobileOrderStatus}
+    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,omo.serial_no,omo.pic_param
+    FROM ofc_mobile_order omo where
+        1=1
+    <if test="mobileOrderStatus!=null and mobileOrderStatus!=''">
+      AND omo.mobile_order_status = #{mobileOrderStatus}
+    </if>
     ORDER BY omo.upload_date DESC LIMIT 20
   </select>
 
@@ -34,7 +35,7 @@
   <select id="queryOrderList" resultMap="BaseResultMap">
     SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
     omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
-    omo.img1_url,omo.img2_url,omo.img3_url,omo.img4_url
+    omo.serial_no,omo.pic_param
     FROM ofc_mobile_order omo
     <where>
        1 = 1
@@ -77,15 +78,4 @@
     </set>
     where mobile_order_code = #{mobileOrderCode,jdbcType=VARCHAR}
   </update>
-
-
-
-
-
-
-
-
-
-
-
 </mapper>

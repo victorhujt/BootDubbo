@@ -19,7 +19,7 @@ public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
     OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder);
 
-    List<OfcMobileOrder> queryOrderNotes(String mobileOrderStatus);
+    List<OfcMobileOrder> queryOrderNotes(OfcMobileOrder ofcMobileOrder);
 
     List<OfcMobileOrder> queryOrderList(@Param(value = "form") MobileOrderOperForm form);
 

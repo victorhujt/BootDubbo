@@ -1,34 +1,25 @@
-package com.xescm.ofc.domain;
+package com.xescm.ofc.model.vo.ofc;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
-@Table(name = "ofc_mobile_order")
-public class OfcMobileOrder {
+/**
+ * Created by hujintao on 2016/12/18.
+ */
+public class OfcMobileOrderVo {
     /**
      * 流水号
      */
-    @Id
-    @Column(name = "mobile_order_code")
     private String mobileOrderCode;
 
     /**
      * 上传日期
      */
-    @Column(name = "upload_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date uploadDate;
 
     /**
      * 钉钉账号
      */
-    @Column(name = "dingding_account_no")
     private String dingdingAccountNo;
 
     /**
@@ -39,31 +30,26 @@ public class OfcMobileOrder {
     /**
      * 订单类型（默认值 60 运输订单）
      */
-    @Column(name = "order_type")
     private String orderType;
 
     /**
      * 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    @Column(name = "business_type")
     private String businessType;
 
     /**
      * 运输单号
      */
-    @Column(name = "tran_code")
     private String tranCode;
 
     /**
      * 订单状态 0:未受理 1:已受理 默认值未受理
      */
-    @Column(name = "mobile_order_status")
     private String mobileOrderStatus;
 
     /**
      * 订单编号
      */
-    @Column(name = "order_code")
     private String orderCode;
 
     /**
@@ -74,23 +60,20 @@ public class OfcMobileOrder {
     /**
      * 受理时间
      */
-    @Column(name = "appcet_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date appcetDate;
 
     /**
-     * 附件流水号
+     * 图片路径集合
      */
-    @Column(name = "serial_no")
-    private String serialNo;
+    private List<String> urls;
 
-    /**
-     * 图片处理命令
-     */
-    @Column(name ="pic_param")
-    private String picParam;
+    public List<String> getUrls() {
+        return urls;
+    }
 
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
+    }
 
     /**
      * 获取流水号
@@ -281,22 +264,6 @@ public class OfcMobileOrder {
         return appcetDate;
     }
 
-    public String getSerialNo() {
-        return serialNo;
-    }
-
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
-    }
-
-    public String getPicParam() {
-        return picParam;
-    }
-
-    public void setPicParam(String picParam) {
-        this.picParam = picParam;
-    }
-
     /**
      * 设置受理时间
      *
@@ -306,5 +273,5 @@ public class OfcMobileOrder {
         this.appcetDate = appcetDate;
     }
 
-}
 
+}

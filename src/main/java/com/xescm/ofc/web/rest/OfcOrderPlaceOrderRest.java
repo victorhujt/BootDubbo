@@ -210,6 +210,117 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
 
+
+
+
+    /**
+     *
+     * @param model
+     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
+     * @param orderGoodsListStr     货品信息
+     * @param cscContantAndCompanyDtoConsignorStr   发货人信息
+     * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
+     * @param cscSupplierInfoDtoStr                 供应商信息
+     * @param tag           标识下单、编辑、运输开单
+     * @param response
+     * @return
+     */
+    @RequestMapping("/MobileorderPlaceCon")
+    @ResponseBody
+    public Wrapper<?> mobileOrderPlace(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
+            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
+        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        String resultMessage = null;
+        try {
+            orderGoodsListStr = orderGoodsListStr.replace("~`","");
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
+                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+            }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
+                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
+                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+            }
+            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
+                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+            }
+            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
+            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
+            }
+            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            logger.info(cscContantAndCompanyDtoConsignorStr);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            logger.info(cscContantAndCompanyDtoConsigneeStr);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            if(cscContantAndCompanyDtoConsignor==null){
+                throw new BusinessException("发货人信息不允许为空！");
+            }
+            if(cscContantAndCompanyDtoConsignee==null){
+                throw new BusinessException("收货人信息不允许为空！");
+            }
+            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            //校验业务类型，如果是卡班，必须要有运输单号
+            if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
+                if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
+                    throw new Exception("业务类型是卡班，运输单号是必填项");
+                }
+            }
+            if(null !=ofcOrderDTO){
+                if (null == ofcOrderDTO.getProvideTransport()){
+                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                }
+                if (null == ofcOrderDTO.getUrgent()){
+                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
+                }
+            }else{
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
+            }
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
+                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
+        } catch (BusinessException ex){
+            logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        } catch (Exception ex) {
+            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
+            } else {
+                logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+            }
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 货品筛选(调用客户中心API)
      */

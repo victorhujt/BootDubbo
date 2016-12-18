@@ -5,10 +5,10 @@ import com.xescm.ofc.domain.OfcMobileOrder;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.AttachmentDto;
 import com.xescm.ofc.model.dto.ofc.OfcMobileOrderDto;
+import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiOperation;
@@ -67,7 +67,7 @@ public class OfcMobileOrderAPIRest extends BaseController {
     @ResponseBody
     @ApiOperation(value = "通过流水号查询手机订单信息", notes = "返回包装手机订单信息json", response = Wrapper.class)
     public  Wrapper<?> queryMobileOrderByCode(@ApiParam(name ="ofcMobileOrderDto", value = "手机订单信息") @RequestBody OfcMobileOrderDto dto){
-        OfcMobileOrder result=null;
+        OfcMobileOrderVo result;
         try {
             if(dto == null){
                throw new BusinessException("参数不能为空");
@@ -78,7 +78,7 @@ public class OfcMobileOrderAPIRest extends BaseController {
             OfcMobileOrder condition=new OfcMobileOrder();
             BeanUtils.copyProperties(condition,dto);
             condition.setMobileOrderCode(dto.getMobileOrderCode());
-             result= ofcMobileOrderService.selectOne(condition);
+            result= ofcMobileOrderService.selectOneOfcMobileOrder(condition);
         } catch (Exception e) {
             logger.error("订单号查询出错：orderCode{},{}",dto.getMobileOrderCode(), e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
@@ -95,8 +95,7 @@ public class OfcMobileOrderAPIRest extends BaseController {
         OfcMobileOrder condition=new OfcMobileOrder();
         try {
             BeanUtils.copyProperties(condition,ofcMobileOrderDto);
-            String mobileOrderStatus=PubUtils.trimAndNullAsEmpty(ofcMobileOrderDto.getMobileOrderStatus());
-            list=ofcMobileOrderService.queryOrderNotes(mobileOrderStatus);
+            list=ofcMobileOrderService.queryOrderNotes(condition);
         } catch (Exception e){
             logger.error("查询手机订单出现异常:{},{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());

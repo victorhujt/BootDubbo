@@ -185,21 +185,14 @@
                                 <i class="ace-icon fa fa-arrow-left"></i>
                                 返回
                             </a>
-
                         </div>
-                        <div class="imgClass  imgone">
-                            <img src="${(mobileOrder.img1Url)!""}"/>
-                        </div>
-                        <div class="imgClass">
-                            <img src="${(mobileOrder.img2Url)!""}"/>
-                        </div>
-                        <div class="imgClass">
-                            <img src="${(mobileOrder.img3Url)!""}"/>
-                        </div>
-                        <div class="imgClass">
-                            <img src="${(mobileOrder.img4Url)!""}"/>
-                        </div>
-
+                        <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
+                            <#list mobileOrder.urls as url>
+                                <div class="imgClass  imgone">
+                                    <img src="${url!""}"/>
+                                </div>
+                            </#list>
+                        </#if>
                     </div>
                 </form>
             </div>
