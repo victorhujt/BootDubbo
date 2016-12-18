@@ -395,7 +395,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")) {
                     RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
                     rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-                    RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
+                    RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
                     if (rmcPickup != null){
                         if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseCode()).equals("")){
                             ofcTransplanInfo.setBaseId(rmcPickup.getBaseCode());
@@ -605,9 +605,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     logger.debug("计划单信息保存成功");
                 } catch (Exception ex) {
                     if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
-                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！", ex);
+                        logger.error("获取单号发生重复，导致保存计划单信息发生错误！{}", ex);
+                        throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！");
                     } else {
-                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                        logger.error("保存计划单信息发生错误！", ex);
+                        throw ex;
                     }
                 }
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
@@ -626,9 +628,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             //更改计划单状态为执行中//###
         } catch (BusinessException ex) {
+            logger.error("创建卡班运输计划单发生异常: {}", ex);
             throw ex;
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (Exception ex) {
+            logger.error("创建卡班运输计划单发生异常: {}", ex);
+            throw new BusinessException("创建卡班运输计划单发生异常! ");
         }
     }
 
@@ -1340,7 +1344,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+                                RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 if (rmcPickup != null
                                         && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {//有返回值
                                     //获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
@@ -1377,10 +1381,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+                                RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【配送】、【收货地地址编码】。获取收货TC仓信息
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcServiceCoverageForOrderVo);
-                                RmcServiceCoverageForOrderVo rmcRecipient = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "TwoDistribution");
+                                RmcServiceCoverageForOrderVo rmcRecipient = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "TwoDistribution");
                                 if (rmcRecipient != null
                                         && !PubUtils.trimAndNullAsEmpty(rmcRecipient.getWarehouseCode()).equals("")) {//有返回值
                                     //获取仓库编码、仓库名称、仓库省、仓库市、仓库区、仓库乡镇街道、仓库地址编码、仓库详细地址、仓库联系人、仓库联系电话、调度单位
@@ -1423,10 +1427,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+                                RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【配送】、【收货地地址编码】。获取收货TC仓信息
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcServiceCoverageForOrderVo);
-                                RmcServiceCoverageForOrderVo rmcRecipient = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "TwoDistribution");
+                                RmcServiceCoverageForOrderVo rmcRecipient = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "TwoDistribution");
                                 if (rmcPickup != null
                                         && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
                                         && rmcRecipient != null
@@ -1548,7 +1552,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
                                 //使用发货地省市区街道 获取覆范围的提货类型的【发货TC库编码】,传入计划单信息的【基地ID】字段, 计划单序号为1
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-                                RmcServiceCoverageForOrderVo rmcPickup = FeignRMcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+                                RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 if (rmcPickup != null
                                         && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {
                                     ofcTransplanInfo.setBaseId("");
@@ -1830,14 +1834,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
-    public RmcServiceCoverageForOrderVo FeignRMcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
+    public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         //先判断是上门提货还是二次配送
         if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
+            if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 return rmcPickupList.getResult().get(0);
             }else {
                 return null;
@@ -1846,7 +1850,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             Wrapper<List<RmcServiceCoverageForOrderVo>> RmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
+            if(RmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(RmcRecipientList.getResult(), 0)){
                 return RmcRecipientList.getResult().get(0);
             }else{
                 return null;

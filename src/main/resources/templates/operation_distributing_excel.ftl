@@ -108,9 +108,31 @@
     <form class="form-horizontal" role="form">
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
-            <div class="col-xs-3">
-                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
-                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a>
+            <div class="col-xs-6">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">模板类型</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">模板名称</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>交叉</td>
+                        <td><a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>明细列表</td>
+                        <td><a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
                     <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
@@ -386,6 +408,7 @@
         }
     }
     function goodsAndConsignee(obj){
+        debugger
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
@@ -415,7 +438,7 @@
 
 
             if(undefined != viewMap.get(mapKey)){
-                
+                debugger
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
@@ -450,7 +473,7 @@
     var errorGoodsNum = 0;
 
 
-            function uploadFileChange(target) {
+    function uploadFileChange(target) {
 
     }
     $(function () {
@@ -754,8 +777,7 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
-//            $("#toMaintainBatchCustomerImportPage").submit();//
-//            $("#errorExcelImport").hide();
+        $("#errorExcelImport").hide();
     })
     $("#errorExcelImportGoodsBtn").click(function () {
         if(errorGoodsNum < 1){
@@ -767,6 +789,7 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
+        $("#errorExcelImport").hide();
     })
 
 
