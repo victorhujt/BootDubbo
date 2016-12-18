@@ -882,7 +882,7 @@
     });
 
     function main(){
-        initChosen();
+        //initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
@@ -1887,7 +1887,7 @@
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
-        initChosen();
+        //initChosen();
     }
 
     function checkConsignOrEe(){
@@ -2494,7 +2494,6 @@
                 var goodsInfoListDiv = "";
                 var groupId = $("#custGroupId").val();
                 var firstGoodsType = null;
-                var provale=null;
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red' style='margin-top:5px;'>删除</a></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
@@ -2519,15 +2518,14 @@
                     });
                 }else{
                     $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option").each(function() {
-                        provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
+                        var provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
                         text = $(this).text();
                         value = $(this).val();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
-                        /*if(provale==value){
+                        if(provale==value){
                             goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"' selected = 'selected'>"+text+"</option>";
                         }else{
                             goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
-                        }*/
+                        }
 
                     });
                 }
@@ -2565,10 +2563,9 @@
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
-                $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option[value='"+provale+"']").prop("select","true");
-                initChosen();
+                //initChosen();
             }
-            initChosen();
+            //initChosen();
 
         });
 
@@ -2641,7 +2638,6 @@
                     var typeID = tdArr.eq(9).text();//单位
                     $("#typeSel").val(typeID);
                     goodsTypeParentChange($("#typeSel"));
-                    $("#typeSel option[value='"+typeID+"']").prop("select","true");
                     //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
