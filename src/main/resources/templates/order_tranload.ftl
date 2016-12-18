@@ -1762,7 +1762,7 @@
                 });
             }else{
                 // 如果发货方条数大于1条，默认带出cookie中上次选择的
-//                clearConsignor();
+                clearConsignor();
                 cscContact.purpose = "1";
                 outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 checkConsignOrEe();
@@ -1814,8 +1814,8 @@
         $("#consignorContactCode").val("");
         $("#consignorType").val("");
         $("#consignorAddress").val("");
-        $("#city-picker3-consignor").val(" / / / ");
-        $("#city-picker3-consignor").citypicker('refresh');
+        //$("#city-picker3-consignor").val(" / / / ");
+        //$("#city-picker3-consignor").citypicker('refresh');
         departurePlace();
     }
     //清空收货方
@@ -2494,6 +2494,7 @@
                 var goodsInfoListDiv = "";
                 var groupId = $("#custGroupId").val();
                 var firstGoodsType = null;
+                var provale=null;
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red' style='margin-top:5px;'>删除</a></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
@@ -2518,14 +2519,15 @@
                     });
                 }else{
                     $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option").each(function() {
-                        var provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
+                        provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
                         text = $(this).text();
                         value = $(this).val();
-                        if(provale==value){
+                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
+                        /*if(provale==value){
                             goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"' selected = 'selected'>"+text+"</option>";
                         }else{
                             goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
-                        }
+                        }*/
 
                     });
                 }
@@ -2563,6 +2565,7 @@
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
+                $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option[value='"+provale+"']").prop("select","true");
                 initChosen();
             }
             initChosen();
@@ -2638,6 +2641,7 @@
                     var typeID = tdArr.eq(9).text();//单位
                     $("#typeSel").val(typeID);
                     goodsTypeParentChange($("#typeSel"));
+                    $("#typeSel option[value='"+typeID+"']").prop("select","true");
                     //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
