@@ -1361,11 +1361,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         //收货方信息更改为已获取的发货TC 仓信息，收货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDestinationPlace(ofcTransplanInfo, rmcWarehouse);
                                         ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
+                                        ofcTransplanInfo.setBaseName(rmcPickup.getWarehouseName());
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                         //创建第二个卡班计划单
                                         ofcTransplanInfoReflect.setBusinessType("602");
                                         ofcTransplanInfoReflect.setBaseId(rmcPickup.getWarehouseCode());
+                                        ofcTransplanInfoReflect.setBaseName(rmcPickup.getWarehouseName());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1402,8 +1404,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         }
                                         //创建第一个卡班单
                                         ofcTransplanInfo.setBusinessType("602");
-                                        if (!PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {
+                                        if (!PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
+                                                && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseName()).equals("")) {
                                             ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
+                                            ofcTransplanInfo.setBaseName(rmcPickup.getWarehouseName());
                                         }
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
@@ -1412,6 +1416,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         //发货方信息更改为已获取的收货TC 仓信息，发货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDarturePlace(ofcTransplanInfoReflect, rmcWarehouse);
                                         ofcTransplanInfoReflect.setBaseId(rmcRecipient.getWarehouseCode());
+                                        ofcTransplanInfoReflect.setBaseName(rmcRecipient.getWarehouseName());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo,ofcFinanceInformation, ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1456,11 +1461,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         //收货方信息更改为已获取的发货TC 仓信息，收货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDestinationPlace(ofcTransplanInfo, rmcWarehouseor);
                                         ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
+                                        ofcTransplanInfo.setBaseName(rmcPickup.getWarehouseName());
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo,ofcFinanceInformation, ofcFundamentalInformation.getCustName());
                                         //创建第二个卡班计划单
                                         ofcTransplanInfoReflect1.setBusinessType("602");
                                         ofcTransplanInfoReflect1.setBaseId(rmcPickup.getWarehouseCode());
+                                        ofcTransplanInfoReflect1.setBaseName(rmcPickup.getWarehouseName());
                                         ofcTransplanInfoReflect1.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect1, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                         //创建第三个城配计划单
@@ -1468,6 +1475,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         //发货方信息更改为已获取的收货TC 仓信息，发货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDarturePlace(ofcTransplanInfoReflect2, rmcWarehouseee);
                                         ofcTransplanInfoReflect2.setBaseId(rmcRecipient.getWarehouseCode());
+                                        ofcTransplanInfoReflect2.setBaseName(rmcRecipient.getWarehouseName());
                                         ofcTransplanInfoReflect2.setProgramSerialNumber("3");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect2, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1496,11 +1504,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         //收货方信息更改为已获取的发货TC 仓信息，收货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDestinationPlace(ofcTransplanInfo, rmcWarehouse);
                                         ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
+                                        ofcTransplanInfo.setBaseName(rmcPickup.getWarehouseName());
                                         ofcTransplanInfo.setProgramSerialNumber("1");
                                         transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                         //创建第二个卡班计划单
                                         ofcTransplanInfoReflect.setBusinessType("602");
                                         ofcTransplanInfoReflect.setBaseId(rmcPickup.getWarehouseCode());
+                                        ofcTransplanInfoReflect.setBaseName(rmcPickup.getWarehouseName());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1533,6 +1543,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         //发货方信息更改为已获取的收货TC 仓信息，发货方编码与名称对应仓库编码及仓库名称，其他信息同类对应。
                                         copyDarturePlace(ofcTransplanInfoReflect, rmcWarehouse);
                                         ofcTransplanInfoReflect.setBaseId(rmcRecipient.getWarehouseCode());
+                                        ofcTransplanInfoReflect.setBaseName(rmcRecipient.getWarehouseName());
                                         ofcTransplanInfoReflect.setProgramSerialNumber("2");
                                         transPlanCreateKaBan(ofcTransplanInfoReflect, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                                     } else {
@@ -1554,8 +1565,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
                                 RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
                                 if (rmcPickup != null
-                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")) {
-                                    ofcTransplanInfo.setBaseId("");
+                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
+                                        && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseName()).equals("")) {
+                                    ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
+                                    ofcTransplanInfo.setBaseName(rmcPickup.getWarehouseName());
                                 }
                                 ofcTransplanInfo.setProgramSerialNumber("1");
                                 ofcTransplanInfo.setBusinessType("602");//卡班计划单
