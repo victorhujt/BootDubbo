@@ -1904,9 +1904,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getArea()).equals("")){
             ofcTransplanInfo.setDepartureDistrict(rmcWarehouse.getArea());
+        }else{
+            ofcTransplanInfo.setDepartureDistrict("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getStreet()).equals("")){
             ofcTransplanInfo.setDepartureTowns(rmcWarehouse.getStreet());
+        }else{
+            ofcTransplanInfo.setDepartureTowns("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getProvinceCode()).equals("")
                 && !PubUtils.trimAndNullAsEmpty(rmcWarehouse.getCityCode()).equals("")
@@ -1946,9 +1950,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getArea()).equals("")){
             ofcTransplanInfo.setDestinationDistrict(rmcWarehouse.getArea());
+        }else{
+            ofcTransplanInfo.setDestinationDistrict("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getStreet()).equals("")){
             ofcTransplanInfo.setDestinationTown(rmcWarehouse.getStreet());
+        }else{
+            ofcTransplanInfo.setDestinationTown("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getProvinceCode()).equals("")
                 && !PubUtils.trimAndNullAsEmpty(rmcWarehouse.getCityCode()).equals("")
