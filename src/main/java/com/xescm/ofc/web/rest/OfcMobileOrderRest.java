@@ -81,7 +81,7 @@ public class OfcMobileOrderRest extends BaseController {
         ModelAndView modelAndView = new ModelAndView("mobile_order_accept_opera");
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
-        OfcMobileOrder mobileOrder = ofcMobileOrderService.selectOne(condition);
+        OfcMobileOrderVo mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
         modelAndView.addObject("mobileOrder", mobileOrder);
         return modelAndView;
     }
