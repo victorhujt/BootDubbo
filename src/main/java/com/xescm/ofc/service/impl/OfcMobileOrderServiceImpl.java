@@ -917,8 +917,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                     }
                 }
                 if(url!=null){
-                    if(!urls.contains(url.toString())){
-                        urls.add(url.toString());
+                    String urlStr=url.toString().replace("vpc100-","");
+                    if(!urls.contains(urlStr)){
+                        urls.add(urlStr);
                     }
                 }
             }
