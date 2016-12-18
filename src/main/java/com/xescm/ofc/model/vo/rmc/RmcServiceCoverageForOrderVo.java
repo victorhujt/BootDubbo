@@ -154,4 +154,22 @@ public class RmcServiceCoverageForOrderVo {
     public void setStreetCode(String streetCode) {
         this.streetCode = streetCode;
     }
+
+    @Override
+    public String toString() {
+        return "RmcServiceCoverageForOrderVo{" +
+                "baseName='" + baseName + '\'' +
+                ", baseCode='" + baseCode + '\'' +
+                ", warehouseName='" + warehouseName + '\'' +
+                ", warehouseCode='" + warehouseCode + '\'' +
+                ", isPickup=" + isPickup +
+                ", isDispatch=" + isDispatch +
+                ", coverageType=" + coverageType +
+                ", warehouseType='" + warehouseType + '\'' +
+                ", provinceCode='" + provinceCode + '\'' +
+                ", cityCode='" + cityCode + '\'' +
+                ", districtCode='" + districtCode + '\'' +
+                ", streetCode='" + streetCode + '\'' +
+                '}';
+    }
 }

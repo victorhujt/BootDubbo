@@ -1843,7 +1843,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
             Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
-                logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0));
+                logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);
             }else {
                 logger.info("#####################接口返回数据为：{}###########################","");
@@ -1855,7 +1855,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
             Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
-                logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0));
+                logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);
             }else{
                 logger.info("#####################接口返回数据为：{}###########################","");
@@ -1904,9 +1904,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getArea()).equals("")){
             ofcTransplanInfo.setDepartureDistrict(rmcWarehouse.getArea());
+        }else{
+            ofcTransplanInfo.setDepartureDistrict("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getStreet()).equals("")){
             ofcTransplanInfo.setDepartureTowns(rmcWarehouse.getStreet());
+        }else{
+            ofcTransplanInfo.setDepartureTowns("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getProvinceCode()).equals("")
                 && !PubUtils.trimAndNullAsEmpty(rmcWarehouse.getCityCode()).equals("")
@@ -1946,9 +1950,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getArea()).equals("")){
             ofcTransplanInfo.setDestinationDistrict(rmcWarehouse.getArea());
+        }else{
+            ofcTransplanInfo.setDestinationDistrict("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getStreet()).equals("")){
             ofcTransplanInfo.setDestinationTown(rmcWarehouse.getStreet());
+        }else{
+            ofcTransplanInfo.setDestinationTown("");
         }
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getProvinceCode()).equals("")
                 && !PubUtils.trimAndNullAsEmpty(rmcWarehouse.getCityCode()).equals("")

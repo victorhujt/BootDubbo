@@ -221,7 +221,7 @@
                         <div class="w-width-220 col-float">
                             <input id="consignorContactName" name="consignorContactName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcDistributionBasicInfo.consigneeContactName)!""}">
+                                   value="${(ofcDistributionBasicInfo.consignorContactName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                         <div class="w-width-220 col-float">
