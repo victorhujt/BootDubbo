@@ -408,6 +408,7 @@
         }
     }
     function goodsAndConsignee(obj){
+        debugger
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
@@ -437,7 +438,7 @@
 
 
             if(undefined != viewMap.get(mapKey)){
-                
+                debugger
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
@@ -472,7 +473,7 @@
     var errorGoodsNum = 0;
 
 
-            function uploadFileChange(target) {
+    function uploadFileChange(target) {
 
     }
     $(function () {
@@ -522,8 +523,8 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
-//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
-                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
+                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
+//                var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
                     url: url,
@@ -591,8 +592,8 @@
                 formData.append('sheetNum',sheetNum);
                 formData.append('templatesType',templatesType);
                 formData.append('templatesMapping',templatesMapping);
-//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
-                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
+                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+//                var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
                     type: 'POST',

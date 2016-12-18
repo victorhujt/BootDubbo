@@ -776,24 +776,24 @@
             $.each(consigneeList,function(index,consignee){
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><button type='button' onclick='deleteConsignee(this)'  class='btn btn-minier btn-danger'>删除</button></td>"+
-                        "<td>" + consignee.contactCompanyName + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(consignee.contactCompanyName) + "</td>" +
                         "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
-                        "<td>" + consignee.contactName + "</td>" +
-                        "<td>" + consignee.phone + "</td>" +
-                        "<td>" + consignee.detailAddress + "</td>" +
-                        "<td style='display:none'>" + consignee.type + "</td>" +
-                        "<td style='display:none'>" + consignee.contactCompanySerialNo + "</td>" +
-                        "<td style='display:none'>" + consignee.contactSerialNo + "</td>" +
-                        "<td style='display:none'>" + consignee.phone + "</td>" +
-                        "<td style='display:none'>" + consignee.province + "</td>" +
-                        "<td style='display:none'>" + consignee.provinceName + "</td>" +
-                        "<td style='display:none'>" + consignee.city + "</td>" +
-                        "<td style='display:none'>" + consignee.cityName + "</td>" +
-                        "<td style='display:none'>" + consignee.area + "</td>" +
-                        "<td style='display:none'>" + consignee.areaName + "</td>" +
-                        "<td style='display:none'>" + consignee.street + "</td>" +
-                        "<td style='display:none'>" + consignee.streetName + "</td>" +
-                        "<td style='display:none'>" + consignee.address + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(consignee.contactName) + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(consignee.phone) + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(consignee.detailAddress) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.type) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.contactCompanySerialNo) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.contactSerialNo) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.phone) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.province) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.provinceName) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.city) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.cityName) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.area) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.areaName) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.street) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.streetName) + "</td>" +
+                        "<td style='display:none'>" + StringUtil.nullToEmpty(consignee.address) + "</td>" +
                         "</tr>");
             })
 
@@ -1092,6 +1092,7 @@
     }
 
     function goodsAndConsignee(obj){
+        debugger
        $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
@@ -1830,6 +1831,7 @@
     function distributingOrderPlaceCon() {
         console.log("这儿都进不来?");
         if(!validateForm()){
+            //alert("您输入的订单信息不完整!")
             return;
         }
         //如果没有仓库信息就是城配运输订单
@@ -1976,7 +1978,7 @@
         //还有页面所有的校验都还没有做
         //客户订单编号的校验也不好做
         //添加批次号
-
+debugger
         var consigneeNum = 0;//收货方数量一级校验标记
         var goodsNumTag = true;//货品明细数量一级校验标记
         var consigneeGoodsIsEmptyOut = true;//收房方所有货品的数量是否都是0一级校验标记
@@ -1995,7 +1997,7 @@
             var consigneeGoodsIsEmpty = true;//收房方所有货品的数量校验标记
             var goodsIsEmpty = false;//货品列表中货品最后一列的货品数量校验标记
             var goodsNum = 0;//货品列表数量
-            var goodsAndConsigneeTag = true;
+//            var goodsAndConsigneeTag = true;
             var consigneeAndGoodsMsgJson = null;
             $("#goodsInfoListDiv").find("tr").each(function(index) {
                 goodsNum += 1;
@@ -2012,17 +2014,21 @@
                     goodsIsEmpty = true;
                     return false;
                 }
+                debugger
                 var mapKey = goodsCode + "@" + goodsIndex;
-
+                console.log("mapkeyyyyy"+mapKey)
                 if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
-                    if(goodsAndConsigneeTag){
+//                    if(goodsAndConsigneeTag){
                         consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                    }
+                        console.log("consigneeAndGoodsMsgJson" + consigneeAndGoodsMsgJson)
+//                    }
                 }
                 var goodsAmount = 0;
-                if(null != consigneeAndGoodsMsgJson){
+                if(null != consigneeAndGoodsMsgJson){//要么没进来要么goodsamount是个0
+                    console.log('进来了?')
                     var param = contactCompanyId +"@"+ contactCode;
                     goodsAmount = consigneeAndGoodsMsgJson[param];
+                    console.log("goodsAmounttttt"+goodsAmount)
                 }
 
                 if(goodsAmount != 0){
@@ -2030,7 +2036,7 @@
                     consigneeGoodsIsEmpty = false;
                     //return false;
                 }
-                goodsAndConsigneeTag = false;
+//                goodsAndConsigneeTag = false;
             })
             if(0 == goodsNum){
                 goodsNumTag = false;

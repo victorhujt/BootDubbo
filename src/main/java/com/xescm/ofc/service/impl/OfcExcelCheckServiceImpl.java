@@ -58,7 +58,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     public Wrapper<?> checkXlsBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
 
         HSSFWorkbook hssfWorkbook = null;
-        Map<Integer,String> modelNameStr = new HashMap<>();
+        Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
         try {
@@ -402,7 +402,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         if(checkPass){
             int goodsRowNum = 1;
             //将MapKey更改为适合前端模板的格式
-            Map<String,JSONArray> afterResultMap = new HashMap<>();
+            Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
             Boolean consigneeTag = false;
             int consigneeNum = 1;
             for(String mapKey : resultMap.keySet()){
@@ -468,7 +468,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     @Override
     public Wrapper<?> checkXlsxBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         XSSFWorkbook xssfWorkbook = null;
-        Map<Integer,String> modelNameStr = new HashMap<>();
+        Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
         try {
@@ -812,7 +812,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         if(checkPass){
             int goodsRowNum = 1;
             //将MapKey更改为适合前端模板的格式
-            Map<String,JSONArray> afterResultMap = new HashMap<>();
+            Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
             Boolean consigneeTag = false;
             int consigneeNum = 1;
             for(String mapKey : resultMap.keySet()){
