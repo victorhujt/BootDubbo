@@ -171,7 +171,7 @@ public class OfcMobileOrderRest extends BaseController {
             ofcMobileOrderService.updateByMobileCode(order);
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心下单或编辑出现异常");
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                 logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
