@@ -920,6 +920,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         List<String> goodsCodeListForCheck = null;
         List<String> xlsErrorMsg = null;
         HSSFWorkbook hssfWorkbook = null;
+        List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         try {
             hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
         } catch (IOException e) {
@@ -1019,6 +1021,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 consigneeNameListForCheck.add("");
 
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
+                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+                                cscContantAndCompanyInportDto.setCustCode(customerCode);
+                                cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
+                                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+                                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                                cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                             }
                         }
                         //校验从第二行开始的体
@@ -1040,6 +1048,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
+                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+                                cscGoodsImportDto.setCustomerCode(customerCode);
+                                cscGoodsImportDto.setGoodsCode(goodsCode);
+                                //只有货品编码
+
+                                cscGoodsImportDtoList.add(cscGoodsImportDto);
                                 break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -1124,6 +1138,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
 
@@ -1148,6 +1164,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         List<String> goodsCodeListForCheck = null;
         List<String> xlsErrorMsg = null;
         XSSFWorkbook xssfWorkbook = null;
+        List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         try {
             xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
         } catch (IOException e) {
@@ -1246,6 +1264,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                 consigneeNameListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
+                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+                                cscContantAndCompanyInportDto.setCustCode(custId);
+                                cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
+                                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+                                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                                cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                             }
                         }
                         //校验从第二行开始的体
@@ -1267,6 +1291,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
+                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+                                cscGoodsImportDto.setCustomerCode(custId);
+                                cscGoodsImportDto.setGoodsCode(goodsCode);
+                                //只有货品编码
+
+                                cscGoodsImportDtoList.add(cscGoodsImportDto);
                                 break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -1354,6 +1384,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }

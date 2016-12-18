@@ -777,8 +777,7 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
-//            $("#toMaintainBatchCustomerImportPage").submit();//
-//            $("#errorExcelImport").hide();
+        $("#errorExcelImport").hide();
     })
     $("#errorExcelImportGoodsBtn").click(function () {
         if(errorGoodsNum < 1){
@@ -790,6 +789,7 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
+        $("#errorExcelImport").hide();
     })
 
 
