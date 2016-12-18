@@ -56,7 +56,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      */
     @Override
     public Wrapper<?> checkXlsBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
-
+        boolean checkPass = true;
+        List<String> xlsErrorMsg = new ArrayList<>();
         HSSFWorkbook hssfWorkbook = null;
         Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
@@ -136,10 +137,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                BigDecimal bigDecimal = new BigDecimal(cellValue);
-                                Field field = clazz.getDeclaredField(cellNumName);
-                                field.setAccessible(true);
-                                field.set(ofcExcelBoradwise,bigDecimal);
+                                boolean matches = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                //如果校验成功,就往结果集里堆
+                                if(matches){
+                                    BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                    Field field = clazz.getDeclaredField(cellNumName);
+                                    field.setAccessible(true);
+                                    field.set(ofcExcelBoradwise,bigDecimal);
+                                }else{
+                                    checkPass = false;
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                }
+
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
                                 Field field = clazz.getDeclaredField(cellNumName);
@@ -171,12 +180,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }
         //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
         //无法再按照之前的方法进行
-        boolean checkPass = true;
+
 
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
-        List<String> xlsErrorMsg = new ArrayList<>();
         List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
 
@@ -468,6 +476,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     @Override
     public Wrapper<?> checkXlsxBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         XSSFWorkbook xssfWorkbook = null;
+        boolean checkPass = true;
+        List<String> xlsErrorMsg = new ArrayList<>();
         Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
@@ -546,10 +556,17 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                BigDecimal bigDecimal = new BigDecimal(cellValue);
-                                Field field = clazz.getDeclaredField(cellNumName);
-                                field.setAccessible(true);
-                                field.set(ofcExcelBoradwise,bigDecimal);
+                                boolean matches = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                //如果校验成功,就往结果集里堆
+                                if(matches){
+                                    BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                    Field field = clazz.getDeclaredField(cellNumName);
+                                    field.setAccessible(true);
+                                    field.set(ofcExcelBoradwise,bigDecimal);
+                                }else{
+                                    checkPass = false;
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                }
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
                                 Field field = clazz.getDeclaredField(cellNumName);
@@ -581,12 +598,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }
         //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
         //无法再按照之前的方法进行
-        boolean checkPass = true;
+
 
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
-        List<String> xlsErrorMsg = new ArrayList<>();
         List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
 
@@ -1085,6 +1101,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 //如果校验成功,就往结果集里堆
                                 if(matches){
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
+                                    if(null == cscContantAndCompanyVo){
+                                        throw new BusinessException("您未成功导入有效联系人");
+                                    }
                                     CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                     goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                     cscGoodsApiVo.setGoodsAmount(goodsAmount);
@@ -1328,6 +1347,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 //如果校验成功,就往结果集里堆
                                 if(matches){
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
+                                    if(null == cscContantAndCompanyVo){
+                                        throw new BusinessException("您未成功导入有效联系人");
+                                    }
                                     CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                     goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                     cscGoodsApiVo.setGoodsAmount(goodsAmount);
