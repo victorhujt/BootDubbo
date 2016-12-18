@@ -137,9 +137,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                boolean matches = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesPot = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = cellNumName.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
-                                if(matches){
+                                if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);
                                     Field field = clazz.getDeclaredField(cellNumName);
                                     field.setAccessible(true);
@@ -556,9 +557,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                boolean matches = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesPot = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = cellNumName.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
-                                if(matches){
+                                if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);
                                     Field field = clazz.getDeclaredField(cellNumName);
                                     field.setAccessible(true);
