@@ -56,9 +56,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      */
     @Override
     public Wrapper<?> checkXlsBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
-
+        boolean checkPass = true;
+        List<String> xlsErrorMsg = new ArrayList<>();
         HSSFWorkbook hssfWorkbook = null;
-        Map<Integer,String> modelNameStr = new HashMap<>();
+        Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
         try {
@@ -136,10 +137,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                BigDecimal bigDecimal = new BigDecimal(cellValue);
-                                Field field = clazz.getDeclaredField(cellNumName);
-                                field.setAccessible(true);
-                                field.set(ofcExcelBoradwise,bigDecimal);
+                                boolean matches = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                //如果校验成功,就往结果集里堆
+                                if(matches){
+                                    BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                    Field field = clazz.getDeclaredField(cellNumName);
+                                    field.setAccessible(true);
+                                    field.set(ofcExcelBoradwise,bigDecimal);
+                                }else{
+                                    checkPass = false;
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                }
+
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
                                 Field field = clazz.getDeclaredField(cellNumName);
@@ -171,12 +180,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }
         //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
         //无法再按照之前的方法进行
-        boolean checkPass = true;
+
 
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
-        List<String> xlsErrorMsg = new ArrayList<>();
         List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
 
@@ -402,7 +410,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         if(checkPass){
             int goodsRowNum = 1;
             //将MapKey更改为适合前端模板的格式
-            Map<String,JSONArray> afterResultMap = new HashMap<>();
+            Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
             Boolean consigneeTag = false;
             int consigneeNum = 1;
             for(String mapKey : resultMap.keySet()){
@@ -468,7 +476,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     @Override
     public Wrapper<?> checkXlsxBoradwise(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         XSSFWorkbook xssfWorkbook = null;
-        Map<Integer,String> modelNameStr = new HashMap<>();
+        boolean checkPass = true;
+        List<String> xlsErrorMsg = new ArrayList<>();
+        Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
         try {
@@ -546,10 +556,17 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                BigDecimal bigDecimal = new BigDecimal(cellValue);
-                                Field field = clazz.getDeclaredField(cellNumName);
-                                field.setAccessible(true);
-                                field.set(ofcExcelBoradwise,bigDecimal);
+                                boolean matches = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
+                                //如果校验成功,就往结果集里堆
+                                if(matches){
+                                    BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                    Field field = clazz.getDeclaredField(cellNumName);
+                                    field.setAccessible(true);
+                                    field.set(ofcExcelBoradwise,bigDecimal);
+                                }else{
+                                    checkPass = false;
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                }
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
                                 Field field = clazz.getDeclaredField(cellNumName);
@@ -581,12 +598,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }
         //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
         //无法再按照之前的方法进行
-        boolean checkPass = true;
+
 
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
-        List<String> xlsErrorMsg = new ArrayList<>();
         List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
 
@@ -812,7 +828,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         if(checkPass){
             int goodsRowNum = 1;
             //将MapKey更改为适合前端模板的格式
-            Map<String,JSONArray> afterResultMap = new HashMap<>();
+            Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
             Boolean consigneeTag = false;
             int consigneeNum = 1;
             for(String mapKey : resultMap.keySet()){
@@ -920,6 +936,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         List<String> goodsCodeListForCheck = null;
         List<String> xlsErrorMsg = null;
         HSSFWorkbook hssfWorkbook = null;
+        List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         try {
             hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
         } catch (IOException e) {
@@ -1019,6 +1037,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 consigneeNameListForCheck.add("");
 
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
+                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+                                cscContantAndCompanyInportDto.setCustCode(customerCode);
+                                cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
+                                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+                                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                                cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                             }
                         }
                         //校验从第二行开始的体
@@ -1040,6 +1064,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
+                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+                                cscGoodsImportDto.setCustomerCode(customerCode);
+                                cscGoodsImportDto.setGoodsCode(goodsCode);
+                                //只有货品编码
+
+                                cscGoodsImportDtoList.add(cscGoodsImportDto);
                                 break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -1071,6 +1101,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 //如果校验成功,就往结果集里堆
                                 if(matches){
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
+                                    if(null == cscContantAndCompanyVo){
+                                        continue;
+                                    }
                                     CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                     goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                     cscGoodsApiVo.setGoodsAmount(goodsAmount);
@@ -1079,9 +1112,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     String consigneeCode = cscContantAndCompanyVo.getContactCompanySerialNo();
                                     String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                     if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
+//                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                         //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
                                         //throw new BusinessException("收货方编码或收货方联系人编码为空!");
+                                        checkPass = false;
+                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                        break;
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
@@ -1124,6 +1160,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
 
@@ -1148,6 +1186,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         List<String> goodsCodeListForCheck = null;
         List<String> xlsErrorMsg = null;
         XSSFWorkbook xssfWorkbook = null;
+        List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         try {
             xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
         } catch (IOException e) {
@@ -1246,6 +1286,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                 consigneeNameListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
+                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+                                cscContantAndCompanyInportDto.setCustCode(custId);
+                                cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
+                                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+                                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                                cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                             }
                         }
                         //校验从第二行开始的体
@@ -1267,6 +1313,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
+                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+                                cscGoodsImportDto.setCustomerCode(custId);
+                                cscGoodsImportDto.setGoodsCode(goodsCode);
+                                //只有货品编码
+
+                                cscGoodsImportDtoList.add(cscGoodsImportDto);
                                 break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -1298,6 +1350,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 //如果校验成功,就往结果集里堆
                                 if(matches){
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
+                                    if(null == cscContantAndCompanyVo){
+                                        continue;
+                                    }
                                     CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                     goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
                                     cscGoodsApiVo.setGoodsAmount(goodsAmount);
@@ -1306,10 +1361,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     String consigneeCode = cscContantAndCompanyVo.getContactCompanySerialNo();
                                     String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                     if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
-                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
-//                                            checkPass = false;
-//                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
-//                                            continue;
+//                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
+                                            checkPass = false;
+                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                            break;
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
@@ -1354,6 +1409,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
