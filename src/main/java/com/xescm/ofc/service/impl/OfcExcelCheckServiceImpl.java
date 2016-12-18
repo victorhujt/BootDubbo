@@ -1102,7 +1102,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 if(matches){
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                     if(null == cscContantAndCompanyVo){
-                                        throw new BusinessException("您未成功导入有效联系人");
+                                        continue;
                                     }
                                     CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                     goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
@@ -1348,7 +1348,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 if(matches){
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                     if(null == cscContantAndCompanyVo){
-                                        throw new BusinessException("您未成功导入有效联系人");
+                                        continue;
                                     }
                                     CscGoodsApiVo cscGoodsApiVo = goodsApiVoList.get(rowNum - 1);
                                     goodsAmount = cscGoodsApiVo.getGoodsAmount() + goodsAndConsigneeNum;
