@@ -635,15 +635,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (Exception e) {
             throw new BusinessException("推送卡班信息拷贝属性错误",e);
         }
-        if(!PubUtils.trimAndNullAsEmpty(pushDistributionBasicInfo.getCubage()).equals("")){
-            String[] cubage = pushDistributionBasicInfo.getCubage().split("\\*");
-            if(cubage.length == 3){
-                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                pushDistributionBasicInfo.setCubage(volume.toString());
-            }else{
-                throw new BusinessException("体积串格式不正确,长宽高都必须填入");
-            }
-        }
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getNotes()).equals("")){
             pushDistributionBasicInfo.setNotes(ofcTransplanInfo.getNotes());
         }

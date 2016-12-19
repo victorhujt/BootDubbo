@@ -408,7 +408,7 @@
         }
     }
     function goodsAndConsignee(obj){
-        debugger
+        
         $("#goodsAndConsigneeDiv").fadeIn("slow");
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
@@ -438,13 +438,13 @@
 
 
             if(undefined != viewMap.get(mapKey)){
-                debugger
+                
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
-                console.log(cadj)
+
                 num = preGoodsAndConsigneeJsonMsg[cadj];
-                console.log(num)
+
             }
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -488,7 +488,7 @@
             $("#consigneeInfoListDiv").html("");
             $("#goodsListDiv").show();
             $("#errorMsgDiv").hide();
-            debugger
+            
             file = this.files[0];
             var fileSize = file.size;
             if(fileSize / 1024 > 1000){
@@ -517,7 +517,7 @@
         $("#uploadFileInput").click(function () {//上传
 
             if(uploadFileTag){
-                debugger
+                
                 var formData = new FormData();
                 var customerCode = $("#customerCode").val();
                 formData.append('file',file);
@@ -601,7 +601,7 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        debugger
+                        
                         if (result == undefined || result == null) {
                             layer.msg("HTTP请求无数据返回", {
                                 icon: 1
@@ -623,7 +623,7 @@
                             var indexView = 0;
                             for(var key in resultMap){
                                 indexView += 1;
-                                debugger
+                                
                                 var resultMapValue = resultMap[key]; //一条货品记录
                                 var viewMapValue = [];
                                 var consigeeMsg = {};
@@ -690,9 +690,9 @@
                             if(errorEEsNum > 0 || errorGoodsNum > 0){
                                 $("#errorExcelImport").show();
                                 if(errorGoodsNum > 0){
-                                    console.log('batchgoodsKey' + result.result.batchgoodsKey)
+
                                     batchgoodsKey = result.result.batchgoodsKey;
-                                    console.log("全局变量" + batchgoodsKey)
+
                                 }
                                 if (errorEEsNum > 0){
                                     batchconsingeeKey = result.result.batchconsingeeKey;
@@ -737,7 +737,7 @@
                         icon : 3,
                         title : '确认操作'
                     }, function(index){
-                        debugger
+                        
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
                         var custName = $("#custName").val();
@@ -782,7 +782,7 @@
             alert("您无需添加货品")
             return;
         }
-        console.log("......" + batchgoodsKey)
+
         var url = "/csc/batchimport/toMaintainBatchGoodsImportPage/" + batchgoodsKey;
         var html = window.location.href;
         var index = html.indexOf("/index#");
