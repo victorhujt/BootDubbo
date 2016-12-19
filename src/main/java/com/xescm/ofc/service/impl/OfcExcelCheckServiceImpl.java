@@ -99,15 +99,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-                //空行
-                HSSFCell cell = hssfRow.getCell(0);
-                if(null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
-                    continue;
-                }
                 if (null == hssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
+                //空行
+                HSSFCell cell = hssfRow.getCell(0);
+                if(null == cell  || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
+                    continue;
+                }
+
                 //遍历列
                 for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++) {
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
@@ -124,6 +125,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                     } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                        DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));
                     } /*else if(HSSFCell.Cell){
 
                     }*/
@@ -156,13 +159,20 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
                             }else if("consigneeContactPhone".equals(cellNumName)){//电话
-                                DecimalFormat df = new DecimalFormat("0");
-                                String format = df.format(Double.valueOf(cellValue));
-                                BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                String format = null;
+                                String cellValuePhone = null;
+                                if (HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()) {
+                                    cellValuePhone = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                                    format = cellValuePhone;
+                                } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
+                                    cellValuePhone = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    format = df.format(Double.valueOf(cellValuePhone));
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,format);
-                            }else{
+                            }else if (!PubUtils.isSEmptyOrNull(cellNumName)){
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -526,15 +536,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
+                if (null == xssfRow) {
+                    //标记当前行出错,并跳出当前循环
+                    break;
+                }
                 //空行
                 XSSFCell cell = xssfRow.getCell(0);
                 if(null == cell || XSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
                     continue;
                 }
-                if (null == xssfRow) {
-                    //标记当前行出错,并跳出当前循环
-                    break;
-                }
+
                 //遍历列
                 for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++) {
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
@@ -551,6 +562,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
                     } else if (XSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                        DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));
                     } /*else if(XSSFCell.Cell){
 
                     }*/
@@ -577,18 +590,28 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
                                 }
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
+
+
+
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
                             }else if("consigneeContactPhone".equals(cellNumName)){//电话
-                                DecimalFormat df = new DecimalFormat("0");
-                                String format = df.format(Double.valueOf(cellValue));
-                                BigDecimal bigDecimal = new BigDecimal(cellValue);
+                                String format = null;
+                                String cellValuePhone = null;
+                                if (HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
+                                    cellValuePhone = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                                    format = cellValuePhone;
+                                } else if (HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
+                                    cellValuePhone = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    format = df.format(Double.valueOf(cellValuePhone));
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,format);
-                            }else{
+                            }else if(!PubUtils.isSEmptyOrNull(cellNumName)){
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -771,6 +794,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         }
 
                     }
+                    //+++++
+
 
                     continue;
                 }
@@ -981,12 +1006,21 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 HSSFRow hssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 JSONArray jsonArray = new JSONArray();
-                //空行
-                HSSFCell cell = hssfRow.getCell(0);
-                if(null == hssfRow || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
+                if (null == hssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
+                //空行
+                HSSFCell cell = hssfRow.getCell(0);
+                if(null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
+                    continue;
+                }
+                /*//空行
+                HSSFCell cell = hssfRow.getCell(0);
+                if(null == hssfRow  || null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
+                    //标记当前行出错,并跳出当前循环
+                    break;
+                }*/
                 //遍历cell
                 for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
@@ -1231,12 +1265,21 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 XSSFRow xssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 JSONArray jsonArray = new JSONArray();
-                //空行
-                XSSFCell cell = xssfRow.getCell(0);
-                if(null == xssfRow || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
+                if (null == xssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
+                //空行
+                XSSFCell cell = xssfRow.getCell(0);
+                if(null == cell || XSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
+                    continue;
+                }
+                /*//空行
+                XSSFCell cell = xssfRow.getCell(0);
+                if(null == xssfRow || null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
+                    //标记当前行出错,并跳出当前循环
+                    break;
+                }*/
                 //遍历cell
                 for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
