@@ -2603,9 +2603,9 @@
                     }
                 }else{
                     $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
-                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").text();
+                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").val();
                         text = $(this).text();
-                        if(gateVal==value){
+                        if(gateVal==text){
                             goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"' selected = 'selected'>"+text+"</option>";
                         }else{
                             goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
