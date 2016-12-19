@@ -357,13 +357,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
                 }
                 if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")) {
-                    String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if (cubage.length == 3) {
-                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                        ofcTransplanInfo.setVolume(volume);//$$$
-                    } else {
-                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
-                    }
+                    ofcTransplanInfo.setVolume(BigDecimal.valueOf(Double.valueOf(ofcDistributionBasicInfo.getCubage())));
                 }
                 if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")) {
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -542,13 +536,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
-                    String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if(cubage.length==3){
-                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                        ofcTransplanInfo.setVolume(volume);//$$$
-                    }else{
-                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
-                    }
+                    ofcTransplanInfo.setVolume(BigDecimal.valueOf(Double.valueOf(ofcDistributionBasicInfo.getCubage())));
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -646,15 +634,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(pushDistributionBasicInfo,ofcDistributionBasicInfo);
         } catch (Exception e) {
             throw new BusinessException("推送卡班信息拷贝属性错误",e);
-        }
-        if(!PubUtils.trimAndNullAsEmpty(pushDistributionBasicInfo.getCubage()).equals("")){
-            String[] cubage = pushDistributionBasicInfo.getCubage().split("\\*");
-            if(cubage.length == 3){
-                BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                pushDistributionBasicInfo.setCubage(volume.toString());
-            }else{
-                throw new BusinessException("体积串格式不正确,长宽高都必须填入");
-            }
         }
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getNotes()).equals("")){
             pushDistributionBasicInfo.setNotes(ofcTransplanInfo.getNotes());
@@ -1204,6 +1183,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTO.setMarketDepDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleDepartmentDesc()));//销售部门描述
                 transportDTO.setMarketTeamDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleGroupDesc()));//销售组描述
                 transportDTO.setTransportSource(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSingleSourceOfTransport()));//运输单来源
+                transportDTO.setBaseName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseName()));
+                logger.info("#####################推送TMS的基地Name为：{}",PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseName()));
                 //OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
                 //ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 if(ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode())!=null){
@@ -1712,11 +1693,19 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setConsigneeName(PubUtils.trimAndNullAsEmpty(info.getConsigneeName()));//收货方名称
                 wsv.setConsigneeContact(PubUtils.trimAndNullAsEmpty(info.getConsigneeContact()));//收货方联系人
                 wsv.setConsigneeTel(PubUtils.trimAndNullAsEmpty(info.getConsigneeContactPhone()));//手机号码
+                if(disInfo!=null){
+                    wsv.setcProvince(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationProvince()));//省
+                    wsv.setcCity(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationCity()));//城市
+                    wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationDistrict()));//县
+                    wsv.setcStreet(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationTowns()));//乡镇街道
+                    wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationProvince()+disInfo.getDestinationCity()+disInfo.getDestinationDistrict()+disInfo.getDestinationTowns()));//详细地址
+                }else{
                 wsv.setcProvince(PubUtils.trimAndNullAsEmpty(info.getConsigneeProvince()));//省
                 wsv.setcCity(PubUtils.trimAndNullAsEmpty(info.getConsigneeCity()));//城市
                 wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(info.getConsigneeDistrictAndCounty()));//县
                 wsv.setcStreet(PubUtils.trimAndNullAsEmpty(info.getConsigneeTownshipStreets()));//乡镇街道
                 wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(info.getConsigneeAddress()));//详细地址
+                }
                 if(disInfo!=null){
                     wsv.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运商编码
                     wsv.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运商名称
@@ -1728,7 +1717,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setPrintInvoice(PubUtils.trimAndNullAsEmpty(info.getPrintInvoice()));//是否打印发票
                 wsv.setInvoiceTitle("");//发票抬头
                 wsv.setInvoiceContent("");//发票内容
-                wsv.setCollect(finfo.getCollectFlag());//是否代收
+                if(finfo!=null){
+                    wsv.setCollect(PubUtils.trimAndNullAsEmpty(finfo.getCollectFlag()));//是否代收
+                }
                 //  wsv.setcollectAmount(info.getOrderAmount());//代收金额
                 wsv.setPlanNo(info.getPlanCode());//计划单号
                 wsv.setCustomerOrderNo(fuInfo.getCustOrderCode());//客户订单号
@@ -1775,11 +1766,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setSupplierName(PubUtils.trimAndNullAsEmpty(ofcWarehouseInformation.getSupportName()));//供应商名称
                 wp.setSupplierContact("");//供应商联系人
                 wp.setSupplierAddr("");//供应商地址
-                wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
-                wp.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运人姓名
-                wp.setVehical(disInfo.getPlateNumber());//车牌号
-                wp.setDriver(disInfo.getDriverName());//司机名称
-                wp.setDriverTel(disInfo.getContactNumber());//联系电话
+                if(disInfo!=null){
+                    wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
+                    wp.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运人姓名
+                    wp.setVehical(disInfo.getPlateNumber());//车牌号
+                    wp.setDriver(disInfo.getDriverName());//司机名称
+                    wp.setDriverTel(disInfo.getContactNumber());//联系电话
+                }
                 //wp.setWareHouseExpense(12);//仓储费用
                 wp.setPlanNo(info.getPlanCode());//计划单号
                 wp.setCustomerOrderNo(fuInfo.getCustOrderCode());//客户订单编号

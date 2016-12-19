@@ -149,8 +149,16 @@
                         </div>
                         <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">业务类型</label>
                         <div class="w-width-220 col-float">
+                        <#if mobileOrder.businessType  =="602">
                             <input id="businessType" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(mobileOrder.businessType)!""}">
+                                   aria-controls="dynamic-table" value="卡班">
+                        <#elseif  mobileOrder.businessType =="600">
+                            <input id="businessType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="城配">
+                        <#elseif  mobileOrder.businessType =="601">
+                            <input id="businessType" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="干线">
+                        </#if>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">运输单号</label>
                         <div class="w-width-220 col-float">
@@ -405,12 +413,16 @@
                     </thead>
                     <tbody id="custListDivTbody"></tbody>
                 </table>
+                <div class="row">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    </div>
+                </div>
             </form>
 
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+        <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
             <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
             <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
@@ -916,8 +928,9 @@
                         <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
                         <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费数量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
                     </thead>
                 <#--货品明细-->
 
@@ -984,7 +997,7 @@
     });
 
     function main(){
-        initChosen();
+        //initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
@@ -1177,22 +1190,18 @@
             rules : {
                 currentAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 toPayAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 returnAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 monthlyAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 }
             },
@@ -1471,7 +1480,6 @@
             var st=tdArr.eq(10).find("input").val();
             if(chargingways=="01"){
                 if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    quantityCount=quantityCount+parseFloat(tdArr.eq(10).find("input").val());
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
                         luggage=luggage+parseFloat(tdArr.eq(10).find("input").val())*parseFloat(tdArr.eq(9).find("input").val());
                     }else{
@@ -1481,10 +1489,9 @@
                     flg1="error";
                 }
             }else if(chargingways=="02"){
-                if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    weightCount=weightCount+parseFloat(tdArr.eq(10).find("input").val());
+                if(tdArr.eq(12).find("input").val()!="" && tdArr.eq(12).find("input").val()!="0"){
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
-                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(10).find("input").val());
+                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(12).find("input").val());
                     }else{
                         flg2="error";
                     }
@@ -1492,10 +1499,9 @@
                     flg2="error";
                 }
             }else if(chargingways=="03"){
-                if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    cubageCount=cubageCount+parseFloat(tdArr.eq(10).find("input").val());
+                if(tdArr.eq(13).find("input").val()!="" && tdArr.eq(13).find("input").val()!="0"){
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
-                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(10).find("input").val());
+                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(13).find("input").val());
                     }else{
                         flg3="error";
                     }
@@ -1506,6 +1512,22 @@
                 alert("计费方式有问题");
             }
         });
+        $('input[name="quantity"]').each(function(){
+            if($(this).val()!=""){
+                quantityCount=quantityCount+parseFloat($(this).val());
+            }
+        });
+        $('input[name="weight"]').each(function(){
+            if($(this).val()!=""){
+                weightCount=weightCount+parseFloat($(this).val());
+            }
+        });
+        $('input[name="cubage"]').each(function(){
+            if($(this).val()!=""){
+                cubageCount=cubageCount+parseFloat($(this).val());
+            }
+        });
+
         if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val(luggage)}
         countCostCheck();
         $("#weightCount").html(weightCount);
@@ -1855,7 +1877,7 @@
                 });
             }else{
                 // 如果发货方条数大于1条，默认带出cookie中上次选择的
-//                clearConsignor();
+                clearConsignor();
                 cscContact.purpose = "1";
                 outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 checkConsignOrEe();
@@ -1907,8 +1929,8 @@
         $("#consignorContactCode").val("");
         $("#consignorType").val("");
         $("#consignorAddress").val("");
-        $("#city-picker3-consignor").val(" / / / ");
-        $("#city-picker3-consignor").citypicker('refresh');
+        //$("#city-picker3-consignor").val(" / / / ");
+        //$("#city-picker3-consignor").citypicker('refresh');
         departurePlace();
     }
     //清空收货方
@@ -1967,14 +1989,20 @@
                 "<input class='col-xs-12'  name='' id='' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class=' col-xs-12'  name='' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                "<input class='col-xs-12'  name='quantity' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
-        goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                "<input class='col-xs-12'  name='billingWeight' id='' type='text' onblur='checkBillingWeight(this)'/>"
+        goodsInfoListDiv = goodsInfoListDiv + "<td id='1' style=\"display:none\">"+
+                "<input class='col-xs-12'  name='billingWeight' id='' type='hidden' onblur='checkBillingWeight(this)'/>"
+                +"</td>";
+        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                "<input class='col-xs-12'  name='weight' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                +"</td>";
+        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                "<input class='col-xs-12'  name='cubage' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
-        initChosen();
+        //initChosen();
     }
 
     function checkConsignOrEe(){
@@ -2003,6 +2031,7 @@
             $("#consigneePhone-error").remove();
         }
     }
+
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
         var custName = $("#custNameDiv").val();
@@ -2148,7 +2177,7 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            $("input[name='billingWeight']").each(function(){
+            /*$("input[name='billingWeight']").each(function(){
                 var value=onlyNumber($(this).val());
                 if(value==""){
                     if($(this).parent().children().length<2){
@@ -2162,7 +2191,7 @@
                     $(this).val(value);
                     $(this).parent().find("div").remove();
                 }
-            });
+            });*/
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
             $('#orderFinanceChargeFormValidate').submit();
@@ -2183,7 +2212,6 @@
                     alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
-
                 if(transCode!=mobileTranCode){
                     alert("运输单号必须和拍照订单的运输单号一致！");
                     return false;
@@ -2231,6 +2259,10 @@
                         case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
                     }
+                    if(tableRows == 1 && tableCells == 1){
+                        jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
+                        jsonStr.goodsTypeName=orderGoods.goodsType;
+                    }
                 }
                 if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
@@ -2246,6 +2278,7 @@
             }
             var tag = "tranplace";
             var ofcOrderDTO = JSON.stringify(jsonStr);
+            var mobileorderCode=$("#mobileorderCode").val();
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             var cscContantAndCompanyDtoConsignorStr;
             var cscContantAndCompanyDtoConsigneeStr;
@@ -2257,7 +2290,9 @@
                         ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":null
-                        ,"tag":tag}
+                        ,"tag":tag
+                        ,"mobileorderCode":mobileorderCode
+            }
                     ,"您确认提交订单吗?"
                     ,function () {
                         // 更新开单员
@@ -2268,7 +2303,9 @@
 
         });
 
-        $("#custSelectFormBtn").click(function () {
+
+        // 分页查询客户
+        $("#custSelectFormBtn").click(function() {
             queryCustomerData(1);
         });
 
@@ -2294,6 +2331,7 @@
                         cscContact.purpose = "2";
                         outConsignor(cscContact,cscContactCompany,groupId,customerCode);
                         $("#goodsInfoListDiv").html("");
+                        countQuantityOrWeightOrCubageCheck();
                     }
                 }
             });
@@ -2602,13 +2640,20 @@
                         }
                     });
                 }else{
-                    $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
+                    $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option").each(function() {
+                        var provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
                         text = $(this).text();
                         value = $(this).val();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
+                        if(provale==value){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
+                        }
+
                     });
                 }
-                initChosen();
+                goodsInfoListDiv = goodsInfoListDiv + "</select>";
+
 
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                         "<select  id='goodsCategory' name='goodsCategory' class='chosen-select form-control' style='width:80px;'>";
@@ -2619,6 +2664,7 @@
                             $.each(data,function (index,CscGoodsTypeVo) {
                                 goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                             });
+                            goodsInfoListDiv = goodsInfoListDiv + "</select>";
                             goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
@@ -2631,17 +2677,18 @@
                         });
                     }
                 }else{
-                    $("#goodsInfoListDiv tr:first-child").children().eq(2).find("select:first").find("option").each(function() {
+                    $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
                         text = $(this).text();
                         goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
                     });
+                    goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
-
+                //initChosen();
             }
-            initChosen();
+            //initChosen();
 
         });
 
@@ -2876,41 +2923,5 @@
 
 
 
-<script>
-    $(function () {
-        $("input[type='search']").attr("readonly", "readonly")
-    })
 
-    $(function () {
-        var businessType = "${(mobileOrder.businessType)!""}"
-        $("#businessType").val(getBusiType(businessType));
-    });
-    function getBusiType(businessType) {
-        var value = "";
-        if (businessType == '600') {
-            value = "城配"
-        } else if (businessType == "601") {
-            value = "干线";
-        } else if (businessType == "602") {
-            value = "卡班";
-        } else if (businessType == "610") {
-            value = "销售出库";
-        } else if (businessType == "611") {
-            value = "调拨出库";
-        } else if (businessType == "612") {
-            value = "报损出库";
-        } else if (businessType == "613") {
-            value = "其他出库";
-        } else if (businessType == "620") {
-            value = "采购入库";
-        } else if (businessType == "621") {
-            value = "调拨入库";
-        } else if (businessType == "622") {
-            value = "退货入库";
-        } else if (businessType == "623") {
-            value = "加工入库";
-        }
-        return value;
-    }
-</script>
 </body>

@@ -830,13 +830,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * 校验运输基本信息
      */
     private void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
-        String volume = ofcDistributionBasicInfo.getCubage();
+        /*String volume = ofcDistributionBasicInfo.getCubage();
         if(!PubUtils.isSEmptyOrNull(volume)){
             boolean matches = volume.matches("\\d{1,10}\\*\\d{1,10}\\*\\d{1,10}");
             if(!matches){
                 throw new BusinessException("您输入的体积不符合规则! 请重新输入!");
             }
-        }
+        }*/
 
 
     }

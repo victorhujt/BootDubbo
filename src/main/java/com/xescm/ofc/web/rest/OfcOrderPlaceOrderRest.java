@@ -495,6 +495,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             }
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
             response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
+            logger.info("###############返回货品类别列表为{}####################",JSONUtils.objectToJson(CscGoodsType.getResult()));
             CscGoodsTypeVo cscGoodsTypeVo=new CscGoodsTypeVo();
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);

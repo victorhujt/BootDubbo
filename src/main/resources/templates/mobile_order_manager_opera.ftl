@@ -180,7 +180,7 @@
             //  queryData(1);
 
             $("#doSearch").click(function () {
-//                debugger;
+//                
                 queryData(1);
             });
         }
@@ -189,7 +189,7 @@
 
         //页面数据初始化
         function initPageData(){
-//            debugger;
+//            
             var active_class = "active";
             $("#simple-table > thead > tr > th input[type=checkbox]").eq(0).on("click", function(){
                 var th_checked = this.checked;//checkbox inside "TH" table header
@@ -212,7 +212,7 @@
     <script type="text/javascript">
 
         function queryData(pageNum) {
-            //debugger;
+            //
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
@@ -329,7 +329,7 @@
 
         //订单详情
         function orderDetailOper(orderCode) {
-//            debugger;
+//            
             var url = "/ofc/mobileOrderDetails/" + orderCode;
             var html = window.location.href;
             var index = html.indexOf("/index#");
@@ -339,7 +339,7 @@
 
         //订单受理
         function acceptMobileOrder(orderCode) {
-//            debugger;
+//            
             var url = "/ofc/acceptMobileOrder/" + orderCode;
             var html = window.location.href;
             var index = html.indexOf("/index#");
