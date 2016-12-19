@@ -882,7 +882,7 @@
     });
 
     function main(){
-        //initChosen();
+        initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
@@ -1399,21 +1399,21 @@
         });
         $('input[name="quantity"]').each(function(){
             if($(this).val()!=""){
-                quantityCount=quantityCount+parseFloat($(this).val());
+                quantityCount=(quantityCount+parseFloat($(this).val())).toFixed(3);
             }
         });
         $('input[name="weight"]').each(function(){
             if($(this).val()!=""){
-                weightCount=weightCount+parseFloat($(this).val());
+                weightCount=(weightCount+parseFloat($(this).val())).toFixed(3);
             }
         });
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
-                cubageCount=cubageCount+parseFloat($(this).val());
+                cubageCount=(cubageCount+parseFloat($(this).val())).toFixed(3);
             }
         });
 
-        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val(luggage)}
+        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val((luggage).toFixed(2))}
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
@@ -1437,8 +1437,8 @@
             });
             $(obj).parent().next().children("select").find("option").each(function() {
                 text = $(this).text();
-                if($(obj).parent().next().children("select").find("option:contains("+text+")")){
-                    $(obj).parent().next().children("select").find("option:contains("+text+"):gt(0)").remove();
+                if($(obj).parent().next().children("select").find("option[value='"+text+"']")){
+                    $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
             });
             $(obj).parent().next().children("select").trigger("chosen:updated");
@@ -1887,7 +1887,7 @@
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
-        //initChosen();
+        initChosen();
     }
 
     function checkConsignOrEe(){
@@ -2511,8 +2511,8 @@
                         if($("#goodsInfoListDiv").find("tr").length==1){
                             $("select option").each(function() {
                                 text = $(this).text();
-                                if($("select option:contains("+text+")").length > 1)
-                                    $("select option:contains("+text+"):gt(0)").remove();
+                                if($("select option[value='"+text+"']").length > 1)
+                                    $("select option[value='"+text+"']:gt(0)").remove();
                             });
                         }
                     });
@@ -2546,9 +2546,10 @@
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
                                 $("select option").each(function() {
-                                    text = $(this).text();
-                                    if($("select option:contains("+text+")").length > 1)
-                                        $("select option:contains("+text+"):gt(0)").remove();
+                                    text = $(this).val();
+                                    if($("select option[value='"+text+"']").length > 1)
+                                        $("select option[value='"+text+"']:gt(0)").remove();
+
                                 });
                             }
                         });
@@ -2563,7 +2564,7 @@
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
-                //initChosen();
+                initChosen();
             }
             //initChosen();
 
@@ -2653,6 +2654,7 @@
             }else{
                 $("#goodsListDiv").fadeOut(0);
                 $("#yangdongxushinanshen").attr("id","goodCodeSel");
+                $("#typeSel").trigger("chosen:updated");
                 $("#typeSel").attr("id","");
             }
         });
@@ -2682,6 +2684,7 @@
     $("#merchandiser").editableSelect();
 
     function initChosen() {
+        debugger;
         $('.chosen-select').chosen({allow_single_deselect: true});
         //resize the chosen on window resize
         $(window).off('resize.chosen').on('resize.chosen', function () {
