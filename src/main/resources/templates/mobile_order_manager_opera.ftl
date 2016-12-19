@@ -261,6 +261,7 @@
             }
 
             for ( var i = 0; i < data.result.list.length; i++) {
+                debugger;
                 var order = data.result.list[i];
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                     + "<td>" + [ i + 1] + "</td>"
@@ -268,7 +269,7 @@
                         + "<a onclick=\"orderDetailOper('" + order.mobileOrderCode + "')\">" + StringUtil.nullToEmpty(order.mobileOrderCode) + "</a>"
                         + "</td>"
                     + "<td class=\"hidden-480\">" + subTimeString(StringUtil.nullToEmpty(order.uploadDate)) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.dcustOrderCodeingdingAccountNo) + "</td>"
+                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.dingdingAccountNo) + "</td>"
                     + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.operator) + "</td>"
                     + "<td class=\"hidden-480\">" + getBusiType(order) + "</td>"
                     + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.tranCode) + "</td>"

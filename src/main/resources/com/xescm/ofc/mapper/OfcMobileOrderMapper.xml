@@ -21,7 +21,7 @@
   </resultMap>
 
   <select id="queryOrderNotes" resultType="com.xescm.ofc.domain.OfcMobileOrder">
-    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,omo.dingding_account_no,
     omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,omo.serial_no,omo.pic_param
     FROM ofc_mobile_order omo where
         1=1
@@ -36,7 +36,7 @@
 
   <!-- 运营-订单管理查询 -->
   <select id="queryOrderList" resultMap="BaseResultMap">
-    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,
+    SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,omo.dingding_account_no,
     omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
     omo.serial_no,omo.pic_param
     FROM ofc_mobile_order omo

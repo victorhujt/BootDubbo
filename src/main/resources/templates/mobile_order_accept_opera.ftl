@@ -126,7 +126,7 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">流水号</label>
                         <div class="w-width-220 col-float">
-                            <input id="orderCode" name="" type="search" placeholder=""
+                            <input id="mobileOrderCode" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">上传日期</label>
@@ -2207,12 +2207,12 @@
             //卡班类型必须输入运输单号
             if($("#businessType").val() == "602"){
                 var transCode = $("#transCode").val().trim();
-                var mobileTranCode=$("#tranCode").val().trim();
+                var tranCode=$("#tranCode").val().trim();
                 if(transCode == null || transCode == "" || transCode == undefined){
                     alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
-                if(transCode!=mobileTranCode){
+                if(transCode!=tranCode){
                     alert("运输单号必须和拍照订单的运输单号一致！");
                     return false;
                 }
@@ -2223,6 +2223,7 @@
             jsonStr.businessType = $("#businessType").val();
             jsonStr.merchandiser = $("#merchandiser").val();
             jsonStr.transportType = $("#transportType").val();
+            var mobileOrderCode=$("#mobileOrderCode").val();
             if($('#orderTime').val()!=""){
                 jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
             }
@@ -2278,12 +2279,12 @@
             }
             var tag = "tranplace";
             var ofcOrderDTO = JSON.stringify(jsonStr);
-            var mobileorderCode=$("#mobileorderCode").val();
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             var cscContantAndCompanyDtoConsignorStr;
             var cscContantAndCompanyDtoConsigneeStr;
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
             cscContantAndCompanyDtoConsigneeStr = getCscContantAndCompanyDtoConsigneeStr();
+            debugger;
             xescm.common.submit("/ofc/mobileorderPlaceCon"
                     ,{"ofcOrderDTOStr":ofcOrderDTO
                         ,"orderGoodsListStr":orderGoodsListStr+"~`"
@@ -2291,7 +2292,7 @@
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":null
                         ,"tag":tag
-                        ,"mobileorderCode":mobileorderCode
+                        ,"mobileOrderCode":mobileOrderCode
             }
                     ,"您确认提交订单吗?"
                     ,function () {

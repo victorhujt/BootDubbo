@@ -231,6 +231,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw ex;
         } catch (Exception ex) {
             logger.error("==>审核订单发生未知异常！", ex);
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -1698,7 +1699,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     wsv.setcCity(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationCity()));//城市
                     wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationDistrict()));//县
                     wsv.setcStreet(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationTowns()));//乡镇街道
-                    wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationProvince()+disInfo.getDestinationCity()+disInfo.getDestinationDistrict()+disInfo.getDestinationTowns()));//详细地址
+                    wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(disInfo.getDestination()));
                 }else{
                 wsv.setcProvince(PubUtils.trimAndNullAsEmpty(info.getConsigneeProvince()));//省
                 wsv.setcCity(PubUtils.trimAndNullAsEmpty(info.getConsigneeCity()));//城市
