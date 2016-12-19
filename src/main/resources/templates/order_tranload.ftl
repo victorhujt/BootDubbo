@@ -1399,21 +1399,25 @@
         });
         $('input[name="quantity"]').each(function(){
             if($(this).val()!=""){
-                quantityCount=(quantityCount+parseFloat($(this).val())).toFixed(3);
+                quantityCount=quantityCount+parseFloat($(this).val());
+                quantityCount=parseFloat((parseFloat(quantityCount)).toFixed(3));
             }
         });
         $('input[name="weight"]').each(function(){
             if($(this).val()!=""){
-                weightCount=(weightCount+parseFloat($(this).val())).toFixed(3);
+                weightCount=weightCount+parseFloat($(this).val());
+                weightCount=parseFloat((parseFloat(weightCount)).toFixed(3));
             }
         });
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
-                cubageCount=(cubageCount+parseFloat($(this).val())).toFixed(3);
+                cubageCount=cubageCount+parseFloat($(this).val());
+                cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
+        debugger;
+        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage)}
 
-        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val((luggage).toFixed(2))}
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
@@ -1436,7 +1440,7 @@
                 $(obj).parent().next().children("select").append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
             $(obj).parent().next().children("select").find("option").each(function() {
-                text = $(this).text();
+                text = $(this).val();
                 if($(obj).parent().next().children("select").find("option[value='"+text+"']")){
                     $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
@@ -2509,8 +2513,8 @@
                             goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.id + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                         });
                         if($("#goodsInfoListDiv").find("tr").length==1){
-                            $("select option").each(function() {
-                                text = $(this).text();
+                            $("#goodsInfoListDiv tr:eq(0) td:eq(0) select option").each(function() {
+                                text = $(this).val();
                                 if($("select option[value='"+text+"']").length > 1)
                                     $("select option[value='"+text+"']:gt(0)").remove();
                             });
@@ -2545,7 +2549,7 @@
                             goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
-                                $("select option").each(function() {
+                                $("#goodsInfoListDiv tr:eq(0) td:eq(1) select option").each(function() {
                                     text = $(this).val();
                                     if($("select option[value='"+text+"']").length > 1)
                                         $("select option[value='"+text+"']:gt(0)").remove();
@@ -2566,7 +2570,7 @@
                 }
                 initChosen();
             }
-            //initChosen();
+            initChosen();
 
         });
 
@@ -2638,9 +2642,11 @@
                     var unit = tdArr.eq(7).text();//单位
                     var typeID = tdArr.eq(9).text();//单位
                     $("#typeSel").val(typeID);
+                    $("#typeSel").trigger("chosen:updated");
                     goodsTypeParentChange($("#typeSel"));
                     //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+                    $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
@@ -2654,7 +2660,6 @@
             }else{
                 $("#goodsListDiv").fadeOut(0);
                 $("#yangdongxushinanshen").attr("id","goodCodeSel");
-                $("#typeSel").trigger("chosen:updated");
                 $("#typeSel").attr("id","");
             }
         });
@@ -2684,7 +2689,6 @@
     $("#merchandiser").editableSelect();
 
     function initChosen() {
-        debugger;
         $('.chosen-select').chosen({allow_single_deselect: true});
         //resize the chosen on window resize
         $(window).off('resize.chosen').on('resize.chosen', function () {
