@@ -357,13 +357,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
                 }
                 if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")) {
-                    String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if (cubage.length == 3) {
-                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                        ofcTransplanInfo.setVolume(volume);//$$$
-                    } else {
-                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
-                    }
+                    ofcTransplanInfo.setVolume(BigDecimal.valueOf(Double.valueOf(ofcDistributionBasicInfo.getCubage())));
                 }
                 if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")) {
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
@@ -542,13 +536,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){
-                    String[] cubage = ofcDistributionBasicInfo.getCubage().split("\\*");
-                    if(cubage.length==3){
-                        BigDecimal volume = BigDecimal.valueOf(Double.valueOf(cubage[0])).multiply(BigDecimal.valueOf(Double.valueOf(cubage[1]))).multiply(BigDecimal.valueOf(Double.valueOf(cubage[2])));
-                        ofcTransplanInfo.setVolume(volume);//$$$
-                    }else{
-                        throw new BusinessException("体积串格式不正确,长宽高都必须填入");
-                    }
+                    ofcTransplanInfo.setVolume(BigDecimal.valueOf(Double.valueOf(ofcDistributionBasicInfo.getCubage())));
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("")){
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
