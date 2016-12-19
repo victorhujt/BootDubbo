@@ -86,7 +86,6 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.info("分拣中心状态反馈的消息体:{}",messageBody);
                 logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
                 DmsTransferStatusDto dmsTransferStatusDto = null;
-                System.out.println("分拣中心状态反馈的消息体:--------------------" + messageBody);
                 try {
                     dmsTransferStatusDto = JSON.parseObject(messageBody,DmsTransferStatusDto.class);
                     if(!keyList.contains(key)){

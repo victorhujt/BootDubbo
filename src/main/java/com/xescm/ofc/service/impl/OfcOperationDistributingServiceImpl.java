@@ -329,9 +329,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * @return
      */
     private Wrapper<?> boradwiseCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
-        if("xls".equals(suffix)){
+        if("xls".equals(suffix.toLowerCase())){
             return ofcExcelCheckService.checkXlsBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
-        }else if("xlsx".equals(suffix)){
+        }else if("xlsx".equals(suffix.toLowerCase())){
             return ofcExcelCheckService.checkXlsxBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");

@@ -54,5 +54,15 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         return result;
     }
 
+    /**
+     * 根据订单编号查询计划单编号列表
+     * @param orderCode
+     * @return
+     */
+    @Override
+    public List<String> queryPlanCodesByOrderCode(String orderCode) {
+        return ofcTransplanInfoMapper.queryTransCodeByOrderCode(orderCode);
+    }
+
 
 }

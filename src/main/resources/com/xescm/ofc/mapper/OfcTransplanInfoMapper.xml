@@ -175,4 +175,19 @@
   </where>
 
  </select>
+
+  <select id="queryTransCodeByOrderCode" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT
+    oti.plan_code
+    FROM
+    ofc_transplan_info oti
+    LEFT JOIN ofc_transplan_status ots ON oti.plan_code = ots.plan_code
+    <where>
+      <if test="orderCode != null and orderCode != '' ">
+        AND oti.order_code  = #{orderCode,jdbcType=VARCHAR}
+      </if>
+      AND ots.planned_single_state != '50'
+    </where>
+  </select>
+
 </mapper>

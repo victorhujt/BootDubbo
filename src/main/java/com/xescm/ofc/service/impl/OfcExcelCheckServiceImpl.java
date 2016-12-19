@@ -183,6 +183,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         //无法再按照之前的方法进行
 
 
+        if(modelNameStr.size() < 12){
+            throw new BusinessException("Excel字段不全!");//
+        }
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
@@ -276,7 +279,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
                         if(null == jsonArrayExistGoods){
                            //break;
-                            continue;
+
                         }
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
@@ -605,7 +608,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
         //无法再按照之前的方法进行
 
-
+        if(modelNameStr.size() < 12){
+            throw new BusinessException("Excel字段不全!");//
+        }
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,CscContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
@@ -919,8 +924,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             return "goodsAmount";
         }else if(cellName.equals("单价")){
             return "goodsUnitPirce";
-        }else{
-            throw new BusinessException("字段错误");
+        }else {
+            return "";
         }
 
     }
