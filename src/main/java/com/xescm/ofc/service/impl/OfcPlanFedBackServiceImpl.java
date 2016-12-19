@@ -237,7 +237,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
                         for (OfcOrderStatus status : statusList) {
                             String statusNote = status.getNotes();
-                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.startsWith("订单"+tag+"调度完成")) {
+                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.startsWith(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
+                                    +" 订单"+tag+"调度完成")) {
                                 flag = true;
                                 break;
                             }
