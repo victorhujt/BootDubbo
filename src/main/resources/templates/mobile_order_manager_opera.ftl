@@ -7,10 +7,10 @@
         td{
             text-align: center;
         }
-        .page-content{
+       /* .page-content{
             max-width: 1250px;
             min-width: 1250px;
-        }
+        }*/
         .filters{
             padding: 0;
         }

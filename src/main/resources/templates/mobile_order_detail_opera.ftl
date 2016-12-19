@@ -72,41 +72,38 @@
         }
         .imgClass{
             float: left;
-            width:50px;
-            height:50px;
+            width:190px;
+            height:145px;
             border:1px solid #cacaca;
-            margin-top: 50px;
-            margin-left: 100px;
+            margin-top: 20px;
+
         }
         .imgClass img{
-            width: 50px;
-            height:50px;
+            width: 100%;
+            height:100%;
             background-size: 50px 50px;
         }
-        .row{
+     /*   .row{
             max-width: 1250px;
             min-width: 1250px;
 
-        }
+        }*/
         .laypage_curr{
             margin-top: 24px;
-            width: 100%;
+            margin-left:12px;
             float: left;
         }
         .laypage_curr a{
             margin-right: 204px;
         }
-        .laypage_curr a{
+      /*  .laypage_curr a{
             float: right;
-        }
-        .col-label{
+        }*/
+     /*   .col-label{
             margin-left: 71px;
-        }
-        .col-float{
-            margin-top: 24px;
-        }
+        }*/
         .imgone{
-           margin-right: 148px;
+           margin-right: 10px;
         }
 
     </style>
@@ -128,73 +125,86 @@
         <div class="row">
             <div class="col-xs-12">
                 <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">流水号</label>
+                    <div class="form-group y-float">
+                        <label class="control-label col-label no-padding-right" for="name" >流水号</label>
                         <div class="w-width-220 col-float">
-                            <input id="orderCode" name="" type="search" placeholder=""
+                            <input class="width-100" id="orderCode" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">上传日期</label>
+                    </div>
+                    <div class="form-group y-float">
+                        <label class="control-label col-label no-padding-right" for="name" >上传日期</label>
                         <div class="w-width-220 col-float">
-                            <input id="uploadDate" name="" type="search" placeholder=""
+                            <input class="width-100" id="uploadDate" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">钉钉账号</label>
-                        <div class="w-width-220 col-float">
-                            <input id="dingdingAccountNo" name="dingdingAccountNo" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.dingdingAccountNo)!""}">
+                    </div>
+                       <div class="form-group y-float">
+                           <label class="control-label col-label no-padding-right" for="name" >钉钉账号</label>
+                           <div class="w-width-220 col-float">
+                               <input class="width-100" id="dingdingAccountNo" name="dingdingAccountNo" type="search" placeholder=""
+                                      aria-controls="dynamic-table"
+                                      value="${(mobileOrder.dingdingAccountNo)!""}">
+                           </div>
+                       </div>
+                       <div class="form-group y-float" style="clear:left">
+                           <label class="control-label col-label no-padding-right" for="name" >开单员</label>
+                           <div class="w-width-220 col-float">
+                               <input class="width-100" id="operator" name="operator" type="search" placeholder=""
+                                      aria-controls="dynamic-table"
+                                      value="${(mobileOrder.operator)!""}">
+                           </div>
+                       </div>
+                       <div class="form-group y-float">
+                           <label class="control-label col-label no-padding-right" for="name" >业务类型</label>
+                           <div class="w-width-220 col-float">
+                           <#if mobileOrder.businessType  =="602">
+                               <input class="width-100" id="businessType" name="businessType" type="search" placeholder=""
+                                      aria-controls="dynamic-table" value="卡班">
+                           <#elseif  mobileOrder.businessType =="600">
+                               <input class="width-100" id="businessType" name="businessType" type="search" placeholder=""
+                                      aria-controls="dynamic-table" value="城配">
+                           <#elseif  mobileOrder.businessType =="601">
+                               <input class="width-100" id="businessType" name="businessType" type="search" placeholder=""
+                                      aria-controls="dynamic-table" value="干线">
+                           </#if>
+                           </div>
+                       </div>
+                        <div class="form-group y-float">
+                            <label class="control-label col-label no-padding-right" for="name" >运输单号</label>
+                            <div class="w-width-220 col-float">
+                                <input class="width-100" id="tranCode" name="tranCode" type="search" placeholder=""
+                                       aria-controls="dynamic-table"
+                                       value="${(mobileOrder.tranCode)!""}">
+                            </div>
                         </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">开单员</label>
+                       <div class="form-group y-float" style="clear:left">
+                           <label class="control-label col-label no-padding-right" for="name" >订单编号</label>
+                           <div class="w-width-220 col-float">
+                               <input class="width-100" id="tranCode" name="OrderCode" type="search" placeholder=""
+                                      aria-controls="dynamic-table"
+                                      value="${(mobileOrder.OrderCode)!""}">
+                           </div>
+                       </div>
+                       <div class="form-group y-float">
+                           <label class="control-label col-label no-padding-right" for="name" >受理人</label>
+                           <div class="w-width-220 col-float">
+                               <input class="width-100" id="tranCode" name="accepter" type="search" placeholder=""
+                                      aria-controls="dynamic-table"
+                                      value="${(mobileOrder.accepter)!""}">
+                           </div>
+                       </div>
+                       <div class="form-group y-float">
+                        <label class="control-label col-label no-padding-right" for="name" >受理时间</label>
                         <div class="w-width-220 col-float">
-                            <input id="operator" name="operator" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.operator)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">业务类型</label>
-                        <div class="w-width-220 col-float">
-                        <#if mobileOrder.businessType  =="602">
-                            <input id="businessType" name="businessType" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="卡班">
-                        <#elseif  mobileOrder.businessType =="600">
-                            <input id="businessType" name="businessType" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="城配">
-                        <#elseif  mobileOrder.businessType =="601">
-                            <input id="businessType" name="businessType" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="干线">
-                        </#if>
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">运输单号</label>
-                        <div class="w-width-220 col-float">
-                            <input id="tranCode" name="tranCode" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.tranCode)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">订单编号</label>
-                        <div class="w-width-220 col-float">
-                            <input id="tranCode" name="OrderCode" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.OrderCode)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">受理人</label>
-                        <div class="w-width-220 col-float">
-                            <input id="tranCode" name="accepter" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.accepter)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top: 24px">受理时间</label>
-                        <div class="w-width-220 col-float">
-                            <input id="uploadDate" name="" type="search" placeholder=""
+                            <input class="width-100" id="uploadDate" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(mobileOrder.appcetDate?string("yyyy-MM-dd"))!""}">
                         </div>
-                        <div class="laypage_curr">
-                            <a href="index#/ofc/mobileOrderManageOpera" class="btn btn-white btn-info btn-bold y-rt-btn">
-                                <i class="ace-icon fa fa-arrow-left"></i>
-                                返回
-                            </a>
-                        </div>
+                       </div>
+                    <div class="y-float">
+                        <label class="control-label col-label no-padding-right" for="name"  style="margin-right:8px;"></label>
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                             <#list mobileOrder.urls as url>
                                 <div class="imgClass  imgone">
@@ -202,6 +212,17 @@
                                 </div>
                             </#list>
                         </#if>
+                    </div>
+
+                    <div class="form-group y-float" style="width:100%;">
+                        <label class="control-label col-label no-padding-right" for="name" ></label>
+                        <div class="laypage_curr">
+                            <a href="index#/ofc/mobileOrderManageOpera" class="btn btn-white btn-info btn-bold y-rt-btn">
+                                <i class="ace-icon fa fa-arrow-left"></i>
+                                返回
+                            </a>
+                        </div>
+
                     </div>
                 </form>
             </div>
