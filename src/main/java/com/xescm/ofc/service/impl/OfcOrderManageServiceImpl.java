@@ -1702,26 +1702,28 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 // wsv.setStatus("");//出库单状态
                 wsv.setWareHouseCode(PubUtils.trimAndNullAsEmpty(info.getWarehouseCode()));//仓库编号
                 wsv.setWareHouseName(PubUtils.trimAndNullAsEmpty(info.getWarehouseName()));//仓库名称
-                wsv.setCustomerCode(PubUtils.trimAndNullAsEmpty(info.getCustCode()));//货主编号
-                wsv.setCustomerName(PubUtils.trimAndNullAsEmpty(disInfo.getConsigneeName()));//货主名称
+                wsv.setCustomerCode(PubUtils.trimAndNullAsEmpty(fuInfo.getCustCode()));//货主编号
+                wsv.setCustomerName(PubUtils.trimAndNullAsEmpty(fuInfo.getCustName()));//货主名称
                 wsv.setExpectedArriveTime(info.getArriveTime());//预计出库时间
                 wsv.setOrderNo(info.getOrderCode());//订单编号
                 wsv.setWmsNo("");//wms单据号
                 wsv.setNotes("");//备注
                 wsv.setConsigneeCode(PubUtils.trimAndNullAsEmpty(info.getConsigneeCode()));//收货人编码
                 wsv.setConsigneeName(PubUtils.trimAndNullAsEmpty(info.getConsigneeName()));//收货方名称
-                wsv.setConsigneeContact(PubUtils.trimAndNullAsEmpty(disInfo.getConsigneeContactName()));//收货方联系人
-                wsv.setConsigneeTel(PubUtils.trimAndNullAsEmpty(disInfo.getConsigneeContactPhone()));//手机号码
-                wsv.setcProvince(disInfo.getDestinationProvince());//省
-                wsv.setcCity(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationCity()));//城市
-                wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationDistrict()));//县
-                wsv.setcStreet(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationTowns()));//乡镇街道
+                wsv.setConsigneeContact(PubUtils.trimAndNullAsEmpty(info.getConsigneeContact()));//收货方联系人
+                wsv.setConsigneeTel(PubUtils.trimAndNullAsEmpty(info.getConsigneeContactPhone()));//手机号码
+                wsv.setcProvince(PubUtils.trimAndNullAsEmpty(info.getConsigneeProvince()));//省
+                wsv.setcCity(PubUtils.trimAndNullAsEmpty(info.getConsigneeCity()));//城市
+                wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(info.getConsigneeDistrictAndCounty()));//县
+                wsv.setcStreet(PubUtils.trimAndNullAsEmpty(info.getConsigneeTownshipStreets()));//乡镇街道
                 wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(info.getConsigneeAddress()));//详细地址
-                wsv.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运商编码
-                wsv.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运商名称
-                wsv.setVehical(disInfo.getPlateNumber());//车牌号
-                wsv.setDriver(disInfo.getDriverName());//司机名称
-                wsv.setDriverTel(disInfo.getContactNumber());//联系电话
+                if(disInfo!=null){
+                    wsv.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运商编码
+                    wsv.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运商名称
+                    wsv.setVehical(disInfo.getPlateNumber());//车牌号
+                    wsv.setDriver(disInfo.getDriverName());//司机名称
+                    wsv.setDriverTel(disInfo.getContactNumber());//联系电话
+                }
                 //wsv.setWareHouseExpense(12);//仓储费用
                 wsv.setPrintInvoice(PubUtils.trimAndNullAsEmpty(info.getPrintInvoice()));//是否打印发票
                 wsv.setInvoiceTitle("");//发票抬头
@@ -1819,6 +1821,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewStatus);//更新仓储计划单最新的状态
             }
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("组装数据产生异常",e);
         }
 
