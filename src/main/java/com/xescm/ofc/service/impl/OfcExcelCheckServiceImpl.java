@@ -112,10 +112,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++) {
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
                     //空列
-                    if (null == hssfCell) {
+                    if (null == hssfCell && cellNum > 11) {
                         //标记当前列出错, 并跳过当前循环
                         break;
-                    } else if (HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()) {
+                    } else if (null == hssfCell || HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()) {
                         continue;
                     }
                     //校验第一行,包括固定内容和收货人列表
@@ -137,8 +137,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                boolean matchesPot = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
-                                boolean matchesInt = cellNumName.matches("\\d{1,6}");
+                                boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = cellValue.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
                                 if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);
@@ -274,6 +274,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }else{
                         //如果在Map中已经存在,则存对应收货方和数量
                         JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
+                        if(null == jsonArrayExistGoods){
+                           //break;
+                            continue;
+                        }
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
                         jsonArrayExistGoods.remove(1);
@@ -532,10 +536,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++) {
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
                     //空列
-                    if (null == xssfCell) {
+                    if (null == xssfCell  && cellNum > 11) {
                         //标记当前列出错, 并跳过当前循环
                         break;
-                    } else if (XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()) {
+                    } else if (null == xssfCell || XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()) {
                         continue;
                     }
                     //校验第一行,包括固定内容和收货人列表
@@ -557,8 +561,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                boolean matchesPot = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
-                                boolean matchesInt = cellNumName.matches("\\d{1,6}");
+                                boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = cellValue.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
                                 if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);
@@ -693,6 +697,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }else{
                         //如果在Map中已经存在,则存对应收货方和数量
                         JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
+                        if(null == jsonArrayExistGoods){
+//                            break;
+                            continue;
+                        }
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
                         jsonArrayExistGoods.remove(1);
@@ -1365,7 +1373,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
 //                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                             checkPass = false;
-                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方在档案中不存在或信息不完整!");
                                             break;
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;

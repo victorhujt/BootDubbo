@@ -572,7 +572,7 @@
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">体积</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix" style="color:#c3c3c3;">
-                                                                            <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(长*宽*高,单位:m)
+                                                                            <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(单位:m³)
                                                                         </div>
                                                                     </div></div>
                                                                 </div>

@@ -740,7 +740,7 @@
         var excelImportTag = $("#excelImportTag").html();
         if("confirm" == excelImportTag){ // 如果是Excel导入进入这个页面//先将用户选择的客户显示出来
             var customerCode = $("#customerCodeFromExcelImport").html();
-            console.log("consigneeList"+JSON.stringify(consigneeList))
+
 
             var custName = $("#custNameFromExcelImport").html();
             //重新从接口里查一遍
@@ -797,7 +797,7 @@
                         "</tr>");
             })
 
-            debugger
+            
             //先做成死的, 暂时不允许收货方动态增删
             //ifConsigneeConfirm = true;
 
@@ -1032,7 +1032,7 @@
 
 
     function deleteConsignee(obj) {
-        debugger
+        
         //动态删除收货方,即从Map中从收货方给拆出来
         //遍历货品信息
         var contactCompanyId = $(obj).parent().parent().children().eq(7).text();//---
@@ -1042,15 +1042,15 @@
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
-            debugger
+            
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
             if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
                 consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
             }
-            debugger
+            
             if(null != consigneeAndGoodsMsgJson){
-                debugger
+                
                 var param = contactCompanyId +"@"+ contactCode;
                 var goodsAmount = consigneeAndGoodsMsgJson[param];
                 if(undefined != goodsAmount || !StringUtil.isEmpty(goodsAmount)){
@@ -1092,7 +1092,7 @@
     }
 
     function goodsAndConsignee(obj){
-        debugger
+        
        $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
@@ -1418,8 +1418,7 @@
                 $("#consignorType").val(type);
                 $("#consignorContactCompanyId").val(contactCompanyCode);
                 $("#consignorContactCode").val(contactCode);
-                console.log("2222"+$("#consignorContactCompanyId").val());
-                console.log("2222"+$("#consignorContactCode").val());
+
                 $("#consignorPhone").val(phone);
                 $("#consignorProvince").val(province);
                 $("#consignorProvinceName").val(provinceName);
@@ -1540,8 +1539,7 @@
             var type = tdArr.eq(6).text();
             var contactCompanyId = tdArr.eq(7).text();
             var contactCode = tdArr.eq(8).text();
-            console.log(contactCompanyId);
-            console.log(contactCode);
+
             var phone = tdArr.eq(9).text();
             var province = tdArr.eq(10).text();
             var provinceName = tdArr.eq(11).text();
@@ -1833,7 +1831,7 @@
 
 
     function distributingOrderPlaceCon() {
-        console.log("这儿都进不来?");
+
         if(!validateForm()){
             //alert("您输入的订单信息不完整!")
             return;
@@ -1845,7 +1843,7 @@
         var orderInfo = null;
         //遍历收货方列表
         $("#consigneeInfoListDiv").find("tr").each(function (index) {
-            console.log("遍历收货方列表进来了");
+
 
             orderInfo = {};
 
@@ -1928,7 +1926,7 @@
             //遍历货品信息
 
             $("#goodsInfoListDiv").find("tr").each(function(index) {//&&&
-                console.log("货品遍历进来了");
+
                 goods = {};
                 var tdArr = $(this).children();
                 var goodsIndex = tdArr.eq(1).text();//货品序号
@@ -1949,8 +1947,8 @@
 
                 var mapKey = goodsCode + "@" + goodsIndex;
 //                var goodsMsgStr =  goodsAndConsigneeMap.get(mapKey)[0];//货品信息
-                debugger
-                console.log("mapKey啊" + mapKey)
+                
+
                 var consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息 ///====================
                 var param =contactCompanyId + "@" + contactCode;
                 var goodsAmount = consigneeAndGoodsMsgJson[param];
@@ -1982,7 +1980,7 @@
         //还有页面所有的校验都还没有做
         //客户订单编号的校验也不好做
         //添加批次号
-debugger
+
         var consigneeNum = 0;//收货方数量一级校验标记
         var goodsNumTag = true;//货品明细数量一级校验标记
         var consigneeGoodsIsEmptyOut = true;//收房方所有货品的数量是否都是0一级校验标记
@@ -2018,21 +2016,20 @@ debugger
                     goodsIsEmpty = true;
                     return false;
                 }
-                debugger
+                
                 var mapKey = goodsCode + "@" + goodsIndex;
-                console.log("mapkeyyyyy"+mapKey)
+
                 if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
 //                    if(goodsAndConsigneeTag){
                         consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
-                        console.log("consigneeAndGoodsMsgJson" + consigneeAndGoodsMsgJson)
+
 //                    }
                 }
                 var goodsAmount = 0;
                 if(null != consigneeAndGoodsMsgJson){//要么没进来要么goodsamount是个0
-                    console.log('进来了?')
                     var param = contactCompanyId +"@"+ contactCode;
                     goodsAmount = consigneeAndGoodsMsgJson[param];
-                    console.log("goodsAmounttttt"+goodsAmount)
+
                 }
 
                 if(goodsAmount != 0){

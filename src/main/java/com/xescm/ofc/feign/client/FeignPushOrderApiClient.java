@@ -58,16 +58,16 @@ public class FeignPushOrderApiClient {
                                    List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         logger.info("推送订单信息到结算中心");
         if (ofcFundamentalInformation == null) {
-            throw new BusinessException("参数ofcFundamentalInformation不能为空");
+            throw new BusinessException("订单基本信息不能为空");
         }
         if (ofcFinanceInformation == null) {
-            throw new BusinessException("参数ofcFinanceInformation不能为空");
+            throw new BusinessException("订单财务信息不能为空");
         }
         if (ofcDistributionBasicInfo == null) {
-            throw new BusinessException("参数ofcDistributionBasicInfo不能为空");
+            throw new BusinessException("订单运输信息不能为空");
         }
         if (CollectionUtils.isEmpty(ofcGoodsDetailsInfos)) {
-            throw new BusinessException("参数ofcGoodsDetailsInfos不能为空");
+            throw new BusinessException("订单货品列表不能为空");
         }
         AcOrderDto acOrderDto = new AcOrderDto();
         acOrderDto.setOfcFundamentalInformation(ofcFundamentalInformation);
