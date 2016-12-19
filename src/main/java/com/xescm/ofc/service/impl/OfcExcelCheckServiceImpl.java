@@ -275,7 +275,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //如果在Map中已经存在,则存对应收货方和数量
                         JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
                         if(null == jsonArrayExistGoods){
-                            break;
+                           //break;
+                            continue;
                         }
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
@@ -697,7 +698,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //如果在Map中已经存在,则存对应收货方和数量
                         JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
                         if(null == jsonArrayExistGoods){
-                            break;
+//                            break;
+                            continue;
                         }
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
