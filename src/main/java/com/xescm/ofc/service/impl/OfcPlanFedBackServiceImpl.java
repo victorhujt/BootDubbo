@@ -230,6 +230,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                             ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                             }*/
+                    logger.info("###############调度状态更新信息为{}",info);
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     boolean flag = false;
                     List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");

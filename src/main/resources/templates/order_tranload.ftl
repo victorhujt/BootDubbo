@@ -1483,7 +1483,7 @@
                     $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
             });
-            $(obj).trigger("chosen:updated");
+            $(obj).parent().next().children("select").trigger("chosen:updated");
 
         });
     }
@@ -2603,8 +2603,13 @@
                     }
                 }else{
                     $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
+                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").text();
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        if(gateVal==value){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        }
                     });
                     goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
