@@ -621,7 +621,7 @@
                     </td>
                     <td class="center">${goods.chargingUnitPrice!"" }</td>
                     <td class="center">${goods.chargingQuantity!"" }</td>
-                    <td class="center">${goods.billingWeight!"" }</td>
+                    <td class="center">${goods.weight!"" }</td>
                     <td class="center">${goods.cubage!"" }</td>
                 </tr>
                 </#list>
