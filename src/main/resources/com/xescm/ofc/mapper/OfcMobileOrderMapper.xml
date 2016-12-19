@@ -28,6 +28,9 @@
     <if test="mobileOrderStatus!=null and mobileOrderStatus!=''">
       AND omo.mobile_order_status = #{mobileOrderStatus}
     </if>
+    <if test="dingdingAccountNo!=null and dingdingAccountNo!=''">
+      AND omo.dingding_account_no = #{dingdingAccountNo}
+    </if>
     ORDER BY omo.upload_date DESC LIMIT 20
   </select>
 
