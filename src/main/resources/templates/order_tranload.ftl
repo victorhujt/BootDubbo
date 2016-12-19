@@ -1265,9 +1265,19 @@
     }
     function countQuantOrWeightOrCubage(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+        if(parseFloat($(obj).val())>30000){
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为30000.00</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0"){
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1286,9 +1296,19 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="") || parseFloat($(obj).val())>9999){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关金额</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if(parseFloat($(obj).val())>9999){
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1416,7 +1436,11 @@
             }
         });
         debugger;
-        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage)}
+        if(flg1=="error" || flg2=="error" || flg3=="error"){
+            $("#luggage").val(0);
+        }else{
+            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage)
+        }
 
         countCostCheck();
         $("#weightCount").html(weightCount);
