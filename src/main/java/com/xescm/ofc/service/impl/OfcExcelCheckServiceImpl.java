@@ -137,8 +137,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                boolean matchesPot = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
-                                boolean matchesInt = cellNumName.matches("\\d{1,6}");
+                                boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = cellValue.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
                                 if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);
@@ -557,8 +557,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
-                                boolean matchesPot = cellNumName.matches("\\d{1,6}\\.\\d{1,3}");
-                                boolean matchesInt = cellNumName.matches("\\d{1,6}");
+                                boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = cellValue.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
                                 if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);
