@@ -1365,7 +1365,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
 //                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                             checkPass = false;
-                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方在档案中不存在或信息不完整!");
                                             break;
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;

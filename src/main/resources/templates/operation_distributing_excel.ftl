@@ -523,7 +523,6 @@
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
-//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
                 var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
@@ -592,7 +591,6 @@
                 formData.append('sheetNum',sheetNum);
                 formData.append('templatesType',templatesType);
                 formData.append('templatesMapping',templatesMapping);
-//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
                 var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
