@@ -194,7 +194,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     OfcDistributionBasicInfo ofcDistributionBasicInfo
                             =ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
 
-                    ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
+
                     OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
                     OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(transPortNo);
                     String info="订单";
@@ -230,6 +230,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                             ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                             }*/
+                    ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     boolean flag = false;
                     List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
                     if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
