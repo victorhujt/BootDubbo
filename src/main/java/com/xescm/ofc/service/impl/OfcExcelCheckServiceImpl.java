@@ -1022,6 +1022,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     break;
                 }*/
                 //遍历cell
+                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
                 for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
                     //空列
@@ -1037,6 +1038,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                     }else if(HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()){
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                        DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));
                     }
                     if(rowNum == 0){
                         //第一行全为字符串
@@ -1113,12 +1116,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
-                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+
                                 cscGoodsImportDto.setCustomerCode(customerCode);
                                 cscGoodsImportDto.setGoodsCode(goodsCode);
                                 //只有货品编码
 
-                                cscGoodsImportDtoList.add(cscGoodsImportDto);
+
                                 break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -1138,7 +1141,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
-
+                            if(cellNum == 1){
+                                cscGoodsImportDto.setGoodsName(cellValue);
+                            }else if(cellNum == 2){
+                                cscGoodsImportDto.setSpecification(cellValue);
+                            }else if(cellNum == 3){
+                                cscGoodsImportDto.setUnit(cellValue);
+                            }
+                            cscGoodsImportDtoList.add(cscGoodsImportDto);
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
                             try{
@@ -1281,6 +1291,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     break;
                 }*/
                 //遍历cell
+                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
                 for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
                     //空列
@@ -1296,6 +1307,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
                     }else if(HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()){
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                        DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));
                     }
                     if(rowNum == 0){
                         //第一行全为字符串
@@ -1371,12 +1384,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
-                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+
                                 cscGoodsImportDto.setCustomerCode(custId);
                                 cscGoodsImportDto.setGoodsCode(goodsCode);
                                 //只有货品编码
 
-                                cscGoodsImportDtoList.add(cscGoodsImportDto);
+
                                 break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
@@ -1396,7 +1409,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
-
+                            if(cellNum == 1){
+                                cscGoodsImportDto.setGoodsName(cellValue);
+                            }else if(cellNum == 2){
+                                cscGoodsImportDto.setSpecification(cellValue);
+                            }else if(cellNum == 3){
+                                cscGoodsImportDto.setUnit(cellValue);
+                            }
+                            cscGoodsImportDtoList.add(cscGoodsImportDto);
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
                             try{
