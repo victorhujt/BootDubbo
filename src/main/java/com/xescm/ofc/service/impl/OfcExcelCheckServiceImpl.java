@@ -101,7 +101,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 }
                 //空行
                 HSSFCell cell = hssfRow.getCell(0);
-                if(null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
+                if(null == cell || null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
                     continue;
                 }
                 if (null == hssfRow) {
@@ -771,6 +771,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         }
 
                     }
+                    //+++++
+
 
                     continue;
                 }
@@ -1233,7 +1235,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 JSONArray jsonArray = new JSONArray();
                 //空行
                 XSSFCell cell = xssfRow.getCell(0);
-                if(null == xssfRow || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
+                if(null == xssfRow || null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
