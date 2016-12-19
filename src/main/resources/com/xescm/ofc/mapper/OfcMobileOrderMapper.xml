@@ -60,7 +60,7 @@
   </select>
 
 
-  <update id="updateByPlanCode" parameterType="com.xescm.ofc.domain.OfcMobileOrder" >
+  <update id="updateByMobileCode" parameterType="com.xescm.ofc.domain.OfcMobileOrder" >
     <!--
       根据计划单号进行修改
     -->
