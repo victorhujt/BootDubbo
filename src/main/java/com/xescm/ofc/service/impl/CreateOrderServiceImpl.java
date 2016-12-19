@@ -5,10 +5,12 @@ import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
+import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
@@ -51,6 +53,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcCreateOrderService ofcCreateOrderService;
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
+    @Autowired
+    private OfcCreateOrderMapper ofcCreateOrderMapper;
 
 
     @Override
@@ -145,6 +149,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return null;
     }
 
+
     /**
      * 组装返回信息封装到 List<CreateOrderResult>
      *
@@ -167,6 +172,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     /**
      * 取消订单
+     *
      * @param custOrderCode
      * @return
      */
@@ -234,6 +240,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         ofcCreateOrderErrorLog.setOrderTime(DateUtils.String2Date(DateUtils.dateSubStringGetYMD(orderTime), DateUtils.DateFormatType.TYPE2));
         ofcCreateOrderErrorLog.setErrorLog(ex.toString());
         ofcCreateOrderErrorLogService.save(ofcCreateOrderErrorLog);
+    }
+
+
+    @Override
+    public List<QueryOrderStatusDto> queryOrderStatusList(QueryOrderStatusDto queryOrderStatusDto) {
+        return ofcCreateOrderMapper.queryOrderStatusList(queryOrderStatusDto);
     }
 
 }

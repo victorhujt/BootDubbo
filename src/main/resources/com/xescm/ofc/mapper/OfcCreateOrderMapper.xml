@@ -44,4 +44,49 @@
     AND ofi.cust_code = #{custCode}
   </select>
 
+  <resultMap id="queryOrderStatusMap" type="com.xescm.ofc.model.dto.epc.QueryOrderStatusDto">
+    <result column="cust_order_code" property="custOrderCode"></result>
+    <result column="order_code" property="orderCode"></result>
+    <result column="order_status" property="orderStatus"></result>
+  </resultMap>
+
+  <select id="queryOrderStatusList" resultMap="queryOrderStatusMap" parameterType="com.xescm.ofc.model.dto.epc.QueryOrderStatusDto">
+    SELECT
+      ofi.order_code,
+      ofi.cust_order_code,
+      ofi.cust_code,
+      CASE oos.order_status
+        WHEN '10' THEN '待审核'
+        WHEN '20' THEN '已审核'
+        WHEN '30' THEN '任务中'
+        ELSE oos.order_status
+      END AS order_status
+    FROM ofc_fundamental_information ofi
+    LEFT JOIN (
+        SELECT
+        temp.*
+        FROM
+        ofc_order_status temp
+        WHERE temp.lasted_oper_time =
+        (SELECT MAX(lasted_oper_time) FROM ofc_order_status
+        WHERE temp.order_code = order_code
+        ) ORDER BY temp.lasted_oper_time DESC) oos
+    ON ofi.order_code = oos.order_code
+    WHERE 1=1
+    <if test="custCode != '' and custCode != null">
+      AND ofi.cust_code = #{custCode}
+    </if>
+    <if test="startDate != '' and startDate != null">
+      <![CDATA[
+        AND ofi.order_time >= #{startDate}
+      ]]>
+    </if>
+    <if test="endDate != '' and endDate != null">
+      <![CDATA[
+        AND ofi.order_time <= #{endDate}
+      ]]>
+    </if>
+    AND oos.order_status IN ('10','20','30')
+  </select>
+
 </mapper>
