@@ -544,7 +544,7 @@
                     aria-label="Clicks: activate to sort column ascending">货品名称
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">货品规格
+                    aria-label="Clicks: activate to sort column ascending">规格
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">单位
@@ -559,10 +559,13 @@
                     aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">计费数量
+                    aria-label="Clicks: activate to sort column ascending">数量
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">重量(kg)
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">体积(m³)
                 </th>
             </tr>
             </thead>
@@ -619,6 +622,7 @@
                     <td class="center">${goods.chargingUnitPrice!"" }</td>
                     <td class="center">${goods.chargingQuantity!"" }</td>
                     <td class="center">${goods.billingWeight!"" }</td>
+                    <td class="center">${goods.cubage!"" }</td>
                 </tr>
                 </#list>
             </#if>
