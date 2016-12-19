@@ -457,7 +457,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
                 <div class="width-267">
                     <div class="clearfix">
-                        <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="merchandiser" type="text" placeholder="开单员">
+                        <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
                             <#list merchandiserList! as merchandiser>
                                 <option>${(merchandiser.merchandiser)!""}</option>
                             </#list>
@@ -467,7 +467,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="width-267">
                 <div class="bk-1 position-relative">
-                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="预计发货时间" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
+                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
                     <label class="btn btn-minier no-padding-right initBtn" id="" for="expectedArrivedTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
                     </label>
@@ -480,7 +480,7 @@
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>客户名称</label>
             <div class="width-267">
                 <div class="bk-1 position-relative">
-                    <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder="客户名称"/>
+                    <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder=""/>
                     <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
                         <i class="fa fa-user l-cor"></i>
@@ -494,9 +494,9 @@
             </div></div>
             <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
             <div class="width-267">
-                <div class="clearfix col-width-168">
+                <div class="clearfix" style="width:245px;">
                     <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="chosen-select">
-                        <option value="">无</option>
+                        <option value=""></option>
 
                     </select>
                 </div>
@@ -504,7 +504,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
             <div class="width-267">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder="备注"/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
                 </div>
             </div></div>
         </div>
@@ -532,7 +532,7 @@
                 <div class="width-267">
                     <div class="bk-1 position-relative" style="height:34px;">
                         <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorName" id="consignorName" type="text"
-                               placeholder="名称"/>
+                               placeholder=""/>
                        <#-- <span style="cursor:pointer" id="consignorListDivBlock">
                         <button type="button" class="btn btn-minier btn-inverse no-padding-right y-float"
                                 id=""><i class="fa fa-user l-cor"></i>
@@ -546,13 +546,13 @@
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系人</label>
                 <div class="width-267">
                     <div class="clearfix">
-                        <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder="联系人"/>
+                        <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder=""/>
                     </div>
                 </div>
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
                 <div class="width-267">
                     <div class="clearfix">
-                        <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder="联系电话"/>
+                        <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder=""/>
                     </div>
                 </div>
             </div>
@@ -562,7 +562,7 @@
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">地址</label>
                 <div class="col-xs-9">
                     <div class="clearfix">
-                        <input style="width:506px;"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="地址" />
+                        <input style="width:583px;"  readonly="readonly" name="consignorContactAddress" id="consignorContactAddress" type="text" placeholder="" />
                         <input class="col-xs-10 col-xs-12 bk-1" name="consignorType" id="consignorType" type="hidden" />
                         <input class="col-xs-10 col-xs-12 bk-1" name="consignorContactCompanyId" id="consignorContactCompanyId" type="hidden" />
                         <input class="col-xs-10 col-xs-12 bk-1" name="consignorContactCode" id="consignorContactCode" type="hidden" />
@@ -761,7 +761,7 @@
             $("#warehouseCode option").remove();
             //<option value="">无</option>
             /* $("#warehouseCode").append("<option value="">无</option>");*/
-            $("#warehouseCode").append("<option value = ''>无</option>");
+            $("#warehouseCode").append("<option value = ''></option>");
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
                 data=eval(data);
                 $.each(data,function (index,warehouse) {
@@ -2225,7 +2225,6 @@
             },
             highlight : function(e) {
                 $(e).parent().parent().parent().removeClass('has-info').addClass('has-error');
-
             },
             success : function(e) {
                 $(e).parent().parent().parent().removeClass('has-error').addClass('has-success');
@@ -2239,6 +2238,9 @@
                 distributingOrderPlaceCon();
             },
             invalidHandler : function(form) {
+            },
+            onfocusout:function(element){
+                $(element).valid();
             }
         });
 
@@ -2271,7 +2273,20 @@
     function onlyNumAndAbc(value){
         return value = value.replace(/[^\w]/ig,'');
     }
+    $(".es-list").click(function(){
+        checkType();
+    })
 
+    function checkType() {
+        var type = $("#merchandiser").val();
+        if(type == null || type == ""){
+            $("#merchandiser-error").html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>请选择开单员");
+        }else{
+            $("#merchandiser-error").css("display","none")
+         /*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
+            $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
+        }
+    }
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>

@@ -31,6 +31,48 @@
             padding-top:0 !important;
             line-height:34px;
         }
+        .dropdown-btn{
+            height: 34px;
+            width:226px;
+            padding: 0;
+            font-size: 12px;
+            line-height: 32px;
+            box-shadow: none;
+            background: #fff;
+            color: #999;
+            padding: 0 0 0 3px;
+            border: 1px solid #cacaca;
+        }
+        .multiselect-search{
+            width:87px;
+            height:34px!important;
+        }
+        .filter{
+            padding:0 4px;
+        }
+        .multiselect{
+            text-align:left;
+        }
+        .fa-caret-down{
+            position:absolute;
+            right:8px;
+            top:11px;
+        }
+        .initBtn{
+            line-height:32px;
+            width:34px;
+            border:1px solid #cacaca;
+            background:#f7f7f7!important;
+            cursor:pointer;
+            position:absolute;
+            top:0;
+            right:0;
+            color:#393939!important;
+        }
+        .initBtn:hover{
+            background:#fff!important;
+            border:1px solid #cacaca!important;
+        }
     </style>
 </head>
 
@@ -207,11 +249,11 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-horizontal">
-                            <div class="form-group">
+                            <div class="form-group y-float">
                                 <label class="control-label col-label no-padding-right" for="name">资源分配状态</label>
-                                <div class="col-width-168 padding-15">
+                                <div class="w-width-250">
                                     <div class="clearfix">
-                                        <select multiple="" style="height:34px;" class="chosen-select form-control" id="resourceAllocationStatues" name="resourceAllocationStatues" data-placeholder="请选择一个状态..." style="display: none;">
+                                        <select multiple="" class="multiselect blue" id="resourceAllocationStatues" name="resourceAllocationStatues" data-placeholder="请选择一个状态..." style="display: none;height:34px;width:100%;">
                                             <option value="10">待分配</option>
                                             <option value="20">未分配</option>
                                             <option value="30">已分配</option>
@@ -219,54 +261,65 @@
                                         </select>
                                     </div>
                                 </div>
+
+
+                            </div>
+                           <div class="form-group y-float">
+                               <label class="control-label col-label no-padding-right" for="name">订单日期</label>
+                               <div style="float:left;width:125px;padding-left:12px;">
+                                   <div class="clearfix position-relative ">
+                                       <input id="orderTimePre" class="width-100 laydate-icon" style="display:block;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                       <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTimePre">
+                                           <i class="fa fa-calendar l-cor bigger-130"></i>
+                                       </label>
+                                   </div>
+                               </div>
+                               <label class="control-label no-padding-right y-float" style="margin:0 5px;" for="name">至</label>
+                               <div style="float:left; width:125px;">
+                                   <div class="clearfix position-relative">
+                                       <input id="orderTimeSuf" class="width-100 laydate-icon" style="display:block;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                       <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTimeSuf">
+                                           <i class="fa fa-calendar l-cor bigger-130"></i>
+                                       </label>
+                                   </div>
+                               </div>
+                            </div>
+                            <div class="form-group y-float" style="clear:left;">
                                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
-                                <div class="col-width-168 padding-15">
+                                <div class="w-width-250">
                                     <div class="clearfix">
                                         <input id="custName" name="custName" type="search" class="form-control" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
-                                <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                                <div class="padding-15" style="float:left;">
-                                    <div class="clearfix">
-                                        <input id="orderTimePre" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                    </div>
-                                </div>
-                                <label class="control-label no-padding-right y-float" style="text-align:center;width:30px;" for="name">至</label>
-                                <div class="padding-15" style="float:left;">
-                                    <div class="clearfix">
-                                        <input id="orderTimeSuf" class="padding-15" style="display:block;width:138px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table"onClick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
-                                    </div>
-                                </div>
                             </div>
-                           <#-- <div class="form-group">
 
-                            </div>
-                            <div class="form-group">
-
-                            </div>-->
-                            <div class="form-group">
+                            <div class="form-group  y-float">
                                 <label class="control-label col-label no-padding-right" for="name">订单编号</label>
-                                <div class="col-width-168 padding-15">
+                                <div class="w-width-250" style="width:284px;">
                                     <div class="clearfix">
                                         <input id="orderCode" name="orderCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group y-float" style="clear:left;">
                                 <label class="control-label col-label no-padding-right" for="name">计划单编号</label>
-                                <div class="col-width-168 padding-15">
+                                <div class="w-width-250">
                                     <div class="clearfix">
                                         <input id="planCode" name="planCode" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group y-float">
                                 <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
-                                <div class="col-width-168 padding-15">
+                                <div class="w-width-250" style="width:284px;">
                                     <div class="clearfix">
                                         <input id="orderBatchNumber" name="orderBatchNumber" style="color: black" type="search" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group y-float" style="clear:left;">
                                 <label class="control-label col-label no-padding-right" for="name"></label>
-                                <div class="col-width-376 padding-15">
+                                <div class="w-width-250">
                                     <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
                                         筛选
                                     </button>
@@ -336,7 +389,7 @@
     $(function () {
 
     });
-    var scripts = [ null, "../components/chosen/chosen.jquery.js", null ]
+    var scripts = [ null, "../components/chosen/chosen.jquery.js","/components/_mod/bootstrap-multiselect/bootstrap-multiselect.min.js", null ]
     $(".page-content-area").ace_ajax("loadScripts", scripts, function() {
         $(document).ready(main);
         $('.chosen-select').chosen({allow_single_deselect:true});
@@ -363,6 +416,7 @@
     function main(){
         //初始化页面数据
         initPageData();
+        initMultiselect();
         // 查询
         queryData(1);
 
@@ -989,6 +1043,22 @@
             value = "已确定";
         }
         return value;
+    }
+    function initMultiselect() {
+        $('.multiselect').multiselect({
+            enableFiltering: true,
+            enableHTML: true,
+            buttonClass: 'col-xs-12 dropdown-btn',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+                ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+                filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text" style="height:28px;"></div></li>',
+                filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+                li: '<li><a tabindex="0"><label></label></a></li>',
+                divider: '<li class="multiselect-item divider"></li>',
+                liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+            }
+        });
     }
 
 </script>

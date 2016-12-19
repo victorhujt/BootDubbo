@@ -69,6 +69,15 @@
         #goodsInfoListDiv .help-block{
             line-height:20px;
         }
+        .chosen-container .chosen-results{
+            max-height:120px;
+        }
+       .pay .chosen-container-single .chosen-search:after{
+           top:4px;
+       }
+        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+            padding-top:0;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -667,14 +676,14 @@
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="margin-right:10px;float:left;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;padding-to"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
                     <div>
-                        <div class="col-width-70" style="float:left;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="float:left;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePaymentPartyV2" type="radio" class="ace" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">收货方</span>
@@ -686,7 +695,7 @@
                     <div>
                         <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:34px;">支付方式</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
+                            <div class="clearfix col-width-100 pay">
                                 <select class="chosen-select form-control" id="payment" name="payment">
                                     <option value="6810">现金</option>
                                     <option value="6820">POS刷卡</option>
@@ -882,7 +891,7 @@
     });
 
     function main(){
-        //initChosen();
+        initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
@@ -1265,9 +1274,21 @@
     }
     function countQuantOrWeightOrCubage(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+        if(parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为30000.00</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0"){
+            $(obj).css("border-color","#dd5a43");
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1276,6 +1297,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1286,9 +1308,21 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="") || parseFloat($(obj).val())>9999){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关金额</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if(parseFloat($(obj).val())>9999){
+            $(obj).css("border-color","#dd5a43");
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1297,6 +1331,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1400,20 +1435,27 @@
         $('input[name="quantity"]').each(function(){
             if($(this).val()!=""){
                 quantityCount=quantityCount+parseFloat($(this).val());
+                quantityCount=parseFloat((parseFloat(quantityCount)).toFixed(3));
             }
         });
         $('input[name="weight"]').each(function(){
             if($(this).val()!=""){
                 weightCount=weightCount+parseFloat($(this).val());
+                weightCount=parseFloat((parseFloat(weightCount)).toFixed(3));
             }
         });
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
                 cubageCount=cubageCount+parseFloat($(this).val());
+                cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
+        if(flg1=="error" || flg2=="error" || flg3=="error"){
+            $("#luggage").val(0);
+        }else{
+            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage)
+        }
 
-        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val(luggage)}
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
@@ -1436,18 +1478,20 @@
                 $(obj).parent().next().children("select").append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
             $(obj).parent().next().children("select").find("option").each(function() {
-                text = $(this).text();
-                if($(obj).parent().next().children("select").find("option:contains("+text+")")){
-                    $(obj).parent().next().children("select").find("option:contains("+text+"):gt(0)").remove();
+                text = $(this).val();
+                if($(obj).parent().next().children("select").find("option[value='"+text+"']")){
+                    $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
             });
-            $(obj).parent().next().children("select").trigger("chosen:updated");
+            $(obj).trigger("chosen:updated");
+
         });
     }
 
     function checkBillingWeight(obj){
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value))) || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43")
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1456,6 +1500,7 @@
                 $(obj).val("");
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
         };
@@ -1836,11 +1881,11 @@
     function goodsInfoListDivSupple(goodsInfoListDiv){
         goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
+                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text' style='min-width:80px;'/>"+
                 "<a  class='blue no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</a>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
+                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text' style='min-width:60px;'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                 "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
@@ -1887,7 +1932,7 @@
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
-        //initChosen();
+        initChosen();
     }
 
     function checkConsignOrEe(){
@@ -2065,6 +2110,7 @@
             /*$("input[name='billingWeight']").each(function(){
                 var value=onlyNumber($(this).val());
                 if(value==""){
+                    $(this).css("border-color","#dd5a43")
                     if($(this).parent().children().length<2){
                         $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(this));
                         $(this).parent().removeClass('has-info').addClass('has-error');
@@ -2073,6 +2119,7 @@
                         $(this).val("");
                     }
                 }else{
+                    $(this).css("border-color","#cacaca")
                     $(this).val(value);
                     $(this).parent().find("div").remove();
                 }
@@ -2509,10 +2556,10 @@
                             goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.id + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                         });
                         if($("#goodsInfoListDiv").find("tr").length==1){
-                            $("select option").each(function() {
-                                text = $(this).text();
-                                if($("select option:contains("+text+")").length > 1)
-                                    $("select option:contains("+text+"):gt(0)").remove();
+                            $("#goodsInfoListDiv tr:eq(0) td:eq(0) select option").each(function() {
+                                text = $(this).val();
+                                if($("select option[value='"+text+"']").length > 1)
+                                    $("select option[value='"+text+"']:gt(0)").remove();
                             });
                         }
                     });
@@ -2545,10 +2592,11 @@
                             goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
-                                $("select option").each(function() {
-                                    text = $(this).text();
-                                    if($("select option:contains("+text+")").length > 1)
-                                        $("select option:contains("+text+"):gt(0)").remove();
+                                $("#goodsInfoListDiv tr:eq(0) td:eq(1) select option").each(function() {
+                                    text = $(this).val();
+                                    if($("select option[value='"+text+"']").length > 1)
+                                        $("select option[value='"+text+"']:gt(0)").remove();
+
                                 });
                             }
                         });
@@ -2563,9 +2611,9 @@
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
-                //initChosen();
+                initChosen();
             }
-            //initChosen();
+            initChosen();
 
         });
 
@@ -2637,9 +2685,11 @@
                     var unit = tdArr.eq(7).text();//单位
                     var typeID = tdArr.eq(9).text();//单位
                     $("#typeSel").val(typeID);
+                    $("#typeSel").trigger("chosen:updated");
                     goodsTypeParentChange($("#typeSel"));
                     //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+                    $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);

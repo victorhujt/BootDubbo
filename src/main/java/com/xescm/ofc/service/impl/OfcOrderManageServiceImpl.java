@@ -1183,6 +1183,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 transportDTO.setMarketDepDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleDepartmentDesc()));//销售部门描述
                 transportDTO.setMarketTeamDes(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSaleGroupDesc()));//销售组描述
                 transportDTO.setTransportSource(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getSingleSourceOfTransport()));//运输单来源
+                transportDTO.setBaseName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseName()));
+                logger.info("#####################推送TMS的基地Name为：{}",PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseName()));
                 //OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
                 //ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 if(ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode())!=null){
@@ -1691,11 +1693,19 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setConsigneeName(PubUtils.trimAndNullAsEmpty(info.getConsigneeName()));//收货方名称
                 wsv.setConsigneeContact(PubUtils.trimAndNullAsEmpty(info.getConsigneeContact()));//收货方联系人
                 wsv.setConsigneeTel(PubUtils.trimAndNullAsEmpty(info.getConsigneeContactPhone()));//手机号码
+                if(disInfo!=null){
+                    wsv.setcProvince(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationProvince()));//省
+                    wsv.setcCity(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationCity()));//城市
+                    wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationDistrict()));//县
+                    wsv.setcStreet(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationTowns()));//乡镇街道
+                    wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(disInfo.getDestinationProvince()+disInfo.getDestinationCity()+disInfo.getDestinationDistrict()+disInfo.getDestinationTowns()));//详细地址
+                }else{
                 wsv.setcProvince(PubUtils.trimAndNullAsEmpty(info.getConsigneeProvince()));//省
                 wsv.setcCity(PubUtils.trimAndNullAsEmpty(info.getConsigneeCity()));//城市
                 wsv.setcDistrict(PubUtils.trimAndNullAsEmpty(info.getConsigneeDistrictAndCounty()));//县
                 wsv.setcStreet(PubUtils.trimAndNullAsEmpty(info.getConsigneeTownshipStreets()));//乡镇街道
                 wsv.setConsigneeAddr(PubUtils.trimAndNullAsEmpty(info.getConsigneeAddress()));//详细地址
+                }
                 if(disInfo!=null){
                     wsv.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运商编码
                     wsv.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运商名称

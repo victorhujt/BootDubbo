@@ -1,8 +1,11 @@
 package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  *
@@ -18,6 +21,14 @@ public interface OfcCreateOrderMapper {
      */
     int queryCountByOrderStatus(@Param(value = "custOrderCode") String custOrderCode, @Param(value = "custCode") String custCode);
 
-
+    /**
+     * 对接平台定时获取订单中心的鲜易网七天内待发货状态中的订单
+     * 参数：客户编码 订单日期开始日期 订单日期结束日期
+     * 仅需要订单状态为【待审核】、【已审核】、【任务中】 三种状态的订单列表
+     * 返回：List
+     * @param queryOrderStatusDto
+     * @return
+     */
+    List<QueryOrderStatusDto> queryOrderStatusList(QueryOrderStatusDto queryOrderStatusDto);
 
 }
