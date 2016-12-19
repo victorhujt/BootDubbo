@@ -2184,9 +2184,12 @@
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
                         case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
                         case 9 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
-                        case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.quantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
+                        case 12 :orderGoods.weight = param.getElementsByTagName("input")[0].value;break;
+                        case 13 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
                     }
+                    debugger;
                     if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
                         jsonStr.goodsTypeName=orderGoods.goodsType;
