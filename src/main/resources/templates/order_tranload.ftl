@@ -2189,13 +2189,12 @@
                         case 12 :orderGoods.weight = param.getElementsByTagName("input")[0].value;break;
                         case 13 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
                     }
-                    debugger;
                     if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
                         jsonStr.goodsTypeName=orderGoods.goodsType;
                     }
                 }
-                if(orderGoods.chargingWays=="01"){
+                /*if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
                     orderGoods.quantityUnitPrice=orderGoods.chargingUnitPrice;
                 }else if(orderGoods.chargingWays=="02"){
@@ -2204,7 +2203,7 @@
                 }else if(orderGoods.chargingWays=="03"){
                     orderGoods.cubage=orderGoods.chargingQuantity;
                     orderGoods.volumeUnitPrice=orderGoods.chargingUnitPrice;
-                }
+                }*/
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
             var tag = "tranplace";
