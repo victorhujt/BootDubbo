@@ -150,13 +150,13 @@
                         <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">业务类型</label>
                         <div class="w-width-220 col-float">
                         <#if mobileOrder.businessType  =="602">
-                            <input id="businessType" name="custName" type="search" placeholder=""
+                            <input id="mbusinessType" name="mbusinessType" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="卡班">
                         <#elseif  mobileOrder.businessType =="600">
-                            <input id="businessType" name="custName" type="search" placeholder=""
+                            <input id="mbusinessType" name="mbusinessType" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="城配">
                         <#elseif  mobileOrder.businessType =="601">
-                            <input id="businessType" name="custName" type="search" placeholder=""
+                            <input id="mbusinessType" name="mbusinessType" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="干线">
                         </#if>
                         </div>
@@ -2204,6 +2204,19 @@
                 alert("您输入的内容还有一些问题，请仔细检查哦");
                 return false;
             }
+
+            var mbusinessType=$("#mbusinessType").val();
+            var businessType=$("#businessType opition:selected").val();
+            if(mbusinessType!=businessType){
+                alert("业务类型必须和手机订单的业务类型一致");
+                return false;
+            }
+
+
+
+
+
+
             //卡班类型必须输入运输单号
             if($("#businessType").val() == "602"){
                 var transCode = $("#transCode").val().trim();

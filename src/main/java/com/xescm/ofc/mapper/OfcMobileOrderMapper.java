@@ -29,5 +29,5 @@ public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
 
 
-    int updateByMobileCode(OfcMobileOrder mobileOrder);
+    int updateByMobileCode(Object key);
 }
