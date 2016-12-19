@@ -171,6 +171,14 @@ public class OfcMobileOrderRest extends BaseController {
             ofcMobileOrderService.updateByMobileCode(order);
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
+            //更新拍照订单的状态，订单号
+            OfcMobileOrder order=new OfcMobileOrder();
+            order.setMobileOrderCode(mobileOrderCode);
+           // order.setAccepter(authResDtoByToken.getUserName());
+            order.setAppcetDate(new Date());
+            order.setMobileOrderStatus("1");//已处理
+            order.setOrderCode(orderCode);
+            ofcMobileOrderService.updateByMobileCode(order);
             return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心下单或编辑出现异常");
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {

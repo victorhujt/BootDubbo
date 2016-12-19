@@ -130,4 +130,34 @@ public class OfcMobileOrderAPIRest extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
     }
+
+
+    @RequestMapping(value = "/mobileOrder/delAtachment", method = RequestMethod.POST)
+    @ApiOperation(value = "删除附件信息", response = Wrapper.class)
+    public Wrapper<?> delAtachment(@ApiParam(name = "AttachmentDto", value = "附件信息") @RequestBody AttachmentDto attachmentDto) {
+        OfcAttachment ofcAttachment=new OfcAttachment();
+        try {
+            if(attachmentDto == null){
+                throw new BusinessException("参数不能为空");
+            }
+            if(StringUtils.isEmpty(attachmentDto.getSerialNo())){
+                throw new BusinessException("附件流水号不能为空");
+            }
+            logger.info("删除的附件流水号为:{}",attachmentDto.getSerialNo());
+            BeanUtils.copyProperties(ofcAttachment,attachmentDto);
+            ofcAttachmentService.deleteAttachmentByserialNo(ofcAttachment);
+        } catch (BusinessException ex) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception e) {
+            logger.debug("删除附件信息={}", e.getMessage(), e);
+            e.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+
+
+
+
 }
