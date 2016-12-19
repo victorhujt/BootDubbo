@@ -1450,7 +1450,6 @@
                 cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
-        debugger;
         if(flg1=="error" || flg2=="error" || flg3=="error"){
             $("#luggage").val(0);
         }else{
