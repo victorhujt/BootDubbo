@@ -1728,7 +1728,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setPrintInvoice(PubUtils.trimAndNullAsEmpty(info.getPrintInvoice()));//是否打印发票
                 wsv.setInvoiceTitle("");//发票抬头
                 wsv.setInvoiceContent("");//发票内容
-                wsv.setCollect(finfo.getCollectFlag());//是否代收
+                if(finfo!=null){
+                    wsv.setCollect(PubUtils.trimAndNullAsEmpty(finfo.getCollectFlag()));//是否代收
+                }
                 //  wsv.setcollectAmount(info.getOrderAmount());//代收金额
                 wsv.setPlanNo(info.getPlanCode());//计划单号
                 wsv.setCustomerOrderNo(fuInfo.getCustOrderCode());//客户订单号
@@ -1775,11 +1777,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setSupplierName(PubUtils.trimAndNullAsEmpty(ofcWarehouseInformation.getSupportName()));//供应商名称
                 wp.setSupplierContact("");//供应商联系人
                 wp.setSupplierAddr("");//供应商地址
-                wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
-                wp.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运人姓名
-                wp.setVehical(disInfo.getPlateNumber());//车牌号
-                wp.setDriver(disInfo.getDriverName());//司机名称
-                wp.setDriverTel(disInfo.getContactNumber());//联系电话
+                if(disInfo!=null){
+                    wp.setCarrierCode(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierCode()));//承运人编码
+                    wp.setCarrierName(PubUtils.trimAndNullAsEmpty(disInfo.getCarrierName()));//承运人姓名
+                    wp.setVehical(disInfo.getPlateNumber());//车牌号
+                    wp.setDriver(disInfo.getDriverName());//司机名称
+                    wp.setDriverTel(disInfo.getContactNumber());//联系电话
+                }
                 //wp.setWareHouseExpense(12);//仓储费用
                 wp.setPlanNo(info.getPlanCode());//计划单号
                 wp.setCustomerOrderNo(fuInfo.getCustOrderCode());//客户订单编号
