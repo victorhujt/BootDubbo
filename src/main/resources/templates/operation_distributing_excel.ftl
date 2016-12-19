@@ -690,9 +690,7 @@
                             if(errorEEsNum > 0 || errorGoodsNum > 0){
                                 $("#errorExcelImport").show();
                                 if(errorGoodsNum > 0){
-
                                     batchgoodsKey = result.result.batchgoodsKey;
-
                                 }
                                 if (errorEEsNum > 0){
                                     batchconsingeeKey = result.result.batchconsingeeKey;
