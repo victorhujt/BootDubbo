@@ -934,6 +934,9 @@
                 },
                 custName:{
                     maxlength:100
+                },
+                transRequire:{
+                    maxlength:255
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -958,6 +961,9 @@
                 },
                 custName:{
                     maxlength:mistake+"超过最大长度"
+                },
+                transRequire:{
+                    maxlength:mistake+"超过最大长度255"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1188,11 +1194,11 @@
             messages : {
                 consignorName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consignorContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consignorPhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1200,15 +1206,15 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 },
                 consigneeName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consigneeContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consigneePhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1216,7 +1222,7 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 }
             },
             highlight : function(e) {
@@ -1965,14 +1971,15 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
         param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null) {
-                alert("未查询到客户信息！");
+            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
@@ -2290,7 +2297,6 @@
             var param = JSON.stringify(cscGoods);
             CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
-
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
