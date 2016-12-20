@@ -487,14 +487,10 @@
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                    <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
-                                    <#--<#list merchandiserList! as merchandiser>-->
-                                    <#--<option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>-->
-                                    <#--</#list>-->
-                                    <#list merchandiserList! as merchandiser>
-                                        <option>${(merchandiser.merchandiser)!""}</option>
-                                    </#list>
-                                    </select></div>
+                                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                                           aria-controls="dynamic-table"
+                                           value="${(mobileOrder.operator)!""}">
+                            </div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
