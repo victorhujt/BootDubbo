@@ -2229,12 +2229,21 @@
                     alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
-                if(transCode!=mobileTranCode){
-                    alert("运输单号必须和拍照订单的运输单号一致！");
-                    return false;
-                }
+               // if(transCode!=mobileTranCode){
+                //    alert("运输单号必须和拍照订单的运输单号一致！");
+                  //  return false;
+               // }
             }
 
+           // var businessType= $("#businessType option:selected").val();
+
+            //var businessType= $("#businessType option:selected").val();
+           // var businessType=$("#businessType").val();
+          //  var mbusinessType=$("#mbusinessType").val();
+           // if(businessType!=mbusinessType){
+            //    alert("业务类型必须和拍照订单的业务类型一致！");
+              //  return false;
+            //}
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
