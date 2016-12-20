@@ -9,6 +9,7 @@ import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
 import com.xescm.ofc.model.dto.csc.*;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
@@ -31,9 +32,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -51,6 +50,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @RequestMapping(value = "/ofc/distributing",produces = {"application/json;charset=UTF-8"})
+//@RequestMapping(value = "/ofc/distributing",produces={"text/html;charset=UTF-8;","application/json;"})
 @Controller
 public class OfcOperationDistributing extends BaseController{
     @Autowired
@@ -70,19 +70,15 @@ public class OfcOperationDistributing extends BaseController{
     @Resource
     private CodeGenUtils codeGenUtils;
 
-    /**
-     * 城配开单确认下单
-     * @param orderLists
-     * @param model
-     * @return
-     */
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
+
     public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
         logger.info("城配开单确认下单==> orderLists={}", orderLists);
         String resultMessage = null;
         try{
             if(PubUtils.isSEmptyOrNull(orderLists)){
+
                 logger.error("城配开单批量下单入参为空");
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"您没有添加任何信息,请检查!");
             }
