@@ -41,7 +41,7 @@
             margin-left: 10px;
         }
         .bk-1{
-            width: 168px;
+            width: 245px;
         }
         .dz-1{
             width: 376px;
@@ -346,7 +346,7 @@
                     <tbody id="custListDivTbody"></tbody>
                 </table>
                 <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
                     </div>
                 </div>
             </form>
@@ -519,7 +519,7 @@
                 <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px">
                 </div>
                 <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">出发地:</b></label>
-                <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px;">
+                <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px;line-height:32px;">
                     <div class="clearfix">
                         <span id="showDepaturePlace" class="l-bj"></span>
                     </div>
@@ -585,7 +585,7 @@
 <#--</form>-->
     <br/>
     <div class="col-xs-12">
-        <div class="tabbable" style="width:1000px;">
+        <div class="tabbable">
             <ul class="nav nav-tabs" id="myTab4">
                 <li class="goodsLi disable" >
                     <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
@@ -774,7 +774,7 @@
             $("#consigneeInfoListDiv").html("");
             $.each(consigneeList,function(index,consignee){
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
-                        "<td><button type='button' onclick='deleteConsignee(this)'  class='btn btn-minier btn-danger'>删除</button></td>"+
+                        "<td><a onclick='deleteConsignee(this)'  class='red'>删除</a></td>"+
                         "<td>" + StringUtil.nullToEmpty(consignee.contactCompanyName) + "</td>" +
                         "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
                         "<td>" + StringUtil.nullToEmpty(consignee.contactName) + "</td>" +
@@ -1555,9 +1555,9 @@
 
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-            consignorout =consignorout + "<td><button type='button' onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";
+            consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' /></td>";
+            consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1608,9 +1608,9 @@
                     return true;
                 }
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
-                consignorout =consignorout + "<td><button type='button'  onclick='deleteConsignee(this)' class='btn btn-minier btn-danger'>删除</button></td>";//###
+                consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
-                consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)'  /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
+                consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca; ' /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -2285,6 +2285,13 @@
             $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
         }
     }
+    $("#custEnter").click(function(){
+        if($("#custName").val()!==""){
+            $("#custName-error").html("");
+            $("#custName").parent().parent().parent().removeClass("has-error").addClass("has-success");
+
+        }
+    })
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>

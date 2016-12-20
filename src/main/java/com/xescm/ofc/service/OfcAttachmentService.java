@@ -8,4 +8,6 @@ import com.xescm.ofc.domain.OfcAttachment;
 public interface OfcAttachmentService extends IService<OfcAttachment>{
 
     public OfcAttachment saveAttachment(OfcAttachment attachment);
+
+    public void deleteAttachmentByserialNo(OfcAttachment attachment);
 }

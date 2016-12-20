@@ -318,7 +318,7 @@
                     <tbody id="custListDivTbody"></tbody>
                 </table>
                 <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
                     </div>
                 </div>
             </form>
@@ -395,7 +395,7 @@
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
                         <div class="col-width-168 padding-15">
-                            <div class="cclearfix" >
+                            <div class="clearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
@@ -934,6 +934,9 @@
                 },
                 custName:{
                     maxlength:100
+                },
+                transRequire:{
+                    maxlength:255
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -958,6 +961,9 @@
                 },
                 custName:{
                     maxlength:mistake+"超过最大长度"
+                },
+                transRequire:{
+                    maxlength:mistake+"超过最大长度255"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1188,11 +1194,11 @@
             messages : {
                 consignorName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consignorContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consignorPhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1200,15 +1206,15 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 },
                 consigneeName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consigneeContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consigneePhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1216,7 +1222,7 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 }
             },
             highlight : function(e) {
@@ -1453,7 +1459,8 @@
         if(flg1=="error" || flg2=="error" || flg3=="error"){
             $("#luggage").val(0);
         }else{
-            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage)
+            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage);
+            $('#orderFinanceFormValidate').submit();
         }
 
         countCostCheck();
@@ -1483,7 +1490,7 @@
                     $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
             });
-            $(obj).trigger("chosen:updated");
+            $(obj).parent().next().children("select").trigger("chosen:updated");
 
         });
     }
@@ -1964,14 +1971,15 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
         param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null) {
-                alert("未查询到客户信息！");
+            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
@@ -2183,15 +2191,17 @@
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
                         case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
                         case 9 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
-                        case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.quantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
+                        case 12 :orderGoods.weight = param.getElementsByTagName("input")[0].value;break;
+                        case 13 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
                     }
                     if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
                         jsonStr.goodsTypeName=orderGoods.goodsType;
                     }
                 }
-                if(orderGoods.chargingWays=="01"){
+                /*if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
                     orderGoods.quantityUnitPrice=orderGoods.chargingUnitPrice;
                 }else if(orderGoods.chargingWays=="02"){
@@ -2200,7 +2210,7 @@
                 }else if(orderGoods.chargingWays=="03"){
                     orderGoods.cubage=orderGoods.chargingQuantity;
                     orderGoods.volumeUnitPrice=orderGoods.chargingUnitPrice;
-                }
+                }*/
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
             var tag = "tranplace";
@@ -2287,7 +2297,6 @@
             var param = JSON.stringify(cscGoods);
             CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
-
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
@@ -2603,8 +2612,13 @@
                     }
                 }else{
                     $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
+                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").val();
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        if(gateVal==text){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        }
                     });
                     goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);

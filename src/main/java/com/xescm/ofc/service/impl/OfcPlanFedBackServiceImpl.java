@@ -304,13 +304,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                             ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                             }*/
+                    logger.info("###############调度状态更新信息为{}",info);
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     boolean flag = false;
                     List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
                     if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
                         for (OfcOrderStatus status : statusList) {
                             String statusNote = status.getNotes();
-                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.startsWith("订单"+tag+"调度完成")) {
+                            if (!PubUtils.isSEmptyOrNull(statusNote) && statusNote.startsWith(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
+                                    +" 订单"+tag+"调度完成")) {
                                 flag = true;
                                 break;
                             }

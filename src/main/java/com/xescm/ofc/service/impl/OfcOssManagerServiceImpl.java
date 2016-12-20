@@ -49,4 +49,14 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
         logger.debug("==> 获取文件路径 filePath = {}", filePath);
         return signedUrl;
     }
+
+    @Override
+    public void deleteFile(String filePath) {
+        logger.debug("==> 开始删除文件...");
+        logger.debug("==> 删除文件 ossConfigure = {}", ossConfigure);
+        logger.debug("==> 删除文件 filePath = {}", filePath);
+        OSSClient ossClient = new OSSClient(ossConfigure.getEndpoint(), ossConfigure.getAccessKeyId(), ossConfigure.getAccessKeySecret());
+        ossClient.deleteObject(ossConfigure.getBucketName(), filePath);
+        logger.debug("==> 删除文件成功 filePath = {}", filePath);
+    }
 }
