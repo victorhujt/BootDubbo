@@ -72,8 +72,8 @@
         }
         .imgClass{
             float: left;
-            width:190px;
-            height:145px;
+            width:188px;
+            height:198px;
             border:1px solid #cacaca;
             margin-top: 20px;
             overflow: hidden;
@@ -107,15 +107,33 @@
         .Apend{
             width: 100%;
             height: 250px;
+            /*display: none;*/
+            overflow: hidden;
         }
-
-
-
+        .scales,.closes{
+            width: 50px;height: 50px;
+            float: right;
+            background: #dbdbdb;
+            line-height: 50px;
+        }
+        .scales img,.closes img{
+            background-size: 100% 100%; */
+            margin-left:14px;
+            width: 24px;
+            height: 20px;
+            display: block;
+            margin-top: 16px;
+         }
     </style>
 </head>
 <body class="no-skin">
 
-<div class="col-xs-12">
+<div class="col-xs-12" id="BApen">
+    <div class="Apend">
+        <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
+        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+
+    </div>
     <div class="col-sm-6" style="float: right">
 
     </div>
@@ -212,8 +230,8 @@
                         <label class="control-label col-label no-padding-right" for="name"  style="margin-right:8px;"></label>
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                             <#list mobileOrder.urls as url>
-                                <div class="imgClass  imgone" style="position: relative;height: 200px;overflow: hidden">
-                                    <img src="${url!""}" class="dragAble" onmousewheel="return onWheelZoom(this)" name="images1"/>
+                                <div class="imgClass  imgone" style="position: relative;">
+                                    <img src="${url!""}" class="dragAble" onmousewheel="return onWheelZoom(this)" style="position: absolute"/>
                                 </div>
                             </#list>
                         </#if>
@@ -242,15 +260,17 @@
                 (function(i){
                     imgs[i].onclick=function () {
                         var _this=this;
+                        $(".Apend").css({"display":"block"});
                         $(_this).animate({
-                            'width':'600px',
-                            'height':'410px',
-                            "overflow":"hidden"
+                            'width':'188px',
+                            'height':'198px'
+
                         });
+                        $(".Apend").append($(_this).clone(true));
                         $(_this).siblings('.imgClass').animate({
                             'width':'188px',
-                            'height':'143px',
-                            "overflow":"hidden"
+                            'height':'143px'
+
                         });
                         return
                     }

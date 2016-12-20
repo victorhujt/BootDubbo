@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcAttachment;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +54,9 @@ public class OfcMobileOrderRest extends BaseController {
 
     @Autowired
     private OfcMobileOrderService ofcMobileOrderService;
+
+    @Resource
+    private RestConfig restConfig;
 
 
     @RequestMapping(value = "/queryMobileOrderData", method = {RequestMethod.POST})
@@ -75,6 +80,7 @@ public class OfcMobileOrderRest extends BaseController {
     public ModelAndView orderDetailByOrderCode(@PathVariable("orderCode") String code) {
         logger.debug("==>手机订单详情code code={}", code);
         ModelAndView modelAndView = new ModelAndView("mobile_order_detail_opera");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
         OfcMobileOrderVo mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
@@ -86,6 +92,7 @@ public class OfcMobileOrderRest extends BaseController {
     public ModelAndView acceptMobileOrder(@PathVariable("orderCode") String code) {
         logger.debug("==>手机订单详情code code={}", code);
         ModelAndView modelAndView = new ModelAndView("mobile_order_accept_opera");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
         OfcMobileOrderVo mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
