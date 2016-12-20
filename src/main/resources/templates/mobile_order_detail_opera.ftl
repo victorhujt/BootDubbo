@@ -125,6 +125,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <form class="form-horizontal">
+                    <div class="width-100 y-float">
                     <div class="form-group y-float">
                         <label class="control-label col-label no-padding-right" for="name" >流水号</label>
                         <div class="w-width-220 col-float">
@@ -203,6 +204,7 @@
                                    value="${(mobileOrder.appcetDate?string("yyyy-MM-dd"))!""}">
                         </div>
                        </div>
+                    </div>
                     <div class="y-float">
                         <label class="control-label col-label no-padding-right" for="name"  style="margin-right:8px;"></label>
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
