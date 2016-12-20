@@ -396,6 +396,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
             }
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+            orCode=ofcFundamentalInformation.getOrderCode();
             // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
             ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
             ofcFundamentalInformation.setOrderType(TRANSPORTORDER);
