@@ -42,6 +42,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	private OfcPlannedDetailService ofcPlannedDetailService;
 	@Autowired
 	private OfcTransplanInfoService ofcTransplanInfoService;
+	@Autowired
+	private OfcTransplanStatusService ofcTransplanStatusService;
 
     public int updateByPlanCode(Object key){
 
@@ -190,6 +192,18 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				if(transInfos!=null&&transInfos.size()>0){
 					OfcTransplanInfoVo vo=transInfos.get(0);
 					if(OrderConstConstant.RENWUWANCH.equals(vo.getPlannedSingleState())){
+						OfcOrderStatus status=new OfcOrderStatus();
+						status.setOrderStatus(HASBEENCOMPLETED);
+						status.setOrderCode(info.getOrderCode());
+						status.setStatusDesc("已完成");
+						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+						status.setLastedOperTime(new Date());
+						status.setOperator("");
+						ofcOrderStatusService.save(status);
+					}else{
+						OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+						ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
 						OfcOrderStatus status=new OfcOrderStatus();
 						status.setOrderStatus(HASBEENCOMPLETED);
 						status.setOrderCode(info.getOrderCode());

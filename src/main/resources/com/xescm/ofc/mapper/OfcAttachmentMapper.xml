@@ -20,5 +20,7 @@
     <result column="last_operator_id" property="lastOperatorId" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="yn" property="yn" jdbcType="INTEGER" />
+    <result column="pic_param" property="picParam" jdbcType="VARCHAR" />
+
   </resultMap>
 </mapper>
