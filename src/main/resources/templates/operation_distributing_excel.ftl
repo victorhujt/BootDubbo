@@ -566,9 +566,9 @@
                             $.each(sheetMsg,function (index,sheet) {
                                 var sh = sheet.split("@");
                                 if("active" == sh[1]){
-                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }else{
-                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }
                             })
                             layer.msg(result.message, {
