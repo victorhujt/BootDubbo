@@ -318,7 +318,7 @@
                     <tbody id="custListDivTbody"></tbody>
                 </table>
                 <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
                     </div>
                 </div>
             </form>
