@@ -16,7 +16,7 @@
     <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
     <result column="weight" property="weight" jdbcType="DECIMAL" />
     <result column="quantity" property="quantity" jdbcType="DECIMAL" />
-    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="volume" property="volume" jdbcType="DECIMAL" />
     <result column="money" property="money" jdbcType="DECIMAL" />
     <result column="shippin_customer_code" property="shippinCustomerCode" jdbcType="VARCHAR" />
     <result column="shippin_customer_name" property="shippinCustomerName" jdbcType="VARCHAR" />
@@ -79,7 +79,7 @@
     <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
     <result column="weight" property="weight" jdbcType="DECIMAL" />
     <result column="quantity" property="quantity" jdbcType="DECIMAL" />
-    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="volume" property="volume" jdbcType="DECIMAL" />
     <result column="money" property="money" jdbcType="DECIMAL" />
     <result column="shippin_customer_code" property="shippinCustomerCode" jdbcType="VARCHAR" />
     <result column="shippin_customer_name" property="shippinCustomerName" jdbcType="VARCHAR" />
@@ -126,7 +126,62 @@
   <!--非作废运输计划单列表查询-->
   <select id="ofcTransplanInfoScreenList" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
-    otp.*
+    otp.plan_code,
+    otp.order_code,
+    otp.order_batch_number,
+    otp.program_serial_number,
+    otp.business_type,
+    otp.order_time,
+    otp.cust_code,
+    otp.pickup_time,
+    otp.expected_arrived_time,
+    otp.weight,
+    otp.quantity,
+    otp.volume,
+    otp.money,
+    otp.shippin_customer_code,
+    otp.shippin_customer_name,
+    otp.shipping_address,
+    otp.shipping_customer_contact,
+    otp.customer_contact_phone,
+    otp.departure_province,
+    otp.departure_city,
+    otp.departure_district,
+    otp.departure_towns,
+    otp.departure_place_code,
+    otp.receiving_customer_code,
+    otp.receiving_customer_name,
+    otp.receiving_customer_address,
+    otp.receiving_customer_contact,
+    otp.receiving_customer_contact_phone,
+    otp.destination_province,
+    otp.destination_city,
+    otp.destination_district,
+    otp.destination_town,
+    otp.destination_code,
+    otp.receiving_address_longitude,
+    otp.receiving_address_latitude,
+    otp.notes,
+    otp.sale_organization,
+    otp.product_group,
+    otp.sale_department,
+    otp.sale_group,
+    otp.sale_department_desc,
+    otp.sale_group_desc,
+    otp.single_source_of_transport,
+    otp.service_charge,
+    otp.base_id,
+    otp.creation_time,
+    otp.create_personnel,
+    otp.void_personnel,
+    otp.void_time,
+    otp.merchandiser,
+    otp.transport_type,
+    otp.base_name,
+    otp.goods_type,
+    otp.goods_type_name,
+    otp.cust_name,
+    otp.two_distribution
     FROM
     ofc_transplan_info otp
     LEFT JOIN ofc_transplan_status ots ON otp.plan_code = ots.plan_code
@@ -134,9 +189,9 @@
       <if test="orderCode!=null and orderCode!=''">
         otp.order_code =#{orderCode}
       </if>
-      AND ots.planned_single_state !='50'
+      AND ots.planned_single_state <![CDATA[ <> ]]> '50'
       <if test="ifFinished!=null and ifFinished!=''">
-        AND ots.planned_single_state !='40'
+        AND ots.planned_single_state <![CDATA[ <> ]]>  '40'
       </if>
     </where>
   </select>
@@ -170,8 +225,8 @@
     <if test="orderCode != null and orderCode != ''">
       AND oti.order_code = #{orderCode,jdbcType=VARCHAR}
     </if>
-    AND ots.planned_single_state !='50'
-    AND ots.planned_single_state !='40'
+    AND ots.planned_single_state <![CDATA[ <> ]]> '50'
+    AND ots.planned_single_state <![CDATA[ <> ]]> '40'
   </where>
 
  </select>
@@ -186,8 +241,22 @@
       <if test="orderCode != null and orderCode != '' ">
         AND oti.order_code  = #{orderCode,jdbcType=VARCHAR}
       </if>
-      AND ots.planned_single_state != '50'
+      AND ots.planned_single_state <![CDATA[ <> ]]> '50'
     </where>
   </select>
 
+  <select id="queryUncompletedPlanCodesByOrderCode" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT
+    oti.plan_code
+    FROM
+    ofc_transplan_info oti
+    LEFT JOIN ofc_transplan_status ots ON oti.plan_code = ots.plan_code
+    <where>
+      <if test="orderCode != null and orderCode != '' ">
+        AND oti.order_code  = #{orderCode,jdbcType=VARCHAR}
+      </if>
+      AND ots.planned_single_state <![CDATA[ <> ]]> '50'
+      AND ots.planned_single_state <![CDATA[ <> ]]> '40'
+    </where>
+  </select>
 </mapper>

@@ -217,6 +217,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 
 	}
 
+
+
 	public String translateStatusToDesc(String statusCode,String businessType){
 		String statusDesc="";
 		if(statusCode.equals(TRACE_STATUS_1)){
@@ -280,7 +282,15 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	}
 
 
-
+	/**
+	 * 查询未完成未作废的仓储计划单
+	 * @param orderCode
+	 * @return
+	 */
+	@Override
+	public List<OfcSiloproStatus> queryUncompletedPlanCodesByOrderCode(String orderCode) {
+		return ofcSiloproStatusMapper.queryUncompletedPlanCodesByOrderCode(orderCode);
+	}
 
 
 
