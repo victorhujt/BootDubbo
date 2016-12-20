@@ -566,19 +566,21 @@
                             $.each(sheetMsg,function (index,sheet) {
                                 var sh = sheet.split("@");
                                 if("active" == sh[1]){
-                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }else{
-                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }
                             })
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 1
+                                icon: 1,
+                                time:500
                             });
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
                         }
                     },
@@ -635,7 +637,8 @@
                             //如果校验成功!
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 1
+                                icon: 1,
+                                time:500
                             });
                             var resultMap =  JSON.parse(result.result);
 
@@ -691,7 +694,8 @@
                             //如果校验失败!
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
                             $("#goodsListDiv").hide();
                             $("#errorMsgDiv").show();
@@ -722,7 +726,8 @@
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
 
 
