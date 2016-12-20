@@ -257,6 +257,9 @@
                                 aria-label="Clicks: activate to sort column ascending">单位
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">销售单价
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Clicks: activate to sort column ascending">数量
                             </th>
                         </thead>
@@ -664,6 +667,7 @@
                                                 "<td>" + data.goodsName + "</td>" +
                                                 "<td>" + data.specification + "</td>" +
                                                 "<td>" + data.unit + "</td>" +
+                                                "<td>" + data.unitPrice + "</td>" +
                                                 "<td>" + data.goodsAmount + "</td>" +
                                                 "</tr>");
 //                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量

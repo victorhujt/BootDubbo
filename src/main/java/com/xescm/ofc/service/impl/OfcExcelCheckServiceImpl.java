@@ -125,8 +125,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                     } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
-                        DecimalFormat df = new DecimalFormat("0");
-                        cellValue = df.format(Double.valueOf(cellValue));
+                       /* DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));*/
                     } /*else if(HSSFCell.Cell){
 
                     }*/
@@ -264,6 +264,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             JSONObject jsonObject = new JSONObject();
 
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                            cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                             jsonArray.add(cscGoodsApiVo);
                             jsonArray.add(jsonObject);
                             jsonArray.add(cscContantAndCompanyResponseDto);
@@ -391,6 +392,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                         jsonArray.add(cscGoodsApiVo);
                         jsonArray.add(jsonObject);
                         jsonArray.add(cscContantAndCompanyResponseDto);
@@ -562,8 +564,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
                     } else if (XSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
-                        DecimalFormat df = new DecimalFormat("0");
-                        cellValue = df.format(Double.valueOf(cellValue));
+
                     } /*else if(XSSFCell.Cell){
 
                     }*/
@@ -598,6 +599,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
                             }else if("consigneeContactPhone".equals(cellNumName)){//电话
+
                                 String format = null;
                                 String cellValuePhone = null;
                                 if (HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
@@ -702,6 +704,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             JSONObject jsonObject = new JSONObject();
 
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                            cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                             jsonArray.add(cscGoodsApiVo);
                             jsonArray.add(jsonObject);
                             jsonArray.add(cscContantAndCompanyResponseDto);
@@ -831,6 +834,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                         jsonArray.add(cscGoodsApiVo);
                         jsonArray.add(jsonObject);
                         jsonArray.add(cscContantAndCompanyResponseDto);
@@ -1147,6 +1151,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 cscGoodsImportDto.setSpecification(cellValue);
                             }else if(cellNum == 3){
                                 cscGoodsImportDto.setUnit(cellValue);
+                            }else if(cellNum == 4){
+                                cscGoodsImportDto.setUnitPrice(cellValue);
                             }
 
 
@@ -1184,6 +1190,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
+                                    cscGoodsApiVo.setUnitPrice(cscGoodsImportDto.getUnitPrice());
                                     jsonArray.add(cscGoodsApiVo);
                                     jsonArray.add(jsonObject);
                                     jsonArray.add(cscContantAndCompanyVo);
@@ -1419,6 +1426,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 cscGoodsImportDto.setSpecification(cellValue);
                             }else if(cellNum == 3){
                                 cscGoodsImportDto.setUnit(cellValue);
+                            }else if(cellNum == 4){
+                                cscGoodsImportDto.setUnitPrice(cellValue);
                             }
 
                             //收货人的货品需求数量
@@ -1453,6 +1462,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
+                                    cscGoodsApiVo.setUnitPrice(cscGoodsImportDto.getUnitPrice());
                                     jsonArray.add(cscGoodsApiVo);
                                     jsonArray.add(jsonObject);
                                     jsonArray.add(cscContantAndCompanyVo);
