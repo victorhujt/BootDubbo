@@ -76,12 +76,11 @@
             height:145px;
             border:1px solid #cacaca;
             margin-top: 20px;
-
+            overflow: hidden;
         }
         .imgClass img{
             width: 100%;
             height:100%;
-            background-size: 50px 50px;
         }
      /*   .row{
             max-width: 1250px;
@@ -105,6 +104,12 @@
         .imgone{
            margin-right: 10px;
         }
+        .Apend{
+            width: 100%;
+            height: 250px;
+        }
+
+
 
     </style>
 </head>
@@ -112,9 +117,7 @@
 
 <div class="col-xs-12">
     <div class="col-sm-6" style="float: right">
-    <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-            返回
-        </button>-->
+
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -209,8 +212,8 @@
                         <label class="control-label col-label no-padding-right" for="name"  style="margin-right:8px;"></label>
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                             <#list mobileOrder.urls as url>
-                                <div class="imgClass  imgone">
-                                    <img src="${url!""}"/>
+                                <div class="imgClass  imgone" style="position: relative;height: 200px;overflow: hidden">
+                                    <img src="${url!""}" class="dragAble" onmousewheel="return onWheelZoom(this)" name="images1"/>
                                 </div>
                             </#list>
                         </#if>
@@ -231,4 +234,29 @@
         </div>
     </form>
 </div><!-- /.col -->
+<script type="text/javascript" src="../js/drag_map.js"></script>
+<script>
+    function Maxmin() {
+        var imgs = document.getElementsByClassName("dragAble");
+            for (var i=0;i<imgs.length;i++){
+                (function(i){
+                    imgs[i].onclick=function () {
+                        var _this=this;
+                        $(_this).animate({
+                            'width':'600px',
+                            'height':'410px',
+                            "overflow":"hidden"
+                        });
+                        $(_this).siblings('.imgClass').animate({
+                            'width':'188px',
+                            'height':'143px',
+                            "overflow":"hidden"
+                        });
+                        return
+                    }
+                })(i)
+            }
+    }
+    Maxmin();
+</script>
 </body>
