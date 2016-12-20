@@ -496,7 +496,7 @@
             <div class="width-267">
                 <div class="clearfix" style="width:245px;">
                     <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="chosen-select">
-                        <option value=""></option>
+                        <option value="">无</option>
 
                     </select>
                 </div>
@@ -760,8 +760,7 @@
             //加载仓库列表
             $("#warehouseCode option").remove();
             //<option value="">无</option>
-            /* $("#warehouseCode").append("<option value="">无</option>");*/
-            $("#warehouseCode").append("<option value = ''></option>");
+            $("#warehouseCode").append("<option value = ''>无</option>");
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
                 data=eval(data);
                 $.each(data,function (index,warehouse) {
@@ -1166,7 +1165,7 @@
             }
             var cadj = consigneeCode + "@" + consigneeContactCode;
             consigneeAndGoodsJson[cadj] = num;
-            sendNum += parseInt(num);
+            sendNum += Number(num);
         })
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
@@ -1251,7 +1250,7 @@
             var streetAuto = null;
             var streetNameAuto = null;
             var addressAuto = null;
-            
+            debugger
             CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
                 $.each(data,function (index,CscContantAndCompanyDto) {
@@ -1959,7 +1958,6 @@
             orderInfo.goodsList  = goodsList;
             orderLists[index] = orderInfo;
         })
-
         var param = JSON.stringify(orderLists);
         if(StringUtil.isEmpty(param)){
             return;

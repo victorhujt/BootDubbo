@@ -17,12 +17,11 @@
     <result column="accepter" property="accepter" jdbcType="VARCHAR" />
     <result column="appcet_date" property="appcetDate" jdbcType="TIMESTAMP" />
     <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
-    <result column="pic_param" property="picParam" jdbcType="VARCHAR" />
   </resultMap>
 
   <select id="queryOrderNotes" resultType="com.xescm.ofc.domain.OfcMobileOrder">
     SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,omo.dingding_account_no,
-    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,omo.serial_no,omo.pic_param
+    omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,omo.serial_no
     FROM ofc_mobile_order omo where
         1=1
     <if test="mobileOrderStatus!=null and mobileOrderStatus!=''">
@@ -38,7 +37,7 @@
   <select id="queryOrderList" resultMap="BaseResultMap">
     SELECT omo.mobile_order_code,omo.upload_date,omo.operator,omo.business_type,omo.mobile_order_status,omo.dingding_account_no,
     omo.tran_code,omo.order_code,omo.accepter,omo.appcet_date,
-    omo.serial_no,omo.pic_param
+    omo.serial_no
     FROM ofc_mobile_order omo
     <where>
        1 = 1

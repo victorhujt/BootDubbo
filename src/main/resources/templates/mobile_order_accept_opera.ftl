@@ -80,9 +80,8 @@
             margin-right:10px;
         }
         .imgClass img{
-            width: 190px;
-            height:145px;
-            background-size: 50px 50px;
+            width: 100%;
+            height:100%;
         }
       /*  .row{
             max-width: 1250px;
@@ -449,7 +448,7 @@
 
 
 
-        <div class="col-xs-12">
+        <div class="col-xs-12" style="height: 250px;overflow: auto">
             <div class="page-header">
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
@@ -488,14 +487,10 @@
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                    <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
-                                    <#--<#list merchandiserList! as merchandiser>-->
-                                    <#--<option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>-->
-                                    <#--</#list>-->
-                                    <#list merchandiserList! as merchandiser>
-                                        <option>${(merchandiser.merchandiser)!""}</option>
-                                    </#list>
-                                    </select></div>
+                                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                                           aria-controls="dynamic-table"
+                                           value="${(mobileOrder.operator)!""}">
+                            </div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
@@ -2230,12 +2225,21 @@
                     alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
-                if(transCode!=mobileTranCode){
-                    alert("运输单号必须和拍照订单的运输单号一致！");
-                    return false;
-                }
+               // if(transCode!=mobileTranCode){
+                //    alert("运输单号必须和拍照订单的运输单号一致！");
+                  //  return false;
+               // }
             }
 
+           // var businessType= $("#businessType option:selected").val();
+
+            //var businessType= $("#businessType option:selected").val();
+           // var businessType=$("#businessType").val();
+          //  var mbusinessType=$("#mbusinessType").val();
+           // if(businessType!=mbusinessType){
+            //    alert("业务类型必须和拍照订单的业务类型一致！");
+              //  return false;
+            //}
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
@@ -2940,8 +2944,27 @@
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-
-
-
+<script>
+    function Maxmin() {
+        var imgs = document.getElementsByClassName("imgClass");
+        for (var i=0;i<imgs.length;i++){
+            (function(i){
+                imgs[i].onclick=function () {
+                    var _this=this;
+                    $(_this).animate({
+                        'width':'600px',
+                        'height':'410px'
+                    });
+                    $(_this).siblings('.imgClass').animate({
+                        'width':'188px',
+                        'height':'143px'
+                    });
+                    return
+                }
+            })(i)
+        }
+    }
+    Maxmin();
+</script>
 
 </body>

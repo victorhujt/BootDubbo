@@ -8,12 +8,17 @@ import com.xescm.uam.utils.jwt.SimpleCORSFilter;
 import com.xescm.uam.utils.jwt.TokenUtils;
 import com.xescm.uam.web.interceptor.AuthApiInterceptor;
 import com.xescm.uam.web.interceptor.AuthViewInterceptor;
+import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -82,6 +87,22 @@ public class XescmOfcApplication {
 		}
 		return tokenUtils;
 	}
+
+	/*@Bean
+	EmbeddedServletContainerCustomizer containerCustomizer() throws Exception {
+		return (ConfigurableEmbeddedServletContainer container) -> {
+			if (container instanceof TomcatEmbeddedServletContainerFactory) {
+				TomcatEmbeddedServletContainerFactory tomcat = (TomcatEmbeddedServletContainerFactory) container;
+				tomcat.addConnectorCustomizers(
+						(connector) -> {
+							connector.setMaxPostSize(10000000); // 10 MB
+						}
+				);
+			}
+		};
+	}*/
+
+
 	@Bean
 	public MyHandlerExceptionResolver myHandlerExceptionResolver() {
 		return new MyHandlerExceptionResolver();
