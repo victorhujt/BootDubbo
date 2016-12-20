@@ -334,12 +334,12 @@
     function getOperatorByStatus(order,index) {
         var value = "";
 
-        var newStatus = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"btn btn-minier btn-yellow\">审核</button>"
-                +"<button type=\"button\" id=\"edit\" "+index+" onclick=\"editOrder('"+order.orderCode+"')\" class=\"btn btn-minier btn-success\">编辑</button>"
-                +"<button type=\"button\" id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-danger\">删除</button>";
+        var newStatus = "<a id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"blue\">审核&nbsp;|</a>"
+                +"<a id=\"edit\" "+index+" onclick=\"editOrder('"+order.orderCode+"')\" class=\"blue\">&nbsp;编辑&nbsp;|</a>"
+                +"<a id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"red\">&nbsp;删除</a>";
 
-        var unApproveStatus = "<button type=\"button\" id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
-        var cancelStatus = "<button type=\"button\" id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-default\">取消</button>";
+        var unApproveStatus = "<a id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"blue\">反审核</a>";
+        var cancelStatus = "<a id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"blue\">取消</a>";
 
         if (order.orderStatus == "10") {
             value = newStatus;

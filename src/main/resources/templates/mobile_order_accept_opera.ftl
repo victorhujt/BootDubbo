@@ -73,36 +73,41 @@
 
         .imgClass{
             float: left;
-            width:50px;
-            height:50px;
+            width:190px;
+            height:145px;
             border:1px solid #cacaca;
-            margin-top: 50px;
-            margin-left: 100px;
+            margin-top: 20px;
+            margin-right:10px;
         }
         .imgClass img{
-            width: 50px;
-            height:50px;
-            background-size: 50px 50px;
+            width: 100%;
+            height:100%;
         }
-        .row{
+      /*  .row{
             max-width: 1250px;
             min-width: 1250px;
             margin-left: -21px;
-        }
-        .no-padding-right{
+        }*/
+     /*   .no-padding-right{
             margin-left: 71px;
 
-        }
-        .w-width-220{
+        }*/
+    /*    .w-width-220{
             margin-top: 24px;
-        }
-        .imgone{
+        }*/
+     /*   .imgone{
             margin-right: 148px;
-        }
-        .col-width-376{
+        }*/
+    /*    .col-width-376{
             float: left;
             width:220px;
+        }*/
+        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+            padding-top:0;
         }
+       .pay .chosen-container-single .chosen-search:after{
+           top:3px;
+       }
     </style>
 </head>
 
@@ -112,73 +117,83 @@
         订单详情
     </p>
 </div>
-<div class="col-xs-12">
-    <div class="col-sm-6" style="float: right">
-    <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-            返回
-        </button>-->
-    </div>
+<#--<div class="col-xs-12">-->
+<#--  <div class="col-sm-6" style="float: right">
+ <#tton style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
+         返回
+     </button>
+ </div>-->
 
     <form id="" method="post" class="form-horizontal" role="form">
-        <div class="row">
-            <div class="col-xs-12">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">流水号</label>
-                        <div class="w-width-220 col-float">
-                            <input id="mobileOrderCode" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">上传日期</label>
-                        <div class="w-width-220 col-float">
-                            <input id="uploadDate" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">钉钉账号</label>
-                        <div class="w-width-220 col-float">
-                            <input id="dingdingAccountNo" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.dingdingAccountNo)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">开单员</label>
-                        <div class="w-width-220 col-float">
-                            <input id="operator" name="" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.operator)!""}">
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">业务类型</label>
-                        <div class="w-width-220 col-float">
-                        <#if mobileOrder.businessType  =="602">
-                            <input id="mbusinessType" name="mbusinessType" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="卡班">
-                        <#elseif  mobileOrder.businessType =="600">
-                            <input id="mbusinessType" name="mbusinessType" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="城配">
-                        <#elseif  mobileOrder.businessType =="601">
-                            <input id="mbusinessType" name="mbusinessType" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="干线">
-                        </#if>
-                        </div>
-                        <label class="control-label col-label no-padding-right" for="name" style="margin-top:24px;">运输单号</label>
-                        <div class="w-width-220 col-float">
-                            <input id="tranCode" name="tranCode" type="search" placeholder=""
-                                   aria-controls="dynamic-table"
-                                   value="${(mobileOrder.tranCode)!""}">
-                        </div>
-                    <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
-                        <#list mobileOrder.urls as url>
-                            <div class="imgClass  imgone">
-                                <img src="${url!""}"/>
-                            </div>
-                        </#list>
-                    </#if>
-                    </div>
-                </form>
+        <div class="width-100 y-float">
+        <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name">流水号</label>
+            <div class="w-width-220" style="width:226px; padding:0 15px;">
+                <input class="width-100" id="orderCode" name="" type="search" placeholder=""
+                       aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
             </div>
         </div>
+        <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+            <div class="w-width-220" style="width:226px; padding:0 15px;">
+                <input class="col-xs-12" id="uploadDate" name="" type="search" placeholder=""
+                       aria-controls="dynamic-table"
+                       value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
+            </div>
+        </div>
+        <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
+            <div class="w-width-220" style="width:226px; padding:0 15px;">
+                <input class="width-100" id="dingdingAccountNo" name="" type="search" placeholder=""
+                       aria-controls="dynamic-table"
+                       value="${(mobileOrder.dingdingAccountNo)!""}">
+            </div>
+        </div>
+        <div class="form-group y-float" style="clear:left;">
+            <label class="control-label col-label no-padding-right" for="name">开单员</label>
+            <div class="w-width-220" style="width:226px; padding:0 15px;">
+                <input class="width-100" id="operator" name="" type="search" placeholder=""
+                       aria-controls="dynamic-table"
+                       value="${(mobileOrder.operator)!""}">
+            </div>
+        </div>
+        <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+            <div class="w-width-220" style="width:226px; padding:0 15px;">
+            <#if mobileOrder.businessType  =="602">
+                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                       aria-controls="dynamic-table" value="卡班">
+            <#elseif  mobileOrder.businessType =="600">
+                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                       aria-controls="dynamic-table" value="城配">
+            <#elseif  mobileOrder.businessType =="601">
+                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                       aria-controls="dynamic-table" value="干线">
+            </#if>
+            </div>
+        </div>
+        <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+            <div class="w-width-220" style="width:226px; padding:0 15px;">
+                <input class="width-100" id="tranCode" name="tranCode" type="search" placeholder=""
+                       aria-controls="dynamic-table"
+                       value="${(mobileOrder.tranCode)!""}">
+            </div>
+        </div>
+        </div>
+        <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
+
+            <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
+                <#list mobileOrder.urls as url>
+                    <div class="imgClass  imgone">
+                        <img src="${url!""}"/>
+                    </div>
+                </#list>
+            </#if>
+        </div>
     </form>
-</div><!-- /.col -->
+<#--</div>--><!-- /.col -->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
@@ -414,7 +429,7 @@
                     <tbody id="custListDivTbody"></tbody>
                 </table>
                 <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
                     </div>
                 </div>
             </form>
@@ -430,10 +445,10 @@
 <div class="row">
 
     <!-- /section:basics/content.breadcrumbs -->
-    <div class="page-content no-padding-top" >
 
 
-        <div class="col-xs-12">
+
+        <div class="col-xs-12" style="height: 250px;overflow: auto">
             <div class="page-header">
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
@@ -472,8 +487,10 @@
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                    <input id="merchandiser" name="merchandiser" type="search" placeholder="" aria-controls="dynamic-table" value="${(mobileOrder.operator)!""}">
-                                </div>
+                                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                                           aria-controls="dynamic-table"
+                                           value="${(mobileOrder.operator)!""}">
+                            </div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
@@ -505,7 +522,7 @@
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon toggle">*</span>运输单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
-                                <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;"  value="${(mobileOrder.tranCode)!""}""/>
+                                <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
                             </div>
                         </div></div>
                 </div>
@@ -776,14 +793,14 @@
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="margin-right:10px;float:left;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
                     <div>
-                        <div class="col-width-70" style="float:left;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="float:left;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePaymentPartyV2" type="radio" class="ace" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">收货方</span>
@@ -792,7 +809,7 @@
                     </div>
                     <input id="transportType" type="hidden" name="transportType"/>
                     <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
-                    <div>
+                    <div class="pay">
                         <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:34px;">支付方式</label>
                         <div class="col-width-168 padding-15">
                             <div class="clearfix col-width-100">
@@ -861,7 +878,7 @@
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
-</div><!-- /.row -->
+<!-- /.row -->
 </div><!-- /.page-content -->
 <#--<div class="page-content">
     <div class="row">
@@ -991,7 +1008,7 @@
     });
 
     function main(){
-        //initChosen();
+        initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
@@ -1545,14 +1562,16 @@
                 $(obj).parent().next().children("select").append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
             $(obj).parent().next().children("select").find("option").each(function() {
-                text = $(this).text();
-                if($(obj).parent().next().children("select").find("option:contains("+text+")")){
-                    $(obj).parent().next().children("select").find("option:contains("+text+"):gt(0)").remove();
+                text = $(this).val();
+                if($(obj).parent().next().children("select").find("option[value='"+text+"']")){
+                    $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
             });
             $(obj).parent().next().children("select").trigger("chosen:updated");
+
         });
     }
+
 
     function checkBillingWeight(obj){
         var value=onlyNumber($(obj).val());
@@ -1945,11 +1964,11 @@
     function goodsInfoListDivSupple(goodsInfoListDiv){
         goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
+                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text' style='min-width:80px;'/>"+
                 "<a  class='blue no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</a>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
+                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text' style='min-width:60px;'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                 "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
@@ -1996,7 +2015,7 @@
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
-        //initChosen();
+        initChosen();
     }
 
     function checkConsignOrEe(){
@@ -2206,18 +2225,21 @@
                     alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
-                if(transCode!=mobileTranCode){
-                    alert("运输单号必须和拍照订单的运输单号一致！");
-                    return false;
-                }
+               // if(transCode!=mobileTranCode){
+                //    alert("运输单号必须和拍照订单的运输单号一致！");
+                  //  return false;
+               // }
             }
 
-            var businessType= $("#businessType").val();
-            var mbusinessType=$("#mbusinessType").val();
-            if(businessType!=mbusinessType){
-                alert("业务类型必须和拍照订单的业务类型一致！");
-                return false;
-            }
+           // var businessType= $("#businessType option:selected").val();
+
+            //var businessType= $("#businessType option:selected").val();
+           // var businessType=$("#businessType").val();
+          //  var mbusinessType=$("#mbusinessType").val();
+           // if(businessType!=mbusinessType){
+            //    alert("业务类型必须和拍照订单的业务类型一致！");
+              //  return false;
+            //}
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
@@ -2686,9 +2708,9 @@
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
 
                 }
-                //initChosen();
+                initChosen();
             }
-            //initChosen();
+            initChosen();
 
         });
 
@@ -2760,9 +2782,11 @@
                     var unit = tdArr.eq(7).text();//单位
                     var typeID = tdArr.eq(9).text();//单位
                     $("#typeSel").val(typeID);
+                    $("#typeSel").trigger("chosen:updated");
                     goodsTypeParentChange($("#typeSel"));
                     //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+                    $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
@@ -2920,8 +2944,27 @@
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-
-
-
+<script>
+    function Maxmin() {
+        var imgs = document.getElementsByClassName("imgClass");
+        for (var i=0;i<imgs.length;i++){
+            (function(i){
+                imgs[i].onclick=function () {
+                    var _this=this;
+                    $(_this).animate({
+                        'width':'600px',
+                        'height':'410px'
+                    });
+                    $(_this).siblings('.imgClass').animate({
+                        'width':'188px',
+                        'height':'143px'
+                    });
+                    return
+                }
+            })(i)
+        }
+    }
+    Maxmin();
+</script>
 
 </body>
