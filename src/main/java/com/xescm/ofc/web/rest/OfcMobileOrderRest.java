@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.domain.OfcAttachment;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
 import com.xescm.ofc.enums.BusinessTypeEnum;
@@ -12,8 +13,10 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
+import com.xescm.ofc.model.dto.ofc.AttachmentDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
+import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
@@ -21,6 +24,7 @@ import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +47,9 @@ import java.util.List;
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcMobileOrderRest extends BaseController {
+    @Autowired
+    private OfcAttachmentService ofcAttachmentService;
+
     @Autowired
     private OfcMobileOrderService ofcMobileOrderService;
 
@@ -192,5 +199,30 @@ public class OfcMobileOrderRest extends BaseController {
         return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
 
+    @RequestMapping(value = "/mobileOrder/updatePicParamByserialNo", method = RequestMethod.POST)
+    public Wrapper<?> updatePicParamByserialNo(AttachmentDto attachmentDto) {
+        OfcAttachment ofcAttachment=new OfcAttachment();
+        try {
+            if(attachmentDto == null){
+                throw new BusinessException("参数不能为空");
+            }
+            if(StringUtils.isEmpty(attachmentDto.getSerialNo())){
+                throw new BusinessException("附件流水号不能为空");
+            }
 
+            if(StringUtils.isEmpty(attachmentDto.getPicParam())){
+                throw new BusinessException("附件流水号操作命令不能为空");
+            }
+            logger.info("操作的附件流水号为:{}",attachmentDto.getSerialNo());
+            BeanUtils.copyProperties(ofcAttachment,attachmentDto);
+            ofcAttachmentService.updatePicParamByserialNo(ofcAttachment);
+        } catch (BusinessException ex) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception e) {
+            logger.debug("更新附件操作失败={}", e.getMessage(), e);
+            e.printStackTrace();
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
 }

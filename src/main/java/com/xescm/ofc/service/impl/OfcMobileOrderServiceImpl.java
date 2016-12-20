@@ -918,6 +918,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
                 if(url!=null){
                     String urlStr=url.toString().replace("vpc100-","");
+                    if(!StringUtils.isEmpty(result.getPicParam())){
+                        urlStr= urlStr+"?"+result.getPicParam();
+                    }
                     if(!urls.contains(urlStr)){
                         urls.add(urlStr);
                     }

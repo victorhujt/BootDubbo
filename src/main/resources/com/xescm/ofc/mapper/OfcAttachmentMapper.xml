@@ -23,4 +23,17 @@
     <result column="pic_param" property="picParam" jdbcType="VARCHAR" />
 
   </resultMap>
+
+  <update id="updatePicParamByserialNo" parameterType="com.xescm.ofc.domain.OfcAttachment" >
+    <!--
+      根据计划单号进行修改
+    -->
+    update ofc_attachment
+    <set >
+      <if test="pic_param != null" >
+        pic_param = #{picParam,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where serial_no = #{serialNo,jdbcType=VARCHAR}
+  </update>
 </mapper>
