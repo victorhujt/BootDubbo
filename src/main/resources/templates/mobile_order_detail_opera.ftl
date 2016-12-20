@@ -107,22 +107,26 @@
         .Apend{
             width: 100%;
             height: 250px;
-            /*display: none;*/
+            display: none;
             overflow: hidden;
+            position: relative;
         }
         .scales,.closes{
+            position: relative;
+            z-index: 2;
             width: 50px;height: 50px;
             float: right;
             background: #dbdbdb;
             line-height: 50px;
         }
         .scales img,.closes img{
-            background-size: 100% 100%; */
-            margin-left:14px;
+            background-size: 100% 100%;
+            margin-left: 14px;
             width: 24px;
-            height: 20px;
+            height: 22px;
             display: block;
             margin-top: 16px;
+
          }
     </style>
 </head>
@@ -130,9 +134,9 @@
 
 <div class="col-xs-12" id="BApen">
     <div class="Apend">
+        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
         <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
         <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
-
     </div>
     <div class="col-sm-6" style="float: right">
 
@@ -261,21 +265,21 @@
                     imgs[i].onclick=function () {
                         var _this=this;
                         $(".Apend").css({"display":"block"});
-                        $(_this).animate({
-                            'width':'188px',
-                            'height':'198px'
+                        $("#viewBiggerImg").attr('src',_this.src);
+                        $(".scales").on("click",function () {
+                            $(".dragAble").animate({
+                                "transform":"rotate(90deg)"
+                            })
+                        })
 
-                        });
-                        $(".Apend").append($(_this).clone(true));
-                        $(_this).siblings('.imgClass').animate({
-                            'width':'188px',
-                            'height':'143px'
 
-                        });
                         return
                     }
                 })(i)
             }
+            $(".closes").on("click",function () {
+                $(".Apend").css({"display":"block"});
+            })
     }
     Maxmin();
 </script>
