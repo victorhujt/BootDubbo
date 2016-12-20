@@ -192,7 +192,7 @@
                         <label class="control-label col-label no-padding-right" for="name">体积</label>
                         <div class="w-width-220 col-float">
                             <input id="cubage" name="cubage" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">m³
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">运输要求</label>
                         <div class="w-width-220 col-float">

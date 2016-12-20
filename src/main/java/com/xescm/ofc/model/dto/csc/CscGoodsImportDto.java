@@ -61,6 +61,10 @@ public class CscGoodsImportDto implements Serializable {
     private String unit;
 
     /**
+     * 单位
+     */
+    private String unitPrice;
+    /**
      * 客户code
      */
     private String customerCode;

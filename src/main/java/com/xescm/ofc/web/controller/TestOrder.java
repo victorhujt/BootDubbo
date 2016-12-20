@@ -74,7 +74,7 @@ public class TestOrder extends BaseController {
         OfcPlanFedBackCondition ofcPlanFedBackCondition = new OfcPlanFedBackCondition();
         ofcPlanFedBackCondition.setStatus("已签收");
         ofcPlanFedBackCondition.setTraceTime(new Date());
-        ofcPlanFedBackCondition.setTransportNo("TP161220000057");
+        ofcPlanFedBackCondition.setTransportNo("TP161220000125");
         ofcPlanFedBackCondition.setNotes("测试的NOtes");
         String userName = "策士大夫";
         ofcPlanFedBackService.planFedBack(ofcPlanFedBackCondition,userName);

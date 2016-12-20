@@ -625,6 +625,9 @@
                                 aria-label="Clicks: activate to sort column ascending">单位
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">销售单价
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Clicks: activate to sort column ascending">数量
                             </th>
                         </thead>
@@ -819,6 +822,7 @@
                         "<td>" + goodsDetail.goodsName + "</td>" +
                         "<td>" + goodsDetail.specification + "</td>" +
                         "<td>" + goodsDetail.unit + "</td>" +
+                        "<td>" + goodsDetail.unitPrice + "</td>" +
                         "<td>" + goodsDetail.goodsAmount + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeParentName + "</td>" +
@@ -930,11 +934,10 @@
                 var goodsName = tdArr.eq(3).text();//货品名称
                 var specification = tdArr.eq(4).text();//    货品规格
                 var unit = tdArr.eq(5).text();//    单位
-                var sendGoods = tdArr.eq(6).text();//发货数量
-                var goodsSecType = tdArr.eq(7).text();//货品二级类
-
-                var goodsFirType = tdArr.eq(8).text();//货品一级类
-
+                var unitPrice = tdArr.eq(6).text();//    单位
+                var sendGoods = tdArr.eq(7).text();//发货数量
+                var goodsSecType = tdArr.eq(8).text();//货品二级类
+                var goodsFirType = tdArr.eq(9).text();//货品一级类
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
@@ -946,6 +949,7 @@
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
                 goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
@@ -981,8 +985,9 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";//单位
+                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";//单价
+                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";//数量
                     goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
@@ -1040,7 +1045,7 @@
             var tdArr = $(this).children();
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
-            var goodsAmountTotal = tdArr.eq(6).text();//货品需求数量合计
+            var goodsAmountTotal = tdArr.eq(7).text();//货品需求数量合计
             
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
@@ -1058,7 +1063,7 @@
                     ///然后从每个货品数量的总量中减去对应的数量
                     goodsAmountTotal = goodsAmountTotal - goodsAmount;
                     //对货品列表重新进行展示
-                    tdArr.eq(6).text(goodsAmountTotal);
+                    tdArr.eq(7).text(goodsAmountTotal);
                     delete consigneeAndGoodsMsgJson[param]; //遍历删除对应JSON结点
                     return true;
                 }
@@ -1175,18 +1180,20 @@
             var goodsCodeDiv = $("#goodsCodeDiv").val();
             var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
             if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
-                tdArr.eq(6).text(sendNum);
+                tdArr.eq(7).text(sendNum);
                 var indexIn = tdArr.eq(1).text();
                 var goodsCodeIn = tdArr.eq(2).text();
                 var goodsNameIn = tdArr.eq(3).text();
                 var goodsSpecIn = tdArr.eq(4).text();
                 var goodsUnitIn = tdArr.eq(5).text();
-                var goodsAmountIn = tdArr.eq(6).text();
+                var goodsUnitPriceIn = tdArr.eq(6).text();
+                var goodsAmountIn = tdArr.eq(7).text();
                 goodsJson.indexIn = indexIn;
                 goodsJson.goodsCodeIn = goodsCodeIn;
                 goodsJson.goodsNameIn = goodsNameIn;
                 goodsJson.goodsSpecIn = goodsSpecIn;
                 goodsJson.goodsUnitIn = goodsUnitIn;
+                goodsJson.goodsUnitPriceIn = goodsUnitPriceIn;
                 goodsJson.goodsAmountIn = goodsAmountIn;
                 mapKey = goodsCodeIn + "@" + indexIn;
             }
@@ -1783,8 +1790,8 @@
                 var customerName = tdArr.eq(3).text();//公司名称
                 var channel = tdArr.eq(4).text();//    渠道
                 var productType = tdArr.eq(5).text();//    产品类别
-//                var groupId = tdArr.eq(6).text();//    产品类别
-                var customerCode = tdArr.eq(7).text();//    产品类别
+//                var groupId = tdArr.eq(6).text();//
+                var customerCode = tdArr.eq(7).text();//
                 $("#custName").val(customerName);
                 $("#customerCode").val(customerCode);
                 $("#customerCodeForGoods").val(customerCode);
@@ -1934,12 +1941,14 @@
                 var goodsSpec = tdArr.eq(4).text();//规格
                 var goodsUnit = tdArr.eq(5).text();//单位
                 //var goodsTotalAmount = tdArr.eq(6).text();//总数量
-                var goodsSecType = tdArr.eq(7).text();
-                var goodsFirType = tdArr.eq(8).text();
+                var goodsUnitPrice = tdArr.eq(6).text();
+                var goodsSecType = tdArr.eq(8).text();
+                var goodsFirType = tdArr.eq(9).text();
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
                 goods.unit = goodsUnit;
+                goods.unitPrice = goodsUnitPrice;
                 goods.goodsCategory = goodsSecType;
                 goods.goodsType = goodsFirType;
                 goods.chargingWays = '01';//计费方式按默认按件数
@@ -2007,7 +2016,7 @@
                 var goodsIndex = tdArr.eq(1).text();//货品序号
                 var goodsCode = tdArr.eq(2).text();//货品编码
                 var goodsName = tdArr.eq(3).text();//货品名称
-                var goodsTotalAmount = tdArr.eq(6).text();//总数量
+                var goodsTotalAmount = tdArr.eq(7).text();//总数量
                 if(goodsTotalAmount == 0){
                     alert("货品列表中【"+goodsName+"】的数量为空,请检查!");
                     //return false;
