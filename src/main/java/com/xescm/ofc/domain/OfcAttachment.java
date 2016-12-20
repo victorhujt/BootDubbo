@@ -90,6 +90,15 @@ public class OfcAttachment {
      */
     private Integer yn;
 
+    private String picParam;
+
+    public String getPicParam() {
+        return picParam;
+    }
+
+    public void setPicParam(String picParam) {
+        this.picParam = picParam;
+    }
 
     /**
      * 获取附件流水号

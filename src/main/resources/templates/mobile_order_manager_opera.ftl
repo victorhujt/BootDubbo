@@ -7,10 +7,10 @@
         td{
             text-align: center;
         }
-        .page-content{
+       /* .page-content{
             max-width: 1250px;
             min-width: 1250px;
-        }
+        }*/
         .filters{
             padding: 0;
         }
@@ -261,6 +261,7 @@
             }
 
             for ( var i = 0; i < data.result.list.length; i++) {
+                debugger;
                 var order = data.result.list[i];
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                     + "<td>" + [ i + 1] + "</td>"
@@ -268,7 +269,7 @@
                         + "<a onclick=\"orderDetailOper('" + order.mobileOrderCode + "')\">" + StringUtil.nullToEmpty(order.mobileOrderCode) + "</a>"
                         + "</td>"
                     + "<td class=\"hidden-480\">" + subTimeString(StringUtil.nullToEmpty(order.uploadDate)) + "</td>"
-                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.dcustOrderCodeingdingAccountNo) + "</td>"
+                    + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.dingdingAccountNo) + "</td>"
                     + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.operator) + "</td>"
                     + "<td class=\"hidden-480\">" + getBusiType(order) + "</td>"
                     + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.tranCode) + "</td>"
@@ -307,6 +308,8 @@
                 value = "城配"
             }else if(order.businessType == "601"){
                 value = "干线";
+            }else if(order.businessType == "602"){
+                value = "卡班";
             }else if(order.businessType == "610"){
                 value = "销售出库";
             }else if(order.businessType == "611"){

@@ -11,6 +11,7 @@ import java.util.Map;
 public interface OfcTransplanInfoMapper extends Mapper<OfcTransplanInfo> {
     List<OfcTransplanInfo> ofcTransplanInfoScreenList(Map<String,String> mapperMap);
     List<OfcTransplanInfoVo> ofcTransplanInfoVoList(Map<String,String> mapperMap);
-
     int queryNotInvalidAndNotCompleteTransOrder(@Param(value = "orderCode") String orderCode);
+    List<String> queryTransCodeByOrderCode(@Param(value = "orderCode") String orderCode);
+    List<String> queryUncompletedPlanCodesByOrderCode(@Param(value = "orderCode")String orderCode);
 }

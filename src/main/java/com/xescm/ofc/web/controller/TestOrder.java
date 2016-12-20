@@ -1,11 +1,11 @@
 package com.xescm.ofc.web.controller;
 
-import com.xescm.ofc.domain.OfcDistributionBasicInfo;
-import com.xescm.ofc.domain.OfcFinanceInformation;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.DmsCallbackStatusEnum;
 import com.xescm.ofc.feign.client.FeignAddressCodeClient;
 import com.xescm.ofc.feign.client.FeignPushOrderApiClient;
+import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
+import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hiyond on 2016/11/19.
@@ -45,10 +48,62 @@ public class TestOrder extends BaseController {
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
     private FeignPushOrderApiClient pushOrderApiClient;
+    @Autowired
+    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
+    @Autowired
+    private OfcPlanFedBackService ofcPlanFedBackService;
+    @Autowired
+    private OfcTransplanInfoMapper ofcTransplanInfoMapper;
 
+
+
+    @RequestMapping(value = "/dms")
+    public void ttt(){
+        DmsTransferStatusDto dmsTransferStatusDto = new DmsTransferStatusDto();
+        dmsTransferStatusDto.setTransNo("12197001");
+        dmsTransferStatusDto.setWaybillStatusCode(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode());
+        dmsTransferStatusDto.setCreator("阿斯顿法国");
+        dmsTransferStatusDto.setCreatedTime(new Date());
+        dmsTransferStatusDto.setDesp("盐田港buoimoisdfkjp[oia");
+        ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
+    }
+
+
+    @RequestMapping(value = "TFC")
+    public void dsfadsf(){
+        OfcPlanFedBackCondition ofcPlanFedBackCondition = new OfcPlanFedBackCondition();
+        ofcPlanFedBackCondition.setStatus("已签收");
+        ofcPlanFedBackCondition.setTraceTime(new Date());
+        ofcPlanFedBackCondition.setTransportNo("TP161220000057");
+        ofcPlanFedBackCondition.setNotes("测试的NOtes");
+        String userName = "策士大夫";
+        ofcPlanFedBackService.planFedBack(ofcPlanFedBackCondition,userName);
+    }
+
+
+    @RequestMapping(value = "SQ")
+    public  void asdf(){
+        Map<String,String> mapperMap = new HashMap<>();
+        mapperMap.put("ifFinished","planfinish");
+        mapperMap.put("orderCode","SO161220000034");
+        List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+        List<OfcTransplanInfo> ofcTransplanInfos2=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+        List<OfcTransplanInfo> ofcTransplanI2nfos2=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+    }
+
+   /*
     @RequestMapping(value = "/order", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String test() throws Exception {
+
+
+
+
+
+
+
+
+
 ////        OrderOperForm orderOperForm = new OrderOperForm();
 ////        System.out.println(ofcOrderManageOperService.queryOrderOper(orderOperForm));
 //        OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect("SO161124000237", "orderCode");
@@ -276,6 +331,6 @@ public class TestOrder extends BaseController {
         ofcGoodsDetailsInfo.setOrderCode(orderCode);
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
         pushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
-    }
+    }*/
 
 }

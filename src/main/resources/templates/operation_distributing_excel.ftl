@@ -106,7 +106,7 @@
 </div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
-        <div class="form-group">
+        <div class="form-group" style="margin-top:20px;">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-6">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -130,9 +130,6 @@
                     </tr>
                     </tbody>
                 </table>
-
-
-
                     <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
@@ -144,42 +141,63 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">模板类型</label>
             <div class="col-xs-3">
-                <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked type="radio"/>交叉
-                <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio"/>明细列表
+               <#-- <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked type="radio"/>交叉
+                <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio"/>明细列表-->
+                <div class="radio y-float">
+                    <label style="width:56px;padding-left:10px;">
+                        <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked="checked" type="radio" class="ace"/>
+                        <span class="lbl">交叉</span>
+                    </label>
+                </div>
+                <div class="radio y-float">
+                    <label>
+                        <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio" class="ace"/>
+                        <span class="lbl">明细列表</span>
+                    </label>
+                </div>
             </div>
+
         </div>
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">模板映射</label>
             <div class="col-xs-3">
-                <select class="col-xs-12" id="templatesMapping">
+                <select class="col-xs-12 chosen-select" id="templatesMapping" >
                     <option value="standard">标准</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">上传文件</label>
-            <div class="col-xs-3">
+            <div class="col-xs-3 y-float">
                 <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
                 <span hidden="true" id = "csc_url_local">${(CSC_URL_LOCAL)!}</span>
                 <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
-            <div class="col-xs-3">
-                <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" name="uploadFile" /></p>
-                    <p><input type="button" id="uploadFileInput"  value="上传"/></p>
-                </form>
+           <#-- <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" &lt;#&ndash;enctype="multipart/form-data"&ndash;&gt; >-->
+            <div class="y-float">
+                <p class="y-float">
+                    <input type="file" id="uploadFile" name="uploadFile" style="display:none;" />
+                    <label for="uploadFile" class="btn btn-white btn-info btn-bold ">选择文件</label>
+                </p>
+                <p class="y-float padding-12">
+                    <input type="button" id="uploadFileInput" name="uploadFileInput"  value="上传" style="display:none;"/>
+                    <label for="uploadFileInput" class="btn btn-primary" style="padding:2px 12px;">上传</label>
+                </p>
+
             </div>
+            <#--</form>-->
+
+            <#-- <div class="col-xs-6 y-float"></div>-->
         </div>
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
             <div class="col-xs-3">
-                    <select class="col-xs-12" id="uploadExcelSheet">
-                    </select>
+                <select class="col-xs-12 chosen-select" id="uploadExcelSheet">
+                    <option value=""></option>
+                </select>
             </div>
-            <div class="col-xs-3">
-                <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">加载</button>
-            </div>
+            <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold">加载</button>
         </div>
     </form>
 </div>
@@ -199,7 +217,7 @@
 <div id="goodsListDiv">
 
     <div class="col-sm-12">
-        <div class="tabbable" style="width:1000px;">
+        <div class="tabbable" style="margin:20px 0;">
             <ul class="nav nav-tabs" id="myTab4">
                 <li class="goodsLi disable" >
                     <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
@@ -272,7 +290,10 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer"><button id="excelImportEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
+    <div class="modal-footer" style="text-align:left;margin-left:-2px;">
+        <button id="excelImportEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button>
+        <span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span>
+    </div>
 
 </div>
 
@@ -310,7 +331,7 @@
     });
 
     function main() {
-
+        initChosen();
     }
 
     var ofc_url = $("#ofc_url").html();
@@ -545,19 +566,21 @@
                             $.each(sheetMsg,function (index,sheet) {
                                 var sh = sheet.split("@");
                                 if("active" == sh[1]){
-                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }else{
-                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }
                             })
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 1
+                                icon: 1,
+                                time:500
                             });
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
                         }
                     },
@@ -614,7 +637,8 @@
                             //如果校验成功!
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 1
+                                icon: 1,
+                                time:500
                             });
                             var resultMap =  JSON.parse(result.result);
 
@@ -670,7 +694,8 @@
                             //如果校验失败!
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
                             $("#goodsListDiv").hide();
                             $("#errorMsgDiv").show();
@@ -701,7 +726,8 @@
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
 
 
@@ -787,6 +813,23 @@
         window.open(html.substring(0,index) + "/index#" + url);
         $("#errorExcelImport").hide();
     })
-
+    function initChosen() {
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        //resize the chosen on window resize
+        $(window).off('resize.chosen').on('resize.chosen', function () {
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    }
 
 </script>

@@ -69,6 +69,15 @@
         #goodsInfoListDiv .help-block{
             line-height:20px;
         }
+        .chosen-container .chosen-results{
+            max-height:120px;
+        }
+       .pay .chosen-container-single .chosen-search:after{
+           top:4px;
+       }
+        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+            padding-top:0;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 </head>
@@ -309,7 +318,7 @@
                     <tbody id="custListDivTbody"></tbody>
                 </table>
                 <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
                     </div>
                 </div>
             </form>
@@ -386,7 +395,7 @@
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
                         <div class="col-width-168 padding-15">
-                            <div class="cclearfix" >
+                            <div class="clearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
@@ -667,14 +676,14 @@
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="margin-right:10px;float:left;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;padding-to"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
                     <div>
-                        <div class="col-width-70" style="float:left;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="float:left;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePaymentPartyV2" type="radio" class="ace" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">收货方</span>
@@ -686,7 +695,7 @@
                     <div>
                         <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:34px;">支付方式</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
+                            <div class="clearfix col-width-100 pay">
                                 <select class="chosen-select form-control" id="payment" name="payment">
                                     <option value="6810">现金</option>
                                     <option value="6820">POS刷卡</option>
@@ -925,6 +934,9 @@
                 },
                 custName:{
                     maxlength:100
+                },
+                transRequire:{
+                    maxlength:255
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -949,6 +961,9 @@
                 },
                 custName:{
                     maxlength:mistake+"超过最大长度"
+                },
+                transRequire:{
+                    maxlength:mistake+"超过最大长度255"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1179,11 +1194,11 @@
             messages : {
                 consignorName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consignorContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consignorPhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1191,15 +1206,15 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 },
                 consigneeName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consigneeContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consigneePhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1207,7 +1222,7 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 }
             },
             highlight : function(e) {
@@ -1266,6 +1281,7 @@
     function countQuantOrWeightOrCubage(obj) {
         var value=onlyNumber($(obj).val());
         if(parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为30000.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1276,6 +1292,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0"){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1286,6 +1303,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1297,6 +1315,7 @@
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1307,6 +1326,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else if(parseFloat($(obj).val())>9999){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1317,6 +1337,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1435,11 +1456,11 @@
                 cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
-        debugger;
         if(flg1=="error" || flg2=="error" || flg3=="error"){
             $("#luggage").val(0);
         }else{
-            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage)
+            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage);
+            $('#orderFinanceFormValidate').submit();
         }
 
         countCostCheck();
@@ -1470,12 +1491,14 @@
                 }
             });
             $(obj).parent().next().children("select").trigger("chosen:updated");
+
         });
     }
 
     function checkBillingWeight(obj){
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value))) || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43")
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1484,6 +1507,7 @@
                 $(obj).val("");
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
         };
@@ -1864,11 +1888,11 @@
     function goodsInfoListDivSupple(goodsInfoListDiv){
         goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
+                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text' style='min-width:80px;'/>"+
                 "<a  class='blue no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</a>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
+                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text' style='min-width:60px;'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
                 "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
@@ -1947,14 +1971,15 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
         param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null) {
-                alert("未查询到客户信息！");
+            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
@@ -2093,6 +2118,7 @@
             /*$("input[name='billingWeight']").each(function(){
                 var value=onlyNumber($(this).val());
                 if(value==""){
+                    $(this).css("border-color","#dd5a43")
                     if($(this).parent().children().length<2){
                         $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(this));
                         $(this).parent().removeClass('has-info').addClass('has-error');
@@ -2101,6 +2127,7 @@
                         $(this).val("");
                     }
                 }else{
+                    $(this).css("border-color","#cacaca")
                     $(this).val(value);
                     $(this).parent().find("div").remove();
                 }
@@ -2164,15 +2191,17 @@
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
                         case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
                         case 9 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
-                        case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.quantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
+                        case 12 :orderGoods.weight = param.getElementsByTagName("input")[0].value;break;
+                        case 13 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
                     }
                     if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
                         jsonStr.goodsTypeName=orderGoods.goodsType;
                     }
                 }
-                if(orderGoods.chargingWays=="01"){
+                /*if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
                     orderGoods.quantityUnitPrice=orderGoods.chargingUnitPrice;
                 }else if(orderGoods.chargingWays=="02"){
@@ -2181,7 +2210,7 @@
                 }else if(orderGoods.chargingWays=="03"){
                     orderGoods.cubage=orderGoods.chargingQuantity;
                     orderGoods.volumeUnitPrice=orderGoods.chargingUnitPrice;
-                }
+                }*/
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
             var tag = "tranplace";
@@ -2268,7 +2297,6 @@
             var param = JSON.stringify(cscGoods);
             CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
                 data=eval(data);
-
                 var goodsList = "";
                 $.each(data,function (index,cscGoodsVo) {
                     goodsList =goodsList + "<tr role='row' class='odd'>";
@@ -2584,8 +2612,13 @@
                     }
                 }else{
                     $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
+                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").val();
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        if(gateVal==text){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        }
                     });
                     goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);

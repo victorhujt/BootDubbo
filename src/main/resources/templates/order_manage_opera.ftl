@@ -26,7 +26,7 @@
             position:absolute;
             top:0;
             right:0;
-            padding:7px 9px;
+          padding-left:9px;
         }
         .initBtn:hover{
             background:#fff !important;
