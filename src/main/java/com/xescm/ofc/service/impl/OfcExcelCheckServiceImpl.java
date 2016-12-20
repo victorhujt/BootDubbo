@@ -475,8 +475,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
@@ -915,8 +915,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
@@ -1225,8 +1225,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
 
@@ -1496,8 +1496,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
@@ -1554,4 +1554,32 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
         }
     }
+
+    /**
+     * 向客户中心批量添加收货方时去重
+     */
+    private List<CscContantAndCompanyInportDto> removeConsigneeRepeat(List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList){
+        Set<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoSet = new HashSet<>();
+        cscContantAndCompanyInportDtoSet.addAll(cscContantAndCompanyInportDtoList);
+        cscContantAndCompanyInportDtoList = new ArrayList<>();
+        for(CscContantAndCompanyInportDto cscContantAndCompanyInportDto : cscContantAndCompanyInportDtoSet){
+            cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
+        }
+        return cscContantAndCompanyInportDtoList;
+    }
+
+
+    /**
+     * 向客户中心批量添加货品时去重
+     */
+    private List<CscGoodsImportDto> removeGoodsRepeat(List<CscGoodsImportDto> cscGoodsImportDtoList){
+        Set<CscGoodsImportDto> cscGoodsImportDtoSet = new HashSet<>();
+        cscGoodsImportDtoSet.addAll(cscGoodsImportDtoList);
+        cscGoodsImportDtoList = new ArrayList<>();
+        for(CscGoodsImportDto cscGoodsImportDto : cscGoodsImportDtoSet){
+            cscGoodsImportDtoList.add(cscGoodsImportDto);
+        }
+        return cscGoodsImportDtoList;
+    }
+
 }
