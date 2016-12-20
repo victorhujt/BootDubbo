@@ -46,9 +46,9 @@ public class XescmOfcApplication {
 	public MultipartConfigElement multipartConfigElement(){
 		MultipartConfigFactory factory = new MultipartConfigFactory();
 		//设置文件大小限制,超了页面会抛出异常信息,这个时候需要进行异常处理
-		factory.setMaxFileSize(1*1024*1024);//KB,MB
+		factory.setMaxFileSize(5*1024*1024);//KB,MB
 		//设置总上传数据总大小
-		factory.setMaxRequestSize(5*1024*1024);
+		factory.setMaxRequestSize(20*1024*1024);
 		return factory.createMultipartConfig();
 	}
 
