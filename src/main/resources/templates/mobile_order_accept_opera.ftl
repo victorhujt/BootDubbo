@@ -129,7 +129,7 @@
         <div class="form-group y-float">
             <label class="control-label col-label no-padding-right" for="name">流水号</label>
             <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="orderCode" name="" type="search" placeholder=""
+                <input class="width-100" id="mobileOrderCode" name="" type="search" placeholder=""
                        aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
             </div>
         </div>
@@ -2300,7 +2300,7 @@
             }
             var tag = "tranplace";
             var ofcOrderDTO = JSON.stringify(jsonStr);
-            var mobileorderCode=$("#mobileorderCode").val();
+            var mobileOrderCode=$("#mobileOrderCode").val();
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             var cscContantAndCompanyDtoConsignorStr;
             var cscContantAndCompanyDtoConsigneeStr;
@@ -2313,7 +2313,7 @@
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":null
                         ,"tag":tag
-                        ,"mobileorderCode":mobileorderCode
+                        ,"mobileorderCode":mobileOrderCode
             }
                     ,"您确认提交订单吗?"
                     ,function () {
