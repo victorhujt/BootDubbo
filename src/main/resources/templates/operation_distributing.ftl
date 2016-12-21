@@ -880,8 +880,8 @@
             $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
-        $("#goodsSelectFormBtn").click(function () {
-            
+        /*$("#goodsSelectFormBtn").click(function () {
+
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
                 data=eval(data);
 
@@ -898,14 +898,24 @@
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";//规格
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";//单位
                     goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.barCode)+"</td>";//条形码
-                    /* goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
-                     goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
+                    /!* goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
+                     goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*!/
                     goodsList =goodsList + "</tr>";
                 });
                 $("#goodsSelectListTbody").html(goodsList);
 
             },"json");
-        });
+        });*/
+
+
+
+
+
+
+
+
+
+
         $("#goodcheck").change(function () {
             if($("#goodcheck").prop("checked")){
                 $("#goodsSelectListTbody").find("tr").each(function(index){
@@ -1003,6 +1013,82 @@
 
         });
     })
+
+
+
+    $("#goodsSelectFormBtn").click(function () {
+        queryGoodsDataDisti(1)
+    })
+
+    function queryGoodsDataDisti(pageNum){
+        $("#goodsSelectListTbody").html("");
+        var cscGoods = {};
+        var customerCode = $("#customerCodeForGoods").val();
+        var goodsTypeId = $("#goodsTypeId").val();
+        var goodsSecTypeId = $("#goodsSecTypeId").val();
+        var goodsName = $("#goodsName").val();
+        var barCode = $("#barCode").val();
+        cscGoods.goodsTypeId = goodsTypeId;
+        cscGoods.goodsSecTypeId = goodsSecTypeId;
+        cscGoods.goodsName = goodsName;
+        cscGoods.barCode = barCode;
+        cscGoods.pNum = 1;
+        cscGoods.pSize = 10;
+        var param = JSON.stringify(cscGoods);
+
+
+
+        CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+            debugger;
+            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+                layer.msg("暂时未查询到货品信息！！");
+            } else if (data.code == 200) {
+                //loadGoodsDistri(data.result.list);
+                laypage({
+                    cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: data.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: data.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryGoodsDataDisti(obj.curr);
+                        }
+                    }
+                });
+            } else if (data.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#custListDivTbody").html("");
+            }
+            data=eval(data);
+
+        },"json");
+    }
+
+    function loadGoodsDistri(data) {
+        data=eval(data);
+
+        var goodsList = "";
+        $.each(data,function (index,cscGoodsVo) {
+
+            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeParentName)+"</td>";//货品种类
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeName)+"</td>";//货品小类
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.brand)+"</td>";//品牌
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsCode)+"</td>";//货品编码
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsName)+"</td>";//货品名称
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";//规格
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";//单位
+            goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.barCode)+"</td>";//条形码
+            /*goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
+            goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*/
+            goodsList =goodsList + "</tr>";
+        });
+        $("#goodsSelectListTbody").html(goodsList);
+    }
 
 
     function warehouseByCust(){
@@ -1472,7 +1558,7 @@
 
     });
 
-    /*$("#consigneeSelectFormBtn").click(function () {
+    $("#consigneeSelectFormBtn").click(function () {
         var cscContantAndCompanyDto = {};
         var cscContact = {};
         var cscContactCompany = {};
@@ -1490,9 +1576,9 @@
             data=eval(data);
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
-                /!*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
                 consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                consigneeTypeHide = CscContantAndCompanyDto.type;*!/
+                consigneeTypeHide = CscContantAndCompanyDto.type;*/
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1517,14 +1603,14 @@
                 $("#contactSelectListTbody1").html(contactList);
             });
         },"json");
-    });*/
-    $("#consigneeSelectFormBtn").click(function () {
+    });
+    /*$("#consigneeSelectFormBtn").click(function () {
        queryConsigneeData(1);
     }
 
     function queryConsigneeData(number) {
 
-    }
+    }*/
 
     $("#consigneecheck").change(function () {
         if($("#consigneecheck").prop("checked")){

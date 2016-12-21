@@ -363,9 +363,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
                 cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
             }
-            if(cscGood!=null){
+            /*if(cscGood!=null){
                 PageHelper.startPage(cscGood.getPNum(), cscGood.getPSize());
-            }
+            }*/
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
