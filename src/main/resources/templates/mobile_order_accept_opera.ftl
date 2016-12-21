@@ -1036,7 +1036,7 @@
                     required:true
                 },
                 transCode:{
-                    maxlength:50,
+                    maxlength:20,
                     pattern:/(^[A-Za-z0-9]+$)/,
                     remote:{
                         url : ofc_url + "/ofc/checkTransCode",
@@ -1051,6 +1051,9 @@
                 },
                 custName:{
                     maxlength:100
+                },
+                transRequire:{
+                    maxlength:255
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -1069,12 +1072,15 @@
                     required:mistake+"请填写订单日期"
                 },
                 transCode:{
-                    maxlength: mistake+"超过最大长度50",
+                    maxlength: mistake+"超过最大长度20",
                     pattern:mistake+"只能输入数字和字母",
                     remote: mistake+"运输单号已存在"
                 },
                 custName:{
                     maxlength:mistake+"超过最大长度"
+                },
+                transRequire:{
+                    maxlength:mistake+"超过最大长度255"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1305,11 +1311,11 @@
             messages : {
                 consignorName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consignorContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consignorPhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1317,15 +1323,15 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 },
                 consigneeName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consigneeContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consigneePhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1333,7 +1339,7 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 }
             },
             highlight : function(e) {
@@ -1391,9 +1397,21 @@
     }
     function countQuantOrWeightOrCubage(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+        if(parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请输入</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为30000.00</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0"){
+            $(obj).css("border-color","#dd5a43");
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1402,6 +1420,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1412,9 +1431,21 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="") || parseFloat($(obj).val())>9999){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关金额</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if(parseFloat($(obj).val())>9999){
+            $(obj).css("border-color","#dd5a43");
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1423,6 +1454,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1526,20 +1558,28 @@
         $('input[name="quantity"]').each(function(){
             if($(this).val()!=""){
                 quantityCount=quantityCount+parseFloat($(this).val());
+                quantityCount=parseFloat((parseFloat(quantityCount)).toFixed(3));
             }
         });
         $('input[name="weight"]').each(function(){
             if($(this).val()!=""){
                 weightCount=weightCount+parseFloat($(this).val());
+                weightCount=parseFloat((parseFloat(weightCount)).toFixed(3));
             }
         });
         $('input[name="cubage"]').each(function(){
             if($(this).val()!=""){
                 cubageCount=cubageCount+parseFloat($(this).val());
+                cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
+        if(flg1=="error" || flg2=="error" || flg3=="error"){
+            $("#luggage").val(0);
+        }else{
+            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage);
+            $('#orderFinanceFormValidate').submit();
+        }
 
-        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val(luggage)}
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
@@ -1572,10 +1612,10 @@
         });
     }
 
-
     function checkBillingWeight(obj){
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value))) || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43")
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
@@ -1584,6 +1624,7 @@
                 $(obj).val("");
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
         };
@@ -2047,14 +2088,15 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
         param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null) {
-                alert("未查询到客户信息！");
+            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
@@ -2109,6 +2151,136 @@
             custList =custList + "</tr>";
             $("#custListDivTbody").html(custList);
         });
+    }
+
+    // 分页查询收货方或发货方列表
+    function queryContactData(param,customerCode,contactType,pageNum) {
+        param.pageNum = pageNum;
+        param.pageSize = 10;
+        var param1=param;
+        param = JSON.stringify(param);
+        var type= contactType == 1?"收货方":"发货方";
+        var ptype= contactType == 1?"ee":"or";
+        CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
+            debugger;
+            if (result == undefined || result == null || result == "[]") {
+                layer.msg("暂时未查询到"+type+"信息！！");
+            } else if (result.code == 200) {
+                loadConsignOrEE(result,contactType);
+                laypage({
+                    cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: result.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: result.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+
+                            queryContactData(param1,customerCode,contactType,obj.curr);
+                        }
+                    }
+                });
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#contactSelectListTbody1").html("");
+                $("#contactSelectListTbody2").html("");
+            }
+        },"json");
+    }
+
+    // 加载收货方或发货方列表
+    function loadConsignOrEE(data,contactType) {
+        var contactList = "";
+        $.each(data.result.list,function (index,CscContantAndCompanyDto) {
+            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
+            contactList =contactList + "</tr>";
+        });
+        if(contactType==1){
+            $("#contactSelectListTbody1").html(contactList);
+        }else if(contactType==2){
+            $("#contactSelectListTbody2").html(contactList);
+        }else{
+            layer.msg("收发货方类型有误");
+        }
+
+    }
+
+    // 分页查询货品列表
+    function queryGoodsData(pageNum) {
+        $("#goodsSelectListTbody").html("");
+        var cscGoods = {};
+        var groupId = $("#custGroupId").val();
+        var customerCode = $("#customerCode").val();
+        var goodsCode = $("#goodsCodeCondition").val();
+        var goodsName = $("#goodsNameCondition").val();
+        cscGoods.goodsCode = goodsCode;
+        cscGoods.goodsName = goodsName;
+        cscGoods.pNum = pageNum;
+        cscGoods.pSize = 10;
+        var param = JSON.stringify(cscGoods);
+        CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+            debugger;
+            if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                layer.msg("暂时未查询到货品信息！！");
+            } else if (data.code == 200) {
+                loadGoods(data.result.list);
+                laypage({
+                    cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: data.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: data.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryGoodsData(obj.curr);
+                        }
+                    }
+                });
+            } else if (data.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#custListDivTbody").html("");
+            }
+            data=eval(data);
+
+        },"json");
+    }
+
+    // 加载货品列表
+    function loadGoods(data) {
+        var goodsList = "";
+        $.each(data,function (index,cscGoodsVo) {
+            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
+            goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
+            goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
+            goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
+            goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+            goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
+            goodsList =goodsList + "</tr>";
+        });
+        $("#goodsSelectListTbody").html(goodsList);
     }
 
     $(function(){
@@ -2190,21 +2362,23 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            /*$("input[name='billingWeight']").each(function(){
+            $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
                 if(value==""){
+                    $(this).css("border-color","#dd5a43")
                     if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(this));
+                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>添加货品一定要输入重量哦</div>").insertAfter($(this));
                         $(this).parent().removeClass('has-info').addClass('has-error');
                         $(this).val("");
                     }else{
                         $(this).val("");
                     }
                 }else{
+                    $(this).css("border-color","#cacaca")
                     $(this).val(value);
                     $(this).parent().find("div").remove();
                 }
-            });*/
+            });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
             $('#orderFinanceChargeFormValidate').submit();
@@ -2220,26 +2394,12 @@
             //卡班类型必须输入运输单号
             if($("#businessType").val() == "602"){
                 var transCode = $("#transCode").val().trim();
-                var mobileTranCode=$("#tranCode").val().trim();
                 if(transCode == null || transCode == "" || transCode == undefined){
                     alert("业务类型选择卡班，必须输入运输单号！");
                     return false;
                 }
-               // if(transCode!=mobileTranCode){
-                //    alert("运输单号必须和拍照订单的运输单号一致！");
-                  //  return false;
-               // }
             }
 
-           // var businessType= $("#businessType option:selected").val();
-
-            //var businessType= $("#businessType option:selected").val();
-           // var businessType=$("#businessType").val();
-          //  var mbusinessType=$("#mbusinessType").val();
-           // if(businessType!=mbusinessType){
-            //    alert("业务类型必须和拍照订单的业务类型一致！");
-              //  return false;
-            //}
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
@@ -2256,7 +2416,7 @@
             jsonStr.quantity = $("#quantityCount").html();
             var cubageAmount ="";
             if($("#cubageCountHidden").html()!=""){
-                cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+                cubageAmount = $("#cubageCountHidden").html();
             }
             jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
@@ -2278,15 +2438,17 @@
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
                         case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
                         case 9 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
-                        case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.quantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
+                        case 12 :orderGoods.weight = param.getElementsByTagName("input")[0].value;break;
+                        case 13 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
                     }
                     if(tableRows == 1 && tableCells == 1){
                         jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
                         jsonStr.goodsTypeName=orderGoods.goodsType;
                     }
                 }
-                if(orderGoods.chargingWays=="01"){
+                /*if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
                     orderGoods.quantityUnitPrice=orderGoods.chargingUnitPrice;
                 }else if(orderGoods.chargingWays=="02"){
@@ -2295,13 +2457,13 @@
                 }else if(orderGoods.chargingWays=="03"){
                     orderGoods.cubage=orderGoods.chargingQuantity;
                     orderGoods.volumeUnitPrice=orderGoods.chargingUnitPrice;
-                }
+                }*/
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
             var tag = "tranplace";
             var ofcOrderDTO = JSON.stringify(jsonStr);
-            var mobileOrderCode=$("#mobileOrderCode").val();
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
+            var mobileOrderCode=$("#mobileOrderCode").val();
             var cscContantAndCompanyDtoConsignorStr;
             var cscContantAndCompanyDtoConsigneeStr;
             cscContantAndCompanyDtoConsignorStr = getCscContantAndCompanyDtoConsignorStr();
@@ -2314,6 +2476,7 @@
                         ,"cscSupplierInfoDtoStr":null
                         ,"tag":tag
                         ,"mobileorderCode":mobileOrderCode
+
             }
                     ,"您确认提交订单吗?"
                     ,function () {
@@ -2375,39 +2538,13 @@
         });
 
         $("#goodsSelectFormBtn").click(function () {
-            var cscGoods = {};
-            var groupId = $("#custGroupId").val();
-            var customerCode = $("#customerCode").val();
-            var goodsCode = $("#goodsCodeCondition").val();
-            var goodsName = $("#goodsNameCondition").val();
-            cscGoods.goodsCode = goodsCode;
-            cscGoods.goodsName = goodsName;
-            var param = JSON.stringify(cscGoods);
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-
-                var goodsList = "";
-                $.each(data,function (index,cscGoodsVo) {
-                    goodsList =goodsList + "<tr role='row' class='odd'>";
-                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
-                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
-                    goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
-                    goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
-                    goodsList =goodsList + "</tr>";
-                });
-                $("#goodsSelectListTbody").html(goodsList);
-            },"json");
+            queryGoodsData(1);
         });
 
 
 
         $("#consignorSelectFormBtn").click(function () {
+            $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -2420,36 +2557,11 @@
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
             var customerCode = $("#customerCode").val();
 
-            var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var contactList = "";
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                    consignorTypeHide = CscContantAndCompanyDto.type;*/
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                    contactList =contactList + "</tr>";
-                });
-                $("#contactSelectListTbody2").html(contactList);
-            },"json");
+            queryContactData(cscContantAndCompanyDto,customerCode,2,1);
         });
 
         $("#consigneeSelectFormBtn").click(function () {
+            $("#contactSelectListTbody1").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -2460,36 +2572,9 @@
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
 
-            var groupId = $("#custGroupId").val();
             var customerCode = $("#customerCode").val();
 
-            var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var contactList = "";
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                    consigneeTypeHide = CscContantAndCompanyDto.type;*/
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                    contactList =contactList + "</tr>";
-                    $("#contactSelectListTbody1").html(contactList);
-                });
-            },"json");
+            queryContactData(cscContantAndCompanyDto,customerCode,1,1);
         });
 
 
@@ -2579,7 +2664,7 @@
 
         $("#consignorListDivBlock").click(function(){
             if(!validateCustChosen()){
-                alert("请先选择客户")
+                alert("请先选择客户");
             }else{
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2654,10 +2739,10 @@
                             goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.id + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                         });
                         if($("#goodsInfoListDiv").find("tr").length==1){
-                            $("select option").each(function() {
-                                text = $(this).text();
-                                if($("select option:contains("+text+")").length > 1)
-                                    $("select option:contains("+text+"):gt(0)").remove();
+                            $("#goodsInfoListDiv tr:eq(0) td:eq(0) select option").each(function() {
+                                text = $(this).val();
+                                if($("select option[value='"+text+"']").length > 1)
+                                    $("select option[value='"+text+"']:gt(0)").remove();
                             });
                         }
                     });
@@ -2690,18 +2775,24 @@
                             goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
-                                $("select option").each(function() {
-                                    text = $(this).text();
-                                    if($("select option:contains("+text+")").length > 1)
-                                        $("select option:contains("+text+"):gt(0)").remove();
+                                $("#goodsInfoListDiv tr:eq(0) td:eq(1) select option").each(function() {
+                                    text = $(this).val();
+                                    if($("select option[value='"+text+"']").length > 1)
+                                        $("select option[value='"+text+"']:gt(0)").remove();
+
                                 });
                             }
                         });
                     }
                 }else{
                     $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
+                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").val();
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        if(gateVal==text){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        }
                     });
                     goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
@@ -2944,27 +3035,5 @@
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-<script>
-    function Maxmin() {
-        var imgs = document.getElementsByClassName("imgClass");
-        for (var i=0;i<imgs.length;i++){
-            (function(i){
-                imgs[i].onclick=function () {
-                    var _this=this;
-                    $(_this).animate({
-                        'width':'600px',
-                        'height':'410px'
-                    });
-                    $(_this).siblings('.imgClass').animate({
-                        'width':'188px',
-                        'height':'143px'
-                    });
-                    return
-                }
-            })(i)
-        }
-    }
-    Maxmin();
-</script>
 
 </body>

@@ -423,7 +423,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
-            csc.setCustomerCode("YHTEST");
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
