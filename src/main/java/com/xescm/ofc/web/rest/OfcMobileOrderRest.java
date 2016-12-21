@@ -175,6 +175,7 @@ public class OfcMobileOrderRest extends BaseController {
             if("未定义错误".equals(resultMessage)||"用户操作异常".equals(resultMessage)||"页面跳转出错".equals(resultMessage)){
                 return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
             }
+            orderCode=orderCode.split(":")[1];
             //更新拍照订单的状态，订单号
             OfcMobileOrder order=new OfcMobileOrder();
             order.setMobileOrderCode(mobileOrderCode);

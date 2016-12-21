@@ -466,9 +466,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             throw new BusinessException("未知操作!系统无法识别!");
         }
         if("place".equals(tag) || "tranplace".equals(tag) || "distributionPlace".equals(tag)){
-            return "您已成功下单!";
+            return "您已成功下单!"+":"+orCode;
         }else if("manage".equals(tag)){
-            return "您的订单修改成功!";
+            return "您的订单修改成功!"+":"+orCode;
         }else {
             return ResultCodeEnum.ERROROPER.getName();
         }
