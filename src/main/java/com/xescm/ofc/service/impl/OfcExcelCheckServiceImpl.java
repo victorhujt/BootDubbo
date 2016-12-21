@@ -172,6 +172,19 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,format);
+
+                            }else if("custOrderCode".equals(cellNumName)){
+                                DecimalFormat df = new DecimalFormat("0");
+                                cellValue = df.format(Double.valueOf(cellValue));
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
+                            }else if("goodsCode".equals(cellNumName)){
+                                DecimalFormat df = new DecimalFormat("0");
+                                cellValue = df.format(Double.valueOf(cellValue));
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
                             }else if (!PubUtils.isSEmptyOrNull(cellNumName)){
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
@@ -613,6 +626,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,format);
+                            }else if("custOrderCode".equals(cellNumName)){
+                                DecimalFormat df = new DecimalFormat("0");
+                                cellValue = df.format(Double.valueOf(cellValue));
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
+                            }else if("goodsCode".equals(cellNumName)){
+                                DecimalFormat df = new DecimalFormat("0");
+                                cellValue = df.format(Double.valueOf(cellValue));
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
                             }else if(!PubUtils.isSEmptyOrNull(cellNumName)){
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
@@ -1108,6 +1133,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                         JSONObject jsonObject = new JSONObject();
                         if(cellNum == 0){
+                            DecimalFormat df = new DecimalFormat("0");
+                            cellValue = df.format(Double.valueOf(cellValue));
                             String goodsCode = cellValue;
                             if(PubUtils.isSEmptyOrNull(goodsCode)){
                                 continue;
@@ -1385,6 +1412,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                         JSONObject jsonObject = new JSONObject();
                         if(cellNum == 0){
+                            DecimalFormat df = new DecimalFormat("0");
+                            cellValue = df.format(Double.valueOf(cellValue));
                             String goodsCode = cellValue;
                             if(PubUtils.isSEmptyOrNull(goodsCode)){
                                 continue;
