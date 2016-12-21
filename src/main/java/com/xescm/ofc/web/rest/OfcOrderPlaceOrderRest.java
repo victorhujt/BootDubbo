@@ -411,7 +411,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
-    public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode, HttpServletResponse response){
+    public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
         logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
         logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
@@ -423,6 +423,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
+            csc.setCustomerCode("YHTEST");
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
