@@ -1327,6 +1327,9 @@
             var addressAuto = null;
             
             CommonClient.syncpost(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
+                if(null == data.result.list || undefined == data.result.list){
+                    return ;
+                }
                 data=eval(data.result.list);
 
                 $.each(data,function (index,CscContantAndCompanyDto) {
