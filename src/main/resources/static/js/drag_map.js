@@ -1,8 +1,8 @@
 drag = 0
 move = 0
 
-// ÍÏ×§¶ÔÏó
-// ²Î¼û£ºhttp://blog.sina.com.cn/u/4702ecbe010007pe
+// ï¿½ï¿½×§ï¿½ï¿½ï¿½ï¿½
+// ï¿½Î¼ï¿½ï¿½ï¿½http://blog.sina.com.cn/u/4702ecbe010007pe
 var ie=document.all;
 var nn6=document.getElementById&&!document.all;
 var isdrag=false;
@@ -105,7 +105,7 @@ function featsize()
       alert(1)
     }*/ 
 if(navigator.userAgent.indexOf('Firefox') >= 0){  
-    function onWheelZoom(obj){  //¹öÂÖËõ·Å  
+    function onWheelZoom(obj){  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
         zoom = parseFloat(obj.style.zoom);
         tZoom = zoom + (event.detail<0 ? 0.05 : -0.05);
         if(tZoom<0.1 ) return true;
@@ -115,7 +115,7 @@ if(navigator.userAgent.indexOf('Firefox') >= 0){
     
     }
  }else{
-    function onWheelZoom(obj){  //¹öÂÖËõ·Å  
+    function onWheelZoom(obj){  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
       zoom = parseFloat(obj.style.zoom);
       tZoom = zoom + (event.wheelDelta>0 ? 0.05 : -0.05);
       if(tZoom<0.1 ) return true;
