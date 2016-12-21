@@ -1235,7 +1235,8 @@
             }
             var cadj = consigneeCode + "@" + consigneeContactCode;
             consigneeAndGoodsJson[cadj] = num;
-            sendNum += Number(num);
+//            sendNum =( parseInt(Number(num) * 1000) + parseInt(Number(sendNum) * 1000) ) /1000;
+            sendNum = (Number(num) + Number(sendNum)).toFixed(3)
         })
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
@@ -1327,6 +1328,7 @@
             
             CommonClient.syncpost(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
                 data=eval(data.result.list);
+
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
                     if(contactList == 1){

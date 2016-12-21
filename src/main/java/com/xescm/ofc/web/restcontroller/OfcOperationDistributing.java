@@ -53,8 +53,6 @@ import java.util.concurrent.TimeUnit;
 @Controller
 public class OfcOperationDistributing extends BaseController{
     @Autowired
-    private OfcOrderPlaceService ofcOrderPlaceService;
-    @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
     private OfcOperationDistributingService ofcOperationDistributingService;
