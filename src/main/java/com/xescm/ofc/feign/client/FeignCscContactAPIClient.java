@@ -1,5 +1,6 @@
 package com.xescm.ofc.feign.client;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscContactAPI;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @Service
 public class FeignCscContactAPIClient {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeignCscContactAPI.class);
     /*@Value("${restful.uamUrl}")
     private String uamUrl;*/
     @Resource
@@ -49,6 +50,24 @@ public class FeignCscContactAPIClient {
         }
         try {
             wrapper = getApi().queryCscReceivingInfoList(cscContantAndCompanyDto);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询客户联系人接口(/api/csc/contact/queryCscReceivingInfoList)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询客户联系人接口无法连接或超时！");
+        } catch (Exception ex) {
+            logger.error("==>调用接口发生异常：查询客户联系人接口(/api/csc/contact/queryCscReceivingInfoList). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询客户联系人接口异常！");
+        }
+        return wrapper;
+    }
+
+    public Wrapper<PageInfo<CscContantAndCompanyResponseDto>> queryCscReceivingInfoListWithPage(CscContantAndCompanyDto cscContantAndCompanyDto){
+        Wrapper<PageInfo<CscContantAndCompanyResponseDto>> wrapper = null;
+        logger.debug("==>查询客户联系人 cscContantAndCompanyDto={}", cscContantAndCompanyDto);
+        if(null == cscContantAndCompanyDto){
+            throw new BusinessException("参数为空");
+        }
+        try {
+            wrapper = getApi().queryCscReceivingInfoListWithPage(cscContantAndCompanyDto);
         } catch (RetryableException ex) {
             logger.error("==>调用接口发生异常：调用查询客户联系人接口(/api/csc/contact/queryCscReceivingInfoList)无法连接或超时. {}", ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用查询客户联系人接口无法连接或超时！");
