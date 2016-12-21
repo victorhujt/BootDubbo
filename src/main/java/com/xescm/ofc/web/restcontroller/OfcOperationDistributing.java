@@ -237,9 +237,9 @@ public class OfcOperationDistributing extends BaseController{
     public Object queryCustomerByName(String custName, int pageNum, int pageSize) {
         logger.info("城配开单根据客户名称查询客户==> custName={}", custName);
         logger.info("城配开单根据客户名称查询客户==> pageNum={}", pageNum);
+        logger.info("城配开单根据客户名称查询客户==> pageSize={}", pageSize);
         Wrapper<PageInfo<CscCustomerVo>> result;
         try {
-            PageHelper.startPage(pageNum, pageSize);
             QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
             queryParam.setCustomerName(custName);
             queryParam.setPageNum(pageNum);

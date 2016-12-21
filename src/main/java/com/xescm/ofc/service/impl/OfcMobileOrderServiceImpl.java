@@ -52,6 +52,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     @Resource
     private OfcMobileOrderMapper ofcMobileOrderMapper;
 
+
+
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
     @Resource
@@ -165,7 +167,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken, String custId
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
-            , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto,String orCode) {
+            , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto, String orCode) {
         Wrapper<?> wrapperFun = validateFundamentalMessage(ofcOrderDTO);
         if(Wrapper.ERROR_CODE == wrapperFun.getCode()){
             throw new BusinessException(wrapperFun.getMessage());
@@ -466,9 +468,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             throw new BusinessException("未知操作!系统无法识别!");
         }
         if("place".equals(tag) || "tranplace".equals(tag) || "distributionPlace".equals(tag)){
-            return "您已成功下单!";
+           return "您已成功下单!"+":"+orCode;
         }else if("manage".equals(tag)){
-            return "您的订单修改成功!";
+           return "您的订单修改成功!"+":"+orCode;
         }else {
             return ResultCodeEnum.ERROROPER.getName();
         }
@@ -892,14 +894,14 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 校验运输基本信息
      */
     private void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
-        String volume = ofcDistributionBasicInfo.getCubage();
+       /* String volume = ofcDistributionBasicInfo.getCubage();
         if(!PubUtils.isSEmptyOrNull(volume)){
             boolean matches = volume.matches("\\d{1,10}\\*\\d{1,10}\\*\\d{1,10}");
             if(!matches){
                 throw new BusinessException("您输入的体积不符合规则! 请重新输入!");
             }
         }
-
+*/
 
     }
     private List<String> getOssUrls(String[] serialNos){
