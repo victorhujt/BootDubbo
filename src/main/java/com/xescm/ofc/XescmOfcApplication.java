@@ -83,19 +83,7 @@ public class XescmOfcApplication {
 		return tokenUtils;
 	}
 
-	/*@Bean
-	EmbeddedServletContainerCustomizer containerCustomizer() throws Exception {
-		return (ConfigurableEmbeddedServletContainer container) -> {
-			if (container instanceof TomcatEmbeddedServletContainerFactory) {
-				TomcatEmbeddedServletContainerFactory tomcat = (TomcatEmbeddedServletContainerFactory) container;
-				tomcat.addConnectorCustomizers(
-						(connector) -> {
-							connector.setMaxPostSize(10000000); // 10 MB
-						}
-				);
-			}
-		};
-	}*/
+
 
 
 	@Bean
