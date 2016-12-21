@@ -675,6 +675,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
                 }
                 if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
+                    String consingneeSerialNo = cscContantAndCompanyDtoConsignee.getCscContact().getSerialNo();
+                    cscContantAndCompanyDtoConsignee.getCscContact().setSerialNo(consingneeSerialNo.split("\\@")[0]);
                     Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());

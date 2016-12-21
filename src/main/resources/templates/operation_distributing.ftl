@@ -2115,7 +2115,7 @@
             orderInfo.consigneeType = type;
             orderInfo.consigneeContactName = consigneeContactName;//000
             orderInfo.consigneeCode = contactCompanyId;
-            orderInfo.consigneeContactCode = contactCode;
+            orderInfo.consigneeContactCode = contactCode.split('@')[0];
             orderInfo.consigneeContactPhone = consigneeContactPhone;
             orderInfo.destination= address;
             orderInfo.destinationProvince = provinceName;
