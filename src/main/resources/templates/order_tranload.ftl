@@ -137,8 +137,10 @@
                     </thead>
                     <tbody id="goodsSelectListTbody"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -203,8 +205,10 @@
                     </thead>
                     <tbody id="contactSelectListTbody2"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -269,8 +273,10 @@
                     </thead>
                     <tbody id="contactSelectListTbody1"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -919,7 +925,7 @@
                     required:true
                 },
                 transCode:{
-                    maxlength:50,
+                    maxlength:20,
                     pattern:/(^[A-Za-z0-9]+$)/,
                     remote:{
                         url : ofc_url + "/ofc/checkTransCode",
@@ -955,7 +961,7 @@
                     required:mistake+"请填写订单日期"
                 },
                 transCode:{
-                    maxlength: mistake+"超过最大长度50",
+                    maxlength: mistake+"超过最大长度20",
                     pattern:mistake+"只能输入数字和字母",
                     remote: mistake+"运输单号已存在"
                 },
@@ -2036,6 +2042,136 @@
         });
     }
 
+    // 分页查询收货方或发货方列表
+    function queryContactData(param,customerCode,contactType,pageNum) {
+        param.pageNum = pageNum;
+        param.pageSize = 10;
+        var param1=param;
+        param = JSON.stringify(param);
+        var type= contactType == 1?"收货方":"发货方";
+        var ptype= contactType == 1?"ee":"or";
+        CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
+            debugger;
+            if (result == undefined || result == null || result == "[]") {
+                layer.msg("暂时未查询到"+type+"信息！！");
+            } else if (result.code == 200) {
+                loadConsignOrEE(result,contactType);
+                laypage({
+                    cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: result.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: result.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+
+                            queryContactData(param1,customerCode,contactType,obj.curr);
+                        }
+                    }
+                });
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#contactSelectListTbody1").html("");
+                $("#contactSelectListTbody2").html("");
+            }
+        },"json");
+    }
+
+    // 加载收货方或发货方列表
+    function loadConsignOrEE(data,contactType) {
+        var contactList = "";
+        $.each(data.result.list,function (index,CscContantAndCompanyDto) {
+            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
+            contactList =contactList + "</tr>";
+        });
+        if(contactType==1){
+            $("#contactSelectListTbody1").html(contactList);
+        }else if(contactType==2){
+            $("#contactSelectListTbody2").html(contactList);
+        }else{
+            layer.msg("收发货方类型有误");
+        }
+
+    }
+
+    // 分页查询货品列表
+    function queryGoodsData(pageNum) {
+        $("#goodsSelectListTbody").html("");
+        var cscGoods = {};
+        var groupId = $("#custGroupId").val();
+        var customerCode = $("#customerCode").val();
+        var goodsCode = $("#goodsCodeCondition").val();
+        var goodsName = $("#goodsNameCondition").val();
+        cscGoods.goodsCode = goodsCode;
+        cscGoods.goodsName = goodsName;
+        cscGoods.pNum = pageNum;
+        cscGoods.pSize = 10;
+        var param = JSON.stringify(cscGoods);
+        CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+            debugger;
+            if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                layer.msg("暂时未查询到货品信息！！");
+            } else if (data.code == 200) {
+                loadGoods(data.result.list);
+                laypage({
+                    cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: data.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: data.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryGoodsData(obj.curr);
+                        }
+                    }
+                });
+            } else if (data.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#custListDivTbody").html("");
+            }
+            data=eval(data);
+
+        },"json");
+    }
+
+    // 加载货品列表
+    function loadGoods(data) {
+        var goodsList = "";
+        $.each(data,function (index,cscGoodsVo) {
+            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
+            goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
+            goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
+            goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
+            goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+            goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
+            goodsList =goodsList + "</tr>";
+        });
+        $("#goodsSelectListTbody").html(goodsList);
+    }
+
     $(function(){
 
         $("#pickUpGoodsV").change(function(){
@@ -2115,12 +2251,12 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            /*$("input[name='billingWeight']").each(function(){
+            $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
                 if(value==""){
                     $(this).css("border-color","#dd5a43")
                     if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(this));
+                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>添加货品一定要输入重量哦</div>").insertAfter($(this));
                         $(this).parent().removeClass('has-info').addClass('has-error');
                         $(this).val("");
                     }else{
@@ -2131,7 +2267,7 @@
                     $(this).val(value);
                     $(this).parent().find("div").remove();
                 }
-            });*/
+            });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
             $('#orderFinanceChargeFormValidate').submit();
@@ -2287,38 +2423,13 @@
         });
 
         $("#goodsSelectFormBtn").click(function () {
-            var cscGoods = {};
-            var groupId = $("#custGroupId").val();
-            var customerCode = $("#customerCode").val();
-            var goodsCode = $("#goodsCodeCondition").val();
-            var goodsName = $("#goodsNameCondition").val();
-            cscGoods.goodsCode = goodsCode;
-            cscGoods.goodsName = goodsName;
-            var param = JSON.stringify(cscGoods);
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var goodsList = "";
-                $.each(data,function (index,cscGoodsVo) {
-                    goodsList =goodsList + "<tr role='row' class='odd'>";
-                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
-                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
-                    goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
-                    goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
-                    goodsList =goodsList + "</tr>";
-                });
-                $("#goodsSelectListTbody").html(goodsList);
-            },"json");
+            queryGoodsData(1);
         });
 
 
 
         $("#consignorSelectFormBtn").click(function () {
+            $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -2331,36 +2442,11 @@
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
             var customerCode = $("#customerCode").val();
 
-            var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var contactList = "";
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                    consignorTypeHide = CscContantAndCompanyDto.type;*/
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                    contactList =contactList + "</tr>";
-                });
-                $("#contactSelectListTbody2").html(contactList);
-            },"json");
+            queryContactData(cscContantAndCompanyDto,customerCode,2,1);
         });
 
         $("#consigneeSelectFormBtn").click(function () {
+            $("#contactSelectListTbody1").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -2371,36 +2457,9 @@
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
 
-            var groupId = $("#custGroupId").val();
             var customerCode = $("#customerCode").val();
 
-            var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var contactList = "";
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                    consigneeTypeHide = CscContantAndCompanyDto.type;*/
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                    contactList =contactList + "</tr>";
-                    $("#contactSelectListTbody1").html(contactList);
-                });
-            },"json");
+            queryContactData(cscContantAndCompanyDto,customerCode,1,1);
         });
 
 
@@ -2490,7 +2549,7 @@
 
         $("#consignorListDivBlock").click(function(){
             if(!validateCustChosen()){
-                alert("请先选择客户")
+                alert("请先选择客户");
             }else{
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
