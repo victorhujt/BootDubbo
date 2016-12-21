@@ -1301,6 +1301,8 @@
             cscContact.phone = "";
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            cscContantAndCompanyDto.pageNum = 1;
+            cscContantAndCompanyDto.pageSize = 20;
             var customerCode = $("#customerCode").val();
             var param = JSON.stringify(cscContantAndCompanyDto);
             var contactList = 0;
@@ -1323,8 +1325,8 @@
             var streetNameAuto = null;
             var addressAuto = null;
             debugger
-            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
+            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
+                data=eval(data.result.list);
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
                     if(contactList == 1){
