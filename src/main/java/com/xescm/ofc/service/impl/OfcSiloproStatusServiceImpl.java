@@ -42,6 +42,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	private OfcPlannedDetailService ofcPlannedDetailService;
 	@Autowired
 	private OfcTransplanInfoService ofcTransplanInfoService;
+	@Autowired
+	private OfcTransplanStatusService ofcTransplanStatusService;
 
     public int updateByPlanCode(Object key){
 
@@ -198,6 +200,18 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 						status.setLastedOperTime(new Date());
 						status.setOperator("");
 						ofcOrderStatusService.save(status);
+					}else{
+						OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+						ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+						OfcOrderStatus status=new OfcOrderStatus();
+						status.setOrderStatus(HASBEENCOMPLETED);
+						status.setOrderCode(info.getOrderCode());
+						status.setStatusDesc("已完成");
+						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+						status.setLastedOperTime(new Date());
+						status.setOperator("");
+						ofcOrderStatusService.save(status);
 					}
 				}
 			}
@@ -216,6 +230,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 		}
 
 	}
+
+
 
 	public String translateStatusToDesc(String statusCode,String businessType){
 		String statusDesc="";
@@ -280,7 +296,15 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	}
 
 
-
+	/**
+	 * 查询未完成未作废的仓储计划单
+	 * @param orderCode
+	 * @return
+	 */
+	@Override
+	public List<OfcSiloproStatus> queryUncompletedPlanCodesByOrderCode(String orderCode) {
+		return ofcSiloproStatusMapper.queryUncompletedPlanCodesByOrderCode(orderCode);
+	}
 
 
 

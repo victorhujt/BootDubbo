@@ -46,4 +46,8 @@ public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implem
             throw new BusinessException("附件不存在");
         }
     }
+
+    public void updatePicParamByserialNo(OfcAttachment attachment){
+        ofcAttachmentMapper.updatePicParamByserialNo(attachment);
+    }
 }

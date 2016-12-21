@@ -86,13 +86,6 @@ public class OfcMobileOrder {
     private String serialNo;
 
     /**
-     * 图片处理命令
-     */
-    @Column(name ="pic_param")
-    private String picParam;
-
-
-    /**
      * 获取流水号
      *
      * @return mobile_order_code - 流水号
@@ -289,13 +282,7 @@ public class OfcMobileOrder {
         this.serialNo = serialNo;
     }
 
-    public String getPicParam() {
-        return picParam;
-    }
 
-    public void setPicParam(String picParam) {
-        this.picParam = picParam;
-    }
 
     /**
      * 设置受理时间

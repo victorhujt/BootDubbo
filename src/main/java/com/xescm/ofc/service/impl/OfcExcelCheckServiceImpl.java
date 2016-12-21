@@ -125,8 +125,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                     } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
-                        DecimalFormat df = new DecimalFormat("0");
-                        cellValue = df.format(Double.valueOf(cellValue));
+                       /* DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));*/
                     } /*else if(HSSFCell.Cell){
 
                     }*/
@@ -264,6 +264,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             JSONObject jsonObject = new JSONObject();
 
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                            cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                             jsonArray.add(cscGoodsApiVo);
                             jsonArray.add(jsonObject);
                             jsonArray.add(cscContantAndCompanyResponseDto);
@@ -391,6 +392,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                         jsonArray.add(cscGoodsApiVo);
                         jsonArray.add(jsonObject);
                         jsonArray.add(cscContantAndCompanyResponseDto);
@@ -475,8 +477,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
@@ -562,8 +564,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
                     } else if (XSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
-                        DecimalFormat df = new DecimalFormat("0");
-                        cellValue = df.format(Double.valueOf(cellValue));
+
                     } /*else if(XSSFCell.Cell){
 
                     }*/
@@ -598,6 +599,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
                             }else if("consigneeContactPhone".equals(cellNumName)){//电话
+
                                 String format = null;
                                 String cellValuePhone = null;
                                 if (HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
@@ -702,6 +704,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             JSONObject jsonObject = new JSONObject();
 
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                            cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                             jsonArray.add(cscGoodsApiVo);
                             jsonArray.add(jsonObject);
                             jsonArray.add(cscContantAndCompanyResponseDto);
@@ -831,6 +834,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                         jsonArray.add(cscGoodsApiVo);
                         jsonArray.add(jsonObject);
                         jsonArray.add(cscContantAndCompanyResponseDto);
@@ -915,8 +919,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
@@ -1003,7 +1007,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 throw new BusinessException("请先上传Excel导入数据，再加载后执行导入！");
             }
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
-                HSSFRow hssfRow = sheet.getRow(rowNum);
+                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
+                        HSSFRow hssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 JSONArray jsonArray = new JSONArray();
                 if (null == hssfRow) {
@@ -1022,6 +1027,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     break;
                 }*/
                 //遍历cell
+                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
                 for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
                     //空列
@@ -1037,6 +1043,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                     }else if(HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()){
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                        DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));
                     }
                     if(rowNum == 0){
                         //第一行全为字符串
@@ -1107,19 +1115,17 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                             cscGoodsApiDto.setGoodsCode(goodsCode);
                             cscGoodsApiDto.setCustomerCode(customerCode);
-                            Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+                            queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                 checkPass = false;
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
-                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+
                                 cscGoodsImportDto.setCustomerCode(customerCode);
                                 cscGoodsImportDto.setGoodsCode(goodsCode);
                                 //只有货品编码
 
-                                cscGoodsImportDtoList.add(cscGoodsImportDto);
-                                break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
                             if(null != result && result.size() > 0){
@@ -1139,8 +1145,22 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
 
+                            if(cellNum == 1){
+                                cscGoodsImportDto.setGoodsName(cellValue);
+                            }else if(cellNum == 2){
+                                cscGoodsImportDto.setSpecification(cellValue);
+                            }else if(cellNum == 3){
+                                cscGoodsImportDto.setUnit(cellValue);
+                            }else if(cellNum == 4){
+                                cscGoodsImportDto.setUnitPrice(cellValue);
+                            }
+
+
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
+                            if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
+                                break;
+                            }
                             try{
                                 //校验是否数字
                                 Double goodsAmount = 0.0;
@@ -1170,6 +1190,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
+                                    cscGoodsApiVo.setUnitPrice(cscGoodsImportDto.getUnitPrice());
                                     jsonArray.add(cscGoodsApiVo);
                                     jsonArray.add(jsonObject);
                                     jsonArray.add(cscContantAndCompanyVo);
@@ -1189,7 +1210,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         }
                     }
                 }
+
                 if(rowNum > 0){//避免第一行
+                    cscGoodsImportDtoList.add(cscGoodsImportDto);
                     resultMap.put(mapKey,jsonArray);//一条结果
                 }
             }
@@ -1209,8 +1232,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
 
@@ -1262,6 +1285,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 throw new BusinessException("请先上传Excel导入数据，再加载后执行导入！");
             }
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
+                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
                 XSSFRow xssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 JSONArray jsonArray = new JSONArray();
@@ -1281,6 +1305,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     break;
                 }*/
                 //遍历cell
+                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
                 for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
                     //空列
@@ -1296,6 +1321,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
                     }else if(HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()){
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                        DecimalFormat df = new DecimalFormat("0");
+                        cellValue = df.format(Double.valueOf(cellValue));
                     }
                     if(rowNum == 0){
                         //第一行全为字符串
@@ -1365,19 +1392,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                             cscGoodsApiDto.setGoodsCode(goodsCode);
                             cscGoodsApiDto.setCustomerCode(custId);
-                            Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+                            queryCscGoodsList = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                 checkPass = false;
                                 goodsApiVoList.add(new CscGoodsApiVo());
                                 goodsCodeListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品在货品档案中不存在!");
-                                CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+
                                 cscGoodsImportDto.setCustomerCode(custId);
                                 cscGoodsImportDto.setGoodsCode(goodsCode);
                                 //只有货品编码
-
-                                cscGoodsImportDtoList.add(cscGoodsImportDto);
-                                break;
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
                             if(null != result && result.size() > 0){
@@ -1396,9 +1420,21 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
+                            if(cellNum == 1){
+                                cscGoodsImportDto.setGoodsName(cellValue);
+                            }else if(cellNum == 2){
+                                cscGoodsImportDto.setSpecification(cellValue);
+                            }else if(cellNum == 3){
+                                cscGoodsImportDto.setUnit(cellValue);
+                            }else if(cellNum == 4){
+                                cscGoodsImportDto.setUnitPrice(cellValue);
+                            }
 
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
+                            if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
+                                break;
+                            }
                             try{
                                 //校验是否数字
                                 Double goodsAmount = 0.0;
@@ -1426,6 +1462,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
+                                    cscGoodsApiVo.setUnitPrice(cscGoodsImportDto.getUnitPrice());
                                     jsonArray.add(cscGoodsApiVo);
                                     jsonArray.add(jsonObject);
                                     jsonArray.add(cscContantAndCompanyVo);
@@ -1446,7 +1483,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         }
                     }
                 }
+
                 if(rowNum > 0){             //避免第一行
+                    cscGoodsImportDtoList.add(cscGoodsImportDto);
                     resultMap.put(mapKey,jsonArray);//一条结果
                 }
             }
@@ -1467,8 +1506,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
-            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(cscGoodsImportDtoList);
-            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(cscContantAndCompanyInportDtoList);
+            ofcCheckExcelErrorVo.setCscGoodsImportDtoList(removeGoodsRepeat(cscGoodsImportDtoList));
+            ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
     }
@@ -1525,4 +1564,32 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
         }
     }
+
+    /**
+     * 向客户中心批量添加收货方时去重
+     */
+    private List<CscContantAndCompanyInportDto> removeConsigneeRepeat(List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList){
+        Set<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoSet = new HashSet<>();
+        cscContantAndCompanyInportDtoSet.addAll(cscContantAndCompanyInportDtoList);
+        cscContantAndCompanyInportDtoList = new ArrayList<>();
+        for(CscContantAndCompanyInportDto cscContantAndCompanyInportDto : cscContantAndCompanyInportDtoSet){
+            cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
+        }
+        return cscContantAndCompanyInportDtoList;
+    }
+
+
+    /**
+     * 向客户中心批量添加货品时去重
+     */
+    private List<CscGoodsImportDto> removeGoodsRepeat(List<CscGoodsImportDto> cscGoodsImportDtoList){
+        Set<CscGoodsImportDto> cscGoodsImportDtoSet = new HashSet<>();
+        cscGoodsImportDtoSet.addAll(cscGoodsImportDtoList);
+        cscGoodsImportDtoList = new ArrayList<>();
+        for(CscGoodsImportDto cscGoodsImportDto : cscGoodsImportDtoSet){
+            cscGoodsImportDtoList.add(cscGoodsImportDto);
+        }
+        return cscGoodsImportDtoList;
+    }
+
 }

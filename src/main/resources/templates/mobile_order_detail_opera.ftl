@@ -72,16 +72,15 @@
         }
         .imgClass{
             float: left;
-            width:190px;
-            height:145px;
+            width:188px;
+            height:198px;
             border:1px solid #cacaca;
             margin-top: 20px;
-
+            overflow: hidden;
         }
         .imgClass img{
             width: 100%;
             height:100%;
-            background-size: 50px 50px;
         }
      /*   .row{
             max-width: 1250px;
@@ -105,16 +104,42 @@
         .imgone{
            margin-right: 10px;
         }
+        .Apend{
+            width: 100%;
+            height: 250px;
+            display: none;
+            overflow: hidden;
+            position: relative;
+        }
+        .scales,.closes{
+            position: relative;
+            z-index: 2;
+            width: 50px;height: 50px;
+            float: right;
+            background: #dbdbdb;
+            line-height: 50px;
+        }
+        .scales img,.closes img{
+            background-size: 100% 100%;
+            margin-left: 14px;
+            width: 24px;
+            height: 22px;
+            display: block;
+            margin-top: 16px;
 
+         }
     </style>
 </head>
 <body class="no-skin">
 
-<div class="col-xs-12">
+<div class="col-xs-12" id="BApen">
+    <div class="Apend">
+        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
+        <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
+        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+    </div>
     <div class="col-sm-6" style="float: right">
-    <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-            返回
-        </button>-->
+
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -209,8 +234,8 @@
                         <label class="control-label col-label no-padding-right" for="name"  style="margin-right:8px;"></label>
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                             <#list mobileOrder.urls as url>
-                                <div class="imgClass  imgone">
-                                    <img src="${url!""}"/>
+                                <div class="imgClass  imgone" style="position: relative;">
+                                    <img src="${url!""}" class="dragAble" onmousewheel="return onWheelZoom(this)" style="position: absolute"/>
                                 </div>
                             </#list>
                         </#if>
@@ -231,4 +256,31 @@
         </div>
     </form>
 </div><!-- /.col -->
+<script type="text/javascript" src="../js/drag_map.js"></script>
+<script>
+    function Maxmin() {
+        var imgs = document.getElementsByClassName("dragAble");
+            for (var i=0;i<imgs.length;i++){
+                (function(i){
+                    imgs[i].onclick=function () {
+                        var _this=this;
+                        $(".Apend").css({"display":"block"});
+                        $("#viewBiggerImg").attr('src',_this.src);
+                        $(".scales").on("click",function () {
+                            $(".dragAble").animate({
+                                "transform":"rotate(90deg)"
+                            })
+                        })
+
+
+                        return
+                    }
+                })(i)
+            }
+            $(".closes").on("click",function () {
+                $(".Apend").css({"display":"block"});
+            })
+    }
+    Maxmin();
+</script>
 </body>

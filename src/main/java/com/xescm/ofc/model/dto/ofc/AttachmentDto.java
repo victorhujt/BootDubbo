@@ -3,11 +3,6 @@ package com.xescm.ofc.model.dto.ofc;
 import java.util.Date;
 
 public class AttachmentDto {
-    /**
-     * 主键
-     */
-
-    private String id;
 
     /**
      * 附件流水号
@@ -91,22 +86,14 @@ public class AttachmentDto {
      */
     private Integer yn;
 
-    /**
-     * 获取主键
-     *
-     * @return id - 主键
-     */
-    public String getId() {
-        return id;
+    private String picParam;
+
+    public String getPicParam() {
+        return picParam;
     }
 
-    /**
-     * 设置主键
-     *
-     * @param id 主键
-     */
-    public void setId(String id) {
-        this.id = id;
+    public void setPicParam(String picParam) {
+        this.picParam = picParam;
     }
 
     /**

@@ -52,7 +52,7 @@ public final class OrderConstConstant {
     public static final String YIQUEDING="40";  //已确定
 
     /**
-     * 运输计划单状态
+     * 计划单状态
      */
     public static final String ZIYUANFENPEIZ="10";  //资源分配中
     public static final String YITUISONG="20";  //已推送

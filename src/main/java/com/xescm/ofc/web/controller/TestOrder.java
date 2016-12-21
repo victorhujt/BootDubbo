@@ -1,12 +1,10 @@
 package com.xescm.ofc.web.controller;
 
-import com.xescm.ofc.domain.OfcDistributionBasicInfo;
-import com.xescm.ofc.domain.OfcFinanceInformation;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.DmsCallbackStatusEnum;
 import com.xescm.ofc.feign.client.FeignAddressCodeClient;
 import com.xescm.ofc.feign.client.FeignPushOrderApiClient;
+import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.service.*;
@@ -17,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hiyond on 2016/11/19.
@@ -50,6 +50,10 @@ public class TestOrder extends BaseController {
     private FeignPushOrderApiClient pushOrderApiClient;
     @Autowired
     private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
+    @Autowired
+    private OfcPlanFedBackService ofcPlanFedBackService;
+    @Autowired
+    private OfcTransplanInfoMapper ofcTransplanInfoMapper;
 
 
 
@@ -65,6 +69,27 @@ public class TestOrder extends BaseController {
     }
 
 
+    @RequestMapping(value = "TFC")
+    public void dsfadsf(){
+        OfcPlanFedBackCondition ofcPlanFedBackCondition = new OfcPlanFedBackCondition();
+        ofcPlanFedBackCondition.setStatus("已签收");
+        ofcPlanFedBackCondition.setTraceTime(new Date());
+        ofcPlanFedBackCondition.setTransportNo("TP161220000125");
+        ofcPlanFedBackCondition.setNotes("测试的NOtes");
+        String userName = "策士大夫";
+        ofcPlanFedBackService.planFedBack(ofcPlanFedBackCondition,userName);
+    }
+
+
+    @RequestMapping(value = "SQ")
+    public  void asdf(){
+        Map<String,String> mapperMap = new HashMap<>();
+        mapperMap.put("ifFinished","planfinish");
+        mapperMap.put("orderCode","SO161220000034");
+        List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+        List<OfcTransplanInfo> ofcTransplanInfos2=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+        List<OfcTransplanInfo> ofcTransplanI2nfos2=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+    }
 
    /*
     @RequestMapping(value = "/order", method = {RequestMethod.POST, RequestMethod.GET})

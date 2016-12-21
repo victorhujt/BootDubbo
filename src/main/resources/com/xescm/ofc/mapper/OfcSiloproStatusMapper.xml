@@ -44,4 +44,20 @@
     </set>
     where plan_code = #{planCode,jdbcType=VARCHAR}
   </update>
+
+  <select id="queryUncompletedPlanCodesByOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    ofc_silopro_status oss
+     <where>
+       <if test="orderCode != null and orderCode != ''">
+         AND oss.order_code = #{orderCode,jdbcType=VARCHAR}
+       </if>
+       AND oss.planned_single_state <![CDATA[ <> ]]>  '50'
+       AND oss.planned_single_state <![CDATA[ <> ]]>  '40'
+     </where>
+
+
+  </select>
 </mapper>

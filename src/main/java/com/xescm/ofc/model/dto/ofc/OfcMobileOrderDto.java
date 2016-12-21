@@ -72,19 +72,6 @@ private String mobileOrderCode;
         this.serialNo = serialNo;
     }
 
-    public String getPicParam() {
-        return picParam;
-    }
-
-    public void setPicParam(String picParam) {
-        this.picParam = picParam;
-    }
-
-    /**
-
-     * 图片处理命令
-     */
-    private String picParam;
 
     /**
      * 获取流水号

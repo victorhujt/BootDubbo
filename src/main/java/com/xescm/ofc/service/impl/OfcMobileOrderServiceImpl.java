@@ -396,6 +396,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
             }
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+            orCode=ofcFundamentalInformation.getOrderCode();
             // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
             ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
             ofcFundamentalInformation.setOrderType(TRANSPORTORDER);
@@ -918,6 +919,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
                 if(url!=null){
                     String urlStr=url.toString().replace("vpc100-","");
+                    if(!StringUtils.isEmpty(result.getPicParam())){
+                        urlStr= urlStr+"?"+result.getPicParam();
+                    }
                     if(!urls.contains(urlStr)){
                         urls.add(urlStr);
                     }
