@@ -73,11 +73,12 @@
 
         .imgClass{
             float: left;
-            width:190px;
-            height:145px;
+            width:188px;
+            height:198px;
             border:1px solid #cacaca;
             margin-top: 20px;
             margin-right:10px;
+            overflow: hidden;
         }
         .imgClass img{
             width: 100%;
@@ -108,6 +109,31 @@
        .pay .chosen-container-single .chosen-search:after{
            top:3px;
        }
+        .Apend{
+            width: 1004px;
+            margin: auto;
+            height: 250px;
+            display: none;
+            overflow: hidden;
+            position: relative;
+        }
+        .scales,.closes{
+            position: relative;
+            z-index: 2;
+            width: 50px;height: 50px;
+            float: right;
+            background: #dbdbdb;
+            line-height: 50px;
+        }
+        .scales img,.closes img{
+            background-size: 100% 100%;
+            margin-left: 14px;
+            width: 24px;
+            height: 22px;
+            display: block;
+            margin-top: 16px;
+
+        }
     </style>
 </head>
 
@@ -117,12 +143,15 @@
         订单详情
     </p>
 </div>
-<#--<div class="col-xs-12">-->
-<#--  <div class="col-sm-6" style="float: right">
- <#tton style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-         返回
-     </button>
- </div>-->
+<div class="col-xs-12">
+    <div class="Apend" id="BApen">
+        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
+        <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
+        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+    </div>
+  <div class="col-sm-6" style="float: right">
+
+ </div>
 
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="width-100 y-float">
@@ -186,8 +215,8 @@
 
             <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                 <#list mobileOrder.urls as url>
-                    <div class="imgClass  imgone">
-                        <img src="${url!""}"/>
+                    <div class="imgClass  imgone" style="position: relative;">
+                        <img src="${url!""}" class="dragAble" />
                     </div>
                 </#list>
             </#if>
@@ -974,7 +1003,53 @@
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
 
+<script>
 
+    function Maxmin() {
+        var imgs = document.getElementsByClassName("dragAble");
+        for (var i=0;i<imgs.length;i++){
+            (function(i){
+                imgs[i].onclick=function () {
+                    var _this=this;
+                    $(".Apend").css({"display":"block"});
+                    $("#viewBiggerImg").attr('src',_this.src);
+//                        var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
+//                        var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
+//                        if(Left<=0){
+//                            $("#viewBiggerImg").animate({"left":"0"},300)
+//                        }
+//                        if(Left>=0){
+//                            $("#viewBiggerImg").animate({"left":"0"},300)
+//                        }
+                    return
+                }
+            })(i)
+        }
+        var _ecIndex=-1,Deg_num=0;
+        $('.imgClass').each(function(index, el){
+            $(this).on('click',function(){
+                if(_ecIndex!=index){
+                    _ecIndex=index;
+                    Deg_num=0;
+                    $("#viewBiggerImg").css({
+                        "transform":"rotate(0deg)"
+                    })
+                };
+            });
+        });
+        $(".scales").on("click",function () {
+            Deg_num++;
+            $("#viewBiggerImg").css({
+                "transform":"rotate("+90*Deg_num+"deg)"
+            })
+        });
+
+        $(".closes").on("click",function () {
+            $(".Apend").css({"display":"none"});
+        })
+    }
+    Maxmin();
+</script>
 <script type="text/javascript">
     var scripts = [ null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
@@ -2475,7 +2550,7 @@
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":null
                         ,"tag":tag
-                        ,"mobileorderCode":mobileOrderCode
+                        ,"mobileOrderCode":mobileOrderCode
 
             }
                     ,"您确认提交订单吗?"
@@ -3034,6 +3109,8 @@
         document.cookie=name+"=v; expires="+date.toGMTString();
     }
 </script>
-<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
+<#--<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>-->
+
+<#--<script type="text/javascript" src="../js/drag_map.js"></script>-->
 
 </body>

@@ -757,7 +757,7 @@
             var custName = $("#custNameFromExcelImport").html();
             //重新从接口里查一遍
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"custName":custName,"pageNum":1, "pageSize":1}, function(data) {
-                if (data != null && data != '' && data != undefined && data.result.list.length > 0) {
+                if (data != null && data != '' && data != undefined && data.result != null && data.result.list != null  && data.result.list.length > 0) {
 //                    data=eval(data);
                     $.each(data.result.list,function (index,cscCustomerVo) {
                         if(index == 0){//只显示第一条
@@ -931,8 +931,8 @@
 
 
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-            debugger;
-            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+            
+            if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
                 loadGoodsDistri(data.result.list);
@@ -1235,7 +1235,8 @@
             }
             var cadj = consigneeCode + "@" + consigneeContactCode;
             consigneeAndGoodsJson[cadj] = num;
-            sendNum += Number(num);
+//            sendNum =( parseInt(Number(num) * 1000) + parseInt(Number(sendNum) * 1000) ) /1000;
+            sendNum = (Number(num) + Number(sendNum)).toFixed(3)
         })
         var goodsInfoListDiv = "";
         $("#goodsInfoListDiv").find("tr").each(function(index) {
@@ -1301,6 +1302,8 @@
             cscContact.phone = "";
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            cscContantAndCompanyDto.pageNum = 1;
+            cscContantAndCompanyDto.pageSize = 20;
             var customerCode = $("#customerCode").val();
             var param = JSON.stringify(cscContantAndCompanyDto);
             var contactList = 0;
@@ -1322,9 +1325,13 @@
             var streetAuto = null;
             var streetNameAuto = null;
             var addressAuto = null;
-            debugger
-            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
+            
+            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
+                if(null == data || undefined == data || null == data.result || undefined == data.result || null == data.result.list || undefined == data.result.list){
+                    return ;
+                }
+                data=eval(data.result.list);
+
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
                     if(contactList == 1){
@@ -1432,7 +1439,11 @@
         var param = JSON.stringify(cscContantAndCompanyDto);
 
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+            /*if(null == data || undefined == data || null == data.result || undefined == data.result || null == data.result.list || undefined == data.result.list){
+                    return ;
+                }*/
+            if (data == undefined || data == null || null == data.result || undefined == data.result
+                    || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
                 loadConsingorDistri(data.result.list);
@@ -1645,7 +1656,8 @@
         var param = JSON.stringify(cscContantAndCompanyDto);
 
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+            if (data == undefined || data == null || null == data.result || undefined == data.result
+                    || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
                 loadConsingeeDistri(data.result.list);
@@ -1904,8 +1916,8 @@
         param.pageSize = 20;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null) {
-                alert("未查询到客户信息！");
+            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                layer.msg("未查询到客户信息！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
@@ -2152,15 +2164,18 @@
             orderInfo.goodsList  = goodsList;
             orderLists[index] = orderInfo;
         })
+        
         var param = JSON.stringify(orderLists);
         if(StringUtil.isEmpty(param)){
             return;
         }
+
         xescm.common.submit("/ofc/distributing/placeOrdersListCon"
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
-                    xescm.common.loadPage("/ofc/operationDistributing");
+                    location.reload();
+                    //xescm.common.loadPage("/ofc/operationDistributing");
                 })
     }
 

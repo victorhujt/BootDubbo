@@ -368,7 +368,7 @@
                             </div>
                         </div></div>
 
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
+                    <div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
@@ -408,15 +408,23 @@
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon toggle">*</span>运输单号</label>
+                    <div><label class="control-label col-label no-padding-right" for="transCode"><span class="w-label-icon toggle">*</span>运输单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
                             </div>
                         </div></div>
+                    <div>
+                        <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
+                    <div><label class="control-label col-label no-padding-right" for="custName" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -431,7 +439,7 @@
 
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
+                    <div><label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
@@ -943,6 +951,18 @@
                 },
                 transRequire:{
                     maxlength:255
+                },custOrderCode: {
+                    maxlength:30,
+                    remote:{
+                        url : ofc_url + "/ofc/checkCustOrderCode",
+                        type : "POST",
+                        dataType : "json",
+                        data : {
+                            custOrderCode : function() {
+                                return $("#custOrderCode").val();
+                            }
+                        }
+                    }
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -970,6 +990,11 @@
                 },
                 transRequire:{
                     maxlength:mistake+"超过最大长度255"
+                },
+                custOrderCode:{
+
+                    maxlength:mistake+ "超过最大长度30",
+                    remote: mistake+ "该客户订单编号已经存在"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1259,6 +1284,7 @@
         countQuantityOrWeightOrCubageCheck();
     }
     function seleGoods(obj) {
+        $("#goodsSelectListTbody").html("");
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2051,7 +2077,7 @@
         var type= contactType == 1?"收货方":"发货方";
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
-            if (result == undefined || result == null || result == "[]") {
+            if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
                 loadConsignOrEE(result,contactType);
@@ -2144,7 +2170,7 @@
             } else if (data.code == 403) {
                 alert("没有权限")
             } else {
-                $("#custListDivTbody").html("");
+                $("#goodsSelectListTbody").html("");
             }
             data=eval(data);
 
@@ -2255,18 +2281,18 @@
             $("select[name='chargingWays']").each(function(){
                 if($(this).val()=="01"){
                     var value=onlyNumber($(this).parent().next().next().children().val());
-                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填哦");
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
                 }else if($(this).val()=="02"){
                     var value=onlyNumber($(this).parent().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填哦");
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
                 }else if($(this).val()=="03"){
                     var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填哦");
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
                 }
             });
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
-                checkValue($(this),value,"添加货品必须输入重量哦")
+                checkValue($(this),value,"添加货品重量必输")
             });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
@@ -2300,6 +2326,7 @@
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
             jsonStr.custCode = $("#customerCode").val();//000
+            jsonStr.custOrderCode = $("#custOrderCode").val();  // 客户订单号
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
@@ -2367,7 +2394,8 @@
                     ,function () {
                         // 更新开单员
                         updateLastUserData();
-                        xescm.common.loadPage("/ofc/tranLoad");
+                        location.reload();
+//                        xescm.common.loadPage("/ofc/tranLoad");
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
