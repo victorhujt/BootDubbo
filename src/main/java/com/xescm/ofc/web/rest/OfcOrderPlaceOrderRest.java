@@ -363,9 +363,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
                 cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
             }
-            if(cscGood!=null){
+            /*if(cscGood!=null){
                 PageHelper.startPage(cscGood.getPNum(), cscGood.getPSize());
-            }
+            }*/
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
@@ -423,7 +423,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
-            csc.setCustomerCode("YHTEST");
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
