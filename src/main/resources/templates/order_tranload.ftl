@@ -362,7 +362,7 @@
                             </div>
                         </div></div>
 
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
+                    <div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
@@ -402,7 +402,7 @@
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon toggle">*</span>运输单号</label>
+                    <div><label class="control-label col-label no-padding-right" for="transCode"><span class="w-label-icon toggle">*</span>运输单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
@@ -418,7 +418,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
+                    <div><label class="control-label col-label no-padding-right" for="custName" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -433,7 +433,7 @@
 
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
+                    <div><label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
@@ -987,7 +987,7 @@
                 },
                 custOrderCode:{
 
-                    maxlength:mistake+ "超过最大长度",
+                    maxlength:mistake+ "超过最大长度30",
                     remote: mistake+ "该客户订单编号已经存在"
                 }/*,
                 goodsListQuantity:{
