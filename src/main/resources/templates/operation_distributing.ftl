@@ -165,7 +165,10 @@
                     </thead>
                     <tbody id="goodsSelectListTbody"></tbody>
                 </table>
-
+                <div class="row">
+                    <div id="pageBarDivGoodsDistri" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
 
             </form>
         </div>
@@ -232,7 +235,10 @@
                     <tbody id="contactSelectListTbody2"></tbody>
                 </table>
 
-
+                <div class="row">
+                    <div id="pageBarDivConsignorDistri" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -297,7 +303,10 @@
                     <tbody id="contactSelectListTbody1"></tbody>
                 </table>
 
-
+                <div class="row">
+                    <div id="pageBarDivConsigneeDistri" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -880,38 +889,6 @@
             $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
 
         });
-        /*$("#goodsSelectFormBtn").click(function () {
-
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsListInDistrbuting", $("#goodsSelConditionForm").serialize(), function(data) {
-                data=eval(data);
-
-                var goodsList = "";
-                $.each(data,function (index,cscGoodsVo) {
-
-                    goodsList =goodsList + "<tr role='row' class='odd'>";
-                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeParentName)+"</td>";//货品种类
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeName)+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.brand)+"</td>";//品牌
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsCode)+"</td>";//货品编码
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsName)+"</td>";//货品名称
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.specification)+"</td>";//规格
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.unit)+"</td>";//单位
-                    goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.barCode)+"</td>";//条形码
-                    /!* goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.weight+"</td>";
-                     goodsList =goodsList + "<td style='display:none'>"+cscGoodsVo.volume+"</td>";*!/
-                    goodsList =goodsList + "</tr>";
-                });
-                $("#goodsSelectListTbody").html(goodsList);
-
-            },"json");
-        });*/
-
-
-
-
-
-
 
 
 
@@ -927,91 +904,7 @@
                 });
             }
         });
-        $("#goodsEnter").click(function () {
-            couldChangeCust = false;
-            var goodsInfoListDiv = "";
-            var preIndex = "0";
-            var goodsCodeOut = {};
-            $("#goodsInfoListDiv").find("tr").each(function(index){
-                var tdArr = $(this).children();
-                var index = tdArr.eq(1).text();//序号
-                var goodsCode = tdArr.eq(2).text();//货品编码
 
-
-                goodsCodeOut[goodsCode] = 1;
-
-
-                var goodsName = tdArr.eq(3).text();//货品名称
-                var specification = tdArr.eq(4).text();//    货品规格
-                var unit = tdArr.eq(5).text();//    单位
-                var unitPrice = tdArr.eq(6).text();//    单位
-                var sendGoods = tdArr.eq(7).text();//发货数量
-                var goodsSecType = tdArr.eq(8).text();//货品二级类
-                var goodsFirType = tdArr.eq(9).text();//货品一级类
-
-                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
-                        "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
-                        "</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
-                goodsInfoListDiv =goodsInfoListDiv + "</tr>";
-                preIndex = index;
-            });
-            $("#goodsInfoListDiv").html("");
-            var str = "";
-            $("#goodsSelectListTbody").find("tr").each(function(index){
-                var tdArr = $(this).children();
-                if(tdArr.eq(0).find("input").prop("checked")){
-
-                    var numIndex = parseInt(preIndex);
-                    preIndex = numIndex + 1;
-                    var goodsFirType = tdArr.eq(1).text();//货品一级类
-                    var goodsSecType = tdArr.eq(2).text();//货品二级类
-                    var goodsCode = tdArr.eq(4).text();//货品编码
-                    var goodsName = tdArr.eq(5).text();//货品名称
-                    var specification = tdArr.eq(6).text();//规格
-                    var unit = tdArr.eq(7).text();//单位
-
-                    if(undefined != goodsCodeOut[goodsCode] && goodsCodeOut[goodsCode] == 1){
-                        return true;
-                    }
-
-                    goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                            "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
-                            "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
-                            "</td>";
-                    /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";//单位
-                    goodsInfoListDiv =goodsInfoListDiv + "<td></td>";//单价
-                    goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";//数量
-                    goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
-                    goodsInfoListDiv =goodsInfoListDiv + "</tr>";
-                    str="str";
-                }
-            });
-            if(goodsInfoListDiv==""){
-                alert("请至少选择一行");
-            }else{
-                $("#goodsInfoListDiv").html(goodsInfoListDiv);
-                $("#goodsListDiv").fadeOut(0);
-            }
-
-        });
     })
 
 
@@ -1032,10 +925,9 @@
         cscGoods.goodsSecTypeId = goodsSecTypeId;
         cscGoods.goodsName = goodsName;
         cscGoods.barCode = barCode;
-        cscGoods.pNum = 1;
+        cscGoods.pNum = pageNum;
         cscGoods.pSize = 10;
         var param = JSON.stringify(cscGoods);
-
 
 
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
@@ -1043,9 +935,9 @@
             if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
-                //loadGoodsDistri(data.result.list);
+                loadGoodsDistri(data.result.list);
                 laypage({
-                    cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    cont: $("#pageBarDivGoodsDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
                     pages: data.result.pages, // 总页数
                     skip: true, // 是否开启跳页
                     skin: "molv",
@@ -1060,7 +952,7 @@
             } else if (data.code == 403) {
                 alert("没有权限")
             } else {
-                $("#custListDivTbody").html("");
+                $("#goodsSelectListTbody").html("");
             }
             data=eval(data);
 
@@ -1090,6 +982,91 @@
         $("#goodsSelectListTbody").html(goodsList);
     }
 
+    $("#goodsEnter").click(function () {
+        couldChangeCust = false;
+        var goodsInfoListDiv = "";
+        var preIndex = "0";
+        var goodsCodeOut = {};
+        $("#goodsInfoListDiv").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            var index = tdArr.eq(1).text();//序号
+            var goodsCode = tdArr.eq(2).text();//货品编码
+
+
+            goodsCodeOut[goodsCode] = 1;
+
+
+            var goodsName = tdArr.eq(3).text();//货品名称
+            var specification = tdArr.eq(4).text();//    货品规格
+            var unit = tdArr.eq(5).text();//    单位
+            var unitPrice = tdArr.eq(6).text();//    单位
+            var sendGoods = tdArr.eq(7).text();//发货数量
+            var goodsSecType = tdArr.eq(8).text();//货品二级类
+            var goodsFirType = tdArr.eq(9).text();//货品一级类
+
+            goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>" +
+                    "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
+                    "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                    "</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+unitPrice+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td>"+sendGoods+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
+            goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+            preIndex = index;
+        });
+        $("#goodsInfoListDiv").html("");
+        var str = "";
+        $("#goodsSelectListTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+
+                var numIndex = parseInt(preIndex);
+                preIndex = numIndex + 1;
+                var goodsFirType = tdArr.eq(1).text();//货品一级类
+                var goodsSecType = tdArr.eq(2).text();//货品二级类
+                var goodsCode = tdArr.eq(4).text();//货品编码
+                var goodsName = tdArr.eq(5).text();//货品名称
+                var specification = tdArr.eq(6).text();//规格
+                var unit = tdArr.eq(7).text();//单位
+
+                if(undefined != goodsCodeOut[goodsCode] && goodsCodeOut[goodsCode] == 1){
+                    return true;
+                }
+
+                goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
+                goodsInfoListDiv =goodsInfoListDiv + "<td>" +
+                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
+                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "</td>";
+                /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+specification+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td>"+unit+"</td>";//单位
+                goodsInfoListDiv =goodsInfoListDiv + "<td></td>";//单价
+                goodsInfoListDiv =goodsInfoListDiv + "<td>0</td>";//数量
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsSecType+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "<td  style='display:none'>"+goodsFirType+"</td>";
+                goodsInfoListDiv =goodsInfoListDiv + "</tr>";
+                str="str";
+            }
+        });
+        if(goodsInfoListDiv==""){
+            alert("请至少选择一行");
+        }else{
+            $("#goodsInfoListDiv").html(goodsInfoListDiv);
+            $("#goodsListDiv").fadeOut(0);
+        }
+
+    });
 
     function warehouseByCust(){
         if(!validateCustChosen()){//如果没选客户
@@ -1158,6 +1135,8 @@
         })
         $(obj).parent().parent().remove();
     }
+
+
     function deleteGood(obj) {
         layer.confirm('您确认删除该货品吗?', {
             skin : 'layui-layer-molv',
@@ -1429,7 +1408,13 @@
 
     });
 
+
     $("#consignorSelectFormBtn").click(function () {
+        queryConsignorDataDistri(1);
+    })
+
+    function queryConsignorDataDistri(pageNum){
+        $("#contactSelectListTbody2").html("");
         var cscContantAndCompanyDto = {};
         var cscContact = {};
         var cscContactCompany = {};
@@ -1440,43 +1425,76 @@
         cscContact.phone = $("#consignorPhoneNumber2").val();
         cscContantAndCompanyDto.cscContact = cscContact;
         cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
-
-
+        cscContantAndCompanyDto.pageNum = pageNum;
+        cscContantAndCompanyDto.pageSize = 20;
         var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
-        CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-            data=eval(data);
-            var contactList = "";
-            $.each(data,function (index,CscContantAndCompanyDto) {
-                /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
-                consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                consignorTypeHide = CscContantAndCompanyDto.type;*/
-                contactList =contactList + "<tr role='row' class='odd'>";
-                contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                contactList =contactList + "<td>"+(index+1)+"</td>";
-                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
-                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
-                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
-                contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
-                contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
-                contactList =contactList + "</tr>";
-            });
-            $("#contactSelectListTbody2").html(contactList);
+
+        CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
+            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+                layer.msg("暂时未查询到发货方信息！！");
+            } else if (data.code == 200) {
+                loadConsingorDistri(data.result.list);
+                laypage({
+                    cont: $("#pageBarDivConsignorDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: data.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: data.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryConsignorDataDistri(obj.curr);
+                        }
+                    }
+                });
+            } else if (data.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#contactSelectListTbody2").html("");
+            }
+
         },"json");
-    });
+    }
+
+
+    function loadConsingorDistri(data){
+        data=eval(data);
+        var contactList = "";
+        $.each(data,function (index,CscContantAndCompanyDto) {
+            /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
+            consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
+            consignorTypeHide = CscContantAndCompanyDto.type;*/
+            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
+            contactList =contactList + "</tr>";
+        });
+        $("#contactSelectListTbody2").html(contactList);
+    }
+
+
+
+
+
 
     $("#contactinEnter").click(function () {
         couldChangeCust = false;
@@ -1558,7 +1576,7 @@
 
     });
 
-    $("#consigneeSelectFormBtn").click(function () {
+    /*$("#consigneeSelectFormBtn").click(function () {
         var cscContantAndCompanyDto = {};
         var cscContact = {};
         var cscContactCompany = {};
@@ -1576,9 +1594,9 @@
             data=eval(data);
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
-                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                /!*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
                 consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                consigneeTypeHide = CscContantAndCompanyDto.type;*/
+                consigneeTypeHide = CscContantAndCompanyDto.type;*!/
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1603,14 +1621,87 @@
                 $("#contactSelectListTbody1").html(contactList);
             });
         },"json");
-    });
-    /*$("#consigneeSelectFormBtn").click(function () {
-       queryConsigneeData(1);
+    });*/
+    $("#consigneeSelectFormBtn").click(function () {
+        queryConsigneeDataDistri(1);
+    })
+
+    function queryConsigneeDataDistri(pageNum) {
+        $("#contactSelectListTbody1").html("");
+
+        var cscContantAndCompanyDto = {};
+        var cscContact = {};
+        var cscContactCompany = {};
+        cscContactCompany.contactCompanyName = $("#consignorName1").val();
+        cscContact.purpose = "1";
+        cscContact.contactName = $("#consignorPerson1").val();
+        cscContact.phone = $("#consignorPhoneNumber1").val();
+        cscContantAndCompanyDto.cscContact = cscContact;
+        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        cscContantAndCompanyDto.pageNum = pageNum;
+        cscContantAndCompanyDto.pageSize = 20;
+        var customerCode = $("#customerCode").val();
+
+        var param = JSON.stringify(cscContantAndCompanyDto);
+
+        CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
+            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+                layer.msg("暂时未查询到发货方信息！！");
+            } else if (data.code == 200) {
+                loadConsingeeDistri(data.result.list);
+                laypage({
+                    cont: $("#pageBarDivConsigneeDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: data.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: data.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryConsigneeDataDistri(obj.curr);
+                        }
+                    }
+                });
+            } else if (data.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#contactSelectListTbody1").html("");
+            }
+
+        },"json");
     }
 
-    function queryConsigneeData(number) {
-
-    }*/
+    function loadConsingeeDistri(data){
+        data=eval(data);
+        var contactList = "";
+        $.each(data,function (index,CscContantAndCompanyDto) {
+            /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+            consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
+            consigneeTypeHide = CscContantAndCompanyDto.type;*/
+            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+            contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.detailAddress)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.type)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanySerialNo)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactSerialNo)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.province)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.provinceName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.city)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.cityName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.area)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.areaName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.street)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.streetName)+"</td>";
+            contactList =contactList + "<td style='display:none'>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.address)+"</td>";
+            contactList =contactList + "</tr>";
+            $("#contactSelectListTbody1").html(contactList);
+        });
+    }
 
     $("#consigneecheck").change(function () {
         if($("#consigneecheck").prop("checked")){
@@ -1810,7 +1901,7 @@
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
-        param.pageSize = 10;
+        param.pageSize = 20;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null) {
