@@ -1171,7 +1171,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         transportDTO.setCustomerName(PubUtils.trimAndNullAsEmpty(userName));//客户名称（委托方名称）
         transportDTO.setCustomerTel(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustomerContactPhone()));//客户联系方式
         transportDTO.setFromTransportName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()));//运输单产生机构
-        transportDTO.setCustOrderCode(PubUtils.trimAndNullAsEmpty(custOrderCode));
+        transportDTO.setCustomerOrderCode(PubUtils.trimAndNullAsEmpty(custOrderCode));
         if (!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getPickupTime())) {
             simpleDateFormat.format(ofcTransplanInfo.getPickupTime());
             transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getPickupTime())));//预计发货时间

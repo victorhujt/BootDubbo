@@ -10,7 +10,7 @@ public class TransportDTO {
 
     private String transportNo;
 
-    private String custOrderCode;
+    private String customerOrderCode;
 
     private String createTime;
 
@@ -480,11 +480,11 @@ public class TransportDTO {
         this.baseName = baseName;
     }
 
-    public String getCustOrderCode() {
-        return custOrderCode;
+    public String getCustomerOrderCode() {
+        return customerOrderCode;
     }
 
-    public void setCustOrderCode(String custOrderCode) {
-        this.custOrderCode = custOrderCode;
+    public void setCustomerOrderCode(String customerOrderCode) {
+        this.customerOrderCode = customerOrderCode;
     }
 }

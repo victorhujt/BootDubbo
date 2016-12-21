@@ -29,6 +29,7 @@ public class OrderScreenResult {
 
     private String custName;//客户名称
 
+
     public String getCustName() {
         return custName;
     }

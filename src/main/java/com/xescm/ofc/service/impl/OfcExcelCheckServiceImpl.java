@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -180,8 +181,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
                             }else if("goodsCode".equals(cellNumName)){
-                                DecimalFormat df = new DecimalFormat("0");
-                                cellValue = df.format(Double.valueOf(cellValue));
+                                if (HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                                } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    cellValue = df.format(Double.valueOf(cellValue));
+                                }
+
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -463,7 +470,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 jsonObject.put(consigneeAndGoodsKey,new BigDecimal(0));
                             }else{
                                 BigDecimal bigDecimal = (BigDecimal) jsonObject.get(consigneeAndGoodsKey);
-                                goodsAmout = bigDecimal.doubleValue() + goodsAmout;
+                                goodsAmout = bigDecimal.add(new BigDecimal(goodsAmout.toString())).doubleValue();
                             }
                         }
                         cscGoodsApiVo.setGoodsAmount(goodsAmout);
@@ -633,8 +640,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
                             }else if("goodsCode".equals(cellNumName)){
-                                DecimalFormat df = new DecimalFormat("0");
-                                cellValue = df.format(Double.valueOf(cellValue));
+                                if (HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                                } else if (HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    cellValue = df.format(Double.valueOf(cellValue));
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -917,7 +929,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 jsonObject.put(consigneeAndGoodsKey,new BigDecimal(0));
                             }else{
                                 BigDecimal bigDecimal = (BigDecimal) jsonObject.get(consigneeAndGoodsKey);
-                                goodsAmout = bigDecimal.doubleValue() + goodsAmout;
+                                goodsAmout = bigDecimal.add(new BigDecimal(goodsAmout.toString())).doubleValue();
                             }
                         }
                         cscGoodsApiVo.setGoodsAmount(goodsAmout);
