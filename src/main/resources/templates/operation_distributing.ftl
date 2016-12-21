@@ -1917,7 +1917,7 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
-                alert("未查询到客户信息！");
+                layer.msg("未查询到客户信息！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
