@@ -2394,7 +2394,8 @@
                     ,function () {
                         // 更新开单员
                         updateLastUserData();
-                        xescm.common.loadPage("/ofc/tranLoad");
+                        location.reload();
+//                        xescm.common.loadPage("/ofc/tranLoad");
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
