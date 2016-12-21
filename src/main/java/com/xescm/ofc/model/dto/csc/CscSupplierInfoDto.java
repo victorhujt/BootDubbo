@@ -14,6 +14,13 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
 
     private static final long serialVersionUID = 5459176940946689162L;
 
+    //当前页
+    private int pNum;
+
+    //每页的数量
+    private int pSize;
+
+
     /**
      * 版本号
      */
@@ -445,5 +452,21 @@ public class CscSupplierInfoDto extends AuthDto implements Serializable {
                 ", selfName='" + selfName + '\'' +
                 ", selfPhone='" + selfPhone + '\'' +
                 '}';
+    }
+
+    public int getpNum() {
+        return pNum;
+    }
+
+    public void setpNum(int pNum) {
+        this.pNum = pNum;
+    }
+
+    public int getpSize() {
+        return pSize;
+    }
+
+    public void setpSize(int pSize) {
+        this.pSize = pSize;
     }
 }
