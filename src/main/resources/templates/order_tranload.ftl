@@ -2584,7 +2584,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户");
             }else{
-                $("#pageBarDivConsignor").show();
+                $("#pageBarDivConsignor").hide();
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2606,7 +2606,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
-                $("#pageBarDivConsignee").show();
+                $("#pageBarDivConsignee").hide();
                 $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
