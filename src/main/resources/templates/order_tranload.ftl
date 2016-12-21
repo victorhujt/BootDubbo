@@ -1259,6 +1259,7 @@
         countQuantityOrWeightOrCubageCheck();
     }
     function seleGoods(obj) {
+        $("#goodsSelectListTbody").html("");
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2144,7 +2145,7 @@
             } else if (data.code == 403) {
                 alert("没有权限")
             } else {
-                $("#custListDivTbody").html("");
+                $("#goodsSelectListTbody").html("");
             }
             data=eval(data);
 
@@ -2255,18 +2256,18 @@
             $("select[name='chargingWays']").each(function(){
                 if($(this).val()=="01"){
                     var value=onlyNumber($(this).parent().next().next().children().val());
-                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填哦");
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
                 }else if($(this).val()=="02"){
                     var value=onlyNumber($(this).parent().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填哦");
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
                 }else if($(this).val()=="03"){
                     var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填哦");
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
                 }
             });
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
-                checkValue($(this),value,"添加货品必须输入重量哦")
+                checkValue($(this),value,"添加货品重量必输")
             });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
