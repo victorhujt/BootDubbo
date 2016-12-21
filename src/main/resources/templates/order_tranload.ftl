@@ -2046,6 +2046,7 @@
     function queryContactData(param,customerCode,contactType,pageNum) {
         param.pageNum = pageNum;
         param.pageSize = 10;
+        var param1=param;
         param = JSON.stringify(param);
         var type= contactType == 1?"收货方":"发货方";
         var ptype= contactType == 1?"ee":"or";
@@ -2064,7 +2065,8 @@
                     curr: result.result.pageNum, // 当前页
                     jump: function (obj, first) { // 触发分页后的回调
                         if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
-                            queryContactData(param,customerCode,contactType,obj.curr);
+
+                            queryContactData(param1,customerCode,contactType,obj.curr);
                         }
                     }
                 });
@@ -2118,12 +2120,12 @@
         var goodsName = $("#goodsNameCondition").val();
         cscGoods.goodsCode = goodsCode;
         cscGoods.goodsName = goodsName;
-        cscGoods.pNum = 1;
+        cscGoods.pNum = pageNum;
         cscGoods.pSize = 10;
         var param = JSON.stringify(cscGoods);
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
             debugger;
-            if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
+            if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
                 loadGoods(data.result.list);
