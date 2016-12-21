@@ -26,8 +26,6 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
     @Autowired
-    private OfcTransplanInfoMapper ofcTransplanInfoMapper;
-    @Autowired
     private OfcTransplanInfoService ofcTransplanInfoService;
     @Autowired
     private OfcTransplanStatusService ofcTransplanStatusService;
@@ -43,6 +41,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService ;
+    @Autowired
+    private OfcTransplanInfoMapper ofcTransplanInfoMapper;
 
 
     /**
@@ -247,7 +247,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedback(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
         for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getTransportNo().size();i++){
-            String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getTransportNo().get(0));
+            String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getTransportNo().get(i));
             if(transPortNo.equals("")){
                 throw new BusinessException("运输计划单号不可以为空");
             }else{
