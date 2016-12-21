@@ -1,6 +1,8 @@
 package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
@@ -12,6 +14,7 @@ import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
 import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
@@ -347,33 +350,34 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     /**
      * 运营中心货品筛选(调用客户中心API)
      */
-    @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
-    @ApiImplicitParams({
-            //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
-    })
     @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
-    public void goodsSelectByCsc(Model model,String  cscGoods,String customerCode, HttpServletResponse response){
+    @ResponseBody
+    public Object goodsSelectByCsc(String  cscGoods,String customerCode, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         logger.debug("==>下单货品筛选,cscGoods = {}",cscGoods);
         logger.debug("==>下单货品筛选,customerCode = {}",customerCode);
+        Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists=null;
         try{
+
             CscGoodsApiDto cscGood=new CscGoodsApiDto();
             if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
-                cscGood= JSONUtils.jsonToPojo(cscGoods, CscGoodsApiDto.class);
+                cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
+            }
+            if(cscGood!=null){
+                PageHelper.startPage(cscGood.getPNum(), cscGood.getPSize());
             }
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGood);
-            response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
+            cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsPageList(cscGood);
+            //response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
+        return cscGoodsLists;
     }
 
-    /**
-     * 收货方发货方筛选(调用客户中心API)
-     */
+
     @ApiOperation(value="下单收发货方筛选", notes="根据查询条件筛选收发货方")
     @ApiImplicitParams({
     })
@@ -394,8 +398,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
             Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
-            /*
-            csc.getCscContact().setPurpose("3");
+
+            /*csc.getCscContact().setPurpose("3");
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
             result.addAll(resultOfBoth);*/
@@ -404,6 +408,38 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
         }
     }
+
+    @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
+    @ResponseBody
+    public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
+        logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
+        logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
+        //调用外部接口,最低传CustomerCode和purpose
+        Wrapper<PageInfo<CscContantAndCompanyResponseDto>> result=null;
+        try {
+            CscContantAndCompanyDto csc = JSONUtils.jsonToPojo(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            if(PubUtils.isSEmptyOrNull(customerCode)){
+                customerCode = authResDtoByToken.getGroupRefCode();
+            }
+            csc.setCustomerCode(customerCode);
+            csc.setCustomerCode("YHTEST");
+            csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
+            csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
+            csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
+            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoListWithPage(csc);
+            result = cscReceivingInfoList;
+            /*
+            csc.getCscContact().setPurpose("3");
+            Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
+            List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
+            result.addAll(resultOfBoth);*/
+        } catch (Exception ex) {
+            logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
+        }
+        return result;
+    }
+
 
     /**
      * 供应商筛选(调用客户中心API)
