@@ -50,7 +50,6 @@ import java.util.concurrent.TimeUnit;
  */
 
 @RequestMapping(value = "/ofc/distributing",produces = {"application/json;charset=UTF-8"})
-//@RequestMapping(value = "/ofc/distributing",produces={"text/html;charset=UTF-8;","application/json;"})
 @Controller
 public class OfcOperationDistributing extends BaseController{
     @Autowired

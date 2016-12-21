@@ -931,7 +931,7 @@
 
 
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-            debugger;
+            
             if (data == undefined || data == null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
@@ -1301,6 +1301,8 @@
             cscContact.phone = "";
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            cscContantAndCompanyDto.pageNum = 1;
+            cscContantAndCompanyDto.pageSize = 20;
             var customerCode = $("#customerCode").val();
             var param = JSON.stringify(cscContantAndCompanyDto);
             var contactList = 0;
@@ -1322,9 +1324,9 @@
             var streetAuto = null;
             var streetNameAuto = null;
             var addressAuto = null;
-            debugger
-            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
+            
+            CommonClient.syncpost(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
+                data=eval(data.result.list);
                 $.each(data,function (index,CscContantAndCompanyDto) {
                     contactList += 1;
                     if(contactList == 1){
@@ -2152,10 +2154,12 @@
             orderInfo.goodsList  = goodsList;
             orderLists[index] = orderInfo;
         })
+        
         var param = JSON.stringify(orderLists);
         if(StringUtil.isEmpty(param)){
             return;
         }
+
         xescm.common.submit("/ofc/distributing/placeOrdersListCon"
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
