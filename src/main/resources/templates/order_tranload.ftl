@@ -1285,6 +1285,7 @@
     }
     function seleGoods(obj) {
         $("#goodsSelectListTbody").html("");
+        $("#pageBarDivGoods").hide();
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2080,6 +2081,7 @@
             if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDivConsign"+ptype).show();
                 loadConsignOrEE(result,contactType);
                 laypage({
                     cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2137,6 +2139,7 @@
 
     // 分页查询货品列表
     function queryGoodsData(pageNum) {
+
         $("#goodsSelectListTbody").html("");
         var cscGoods = {};
         var groupId = $("#custGroupId").val();
@@ -2149,10 +2152,11 @@
         cscGoods.pSize = 10;
         var param = JSON.stringify(cscGoods);
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-            debugger;
+
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivGoods").show();
                 loadGoods(data.result.list);
                 laypage({
                     cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2429,6 +2433,7 @@
                         cscContact.purpose = "2";
                         outConsignor(cscContact,cscContactCompany,groupId,customerCode);
                         $("#goodsInfoListDiv").html("");
+
                         countQuantityOrWeightOrCubageCheck();
                     }
                 }
@@ -2579,6 +2584,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户");
             }else{
+                $("#pageBarDivConsignor").show();
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2600,6 +2606,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#pageBarDivConsignee").show();
                 $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
