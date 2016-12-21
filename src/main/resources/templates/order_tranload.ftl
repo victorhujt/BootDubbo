@@ -2231,7 +2231,7 @@
                     ,function () {
                         // 更新开单员
                         updateLastUserData();
-                        location.reload();
+                        xescm.common.loadPage("/ofc/tranLoad");
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 

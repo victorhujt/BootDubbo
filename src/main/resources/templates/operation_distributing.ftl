@@ -1472,7 +1472,7 @@
 
     });
 
-    $("#consigneeSelectFormBtn").click(function () {
+    /*$("#consigneeSelectFormBtn").click(function () {
         var cscContantAndCompanyDto = {};
         var cscContact = {};
         var cscContactCompany = {};
@@ -1490,9 +1490,9 @@
             data=eval(data);
             var contactList = "";
             $.each(data,function (index,CscContantAndCompanyDto) {
-                /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
+                /!*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
                 consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                consigneeTypeHide = CscContantAndCompanyDto.type;*/
+                consigneeTypeHide = CscContantAndCompanyDto.type;*!/
                 contactList =contactList + "<tr role='row' class='odd'>";
                 contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
                 contactList =contactList + "<td>"+(index+1)+"</td>";
@@ -1517,7 +1517,15 @@
                 $("#contactSelectListTbody1").html(contactList);
             });
         },"json");
-    });
+    });*/
+    $("#consigneeSelectFormBtn").click(function () {
+       queryConsigneeData(1);
+    }
+
+    function queryConsigneeData(number) {
+
+    }
+
     $("#consigneecheck").change(function () {
         if($("#consigneecheck").prop("checked")){
             $("#contactSelectListTbody1").find("tr").each(function(index){
