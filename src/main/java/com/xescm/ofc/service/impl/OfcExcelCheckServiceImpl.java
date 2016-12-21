@@ -252,6 +252,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                     cscContantAndCompanyResponseDto = result.get(0);
                     cscContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
+                    cscContantAndCompanyResponseDto.setContactSerialNo(cscContantAndCompanyResponseDto.getContactSerialNo() + "@" + custOrderCode);
                     getEEByCustOrderCode.put(ofcExcelBoradwise.getCustOrderCode(),cscContantAndCompanyResponseDto);
                     String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
 
@@ -709,6 +710,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                     cscContantAndCompanyResponseDto = result.get(0);
                     cscContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
+                    cscContantAndCompanyResponseDto.setContactSerialNo(cscContantAndCompanyResponseDto.getContactSerialNo() + "@" + custOrderCode);//___
                     getEEByCustOrderCode.put(ofcExcelBoradwise.getCustOrderCode(),cscContantAndCompanyResponseDto);
                     String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
 
