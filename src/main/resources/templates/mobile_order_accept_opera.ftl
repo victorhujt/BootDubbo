@@ -2475,7 +2475,7 @@
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":null
                         ,"tag":tag
-                        ,"mobileorderCode":mobileOrderCode
+                        ,"mobileOrderCode":mobileOrderCode
 
             }
                     ,"您确认提交订单吗?"
