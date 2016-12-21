@@ -210,7 +210,7 @@
                            <div class="w-width-220 col-float">
                                <input class="width-100" id="tranCode" name="OrderCode" type="search" placeholder=""
                                       aria-controls="dynamic-table"
-                                      value="${(mobileOrder.OrderCode)!""}">
+                                      value="${(mobileOrder.orderCode)!""}">
                            </div>
                        </div>
                        <div class="form-group y-float">
