@@ -2077,7 +2077,7 @@
         var type= contactType == 1?"收货方":"发货方";
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
-            if (result == undefined || result == null || result == "[]") {
+            if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
                 loadConsignOrEE(result,contactType);
