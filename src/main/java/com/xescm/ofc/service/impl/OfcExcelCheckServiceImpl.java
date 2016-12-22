@@ -461,6 +461,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //第一个3
                     if(1 == consigneeNum){
                         //所有的货品, 每个收货人都应该有, 如果没有就置为0, 而且要将3个一循环的数据堆齐
+                        if(null == jsonArray.get(0)){
+                            throw new BusinessException("货品校验时出错!");
+                        }
                         CscGoodsApiVo cscGoodsApiVo = (CscGoodsApiVo) jsonArray.get(0);
                         Double goodsAmout = cscGoodsApiVo.getGoodsAmount();
                         JSONObject jsonObject = (JSONObject) jsonArray.get(1);
@@ -921,6 +924,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //第一个3
                     if(1 == consigneeNum){
                         //所有的货品, 每个收货人都应该有, 如果没有就置为0, 而且要将3个一循环的数据堆齐
+                        if(null == jsonArray.get(0)){
+                            throw new BusinessException("货品校验时出错!");
+                        }
                         CscGoodsApiVo cscGoodsApiVo = (CscGoodsApiVo) jsonArray.get(0);
                         Double goodsAmout = cscGoodsApiVo.getGoodsAmount();
                         JSONObject jsonObject = (JSONObject) jsonArray.get(1);
