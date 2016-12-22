@@ -157,7 +157,7 @@
                     <div class="form-group y-float">
                         <label class="control-label col-label no-padding-right" for="name" >流水号</label>
                         <div class="w-width-220 col-float">
-                            <input class="width-100" id="orderCode" name="" type="search" placeholder=""
+                            <input class="width-100"readonly="readonly" id="orderCode" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                        <div class="form-group y-float">
                            <label class="control-label col-label no-padding-right" for="name" >钉钉账号</label>
                            <div class="w-width-220 col-float">
-                               <input class="width-100" id="dingdingAccountNo" name="dingdingAccountNo" type="search" placeholder=""
+                               <input class="width-100" readonly="readonly"  id="dingdingAccountNo" name="dingdingAccountNo" type="search" placeholder=""
                                       aria-controls="dynamic-table"
                                       value="${(mobileOrder.dingdingAccountNo)!""}">
                            </div>

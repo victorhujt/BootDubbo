@@ -1,23 +1,26 @@
-/*
-Navicat MySQL Data Transfer
+SET FOREIGN_KEY_CHECKS = 0;
 
-Source Server         : xescm
-Source Server Version : 50629
-Source Host           : rm-2zejc4039t14ul730o.mysql.rds.aliyuncs.com:3306
-Source Database       : xescm_ofc_test
+CREATE TABLE `ofc_attachment` (
+  `serial_no` varchar(20) NOT NULL COMMENT '附件流水号',
+  `ref_no` varchar(20) DEFAULT NULL COMMENT '上传附件的相关业务流水号',
+  `name` varchar(255) DEFAULT NULL COMMENT '附件名称',
+  `path` varchar(255) DEFAULT NULL COMMENT '附件存储相对路径',
+  `type` varchar(255) DEFAULT NULL COMMENT '附件类型',
+  `format` varchar(255) DEFAULT NULL COMMENT '附件格式',
+  `description` varchar(255) DEFAULT NULL COMMENT '备注',
+  `version` bigint(20) DEFAULT NULL COMMENT '版本号',
+  `creator` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `creator_id` varchar(32) DEFAULT NULL COMMENT '创建人id',
+  `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
+  `last_operator` varchar(50) DEFAULT NULL COMMENT '最后操作人',
+  `last_operator_id` varchar(32) DEFAULT NULL COMMENT '最后操作人id',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新日期',
+  `yn` int(11) DEFAULT '0' COMMENT '删除标识(1-已删除；0-未删除)',
+  `pic_param` varchar(100) DEFAULT NULL COMMENT '图片操作命令',
+  PRIMARY KEY (`serial_no`),
+  UNIQUE KEY `serial_no` (`serial_no`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='业务附件表';
 
-Target Server Type    : MYSQL
-Target Server Version : 50629
-File Encoding         : 65001
-
-Date: 2016-12-14 20:26:45
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for ofc_create_order_error_log
--- ----------------------------
 
 CREATE TABLE `ofc_create_order_error_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -26,11 +29,8 @@ CREATE TABLE `ofc_create_order_error_log` (
   `cust_code` varchar(255) DEFAULT '' COMMENT '货主编码',
   `error_log` varchar(1000) DEFAULT '' COMMENT '错误信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=423 DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=469 DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
 
--- ----------------------------
--- Table structure for ofc_distribution_basic_info
--- ----------------------------
 
 CREATE TABLE `ofc_distribution_basic_info` (
   `trans_code` varchar(50) DEFAULT NULL COMMENT '运输单号',
@@ -77,12 +77,11 @@ CREATE TABLE `ofc_distribution_basic_info` (
   `base_id` varchar(50) DEFAULT NULL COMMENT '基地ID(电商)',
   `consignor_contact_phone` varchar(250) DEFAULT NULL COMMENT '发货方联系人电话',
   `consignee_contact_phone` varchar(250) DEFAULT NULL COMMENT '收货方联系人电话',
+  `goods_type` varchar(20) DEFAULT NULL COMMENT '货品种类',
+  `goods_type_name` varchar(20) DEFAULT NULL COMMENT '货品种类名称',
   KEY `index:order_code` (`order_code`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心配送基本信息';
 
--- ----------------------------
--- Table structure for ofc_finance_information
--- ----------------------------
 
 CREATE TABLE `ofc_finance_information` (
   `service_charge` decimal(18,2) DEFAULT NULL COMMENT '服务费',
@@ -121,9 +120,6 @@ CREATE TABLE `ofc_finance_information` (
   KEY `index:order_code` (`order_code`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='财务信息表';
 
--- ----------------------------
--- Table structure for ofc_fundamental_information
--- ----------------------------
 
 CREATE TABLE `ofc_fundamental_information` (
   `order_code` varchar(30) NOT NULL COMMENT '订单编号',
@@ -166,9 +162,6 @@ CREATE TABLE `ofc_fundamental_information` (
   UNIQUE KEY `index:order_code` (`order_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心基本信息';
 
--- ----------------------------
--- Table structure for ofc_goods_details_info
--- ----------------------------
 
 CREATE TABLE `ofc_goods_details_info` (
   `goods_code` varchar(30) DEFAULT NULL COMMENT '货品代码',
@@ -202,19 +195,31 @@ CREATE TABLE `ofc_goods_details_info` (
   KEY `index_order_code` (`order_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货品明细信息';
 
--- ----------------------------
--- Table structure for ofc_merchandiser
--- ----------------------------
 
 CREATE TABLE `ofc_merchandiser` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `merchandiser` varchar(30) DEFAULT NULL COMMENT '开单员名称',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='开单员信息表';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index:merchandiser` (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COMMENT='开单员信息表';
 
--- ----------------------------
--- Table structure for ofc_order_status
--- ----------------------------
+
+CREATE TABLE `ofc_mobile_order` (
+  `mobile_order_code` varchar(30) NOT NULL COMMENT '流水号',
+  `upload_date` datetime DEFAULT NULL COMMENT '上传日期',
+  `dingding_account_no` varchar(30) DEFAULT NULL COMMENT '钉钉账号',
+  `operator` varchar(30) DEFAULT NULL COMMENT '开单员',
+  `order_type` varchar(30) NOT NULL COMMENT '订单类型（默认值 60 运输订单）',
+  `business_type` varchar(30) DEFAULT NULL COMMENT '业务类型 【602】-卡班    ,【601】－干线，【600】－城配',
+  `tran_code` varchar(30) NOT NULL COMMENT '运输单号',
+  `mobile_order_status` varchar(30) NOT NULL COMMENT '订单状态 0:未受理 1:已受理 默认值未受理',
+  `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
+  `accepter` varchar(30) DEFAULT NULL COMMENT '订单受理人',
+  `appcet_date` datetime DEFAULT NULL COMMENT '受理时间',
+  `serial_no` varchar(300) DEFAULT NULL COMMENT '附件流水号，多个以逗号隔开',
+  PRIMARY KEY (`mobile_order_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='拍照录单表';
+
 
 CREATE TABLE `ofc_order_status` (
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
@@ -229,9 +234,6 @@ CREATE TABLE `ofc_order_status` (
   KEY `index_lasted_oper_time` (`lasted_oper_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心订单状态';
 
--- ----------------------------
--- Table structure for ofc_planned_detail
--- ----------------------------
 
 CREATE TABLE `ofc_planned_detail` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
@@ -253,9 +255,46 @@ CREATE TABLE `ofc_planned_detail` (
   KEY `index_goods_code` (`goods_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='计划单明细表';
 
--- ----------------------------
--- Table structure for ofc_siloprogram_info
--- ----------------------------
+
+CREATE TABLE `ofc_silopro_newstatus` (
+  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
+  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
+  `job_new_status` varchar(30) DEFAULT NULL COMMENT '作业最新状态',
+  `job_status_update_time` datetime DEFAULT NULL COMMENT '作业状态更新时间',
+  KEY `index_plan_code` (`plan_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单最新状态表';
+
+
+CREATE TABLE `ofc_silopro_source_status` (
+  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
+  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
+  `resource_allocation_status` varchar(30) DEFAULT NULL COMMENT '资源分配状态',
+  `service_provider_code` varchar(30) DEFAULT NULL COMMENT '服务商编码',
+  `service_provider_name` varchar(30) DEFAULT NULL COMMENT '服务商名称',
+  `service_provider_contact` varchar(30) DEFAULT NULL COMMENT '服务商联系人',
+  `service_provider_contact_phone` varchar(30) DEFAULT NULL COMMENT '服务商联系电话',
+  `resource_confirmation` varchar(30) DEFAULT NULL COMMENT '资源确认人员',
+  `resource_confirmation_time` datetime DEFAULT NULL COMMENT '资源确认时间',
+  `plate_number` varchar(30) DEFAULT NULL COMMENT '车牌号',
+  `driver_name` varchar(30) DEFAULT NULL COMMENT '司机姓名',
+  `contact_number` varchar(30) DEFAULT NULL COMMENT '司机联系电话',
+  `trans_code` varchar(30) DEFAULT NULL COMMENT '运输单号',
+  KEY `index_plan_code` (`plan_code`) USING BTREE,
+  KEY `index_order_code` (`order_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划资源状态表';
+
+
+CREATE TABLE `ofc_silopro_status` (
+  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
+  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
+  `planned_single_state` varchar(30) DEFAULT NULL COMMENT '计划单状态',
+  `planned_start_time` datetime DEFAULT NULL COMMENT '计划开始时间',
+  `planned_completion_time` datetime DEFAULT NULL COMMENT '计划完成时间',
+  `task_start_time` datetime DEFAULT NULL COMMENT '任务开始时间',
+  `task_completion_time` datetime DEFAULT NULL COMMENT '任务完成时间',
+  KEY `index_plan_code` (`plan_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单状态表';
+
 
 CREATE TABLE `ofc_siloprogram_info` (
   `plan_code` varchar(30) NOT NULL DEFAULT '' COMMENT '计划单编号',
@@ -306,58 +345,6 @@ CREATE TABLE `ofc_siloprogram_info` (
   PRIMARY KEY (`plan_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单信息表';
 
--- ----------------------------
--- Table structure for ofc_silopro_newstatus
--- ----------------------------
-
-CREATE TABLE `ofc_silopro_newstatus` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `job_new_status` varchar(30) DEFAULT NULL COMMENT '作业最新状态',
-  `job_status_update_time` datetime DEFAULT NULL COMMENT '作业状态更新时间',
-  KEY `index_plan_code` (`plan_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单最新状态表';
-
--- ----------------------------
--- Table structure for ofc_silopro_source_status
--- ----------------------------
-
-CREATE TABLE `ofc_silopro_source_status` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `resource_allocation_status` varchar(30) DEFAULT NULL COMMENT '资源分配状态',
-  `service_provider_code` varchar(30) DEFAULT NULL COMMENT '服务商编码',
-  `service_provider_name` varchar(30) DEFAULT NULL COMMENT '服务商名称',
-  `service_provider_contact` varchar(30) DEFAULT NULL COMMENT '服务商联系人',
-  `service_provider_contact_phone` varchar(30) DEFAULT NULL COMMENT '服务商联系电话',
-  `resource_confirmation` varchar(30) DEFAULT NULL COMMENT '资源确认人员',
-  `resource_confirmation_time` datetime DEFAULT NULL COMMENT '资源确认时间',
-  `plate_number` varchar(30) DEFAULT NULL COMMENT '车牌号',
-  `driver_name` varchar(30) DEFAULT NULL COMMENT '司机姓名',
-  `contact_number` varchar(30) DEFAULT NULL COMMENT '司机联系电话',
-  `trans_code` varchar(30) DEFAULT NULL COMMENT '运输单号',
-  KEY `index_plan_code` (`plan_code`) USING BTREE,
-  KEY `index_order_code` (`order_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划资源状态表';
-
--- ----------------------------
--- Table structure for ofc_silopro_status
--- ----------------------------
-
-CREATE TABLE `ofc_silopro_status` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `planned_single_state` varchar(30) DEFAULT NULL COMMENT '计划单状态',
-  `planned_start_time` datetime DEFAULT NULL COMMENT '计划开始时间',
-  `planned_completion_time` datetime DEFAULT NULL COMMENT '计划完成时间',
-  `task_start_time` datetime DEFAULT NULL COMMENT '任务开始时间',
-  `task_completion_time` datetime DEFAULT NULL COMMENT '任务完成时间',
-  KEY `index_plan_code` (`plan_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单状态表';
-
--- ----------------------------
--- Table structure for ofc_transplan_info
--- ----------------------------
 
 CREATE TABLE `ofc_transplan_info` (
   `plan_code` varchar(30) NOT NULL DEFAULT '' COMMENT '计划单编号',
@@ -411,13 +398,15 @@ CREATE TABLE `ofc_transplan_info` (
   `receiving_customer_name` varchar(50) DEFAULT NULL COMMENT '收货客户名称',
   `merchandiser` varchar(20) DEFAULT NULL COMMENT '开单员',
   `transport_type` varchar(20) DEFAULT NULL COMMENT '运输类型',
+  `base_name` varchar(50) DEFAULT NULL COMMENT '基地名称(电商)',
+  `cust_name` varchar(50) DEFAULT NULL COMMENT '货主名称',
+  `goods_type` varchar(20) DEFAULT NULL COMMENT '货品种类',
+  `goods_type_name` varchar(20) DEFAULT NULL COMMENT '货品种类名称',
+  `two_distribution` varchar(10) DEFAULT '' COMMENT '是否二次配送',
   PRIMARY KEY (`plan_code`),
   KEY `index_order_code` (`order_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单信息表';
 
--- ----------------------------
--- Table structure for ofc_transplan_newstatus
--- ----------------------------
 
 CREATE TABLE `ofc_transplan_newstatus` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
@@ -434,9 +423,6 @@ CREATE TABLE `ofc_transplan_newstatus` (
   KEY `index_order_code` (`order_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单最新状态表';
 
--- ----------------------------
--- Table structure for ofc_transplan_status
--- ----------------------------
 
 CREATE TABLE `ofc_transplan_status` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
@@ -449,9 +435,6 @@ CREATE TABLE `ofc_transplan_status` (
   KEY `index_plan_code` (`plan_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单状态表';
 
--- ----------------------------
--- Table structure for ofc_traplan_source_status
--- ----------------------------
 
 CREATE TABLE `ofc_traplan_source_status` (
   `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
@@ -470,9 +453,6 @@ CREATE TABLE `ofc_traplan_source_status` (
   KEY `index_plan_code` (`plan_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划资源状态表';
 
--- ----------------------------
--- Table structure for ofc_warehouse_information
--- ----------------------------
 
 CREATE TABLE `ofc_warehouse_information` (
   `support_name` varchar(30) DEFAULT '' COMMENT '供应商名称',
@@ -480,7 +460,7 @@ CREATE TABLE `ofc_warehouse_information` (
   `provide_transport` int(1) DEFAULT NULL COMMENT '是否需要提供运输',
   `shipment_time` datetime DEFAULT NULL COMMENT '出库发货时间',
   `arrive_time` datetime DEFAULT NULL COMMENT '入库预计到达时间',
-  `warehouse_name` varchar(30) DEFAULT '' COMMENT '仓库名称',
+  `warehouse_name` varchar(50) DEFAULT '' COMMENT '仓库名称',
   `plate_number` varchar(20) DEFAULT NULL COMMENT '车牌号',
   `driver_name` varchar(20) DEFAULT NULL COMMENT '司机姓名',
   `contact_number` varchar(50) DEFAULT NULL COMMENT '联系电话',
@@ -489,7 +469,9 @@ CREATE TABLE `ofc_warehouse_information` (
   `creator` varchar(20) DEFAULT NULL COMMENT '创建人',
   `operator` varchar(20) DEFAULT NULL COMMENT '操作人',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
-  `warehouse_code` varchar(30) DEFAULT NULL COMMENT '仓库编码',
+  `warehouse_code` varchar(50) DEFAULT NULL COMMENT '仓库编码',
   KEY `index:order_code` (`order_code`) USING HASH,
   KEY `index_order_code` (`order_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓配信息表';
+
+SET FOREIGN_KEY_CHECKS = 1;
