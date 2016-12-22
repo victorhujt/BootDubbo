@@ -261,7 +261,6 @@
             }
 
             for ( var i = 0; i < data.result.list.length; i++) {
-                debugger;
                 var order = data.result.list[i];
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                     + "<td>" + [ i + 1] + "</td>"
