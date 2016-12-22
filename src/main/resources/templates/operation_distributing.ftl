@@ -1176,6 +1176,7 @@
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
+        var useGoodsCode = goodsCode;
         goodsCode = goodsCode.split('@')[0];
         var goodsName = $(obj).parent().parent().children().eq(3).text();
         var specification = $(obj).parent().parent().children().eq(4).text();
@@ -1197,7 +1198,7 @@
             var consigneeType = tdArr.eq(6).text();//
             var consigneeCode = tdArr.eq(7).text();
             var consigneeContactCode = tdArr.eq(8).text();
-            var mapKey = goodsCode + "@" + goodsIndex;
+            var mapKey = useGoodsCode + "@" + goodsIndex;
             var num = "0";
 
             if(undefined != goodsAndConsigneeMap.get(mapKey)){

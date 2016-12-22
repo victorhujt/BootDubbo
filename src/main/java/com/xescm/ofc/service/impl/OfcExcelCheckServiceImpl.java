@@ -146,6 +146,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     requiredField = false;
                                     continue;
                                 }
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
                             }else if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
@@ -422,7 +425,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     continue;
                 }*/
                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
-
+                if(null == cscContantAndCompanyResponseDto){
+                    continue;
+                }
                 String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
                 //其中货品编码要判断一下是否在Map中存在,
                 if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
@@ -652,6 +657,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     requiredField = false;
                                     continue;
                                 }
+                                Field field = clazz.getDeclaredField(cellNumName);
+                                field.setAccessible(true);
+                                field.set(ofcExcelBoradwise,cellValue);
                             }else if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
@@ -922,8 +930,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }*/
 
 //                }
-                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
 
+
+                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
+                if(null == cscContantAndCompanyResponseDto){
+                    continue;
+                }
                 String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
                 //其中货品编码要判断一下是否在Map中存在,
                 if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
