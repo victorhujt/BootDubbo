@@ -2193,7 +2193,7 @@
                 ,function () {
 //                    location.reload();
                     var getTimestamp  = new Date().getTime();
-                    xescm.common.loadPage("/ofc/operationDistributing"+"?timestamp="+getTimestamp);
+                    xescm.common.loadPage("/ofc/operationDistributing");
                 })
     }
 

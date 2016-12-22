@@ -2398,9 +2398,9 @@
                     ,function () {
                         // 更新开单员
                         updateLastUserData();
-//                        location.reload();
-                        var getTimestamp  = new Date().getTime();
-                        xescm.common.loadPage("/ofc/tranLoad"+"?timestamp="+getTimestamp);
+                        location.reload();
+//                        var getTimestamp  = new Date().getTime();
+//                        xescm.common.loadPage("/ofc/tranLoad"+"?timestamp="+getTimestamp);
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
