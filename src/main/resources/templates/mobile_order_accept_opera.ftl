@@ -113,8 +113,8 @@
         .Apend{
             background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
             background-size: 100% 100%;
-            float: left;
-            width: 788px;
+           /* float: left;
+            width: 500px;*/
             height: 202px;
             overflow: hidden;
             position: relative;
@@ -161,77 +161,76 @@
     </#if>
 
     </div>
+
+
+
+    <form id="" method="post" class="form-horizontal" style="float:right;" role="form">
+        <div class="width-100 y-float">
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">流水号</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="mobileOrderCode" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+                <div class="col-width-168">
+                    <input class="col-xs-12" id="uploadDate" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="dingdingAccountNo" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.dingdingAccountNo)!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">开单员</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.operator)!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                <div class="col-width-168">
+                <#if mobileOrder.businessType  =="602">
+                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="卡班">
+                <#elseif  mobileOrder.businessType =="600">
+                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="城配">
+                <#elseif  mobileOrder.businessType =="601">
+                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="干线">
+                </#if>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="tranCode" name="tranCode" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.tranCode)!""}">
+                </div>
+            </div>
+        </div>
+       <#-- <div class="form-group y-float">
+            <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
+
+
+        </div>-->
+    </form>
     <div class="Apend" id="BApen">
         <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
         <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
     </div>
-  <div class="col-sm-6" style="float: right">
-
- </div>
-
-    <form id="" method="post" class="form-horizontal" role="form">
-        <div class="width-100 y-float">
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">流水号</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="mobileOrderCode" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">上传日期</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="col-xs-12" id="uploadDate" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="dingdingAccountNo" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.dingdingAccountNo)!""}">
-            </div>
-        </div>
-        <div class="form-group y-float" style="clear:left;">
-            <label class="control-label col-label no-padding-right" for="name">开单员</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="operator" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.operator)!""}">
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">业务类型</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-            <#if mobileOrder.businessType  =="602">
-                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="卡班">
-            <#elseif  mobileOrder.businessType =="600">
-                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="城配">
-            <#elseif  mobileOrder.businessType =="601">
-                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="干线">
-            </#if>
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">运输单号</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="tranCode" name="tranCode" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.tranCode)!""}">
-            </div>
-        </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
-
-
-        </div>
-    </form>
 <#--</div>--><!-- /.col -->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
