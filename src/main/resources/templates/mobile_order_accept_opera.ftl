@@ -73,16 +73,17 @@
 
         .imgClass{
             float: left;
-            width:188px;
-            height:198px;
-            border:1px solid #cacaca;
-            margin-top: 20px;
-            margin-right:10px;
+            width:138px;
+            height:96px;
             overflow: hidden;
+            margin: 2px;
+            box-sizing: border-box;
         }
         .imgClass img{
+            border:1px solid #c2c2c2;
             width: 100%;
             height:100%;
+
         }
       /*  .row{
             max-width: 1250px;
@@ -110,10 +111,11 @@
            top:3px;
        }
         .Apend{
-            width: 1004px;
-            margin: auto;
-            height: 250px;
-            display: none;
+            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
+            background-size: 100% 100%;
+            float: left;
+            width: 788px;
+            height: 202px;
             overflow: hidden;
             position: relative;
         }
@@ -131,8 +133,13 @@
             width: 24px;
             height: 22px;
             display: block;
-            margin-top: 16px;
-
+            margin-top: 15px;
+        }
+        .MaxImg{
+            margin-right: 5px;
+            width: 287px;height:202px;
+            border: 1px solid #c2c2c2;
+            float: left;margin-bottom: 20px;
         }
     </style>
 </head>
@@ -144,9 +151,18 @@
     </p>
 </div>
 <div class="col-xs-12">
+    <div class="MaxImg">
+    <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
+        <#list mobileOrder.urls as url>
+            <div class="imgClass  imgone" style="position: relative;">
+                <img src="${url!""}" class="dragAble"/>
+            </div>
+        </#list>
+    </#if>
+
+    </div>
     <div class="Apend" id="BApen">
         <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
-        <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
         <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
     </div>
   <div class="col-sm-6" style="float: right">
@@ -213,13 +229,7 @@
         <div class="form-group y-float">
             <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
 
-            <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
-                <#list mobileOrder.urls as url>
-                    <div class="imgClass  imgone" style="position: relative;">
-                        <img src="${url!""}" class="dragAble" />
-                    </div>
-                </#list>
-            </#if>
+
         </div>
     </form>
 <#--</div>--><!-- /.col -->
@@ -642,7 +652,7 @@
                 </div>
 
 
-                <div style="width:450px;float:left;">
+                <div style="width:460px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">收货方信息</h4>
                     </div>
@@ -1011,16 +1021,23 @@
             (function(i){
                 imgs[i].onclick=function () {
                     var _this=this;
-                    $(".Apend").css({"display":"block"});
+                    $("#BApen").css({"background":"#c2c2c2"});
                     $("#viewBiggerImg").attr('src',_this.src);
-//                        var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
-//                        var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
-//                        if(Left<=0){
-//                            $("#viewBiggerImg").animate({"left":"0"},300)
-//                        }
-//                        if(Left>=0){
-//                            $("#viewBiggerImg").animate({"left":"0"},300)
-//                        }
+                    var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
+
+                    var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
+                    if(Left<=-510){
+                        $("#viewBiggerImg").animate({"left":"-510px"},300)
+                    }
+                    if(Left>=10){
+                        $("#viewBiggerImg").animate({"left":"10px"},300)
+                    }
+                    if(Top<=-885){
+                        $("#viewBiggerImg").animate({"top":"-885px"},300)
+                    }
+                    if(Top>=10){
+                        $("#viewBiggerImg").animate({"top":"10px"},300)
+                    }
                     return
                 }
             })(i)
@@ -1028,11 +1045,15 @@
         var _ecIndex=-1,Deg_num=0;
         $('.imgClass').each(function(index, el){
             $(this).on('click',function(){
+                $(this).css({"border":"4px solid #666"});
+                $(this).siblings(".imgClass").css({"border":"1px solid #c2c2c2"});
                 if(_ecIndex!=index){
                     _ecIndex=index;
                     Deg_num=0;
                     $("#viewBiggerImg").css({
-                        "transform":"rotate(0deg)"
+                        "transform":"rotate(0deg)",
+                        "left":"0",
+                        "top":"0"
                     })
                 };
             });
@@ -1044,9 +1065,7 @@
             })
         });
 
-        $(".closes").on("click",function () {
-            $(".Apend").css({"display":"none"});
-        })
+
     }
     Maxmin();
 </script>

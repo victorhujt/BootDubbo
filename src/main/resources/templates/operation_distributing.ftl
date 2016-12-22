@@ -1293,6 +1293,8 @@
         if(!validateCustChosen()){
             alert("请先选择客户")
         }else{
+            $("#pageBarDivConsignor").hide();
+            $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -1446,6 +1448,7 @@
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivConsignor").show();
                 loadConsingorDistri(data.result.list);
                 laypage({
                     cont: $("#pageBarDivConsignorDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -1570,6 +1573,8 @@
             return;
         }*/else{
             //$("#contactSelectListTbody1").html("");
+            $("#consigneecheck").attr("checked", false);
+            $("#contactSelectListTbody1 tr td label input[name='consigneeSel']").attr("checked", false);
             $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
         }
     });
@@ -1917,7 +1922,7 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
-                layer.msg("未查询到客户信息！");
+                layer.msg("暂时未查询到客户信息！");
             } else if (result.code == 200) {
                 loadCustomer(result);
                 laypage({
@@ -1943,7 +1948,7 @@
 
     // 加载客户列表
     function loadCustomer(data) {
-        if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
+        if ((data == null || data == '' || data == undefined) || data.result.list == null || (data.result.list.length < 1)) {
             $("#custListDivTbody").html("");
             return;
         }

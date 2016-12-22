@@ -103,12 +103,13 @@
             margin-left: 71px;
         }*/
         .imgone{
-           margin-right: 10px;
+           margin-right: 13px;
         }
         .Apend{
+            background: #c2c2c2;
             width: 1004px;
-            margin: auto;
             height: 250px;
+            margin-left: 11px;
             display: none;
             overflow: hidden;
             position: relative;
@@ -127,7 +128,7 @@
             width: 24px;
             height: 22px;
             display: block;
-            margin-top: 16px;
+            margin-top: 15px;
 
          }
     </style>
@@ -268,14 +269,21 @@
                     var _this=this;
                     $(".Apend").css({"display":"block"});
                     $("#viewBiggerImg").attr('src',_this.src);
-//                        var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
-//                        var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
-//                        if(Left<=0){
-//                            $("#viewBiggerImg").animate({"left":"0"},300)
-//                        }
-//                        if(Left>=0){
-//                            $("#viewBiggerImg").animate({"left":"0"},300)
-//                        }
+                        var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
+                        console.log(Left);
+                        var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
+                        if(Left<=-510){
+                            $("#viewBiggerImg").animate({"left":"-510px"},300)
+                        }
+                        if(Left>=10){
+                            $("#viewBiggerImg").animate({"left":"10px"},300)
+                        }
+                        if(Top<=-885){
+                            $("#viewBiggerImg").animate({"top":"-885px"},300)
+                        }
+                        if(Top>=10){
+                            $("#viewBiggerImg").animate({"top":"10px"},300)
+                        }
                     return
                 }
             })(i)
@@ -287,7 +295,9 @@
                     _ecIndex=index;
                     Deg_num=0;
                     $("#viewBiggerImg").css({
-                        "transform":"rotate(0deg)"
+                        "transform":"rotate(0deg)",
+                        "left":"0",
+                        "top":"0"
                     })
                 };
             });
