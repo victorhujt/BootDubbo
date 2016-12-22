@@ -284,7 +284,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = null;
                 //如果存在
                 if(null != result && result.size() > 0){
-                    orderByCustOrderCode.put(custOrderCode,true);
+//                    orderByCustOrderCode.put(custOrderCode,true);
                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                     cscContantAndCompanyResponseDto = result.get(0);
                     cscContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
@@ -777,7 +777,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = null;
                 //如果存在
                 if(null != result && result.size() > 0){
-                    orderByCustOrderCode.put(custOrderCode,true);
+//                    orderByCustOrderCode.put(custOrderCode,true);
                     //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
                     cscContantAndCompanyResponseDto = result.get(0);
                     cscContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
