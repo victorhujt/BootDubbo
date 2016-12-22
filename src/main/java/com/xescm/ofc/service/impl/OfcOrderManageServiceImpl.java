@@ -319,6 +319,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                  */
                 if ("4".equals(ofcFundamentalInformation.getPlatformType())) {
                     ofcTransplanInfo.setSingleSourceOfTransport("6001");
+                } else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("100003")){
+                    ofcTransplanInfo.setSingleSourceOfTransport("6002");
                 } else if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())) {
                     ofcTransplanInfo.setSingleSourceOfTransport("6003");
                 } else {
@@ -533,6 +535,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                  */
                 if("4".equals(ofcFundamentalInformation.getPlatformType())){
                     ofcTransplanInfo.setSingleSourceOfTransport("6001");
+                }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("100003")){
+                    ofcTransplanInfo.setSingleSourceOfTransport("6002");
                 }else if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())){
                     ofcTransplanInfo.setSingleSourceOfTransport("6003");
                 }else{
