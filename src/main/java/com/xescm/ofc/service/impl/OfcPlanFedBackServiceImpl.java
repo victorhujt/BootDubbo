@@ -67,6 +67,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 logger.info("跟踪状态"+status);
                 ofcTransplanStatus.setPlanCode(ofcPlanFedBackCondition.getTransportNo());
                 ofcTransplanNewstatus.setPlanCode(ofcPlanFedBackCondition.getTransportNo());
+                if(ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo())==null){
+                    throw new BusinessException("传送运输单号信息失败，查不到相关计划单");
+                }
                 String orderCode=ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo()).getOrderCode();
                 mapperMap.put("ifFinished","planfinish");
                 mapperMap.put("orderCode",orderCode);
