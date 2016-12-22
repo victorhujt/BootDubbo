@@ -31,7 +31,7 @@
     </resultMap>
 
 
-    <select id="planScreen" parameterType="ofcPlanScreenCondition" resultMap="planSearchResultMap">
+    <select id="planScreen" parameterType="com.xescm.ofc.domain.OfcPlanScreenCondition" resultMap="planSearchResultMap">
         SELECT
         otp.order_code orderCode,
         otp.plan_code planCode,

@@ -114,6 +114,7 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("城配开单根据选择的客户查询仓库==> customerCode={}", customerCode);
         try{
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
         }catch (Exception ex){
             logger.error("城配下单查询仓库列表失败!{}",ex.getMessage(),ex);
@@ -134,6 +135,7 @@ public class OfcOperationDistributing extends BaseController{
             CscGoodsType cscGoodsType = new CscGoodsType();
             wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
+                response.setCharacterEncoding("UTF-8");
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
@@ -158,6 +160,7 @@ public class OfcOperationDistributing extends BaseController{
             cscGoodsType.setPid(goodsType);
             wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
+                response.setCharacterEncoding("UTF-8");
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){
@@ -179,6 +182,7 @@ public class OfcOperationDistributing extends BaseController{
         try{
             wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
             if(null != wrapper.getResult()){
+                response.setCharacterEncoding("UTF-8");
                 response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
             }
         }catch (Exception ex){

@@ -77,6 +77,7 @@
             border:1px solid #cacaca;
             margin-top: 20px;
             overflow: hidden;
+            margin-right: 10px;
         }
         .imgClass img{
             width: 100%;
@@ -102,11 +103,13 @@
             margin-left: 71px;
         }*/
         .imgone{
-           margin-right: 10px;
+           margin-right: 13px;
         }
         .Apend{
-            width: 100%;
+            background: #c2c2c2;
+            width: 1004px;
             height: 250px;
+            margin-left: 11px;
             display: none;
             overflow: hidden;
             position: relative;
@@ -125,7 +128,7 @@
             width: 24px;
             height: 22px;
             display: block;
-            margin-top: 16px;
+            margin-top: 15px;
 
          }
     </style>
@@ -235,7 +238,7 @@
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                             <#list mobileOrder.urls as url>
                                 <div class="imgClass  imgone" style="position: relative;">
-                                    <img src="${url!""}" class="dragAble" onmousewheel="return onWheelZoom(this)" style="position: absolute"/>
+                                    <img src="${url!""}" class="dragAble" />
                                 </div>
                             </#list>
                         </#if>
@@ -256,30 +259,59 @@
         </div>
     </form>
 </div><!-- /.col -->
-<script type="text/javascript" src="../js/drag_map.js"></script>
+<#--<script type="text/javascript" src="../js/drag_map.js"></script>-->
 <script>
     function Maxmin() {
         var imgs = document.getElementsByClassName("dragAble");
-            for (var i=0;i<imgs.length;i++){
-                (function(i){
-                    imgs[i].onclick=function () {
-                        var _this=this;
-                        $(".Apend").css({"display":"block"});
-                        $("#viewBiggerImg").attr('src',_this.src);
-                        $(".scales").on("click",function () {
-                            $(".dragAble").animate({
-                                "transform":"rotate(90deg)"
-                            })
-                        })
-
-
-                        return
-                    }
-                })(i)
-            }
-            $(".closes").on("click",function () {
-                $(".Apend").css({"display":"block"});
+        for (var i=0;i<imgs.length;i++){
+            (function(i){
+                imgs[i].onclick=function () {
+                    var _this=this;
+                    $(".Apend").css({"display":"block"});
+                    $("#viewBiggerImg").attr('src',_this.src);
+                        var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
+                        console.log(Left);
+                        var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
+                        if(Left<=-510){
+                            $("#viewBiggerImg").animate({"left":"-510px"},300)
+                        }
+                        if(Left>=10){
+                            $("#viewBiggerImg").animate({"left":"10px"},300)
+                        }
+                        if(Top<=-885){
+                            $("#viewBiggerImg").animate({"top":"-885px"},300)
+                        }
+                        if(Top>=10){
+                            $("#viewBiggerImg").animate({"top":"10px"},300)
+                        }
+                    return
+                }
+            })(i)
+        }
+        var _ecIndex=-1,Deg_num=0;
+        $('.imgClass').each(function(index, el){
+            $(this).on('click',function(){
+                if(_ecIndex!=index){
+                    _ecIndex=index;
+                    Deg_num=0;
+                    $("#viewBiggerImg").css({
+                        "transform":"rotate(0deg)",
+                        "left":"0",
+                        "top":"0"
+                    })
+                };
+            });
+        });
+        $(".scales").on("click",function () {
+            Deg_num++;
+            $("#viewBiggerImg").css({
+                "transform":"rotate("+90*Deg_num+"deg)"
             })
+        });
+
+        $(".closes").on("click",function () {
+            $(".Apend").css({"display":"none"});
+        })
     }
     Maxmin();
 </script>

@@ -215,6 +215,7 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单删除实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(result);
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
@@ -262,6 +263,7 @@ public class OfcOrderManageRest extends BaseController{
             lineVos1.addAll(lineVos2);
             lineVos1.get(0).setCompanyName("孙悟空");
             rmcCompanyLists.setResult(lineVos1);*/
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
@@ -340,6 +342,7 @@ public class OfcOrderManageRest extends BaseController{
         }
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
         try{
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);

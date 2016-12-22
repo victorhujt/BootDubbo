@@ -73,15 +73,17 @@
 
         .imgClass{
             float: left;
-            width:190px;
-            height:145px;
-            border:1px solid #cacaca;
-            margin-top: 20px;
-            margin-right:10px;
+            width:138px;
+            height:96px;
+            overflow: hidden;
+            margin: 2px;
+            box-sizing: border-box;
         }
         .imgClass img{
+            border:1px solid #c2c2c2;
             width: 100%;
             height:100%;
+
         }
       /*  .row{
             max-width: 1250px;
@@ -108,6 +110,37 @@
        .pay .chosen-container-single .chosen-search:after{
            top:3px;
        }
+        .Apend{
+            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
+            background-size: 100% 100%;
+           /* float: left;
+            width: 500px;*/
+            height: 202px;
+            overflow: hidden;
+            position: relative;
+        }
+        .scales,.closes{
+            position: relative;
+            z-index: 2;
+            width: 50px;height: 50px;
+            float: right;
+            background: #dbdbdb;
+            line-height: 50px;
+        }
+        .scales img,.closes img{
+            background-size: 100% 100%;
+            margin-left: 14px;
+            width: 24px;
+            height: 22px;
+            display: block;
+            margin-top: 15px;
+        }
+        .MaxImg{
+            margin-right: 5px;
+            width: 287px;height:202px;
+            border: 1px solid #c2c2c2;
+            float: left;margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -117,82 +150,87 @@
         订单详情
     </p>
 </div>
-<#--<div class="col-xs-12">-->
-<#--  <div class="col-sm-6" style="float: right">
- <#tton style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-         返回
-     </button>
- </div>-->
+<div class="col-xs-12">
+    <div class="MaxImg">
+    <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
+        <#list mobileOrder.urls as url>
+            <div class="imgClass  imgone" style="position: relative;">
+                <img src="${url!""}" class="dragAble"/>
+            </div>
+        </#list>
+    </#if>
 
-    <form id="" method="post" class="form-horizontal" role="form">
+    </div>
+
+
+
+    <form id="" method="post" class="form-horizontal" style="float:right;" role="form">
         <div class="width-100 y-float">
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">流水号</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="mobileOrderCode" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">流水号</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="mobileOrderCode" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">上传日期</label>
+                <div class="col-width-168">
+                    <input class="col-xs-12" id="uploadDate" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="dingdingAccountNo" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.dingdingAccountNo)!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">开单员</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.operator)!""}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                <div class="col-width-168">
+                <#if mobileOrder.businessType  =="602">
+                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="卡班">
+                <#elseif  mobileOrder.businessType =="600">
+                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="城配">
+                <#elseif  mobileOrder.businessType =="601">
+                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
+                           aria-controls="dynamic-table" value="干线">
+                </#if>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">运输单号</label>
+                <div class="col-width-168">
+                    <input class="width-100" id="tranCode" name="tranCode" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="${(mobileOrder.tranCode)!""}">
+                </div>
             </div>
         </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">上传日期</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="col-xs-12" id="uploadDate" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="dingdingAccountNo" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.dingdingAccountNo)!""}">
-            </div>
-        </div>
-        <div class="form-group y-float" style="clear:left;">
-            <label class="control-label col-label no-padding-right" for="name">开单员</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="operator" name="" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.operator)!""}">
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">业务类型</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-            <#if mobileOrder.businessType  =="602">
-                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="卡班">
-            <#elseif  mobileOrder.businessType =="600">
-                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="城配">
-            <#elseif  mobileOrder.businessType =="601">
-                <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                       aria-controls="dynamic-table" value="干线">
-            </#if>
-            </div>
-        </div>
-        <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name">运输单号</label>
-            <div class="w-width-220" style="width:226px; padding:0 15px;">
-                <input class="width-100" id="tranCode" name="tranCode" type="search" placeholder=""
-                       aria-controls="dynamic-table"
-                       value="${(mobileOrder.tranCode)!""}">
-            </div>
-        </div>
-        </div>
-        <div class="form-group y-float">
+       <#-- <div class="form-group y-float">
             <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
 
-            <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
-                <#list mobileOrder.urls as url>
-                    <div class="imgClass  imgone">
-                        <img src="${url!""}"/>
-                    </div>
-                </#list>
-            </#if>
-        </div>
+
+        </div>-->
     </form>
+    <div class="Apend" id="BApen">
+        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
+        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+    </div>
 <#--</div>--><!-- /.col -->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -248,8 +286,10 @@
                     </thead>
                     <tbody id="goodsSelectListTbody"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -314,8 +354,10 @@
                     </thead>
                     <tbody id="contactSelectListTbody2"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -380,8 +422,10 @@
                     </thead>
                     <tbody id="contactSelectListTbody1"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -613,7 +657,7 @@
                 </div>
 
 
-                <div style="width:450px;float:left;">
+                <div style="width:460px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">收货方信息</h4>
                     </div>
@@ -974,7 +1018,62 @@
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
 
+<script>
 
+    function Maxmin() {
+        var imgs = document.getElementsByClassName("dragAble");
+        for (var i=0;i<imgs.length;i++){
+            (function(i){
+                imgs[i].onclick=function () {
+                    var _this=this;
+                    $("#BApen").css({"background":"#c2c2c2"});
+                    $("#viewBiggerImg").attr('src',_this.src);
+                    var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
+
+                    var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
+                    if(Left<=-510){
+                        $("#viewBiggerImg").animate({"left":"-510px"},300)
+                    }
+                    if(Left>=10){
+                        $("#viewBiggerImg").animate({"left":"10px"},300)
+                    }
+                    if(Top<=-885){
+                        $("#viewBiggerImg").animate({"top":"-885px"},300)
+                    }
+                    if(Top>=10){
+                        $("#viewBiggerImg").animate({"top":"10px"},300)
+                    }
+                    return
+                }
+            })(i)
+        }
+        var _ecIndex=-1,Deg_num=0;
+        $('.imgClass').each(function(index, el){
+            $(this).on('click',function(){
+                $(this).css({"border":"4px solid #666"});
+                $(this).siblings(".imgClass").css({"border":"1px solid #c2c2c2"});
+                if(_ecIndex!=index){
+                    _ecIndex=index;
+                    Deg_num=0;
+                    $("#viewBiggerImg").css({
+                        "transform":"rotate(0deg)",
+                        "left":"0",
+                        "top":"0"
+                    })
+                };
+            });
+        });
+        $(".scales").on("click",function () {
+            Deg_num++;
+            $("#viewBiggerImg").css({
+                "transform":"rotate("+90*Deg_num+"deg)"
+            })
+        });
+
+
+    }
+    Maxmin();
+</script>
 <script type="text/javascript">
     var scripts = [ null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
@@ -1370,6 +1469,8 @@
         countQuantityOrWeightOrCubageCheck();
     }
     function seleGoods(obj) {
+        $("#goodsSelectListTbody").html("");
+        $("#pageBarDivGoods").hide();
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2162,10 +2263,11 @@
         var type= contactType == 1?"收货方":"发货方";
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
-            debugger;
-            if (result == undefined || result == null || result == "[]") {
+            if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
+
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDivConsign"+ptype).show();
                 loadConsignOrEE(result,contactType);
                 laypage({
                     cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2235,10 +2337,11 @@
         cscGoods.pSize = 10;
         var param = JSON.stringify(cscGoods);
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-            debugger;
+
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivGoods").show();
                 loadGoods(data.result.list);
                 laypage({
                     cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2256,7 +2359,7 @@
             } else if (data.code == 403) {
                 alert("没有权限")
             } else {
-                $("#custListDivTbody").html("");
+                $("#goodsSelectListTbody").html("");
             }
             data=eval(data);
 
@@ -2362,22 +2465,23 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+            $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
+            $("#goodsInfoListDiv tr td div.has-error").remove();
+            $("select[name='chargingWays']").each(function(){
+                if($(this).val()=="01"){
+                    var value=onlyNumber($(this).parent().next().next().children().val());
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
+                }else if($(this).val()=="02"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
+                }else if($(this).val()=="03"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
+                }
+            });
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
-                if(value==""){
-                    $(this).css("border-color","#dd5a43")
-                    if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>添加货品一定要输入重量哦</div>").insertAfter($(this));
-                        $(this).parent().removeClass('has-info').addClass('has-error');
-                        $(this).val("");
-                    }else{
-                        $(this).val("");
-                    }
-                }else{
-                    $(this).css("border-color","#cacaca")
-                    $(this).val(value);
-                    $(this).parent().find("div").remove();
-                }
+                checkValue($(this),value,"添加货品重量必输")
             });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
@@ -2477,7 +2581,7 @@
                         ,"tag":tag
                         ,"mobileOrderCode":mobileOrderCode
 
-            }
+                    }
                     ,"您确认提交订单吗?"
                     ,function () {
                         // 更新开单员
@@ -2666,6 +2770,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户");
             }else{
+                $("#pageBarDivConsignor").hide();
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2687,6 +2792,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#pageBarDivConsignee").hide();
                 $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -3033,7 +3139,27 @@
         date.setTime(-1); //设定一个过去的时间即可
         document.cookie=name+"=v; expires="+date.toGMTString();
     }
+
+    //货品行校验数据并提示
+    function checkValue(obj,value,msg){
+        if(value==""){
+            $(obj).css("border-color","#dd5a43")
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+            }else{
+                $(obj).val("");
+            }
+        }else{
+            $(obj).css("border-color","#cacaca")
+            $(obj).val(value);
+            $(obj).parent().find("div").remove();
+        }
+    }
 </script>
-<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
+<#--<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>-->
+
+<#--<script type="text/javascript" src="../js/drag_map.js"></script>-->
 
 </body>

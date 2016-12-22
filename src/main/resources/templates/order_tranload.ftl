@@ -1285,6 +1285,7 @@
     }
     function seleGoods(obj) {
         $("#goodsSelectListTbody").html("");
+        $("#pageBarDivGoods").hide();
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2077,9 +2078,10 @@
         var type= contactType == 1?"收货方":"发货方";
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
-            if (result == undefined || result == null || result == "[]") {
+            if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDivConsign"+ptype).show();
                 loadConsignOrEE(result,contactType);
                 laypage({
                     cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2137,6 +2139,7 @@
 
     // 分页查询货品列表
     function queryGoodsData(pageNum) {
+
         $("#goodsSelectListTbody").html("");
         var cscGoods = {};
         var groupId = $("#custGroupId").val();
@@ -2149,10 +2152,11 @@
         cscGoods.pSize = 10;
         var param = JSON.stringify(cscGoods);
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-            debugger;
+
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivGoods").show();
                 loadGoods(data.result.list);
                 laypage({
                     cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2394,7 +2398,8 @@
                     ,function () {
                         // 更新开单员
                         updateLastUserData();
-                        xescm.common.loadPage("/ofc/tranLoad");
+                        location.reload();
+//                        xescm.common.loadPage("/ofc/tranLoad");
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
@@ -2428,6 +2433,7 @@
                         cscContact.purpose = "2";
                         outConsignor(cscContact,cscContactCompany,groupId,customerCode);
                         $("#goodsInfoListDiv").html("");
+
                         countQuantityOrWeightOrCubageCheck();
                     }
                 }
@@ -2578,6 +2584,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户");
             }else{
+                $("#pageBarDivConsignor").hide();
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2599,6 +2606,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#pageBarDivConsignee").hide();
                 $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }

@@ -341,6 +341,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
             cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));
             Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
@@ -403,6 +404,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
             result.addAll(resultOfBoth);*/
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(result));
         } catch (Exception ex) {
             logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
@@ -457,6 +459,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
             cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
             Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
         }catch (IOException ex) {
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
@@ -529,6 +532,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 cscGoodType.setPid(cscGoodsType);
             }
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
             logger.info("###############返回货品类别列表为{}####################",JSONUtils.objectToJson(CscGoodsType.getResult()));
             CscGoodsTypeVo cscGoodsTypeVo=new CscGoodsTypeVo();

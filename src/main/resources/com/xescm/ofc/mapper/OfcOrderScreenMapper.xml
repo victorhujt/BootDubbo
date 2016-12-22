@@ -36,7 +36,7 @@
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
     LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     -->
-    <select id="orderScreen" parameterType="orderScreenCondition" resultMap="orderSearchResultMap">
+    <select id="orderScreen" parameterType="com.xescm.ofc.domain.OrderScreenCondition" resultMap="orderSearchResultMap">
         SELECT
         ofi.order_code orderCode,
         ofi.cust_order_code custOrderCode,
