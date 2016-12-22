@@ -733,9 +733,13 @@
     }
     //链接到收发货方联系人档案
     $("#to_operation_csc_contact_manage").click(function () {
-        var csc_url = $("#csc_url").html();
+        /*var csc_url = $("#csc_url").html();
         var url = csc_url + "/csc/receive/toMainReceivAndDispatchFilePage";
-        xescm.common.loadPage(url);
+        xescm.common.loadPage(url);*/
+        var url = "/csc/receive/toMainReceivAndDispatchFilePage";
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
     })
     //创建新客户
     $("#to_csc_createCustBtn").click(function () {

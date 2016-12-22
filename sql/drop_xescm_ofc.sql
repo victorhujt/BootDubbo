@@ -1,9 +1,11 @@
+DROP TABLE IF EXISTS `ofc_attachment`;
 DROP TABLE IF EXISTS `ofc_create_order_error_log`;
 DROP TABLE IF EXISTS `ofc_distribution_basic_info`;
 DROP TABLE IF EXISTS `ofc_finance_information`;
 DROP TABLE IF EXISTS `ofc_fundamental_information`;
 DROP TABLE IF EXISTS `ofc_goods_details_info`;
 DROP TABLE IF EXISTS `ofc_merchandiser`;
+DROP TABLE IF EXISTS `ofc_mobile_order`;
 DROP TABLE IF EXISTS `ofc_order_status`;
 DROP TABLE IF EXISTS `ofc_planned_detail`;
 DROP TABLE IF EXISTS `ofc_siloprogram_info`;

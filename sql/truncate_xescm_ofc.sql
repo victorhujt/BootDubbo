@@ -1,9 +1,11 @@
+TRUNCATE TABLE `ofc_attachment`;
 TRUNCATE TABLE `ofc_create_order_error_log`;
 TRUNCATE TABLE `ofc_distribution_basic_info`;
 TRUNCATE TABLE `ofc_finance_information`;
 TRUNCATE TABLE `ofc_fundamental_information`;
 TRUNCATE TABLE `ofc_goods_details_info`;
 TRUNCATE TABLE `ofc_merchandiser`;
+TRUNCATE TABLE `ofc_mobile_order`;
 TRUNCATE TABLE `ofc_order_status`;
 TRUNCATE TABLE `ofc_planned_detail`;
 TRUNCATE TABLE `ofc_siloprogram_info`;
