@@ -2191,8 +2191,9 @@
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
-                    location.reload();
-                    //xescm.common.loadPage("/ofc/operationDistributing");
+//                    location.reload();
+                    var getTimestamp  = new Date().getTime();
+                    xescm.common.loadPage("/ofc/operationDistributing"+"?timestamp="+getTimestamp);
                 })
     }
 
