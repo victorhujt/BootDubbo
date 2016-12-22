@@ -660,10 +660,17 @@
                                     if(index == 0){//货品详细信息
                                         viewMapValue[0] = data;
                                         //顺便在页面中进行展示
+                                        var goodsCode = data.goodsCode;
+                                        var realGoodsCode0 = goodsCode.split('@')[0];
+                                        var realGoodsCode1 = '';
+                                        if(goodsCode.split('@').length > 1){
+                                            realGoodsCode1 = '@' + goodsCode.split('@')[1];
+                                        }
+
                                         $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
                                                 "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>查看</button></td>" +
                                                 "<td>" + indexView + "</td>" +
-                                                "<td>" + data.goodsCode + "</td>" +
+                                                "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
                                                 "<td>" + data.goodsName + "</td>" +
                                                 "<td>" + data.specification + "</td>" +
                                                 "<td>" + data.unit + "</td>" +

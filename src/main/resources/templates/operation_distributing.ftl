@@ -820,6 +820,12 @@
                 viewMapIndexOf += 1;
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
+                var goodsCode = goodsDetail.goodsCode;
+                var realGoodsCode0 = goodsCode.split('@')[0];
+                var realGoodsCode1 = '';
+                if(goodsCode.split('@').length > 1){
+                    realGoodsCode1 = '@' + goodsCode.split('@')[1];
+                }
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
                 $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
                         "<td>" +
@@ -827,7 +833,7 @@
                         "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                         "</td>" +
                         "<td>" + viewMapIndexOf + "</td>" +
-                        "<td>" + goodsDetail.goodsCode + "</td>" +
+                        "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
                         "<td>" + goodsDetail.goodsName + "</td>" +
                         "<td>" + goodsDetail.specification + "</td>" +
                         "<td>" + goodsDetail.unit + "</td>" +
