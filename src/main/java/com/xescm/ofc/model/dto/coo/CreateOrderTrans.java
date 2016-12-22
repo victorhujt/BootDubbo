@@ -4,8 +4,10 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.OrderSourceEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -131,7 +133,10 @@ public class CreateOrderTrans {
             String custCode = createOrderEntity.getCustCode();
             String orderSource = OrderSourceEnum.getCodeByCustCode(custCode);
             ofcFundamentalInformation.setOrderSource(orderSource);
-//            ofcFundamentalInformation.setPlatformType("4");
+            //如果是鲜易网（100002或者XEBEST），固定平台类型为4
+            if (StringUtils.equals("100002", custCode) || StringUtils.equals("XEBEST", custCode)) {
+                ofcFundamentalInformation.setPlatformType("4");
+            }
             return ofcFundamentalInformation;
         }
         return null;
