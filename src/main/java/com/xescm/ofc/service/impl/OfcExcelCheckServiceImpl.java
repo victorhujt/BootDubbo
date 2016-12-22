@@ -260,6 +260,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
 
         for(OfcExcelBoradwise ofcExcelBoradwise : ofcExcelBoradwiseList){
+            ofcExcelBoradwise.setGoodsCode(ofcExcelBoradwise.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
+
+
             String custOrderCode = ofcExcelBoradwise.getCustOrderCode();
             String mapKey = null;
             //如果该客户订单编号是第一次出现
@@ -317,7 +320,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             //如果维护了就只取收货方和数量
                             CscGoodsApiVo cscGoodsApiVo = cscGoodsApiVoResult.get(0);
 //                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
-                            mapKey = cscGoodsApiVo.getGoodsCode();
+                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce();
                             JSONObject jsonObject = new JSONObject();
 
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
@@ -445,7 +448,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONArray jsonArray = new JSONArray();
                         CscGoodsApiVo cscGoodsApiVo = cscGoodsApiVoResult.get(0);
 //                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
-                        mapKey = cscGoodsApiVo.getGoodsCode();
+                        mapKey = cscGoodsApiVo.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce();
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
@@ -757,6 +760,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
 
         for(OfcExcelBoradwise ofcExcelBoradwise : ofcExcelBoradwiseList){
+            ofcExcelBoradwise.setGoodsCode(ofcExcelBoradwise.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
             String custOrderCode = ofcExcelBoradwise.getCustOrderCode();
             String mapKey = null;
             //如果该客户订单编号是第一次出现
@@ -814,7 +818,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             //如果维护了就只取收货方和数量
                             CscGoodsApiVo cscGoodsApiVo = cscGoodsApiVoResult.get(0);
 //                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
-                            mapKey = cscGoodsApiVo.getGoodsCode();
+                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce();
                             JSONObject jsonObject = new JSONObject();
 
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
@@ -942,7 +946,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONArray jsonArray = new JSONArray();
                         CscGoodsApiVo cscGoodsApiVo = cscGoodsApiVoResult.get(0);
 //                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
-                        mapKey = cscGoodsApiVo.getGoodsCode();
+                        mapKey = cscGoodsApiVo.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce();
                         JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
