@@ -1469,6 +1469,8 @@
         countQuantityOrWeightOrCubageCheck();
     }
     function seleGoods(obj) {
+        $("#goodsSelectListTbody").html("");
+        $("#pageBarDivGoods").hide();
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -2261,10 +2263,11 @@
         var type= contactType == 1?"收货方":"发货方";
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
-            debugger;
-            if (result == undefined || result == null || result == "[]") {
+            if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
+
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDivConsign"+ptype).show();
                 loadConsignOrEE(result,contactType);
                 laypage({
                     cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2334,10 +2337,11 @@
         cscGoods.pSize = 10;
         var param = JSON.stringify(cscGoods);
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-            debugger;
+
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivGoods").show();
                 loadGoods(data.result.list);
                 laypage({
                     cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2355,7 +2359,7 @@
             } else if (data.code == 403) {
                 alert("没有权限")
             } else {
-                $("#custListDivTbody").html("");
+                $("#goodsSelectListTbody").html("");
             }
             data=eval(data);
 
@@ -2461,22 +2465,23 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+            $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
+            $("#goodsInfoListDiv tr td div.has-error").remove();
+            $("select[name='chargingWays']").each(function(){
+                if($(this).val()=="01"){
+                    var value=onlyNumber($(this).parent().next().next().children().val());
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
+                }else if($(this).val()=="02"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
+                }else if($(this).val()=="03"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
+                }
+            });
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
-                if(value==""){
-                    $(this).css("border-color","#dd5a43")
-                    if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>添加货品一定要输入重量哦</div>").insertAfter($(this));
-                        $(this).parent().removeClass('has-info').addClass('has-error');
-                        $(this).val("");
-                    }else{
-                        $(this).val("");
-                    }
-                }else{
-                    $(this).css("border-color","#cacaca")
-                    $(this).val(value);
-                    $(this).parent().find("div").remove();
-                }
+                checkValue($(this),value,"添加货品重量必输")
             });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
@@ -2576,7 +2581,7 @@
                         ,"tag":tag
                         ,"mobileOrderCode":mobileOrderCode
 
-            }
+                    }
                     ,"您确认提交订单吗?"
                     ,function () {
                         // 更新开单员
@@ -2765,6 +2770,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户");
             }else{
+                $("#pageBarDivConsignor").hide();
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2786,6 +2792,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#pageBarDivConsignee").hide();
                 $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -3131,6 +3138,24 @@
         var date=new Date();
         date.setTime(-1); //设定一个过去的时间即可
         document.cookie=name+"=v; expires="+date.toGMTString();
+    }
+
+    //货品行校验数据并提示
+    function checkValue(obj,value,msg){
+        if(value==""){
+            $(obj).css("border-color","#dd5a43")
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+            }else{
+                $(obj).val("");
+            }
+        }else{
+            $(obj).css("border-color","#cacaca")
+            $(obj).val(value);
+            $(obj).parent().find("div").remove();
+        }
     }
 </script>
 <#--<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>-->

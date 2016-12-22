@@ -63,6 +63,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
+        boolean requiredField = true;
         try {
             clazz = Class.forName("com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise");
         } catch (ClassNotFoundException e) {
@@ -117,9 +118,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     if (null == hssfCell && cellNum > 11) {
                         //标记当前列出错, 并跳过当前循环
                         break;
-                    } else if (null == hssfCell || HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()) {
+                    }/* else if (null == hssfCell || HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()) {
                         continue;
-                    }
+                    }*/
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
                     if (HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()) {
@@ -138,9 +139,19 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }else if(rowNum > 0){ // 表格的数据体
                         String cellNumName = modelNameStr.get(cellNum); //拿到当前列对应的字段的值
                         try {
-                            if("orderTime".equals(cellNumName)){
+                            //客户订单号, 订单日期, 收货方名称, 货品编码必填
+                            if("consigneeName".equals(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方名称必填!");
+                                    requiredField = false;
+                                    continue;
+                                }
+                            }else if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    cellValue = "0";
+                                }
                                 boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
                                 boolean matchesInt = cellValue.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
@@ -155,11 +166,17 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 }
 
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    cellValue = "0";
+                                }
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
                             }else if("consigneeContactPhone".equals(cellNumName)){//电话
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    cellValue = "0";
+                                }
                                 String format = null;
                                 String cellValuePhone = null;
                                 if (HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()) {
@@ -175,12 +192,22 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.set(ofcExcelBoradwise,format);
 
                             }else if("custOrderCode".equals(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!客户订单号必填!");
+                                    requiredField = false;
+                                    continue;
+                                }
                                 DecimalFormat df = new DecimalFormat("0");
                                 cellValue = df.format(Double.valueOf(cellValue));
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
                             }else if("goodsCode".equals(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!货品编码必填!");
+                                    requiredField = false;
+                                    continue;
+                                }
                                 if (HSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()) {
                                     cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
                                 } else if (HSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
@@ -193,6 +220,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
                             }else if (!PubUtils.isSEmptyOrNull(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    cellValue = "";
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -213,6 +243,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         //无法再按照之前的方法进行
 
 
+        //如果必填字段有缺失
+        if(!requiredField){
+            OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
+            ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
+        }
         if(modelNameStr.size() < 12){
             throw new BusinessException("Excel字段不全!");//
         }
@@ -461,6 +497,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //第一个3
                     if(1 == consigneeNum){
                         //所有的货品, 每个收货人都应该有, 如果没有就置为0, 而且要将3个一循环的数据堆齐
+                        if(null == jsonArray.get(0)){
+                            throw new BusinessException("货品校验时出错!");
+                        }
                         CscGoodsApiVo cscGoodsApiVo = (CscGoodsApiVo) jsonArray.get(0);
                         Double goodsAmout = cscGoodsApiVo.getGoodsAmount();
                         JSONObject jsonObject = (JSONObject) jsonArray.get(1);
@@ -522,6 +561,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcExcelBoradwise> ofcExcelBoradwiseList = new ArrayList<>();
+        boolean requiredField = true;
         try {
             clazz = Class.forName("com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise");
         } catch (ClassNotFoundException e) {
@@ -576,9 +616,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     if (null == xssfCell  && cellNum > 11) {
                         //标记当前列出错, 并跳过当前循环
                         break;
-                    } else if (null == xssfCell || XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()) {
+                    }/* else if (null == xssfCell || XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()) {
                         continue;
-                    }
+                    }*/
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
                     if (XSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
@@ -596,9 +636,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }else if(rowNum > 0){ // 表格的数据体
                         String cellNumName = modelNameStr.get(cellNum); //拿到当前列对应的字段的值
                         try {
-                            if("orderTime".equals(cellNumName)){
+                            if("consigneeName".equals(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方名称必填!");
+                                    requiredField = false;
+                                    continue;
+                                }
+                            }else if("orderTime".equals(cellNumName)){
                                 //对订单日期进行特殊处理
                             }else if("goodsAmount".equals(cellNumName)){//货品数量
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    cellValue = "0";
+                                }
                                 boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
                                 boolean matchesInt = cellValue.matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
@@ -612,7 +661,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
                                 }
                             }else if("goodsUnitPirce".equals(cellNumName)){//货品单价
-
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    cellValue = "0";
+                                }
 
 
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
@@ -620,7 +671,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,bigDecimal);
                             }else if("consigneeContactPhone".equals(cellNumName)){//电话
-
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    cellValue = "0";
+                                }
                                 String format = null;
                                 String cellValuePhone = null;
                                 if (HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
@@ -635,12 +688,22 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,format);
                             }else if("custOrderCode".equals(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!客户订单号必填!");
+                                    requiredField = false;
+                                    continue;
+                                }
                                 DecimalFormat df = new DecimalFormat("0");
                                 cellValue = df.format(Double.valueOf(cellValue));
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
                             }else if("goodsCode".equals(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!货品编码必填!");
+                                    requiredField = false;
+                                    continue;
+                                }
                                 if (HSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
                                     cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
                                 } else if (HSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
@@ -652,6 +715,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
                             }else if(!PubUtils.isSEmptyOrNull(cellNumName)){
+                                if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    cellValue = "";
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -670,7 +736,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         }
         //至此,表格中所有的数据都存在了ofcExcelBoradwiseList里,然后对ofcExcelBoradwiseList进行遍
         //无法再按照之前的方法进行
-
+        //如果必填字段有缺失
+        if(!requiredField){
+            OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
+            ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
+        }
         if(modelNameStr.size() < 12){
             throw new BusinessException("Excel字段不全!");//
         }
@@ -836,8 +907,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         }
 
                     }
-                    //+++++
-
 
                     continue;
                 }
@@ -921,6 +990,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //第一个3
                     if(1 == consigneeNum){
                         //所有的货品, 每个收货人都应该有, 如果没有就置为0, 而且要将3个一循环的数据堆齐
+                        if(null == jsonArray.get(0)){
+                            throw new BusinessException("货品校验时出错!");
+                        }
                         CscGoodsApiVo cscGoodsApiVo = (CscGoodsApiVo) jsonArray.get(0);
                         Double goodsAmout = cscGoodsApiVo.getGoodsAmount();
                         JSONObject jsonObject = (JSONObject) jsonArray.get(1);
