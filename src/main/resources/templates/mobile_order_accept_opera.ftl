@@ -138,7 +138,8 @@
             background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
             background-size: 100% 100%;
             float: left;
-            width: 900px;
+            max-width: 900px;
+            width:60%;
             height: 401px;
             overflow: hidden;
             position: relative;
