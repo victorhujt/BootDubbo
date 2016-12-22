@@ -394,7 +394,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 //如果该客户订单编号不是第一次出现
             }else{
                 //只取货品编码,货品名称,规格,单位,数量,单价,往设定好的数据结构里放
-                if(!orderByCustOrderCode.get(custOrderCode)){//
+                /*if(!orderByCustOrderCode.get(custOrderCode)){//
                     if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
                         resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
@@ -416,7 +416,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }
 
                     continue;
-                }
+                }*/
                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
 
                 String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
@@ -471,14 +471,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }
 
                 }else{
-                    //如果在Map中已经存在,则报错!
+                    //如果在Map中已经存在,则说明同一个客户订单编号下, 出现了两个一样的货品编码!
                     JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
                     JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
-                    if(null != jsonObjectExistGoods){
+                    if(null == jsonObjectExistGoods){
                         checkPass = false;
-                        xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】匹配到两个客户订单编号!请检查!");
+                        xlsErrorMsg.add("货品校验时出错!");
                     }else{
-                        jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        //相同货品编码的当前订单编号下的做累加
+                        BigDecimal laterGoodsAmount = ofcExcelBoradwise.getGoodsAmount();
+                        BigDecimal goodsAmount = (BigDecimal) jsonObjectExistGoods.get(jsonObjectKey);
+                        laterGoodsAmount = laterGoodsAmount.add(goodsAmount);
+                        jsonObjectExistGoods.put(jsonObjectKey,laterGoodsAmount);
                     }
                 }
             }
@@ -887,8 +891,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 //如果该客户订单编号不是第一次出现
             }else{
                 //只取货品编码,货品名称,规格,单位,数量,单价,往设定好的数据结构里放
-                if(!orderByCustOrderCode.get(custOrderCode)){//
-                    if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
+//                if(!orderByCustOrderCode.get(custOrderCode)){//
+                    /*if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
                         resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode());
@@ -905,11 +909,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
                             cscGoodsImportDtoList.add(cscGoodsImportDto);
                         }
+                        continue;
 
-                    }
+                    }*/
 
-                    continue;
-                }
+//                }
                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
 
                 String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
@@ -964,14 +968,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }
 
                 }else{
-                    //如果在Map中已经存在,则报错!
+                    //如果在Map中已经存在,则说明同一个客户订单编号下, 出现了两个一样的货品编码!
                     JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
                     JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
-                    if(null != jsonObjectExistGoods){
+                    if(null == jsonObjectExistGoods){
                         checkPass = false;
-                        xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】匹配到两个客户订单编号!请检查!");
+                        xlsErrorMsg.add("货品校验时出错!");
                     }else{
-                        jsonObjectExistGoods.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
+                        //相同货品编码的当前订单编号下的做累加
+                        BigDecimal laterGoodsAmount = ofcExcelBoradwise.getGoodsAmount();
+                        BigDecimal goodsAmount = (BigDecimal) jsonObjectExistGoods.get(jsonObjectKey);
+                        laterGoodsAmount = laterGoodsAmount.add(goodsAmount);
+                        jsonObjectExistGoods.put(jsonObjectKey,laterGoodsAmount);
                     }
                 }
             }
