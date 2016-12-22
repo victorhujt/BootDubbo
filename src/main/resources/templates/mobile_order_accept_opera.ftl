@@ -2462,22 +2462,23 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
+            $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
+            $("#goodsInfoListDiv tr td div.has-error").remove();
+            $("select[name='chargingWays']").each(function(){
+                if($(this).val()=="01"){
+                    var value=onlyNumber($(this).parent().next().next().children().val());
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
+                }else if($(this).val()=="02"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
+                }else if($(this).val()=="03"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
+                }
+            });
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
-                if(value==""){
-                    $(this).css("border-color","#dd5a43")
-                    if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>添加货品一定要输入重量哦</div>").insertAfter($(this));
-                        $(this).parent().removeClass('has-info').addClass('has-error');
-                        $(this).val("");
-                    }else{
-                        $(this).val("");
-                    }
-                }else{
-                    $(this).css("border-color","#cacaca")
-                    $(this).val(value);
-                    $(this).parent().find("div").remove();
-                }
+                checkValue($(this),value,"添加货品重量必输")
             });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
@@ -3132,6 +3133,24 @@
         var date=new Date();
         date.setTime(-1); //设定一个过去的时间即可
         document.cookie=name+"=v; expires="+date.toGMTString();
+    }
+
+    //货品行校验数据并提示
+    function checkValue(obj,value,msg){
+        if(value==""){
+            $(obj).css("border-color","#dd5a43")
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+            }else{
+                $(obj).val("");
+            }
+        }else{
+            $(obj).css("border-color","#cacaca")
+            $(obj).val(value);
+            $(obj).parent().find("div").remove();
+        }
     }
 </script>
 <#--<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>-->
