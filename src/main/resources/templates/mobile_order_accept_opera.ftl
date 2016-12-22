@@ -83,7 +83,6 @@
             border:1px solid #c2c2c2;
             width: 100%;
             height:100%;
-
         }
       /*  .row{
             max-width: 1250px;
@@ -110,15 +109,7 @@
        .pay .chosen-container-single .chosen-search:after{
            top:3px;
        }
-        .Apend{
-            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
-            background-size: 100% 100%;
-            float: left;
-            width: 900px;
-            height: 401px;
-            overflow: hidden;
-            position: relative;
-        }
+
         .scales,.closes{
             position: relative;
             z-index: 2;
@@ -138,10 +129,31 @@
         .MaxImg{
             margin-right: 5px;
             width: 144px;
-            height: 402px;
+            height: 401px;
             border: 1px solid #c2c2c2;
             float: left;
             margin-bottom: 20px;
+        }
+        .drag_con {
+            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
+            background-size: 100% 100%;
+            float: left;
+            width: 900px;
+            height: 401px;
+            overflow: hidden;
+            position: relative;
+        }
+        #drag_img {
+            width: 1500px;
+            height: 1500px;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+        }
+        #drag_img img {
+            width: 100%;
+            height: 100%;
         }
       /*  #viewBiggerImg{
             transform:scale(0.6)!important;
@@ -156,6 +168,7 @@
     </p>
 </div>
 <div class="col-xs-12">
+
     <div class="MaxImg">
     <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
         <#list mobileOrder.urls as url>
@@ -166,10 +179,16 @@
     </#if>
 
     </div>
-    <div class="Apend" id="BApen">
-        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
+    <div class="drag_con" id="drag_con_id">
+        <div id='drag_img'>
+            <img src="" alt="" id="viewBiggerImg" class="">
+        </div>
         <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
     </div>
+    <#--<div class="Apend" id="BApen">-->
+        <#--<img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">-->
+        <#--<div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>-->
+    <#--</div>-->
 
 
     <form id="" method="post" class="form-horizontal y-float" role="form">
@@ -1035,32 +1054,83 @@
 <script src="../components/chosen/chosen.jquery.js"></script>
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
+<script type="text/javascript">
+    var oConId=document.getElementById('drag_con_id');
+    var oDiv=document.getElementById('drag_img');
 
+
+    var disX=0;
+    var disY=0;
+
+
+    var  dra_Img=function (ev)
+    {
+
+        var oEvent=ev||event;
+        //距离存起来
+
+        disX=oEvent.clientX-oDiv.offsetLeft;
+        disY=oEvent.clientY-oDiv.offsetTop;
+
+        function fnMove(ev)
+        {
+            var oEvent=ev||event;
+
+            var l=oEvent.clientX-disX;
+            var t=oEvent.clientY-disY;
+            if(l < -(oDiv.clientWidth - oConId.clientWidth)){
+                l = -(oDiv.clientWidth - oConId.clientWidth)
+            }
+            if(l > 0){
+                l = 0
+            }
+            if(t < -(oDiv.clientHeight - oConId.clientHeight)) {
+                t = -(oDiv.clientHeight - oConId.clientHeight)
+            }
+            if(t > 0) {
+                t = 0
+            }
+            oDiv.style.left=l+'px';
+            oDiv.style.top=t+'px';
+        }
+
+        function fnUp()
+        {
+            this.onmousemove=null;
+            this.onmouseup=null;
+
+            if(this.releaseCapture)
+            {
+                this.releaseCapture();
+            }
+        }
+
+        if(oDiv.setCapture)
+        {
+            oDiv.onmousemove=fnMove;
+            oDiv.onmouseup=fnUp;
+
+            oDiv.setCapture();
+        }
+        else
+        {
+            document.onmousemove=fnMove;
+            document.onmouseup=fnUp;
+
+            return false;
+        }
+    };
+    oDiv.onmousedown=dra_Img;
+</script>
 <script>
-
     function Maxmin() {
+
         var imgs = document.getElementsByClassName("dragAble");
         for (var i=0;i<imgs.length;i++){
             (function(i){
                 imgs[i].onclick=function () {
                     var _this=this;
-                    $("#BApen").css({"background":"#c2c2c2"});
                     $("#viewBiggerImg").attr('src',_this.src);
-                    var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
-
-                    var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
-                    if(Left<=-510){
-                        $("#viewBiggerImg").animate({"left":"-510px"},300)
-                    }
-                    if(Left>=10){
-                        $("#viewBiggerImg").animate({"left":"10px"},300)
-                    }
-                    if(Top<=-885){
-                        $("#viewBiggerImg").animate({"top":"-885px"},300)
-                    }
-                    if(Top>=10){
-                        $("#viewBiggerImg").animate({"top":"10px"},300)
-                    }
                     return
                 }
             })(i)
@@ -1074,9 +1144,8 @@
                     _ecIndex=index;
                     Deg_num=0;
                     $("#viewBiggerImg").css({
-                        "transform":"rotate(0deg) scale(0.6)",
-                        "left":"-300px",
-                        "top":"-225px"
+                        "transform":"rotate(0deg)",
+
                     })
                 };
             });
@@ -1084,7 +1153,7 @@
         $(".scales").on("click",function () {
             Deg_num++;
             $("#viewBiggerImg").css({
-                "transform":"rotate("+90*Deg_num+"deg) scale(0.6)"
+                "transform":"rotate("+90*Deg_num+"deg)"
             })
         });
 
