@@ -1425,7 +1425,7 @@
         cscContact.phone = $("#consignorPhone").val();
 
         cscContact.contactCompanyName = $("#consignorName").val();
-        cscContact.contactCode = $("#consignorContactCode").val();
+        cscContact.serialNo = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
         //cscContactCompany.id = $("#consignorCode").val();
 
@@ -1472,7 +1472,7 @@
         cscContact.phone = $("#consigneePhone").val();
 
         cscContact.contactCompanyName = $("#consigneeName").val();
-        cscContact.contactCode = $("#consigneeContactCode").val();
+        cscContact.serialNo = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();

@@ -1000,7 +1000,7 @@
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm" onclick="subOrder()>
+            <button class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm" onclick="subOrder()">
                 <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
                 保存修改
             </button>
@@ -1491,8 +1491,7 @@
           });
       });*/
 
-        cscContact.contactCompanyCode = $("#consignorCode").val();
-        cscContact.contactCode = $("#consignorContactCode").val();
+        cscContact.serialNo = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
         //cscContactCompany.id = $("#consignorCode").val();
 
@@ -1540,8 +1539,7 @@
         cscContact.purpose = "1";
         cscContact.phone = $("#consigneePhone").val();
 
-        cscContact.contactCompanyCode = $("#consigneeCode").val();
-        cscContact.contactCode = $("#consigneeContactCode").val();
+        cscContact.serialNo = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
@@ -2203,6 +2201,7 @@
 
     });
     function subOrder() {
+        debugger
         var jsonStr = {};
         //订单基本信息
         jsonStr.orderCode = $("#orderCode").val();
