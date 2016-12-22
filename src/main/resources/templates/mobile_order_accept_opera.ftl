@@ -113,9 +113,9 @@
         .Apend{
             background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
             background-size: 100% 100%;
-           /* float: left;
-            width: 500px;*/
-            height: 202px;
+            float: left;
+            width: 900px;
+            height: 401px;
             overflow: hidden;
             position: relative;
         }
@@ -137,10 +137,15 @@
         }
         .MaxImg{
             margin-right: 5px;
-            width: 287px;height:202px;
+            width: 144px;
+            height: 402px;
             border: 1px solid #c2c2c2;
-            float: left;margin-bottom: 20px;
+            float: left;
+            margin-bottom: 20px;
         }
+      /*  #viewBiggerImg{
+            transform:scale(0.6)!important;
+        }*/
     </style>
 </head>
 
@@ -161,10 +166,13 @@
     </#if>
 
     </div>
+    <div class="Apend" id="BApen">
+        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
+        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+    </div>
 
 
-
-    <form id="" method="post" class="form-horizontal" style="float:right;" role="form">
+    <form id="" method="post" class="form-horizontal y-float" role="form">
         <div class="width-100 y-float">
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">流水号</label>
@@ -227,10 +235,7 @@
 
         </div>-->
     </form>
-    <div class="Apend" id="BApen">
-        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
-        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
-    </div>
+
 <#--</div>--><!-- /.col -->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -1064,9 +1069,9 @@
                     _ecIndex=index;
                     Deg_num=0;
                     $("#viewBiggerImg").css({
-                        "transform":"rotate(0deg)",
-                        "left":"0",
-                        "top":"0"
+                        "transform":"rotate(0deg) scale(0.6)",
+                        "left":"-300px",
+                        "top":"-225px"
                     })
                 };
             });
@@ -1074,7 +1079,7 @@
         $(".scales").on("click",function () {
             Deg_num++;
             $("#viewBiggerImg").css({
-                "transform":"rotate("+90*Deg_num+"deg)"
+                "transform":"rotate("+90*Deg_num+"deg) scale(0.6)"
             })
         });
 

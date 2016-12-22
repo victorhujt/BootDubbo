@@ -77,7 +77,7 @@
             border-color:#cacaca;
         }
         #businessTypeDiv .chosen-container{
-            width:510px!important;
+            width:100% !important;
         }
         .city-picker-span{width:510px;}
     </style>
@@ -387,8 +387,11 @@
                            <div class="form-group">
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="supplierCode">订单日期</label>
                                <div class="w-width-220 y-float">
-                                   <div class="clearfix">
+                                   <div class="clearfix position-relative">
                                        <input class="col-xs-12"  name="orderTime" id="orderTime" type="text" placeholder="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})" />
+                                       <label for="orderTime" class="initBtn">
+                                           <i class="fa fa-calendar bigger-130"></i>
+                                       </label>
                                    </div>
                                </div></div>
                                <div><label class="control-label col-label no-padding-right no-padding-top" for="custOrderCode">客户订单编号</label>
@@ -436,41 +439,50 @@
                                </div>
                            </div>-->
                             <div class="form-group" id="businessTypeDiv" style="display: none">
-                                <div><label class="control-label col-label no-padding-right" for="name">业务类型</label>
-                                <div class="padding-12 y-float" style="width:536px;">
-                                    <div class="clearfix">
-                                    <#--<span id="businessTypeDiv" style="display: none">-->
-                                        <select class="chosen-select"  id="businessType" name="businessType" style="padding-left:0;">
-                                            <option value="610">销售出库</option>
-                                            <option value="611">调拨出库</option>
-                                            <option value="612">报损出库</option>
-                                            <option value="613">其他出库</option>
-                                            <option value="614">分拨出库</option>
-                                            <option value="----------">----------</option>
-                                            <option value="620">采购入库</option>
-                                            <option value="621">调拨入库</option>
-                                            <option value="622">退货入库</option>
-                                            <option value="623">加工入库</option>
-                                            <option value="624">盘盈入库</option>
-                                            <option value="625">流通入库</option>
-                                            <option value="626">其他入库</option>
-                                            <option value="627">分拨入库</option>
-                                        </select>
-                                    <#--  </span>-->
+                                <div>
+                                    <label class="control-label col-label no-padding-right" for="name">业务类型</label>
+                                    <div class="w-width-220 y-float">
+                                        <div class="clearfix">
+                                        <#--<span id="businessTypeDiv" style="display: none">-->
+                                            <select class="chosen-select width-100"  id="businessType" name="businessType">
+                                                <option value="610">销售出库</option>
+                                                <option value="611">调拨出库</option>
+                                                <option value="612">报损出库</option>
+                                                <option value="613">其他出库</option>
+                                                <option value="614">分拨出库</option>
+                                                <option value="----------">----------</option>
+                                                <option value="620">采购入库</option>
+                                                <option value="621">调拨入库</option>
+                                                <option value="622">退货入库</option>
+                                                <option value="623">加工入库</option>
+                                                <option value="624">盘盈入库</option>
+                                                <option value="625">流通入库</option>
+                                                <option value="626">其他入库</option>
+                                                <option value="627">分拨入库</option>
+                                            </select>
+                                        <#--  </span>-->
+                                        </div>
                                     </div>
-                                </div></div>
+                                </div>
+                                <div>
+                                    <label class="control-label col-label no-padding-right" for="name">是否需要运输</label>
+                                    <div class="w-width-220 ">
+                                        <div class="clearfix">
+                                        <#-- <span id="provideTransportDiv" style="display: none">-->
+                                        <#-- <input  id="provideTransport" type="checkbox" name = ""/>-->
+                                            <label>
+                                                <input  id="provideTransport" class="ace" type="checkbox" name = ""/>
+                                                <span class="lbl"></span>
+                                            </label>
+                                            <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
+                                        <#-- </span>-->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group" id="provideTransportDiv" style="display: none">
-                                <div><label class="control-label col-label no-padding-right" for="name">是否需要运输</label>
-                                <div class="col-sm-6" style="height:34px;line-height:34px;">
-                                    <div class="clearfix">
-                                    <#-- <span id="provideTransportDiv" style="display: none">-->
-                                        <input  id="provideTransport" type="checkbox" name = ""/>
-                                        <input id="provideTransportHel" type="hidden" name="provideTransport"  value="0" />
-                                    <#-- </span>-->
-                                    </div>
-                                </div></div>
+
                             </div>
                             <div class="form-group">
                                 <div><label class="control-label col-label no-padding-right no-padding-top y-float" for="name">备注</label>
@@ -566,9 +578,10 @@
                                                                         </div>
                                                                     </div></div>
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">体积</label>
-                                                                    <div class="w-width-220 y-float">
+                                                                    <div class="w-width-220 y-float" style="width:290px;">
                                                                         <div class="clearfix" style="color:#c3c3c3;">
-                                                                            <input id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">(单位:m³)
+                                                                            <input style="width:196px;" id="cubage" name="cubage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                                                                            <span>(单位:m³)</span>
                                                                         </div>
                                                                     </div></div>
                                                                 </div>
@@ -598,7 +611,11 @@
                                                                     <div><label class="control-label col-label no-padding-right no-padding-top" for="name">是否加急</label>
                                                                     <div class="w-width-220 y-float">
                                                                         <div class="clearfix">
-                                                                            <input id="urgent" type="checkbox" name="" style="margin-top:10px;" />
+                                                                            <#--<input id="urgent" type="checkbox" name="" style="margin-top:10px;" />-->
+                                                                            <label>
+                                                                                <input id="urgent" type="checkbox" name=""class="ace" />
+                                                                                <span class="lbl"></span>
+                                                                            </label>
                                                                             <input id="urgentHel" type="hidden" name="urgent"  value="0" />
                                                                         </div>
                                                                     </div></div>
