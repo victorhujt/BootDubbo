@@ -1050,8 +1050,8 @@
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
-                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
+                        "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                         "</td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
@@ -1114,14 +1114,19 @@
         var contactCode = $(obj).parent().parent().children().eq(8).text();
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
+            debugger;
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(7).text();//货品需求数量合计
             
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
-            if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
-                consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+            if(null != goodsAndConsigneeMap.get(mapKey) && undefined != goodsAndConsigneeMap.get(mapKey)){
+                if(goodsAndConsigneeMap.get(mapKey).length > 0){
+                    consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                }else{
+                    return;
+                }
             }
             
             if(null != consigneeAndGoodsMsgJson){
