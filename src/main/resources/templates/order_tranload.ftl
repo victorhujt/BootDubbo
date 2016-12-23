@@ -2949,5 +2949,35 @@
             $(obj).parent().find("div").remove();
         }
     }
+    //验证开单员不为空
+    $(".es-list").click(function(){
+        checkType();
+    })
+
+    function checkType() {
+        var type = $("#merchandiser").val();
+        if(type == null || type == ""){
+            $("#merchandiser-error").html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>请选择开单员");
+        }else{
+            $("#merchandiser-error").css("display","none")
+            /*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
+               $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
+        }
+    }
+    //验证临时客户
+    $("#custEnter").click(function(){
+      if( $("#custName").val()=="临时客户"){
+          $("#currentAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#toPayAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#returnAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#monthlyAmount").val("").attr("disabled","true").css("cursor","default");
+      }else{
+          $("#currentAmount").removeAttr("disabled");
+          $("#toPayAmount").removeAttr("disabled");
+          $("#returnAmount").removeAttr("disabled");
+          $("#monthlyAmount").removeAttr("disabled");
+      }
+    })
+
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
