@@ -133,8 +133,8 @@
             position: relative;
         }
         #drag_img {
-            width: 1500px;
-            height: 1500px;
+            width: 1050px;
+            height: 1050px;
             position: absolute;
             left: 0;
             top: 0;

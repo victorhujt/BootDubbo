@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -106,7 +107,10 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 					statusCondition.setPlannedSingleState(RENWUZHONG);
 					statusCondition.setPlannedStartTime(condition.getTraceTime());
 					ofcSiloproNewstatus.setJobNewStatus((RENWUZHONG));//仓储计划单最新状态
-					ofcSiloproNewstatus.setJobStatusUpdateTime(condition.getTraceTime());//作业状态更新时间
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String dateStr =format.format(condition.getTraceTime());
+					Date dateFor=format.parse(dateStr);
+					ofcSiloproNewstatus.setJobStatusUpdateTime(dateFor);//作业状态更新时间
 					ofcSiloproNewstatus.setOrderCode(infostatus.getOrderCode());
 					status.setLastedOperTime(traceTime);
 					status.setOrderStatus(IMPLEMENTATIONIN);

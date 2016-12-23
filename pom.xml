@@ -107,9 +107,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.aliyun.oss</groupId>
-			<artifactId>aliyun-sdk-oss</artifactId>
-			<version>2.2.0</version>
+			<groupId>com.aliyun.sdk</groupId>
+			<artifactId>aliyun-sdk</artifactId>
+			<version>2.4.0</version>
 		</dependency>
 
 				<!--Swagger-->
@@ -235,22 +235,17 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+
 		<dependency>
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
 		<!--Aop-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
