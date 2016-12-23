@@ -47,7 +47,7 @@ public class OfcOrderCancelApiController extends BaseController {
             if (StringUtils.isBlank(cancelOrderDto.getCustCode())) {
                 throw new IllegalArgumentException("货主编码不能为空");
             }
-            Wrapper<CannelOrderVo> wrapper = createOrderService.cancelOrderStateByOrderCode(cancelOrderDto.getCustOrderCode());
+            Wrapper<CannelOrderVo> wrapper = createOrderService.cancelOrderStateByOrderCode(cancelOrderDto);
             return wrapper;
         } catch (IllegalArgumentException ex) {
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
