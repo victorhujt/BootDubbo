@@ -177,7 +177,33 @@ public class OfcJumpontroller extends BaseController{
         model.addAttribute("custNameFromExcelImport",custName);
         return "operation_distributing";
     }
+    /**
+     * Excel导入跳转模板配置页
+     */
+    @RequestMapping(value = "/ofc/distributing/toTemplatesList/{custCode}/{custName}/{historyUrl}")
+    public String toTemplatesList( Model model,  @PathVariable String custCode, @PathVariable String custName, @PathVariable String historyUrl){
+        setDefaultModel(model);
+        model.addAttribute("customerCode",custCode);
+        model.addAttribute("custName",custName);
+        model.addAttribute("historyUrl",historyUrl);
+        return "operation_distributing_templateslist";
+    }
 
+    /**
+     * 模板配置页跳转模板添加, 编辑, 查看页面, 用同一个页面做这个事儿
+     * @param model
+     * @param custCode
+     * @param custName
+     * @param tag  add
+     * @return
+     */
+    @RequestMapping(value = "/ofc/distributing/toTemplatesoper/{custCode}/{custName}/{tag}")
+    public String toTemplates(Model model,@PathVariable String custCode, @PathVariable String custName, @PathVariable String tag){
+        setDefaultModel(model);
+        model.addAttribute("customerCode",custCode);
+        model.addAttribute("custName",custName);
+        return "operation_distributing_templatesoper";
+    }
     /**
      * 运输开单
      * @param model
