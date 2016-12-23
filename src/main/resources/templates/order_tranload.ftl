@@ -2011,7 +2011,7 @@
         param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+            if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
                 loadCustomer(result);
@@ -2865,8 +2865,8 @@
         var loginUser = $('#login_user').html();
         var lastSelMer = getCookie(loginUser);
         var lastSelConsignor = getCookie(loginUser+"@consignor");
-        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
-        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
+//        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
+//        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
 
         if (lastSelMer != '') {
             $("#merchandiser").val(lastSelMer);

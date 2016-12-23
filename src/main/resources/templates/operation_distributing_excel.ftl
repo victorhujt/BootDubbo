@@ -433,7 +433,7 @@
     }
     function goodsAndConsignee(obj){
         
-        $("#goodsAndConsigneeDiv").fadeIn("slow");
+        $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
@@ -756,7 +756,7 @@
         })
 
         $("#goodsAndConsigneeDivNoneBottom").click(function () {
-            $("#goodsAndConsigneeDiv").fadeOut("slow");
+            $("#goodsAndConsigneeDiv").fadeOut(0);
         });
 
         $("#excelImportEnter").click(function () {

@@ -1,23 +1,41 @@
 package com.xescm.ofc;
 
-import com.xescm.ofc.service.OfcDmsCallbackStatusService;
+import com.xescm.ofc.service.OfcOssManagerService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by hiyond on 2016/11/18.
  */
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@SpringApplicationConfiguration(classes = XescmOfcApplication.class)
-//@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = XescmOfcApplication.class)
+@WebAppConfiguration
 public class CreateOrderApiTest {
 
     @Autowired
-    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
+    private OfcOssManagerService ofcOssManagerService;
+
+  //  @Autowired
+   // private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
+
+    @Test
+    public void getStyleUrl(){
+        String url= null;
+        try {
+            url = ofcOssManagerService.operateImage("image/rotate,90","AT161223000001");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(url);
+    }
+
 
     /*@Test
     public void t3333333333333333t(){

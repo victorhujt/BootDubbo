@@ -16,6 +16,7 @@ import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -309,12 +310,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                            CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+
+                            /*CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
                             cscGoodsImportDto.setCustomerCode(customerCode);
                             cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                             cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
                             cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());*/
+                            CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                             cscGoodsImportDtoList.add(cscGoodsImportDto);
                         }
                         List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
@@ -368,14 +371,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //如果不存在,就输出错误信息,并向cscContantAndCompanyInportDtoList中添加,checkPass=false
                     checkPass = false;
                     xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】在联系人档案中不存在!");
-                    CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
-                    cscContantAndCompanyInportDto.setCustCode(customerCode);
-                    cscContantAndCompanyInportDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
-                    cscContantAndCompanyInportDto.setContactName(ofcExcelBoradwise.getConsigneeContactName());
-                    cscContantAndCompanyInportDto.setPhone(ofcExcelBoradwise.getConsigneeContactPhone());
-                    cscContantAndCompanyInportDto.setAddress(ofcExcelBoradwise.getConsigneeAddress());
-                    cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
-                    cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+
+                    CscContantAndCompanyInportDto cscContantAndCompanyInportDto = addCscContantAndCompanyInportDto("boradwise",customerCode,ofcExcelBoradwise,authResDto,null);
                     cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                     //即使当前收货方没有维护, 也要继续校验货品档案
                     if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
@@ -387,12 +384,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                            CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                            cscGoodsImportDto.setCustomerCode(customerCode);
-                            cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                            cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                            cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                            CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                             cscGoodsImportDtoList.add(cscGoodsImportDto);
                         }
 
@@ -439,12 +431,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                        CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                        cscGoodsImportDto.setCustomerCode(customerCode);
-                        cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                        cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                        cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                        cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                        CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                         cscGoodsImportDtoList.add(cscGoodsImportDto);
                         continue;
                     }
@@ -471,12 +458,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //如果校验失败,就标记该单元格
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                        CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                        cscGoodsImportDto.setCustomerCode(customerCode);
-                        cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                        cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                        cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                        cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                        CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                         cscGoodsImportDtoList.add(cscGoodsImportDto);
                     }
 
@@ -815,12 +797,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                            CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                            cscGoodsImportDto.setCustomerCode(customerCode);
-                            cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                            cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                            cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                            CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                             cscGoodsImportDtoList.add(cscGoodsImportDto);
                         }
                         List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
@@ -874,14 +851,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //如果不存在,就输出错误信息,并向cscContantAndCompanyInportDtoList中添加,checkPass=false
                     checkPass = false;
                     xlsErrorMsg.add("收货方名称【" + ofcExcelBoradwise.getConsigneeName() + "】在联系人档案中不存在!");
-                    CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
-                    cscContantAndCompanyInportDto.setCustCode(customerCode);
-                    cscContantAndCompanyInportDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
-                    cscContantAndCompanyInportDto.setContactName(ofcExcelBoradwise.getConsigneeContactName());
-                    cscContantAndCompanyInportDto.setPhone(ofcExcelBoradwise.getConsigneeContactPhone());
-                    cscContantAndCompanyInportDto.setAddress(ofcExcelBoradwise.getConsigneeAddress());
-                    cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
-                    cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                    CscContantAndCompanyInportDto cscContantAndCompanyInportDto = addCscContantAndCompanyInportDto("boradwise",customerCode,ofcExcelBoradwise,authResDto,null);
                     cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                     //即使当前收货方没有维护, 也要继续校验货品档案
                     if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
@@ -893,12 +863,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                            CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                            cscGoodsImportDto.setCustomerCode(customerCode);
-                            cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                            cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                            cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                            CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                             cscGoodsImportDtoList.add(cscGoodsImportDto);
                         }
 
@@ -947,12 +912,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                        CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                        cscGoodsImportDto.setCustomerCode(customerCode);
-                        cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                        cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                        cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                        cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                        CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                         cscGoodsImportDtoList.add(cscGoodsImportDto);
                         continue;
                     }
@@ -979,12 +939,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //如果校验失败,就标记该单元格
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
-                        CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
-                        cscGoodsImportDto.setCustomerCode(customerCode);
-                        cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
-                        cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
-                        cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
-                        cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+                        CscGoodsImportDto cscGoodsImportDto = addCscGoodsImportDto("boradwise",customerCode,ofcExcelBoradwise);
                         cscGoodsImportDtoList.add(cscGoodsImportDto);
                     }
 
@@ -1052,8 +1007,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 consigneeNum = 1;
                 afterResultMap.put(mapKey + "@" + goodsRowNum++,resultMap.get(mapKey));
             }
-
-
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",afterResultMap );
         }else{
             OfcCheckExcelErrorVo ofcCheckExcelErrorVo = new OfcCheckExcelErrorVo();
@@ -1233,11 +1186,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 consigneeNameListForCheck.add("");
 
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
-                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
-                                cscContantAndCompanyInportDto.setCustCode(customerCode);
-                                cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
-                                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
-                                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = addCscContantAndCompanyInportDto("across",customerCode,null,authResDto,cellValue);
                                 cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                             }
                         }
@@ -1517,11 +1466,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                 consigneeNameListForCheck.add("");
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
-                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
-                                cscContantAndCompanyInportDto.setCustCode(custId);
-                                cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
-                                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
-                                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+                                CscContantAndCompanyInportDto cscContantAndCompanyInportDto = addCscContantAndCompanyInportDto("across",custId,null,authResDto,cellValue);
                                 cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
                             }
                         }
@@ -1720,6 +1665,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 向客户中心批量添加收货方时去重
+     * @param cscContantAndCompanyInportDtoList
+     * @return
      */
     private List<CscContantAndCompanyInportDto> removeConsigneeRepeat(List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList){
         Set<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoSet = new HashSet<>();
@@ -1734,6 +1681,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 向客户中心批量添加货品时去重
+     * @param cscGoodsImportDtoList
+     * @return
      */
     private List<CscGoodsImportDto> removeGoodsRepeat(List<CscGoodsImportDto> cscGoodsImportDtoList){
         Set<CscGoodsImportDto> cscGoodsImportDtoSet = new HashSet<>();
@@ -1743,6 +1692,50 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             cscGoodsImportDtoList.add(cscGoodsImportDto);
         }
         return cscGoodsImportDtoList;
+    }
+
+
+    /**
+     * 批量添加收货方
+     */
+
+    private CscContantAndCompanyInportDto addCscContantAndCompanyInportDto(String tag,String customerCode,OfcExcelBoradwise ofcExcelBoradwise,AuthResDto authResDto, String cellValue){
+        CscContantAndCompanyInportDto cscContantAndCompanyInportDto = new CscContantAndCompanyInportDto();
+        if(StringUtils.equals(tag,"boradwise")){
+            cscContantAndCompanyInportDto.setCustCode(customerCode);
+            if(null != ofcExcelBoradwise){
+                cscContantAndCompanyInportDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
+                cscContantAndCompanyInportDto.setContactName(ofcExcelBoradwise.getConsigneeContactName());
+                cscContantAndCompanyInportDto.setPhone(ofcExcelBoradwise.getConsigneeContactPhone());
+                cscContantAndCompanyInportDto.setAddress(ofcExcelBoradwise.getConsigneeAddress());
+            }
+            if(null != authResDto){
+                cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+                cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+            }
+        }else if(StringUtils.equals(tag,"across")){
+            cscContantAndCompanyInportDto.setCustCode(customerCode);
+            cscContantAndCompanyInportDto.setContactCompanyName(cellValue);
+            cscContantAndCompanyInportDto.setUserId(authResDto.getUserId());
+            cscContantAndCompanyInportDto.setUserName(authResDto.getUserName());
+        }
+        return cscContantAndCompanyInportDto;
+    }
+
+    /**
+     * 批量添加货品
+     */
+    private CscGoodsImportDto addCscGoodsImportDto(String tag, String customerCode, OfcExcelBoradwise ofcExcelBoradwise){
+        CscGoodsImportDto cscGoodsImportDto = new CscGoodsImportDto();
+        if(StringUtils.equals(tag,"boradwise")){
+            cscGoodsImportDto.setCustomerCode(customerCode);
+            cscGoodsImportDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
+            cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
+            cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
+            cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
+        }else if(StringUtils.equals(tag,"across")){
+        }
+        return cscGoodsImportDto;
     }
 
 }

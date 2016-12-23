@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
 /**
@@ -10,6 +11,5 @@ public interface OfcOssManagerService {
 
     public void deleteFile(String filePath);
 
-
-
+    public String operateImage(String operate,String serialNo) throws UnsupportedEncodingException;
 }

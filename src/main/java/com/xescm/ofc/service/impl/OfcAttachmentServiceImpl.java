@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Created by hujintao on 2016/12/17.
  */
@@ -49,5 +51,10 @@ public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implem
 
     public void updatePicParamByserialNo(OfcAttachment attachment){
         ofcAttachmentMapper.updatePicParamByserialNo(attachment);
+    }
+
+    @Override
+    public String operateAttachMent(String style,String serialNo) throws UnsupportedEncodingException {
+       return  ofcOssManagerService.operateImage(style,serialNo);
     }
 }

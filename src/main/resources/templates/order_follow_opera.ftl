@@ -249,8 +249,8 @@
             "searchType": followTag
         }, function (result) {
 
-            if (result == undefined || result == null) {
-                alert("HTTP请求无数据返回！");
+            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                layer.msg("暂时未查询到相关订单跟踪记录！");
             } else if (result.code == 200) {// 1:normal
                 reloadGrid(result);// 刷新页面数据
             } else if (result.code == 403) {
