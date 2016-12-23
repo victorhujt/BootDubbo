@@ -229,15 +229,15 @@
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                 <div class="col-width-168">
                     <#if mobileOrder.businessType  =="602">
-                        <input class="width-100" id="mbusinessType" name="" type="search" placeholder=""
+                        <input class="width-100" id="mbusinessType" readonly="readonly"  name="" type="search" placeholder=""
                                aria-controls="dynamic-table"
                                value="卡班">
                     <#elseif  mobileOrder.businessType =="600">
-                        <input class="width-100" id="mbusinessType" name="" type="search" placeholder=""
+                        <input class="width-100" id="mbusinessType" readonly="readonly" name="" type="search" placeholder=""
                                aria-controls="dynamic-table"
                                value="城配">
                     <#elseif  mobileOrder.businessType =="601">
-                        <input class="width-100" id="mbusinessType" name="" type="search" placeholder=""
+                        <input class="width-100" id="mbusinessType" readonly="readonly" name="" type="search" placeholder=""
                                aria-controls="dynamic-table"
                                value="干线">
                     </#if>
