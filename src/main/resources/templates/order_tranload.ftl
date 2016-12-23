@@ -1997,8 +1997,10 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
                 layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDiv").show();
                 loadCustomer(result);
                 laypage({
                     cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2064,6 +2066,7 @@
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
             if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDivConsign"+ptype).hide();
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
                 $("#pageBarDivConsign"+ptype).show();
@@ -2139,6 +2142,7 @@
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
 
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                $("#pageBarDivGoods").hide();
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
                 $("#pageBarDivGoods").show();

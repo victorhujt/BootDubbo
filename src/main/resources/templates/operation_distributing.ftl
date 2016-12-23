@@ -1477,6 +1477,7 @@
                 }*/
             if (data == undefined || data == null || null == data.result || undefined == data.result
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
+                $("#pageBarDivConsignor").hide();
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
                 $("#pageBarDivConsignor").show();
@@ -1694,8 +1695,10 @@
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             if (data == undefined || data == null || null == data.result || undefined == data.result
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
+                $("#pageBarDivConsigneeDistri").hide();
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivConsigneeDistri").show();
                 loadConsingeeDistri(data.result.list);
                 laypage({
                     cont: $("#pageBarDivConsigneeDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -1946,6 +1949,7 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
@@ -1953,8 +1957,10 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
                 layer.msg("暂时未查询到客户信息！");
             } else if (result.code == 200) {
+                $("#pageBarDiv").show();
                 loadCustomer(result);
                 laypage({
                     cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
