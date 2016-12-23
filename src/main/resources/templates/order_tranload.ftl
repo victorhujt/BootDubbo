@@ -949,17 +949,7 @@
                 transRequire:{
                     maxlength:255
                 },custOrderCode: {
-                    maxlength:30,
-                    remote:{
-                        url : ofc_url + "/ofc/checkCustOrderCode",
-                        type : "POST",
-                        dataType : "json",
-                        data : {
-                            custOrderCode : function() {
-                                return $("#custOrderCode").val();
-                            }
-                        }
-                    }
+                    maxlength:30
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -989,9 +979,7 @@
                     maxlength:mistake+"超过最大长度255"
                 },
                 custOrderCode:{
-
-                    maxlength:mistake+ "超过最大长度30",
-                    remote: mistake+ "该客户订单编号已经存在"
+                    maxlength:mistake+ "超过最大长度30"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -2279,18 +2267,7 @@
         $("#orderPlaceConTableBtn").click(function () {
             $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
             $("#goodsInfoListDiv tr td div.has-error").remove();
-            $("select[name='chargingWays']").each(function(){
-                if($(this).val()=="01"){
-                    var value=onlyNumber($(this).parent().next().next().children().val());
-                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
-                }else if($(this).val()=="02"){
-                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
-                }else if($(this).val()=="03"){
-                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
-                }
-            });
+
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
                 checkValue($(this),value,"添加货品重量必输")
