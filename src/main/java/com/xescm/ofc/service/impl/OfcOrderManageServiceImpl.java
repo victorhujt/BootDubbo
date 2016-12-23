@@ -270,10 +270,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Map<String, List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             List<OfcPlannedDetail> ofcPlannedDetailList = new ArrayList<>();
             while (iter.hasNext()) {
+
                 ofcPlannedDetail = new OfcPlannedDetail();
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
+                if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
+                }
                 BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
                 BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
                 ofcPlannedDetailList.add(ofcPlannedDetail);
@@ -489,6 +493,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
+                if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
+                }
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
                 ofcPlannedDetailList.add(ofcPlannedDetail);
