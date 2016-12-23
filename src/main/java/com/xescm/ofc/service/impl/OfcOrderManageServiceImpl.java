@@ -275,13 +275,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
-                if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
+                }*/
+                if(ofcGoodsDetailsInfo.getQuantity() != null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                    BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
+                    BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
+                    ofcPlannedDetailList.add(ofcPlannedDetail);
+                    ofcPlannedDetailService.save(ofcPlannedDetail);
                 }
-                BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
-                ofcPlannedDetailList.add(ofcPlannedDetail);
-                ofcPlannedDetailService.save(ofcPlannedDetail);
+
                 logger.debug("计划单明细保存成功");
             }
             if (ofcPlannedDetailList.size() > 0) {
@@ -493,13 +496,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
+                }*/
+                if(ofcGoodsDetailsInfo.getQuantity() != null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                    ofcPlannedDetailList.add(ofcPlannedDetail);
+                    ofcPlannedDetailService.save(ofcPlannedDetail);
                 }
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
-                ofcPlannedDetailList.add(ofcPlannedDetail);
-                ofcPlannedDetailService.save(ofcPlannedDetail);
+
                 logger.debug("计划单明细保存成功");
             }
             if(ofcPlannedDetailList.size()>0){
@@ -734,12 +740,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
+                }*/
+                if(ofcGoodsDetailsInfo.getQuantity() != null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
+                    ofcPlannedDetailService.save(ofcPlannedDetail);
                 }
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
-                ofcPlannedDetailService.save(ofcPlannedDetail);
+
                 logger.debug("计划单明细保存成功");
             }
             ofcSiloprogramInfoService.save(ofcSiloprogramInfo);
