@@ -1,88 +1,85 @@
-<head>
-    <title>运输开单</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .date_a{
-            line-height:21px !important;
-        }
-        .form-group > label[class*="col-"]{
-            margin-top:0;
-            line-height:34px;
-        }
-        .form-horizontal .control-label{
-            padding-top:0;
-            line-height:30px;
-        }
-        input[type=checkbox], input[type=radio]{
-            margin:10px 0 0;
-        }
-        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-            color:#393939;
-        }
-        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-            color:#393939;
-        }
-        .dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .dataTable > thead > tr > th[class*=sorting_]{
-            color:#707070;
-        }
-        .has-success .form-control{
-            border-color:#cacaca;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .has-error .form-control{
-            border-color:#b5b5b5 !important;
-        }
-        .custNameIcon:hover{color:#2868c6 !important;}
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .col-label{
-            margin-right:2px;
-            margin-bottom:0;
-        }
-        #goodsInfoListDiv .help-block{
-            line-height:20px;
-        }
-        .chosen-container .chosen-results{
-            max-height:120px;
-        }
-       .pay .chosen-container-single .chosen-search:after{
-           top:4px;
-       }
-        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
-            padding-top:0;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
-</head>
+<title>运输开单</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .date_a{
+        line-height:21px !important;
+    }
+    .form-group > label[class*="col-"]{
+        margin-top:0;
+        line-height:34px;
+    }
+    .form-horizontal .control-label{
+        padding-top:0;
+        line-height:30px;
+    }
+    input[type=checkbox], input[type=radio]{
+        margin:10px 0 0;
+    }
+    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+        color:#393939;
+    }
+    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+        color:#393939;
+    }
+    .dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .dataTable > thead > tr > th[class*=sorting_]{
+        color:#707070;
+    }
+    .has-success .form-control{
+        border-color:#cacaca;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .has-error .form-control{
+        border-color:#b5b5b5 !important;
+    }
+    .custNameIcon:hover{color:#2868c6 !important;}
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .col-label{
+        margin-right:2px;
+        margin-bottom:0;
+    }
+    #goodsInfoListDiv .help-block{
+        line-height:20px;
+    }
+    .chosen-container .chosen-results{
+        max-height:120px;
+    }
+    .pay .chosen-container-single .chosen-search:after{
+        top:4px;
+    }
+    .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+        padding-top:0;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
-<body class="no-skin">
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
@@ -2973,4 +2970,3 @@
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-</body>
