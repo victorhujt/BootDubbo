@@ -41,16 +41,15 @@ public class OfcQueryOrderStatusApiController extends BaseController {
     @ApiOperation(value = "对接平台定时获取订单中心的鲜易网", notes = "list", response = Wrapper.class)
     public Wrapper<List<QueryOrderStatusDto>> queryOrderStatus(@RequestBody QueryOrderStatusDto queryOrderStatusDto) {
         logger.info("取消订单接口参数：queryOrderStatusDto：{}", ToStringBuilder.reflectionToString(queryOrderStatusDto));
-        Wrapper<List<QueryOrderStatusDto>> wrapper = null;
         try {
             if (queryOrderStatusDto == null) {
-                throw new IllegalArgumentException("查询参数不能为空");
+                throw new IllegalArgumentException("查询QueryOrderStatusDto参数不能为空");
             }
             if (StringUtils.isBlank(queryOrderStatusDto.getCustCode())) {
                 throw new IllegalArgumentException("客户订单编号不能为空");
             }
             List<QueryOrderStatusDto> list = createOrderService.queryOrderStatusList(queryOrderStatusDto);
-            wrapper = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
+            Wrapper<List<QueryOrderStatusDto>> wrapper = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
             return wrapper;
         } catch (IllegalArgumentException ex) {
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
