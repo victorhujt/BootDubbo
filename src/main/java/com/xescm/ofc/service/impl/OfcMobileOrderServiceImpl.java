@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     }
 
     @Override
-    public OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
+    public OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder) throws UnsupportedEncodingException {
         OfcMobileOrder order=selectOne(ofcMobileOrder);
         OfcMobileOrderVo vo;
         List<String> urls;
@@ -904,7 +905,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 */
 
     }
-    private List<String> getOssUrls(String[] serialNos){
+    private List<String> getOssUrls(String[] serialNos) throws UnsupportedEncodingException {
         List<String> urls=new ArrayList<>();
         for (int i = 0; i <serialNos.length ; i++) {
             OfcAttachment record=new OfcAttachment();
@@ -921,9 +922,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
                 if(url!=null){
                     String urlStr=url.toString().replace("vpc100-","");
-                    if(!StringUtils.isEmpty(result.getPicParam())){
-                        urlStr= urlStr+"?"+result.getPicParam();
-                    }
+//                    if(!StringUtils.isEmpty(result.getPicParam())){
+//                        urlStr=ofcOssManagerService.operateImage(result.getPicParam(),result.getSerialNo());
+//                    }
                     if(!urls.contains(urlStr)){
                         urls.add(urlStr);
                     }

@@ -2,7 +2,6 @@
     <title>订单查询</title>
     <script language="javascript" type="text/javascript" src="../js/bootstrap-paginator.js"></script>
 </head>
-
 <body class="no-skin">
 <!-- #section:basics/navbar.layout -->
 
@@ -19,11 +18,21 @@
                         <div class="form-horizontal">
                             <div class="form-group">
                                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                                <div class="y-float" style="width:530px;margin-left:12px;">
-                                    <div class="clearfix">
+                                <div class="w-width-220">
+                                    <div class="clearfix position-relative">
                                         <input id="orderTimePre" style="width:196px;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                                        <label class="control-label col-label no-padding-right" style="margin:0 26px;text-align:center;" for="name">至</label>
+                                        <label for="orderTimePre" class="initBtn">
+                                            <i class="fa fa-calendar bigger-130"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="control-label col-label no-padding-right" style="text-align:center;" for="name">至</label>
+                                <div class="w-width-220">
+                                    <div class="clearfix position-relative">
                                         <input id="orderTimeSuf" style="width:196px;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                        <label for="orderTimeSuf" class="initBtn">
+                                            <i class="fa fa-calendar bigger-130"></i>
+                                        </label>
                                     </div>
                                 </div>
                                 <label class="control-label col-label no-padding-right" for="name">订单编号</label>

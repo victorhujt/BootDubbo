@@ -1,22 +1,49 @@
-<head>
-    <title>城配开单Excel导入</title>
-    <style type="text/css">
-        #goodsAndConsigneeDiv{
-            position:fixed;
-            left:50%;
-            top:77px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
 
-    </style>
-    <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
-</head>
+<title>城配开单Excel导入</title>
+<style type="text/css">
+    #goodsAndConsigneeDiv{
+        position:fixed;
+        left:50%;
+        top:77px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 2px;
+    }
+
+    #acrossImg{
+        position:fixed;
+        left:14%;
+        top:207px;
+        overflow: auto;
+        z-index: 3
+    }
+
+    #broadwiseImg{
+        position:fixed;
+        left:14%;
+        top:257px;
+        overflow: auto;
+        z-index: 3
+    }
+
+
+</style>
+<link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
+
 <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
+<div class="modal-content" id="acrossImg" style="display: none;" >
+    <div class="modal-body">
+        <img  src="${(OFC_WEB_URL)!}/templates/across.png">
+    </div>
+</div>
+<div class="modal-content" id="broadwiseImg" style="display: none;">
+    <div class="modal-body">
+        <img   src="${(OFC_WEB_URL)!}/templates/boradwise.png">
+    </div>
+</div>
 <!--goods&Consigee-->
 <div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
     <div class="modal-body">
@@ -121,12 +148,12 @@
                     <tr>
                         <td>1</td>
                         <td>交叉</td>
-                        <td><a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a></td>
+                        <td><a  id="acrossA" href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a></td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>明细列表</td>
-                        <td><a href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a></td>
+                        <td><a  id="broadwiseA" href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -242,7 +269,7 @@
                             </th>
                         <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Domain: activate to sort column ascending">序号
+                                aria-label="Domain: activate to sort column ascending" style="width:42px;">序号
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">货品编码
@@ -503,6 +530,24 @@
 
     }
     $(function () {
+
+        document.getElementById("acrossA").onmouseover = function(){
+            document.getElementById("acrossImg").style.display="block";
+            document.getElementById("broadwiseImg").style.display="none";
+        }
+        document.getElementById("broadwiseA").onmouseover = function(){
+            document.getElementById("acrossImg").style.display="none";
+            document.getElementById("broadwiseImg").style.display="block";
+        }
+        document.getElementById("acrossA").onmouseout = function(){
+            document.getElementById("broadwiseImg").style.display="none";
+            document.getElementById("acrossImg").style.display="none";
+        }
+        document.getElementById("broadwiseA").onmouseout = function(){
+            document.getElementById("broadwiseImg").style.display="none";
+            document.getElementById("acrossImg").style.display="none";
+        }
+
         var file;
         var fileName;
         var uploadFileTag = false;
@@ -670,8 +715,8 @@
                                         }
 
                                         $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
-                                                "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>查看</button></td>" +
-                                                "<td>" + indexView + "</td>" +
+                                                "<td><a onclick='goodsAndConsignee(this)' class='blue'>查看</a></td>" +
+                                                "<td class='center'>" + indexView + "</td>" +
                                                 "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
                                                 "<td>" + data.goodsName + "</td>" +
                                                 "<td>" + data.specification + "</td>" +

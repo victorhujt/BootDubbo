@@ -51,9 +51,10 @@
         #warehouseName_chosen{
             width:100%!important;
         }
-        .initBtn{
-            padding-left:9px;
+        .table > tbody + tbody{
+            border-top:0px;
         }
+
     </style>
 
 </head>
@@ -1838,7 +1839,7 @@
                     var weight = tdArr.eq(6).text();//    重量
                     var volume = tdArr.eq(7).text();//    体积
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red'>删除</a></td>";
+
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
@@ -1851,6 +1852,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red'>删除</a></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
