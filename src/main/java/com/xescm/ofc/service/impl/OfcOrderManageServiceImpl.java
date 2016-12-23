@@ -278,8 +278,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
                 }*/
-                if(ofcGoodsDetailsInfo.getQuantity() != null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                if(ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
                     BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
                     BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
                     ofcPlannedDetailList.add(ofcPlannedDetail);
                     ofcPlannedDetailService.save(ofcPlannedDetail);
@@ -499,8 +500,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
                 }*/
-                if(ofcGoodsDetailsInfo.getQuantity() != null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                if(ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
                     BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
                     BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
                     ofcPlannedDetailList.add(ofcPlannedDetail);
                     ofcPlannedDetailService.save(ofcPlannedDetail);
@@ -743,7 +745,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
                 }*/
-                if(ofcGoodsDetailsInfo.getQuantity() != null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                if(ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0 ){
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
                     BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
                     BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
                     ofcPlannedDetailService.save(ofcPlannedDetail);
