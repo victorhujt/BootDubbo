@@ -24,7 +24,7 @@ import java.util.List;
  */
 
 @Service
-public class FeignRMcServiceCoverageAPIClient {
+public class FeignRmcServiceCoverageAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignRmcPickUpOrRecipientAPI.class);
     @Resource
     private AuthRequestInterceptor authRequestInterceptor;

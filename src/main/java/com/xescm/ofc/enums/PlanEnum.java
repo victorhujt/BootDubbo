@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 计划资源分配状态
+ * 计划单状态枚举类
  * Created by hiyond on 2016/11/27.
  */
 public enum PlanEnum {

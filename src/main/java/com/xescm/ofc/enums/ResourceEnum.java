@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 资源分配状态枚举类
+ * 计划单资源分配状态枚举类
  * Created by hiyond on 2016/11/27.
  */
 public enum ResourceEnum {
