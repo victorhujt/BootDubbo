@@ -223,12 +223,13 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" style="width:42px;" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
@@ -292,13 +293,14 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            <input id="consigneecheck" type="checkbox" class="ace">
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label=""  style="width:42px;">
+                            <label class="pos-rel">
+                                <input id="consigneecheck" type="checkbox" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending" style="width:42px;">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
@@ -344,13 +346,13 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" style="width:42px;" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                            </label>
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending" style="width:42px;">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
@@ -626,7 +628,7 @@
                             </th>
                         <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Domain: activate to sort column ascending">序号
+                                aria-label="Domain: activate to sort column ascending" style="width:42px;">序号
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">货品编码
@@ -1414,6 +1416,8 @@
                     $("#consignorAddress").val(addressAuto);
 
                     $("#showDepaturePlace").html(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
+                    $("#consignorName-error").html("");
+                    $("#consignorName-error").parent().parent().removeClass("has-error").addClass("has-success");
 
 
                     layer.close(index);
@@ -1509,7 +1513,7 @@
             consignorTypeHide = CscContantAndCompanyDto.type;*/
             contactList =contactList + "<tr role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
@@ -1724,7 +1728,7 @@
             consigneeTypeHide = CscContantAndCompanyDto.type;*/
             contactList =contactList + "<tr role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
@@ -1790,7 +1794,7 @@
             contactCodeOut[contactCode] = 1;
 
 
-            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+            consignorout =consignorout + "<tr role='row' class='odd'>";
             consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
             consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
@@ -1987,7 +1991,7 @@
             }
             custList =custList + "<tr role='row' class='odd'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            custList =custList + "<td>"+(index+1)+"</td>";
+            custList =custList + "<td class='center'>"+(index+1)+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
             if(custType == '1'){
                 custList =custList + "<td>公司</td>";
@@ -2531,6 +2535,13 @@
         if($("#custName").val()!==""){
             $("#custName-error").html("");
             $("#custName").parent().parent().parent().removeClass("has-error").addClass("has-success");
+
+        }
+    })
+    $("#contactinEnter").click(function(){
+        if($("#consignorName").val()!==""){
+            $("#consignorName-error").html("");
+            $("#consignorName").parent().parent().parent().removeClass("has-error").addClass("has-success");
 
         }
     })

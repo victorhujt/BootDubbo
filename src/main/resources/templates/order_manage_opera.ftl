@@ -53,8 +53,8 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <input type="hidden" value="${(OFC_URL)!""}">
-                <div style="width:310px;margin-right:15px;" class="padding-12 y-float position-relative">
-                    <input readonly="readonly" id="custName" class="y-float" style="width:265px;" name="custName" type="search" placeholder=""
+                <div style="width:380px;margin-right:15px;" class="padding-12 y-float position-relative">
+                    <input readonly="readonly" id="custName" class="y-float" style="width:335px;" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
                     <label for="custName" class="initBtn" onclick="selectCust();">
                         <i class="fa fa-user bigger-130"></i>
@@ -82,16 +82,16 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                <div class="padding-12 y-float" style="width:325px;">
+                <div class="padding-12 y-float" style="width:395px;">
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                         <label for="startDate" class="initBtn">
                             <i class="fa fa-calendar bigger-130"></i>
                         </label>
                     </div>
-                   <p class="y-float" style="margin:0 3px;line-height:34px;">至</p>
+                   <p class="y-float" style="margin:0 8px;line-height:34px;">至</p>
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
                         <label for="endDate" class="initBtn">
                             <i class="fa fa-calendar bigger-130"></i>
                         </label>
@@ -119,11 +119,14 @@
                         <option value="602">卡班</option>
                     </select>
                 </div>
-                <span>
-                    <button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button>
-                </span>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name"></label>
+                <button class="btn btn-white btn-info btn-bold filters" id="doSearch" style="margin-left:12px;">筛选</button>
+                <button class="btn btn-white btn-info btn-bold filters rtn-btn" id="resetBtn">重置</button>
 
             </div>
+
         </div>
     </div>
 </div>
@@ -137,7 +140,7 @@
     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
            aria-describedby="dynamic-table_info" style="margin-bottom:20px;">
         <thead>
-        <th>序号</th>
+        <th style="width:42px;">序号</th>
         <th>操作列</th>
         <th>客户名称</th>
         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
@@ -372,8 +375,8 @@
                 }
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                         + "<td>" + [index + 1] + "</td>"
-                        + "<td class=\"center\">" + getOperatorByStatusOper(order, index) + "</td>"
-                        + "<td class=\"center\">" + StringUtil.nullToEmpty(order.custName) + "</td>"
+                        + "<td>" + getOperatorByStatusOper(order, index) + "</td>"
+                        + "<td>" + StringUtil.nullToEmpty(order.custName) + "</td>"
                         + "<td>"
                         + "<a onclick=\"orderDetailOper('" + order.orderCode + "')\">" + StringUtil.nullToEmpty(order.orderCode) + "</a>"
                         + "</td>"
@@ -468,11 +471,11 @@
         function getOperatorByStatusOper(order, index) {
             var value = "";
 
-            var newStatus = "<button type=\"button\" id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"btn btn-minier btn-yellow\">审核</button>"
-                    + "<button type=\"button\" id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"btn btn-minier btn-danger\">删除</button>";
+            var newStatus = "<a id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"blue\">审核</a>"
+                    + "<a id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"red\">删除</a>";
 
-            var unApproveStatus = "<button type=\"button\" id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
-            var cancelStatus = "<button type=\"button\" id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"btn btn-minier btn-default\">取消</button>";
+            var unApproveStatus = "<a id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">反审核</a>";
+            var cancelStatus = "<a id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">取消</a>";
 
             if (order.orderStatus == "10") {
                 value = newStatus;
@@ -667,6 +670,15 @@
             var url = csc_url + "/csc/customer/toAddCustomerPage";
             xescm.common.loadPage(url);
         });
+        $("#resetBtn").click(function(){
+            $("#custName").val("");
+            $("#orderCode").val("");
+            $("#startDate").val("");
+            $("#endDate").val("");
+            $("#orderState").val("").trigger("chosen:updated");
+            $("#orderType").val("").trigger("chosen:updated");
+            $("#businessType").val("").trigger("chosen:updated");
+        })
 
     </script>
 
