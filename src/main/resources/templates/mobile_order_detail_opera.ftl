@@ -125,8 +125,8 @@
          }
         .drag_con {
             background: #c2c2c2;
-            width: 1004px;
-            height: 250px;
+            width: 1050px;
+            height: 788px;
             margin-left: 11px;
             display: none;
             overflow: hidden;
@@ -134,7 +134,7 @@
         }
         #drag_img {
             width: 1050px;
-            height: 1050px;
+            height: 788px;
             position: absolute;
             left: 0;
             top: 0;

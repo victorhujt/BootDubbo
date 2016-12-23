@@ -38,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +84,12 @@ public class OfcMobileOrderRest extends BaseController {
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
-        OfcMobileOrderVo mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
+        OfcMobileOrderVo mobileOrder = null;
+        try {
+            mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("手机订单详情:{}", ex.getMessage(), ex);
+        }
         modelAndView.addObject("mobileOrder", mobileOrder);
         return modelAndView;
     }
@@ -95,7 +101,12 @@ public class OfcMobileOrderRest extends BaseController {
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
-        OfcMobileOrderVo mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
+        OfcMobileOrderVo mobileOrder = null;
+        try {
+            mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
+        } catch (UnsupportedEncodingException e) {
+            logger.error("手机订单详情:{}", e.getMessage(), e);
+        }
         modelAndView.addObject("mobileOrder", mobileOrder);
         return modelAndView;
     }

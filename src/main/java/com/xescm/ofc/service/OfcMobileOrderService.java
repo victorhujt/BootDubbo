@@ -9,6 +9,7 @@ import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.uam.domain.dto.AuthResDto;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public interface OfcMobileOrderService extends IService<OfcMobileOrder>{
 
     List<OfcMobileOrder> queryOrderList(MobileOrderOperForm form);
 
-    OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder);
+    OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder) throws UnsupportedEncodingException;
 
     String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken
             , String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
