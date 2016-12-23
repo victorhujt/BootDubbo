@@ -225,4 +225,32 @@ public class OfcMobileOrderRest extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
+
+
+    @RequestMapping(value ="/mobileOrder/operateImage", method = RequestMethod.POST)
+    public void operateImage(Model model,AttachmentDto attachmentDto,HttpServletResponse response) {
+        OfcAttachment ofcAttachment=new OfcAttachment();
+        String url="";
+        try {
+            if(attachmentDto == null){
+                throw new BusinessException("参数不能为空");
+            }
+            if(StringUtils.isEmpty(attachmentDto.getSerialNo())){
+                throw new BusinessException("附件流水号不能为空");
+            }
+
+            if(StringUtils.isEmpty(attachmentDto.getPicParam())){
+                throw new BusinessException("附件流水号操作命令不能为空");
+            }
+            logger.info("操作的附件流水号为:{}",attachmentDto.getSerialNo());
+            BeanUtils.copyProperties(ofcAttachment,attachmentDto);
+            url= ofcAttachmentService.operateAttachMent(attachmentDto.getPicParam(),attachmentDto.getSerialNo());
+            response.getWriter().print(JSONUtils.objectToJson(url));
+
+        } catch (BusinessException ex) {
+        } catch (Exception e) {
+            logger.debug("更新附件操作失败={}", e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
 }
