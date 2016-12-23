@@ -224,7 +224,7 @@
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
                     <tr role="row">
-                        <th class="center sorting_disabled" style="width:42px;" rowspan="1" colspan="1" aria-label="">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                             <label class="pos-rel">
                                 选择
                                 <span class="lbl"></span>
@@ -842,8 +842,8 @@
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
                 $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
                         "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
-                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
+                        "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
                         "</td>" +
                         "<td>" + viewMapIndexOf + "</td>" +
                         "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
@@ -1028,8 +1028,8 @@
 
             goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
             goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                    "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
-                    "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                    "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
+                    "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
                     "</td>";
             goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
             goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
@@ -1064,8 +1064,8 @@
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
-                        "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
+                        "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
                         "</td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
