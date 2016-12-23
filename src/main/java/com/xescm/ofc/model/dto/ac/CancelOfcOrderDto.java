@@ -3,7 +3,7 @@ package com.xescm.ofc.model.dto.ac;
 import java.io.Serializable;
 
 /**
- * 订单中心取消订单
+ * 订单中心取消订单--推送到结算中心
  * Created by hiyond on 2016/12/23.
  */
 public class CancelOfcOrderDto implements Serializable {
