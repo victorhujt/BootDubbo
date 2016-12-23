@@ -162,6 +162,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
                 cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
             }
+
            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
@@ -179,6 +180,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(cscContantAndCompanyDtoConsignee==null){
                 throw new BusinessException("收货人信息不允许为空！");
             }
+
             CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){

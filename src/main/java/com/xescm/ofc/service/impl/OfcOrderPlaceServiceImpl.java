@@ -331,6 +331,20 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 ofcFundamentalInformationService.update(ofcFundamentalInformation);
             }else if(PubUtils.trimAndNullAsEmpty(tag).equals("tranplace")){
+                // 校验当前客户的客户订单号是否重复
+                String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
+                String custCode = ofcFundamentalInformation.getCustCode();
+                if (!PubUtils.isSEmptyOrNull(custOrderCode) && !PubUtils.isSEmptyOrNull(custCode)) {
+                    boolean isDup = checkOrderCode(custOrderCode, custCode);
+                    if (isDup) {
+                        throw new BusinessException("当前客户存在重复客户订单号！");
+                    }
+                } else {
+                    if (PubUtils.isSEmptyOrNull(custCode)) {
+                        throw new BusinessException("客户不能为空！");
+                    }
+                }
+
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                     int orderCodeByTransCode = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
                     if(orderCodeByTransCode>=1){
@@ -417,7 +431,26 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
     }
 
-
+    /**
+     * 根据客户编号和客户订单号校验重复
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    private boolean checkOrderCode (String custOrderCode, String custCode) {
+        boolean isDup = false;
+        // 校验客户订单号
+        if(!PubUtils.isStrsEmptyOrNull(custOrderCode)) {
+            OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
+            ofcFundamentalInfo.setCustOrderCode(custOrderCode);
+            ofcFundamentalInfo.setCustCode(custCode);
+            int count = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInfo);
+            if (count >= 1) {
+                isDup = true;
+            }
+        }
+        return isDup;
+    }
 
     /**
      * 更新并保存订单状态

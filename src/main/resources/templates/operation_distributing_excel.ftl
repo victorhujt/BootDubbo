@@ -1,4 +1,3 @@
-
 <title>城配开单Excel导入</title>
 <style type="text/css">
     #goodsAndConsigneeDiv{
@@ -16,7 +15,7 @@
     #acrossImg{
         position:fixed;
         left:14%;
-        top:207px;
+        top:230px;
         overflow: auto;
         z-index: 3
     }
@@ -24,7 +23,7 @@
     #broadwiseImg{
         position:fixed;
         left:14%;
-        top:257px;
+        top:270px;
         overflow: auto;
         z-index: 3
     }
@@ -133,6 +132,13 @@
 </div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name"></label>
+            <div class="col-xs-3">
+                <input type="button" id="templatesConfig"  name="templatesConfig"  value="模板映射配置" style="display:none;" disabled="disabled" />
+                <label for="templatesConfig" class="btn btn-white btn-info btn-bold "  style="top:10px;border-color:#999;color:#666 !important;cursor:default">模板映射配置</label>
+            </div>
+        </div>
         <div class="form-group" style="margin-top:20px;">
             <label class="control-label col-label no-padding-right" for="name">下载模板</label>
             <div class="col-xs-6">
@@ -370,7 +376,11 @@
     var csc_url_local = $("#csc_url_local").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
-        xescm.common.loadPage(historyUrl);
+        if(!StringUtil.isEmpty(historyUrl)){
+            xescm.common.loadPage(historyUrl);
+        }else{
+            xescm.common.loadPage("/ofc/operationDistributing");
+        }
     })
 
     function HashMap() {
@@ -530,6 +540,13 @@
 
     }
     $(function () {
+
+        $("#templatesConfig").click(function () {
+            var custCode = $("#customerCode").val();
+            var custName = $("#custName").val();
+            var url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+            xescm.common.loadPage(url);
+        })
 
         document.getElementById("acrossA").onmouseover = function(){
             document.getElementById("acrossImg").style.display="block";

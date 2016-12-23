@@ -1,5 +1,6 @@
 package com.xescm.ofc.model.dto.coo;
 
+import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.OrderSourceEnum;
 import com.xescm.ofc.exception.BusinessException;
@@ -134,8 +135,8 @@ public class CreateOrderTrans {
             String orderSource = OrderSourceEnum.getCodeByCustCode(custCode);
             ofcFundamentalInformation.setOrderSource(orderSource);
             //如果是鲜易网（100002或者XEBEST），固定平台类型为4
-            if (StringUtils.equals("100002", custCode) || StringUtils.equals("XEBEST", custCode)) {
-                ofcFundamentalInformation.setPlatformType("4");
+            if (StringUtils.equals(CreateOrderApiConstant.XEBEST_CUST_CODE, custCode) || StringUtils.equals(CreateOrderApiConstant.XEBEST_CUST_CODE_TEST, custCode)) {
+                ofcFundamentalInformation.setPlatformType(CreateOrderApiConstant.XEBEST_PLATFORM_TYPE);
             }
             return ofcFundamentalInformation;
         }

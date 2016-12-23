@@ -1128,7 +1128,7 @@
         var contactCode = $(obj).parent().parent().children().eq(8).text();
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
-            debugger;
+            
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(7).text();//货品需求数量合计
