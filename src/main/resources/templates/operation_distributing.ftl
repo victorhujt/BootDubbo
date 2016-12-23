@@ -1,98 +1,96 @@
-<head>
-    <title>城配下单</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .width-267{
-            width:267px;
-            padding:0 12px;
-            float:left;
-        }
-        .dataTable > thead > tr > th[class*=sorting_],.dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .tp-1{
-            margin-left: 10px;
-        }
-        .bk-1{
-            width: 245px;
-        }
-        .dz-1{
-            width: 376px;
-        }
-        .l-bj{
-            margin-left: 0;!important;
-        }
-        .db-1{
-            margin-top: 10px;
-        }
-        .l-cor{
-            color: #666;
-        }
-        .bg-1{
-            margin-top: 5px;
-        }
-        .xz-1{
-            margin-left: -33px;
-            background-color: #F5F5F5 !important;
-            border:none;
-            margin-left: -20px;
-            margin-top: 7px;
-        }
-        .xz-1:hover{
-            background: #F5F5F5;
-            background-color: #F5F5F5 !important;
-        }
-        .tktp-1{
-            width: 168px;
-        }
-        .qrshf{
-            margin: 0 10px;
-        }
-        .l_dbx{
-            padding-bottom: 11px;
-            border-bottom:1px solid #ccc;
-            box-sizing: border-box;
-        }
-        .l-dw{
-            position: absolute;
-            left: 278px;
-            top: 16px;
-        }
-        .disabled:hover{
-            background-color: #fff !important;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
+<title>城配下单</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .width-267{
+        width:267px;
+        padding:0 12px;
+        float:left;
+    }
+    .dataTable > thead > tr > th[class*=sorting_],.dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .tp-1{
+        margin-left: 10px;
+    }
+    .bk-1{
+        width: 245px;
+    }
+    .dz-1{
+        width: 376px;
+    }
+    .l-bj{
+        margin-left: 0;!important;
+    }
+    .db-1{
+        margin-top: 10px;
+    }
+    .l-cor{
+        color: #666;
+    }
+    .bg-1{
+        margin-top: 5px;
+    }
+    .xz-1{
+        margin-left: -33px;
+        background-color: #F5F5F5 !important;
+        border:none;
+        margin-left: -20px;
+        margin-top: 7px;
+    }
+    .xz-1:hover{
+        background: #F5F5F5;
+        background-color: #F5F5F5 !important;
+    }
+    .tktp-1{
+        width: 168px;
+    }
+    .qrshf{
+        margin: 0 10px;
+    }
+    .l_dbx{
+        padding-bottom: 11px;
+        border-bottom:1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .l-dw{
+        position: absolute;
+        left: 278px;
+        top: 16px;
+    }
+    .disabled:hover{
+        background-color: #fff !important;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
-</head>
-<body>
+
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -2191,8 +2189,9 @@
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
-                    location.reload();
-                    //xescm.common.loadPage("/ofc/operationDistributing");
+//                    location.reload();
+                    var getTimestamp  = new Date().getTime();
+                    xescm.common.loadPage("/ofc/operationDistributing");
                 })
     }
 
@@ -2521,4 +2520,3 @@
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-</body>

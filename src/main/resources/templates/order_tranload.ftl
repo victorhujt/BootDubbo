@@ -2399,7 +2399,8 @@
                         // 更新开单员
                         updateLastUserData();
                         location.reload();
-//                        xescm.common.loadPage("/ofc/tranLoad");
+//                        var getTimestamp  = new Date().getTime();
+//                        xescm.common.loadPage("/ofc/tranLoad"+"?timestamp="+getTimestamp);
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 

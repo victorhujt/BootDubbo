@@ -105,15 +105,7 @@
         .imgone{
            margin-right: 13px;
         }
-        .Apend{
-            background: #c2c2c2;
-            width: 1004px;
-            height: 250px;
-            margin-left: 11px;
-            display: none;
-            overflow: hidden;
-            position: relative;
-        }
+
         .scales,.closes{
             position: relative;
             z-index: 2;
@@ -131,16 +123,45 @@
             margin-top: 15px;
 
          }
+        .drag_con {
+            background: #c2c2c2;
+            width: 1004px;
+            height: 250px;
+            margin-left: 11px;
+            display: none;
+            overflow: hidden;
+            position: relative;
+        }
+        #drag_img {
+            width: 1500px;
+            height: 1500px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #drag_img img {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body class="no-skin">
 
 <div class="col-xs-12" id="BApen">
-    <div class="Apend">
-        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
-        <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
-        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+    <div class="drag_con" id="drag_con_id">
+        <div id='drag_img'>
+            <img src="" alt="" id="viewBiggerImg" class="dragAble">
+        </div>
+    <div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>
+    <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
     </div>
+    <#--<div class="Apend">-->
+        <#--<div class="drag_img">-->
+            <#--<img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">-->
+        <#--</div>-->
+        <#--<div class="closes"><img src="${OFC_WEB_URL!}/docs/images/clons.png" alt=""></div>-->
+        <#--<div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>-->
+    <#--</div>-->
     <div class="col-sm-6" style="float: right">
 
     </div>
@@ -237,7 +258,7 @@
                         <label class="control-label col-label no-padding-right" for="name"  style="margin-right:8px;"></label>
                         <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
                             <#list mobileOrder.urls as url>
-                                <div class="imgClass  imgone" style="position: relative;">
+                                <div class="imgClass  imgone">
                                     <img src="${url!""}" class="dragAble" />
                                 </div>
                             </#list>
@@ -260,6 +281,74 @@
     </form>
 </div><!-- /.col -->
 <#--<script type="text/javascript" src="../js/drag_map.js"></script>-->
+<script type="text/javascript">
+    var oConId=document.getElementById('drag_con_id');
+    var oDiv=document.getElementById('drag_img');
+
+
+    var disX=0;
+    var disY=0;
+
+
+    var  dra_Img=function (ev)
+    {
+        console.log('////')
+        var oEvent=ev||event;
+        //距离存起来
+
+        disX=oEvent.clientX-oDiv.offsetLeft;
+        disY=oEvent.clientY-oDiv.offsetTop;
+
+        function fnMove(ev)
+        {
+            var oEvent=ev||event;
+
+            var l=oEvent.clientX-disX;
+            var t=oEvent.clientY-disY;
+            if(l < -(oDiv.clientWidth - oConId.clientWidth)){
+                l = -(oDiv.clientWidth - oConId.clientWidth)
+            }
+            if(l > 0){
+                l = 0
+            }
+            if(t < -(oDiv.clientHeight - oConId.clientHeight)) {
+                t = -(oDiv.clientHeight - oConId.clientHeight)
+            }
+            if(t > 0) {
+                t = 0
+            }
+            oDiv.style.left=l+'px';
+            oDiv.style.top=t+'px';
+        }
+
+        function fnUp()
+        {
+            this.onmousemove=null;
+            this.onmouseup=null;
+
+            if(this.releaseCapture)
+            {
+                this.releaseCapture();
+            }
+        }
+
+        if(oDiv.setCapture)
+        {
+            oDiv.onmousemove=fnMove;
+            oDiv.onmouseup=fnUp;
+
+            oDiv.setCapture();
+        }
+        else
+        {
+            document.onmousemove=fnMove;
+            document.onmouseup=fnUp;
+
+            return false;
+        }
+    };
+    oDiv.onmousedown=dra_Img;
+</script>
 <script>
     function Maxmin() {
         var imgs = document.getElementsByClassName("dragAble");
@@ -267,23 +356,8 @@
             (function(i){
                 imgs[i].onclick=function () {
                     var _this=this;
-                    $(".Apend").css({"display":"block"});
+                    $(".drag_con").css({"display":"block"});
                     $("#viewBiggerImg").attr('src',_this.src);
-                        var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
-                        console.log(Left);
-                        var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
-                        if(Left<=-510){
-                            $("#viewBiggerImg").animate({"left":"-510px"},300)
-                        }
-                        if(Left>=10){
-                            $("#viewBiggerImg").animate({"left":"10px"},300)
-                        }
-                        if(Top<=-885){
-                            $("#viewBiggerImg").animate({"top":"-885px"},300)
-                        }
-                        if(Top>=10){
-                            $("#viewBiggerImg").animate({"top":"10px"},300)
-                        }
                     return
                 }
             })(i)
@@ -295,9 +369,7 @@
                     _ecIndex=index;
                     Deg_num=0;
                     $("#viewBiggerImg").css({
-                        "transform":"rotate(0deg)",
-                        "left":"0",
-                        "top":"0"
+                        "transform":"rotate(0deg)"
                     })
                 };
             });
@@ -306,11 +378,16 @@
             Deg_num++;
             $("#viewBiggerImg").css({
                 "transform":"rotate("+90*Deg_num+"deg)"
-            })
+            });
+            var oConId=document.getElementById('drag_con_id');
+            var oDiv=document.getElementById('drag_img');
+            var disX=0;
+            var disY=0;
+            oDiv.onmousedown=dra_Img;
         });
 
         $(".closes").on("click",function () {
-            $(".Apend").css({"display":"none"});
+            $(".drag_con").css({"display":"none"});
         })
     }
     Maxmin();
