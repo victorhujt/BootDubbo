@@ -324,8 +324,8 @@
             param.businessType = $("#businessType").val();
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
-                if (result == undefined || result == null) {
-                    alert("HTTP请求无数据返回！");
+                if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                    layer.msg("暂时未查询到相关订单信息！");
                 } else if (result.code == 200) {// 1:normal
                     reloadGrid(result);// 刷新页面数据
                     laypage({
@@ -557,14 +557,15 @@
 
         // 分页查询客户列表
         function queryCustomerData(custName, pageNum) {
+            $("#custListDivTbody").html("");
             var custName = $("#custNameDiv").val();
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
             param.custName = custName;
             CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-                if (result == undefined || result == null) {
-                    alert("未查询到客户信息！");
+                if (result == undefined || result == null || result.result == null || result.result.size == 0 || result.result.list == null) {
+                    layer.msg("暂时未查询到客户信息！");
                 } else if (result.code == 200) {
                     loadCustomer(result);
                     laypage({
