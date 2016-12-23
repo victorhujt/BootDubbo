@@ -1,98 +1,102 @@
-<head>
-    <title>城配下单</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .width-267{
-            width:267px;
-            padding:0 12px;
-            float:left;
-        }
-        .dataTable > thead > tr > th[class*=sorting_],.dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .tp-1{
-            margin-left: 10px;
-        }
-        .bk-1{
-            width: 245px;
-        }
-        .dz-1{
-            width: 376px;
-        }
-        .l-bj{
-            margin-left: 0;!important;
-        }
-        .db-1{
-            margin-top: 10px;
-        }
-        .l-cor{
-            color: #666;
-        }
-        .bg-1{
-            margin-top: 5px;
-        }
-        .xz-1{
-            margin-left: -33px;
-            background-color: #F5F5F5 !important;
-            border:none;
-            margin-left: -20px;
-            margin-top: 7px;
-        }
-        .xz-1:hover{
-            background: #F5F5F5;
-            background-color: #F5F5F5 !important;
-        }
-        .tktp-1{
-            width: 168px;
-        }
-        .qrshf{
-            margin: 0 10px;
-        }
-        .l_dbx{
-            padding-bottom: 11px;
-            border-bottom:1px solid #ccc;
-            box-sizing: border-box;
-        }
-        .l-dw{
-            position: absolute;
-            left: 278px;
-            top: 16px;
-        }
-        .disabled:hover{
-            background-color: #fff !important;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
+<title>城配下单</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .width-267{
+        width:267px;
+        padding:0 12px;
+        float:left;
+    }
+    .dataTable > thead > tr > th[class*=sorting_],.dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .tp-1{
+        margin-left: 10px;
+    }
+    .bk-1{
+        width: 245px;
+    }
+    .dz-1{
+        width: 376px;
+    }
+    .l-bj{
+        margin-left: 0;!important;
+    }
+    .db-1{
+        margin-top: 10px;
+    }
+    .l-cor{
+        color: #666;
+    }
+    .bg-1{
+        margin-top: 5px;
+    }
+    .xz-1{
+        margin-left: -33px;
+        background-color: #F5F5F5 !important;
+        border:none;
+        margin-left: -20px;
+        margin-top: 7px;
+    }
+    .xz-1:hover{
+        background: #F5F5F5;
+        background-color: #F5F5F5 !important;
+    }
+    .tktp-1{
+        width: 168px;
+    }
+    .qrshf{
+        margin: 0 10px;
+    }
+    .l_dbx{
+        padding-bottom: 11px;
+        border-bottom:1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .l-dw{
+        position: absolute;
+        left: 278px;
+        top: 16px;
+    }
+    .disabled:hover{
+        background-color: #fff !important;
+    }
+    #goodsSecTypeId_chosen{
+        width:245px!important;
+    }
+    #goodsTypeId_chosen{
+        width:245px!important;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
-</head>
-<body>
+
 <!--goodsListDiv-->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -101,23 +105,23 @@
         <div class="bootbox-body">
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品种类</label>
+                    <label class="control-label  col-label no-padding-right" for="name">货品种类</label>
                     <div class="col-xs-3 tktp-1">
                         <div class="clearfix">
-                            <select id="goodsTypeId" name="goodsTypeId" class="bk-1"></select>
+                            <select id="goodsTypeId" name="goodsTypeId" class="bk-1 chosen-select"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品小类</label>
+                    <label class="control-label  col-label no-padding-right" for="name">货品小类</label>
                     <div class="col-xs-3 tktp-1">
                         <div class="clearfix">
-                            <select id="goodsSecTypeId" name="goodsTypeSonId" class="bk-1"></select>
+                            <select id="goodsSecTypeId" name="goodsTypeSonId" class="bk-1 chosen-select"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                    <label class="control-label  col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "goodsName" name="goodsName" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
@@ -125,7 +129,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">条形码</label>
+                    <label class="control-label  col-label no-padding-right" for="name">条形码</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
@@ -134,7 +138,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -184,7 +188,7 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label  col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix" >
                             <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -192,7 +196,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label  col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -200,7 +204,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label  col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -208,7 +212,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -219,12 +223,13 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" style="width:42px;" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
@@ -288,13 +293,14 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            <input id="consigneecheck" type="checkbox" class="ace">
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label=""  style="width:42px;">
+                            <label class="pos-rel">
+                                <input id="consigneecheck" type="checkbox" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending" style="width:42px;">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
@@ -321,7 +327,7 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name" style="line-height:34px;">名称</label>
+                    <label class="control-label  col-label no-padding-right" for="name" style="line-height:34px;">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
@@ -329,7 +335,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3 l-dw">
                         <div class="clearfix">
                             <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -340,13 +346,13 @@
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                    <tr role="row">
+                        <th class="center sorting_disabled" style="width:42px;" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                            </label>
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending" style="width:42px;">序号</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
@@ -373,7 +379,7 @@
             <form class="form-horizontal" role="form">
 
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品编码</label>
+                    <label class="control-label col-label no-padding-right" for="name">货品编码</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input id="goodsIndexDivHidden" type="hidden"/>
@@ -382,7 +388,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -390,7 +396,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">规格</label>
+                    <label class="control-label col-label no-padding-right" for="name">规格</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -398,28 +404,31 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">单位</label>
+                    <label class="control-label col-label no-padding-right" for="name">单位</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "unitDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
+                <div class="form-groupp" style="overflow:hidden;">
+                    <label class="control-label col-label no-padding-right" for="name"></label>
+                    <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">发货数量</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goodsAndConsigneeTbody">
+                        </tbody>
+                    </table>
+                </div>
 
-                <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row">
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">发货数量</th>
-                    </tr>
-                    </thead>
-                    <tbody id="goodsAndConsigneeTbody">
-                    </tbody>
-                </table>
             </form>
-
         </div>
     </div>
+
     <div class="form-group" >
         <div class="modal-footer"><button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span></div>
     </div>
@@ -455,7 +464,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
             <div class="width-267">
                 <div class="position-relative bk-1 ">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                    <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                     <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
                     </label>
@@ -476,7 +485,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="width-267">
                 <div class="bk-1 position-relative">
-                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
+                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
                     <label class="btn btn-minier no-padding-right initBtn" id="" for="expectedArrivedTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
                     </label>
@@ -492,7 +501,7 @@
                     <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder=""/>
                     <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
-                        <i class="fa fa-user l-cor"></i>
+                        <i class="fa fa-user l-cor bigger-130"></i>
                     </button>
                 </div>
              <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -547,7 +556,7 @@
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
                         <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
-                            <i class="fa fa-user l-cor"></i>
+                            <i class="fa fa-user l-cor bigger-130"></i>
                         </button>
                     </div>
 
@@ -619,7 +628,7 @@
                             </th>
                         <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Domain: activate to sort column ascending">序号
+                                aria-label="Domain: activate to sort column ascending" style="width:42px;">序号
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">货品编码
@@ -733,9 +742,13 @@
     }
     //链接到收发货方联系人档案
     $("#to_operation_csc_contact_manage").click(function () {
-        var csc_url = $("#csc_url").html();
+        /*var csc_url = $("#csc_url").html();
         var url = csc_url + "/csc/receive/toMainReceivAndDispatchFilePage";
-        xescm.common.loadPage(url);
+        xescm.common.loadPage(url);*/
+        var url = "/csc/receive/toMainReceivAndDispatchFilePage";
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
     })
     //创建新客户
     $("#to_csc_createCustBtn").click(function () {
@@ -820,6 +833,12 @@
                 viewMapIndexOf += 1;
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
+                var goodsCode = goodsDetail.goodsCode;
+                var realGoodsCode0 = goodsCode.split('@')[0];
+                var realGoodsCode1 = '';
+                if(goodsCode.split('@').length > 1){
+                    realGoodsCode1 = '@' + goodsCode.split('@')[1];
+                }
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
                 $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
                         "<td>" +
@@ -827,7 +846,7 @@
                         "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                         "</td>" +
                         "<td>" + viewMapIndexOf + "</td>" +
-                        "<td>" + goodsDetail.goodsCode + "</td>" +
+                        "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
                         "<td>" + goodsDetail.goodsName + "</td>" +
                         "<td>" + goodsDetail.specification + "</td>" +
                         "<td>" + goodsDetail.unit + "</td>" +
@@ -861,6 +880,7 @@
                             firstGoodsType = goodsType.id;
                         }
                         $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
+                        $("#goodsTypeId").trigger("chosen:updated");
                     });
                 });
                 //加载第一个一级货品的二级种类//000
@@ -870,9 +890,11 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"customerCode":customerCode,"goodsType":firstGoodsType},function(data) {
                         data=eval(data);
                         $.each(data,function (index,secGoodsType) {
-                            $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
+                            $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>").trigger("chosen:updated");
+
                         });
                     })
+
                 }
 
 
@@ -1042,8 +1064,8 @@
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
-                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
+                        "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
                         "</td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
@@ -1084,7 +1106,7 @@
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"customerCode":customerCode,"goodsType":goodsType},function(data) {
             data=eval(data);
             $.each(data,function (index,secGoodsType) {
-                $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
+                $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>").trigger("chosen:updated");
             });
         })
     })
@@ -1106,14 +1128,19 @@
         var contactCode = $(obj).parent().parent().children().eq(8).text();
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
+            debugger;
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(7).text();//货品需求数量合计
             
             var mapKey = goodsCode + "@" + goodsIndex;
             var consigneeAndGoodsMsgJson = null;
-            if(null != goodsAndConsigneeMap.get(mapKey) || undefined == goodsAndConsigneeMap.get(mapKey)){
-                consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+            if(null != goodsAndConsigneeMap.get(mapKey) && undefined != goodsAndConsigneeMap.get(mapKey)){
+                if(goodsAndConsigneeMap.get(mapKey).length > 0){
+                    consigneeAndGoodsMsgJson = goodsAndConsigneeMap.get(mapKey)[1];//联系人和货品的对应信息
+                }else{
+                    return;
+                }
             }
             
             if(null != consigneeAndGoodsMsgJson){
@@ -1166,6 +1193,8 @@
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
+        var useGoodsCode = goodsCode;
+        goodsCode = goodsCode.split('@')[0];
         var goodsName = $(obj).parent().parent().children().eq(3).text();
         var specification = $(obj).parent().parent().children().eq(4).text();
         var unit = $(obj).parent().parent().children().eq(5).text();
@@ -1186,7 +1215,7 @@
             var consigneeType = tdArr.eq(6).text();//
             var consigneeCode = tdArr.eq(7).text();
             var consigneeContactCode = tdArr.eq(8).text();
-            var mapKey = goodsCode + "@" + goodsIndex;
+            var mapKey = useGoodsCode + "@" + goodsIndex;
             var num = "0";
 
             if(undefined != goodsAndConsigneeMap.get(mapKey)){
@@ -1387,6 +1416,8 @@
                     $("#consignorAddress").val(addressAuto);
 
                     $("#showDepaturePlace").html(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
+                    $("#consignorName-error").html("");
+                    $("#consignorName-error").parent().parent().removeClass("has-error").addClass("has-success");
 
 
                     layer.close(index);
@@ -1482,7 +1513,7 @@
             consignorTypeHide = CscContantAndCompanyDto.type;*/
             contactList =contactList + "<tr role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
@@ -1697,7 +1728,7 @@
             consigneeTypeHide = CscContantAndCompanyDto.type;*/
             contactList =contactList + "<tr role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.phone)+"</td>";
@@ -1763,7 +1794,7 @@
             contactCodeOut[contactCode] = 1;
 
 
-            consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+            consignorout =consignorout + "<tr role='row' class='odd'>";
             consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
             consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
@@ -1921,7 +1952,7 @@
         param.pageSize = 20;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+            if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到客户信息！");
             } else if (result.code == 200) {
                 loadCustomer(result);
@@ -1960,7 +1991,7 @@
             }
             custList =custList + "<tr role='row' class='odd'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            custList =custList + "<td>"+(index+1)+"</td>";
+            custList =custList + "<td class='center'>"+(index+1)+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
             if(custType == '1'){
                 custList =custList + "<td>公司</td>";
@@ -2179,8 +2210,9 @@
                 ,{"orderLists":param}
                 ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
                 ,function () {
-                    location.reload();
-                    //xescm.common.loadPage("/ofc/operationDistributing");
+//                    location.reload();
+                    var getTimestamp  = new Date().getTime();
+                    xescm.common.loadPage("/ofc/operationDistributing");
                 })
     }
 
@@ -2506,7 +2538,32 @@
 
         }
     })
+    $("#contactinEnter").click(function(){
+        if($("#consignorName").val()!==""){
+            $("#consignorName-error").html("");
+            $("#consignorName").parent().parent().parent().removeClass("has-error").addClass("has-success");
+
+        }
+    })
+    function initChosen() {
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        //resize the chosen on window resize
+        $(window).off('resize.chosen').on('resize.chosen', function () {
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    }
+
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-</body>

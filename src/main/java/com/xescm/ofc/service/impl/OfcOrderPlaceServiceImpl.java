@@ -96,6 +96,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 continue;
             }
             String orderCode = ofcFundamentalInformation.getOrderCode();
+            ofcGoodsDetails.setGoodsCode(ofcGoodsDetails.getGoodsCode().split("\\@")[0]);
             ofcGoodsDetails.setOrderCode(orderCode);
             ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());

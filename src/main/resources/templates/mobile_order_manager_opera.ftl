@@ -4,9 +4,9 @@
         input{
             width: 240px;
         }
-        td{
+    /*    td{
             text-align: center;
-        }
+        }*/
        /* .page-content{
             max-width: 1250px;
             min-width: 1250px;
@@ -54,7 +54,7 @@
                     <label class="control-label col-label no-padding-right" for="name" style="margin-left: 33px">至</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix position-relative">
-                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
                             <label for="orderTimeSuf" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                         </div>
                     </div>
@@ -94,6 +94,7 @@
                     <button class="btn btn-white btn-info btn-bold filters" id="doSearch">
                         筛选
                     </button>
+                    <button class="btn btn-white btn-info btn-bold filters rtn-btn" id="resetBtn">重置</button>
                 </div>
             </div>
         </div>
@@ -107,7 +108,7 @@
 <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
         <thead>
-        <th>序号</th>
+        <th style="width:42px;">序号</th>
         <th>流水号</th>
         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
             aria-label="Clicks: activate to sort column ascending">上传日期
@@ -261,10 +262,9 @@
             }
 
             for ( var i = 0; i < data.result.list.length; i++) {
-                debugger;
                 var order = data.result.list[i];
                 htmlText += "<tr role=\"row\" class=\"odd\">"
-                    + "<td>" + [ i + 1] + "</td>"
+                    + "<td class='center'>" + [ i + 1] + "</td>"
                         + "<td>"
                         + "<a onclick=\"orderDetailOper('" + order.mobileOrderCode + "')\">" + StringUtil.nullToEmpty(order.mobileOrderCode) + "</a>"
                         + "</td>"
@@ -350,7 +350,12 @@
 //            xescm.common.loadPage("/ofc/orderDetailPageByCode/" + orderCode);
         }
 
-
+        $("#resetBtn").click(function(){
+            $("#orderTimePre").val("");
+            $("#orderTimeSuf").val("");
+            $("#mobileOrderStatus").val("").trigger("chosen:updated");
+            $("#businessType").val("").trigger("chosen:updated");
+        })
 
 
 

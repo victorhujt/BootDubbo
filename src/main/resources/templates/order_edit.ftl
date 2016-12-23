@@ -51,9 +51,10 @@
         #warehouseName_chosen{
             width:100%!important;
         }
-        .initBtn{
-            padding-left:9px;
+        .table > tbody + tbody{
+            border-top:0px;
         }
+
     </style>
 
 </head>
@@ -1000,7 +1001,7 @@
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm" onclick="subOrder()>
+            <button class="btn btn-white btn-info btn-bold btn-interval" id="bootbox-confirm" onclick="subOrder()">
                 <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
                 保存修改
             </button>
@@ -1491,8 +1492,7 @@
           });
       });*/
 
-        cscContact.contactCompanyCode = $("#consignorCode").val();
-        cscContact.contactCode = $("#consignorContactCode").val();
+        cscContact.serialNo = $("#consignorContactCode").val();
         cscContactCompany.type = $("#consignorType").val();
         //cscContactCompany.id = $("#consignorCode").val();
 
@@ -1540,8 +1540,7 @@
         cscContact.purpose = "1";
         cscContact.phone = $("#consigneePhone").val();
 
-        cscContact.contactCompanyCode = $("#consigneeCode").val();
-        cscContact.contactCode = $("#consigneeContactCode").val();
+        cscContact.serialNo = $("#consigneeContactCode").val();
         cscContactCompany.type = $("#consigneeType").val();
         cscContact.fax = $("#consigneeFax").val();
         cscContact.email = $("#consigneeEmail").val();
@@ -1840,7 +1839,7 @@
                     var weight = tdArr.eq(6).text();//    重量
                     var volume = tdArr.eq(7).text();//    体积
                     goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                    goodsInfoListDiv =goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red'>删除</a></td>";
+
                     /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsName+"</td>";
@@ -1853,6 +1852,7 @@
                     goodsInfoListDiv =goodsInfoListDiv + "<td><input name='' type='text' class='form-control input-sm' placeholder='' aria-controls='dynamic-table' onclick='laydate({istime: true, format: \"YYYY-MM-DD\",isclear: true,istoday: true})'></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+weight+"</td>";
                     goodsInfoListDiv =goodsInfoListDiv + "<td style='display:none'>"+volume+"</td>";
+                    goodsInfoListDiv =goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red'>删除</a></td>";
                     goodsInfoListDiv =goodsInfoListDiv + "</tr>";
                     str="str";
                 }
@@ -2203,6 +2203,7 @@
 
     });
     function subOrder() {
+        debugger
         var jsonStr = {};
         //订单基本信息
         jsonStr.orderCode = $("#orderCode").val();

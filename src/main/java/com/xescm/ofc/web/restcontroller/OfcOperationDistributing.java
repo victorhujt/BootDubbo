@@ -69,7 +69,6 @@ public class OfcOperationDistributing extends BaseController{
 
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
-
     public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
         logger.info("城配开单确认下单==> orderLists={}", orderLists);
         String resultMessage = null;

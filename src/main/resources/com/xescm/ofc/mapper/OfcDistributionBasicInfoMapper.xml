@@ -260,15 +260,36 @@
 
   <select id="checkTransCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" resultType="java.lang.Integer">
     SELECT
-    count(order_code) AS countOrderCode
+    count(odbi.order_code) AS countOrderCode
     FROM
-    ofc_distribution_basic_info odbi
+    (
+    SELECT
+    s.*
+    FROM
+    ofc_order_status s,
+    (
+    SELECT
+    s.order_code,
+    max(s.lasted_oper_time) val
+    FROM
+    ofc_order_status s
+    GROUP BY
+    s.order_code
+    ) b
+    WHERE
+    s.order_code = b.order_code
+    AND s.lasted_oper_time = b.val
+    ORDER BY
+    s.order_code
+    ) oos
+    LEFT JOIN ofc_distribution_basic_info odbi ON oos.order_code = odbi.order_code
     <where>
       <if test="selfTransCode != null and selfTransCode != ''" >
         trans_code != #{selfTransCode}
       </if>
       AND
       trans_code = #{transCode}
+      AND oos.order_status!='50'
     </where>
   </select>
 

@@ -1,88 +1,85 @@
-<head>
-    <title>运输开单</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .date_a{
-            line-height:21px !important;
-        }
-        .form-group > label[class*="col-"]{
-            margin-top:0;
-            line-height:34px;
-        }
-        .form-horizontal .control-label{
-            padding-top:0;
-            line-height:30px;
-        }
-        input[type=checkbox], input[type=radio]{
-            margin:10px 0 0;
-        }
-        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-            color:#393939;
-        }
-        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-            color:#393939;
-        }
-        .dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .dataTable > thead > tr > th[class*=sorting_]{
-            color:#707070;
-        }
-        .has-success .form-control{
-            border-color:#cacaca;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .has-error .form-control{
-            border-color:#b5b5b5 !important;
-        }
-        .custNameIcon:hover{color:#2868c6 !important;}
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .col-label{
-            margin-right:2px;
-            margin-bottom:0;
-        }
-        #goodsInfoListDiv .help-block{
-            line-height:20px;
-        }
-        .chosen-container .chosen-results{
-            max-height:120px;
-        }
-       .pay .chosen-container-single .chosen-search:after{
-           top:4px;
-       }
-        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
-            padding-top:0;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
-</head>
+<title>运输开单</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .date_a{
+        line-height:21px !important;
+    }
+    .form-group > label[class*="col-"]{
+        margin-top:0;
+        line-height:34px;
+    }
+    .form-horizontal .control-label{
+        padding-top:0;
+        line-height:30px;
+    }
+    input[type=checkbox], input[type=radio]{
+        margin:10px 0 0;
+    }
+    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+        color:#393939;
+    }
+    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+        color:#393939;
+    }
+    .dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .dataTable > thead > tr > th[class*=sorting_]{
+        color:#707070;
+    }
+    .has-success .form-control{
+        border-color:#cacaca;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .has-error .form-control{
+        border-color:#b5b5b5 !important;
+    }
+    .custNameIcon:hover{color:#2868c6 !important;}
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .col-label{
+        margin-right:2px;
+        margin-bottom:0;
+    }
+    #goodsInfoListDiv .help-block{
+        line-height:20px;
+    }
+    .chosen-container .chosen-results{
+        max-height:120px;
+    }
+    .pay .chosen-container-single .chosen-search:after{
+        top:4px;
+    }
+    .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+        padding-top:0;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
-<body class="no-skin">
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
@@ -751,7 +748,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:15px;">回付</label>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:14px;">回付</label>
                         <div style="width:130px;float:left;">
                             <div class="col-float" style="width:100px;margin-right:15px;">
                                 <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
@@ -2011,7 +2008,7 @@
         param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-            if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+            if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
                 layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
                 loadCustomer(result);
@@ -2399,7 +2396,8 @@
                         // 更新开单员
                         updateLastUserData();
                         location.reload();
-//                        xescm.common.loadPage("/ofc/tranLoad");
+//                        var getTimestamp  = new Date().getTime();
+//                        xescm.common.loadPage("/ofc/tranLoad"+"?timestamp="+getTimestamp);
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
@@ -2864,8 +2862,8 @@
         var loginUser = $('#login_user').html();
         var lastSelMer = getCookie(loginUser);
         var lastSelConsignor = getCookie(loginUser+"@consignor");
-        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
-        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
+//        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
+//        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
 
         if (lastSelMer != '') {
             $("#merchandiser").val(lastSelMer);
@@ -2972,4 +2970,3 @@
     }
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-</body>

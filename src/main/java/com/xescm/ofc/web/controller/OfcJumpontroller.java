@@ -182,12 +182,10 @@ public class OfcJumpontroller extends BaseController{
      * 运输开单
      * @param model
      * @param map
-     * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value="/ofc/tranLoad")
-    public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView tranLoad(Model model,Map<String,Object> map){
         try{
             logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();

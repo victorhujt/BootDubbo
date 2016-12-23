@@ -30,7 +30,7 @@
     -->
     update ofc_attachment
     <set >
-      <if test="pic_param != null" >
+      <if test="picParam != null" >
         pic_param = #{picParam,jdbcType=VARCHAR},
       </if>
     </set>

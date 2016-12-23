@@ -33,6 +33,16 @@ public class OfcSchedulingSingleFeedbackCondition {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;//调度单时间
+    private String lineName;
+
+
+    public String getLineName() {
+        return lineName;
+    }
+
+    public void setLineName(String lineName) {
+        this.lineName = lineName;
+    }
 
     public List<String> getTransportNo() {
         return transportNo;

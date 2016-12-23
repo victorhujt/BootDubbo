@@ -83,7 +83,6 @@
             border:1px solid #c2c2c2;
             width: 100%;
             height:100%;
-
         }
       /*  .row{
             max-width: 1250px;
@@ -110,15 +109,7 @@
        .pay .chosen-container-single .chosen-search:after{
            top:3px;
        }
-        .Apend{
-            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
-            background-size: 100% 100%;
-           /* float: left;
-            width: 500px;*/
-            height: 202px;
-            overflow: hidden;
-            position: relative;
-        }
+
         .scales,.closes{
             position: relative;
             z-index: 2;
@@ -137,10 +128,37 @@
         }
         .MaxImg{
             margin-right: 5px;
-            width: 287px;height:202px;
+            width: 144px;
+            height: 401px;
             border: 1px solid #c2c2c2;
-            float: left;margin-bottom: 20px;
+            float: left;
+            margin-bottom: 20px;
         }
+        .drag_con {
+            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
+            background-size: 100% 100%;
+            float: left;
+            max-width: 900px;
+            width:60%;
+            height: 401px;
+            overflow: hidden;
+            position: relative;
+        }
+        #drag_img {
+            width: 1050px;
+            height: 1050px;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+        }
+        #drag_img img {
+            width: 100%;
+            height: 100%;
+        }
+      /*  #viewBiggerImg{
+            transform:scale(0.6)!important;
+        }*/
     </style>
 </head>
 
@@ -151,6 +169,7 @@
     </p>
 </div>
 <div class="col-xs-12">
+
     <div class="MaxImg">
     <#if mobileOrder.urls?? && (mobileOrder.urls?size > 0)>
         <#list mobileOrder.urls as url>
@@ -161,15 +180,24 @@
     </#if>
 
     </div>
+    <div class="drag_con" id="drag_con_id">
+        <div id='drag_img'>
+            <img src="" alt="" id="viewBiggerImg" class="">
+        </div>
+        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
+    </div>
+    <#--<div class="Apend" id="BApen">-->
+        <#--<img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">-->
+        <#--<div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>-->
+    <#--</div>-->
 
 
-
-    <form id="" method="post" class="form-horizontal" style="float:right;" role="form">
+    <form id="" method="post" class="form-horizontal y-float" role="form">
         <div class="width-100 y-float">
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">流水号</label>
                 <div class="col-width-168">
-                    <input class="width-100" id="mobileOrderCode" name="" type="search" placeholder=""
+                    <input class="width-100" readonly="readonly" id="mobileOrderCode" name="" type="search" placeholder=""
                            aria-controls="dynamic-table" value="${(mobileOrder.mobileOrderCode)!""}">
                 </div>
             </div>
@@ -184,7 +212,7 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">钉钉账号</label>
                 <div class="col-width-168">
-                    <input class="width-100" id="dingdingAccountNo" name="" type="search" placeholder=""
+                    <input class="width-100" readonly="readonly" id="dingdingAccountNo" name="" type="search" placeholder=""
                            aria-controls="dynamic-table"
                            value="${(mobileOrder.dingdingAccountNo)!""}">
                 </div>
@@ -200,16 +228,21 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                 <div class="col-width-168">
-                <#if mobileOrder.businessType  =="602">
-                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                           aria-controls="dynamic-table" value="卡班">
-                <#elseif  mobileOrder.businessType =="600">
-                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                           aria-controls="dynamic-table" value="城配">
-                <#elseif  mobileOrder.businessType =="601">
-                    <input class="width-100" id="businessType" name="custName" type="search" placeholder=""
-                           aria-controls="dynamic-table" value="干线">
-                </#if>
+                    <select  id="mbusinessType" name="mbusinessType" class="chosen-select form-control ">
+                    <#if mobileOrder.businessType  =="602">
+                        <option value="602" selected="selected">卡班</option>
+                        <option value="600">城配</option>
+                        <option value="601">干线</option>
+                    <#elseif  mobileOrder.businessType =="600">
+                        <option value="602">卡班</option>
+                        <option value="600" selected="selected">城配</option>
+                        <option value="601">干线</option>
+                    <#elseif  mobileOrder.businessType =="601">
+                        <option value="602">卡班</option>
+                        <option value="600">城配</option>
+                        <option value="601" selected="selected">干线</option>
+                    </#if>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -227,10 +260,7 @@
 
         </div>-->
     </form>
-    <div class="Apend" id="BApen">
-        <img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">
-        <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
-    </div>
+
 <#--</div>--><!-- /.col -->
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
@@ -569,6 +599,14 @@
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" value="${(mobileOrder.tranCode)!""}"/>
                             </div>
                         </div></div>
+                    <div>
+                        <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
@@ -721,7 +759,7 @@
                     服务项目及费用
                 </p>
             </div>
-            <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
+            <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" style="margin-left:6px;">
                 <div class="form-group">
                     <div style="width:280px;margin:0 0 0 15px;float:left;">
                         <div class="clearfix col-xs-1" style="margin-top:4px;">
@@ -919,130 +957,182 @@
 
             </form>
             <!-- /section:elements.tab.option -->
+            <!-- /.page-content -->
+        <#--<div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                </div>
+
+            </div>
+        </div>-->
+            <div class="page-header" style="clear:left;">
+                <p style="font-size: 14px;font-family:'微软雅黑'">
+                    货品信息
+                </p>
+            </div>
+            <div class="col-xs-12">
+                <!-- #section:elements.tab.option -->
+                <div class="tabbable" >
+                <#-- <ul class="nav nav-tabs" id="myTab4">
+                     <li class="active">
+                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+                     </li>
+                 </ul>-->
+
+
+
+                    <div class="tab-content" style="border:none;padding-top:0;">
+                        <div id="home4" class="tab-pane active">
+
+                            <!--货品明细-->
+                            <button type="button" style="float:right;" class="btn btn-white btn-info btn-bold btn-interval"
+                                    id="addGoods">添加一行</button>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="control-label" style="float:right;" for="name">kg</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="control-label" style="float:right;" for="name">重量合计：</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="control-label" style="float:right;" for="name">数量合计：</label>
+                            <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
+                        <#--dynamic-table-->
+                            <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                <thead>
+                                <tr role="row"><th class="center sorting_disabled" style="width:45px;" rowspan="1" colspan="1" aria-label="">
+                                    操作
+                                </th>
+                                <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                                    <th class="" tabindex="0" style="width:120px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
+                                    <th class="" tabindex="0" style="width:98px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
+                                    </th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                    <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
+                                    <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
+                                </thead>
+                            <#--货品明细-->
+
+                                <tbody id="goodsInfoListDiv"></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12" style="margin-top:20px;">
+
+                <button class="btn btn-white btn-info btn-bold btn-interval" style="margin-left:12px;" id="orderPlaceConTableBtn">
+                    <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
+                    确认下单
+                </button>
+            </div>
+
+        <#--
+                </div>
+            </div><!-- /.main-content &ndash;&gt;
+
+
+        </div><!-- /.main-container &ndash;&gt;-->
+
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 <!-- /.row -->
-</div><!-- /.page-content -->
-<#--<div class="page-content">
-    <div class="row">
-        <div class="col-xs-12">
-        </div>
-
-    </div>
-</div>-->
-<div class="page-header" style="clear:left;">
-    <p style="font-size: 14px;font-family:'微软雅黑'">
-        货品信息
-    </p>
 </div>
-<div class="col-xs-12">
-    <!-- #section:elements.tab.option -->
-    <div class="tabbable" >
-    <#-- <ul class="nav nav-tabs" id="myTab4">
-         <li class="active">
-             <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-         </li>
-     </ul>-->
-
-
-
-        <div class="tab-content" style="border:none;padding-top:0;">
-            <div id="home4" class="tab-pane active">
-
-                <!--货品明细-->
-                <button type="button" style="float:right;" class="btn btn-white btn-info btn-bold btn-interval"
-                        id="addGoods">添加一行</button>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label class="control-label" style="float:right;" for="name">kg</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label class="control-label" style="float:right;" for="name">重量合计：</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label class="control-label" style="float:right;" for="name">数量合计：</label>
-                <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
-            <#--dynamic-table-->
-                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row"><th class="center sorting_disabled" style="width:45px;" rowspan="1" colspan="1" aria-label="">
-                        操作
-                    </th>
-                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" style="width:120px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
-                        <th class="" tabindex="0" style="width:98px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                        <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
-                        <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
-                    </thead>
-                <#--货品明细-->
-
-                    <tbody id="goodsInfoListDiv"></tbody>
-
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-xs-12" style="margin-top:20px;">
-
-    <button class="btn btn-white btn-info btn-bold btn-interval" style="margin-left:12px;" id="orderPlaceConTableBtn">
-        <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
-        确认下单
-    </button>
-</div>
-
-<#--
-        </div>
-    </div><!-- /.main-content &ndash;&gt;
-
-
-</div><!-- /.main-container &ndash;&gt;-->
-
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
+<script type="text/javascript">
+    var oConId=document.getElementById('drag_con_id');
+    var oDiv=document.getElementById('drag_img');
 
+
+    var disX=0;
+    var disY=0;
+
+
+    var  dra_Img=function (ev)
+    {
+
+        var oEvent=ev||event;
+        //距离存起来
+
+        disX=oEvent.clientX-oDiv.offsetLeft;
+        disY=oEvent.clientY-oDiv.offsetTop;
+
+        function fnMove(ev)
+        {
+            var oEvent=ev||event;
+
+            var l=oEvent.clientX-disX;
+            var t=oEvent.clientY-disY;
+            if(l < -(oDiv.clientWidth - oConId.clientWidth)){
+                l = -(oDiv.clientWidth - oConId.clientWidth)
+            }
+            if(l > 0){
+                l = 0
+            }
+            if(t < -(oDiv.clientHeight - oConId.clientHeight)) {
+                t = -(oDiv.clientHeight - oConId.clientHeight)
+            }
+            if(t > 0) {
+                t = 0
+            }
+            oDiv.style.left=l+'px';
+            oDiv.style.top=t+'px';
+        }
+
+        function fnUp()
+        {
+            this.onmousemove=null;
+            this.onmouseup=null;
+
+            if(this.releaseCapture)
+            {
+                this.releaseCapture();
+            }
+        }
+
+        if(oDiv.setCapture)
+        {
+            oDiv.onmousemove=fnMove;
+            oDiv.onmouseup=fnUp;
+
+            oDiv.setCapture();
+        }
+        else
+        {
+            document.onmousemove=fnMove;
+            document.onmouseup=fnUp;
+
+            return false;
+        }
+    };
+    oDiv.onmousedown=dra_Img;
+</script>
 <script>
-
     function Maxmin() {
+
         var imgs = document.getElementsByClassName("dragAble");
         for (var i=0;i<imgs.length;i++){
             (function(i){
                 imgs[i].onclick=function () {
                     var _this=this;
-                    $("#BApen").css({"background":"#c2c2c2"});
                     $("#viewBiggerImg").attr('src',_this.src);
-                    var Left = Number($("#viewBiggerImg").css('left').slice(0,-2));
-
-                    var Top = Number($("#viewBiggerImg").css('top').slice(0,-2));
-                    if(Left<=-510){
-                        $("#viewBiggerImg").animate({"left":"-510px"},300)
-                    }
-                    if(Left>=10){
-                        $("#viewBiggerImg").animate({"left":"10px"},300)
-                    }
-                    if(Top<=-885){
-                        $("#viewBiggerImg").animate({"top":"-885px"},300)
-                    }
-                    if(Top>=10){
-                        $("#viewBiggerImg").animate({"top":"10px"},300)
-                    }
                     return
                 }
             })(i)
@@ -1057,8 +1147,7 @@
                     Deg_num=0;
                     $("#viewBiggerImg").css({
                         "transform":"rotate(0deg)",
-                        "left":"0",
-                        "top":"0"
+
                     })
                 };
             });
@@ -1153,7 +1242,23 @@
                 },
                 transRequire:{
                     maxlength:255
-                }/*/!*,
+                },custOrderCode: {
+                    maxlength:30,
+                    remote:{
+                        url : ofc_url + "/ofc/checkCustOrderCode",
+                        type : "POST",
+                        dataType : "json",
+                        data : {
+                            custOrderCode : function() {
+                                return $("#custOrderCode").val();
+                            }
+                        }
+                    }
+                }
+
+
+
+                /*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
                     maxlength:19
@@ -2503,7 +2608,6 @@
                     return false;
                 }
             }
-
             var jsonStr = {};
             //订单基本信息
             jsonStr.businessType = $("#businessType").val();
@@ -2515,6 +2619,7 @@
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
             jsonStr.custCode = $("#customerCode").val();//000
+            jsonStr.custOrderCode = $("#custOrderCode").val();  // 客户订单号
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
