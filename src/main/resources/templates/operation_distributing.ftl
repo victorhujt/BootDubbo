@@ -87,6 +87,12 @@
     .disabled:hover{
         background-color: #fff !important;
     }
+    #goodsSecTypeId_chosen{
+        width:245px!important;
+    }
+    #goodsTypeId_chosen{
+        width:245px!important;
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
@@ -99,23 +105,23 @@
         <div class="bootbox-body">
             <form id="goodsSelConditionForm" class="form-horizontal" role="form">
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品种类</label>
+                    <label class="control-label  col-label no-padding-right" for="name">货品种类</label>
                     <div class="col-xs-3 tktp-1">
                         <div class="clearfix">
-                            <select id="goodsTypeId" name="goodsTypeId" class="bk-1"></select>
+                            <select id="goodsTypeId" name="goodsTypeId" class="bk-1 chosen-select"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品小类</label>
+                    <label class="control-label  col-label no-padding-right" for="name">货品小类</label>
                     <div class="col-xs-3 tktp-1">
                         <div class="clearfix">
-                            <select id="goodsSecTypeId" name="goodsTypeSonId" class="bk-1"></select>
+                            <select id="goodsSecTypeId" name="goodsTypeSonId" class="bk-1 chosen-select"></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                    <label class="control-label  col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "goodsName" name="goodsName" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
@@ -123,7 +129,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">条形码</label>
+                    <label class="control-label  col-label no-padding-right" for="name">条形码</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
@@ -132,7 +138,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -182,7 +188,7 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                    <label class="control-label  col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix" >
                             <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -190,7 +196,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                    <label class="control-label  col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -198,7 +204,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                    <label class="control-label  col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -206,7 +212,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -319,7 +325,7 @@
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
             <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name" style="line-height:34px;">名称</label>
+                    <label class="control-label  col-label no-padding-right" for="name" style="line-height:34px;">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
@@ -327,7 +333,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3 l-dw">
                         <div class="clearfix">
                             <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -371,7 +377,7 @@
             <form class="form-horizontal" role="form">
 
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品编码</label>
+                    <label class="control-label col-label no-padding-right" for="name">货品编码</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input id="goodsIndexDivHidden" type="hidden"/>
@@ -380,7 +386,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                    <label class="control-label col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -388,7 +394,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">规格</label>
+                    <label class="control-label col-label no-padding-right" for="name">规格</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -396,28 +402,31 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">单位</label>
+                    <label class="control-label col-label no-padding-right" for="name">单位</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
                             <input  id = "unitDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
+                <div class="form-groupp" style="overflow:hidden;">
+                    <label class="control-label col-label no-padding-right" for="name"></label>
+                    <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">发货数量</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goodsAndConsigneeTbody">
+                        </tbody>
+                    </table>
+                </div>
 
-                <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row">
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">发货数量</th>
-                    </tr>
-                    </thead>
-                    <tbody id="goodsAndConsigneeTbody">
-                    </tbody>
-                </table>
             </form>
-
         </div>
     </div>
+
     <div class="form-group" >
         <div class="modal-footer"><button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span></div>
     </div>
@@ -453,7 +462,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
             <div class="width-267">
                 <div class="position-relative bk-1 ">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                    <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                     <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
                     </label>
@@ -474,7 +483,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
             <div class="width-267">
                 <div class="bk-1 position-relative">
-                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm',isclear: true,istoday: true})">
+                    <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
                     <label class="btn btn-minier no-padding-right initBtn" id="" for="expectedArrivedTime">
                         <i class="fa fa-calendar l-cor bigger-130"></i>
                     </label>
@@ -490,7 +499,7 @@
                     <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder=""/>
                     <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
                     <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
-                        <i class="fa fa-user l-cor"></i>
+                        <i class="fa fa-user l-cor bigger-130"></i>
                     </button>
                 </div>
              <#--   <span style="cursor:pointer" id="custListDivBlock xz-1">
@@ -545,7 +554,7 @@
                                 id=""><i class="fa fa-user l-cor"></i>
                         </button></span>-->
                         <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
-                            <i class="fa fa-user l-cor"></i>
+                            <i class="fa fa-user l-cor bigger-130"></i>
                         </button>
                     </div>
 
@@ -869,6 +878,7 @@
                             firstGoodsType = goodsType.id;
                         }
                         $("#goodsTypeId").append("<option value='"+goodsType.id+"'>"+goodsType.goodsTypeName+"</option>");
+                        $("#goodsTypeId").trigger("chosen:updated");
                     });
                 });
                 //加载第一个一级货品的二级种类//000
@@ -878,9 +888,11 @@
                     CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"customerCode":customerCode,"goodsType":firstGoodsType},function(data) {
                         data=eval(data);
                         $.each(data,function (index,secGoodsType) {
-                            $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
+                            $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>").trigger("chosen:updated");
+
                         });
                     })
+
                 }
 
 
@@ -1092,7 +1104,7 @@
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryGoodsSecTypeByCAndT",{"customerCode":customerCode,"goodsType":goodsType},function(data) {
             data=eval(data);
             $.each(data,function (index,secGoodsType) {
-                $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>");
+                $("#goodsSecTypeId").append("<option value='"+secGoodsType.id+"'>"+secGoodsType.goodsTypeName+"</option>").trigger("chosen:updated");
             });
         })
     })
@@ -2522,6 +2534,25 @@
 
         }
     })
+    function initChosen() {
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        //resize the chosen on window resize
+        $(window).off('resize.chosen').on('resize.chosen', function () {
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    }
+
 </script>
 
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
