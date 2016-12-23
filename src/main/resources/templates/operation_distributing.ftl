@@ -1128,7 +1128,7 @@
         var contactCode = $(obj).parent().parent().children().eq(8).text();
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
-            debugger;
+            
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(7).text();//货品需求数量合计
@@ -1477,6 +1477,7 @@
                 }*/
             if (data == undefined || data == null || null == data.result || undefined == data.result
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
+                $("#pageBarDivConsignor").hide();
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
                 $("#pageBarDivConsignor").show();
@@ -1694,8 +1695,10 @@
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             if (data == undefined || data == null || null == data.result || undefined == data.result
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
+                $("#pageBarDivConsigneeDistri").hide();
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivConsigneeDistri").show();
                 loadConsingeeDistri(data.result.list);
                 laypage({
                     cont: $("#pageBarDivConsigneeDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -1909,7 +1912,7 @@
         if(couldChangeCust){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }else{
-            alert("您不能再选择客户!")
+            alert("您不能再选择客户! 如需重选, 请重置收发货方!")
         }
     });
     $("#custListDivNoneBottom").click(function () {
@@ -1946,6 +1949,7 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
@@ -1953,8 +1957,10 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
                 layer.msg("暂时未查询到客户信息！");
             } else if (result.code == 200) {
+                $("#pageBarDiv").show();
                 loadCustomer(result);
                 laypage({
                     cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2059,7 +2065,6 @@
             alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
-            var customerCode = $("#customerCode").val();
             var custName = $("#custName").val();
             var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);

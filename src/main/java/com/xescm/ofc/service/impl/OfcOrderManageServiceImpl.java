@@ -4,6 +4,8 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
+import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
+import com.xescm.ofc.model.dto.ac.CancelOfcOrderResultDto;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
@@ -30,6 +32,7 @@ import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +93,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private FeignRmcPickUpOrRecipientAPIClient feignRmcPickUpOrRecipientAPIClient;
     @Autowired
-    private FeignRMcServiceCoverageAPIClient feignRMcServiceCoverageAPIClient;
+    private FeignRmcServiceCoverageAPIClient feignRmcServiceCoverageAPIClient;
     @Autowired
     private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
     @Resource
@@ -924,6 +927,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
+
+            //取消的订单推送到结算中心进行结算取消--hiyond date:2016-12-23
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
+            ofcDistributionBasicInfo.setOrderCode(orderCode);
+            ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
+            if(ofcDistributionBasicInfo != null){
+                CancelOfcOrderDto cancelOfcOrderDto = new CancelOfcOrderDto();
+                cancelOfcOrderDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                cancelOfcOrderDto.setTransCode(ofcDistributionBasicInfo.getTransCode());
+                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
+                if(wrapper == null) {
+                    logger.info("取消订单推送到结算中心,code:{},message:{},返回信息:{},", wrapper.getCode(), wrapper.getMessage(), ToStringBuilder.reflectionToString(wrapper.getResult()));
+                }
+            }
+
             return String.valueOf(Wrapper.SUCCESS_CODE);
         }else {
             throw new BusinessException("计划单状态不在可取消范围内");
@@ -1890,7 +1908,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);
@@ -1902,7 +1920,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);

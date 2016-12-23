@@ -1,6 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -20,7 +21,7 @@ public interface CreateOrderService {
      */
     boolean CreateOrders(List<CreateOrderEntity> list);
 
-    Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode);
+    Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(CancelOrderDto cancelOrderDto);
 
     String createOrder(String data) throws Exception;
 

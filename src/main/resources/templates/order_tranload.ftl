@@ -1,88 +1,85 @@
-<head>
-    <title>运输开单</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .date_a{
-            line-height:21px !important;
-        }
-        .form-group > label[class*="col-"]{
-            margin-top:0;
-            line-height:34px;
-        }
-        .form-horizontal .control-label{
-            padding-top:0;
-            line-height:30px;
-        }
-        input[type=checkbox], input[type=radio]{
-            margin:10px 0 0;
-        }
-        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-            color:#393939;
-        }
-        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-            color:#393939;
-        }
-        .dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .dataTable > thead > tr > th[class*=sorting_]{
-            color:#707070;
-        }
-        .has-success .form-control{
-            border-color:#cacaca;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .has-error .form-control{
-            border-color:#b5b5b5 !important;
-        }
-        .custNameIcon:hover{color:#2868c6 !important;}
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .col-label{
-            margin-right:2px;
-            margin-bottom:0;
-        }
-        #goodsInfoListDiv .help-block{
-            line-height:20px;
-        }
-        .chosen-container .chosen-results{
-            max-height:120px;
-        }
-       .pay .chosen-container-single .chosen-search:after{
-           top:4px;
-       }
-        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
-            padding-top:0;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
-</head>
+<title>运输开单</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .date_a{
+        line-height:21px !important;
+    }
+    .form-group > label[class*="col-"]{
+        margin-top:0;
+        line-height:34px;
+    }
+    .form-horizontal .control-label{
+        padding-top:0;
+        line-height:30px;
+    }
+    input[type=checkbox], input[type=radio]{
+        margin:10px 0 0;
+    }
+    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+        color:#393939;
+    }
+    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+        color:#393939;
+    }
+    .dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .dataTable > thead > tr > th[class*=sorting_]{
+        color:#707070;
+    }
+    .has-success .form-control{
+        border-color:#cacaca;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .has-error .form-control{
+        border-color:#b5b5b5 !important;
+    }
+    .custNameIcon:hover{color:#2868c6 !important;}
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .col-label{
+        margin-right:2px;
+        margin-bottom:0;
+    }
+    #goodsInfoListDiv .help-block{
+        line-height:20px;
+    }
+    .chosen-container .chosen-results{
+        max-height:120px;
+    }
+    .pay .chosen-container-single .chosen-search:after{
+        top:4px;
+    }
+    .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+        padding-top:0;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
-<body class="no-skin">
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
@@ -952,17 +949,7 @@
                 transRequire:{
                     maxlength:255
                 },custOrderCode: {
-                    maxlength:30,
-                    remote:{
-                        url : ofc_url + "/ofc/checkCustOrderCode",
-                        type : "POST",
-                        dataType : "json",
-                        data : {
-                            custOrderCode : function() {
-                                return $("#custOrderCode").val();
-                            }
-                        }
-                    }
+                    maxlength:30
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -992,9 +979,7 @@
                     maxlength:mistake+"超过最大长度255"
                 },
                 custOrderCode:{
-
-                    maxlength:mistake+ "超过最大长度30",
-                    remote: mistake+ "该客户订单编号已经存在"
+                    maxlength:mistake+ "超过最大长度30"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -2012,8 +1997,10 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
                 layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDiv").show();
                 loadCustomer(result);
                 laypage({
                     cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2079,6 +2066,7 @@
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
             if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDivConsign"+ptype).hide();
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
                 $("#pageBarDivConsign"+ptype).show();
@@ -2154,6 +2142,7 @@
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
 
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                $("#pageBarDivGoods").hide();
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
                 $("#pageBarDivGoods").show();
@@ -2282,18 +2271,7 @@
         $("#orderPlaceConTableBtn").click(function () {
             $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
             $("#goodsInfoListDiv tr td div.has-error").remove();
-            $("select[name='chargingWays']").each(function(){
-                if($(this).val()=="01"){
-                    var value=onlyNumber($(this).parent().next().next().children().val());
-                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
-                }else if($(this).val()=="02"){
-                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
-                }else if($(this).val()=="03"){
-                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
-                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
-                }
-            });
+
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
                 checkValue($(this),value,"添加货品重量必输")
@@ -3003,4 +2981,3 @@
 
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-</body>
