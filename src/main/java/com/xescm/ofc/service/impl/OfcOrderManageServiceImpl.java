@@ -734,6 +734,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
+                if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
+                }
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
                 BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
                 ofcPlannedDetailService.save(ofcPlannedDetail);
