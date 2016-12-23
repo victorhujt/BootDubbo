@@ -957,98 +957,99 @@
 
             </form>
             <!-- /section:elements.tab.option -->
+            <!-- /.page-content -->
+        <#--<div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                </div>
+
+            </div>
+        </div>-->
+            <div class="page-header" style="clear:left;">
+                <p style="font-size: 14px;font-family:'微软雅黑'">
+                    货品信息
+                </p>
+            </div>
+            <div class="col-xs-12">
+                <!-- #section:elements.tab.option -->
+                <div class="tabbable" >
+                <#-- <ul class="nav nav-tabs" id="myTab4">
+                     <li class="active">
+                         <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
+                     </li>
+                 </ul>-->
+
+
+
+                    <div class="tab-content" style="border:none;padding-top:0;">
+                        <div id="home4" class="tab-pane active">
+
+                            <!--货品明细-->
+                            <button type="button" style="float:right;" class="btn btn-white btn-info btn-bold btn-interval"
+                                    id="addGoods">添加一行</button>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="control-label" style="float:right;" for="name">kg</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="control-label" style="float:right;" for="name">重量合计：</label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
+                            <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <label class="control-label" style="float:right;" for="name">数量合计：</label>
+                            <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
+                        <#--dynamic-table-->
+                            <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                                <thead>
+                                <tr role="row"><th class="center sorting_disabled" style="width:45px;" rowspan="1" colspan="1" aria-label="">
+                                    操作
+                                </th>
+                                <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
+                                    <th class="" tabindex="0" style="width:120px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
+                                    <th class="" tabindex="0" style="width:98px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
+                                    </th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                                    <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
+                                    <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
+                                    <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
+                                </thead>
+                            <#--货品明细-->
+
+                                <tbody id="goodsInfoListDiv"></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12" style="margin-top:20px;">
+
+                <button class="btn btn-white btn-info btn-bold btn-interval" style="margin-left:12px;" id="orderPlaceConTableBtn">
+                    <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
+                    确认下单
+                </button>
+            </div>
+
+        <#--
+                </div>
+            </div><!-- /.main-content &ndash;&gt;
+
+
+        </div><!-- /.main-container &ndash;&gt;-->
+
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 <!-- /.row -->
-</div><!-- /.page-content -->
-<#--<div class="page-content">
-    <div class="row">
-        <div class="col-xs-12">
-        </div>
-
-    </div>
-</div>-->
-<div class="page-header" style="clear:left;">
-    <p style="font-size: 14px;font-family:'微软雅黑'">
-        货品信息
-    </p>
 </div>
-<div class="col-xs-12">
-    <!-- #section:elements.tab.option -->
-    <div class="tabbable" >
-    <#-- <ul class="nav nav-tabs" id="myTab4">
-         <li class="active">
-             <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
-         </li>
-     </ul>-->
-
-
-
-        <div class="tab-content" style="border:none;padding-top:0;">
-            <div id="home4" class="tab-pane active">
-
-                <!--货品明细-->
-                <button type="button" style="float:right;" class="btn btn-white btn-info btn-bold btn-interval"
-                        id="addGoods">添加一行</button>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label class="control-label" style="float:right;" for="name">kg</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="weightCount" class="control-label" style="float:right;" for="name"></label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label class="control-label" style="float:right;" for="name">重量合计：</label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label id="quantityCount" class="control-label" style="float:right;" for="name"></label>
-                <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <label class="control-label" style="float:right;" for="name">数量合计：</label>
-                <label id="cubageCountHidden" class="control-label" style="float:right;" for="name" hidden></label>
-            <#--dynamic-table-->
-                <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row"><th class="center sorting_disabled" style="width:45px;" rowspan="1" colspan="1" aria-label="">
-                        操作
-                    </th>
-                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" style="width:120px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
-                        <th class="" tabindex="0" style="width:98px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                        <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
-                        <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
-                    </thead>
-                <#--货品明细-->
-
-                    <tbody id="goodsInfoListDiv"></tbody>
-
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-xs-12" style="margin-top:20px;">
-
-    <button class="btn btn-white btn-info btn-bold btn-interval" style="margin-left:12px;" id="orderPlaceConTableBtn">
-        <i class="ace-icon fa fa-floppy-o bigger-120 blue" ></i>
-        确认下单
-    </button>
-</div>
-
-<#--
-        </div>
-    </div><!-- /.main-content &ndash;&gt;
-
-
-</div><!-- /.main-container &ndash;&gt;-->
-
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
