@@ -57,6 +57,7 @@
     var historyUrl = $("#historyUrl").val();
     $("#templatesAddBack").click(function () {
         var url = "/ofc/operationDistributingExcel/" + historyUrl +"/" + customerCode +"/" + custName;
+        console.log('-----' + url)
         xescm.common.loadPage(url);
     })
 
@@ -65,10 +66,12 @@
         xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName + "/" + tag);
     })
     function editTemplates(obj){
-        xescm.common.loadPage("/ofc/distributing/toTemplatesoper");
+        var tag = "edit";
+        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName + "/" + tag);
     }
     function delTemplates(obj) {
-        xescm.common.loadPage("/ofc/distributing/toTemplatesoper");
+        var tag = "del";
+        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName + "/" + tag);
     }
 
 </script>

@@ -76,13 +76,26 @@
         </div>
         <div class="form-group">
             <div class="col-xs-12" style="float: right">
-                <button id="excelImportEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button>
-                <span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span>
+                <button id="templatesOperConfirm" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button>
+                <span id="templatesOperNone" style="cursor:pointer"><button id=""  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span>
             </div>
         </div>
     </form>
 </div>
 <script type="text/javascript">
+
+    $("#templatesOperNone").click(function () {
+        var custCode = $("#customerCode").val();
+        var custName = $("#custName").val();
+        var historyUrl = $("#historyUrl").val();
+        console.log("--===_" + historyUrl)
+        var url = '';
+        if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
+            url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+            xescm.common.loadPage(url);
+        }
+        console.log("--" + url)
+    })
     $("#templatesAdd").click(function () {
         xescm.common.loadPage("/ofc/distributing/toTemplatesoper");
     })

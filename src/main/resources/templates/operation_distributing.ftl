@@ -1909,7 +1909,7 @@
         if(couldChangeCust){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }else{
-            alert("您不能再选择客户!")
+            alert("您不能再选择客户! 如需重选, 请重置收发货方!")
         }
     });
     $("#custListDivNoneBottom").click(function () {
@@ -2059,7 +2059,6 @@
             alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
-            var customerCode = $("#customerCode").val();
             var custName = $("#custName").val();
             var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);

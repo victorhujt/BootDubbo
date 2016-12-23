@@ -376,10 +376,10 @@
     var csc_url_local = $("#csc_url_local").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
-        if(!StringUtil.isEmpty(historyUrl)){
-            xescm.common.loadPage(historyUrl);
-        }else{
-            xescm.common.loadPage("/ofc/operationDistributing");
+        var url = '';
+        if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
+            url = "/ofc/operationDistributing";
+            xescm.common.loadPage(url);
         }
     })
 
@@ -544,7 +544,11 @@
         $("#templatesConfig").click(function () {
             var custCode = $("#customerCode").val();
             var custName = $("#custName").val();
-            var url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+            var historyUrl = $("#historyUrl").val();
+            var url = '';
+            if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
+                url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+            }
             xescm.common.loadPage(url);
         })
 
