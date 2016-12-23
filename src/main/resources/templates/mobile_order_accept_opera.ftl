@@ -759,7 +759,7 @@
                     服务项目及费用
                 </p>
             </div>
-            <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" >
+            <form id="orderFinanceFormValidate" method="post" class="form-horizontal" role="form" style="margin-left:6px;">
                 <div class="form-group">
                     <div style="width:280px;margin:0 0 0 15px;float:left;">
                         <div class="clearfix col-xs-1" style="margin-top:4px;">

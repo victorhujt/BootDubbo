@@ -15,7 +15,7 @@
         .date_a {
             line-height: 21px !important;
         }
-
+/*
         .initBtn{
             height:34px;
             width:34px;
@@ -31,7 +31,7 @@
         .initBtn:hover{
             background:#fff !important;
             border:1px solid #cacaca !important;
-        }
+        }*/
         .col-label{
             margin-left:10px;
 

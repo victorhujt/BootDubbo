@@ -751,7 +751,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:15px;">回付</label>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:14px;">回付</label>
                         <div style="width:130px;float:left;">
                             <div class="col-float" style="width:100px;margin-right:15px;">
                                 <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
