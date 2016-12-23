@@ -75,8 +75,8 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
         attachment.setSerialNo(serialNo);
         OfcAttachment result=ofcAttachmentService.selectOne(attachment);
         if(result!=null){
-            if(!StringUtils.isEmpty(result.getPath())||!StringUtils.isEmpty(result.getName())){
-                key=result.getName();
+            if(!StringUtils.isEmpty(result.getPath())&&!StringUtils.isEmpty(result.getName())){
+                key=result.getPath()+result.getName();
             }else{
                 throw new BusinessException("附件文件名或路径为空");
             }
@@ -85,19 +85,8 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
         }
         logger.info("key is {}",key);
         OSSClient ossClient = new OSSClient(ossConfigure.getEndpoint(), ossConfigure.getAccessKeyId(),  ossConfigure.getAccessKeySecret());
-//        GetObjectRequest request = new GetObjectRequest(ossConfigure.getBucketName(), key);
-//        request.setProcess(style);
-//        File f= new File("example-resize.jpg");
-//        ossClient.getObject(request,f);
-//        URL  url=getFileURL(result.getPath()+f.getName());
-//        logger.info("样式处理后的链接为:{}",url.toString());
-//        OfcAttachment updateAtta=new OfcAttachment();
-//        updateAtta.setSerialNo(serialNo);
-//        updateAtta.setPicParam(style);
-//        ofcAttachmentService.updatePicParamByserialNo(updateAtta);
-//        return url.toString();
         // 过期时间10分钟
-        Date expiration = new Date(new Date().getTime() + 1000 * 60 * 10 );
+        Date expiration = new Date(new Date().getTime() + 1000*60*30);
         GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(ossConfigure.getBucketName(),key,HttpMethod.GET);
         req.setExpiration(expiration);
         req.setProcess(style);
@@ -115,5 +104,5 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
             throw new BusinessException("生成的处理后的url失败");
         }
     }
-    }
+}
 

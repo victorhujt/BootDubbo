@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 /**
  * Created by hiyond on 2016/11/18.
@@ -28,11 +29,20 @@ public class CreateOrderApiTest {
     @Test
     public void getStyleUrl(){
         String url= null;
+
         try {
-            url = ofcOssManagerService.operateImage("image/rotate,90","AT161223000001");
+            url = ofcOssManagerService.operateImage("image/resize,m_fixed,w_300,h_300/rotate,270","AT161222000061");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        URL urlNew=ofcOssManagerService.getFileURL("ofc/file/1482405840769_IMG_2224.JPG");
+        //URL  urlNew=ofcOssManagerService.getFileURL("ofc/file/ example-rotate.jpg.PNG");
+        System.out.println("处理后的图片:"+urlNew.toString());
+
+
+
+
         System.out.println(url);
     }
 
