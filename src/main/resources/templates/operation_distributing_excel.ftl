@@ -275,7 +275,7 @@
                             </th>
                         <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Domain: activate to sort column ascending">序号
+                                aria-label="Domain: activate to sort column ascending" style="width:42px;">序号
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">货品编码
@@ -732,8 +732,8 @@
                                         }
 
                                         $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
-                                                "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>查看</button></td>" +
-                                                "<td>" + indexView + "</td>" +
+                                                "<td><a onclick='goodsAndConsignee(this)' class='blue'>查看</a></td>" +
+                                                "<td class='center'>" + indexView + "</td>" +
                                                 "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
                                                 "<td>" + data.goodsName + "</td>" +
                                                 "<td>" + data.specification + "</td>" +

@@ -8,6 +8,7 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.ac.PushOrderApi;
 import com.xescm.ofc.model.dto.ac.AcOrderDto;
+import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
@@ -36,6 +37,7 @@ public class FeignPushOrderApiClient {
 
     @Resource
     private AuthRequestInterceptor authRequestInterceptor;
+
     public PushOrderApi getApi() {
         PushOrderApi res = Feign.builder()
                 .requestInterceptor(authRequestInterceptor).encoder(new JacksonEncoder())
@@ -80,11 +82,30 @@ public class FeignPushOrderApiClient {
         } catch (RetryableException ex) {
             logger.error("==>调用接口发生异常：调用推送订单信息到结算中心接口(/api/ofc/order/pullOfcOrder)无法连接或超时. {}", ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用推送订单信息到结算中心接口无法连接或超时！");
-        } catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("==>调用接口发生异常：推送订单信息到结算中心接口(/api/ofc/order/pullOfcOrder). {}", ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用推送订单信息到结算中心接口异常！");
         }
         return wrapper;
+    }
+
+    /**
+     * 取消订单到结算中心
+     *
+     * @param cancelOfcOrderDto
+     * @return
+     */
+    public Wrapper<?> cancelOfcOrder(CancelOfcOrderDto cancelOfcOrderDto) {
+        try {
+            Wrapper<?> wrapper = getApi().cancelOfcOrder(cancelOfcOrderDto);
+            return wrapper;
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用取消订单信息到结算中心接口(/api/ofc/order/cancelOfcOrder)无法连接或超时. {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用推送订单信息到结算中心接口无法连接或超时！");
+        } catch (Exception ex) {
+            logger.error("==>调用接口发生异常：调用取消订单信息到结算中心接口(/api/ofc/order/cancelOfcOrder). {}", ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "调用推送订单信息到结算中心接口异常！");
+        }
     }
 
 

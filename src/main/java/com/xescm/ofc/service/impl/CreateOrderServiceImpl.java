@@ -10,6 +10,7 @@ import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
+import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
@@ -172,17 +173,26 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     /**
      * 取消订单
+     * 客户订单编号以及货主编码 判断客户订单编号的订单是否存在
+     * 不存在，返回结果代码为0,原因:发货单号不存在！
+     * 若取消成功，返回结果代码为1;
+     * 若取消失败，返回结果代码为0,并将执行失败的原因返回
+     * 若订单状态为【待审核】、【已审核】、【执行中】则允许取消
+     * 其他状态不允许取消
+     * 状态已经已取消：返回订单已经取消
+     * 状态已经已完成：订单已完成，无法取消
+     * 状态是待审核，直接删除订单
      *
-     * @param custOrderCode
+     *
+     * @param cancelOrderDto
      * @return
      */
     @Transactional
     @Override
-    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode) {
+    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(CancelOrderDto cancelOrderDto) {
         CannelOrderVo cannelOrderVo = new CannelOrderVo();
-        cannelOrderVo.setCustOrderCode(custOrderCode);
-        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-        ofcFundamentalInformation = ofcFundamentalInformationService.queryDataByCustOrderCode(custOrderCode);
+        cannelOrderVo.setCustOrderCode(cancelOrderDto.getCustOrderCode());
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(cancelOrderDto.getCustOrderCode(), cancelOrderDto.getCustCode());
         if (ofcFundamentalInformation == null) {
             cannelOrderVo.setReason("发货单号不存在");
             cannelOrderVo.setResultCode("0");

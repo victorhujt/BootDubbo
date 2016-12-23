@@ -228,21 +228,19 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                 <div class="col-width-168">
-                    <select  id="mbusinessType" name="mbusinessType" class="chosen-select form-control ">
                     <#if mobileOrder.businessType  =="602">
-                        <option value="602" selected="selected">卡班</option>
-                        <option value="600">城配</option>
-                        <option value="601">干线</option>
+                        <input class="width-100" id="mbusinessType" name="" type="search" placeholder=""
+                               aria-controls="dynamic-table"
+                               value="卡班">
                     <#elseif  mobileOrder.businessType =="600">
-                        <option value="602">卡班</option>
-                        <option value="600" selected="selected">城配</option>
-                        <option value="601">干线</option>
+                        <input class="width-100" id="mbusinessType" name="" type="search" placeholder=""
+                               aria-controls="dynamic-table"
+                               value="城配">
                     <#elseif  mobileOrder.businessType =="601">
-                        <option value="602">卡班</option>
-                        <option value="600">城配</option>
-                        <option value="601" selected="selected">干线</option>
+                        <input class="width-100" id="mbusinessType" name="" type="search" placeholder=""
+                               aria-controls="dynamic-table"
+                               value="干线">
                     </#if>
-                    </select>
                 </div>
             </div>
             <div class="form-group">
