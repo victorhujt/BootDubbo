@@ -4,7 +4,7 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <div class="col-sm-6" style="float: right">
+    <div class="col-sm-6" style="float: right"><span hidden="true" id = "REPORT">${(REPORT)!}</span>
     <button class="btn btn-white btn-info btn-bold" style="float:right;width:105px;height:34px;" id="InvoicePrinting" value="" onclick="invoicePrint()">
         发货单打印
     </button>
@@ -207,7 +207,9 @@
     }
     function invoicePrint() {
         var sel = "";
-        var url = "http://60.205.233.183:7020/WebReport/ReportServer?reportlets=";
+        var post = $("#REPORT").val();
+        debugger;
+        var url = post+"/WebReport/ReportServer?reportlets=";
         var code="";
         $("#dataTbody").find("tr").each(function(index){
             var tdArr = $(this).children();

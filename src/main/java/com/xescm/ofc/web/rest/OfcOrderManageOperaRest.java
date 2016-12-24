@@ -19,6 +19,7 @@ import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -254,8 +255,8 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param orderBatchCode
      * @return
      */
-    @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}")
-    public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode) {
+    @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode,Model model) {
         ModelAndView modelAndView = new ModelAndView("order_detail_batch_opera");
         try {
             if (StringUtils.isBlank(orderBatchCode)) {
@@ -269,6 +270,7 @@ public class OfcOrderManageOperaRest extends BaseController {
         } catch (Exception ex) {
             logger.error("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
         }
+        setDefaultModel(model);
         return modelAndView;
     }
 
