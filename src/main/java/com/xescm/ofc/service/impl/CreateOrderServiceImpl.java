@@ -101,7 +101,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
-                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
+                            reason = resultModel == null ? "" : resultModel.getDesc();
+                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
                         } else {
                             result = true;
                             addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
