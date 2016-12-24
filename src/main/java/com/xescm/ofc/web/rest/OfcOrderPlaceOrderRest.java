@@ -307,25 +307,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 货品筛选(调用客户中心API)
      */

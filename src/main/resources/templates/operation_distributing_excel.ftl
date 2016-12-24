@@ -135,7 +135,7 @@
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name"></label>
             <div class="col-xs-3">
-                <input type="button" id="templatesConfig"  name="templatesConfig"  value="模板映射配置" style="display:none;" <#--disabled="disabled"--> />
+                <input type="button" id="templatesConfig"  name="templatesConfig"  value="模板映射配置" style="display:none;" disabled="disabled" />
                 <label for="templatesConfig" class="btn btn-white btn-info btn-bold "  style="top:10px;border-color:#999;color:#666 !important;cursor:default">模板映射配置</label>
             </div>
         </div>

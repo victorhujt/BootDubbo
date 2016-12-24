@@ -948,7 +948,7 @@
         cscGoods.goodsName = goodsName;
         cscGoods.barCode = barCode;
         cscGoods.pNum = pageNum;
-        cscGoods.pSize = 10;
+        cscGoods.pSize = 20;
         var param = JSON.stringify(cscGoods);
 
 
