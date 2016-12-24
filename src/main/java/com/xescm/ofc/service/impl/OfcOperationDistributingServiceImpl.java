@@ -256,8 +256,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");
-            CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");
+            CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");//2为发货方
+            CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");//1为收货方
             ofcOrderDTO.setOrderBatchNumber(batchNumber);
             resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
                     ,consignor,consignee,new CscSupplierInfoDto());

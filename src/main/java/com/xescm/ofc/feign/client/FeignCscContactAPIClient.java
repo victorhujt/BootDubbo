@@ -27,8 +27,7 @@ import java.util.List;
 @Service
 public class FeignCscContactAPIClient {
     private static final Logger logger = LoggerFactory.getLogger(FeignCscContactAPI.class);
-    /*@Value("${restful.uamUrl}")
-    private String uamUrl;*/
+
     @Resource
     RestConfig restConfig;
     @Resource

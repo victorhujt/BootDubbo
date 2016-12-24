@@ -93,7 +93,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private void saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation){
         for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
             if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                continue;
+                if((ofcGoodsDetails.getWeight() != null && ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) != 0 ) || (ofcGoodsDetails.getCubage() != null && ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+
+                }else{
+                    continue;
+                }
             }
             String orderCode = ofcFundamentalInformation.getOrderCode();
             ofcGoodsDetails.setGoodsCode(ofcGoodsDetails.getGoodsCode().split("\\@")[0]);

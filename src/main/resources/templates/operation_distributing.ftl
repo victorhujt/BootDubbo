@@ -948,7 +948,7 @@
         cscGoods.goodsName = goodsName;
         cscGoods.barCode = barCode;
         cscGoods.pNum = pageNum;
-        cscGoods.pSize = 10;
+        cscGoods.pSize = 20;
         var param = JSON.stringify(cscGoods);
 
 
@@ -2050,15 +2050,18 @@
         //加载完客户后自动加载仓库列表, 和货品种类
         //加载仓库列表
         var customerCode = $("#customerCode").val();
-        $("#warehouseCode option").remove();
-        $("#warehouseCode").append("<option value = ''>无</option>");
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
-            data=eval(data);
-            $.each(data,function (index,warehouse) {
-                $("#warehouseCode").append("<option value='"+warehouse.warehouseCode+"'>"+warehouse.warehouseName+"</option>");
-            });
-            $("#warehouseCode").trigger("chosen:updated");
-        })
+        if(!StringUtil.isEmpty(customerCode)){
+            $("#warehouseCode option").remove();
+            $("#warehouseCode").append("<option value = ''>无</option>");
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
+                data=eval(data);
+                $.each(data,function (index,warehouse) {
+                    $("#warehouseCode").append("<option value='"+warehouse.warehouseCode+"'>"+warehouse.warehouseName+"</option>");
+                });
+                $("#warehouseCode").trigger("chosen:updated");
+            })
+        }
+
     });
 
     $("#to_operation_distributing_excel").click(function () {
