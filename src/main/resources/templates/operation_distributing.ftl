@@ -1912,7 +1912,12 @@
         if(couldChangeCust){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }else{
-            alert("您不能再选择客户! 如需重选, 请重置收发货方!")
+            var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
+            if(consigneeNum == 0){
+                $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+            }else{
+                alert("您不能再选择客户! 如需重选, 请重置收发货方!")
+            }
         }
     });
     $("#custListDivNoneBottom").click(function () {

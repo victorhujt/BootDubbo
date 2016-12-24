@@ -88,13 +88,11 @@
         var custCode = $("#customerCode").val();
         var custName = $("#custName").val();
         var historyUrl = $("#historyUrl").val();
-        console.log("--===_" + historyUrl)
         var url = '';
         if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
             url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
             xescm.common.loadPage(url);
         }
-        console.log("--" + url)
     })
     $("#templatesAdd").click(function () {
         xescm.common.loadPage("/ofc/distributing/toTemplatesoper");

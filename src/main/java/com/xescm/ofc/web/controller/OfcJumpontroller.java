@@ -194,14 +194,16 @@ public class OfcJumpontroller extends BaseController{
      * @param model
      * @param custCode
      * @param custName
+     * @param historyUrl
      * @param tag  add
      * @return
      */
-    @RequestMapping(value = "/ofc/distributing/toTemplatesoper/{custCode}/{custName}/{tag}")
-    public String toTemplates(Model model,@PathVariable String custCode, @PathVariable String custName, @PathVariable String tag){
+    @RequestMapping(value = "/ofc/distributing/toTemplatesoper/{custCode}/{custName}/{historyUrl}/{tag}")
+    public String toTemplates(Model model,@PathVariable String custCode, @PathVariable String custName,  @PathVariable String tag, @PathVariable String historyUrl){
         setDefaultModel(model);
         model.addAttribute("customerCode",custCode);
         model.addAttribute("custName",custName);
+        model.addAttribute("historyUrl",historyUrl);
         return "operation_distributing_templatesoper";
     }
     /**
