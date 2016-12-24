@@ -1997,8 +1997,10 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
                 layer.msg("暂时未查询到客户信息！！");
             } else if (result.code == 200) {
+                $("#pageBarDiv").show();
                 loadCustomer(result);
                 laypage({
                     cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2064,6 +2066,7 @@
         var ptype= contactType == 1?"ee":"or";
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
             if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDivConsign"+ptype).hide();
                 layer.msg("暂时未查询到"+type+"信息！！");
             } else if (result.code == 200) {
                 $("#pageBarDivConsign"+ptype).show();
@@ -2139,6 +2142,7 @@
         CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
 
             if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                $("#pageBarDivGoods").hide();
                 layer.msg("暂时未查询到货品信息！！");
             } else if (data.code == 200) {
                 $("#pageBarDivGoods").show();
@@ -2267,7 +2271,18 @@
         $("#orderPlaceConTableBtn").click(function () {
             $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
             $("#goodsInfoListDiv tr td div.has-error").remove();
-
+            $("select[name='chargingWays']").each(function(){
+                if($(this).val()=="01"){
+                    var value=onlyNumber($(this).parent().next().next().children().val());
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
+                }else if($(this).val()=="02"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
+                }else if($(this).val()=="03"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
+                }
+            });
             $("input[name='weight']").each(function(){
                 var value=onlyNumber($(this).val());
                 checkValue($(this),value,"添加货品重量必输")
@@ -2945,5 +2960,35 @@
             $(obj).parent().find("div").remove();
         }
     }
+    //验证开单员不为空
+    $(".es-list").click(function(){
+        checkType();
+    })
+
+    function checkType() {
+        var type = $("#merchandiser").val();
+        if(type == null || type == ""){
+            $("#merchandiser-error").html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>请选择开单员");
+        }else{
+            $("#merchandiser-error").css("display","none")
+            /*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
+               $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
+        }
+    }
+    //验证临时客户
+    $("#custEnter").click(function(){
+      if( $("#custName").val()=="临时客户"){
+          $("#currentAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#toPayAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#returnAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#monthlyAmount").val("").attr("disabled","true").css("cursor","default");
+      }else{
+          $("#currentAmount").removeAttr("disabled");
+          $("#toPayAmount").removeAttr("disabled");
+          $("#returnAmount").removeAttr("disabled");
+          $("#monthlyAmount").removeAttr("disabled");
+      }
+    })
+
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>

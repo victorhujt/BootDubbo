@@ -270,7 +270,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             String custOrderCode = ofcExcelBoradwise.getCustOrderCode();
             String mapKey = null;
             //如果该客户订单编号是第一次出现
-            if(null == orderByCustOrderCode.get(custOrderCode) || orderByCustOrderCode.get(custOrderCode)){
+            if(null == orderByCustOrderCode.get(custOrderCode)){
                 orderByCustOrderCode.put(custOrderCode,false);
 
                 //取客户订单编号, 订单日期, 收货方名称, 联系人, 联系电话, 地址, 货品编码,货品名称,规格,单位,数量,单价, 往设定好的数据结构里放
@@ -470,6 +470,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //相同货品编码的当前订单编号下的做累加
                         BigDecimal laterGoodsAmount = ofcExcelBoradwise.getGoodsAmount();
                         BigDecimal goodsAmount = (BigDecimal) jsonObjectExistGoods.get(jsonObjectKey);
+                        if(null == goodsAmount){
+                            goodsAmount = new BigDecimal(0);
+                        }
                         laterGoodsAmount = laterGoodsAmount.add(goodsAmount);
                         jsonObjectExistGoods.put(jsonObjectKey,laterGoodsAmount);
 
@@ -757,7 +760,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             String custOrderCode = ofcExcelBoradwise.getCustOrderCode();
             String mapKey = null;
             //如果该客户订单编号是第一次出现
-            if(null == orderByCustOrderCode.get(custOrderCode) || orderByCustOrderCode.get(custOrderCode)){
+            if(null == orderByCustOrderCode.get(custOrderCode)){//---
                 orderByCustOrderCode.put(custOrderCode,false);
 
                 //取客户订单编号, 订单日期, 收货方名称, 联系人, 联系电话, 地址, 货品编码,货品名称,规格,单位,数量,单价, 往设定好的数据结构里放
@@ -944,13 +947,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }
 
                 }else{
-                    //如果在Map中已经存在,则说明同一个客户订单编号下, 出现了两个一样的货品编码!
+                    //如果在Map中已经存在,则说明同一个客户订单编号下, 出现了两个一样的货品编码! 不是这样的,也可能说明两个客户订单编号下有两个不同的收货方有相同的货品需求//很明显的情况是有重复货品的那个客户订单重复出现两次!
                     JSONArray jsonArrayExistGoods = resultMap.get(ofcExcelBoradwise.getGoodsCode());
                     if(null != jsonArrayExistGoods && null != jsonArrayExistGoods.get(1)){
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         //相同货品编码的当前订单编号下的做累加
                         BigDecimal laterGoodsAmount = ofcExcelBoradwise.getGoodsAmount();
                         BigDecimal goodsAmount = (BigDecimal) jsonObjectExistGoods.get(jsonObjectKey);
+                        if(null == goodsAmount){
+                            goodsAmount = new BigDecimal(0);
+                        }
                         laterGoodsAmount = laterGoodsAmount.add(goodsAmount);
                         jsonObjectExistGoods.put(jsonObjectKey,laterGoodsAmount);
 

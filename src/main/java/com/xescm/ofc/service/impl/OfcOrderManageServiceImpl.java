@@ -93,7 +93,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private FeignRmcPickUpOrRecipientAPIClient feignRmcPickUpOrRecipientAPIClient;
     @Autowired
-    private FeignRMcServiceCoverageAPIClient feignRMcServiceCoverageAPIClient;
+    private FeignRmcServiceCoverageAPIClient feignRmcServiceCoverageAPIClient;
     @Autowired
     private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
     @Resource
@@ -270,14 +270,24 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Map<String, List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             List<OfcPlannedDetail> ofcPlannedDetailList = new ArrayList<>();
             while (iter.hasNext()) {
+
                 ofcPlannedDetail = new OfcPlannedDetail();
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
-                BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
-                ofcPlannedDetailList.add(ofcPlannedDetail);
-                ofcPlannedDetailService.save(ofcPlannedDetail);
+                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
+                }*/
+                if((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
+                        || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0 )
+                        || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+                    BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
+                    BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
+                    ofcPlannedDetailList.add(ofcPlannedDetail);
+                    ofcPlannedDetailService.save(ofcPlannedDetail);
+                }
+
                 logger.debug("计划单明细保存成功");
             }
             if (ofcPlannedDetailList.size() > 0) {
@@ -489,10 +499,19 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
-                ofcPlannedDetailList.add(ofcPlannedDetail);
-                ofcPlannedDetailService.save(ofcPlannedDetail);
+                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
+                }*/
+                if((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
+                        || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0 )
+                        || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                    ofcPlannedDetailList.add(ofcPlannedDetail);
+                    ofcPlannedDetailService.save(ofcPlannedDetail);
+                }
+
                 logger.debug("计划单明细保存成功");
             }
             if(ofcPlannedDetailList.size()>0){
@@ -727,9 +746,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
-                BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
-                ofcPlannedDetailService.save(ofcPlannedDetail);
+                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
+                }*/
+                if((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
+                        || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0 )
+                        || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
+                    BeanUtils.copyProperties(ofcPlannedDetail,ofcSiloprogramInfo);
+                    ofcPlannedDetailService.save(ofcPlannedDetail);
+                }
+
                 logger.debug("计划单明细保存成功");
             }
             ofcSiloprogramInfoService.save(ofcSiloprogramInfo);
@@ -776,7 +804,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         if(Response.ERROR_CODE == response.getCode()){
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败
-                            logger.error("您无法取消,请联系管理员!{}",response.getMessage());
                             logger.error("您无法取消,请联系管理员!{}",response.getResult());
                             throw new BusinessException("您无法取消,{}",response.getResult().toString());
                         }
@@ -1908,7 +1935,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);
@@ -1920,7 +1947,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRMcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);

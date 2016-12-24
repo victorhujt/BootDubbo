@@ -81,6 +81,11 @@ public class RestConfig {
      */
     private String acUrl;
 
+    /**
+     * 订单中心报表
+     */
+    private String report;
+
 
     public String getWhcUrl() {
         return whcUrl;
@@ -176,5 +181,13 @@ public class RestConfig {
 
     public void setCscUrl(String cscUrl) {
         this.cscUrl = cscUrl;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
     }
 }

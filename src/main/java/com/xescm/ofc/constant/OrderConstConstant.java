@@ -77,6 +77,10 @@ public final class OrderConstConstant {
 
     /**OFC_WEB_URL*/
     public static final String OFC_WEB_URL = "OFC_WEB_URL";
+    /** OFC 报表地址 */
+    public static final String REPORT = "REPORT";
+
+
     //支付方式
     public static final String FINNANCEPAYWAYCASH="6810";//现金支付
     public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡

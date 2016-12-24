@@ -224,7 +224,7 @@
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
                     <tr role="row">
-                        <th class="center sorting_disabled" style="width:42px;" rowspan="1" colspan="1" aria-label="">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                             <label class="pos-rel">
                                 选择
                                 <span class="lbl"></span>
@@ -842,8 +842,8 @@
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
                 $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
                         "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>" +
-                        "<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
+                        "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
                         "</td>" +
                         "<td>" + viewMapIndexOf + "</td>" +
                         "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
@@ -948,7 +948,7 @@
         cscGoods.goodsName = goodsName;
         cscGoods.barCode = barCode;
         cscGoods.pNum = pageNum;
-        cscGoods.pSize = 10;
+        cscGoods.pSize = 20;
         var param = JSON.stringify(cscGoods);
 
 
@@ -1028,8 +1028,8 @@
 
             goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
             goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                    "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
-                    "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                    "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
+                    "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
                     "</td>";
             goodsInfoListDiv =goodsInfoListDiv + "<td>"+index+"</td>";
             goodsInfoListDiv =goodsInfoListDiv + "<td>"+goodsCode+"</td>";
@@ -1064,8 +1064,8 @@
 
                 goodsInfoListDiv =goodsInfoListDiv + "<tr role='row' class='odd' align='center' >";//class=\"btn btn-minier btn-yellow\"
                 goodsInfoListDiv =goodsInfoListDiv + "<td>" +
-                        "<button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger'>删除</button>&nbsp;" +
-                        "&nbsp;<button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>录入</button>" +
+                        "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
+                        "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
                         "</td>";
                 /* goodsInfoListDiv =goodsInfoListDiv + "<td><input id='deleteOrNot' type='checkbox'/></td>";*/
                 goodsInfoListDiv =goodsInfoListDiv + "<td>"+preIndex+"</td>";
@@ -1128,7 +1128,7 @@
         var contactCode = $(obj).parent().parent().children().eq(8).text();
         $("#goodsInfoListDiv").find("tr").each(function(index) {
             var tdArr = $(this).children();
-            debugger;
+            
             var goodsIndex = tdArr.eq(1).text();//货品序号
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsAmountTotal = tdArr.eq(7).text();//货品需求数量合计
@@ -1477,6 +1477,7 @@
                 }*/
             if (data == undefined || data == null || null == data.result || undefined == data.result
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
+                $("#pageBarDivConsignor").hide();
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
                 $("#pageBarDivConsignor").show();
@@ -1694,8 +1695,10 @@
         CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             if (data == undefined || data == null || null == data.result || undefined == data.result
                     || data.result.size == 0 || data.result.list == null || undefined == data.result.list) {
+                $("#pageBarDivConsigneeDistri").hide();
                 layer.msg("暂时未查询到发货方信息！！");
             } else if (data.code == 200) {
+                $("#pageBarDivConsigneeDistri").show();
                 loadConsingeeDistri(data.result.list);
                 laypage({
                     cont: $("#pageBarDivConsigneeDistri"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -1909,7 +1912,12 @@
         if(couldChangeCust){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }else{
-            alert("您不能再选择客户!")
+            var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
+            if(consigneeNum == 0){
+                $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+            }else{
+                alert("您不能再选择客户! 如需重选, 请重置收发货方!")
+            }
         }
     });
     $("#custListDivNoneBottom").click(function () {
@@ -1946,6 +1954,7 @@
 
     // 分页查询客户列表
     function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
@@ -1953,8 +1962,10 @@
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
                 layer.msg("暂时未查询到客户信息！");
             } else if (result.code == 200) {
+                $("#pageBarDiv").show();
                 loadCustomer(result);
                 laypage({
                     cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -2039,15 +2050,18 @@
         //加载完客户后自动加载仓库列表, 和货品种类
         //加载仓库列表
         var customerCode = $("#customerCode").val();
-        $("#warehouseCode option").remove();
-        $("#warehouseCode").append("<option value = ''>无</option>");
-        CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
-            data=eval(data);
-            $.each(data,function (index,warehouse) {
-                $("#warehouseCode").append("<option value='"+warehouse.warehouseCode+"'>"+warehouse.warehouseName+"</option>");
-            });
-            $("#warehouseCode").trigger("chosen:updated");
-        })
+        if(!StringUtil.isEmpty(customerCode)){
+            $("#warehouseCode option").remove();
+            $("#warehouseCode").append("<option value = ''>无</option>");
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryWarehouseByCustId",{"customerCode":customerCode},function(data) {
+                data=eval(data);
+                $.each(data,function (index,warehouse) {
+                    $("#warehouseCode").append("<option value='"+warehouse.warehouseCode+"'>"+warehouse.warehouseName+"</option>");
+                });
+                $("#warehouseCode").trigger("chosen:updated");
+            })
+        }
+
     });
 
     $("#to_operation_distributing_excel").click(function () {
@@ -2059,7 +2073,6 @@
             alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
-            var customerCode = $("#customerCode").val();
             var custName = $("#custName").val();
             var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);
