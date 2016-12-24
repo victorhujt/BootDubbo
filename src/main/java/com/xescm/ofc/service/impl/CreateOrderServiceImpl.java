@@ -93,15 +93,15 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             //订单已存在,获取订单的最新状态,只有待审核的才能更新
                             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                addCreateOrderEntityList(true, reason, custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
                                 return "";
                             }
                         }
                         String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                            addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
-                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{}", custOrderCode, custCode);
+                            addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
+                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
                         } else {
                             result = true;
                             addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
@@ -182,7 +182,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * 状态已经已取消：返回订单已经取消
      * 状态已经已完成：订单已完成，无法取消
      * 状态是待审核，直接删除订单
-     *
      *
      * @param cancelOrderDto
      * @return
