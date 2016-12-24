@@ -207,8 +207,7 @@
     }
     function invoicePrint() {
         var sel = "";
-        var post = $("#REPORT").val();
-        debugger;
+        var post = $("#REPORT").html();
         var url = post+"/WebReport/ReportServer?reportlets=";
         var code="";
         $("#dataTbody").find("tr").each(function(index){
