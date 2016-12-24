@@ -57,21 +57,20 @@
     var historyUrl = $("#historyUrl").val();
     $("#templatesAddBack").click(function () {
         var url = "/ofc/operationDistributingExcel/" + historyUrl +"/" + customerCode +"/" + custName;
-        console.log('-----' + url)
         xescm.common.loadPage(url);
     })
 
     $("#templatesAdd").click(function () {
         var tag = "add";
-        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName + "/" + tag);
+        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName  +"/" + historyUrl + "/" + tag);
     })
     function editTemplates(obj){
         var tag = "edit";
-        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName + "/" + tag);
+        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName +"/" + historyUrl + "/" + tag);
     }
     function delTemplates(obj) {
         var tag = "del";
-        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName + "/" + tag);
+        xescm.common.loadPage("/ofc/distributing/toTemplatesoper/" + customerCode + "/" + custName +"/" + historyUrl + "/" + tag);
     }
 
 </script>

@@ -798,7 +798,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         if(Response.ERROR_CODE == response.getCode()){
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败
-                            logger.error("您无法取消,请联系管理员!{}",response.getMessage());
                             logger.error("您无法取消,请联系管理员!{}",response.getResult());
                             throw new BusinessException("您无法取消,{}",response.getResult().toString());
                         }
