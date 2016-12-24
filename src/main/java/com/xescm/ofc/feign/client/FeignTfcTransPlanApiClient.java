@@ -49,7 +49,7 @@ public class FeignTfcTransPlanApiClient {
             response = getApi().cancelTransport(transportNoDTO);
         } catch (RetryableException ex) {
             logger.error("==>调用接口发生异常：调用TFC取消运输计划单接口(/restApi/tfc/cancelTransport)无法连接或超时. {} ", ex);
-            throw new BusinessException("调用TFC取消运输计划单发生异常！");
+            throw new BusinessException("调用TFC取消运输计划单接口无法连接或超时！");
         } catch (Exception ex){
             logger.error("==>调用接口发生异常：调用TFC取消运输计划单接口(/restApi/tfc/cancelTransport). {}", ex);
             throw new BusinessException("调用TFC取消运输计划单发生异常");
