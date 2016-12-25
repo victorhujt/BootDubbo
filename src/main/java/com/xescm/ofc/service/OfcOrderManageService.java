@@ -1,12 +1,12 @@
 package com.xescm.ofc.service;
 
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.wrap.Wrapper;
 
 import java.util.List;
 

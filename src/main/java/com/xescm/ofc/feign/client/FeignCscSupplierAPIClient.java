@@ -1,12 +1,12 @@
 package com.xescm.ofc.feign.client;
 
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscSupplierAPI;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.Feign;
 import feign.RetryableException;
 import feign.jackson.JacksonDecoder;

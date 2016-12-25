@@ -1,9 +1,9 @@
 package com.xescm.ofc.feign.api.csc;
 
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

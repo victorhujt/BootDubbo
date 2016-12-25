@@ -1,8 +1,8 @@
 package com.xescm.ofc.feign.api.dms;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

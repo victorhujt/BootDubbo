@@ -1,7 +1,7 @@
 package com.xescm.ofc.feign.api.rmc;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.model.vo.rmc.RmcServiceCoverageForOrderVo;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

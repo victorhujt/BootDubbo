@@ -1,10 +1,10 @@
 package com.xescm.ofc.service;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
-import com.xescm.uam.utils.wrap.Wrapper;
 
 import java.util.List;
 

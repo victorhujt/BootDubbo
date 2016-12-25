@@ -1,6 +1,7 @@
 package com.xescm.ofc.feign.client;
 
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
 import com.xescm.ofc.model.dto.csc.CscGoodsType;
@@ -8,8 +9,7 @@ import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.csc.FeignCscGoodsAPI;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.Feign;
 import feign.RetryableException;
 import feign.jackson.JacksonDecoder;

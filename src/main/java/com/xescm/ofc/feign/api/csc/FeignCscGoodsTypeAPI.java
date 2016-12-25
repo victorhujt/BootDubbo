@@ -1,8 +1,8 @@
 package com.xescm.ofc.feign.api.csc;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.model.dto.csc.CscGoodsType;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

@@ -3,8 +3,8 @@ package com.xescm.ofc;
 import com.xescm.ofc.web.interceptor.AuthApiInterceptor;
 import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
 import com.xescm.ofc.web.jwt.AppkeyLoader;
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import com.xescm.ofc.web.jwt.SimpleCORSFilter;
-import com.xescm.uam.exception.MyHandlerExceptionResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,6 +25,11 @@ public class XescmOfcApplication {
 
 	@Value("${env}")
 	private String env;
+
+	@Bean
+	public AuthRequestInterceptor authRequestInterceptor(){
+		return new AuthRequestInterceptor();
+	}
 
 	@Bean
 	public FilterRegistrationBean simpleCORSFilter() {
@@ -60,10 +65,6 @@ public class XescmOfcApplication {
 		return new AppkeyLoader();
 	}
 
-	@Bean
-	public MyHandlerExceptionResolver myHandlerExceptionResolver() {
-		return new MyHandlerExceptionResolver();
-	}
 	public static void main(String[] args) {
  		SpringApplication.run(XescmOfcApplication.class, args);
 	}

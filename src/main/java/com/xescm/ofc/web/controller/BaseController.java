@@ -9,13 +9,13 @@
   
 package com.xescm.ofc.web.controller;
 
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.util.PublicUtil;
+import com.xescm.base.util.ThreadLocalMap;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.uam.constant.UamConstant;
-import com.xescm.uam.domain.dto.AuthResDto;
 import com.xescm.uam.exception.BusinessException;
-import com.xescm.uam.utils.PublicUtil;
-import com.xescm.uam.utils.ThreadLocalMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;

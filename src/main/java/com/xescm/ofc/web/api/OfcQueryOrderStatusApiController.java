@@ -1,11 +1,11 @@
 package com.xescm.ofc.web.api;
 
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;

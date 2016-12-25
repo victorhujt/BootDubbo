@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcAttachment;
@@ -20,11 +23,8 @@ import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.utils.JSONUtils;
+import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PubUtils;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,13 +178,13 @@ public class OfcMobileOrderRest extends BaseController {
                     ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
                 }
             }else{
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
             }
             resultMessage = ofcMobileOrderService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto,orderCode);
 
             if("未定义错误".equals(resultMessage)||"用户操作异常".equals(resultMessage)||"页面跳转出错".equals(resultMessage)){
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
             }
             orderCode=resultMessage.split(":")[1];
             //更新拍照订单的状态，订单号
@@ -197,17 +197,17 @@ public class OfcMobileOrderRest extends BaseController {
             ofcMobileOrderService.updateByMobileCode(order);
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心下单或编辑出现异常");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心下单或编辑出现异常");
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                 logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
             } else {
                 logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
         }
-        return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage.split(":")[0]);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage.split(":")[0]);
     }
 
     @RequestMapping(value = "/mobileOrder/updatePicParamByserialNo", method = RequestMethod.POST)

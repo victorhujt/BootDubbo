@@ -6,7 +6,7 @@ import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.api.tfc.FeignTfcTransPlanApi;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.utils.Response;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.Feign;
 import feign.RetryableException;
 import feign.jackson.JacksonDecoder;

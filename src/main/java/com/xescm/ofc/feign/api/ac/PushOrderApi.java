@@ -1,12 +1,12 @@
 package com.xescm.ofc.feign.api.ac;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFinanceInformation;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.model.dto.ac.AcOrderDto;
 import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

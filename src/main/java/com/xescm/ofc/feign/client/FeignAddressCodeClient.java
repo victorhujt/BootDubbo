@@ -4,7 +4,7 @@ import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.feign.api.wms.AddressCodeInterface;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.Feign;
 import feign.RetryableException;
 import feign.jackson.JacksonEncoder;

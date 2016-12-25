@@ -1,16 +1,14 @@
 package com.xescm.ofc.feign.client;
 
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.rmc.FeignRmcPickUpOrRecipientAPI;
-import com.xescm.ofc.feign.api.rmc.FeignRmcWarehouseAPI;
 import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.rmc.RmcPickup;
 import com.xescm.ofc.model.vo.rmc.RmcRecipient;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.Feign;
 import feign.RetryableException;
 import feign.jackson.JacksonDecoder;

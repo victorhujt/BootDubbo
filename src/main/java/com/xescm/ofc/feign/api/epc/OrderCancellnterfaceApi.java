@@ -1,8 +1,8 @@
 package com.xescm.ofc.feign.api.epc;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

@@ -1,11 +1,11 @@
 package com.xescm.ofc.feign.api.rmc;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.model.vo.rmc.RmcPickup;
 import com.xescm.ofc.model.vo.rmc.RmcRecipient;
-import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
 

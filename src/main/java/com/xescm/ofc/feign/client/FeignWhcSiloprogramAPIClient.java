@@ -2,6 +2,7 @@ package com.xescm.ofc.feign.client;
 
 import javax.annotation.Resource;
 
+import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.RetryableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.whc.FeignWhcOrderAPI;
 import com.xescm.ofc.model.dto.whc.CancelOrderDTO;
 import com.xescm.ofc.utils.Response;
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
