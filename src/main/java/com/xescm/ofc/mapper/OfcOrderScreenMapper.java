@@ -5,12 +5,14 @@ import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by lyh on 2016/10/10.
  */
+@Repository
 public interface OfcOrderScreenMapper extends MyMapper<OrderScreenResult> {
     /**
      * 订单查询结果来自于

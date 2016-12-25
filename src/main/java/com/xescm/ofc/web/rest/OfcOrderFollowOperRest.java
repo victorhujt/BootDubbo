@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OrderFollowOperService;
+import com.xescm.ofc.utils.SortOrderStatusUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.utils.PubUtils;
 import com.xescm.uam.utils.wrap.WrapMapper;
@@ -63,6 +64,7 @@ public class OfcOrderFollowOperRest extends BaseController {
             List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
 //            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
+//            ofcOrderStatuses = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatuses);
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
                 if (ofcOrderDTOs.size() == 1) {
                     map.put("size", 1);
@@ -78,7 +80,7 @@ public class OfcOrderFollowOperRest extends BaseController {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, map);
         } catch (BusinessException ex){
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }catch (Exception ex) {
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
@@ -99,7 +101,7 @@ public class OfcOrderFollowOperRest extends BaseController {
 //            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
-
+//            ofcOrderStatuses = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatuses);
             Map<String, Object> map = new HashMap<>();
             OrderFollowOperResult ofcFundamentalInformation = null;
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {

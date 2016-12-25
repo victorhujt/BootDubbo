@@ -52,7 +52,7 @@ public final class OrderConstConstant {
     public static final String YIQUEDING="40";  //已确定
 
     /**
-     * 运输计划单状态
+     * 计划单状态
      */
     public static final String ZIYUANFENPEIZ="10";  //资源分配中
     public static final String YITUISONG="20";  //已推送
@@ -69,8 +69,18 @@ public final class OrderConstConstant {
     public static final String ADDR_URL = "ADDR_URL";
     /**CSC地址*/
     public static final String CSC_URL = "CSC_URL";
+    /**
+     * CSC
+     */
+    public static final String CSC_URL_LOCAL = "CSC_URL_LOCAL";
+
+
     /**OFC_WEB_URL*/
     public static final String OFC_WEB_URL = "OFC_WEB_URL";
+    /** OFC 报表地址 */
+    public static final String REPORT = "REPORT";
+
+
     //支付方式
     public static final String FINNANCEPAYWAYCASH="6810";//现金支付
     public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡
@@ -131,7 +141,9 @@ public final class OrderConstConstant {
 
     public static final String ORDER_TYPE_IN="RK";
 
+    public static final String MODEL_TYPE_ACROSS = "MODEL_TYPE_ACROSS";
 
+    public static final String MODEL_TYPE_BORADWISE = "MODEL_TYPE_BORADWISE";
 
     public OrderConstConstant() {
     }

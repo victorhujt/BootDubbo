@@ -3,8 +3,6 @@ package com.xescm.ofc.web.controller;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
 import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
@@ -14,6 +12,7 @@ import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.uam.domain.dto.AuthResDto;
+import com.xescm.uam.utils.MD5Util;
 import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,11 +42,7 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
-    @Autowired
     private FeignCscStoreAPIClient feignCscStoreAPIClient;
-    @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
     @Autowired
@@ -68,7 +63,7 @@ public class OfcJumpontroller extends BaseController{
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
-        }catch (BusinessException ex){
+        } catch (BusinessException ex){
             logger.error("订单中心从API获取仓库信息出现异常:{}", ex.getMessage(), ex);
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
@@ -152,9 +147,9 @@ public class OfcJumpontroller extends BaseController{
     public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String customerCode, @PathVariable String custName , Map<String,Object> map){
         logger.info("城配开单Excel导入==> historyUrl={}", historyUrl);
         logger.info("城配开单Excel导入==> custId={}", customerCode);
-        if("operation_distributing".equals(historyUrl)){
+        /*if("operation_distributing".equals(historyUrl)){
             historyUrl = "/ofc/operationDistributing";
-        }
+        }*/
         setDefaultModel(model);
         map.put("historyUrl",historyUrl);
         map.put("customerCode",customerCode);
@@ -182,28 +177,51 @@ public class OfcJumpontroller extends BaseController{
         model.addAttribute("custNameFromExcelImport",custName);
         return "operation_distributing";
     }
+    /**
+     * Excel导入跳转模板配置页
+     */
+    @RequestMapping(value = "/ofc/distributing/toTemplatesList/{custCode}/{custName}/{historyUrl}")
+    public String toTemplatesList( Model model,  @PathVariable String custCode, @PathVariable String custName, @PathVariable String historyUrl){
+        setDefaultModel(model);
+        model.addAttribute("customerCode",custCode);
+        model.addAttribute("custName",custName);
+        model.addAttribute("historyUrl",historyUrl);
+        return "operation_distributing_templateslist";
+    }
 
+    /**
+     * 模板配置页跳转模板添加, 编辑, 查看页面, 用同一个页面做这个事儿
+     * @param model
+     * @param custCode
+     * @param custName
+     * @param historyUrl
+     * @param tag  add
+     * @return
+     */
+    @RequestMapping(value = "/ofc/distributing/toTemplatesoper/{custCode}/{custName}/{historyUrl}/{tag}")
+    public String toTemplates(Model model,@PathVariable String custCode, @PathVariable String custName,  @PathVariable String tag, @PathVariable String historyUrl){
+        setDefaultModel(model);
+        model.addAttribute("customerCode",custCode);
+        model.addAttribute("custName",custName);
+        model.addAttribute("historyUrl",historyUrl);
+        return "operation_distributing_templatesoper";
+    }
     /**
      * 运输开单
      * @param model
      * @param map
-     * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value="/ofc/tranLoad")
-    public ModelAndView tranLoad(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView tranLoad(Model model,Map<String,Object> map){
         try{
-            OfcFundamentalInformation ofcFundamentalInformation
-                    = ofcFundamentalInformationService.getLastMerchandiser(getAuthResDtoByToken().getGroupRefName());
             logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
-            if(ofcFundamentalInformation != null){
-                logger.info("开单员为为{}",ofcFundamentalInformation.getMerchandiser());
-            }
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
-            map.put("merchandiserLast",ofcFundamentalInformation.getMerchandiser());
+            // 加密登录用户名，用于前端缓存cookie的key
+            String loginUser = MD5Util.encodeByAES(getAuthResDtoByToken().getUserName());
+            map.put("loginUser", loginUser);
             setDefaultModel(model);
         }catch (Exception ex){
             logger.error("跳转运输开单页面出错!",ex.getMessage(),ex);
@@ -231,6 +249,18 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    @RequestMapping(value = "ofc/mobileOrderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView mobileOrderManageOpera(Model model) {
+        ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+
+
+
+
 
     @RequestMapping(value = "/ofc/operDistiExcelAdditions")
     public String excelAdditions(){

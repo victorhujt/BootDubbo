@@ -10,6 +10,7 @@ public class TransportDTO {
 
     private String transportNo;
 
+    private String customerOrderCode;
 
     private String createTime;
 
@@ -128,6 +129,8 @@ public class TransportDTO {
 
 
     private String transportSource;
+
+    private String baseName;
 
 
    // private List<TransportDetailDTO> productDetail = new ArrayList<TransportDetailDTO>();
@@ -467,5 +470,21 @@ public class TransportDTO {
 
     public void setProductDetail(List<TransportDetailDTO> productDetail) {
         this.productDetail = productDetail;
+    }
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
+    }
+
+    public String getCustomerOrderCode() {
+        return customerOrderCode;
+    }
+
+    public void setCustomerOrderCode(String customerOrderCode) {
+        this.customerOrderCode = customerOrderCode;
     }
 }

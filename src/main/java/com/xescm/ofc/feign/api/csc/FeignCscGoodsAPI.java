@@ -1,5 +1,6 @@
 package com.xescm.ofc.feign.api.csc;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.ofc.model.dto.csc.CscGoodsApiDto;
 import com.xescm.ofc.model.dto.csc.CscGoodsType;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
@@ -36,5 +37,14 @@ public interface FeignCscGoodsAPI {
     @RequestLine("POST api/csc/goodstype/getCscGoodsTypeList")
     @Headers("Content-Type: application/json")
     public Wrapper<List<CscGoodsTypeVo>> getCscGoodsTypeList(CscGoodsType cscGoodsType);
+
+    /**
+     * 查询客户货品列表//分页
+     * @param cscGoods
+     * @return
+     */
+    @RequestLine("POST /api/csc/goods/queryCscGoodsPageList")
+    @Headers("Content-Type: application/json")
+    public Wrapper<PageInfo<CscGoodsApiVo>> queryCscGoodsPageList(CscGoodsApiDto cscGoods);
 
 }

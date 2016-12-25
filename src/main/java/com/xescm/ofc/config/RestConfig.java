@@ -33,13 +33,7 @@ public class RestConfig {
      */
     private String cscUrl;
 
-    public String getCscWebUrl() {
-        return cscWebUrl;
-    }
 
-    public void setCscWebUrl(String cscWebUrl) {
-        this.cscWebUrl = cscWebUrl;
-    }
 
     /**
      * 客户中心前端Url
@@ -69,13 +63,6 @@ public class RestConfig {
      */
     private String tfcUrl;
 
-    public String getWhcUrl() {
-        return whcUrl;
-    }
-
-    public void setWhcUrl(String whcUrl) {
-        this.whcUrl = whcUrl;
-    }
 
     /**
      * 仓储中心的地址
@@ -93,6 +80,28 @@ public class RestConfig {
      * 结算中心
      */
     private String acUrl;
+
+    /**
+     * 订单中心报表
+     */
+    private String report;
+
+
+    public String getWhcUrl() {
+        return whcUrl;
+    }
+
+    public void setWhcUrl(String whcUrl) {
+        this.whcUrl = whcUrl;
+    }
+
+    public String getCscWebUrl() {
+        return cscWebUrl;
+    }
+
+    public void setCscWebUrl(String cscWebUrl) {
+        this.cscWebUrl = cscWebUrl;
+    }
 
     public String getAcUrl() {
         return acUrl;
@@ -172,5 +181,13 @@ public class RestConfig {
 
     public void setCscUrl(String cscUrl) {
         this.cscUrl = cscUrl;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
     }
 }

@@ -1,77 +1,85 @@
-<head>
-    <title>运输开单</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .date_a{
-            line-height:21px !important;
-        }
-        .form-group > label[class*="col-"]{
-            margin-top:0;
-            line-height:34px;
-        }
-        .form-horizontal .control-label{
-            padding-top:0;
-            line-height:30px;
-        }
-        input[type=checkbox], input[type=radio]{
-            margin:10px 0 0;
-        }
-        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-            color:#393939;
-        }
-        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-            color:#393939;
-        }
-        .dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .dataTable > thead > tr > th[class*=sorting_]{
-            color:#707070;
-        }
-        .has-success .form-control{
-            border-color:#cacaca;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .has-error .form-control{
-            border-color:#b5b5b5 !important;
-        }
-        .custNameIcon:hover{color:#2868c6 !important;}
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .col-label{
-            margin-right:2px;
-            margin-bottom:0;
-        }
+<title>运输开单</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .date_a{
+        line-height:21px !important;
+    }
+    .form-group > label[class*="col-"]{
+        margin-top:0;
+        line-height:34px;
+    }
+    .form-horizontal .control-label{
+        padding-top:0;
+        line-height:30px;
+    }
+    input[type=checkbox], input[type=radio]{
+        margin:10px 0 0;
+    }
+    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+        color:#393939;
+    }
+    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+        color:#393939;
+    }
+    .dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .dataTable > thead > tr > th[class*=sorting_]{
+        color:#707070;
+    }
+    .has-success .form-control{
+        border-color:#cacaca;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .has-error .form-control{
+        border-color:#b5b5b5 !important;
+    }
+    .custNameIcon:hover{color:#2868c6 !important;}
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .col-label{
+        margin-right:2px;
+        margin-bottom:0;
+    }
+    #goodsInfoListDiv .help-block{
+        line-height:20px;
+    }
+    .chosen-container .chosen-results{
+        max-height:120px;
+    }
+    .pay .chosen-container-single .chosen-search:after{
+        top:4px;
+    }
+    .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+        padding-top:0;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
-</head>
-
-<body class="no-skin">
 <div class="modal-content" id="goodsListDiv" style="display: none;">
     <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
         <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
@@ -126,8 +134,10 @@
                     </thead>
                     <tbody id="goodsSelectListTbody"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -192,8 +202,10 @@
                     </thead>
                     <tbody id="contactSelectListTbody2"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -258,8 +270,10 @@
                     </thead>
                     <tbody id="contactSelectListTbody1"></tbody>
                 </table>
-
-
+                <div class="row">
+                    <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -306,12 +320,16 @@
                     </thead>
                     <tbody id="custListDivTbody"></tbody>
                 </table>
+                <div class="row">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
             </form>
 
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+        <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
             <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
             <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
@@ -328,6 +346,7 @@
                     基本信息
                     <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                     <span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
+                    <span hidden="true" id = "login_user">${(loginUser)!}</span>
                 <#--<span hidden="true" id = "addr_url">${(ADDR_URL)!}</span>-->
                 <#--<#import "address.ftl" as apiAddrFtl>-->
                 </p>
@@ -346,13 +365,16 @@
                             </div>
                         </div></div>
 
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
+                    <div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
                                     <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
+                                    <#--<#list merchandiserList! as merchandiser>-->
+                                    <#--<option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>-->
+                                    <#--</#list>-->
                                     <#list merchandiserList! as merchandiser>
-                                        <option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>
+                                        <option>${(merchandiser.merchandiser)!""}</option>
                                     </#list>
                                     </select></div>
                             </div>
@@ -376,29 +398,37 @@
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
                         <div class="col-width-168 padding-15">
-                            <div class="cclearfix" >
+                            <div class="clearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon toggle">*</span>运输单号</label>
+                    <div><label class="control-label col-label no-padding-right" for="transCode"><span class="w-label-icon toggle">*</span>运输单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
                             </div>
                         </div></div>
+                    <div>
+                        <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
+                            <div class="col-width-168">
+                                <input class="col-width-168"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
+                    <div><label class="control-label col-label no-padding-right" for="custName" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
                                 <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;color: #666 !important;" >
-                                    <i class="fa fa-user l-cor"></i>
+                                    <i class="fa fa-user l-cor bigger-130"></i>
                                 </button>
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
@@ -406,7 +436,7 @@
 
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
+                    <div><label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
@@ -418,7 +448,7 @@
             </form>
 
             <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:360px;">
-                <div style="width:530px;margin-right:35px;float:left;">
+                <div style="width:515px;margin-right:35px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
                     </div>
@@ -657,14 +687,14 @@
                     </div>
                     <div >
                         <label class=" no-padding-right" style="float:left; margin:0 15px 0 24px;" for="name">费用支付</label>
-                        <div class="col-width-70" style="margin-right:10px;float:left;background:#eaedf1;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="margin-right:10px;float:left;height:34px;">
                             <label class="clearfix">
-                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;"/>
+                                <input id="expensePayntPartyV1" type="radio" class="ace" name="expensePaymentPartyV" value="10" checked="checked" style="margin:5px;float:left;margin-top:11px;padding-to"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">发货方</span>
                             </label>
                         </div></div>
                     <div>
-                        <div class="col-width-70" style="float:left;background:#eaedf1;padding-top:7px;height:34px;">
+                        <div class="col-width-70" style="float:left;height:34px;">
                             <label class="clearfix">
                                 <input id="expensePaymentPartyV2" type="radio" class="ace" name="expensePaymentPartyV" value="20" style="margin:5px;float:left;margin-top:11px;"/>
                                 <span class="lbl" style="float:left;margin-right:5px;">收货方</span>
@@ -674,9 +704,9 @@
                     <input id="transportType" type="hidden" name="transportType"/>
                     <input id="expensePaymentParty" type="hidden" name="expensePaymentParty"/>
                     <div>
-                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:31px;">支付方式</label>
+                        <label class="no-padding-right" for="name" style="margin-left:30px;float:left;margin-bottom:0;line-height:34px;">支付方式</label>
                         <div class="col-width-168 padding-15">
-                            <div class="clearfix col-width-100">
+                            <div class="clearfix col-width-100 pay">
                                 <select class="chosen-select form-control" id="payment" name="payment">
                                     <option value="6810">现金</option>
                                     <option value="6820">POS刷卡</option>
@@ -718,7 +748,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:15px;">回付</label>
+                        <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:14px;">回付</label>
                         <div style="width:130px;float:left;">
                             <div class="col-float" style="width:100px;margin-right:15px;">
                                 <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
@@ -758,7 +788,7 @@
 </div>
 <div class="col-xs-12">
     <!-- #section:elements.tab.option -->
-    <div class="tabbable" style="width:1000px;" >
+    <div class="tabbable" >
     <#-- <ul class="nav nav-tabs" id="myTab4">
          <li class="active">
              <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
@@ -789,22 +819,23 @@
             <#--dynamic-table-->
                 <table id="orderGoodsListTable" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                    <tr role="row"><th class="center sorting_disabled" style="width:45px;" rowspan="1" colspan="1" aria-label="">
                         操作
                     </th>
                     <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
+                        <th class="" tabindex="0" style="width:120px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品种类</th>
+                        <th class="" tabindex="0" style="width:98px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品小类</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">货品编码</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品名称</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Update: activate to sort column ascending">规格
                         </th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
+                        <th class="" tabindex="0" style="width:94px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">包装</th>
+                        <th class="" tabindex="0" style="width:95px;" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费方式</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费单价</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">计费数量</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">数量</th>
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">重量(Kg)</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">体积(m³)</th>
                     </thead>
                 <#--货品明细-->
 
@@ -871,9 +902,13 @@
     });
 
     function main(){
+        initChosen();
         validateForm();
         $("#weightCount").html("0");
         $("#quantityCount").html("0");
+
+        // 上次选择的开单员
+        setLastUserData();
         /*//$("#orderTime").val(new Date().toLocaleDateString());*/
     }
     /**
@@ -895,7 +930,7 @@
                     required:true
                 },
                 transCode:{
-                    maxlength:50,
+                    maxlength:20,
                     pattern:/(^[A-Za-z0-9]+$)/,
                     remote:{
                         url : ofc_url + "/ofc/checkTransCode",
@@ -910,6 +945,11 @@
                 },
                 custName:{
                     maxlength:100
+                },
+                transRequire:{
+                    maxlength:255
+                },custOrderCode: {
+                    maxlength:30
                 }/*/!*,
                 goodsListQuantity:{
                     numberFormat:true,
@@ -928,12 +968,18 @@
                     required:mistake+"请填写订单日期"
                 },
                 transCode:{
-                    maxlength: mistake+"超过最大长度50",
+                    maxlength: mistake+"超过最大长度20",
                     pattern:mistake+"只能输入数字和字母",
                     remote: mistake+"运输单号已存在"
                 },
                 custName:{
                     maxlength:mistake+"超过最大长度"
+                },
+                transRequire:{
+                    maxlength:mistake+"超过最大长度255"
+                },
+                custOrderCode:{
+                    maxlength:mistake+ "超过最大长度30"
                 }/*,
                 goodsListQuantity:{
                     numberFormat:"请输入正确格式的货品数量",
@@ -1060,22 +1106,18 @@
             rules : {
                 currentAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 toPayAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 returnAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 },
                 monthlyAmount:{
                     maxlength: 9,
-                    required:true,
                     pattern:/^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/
                 }
             },
@@ -1168,11 +1210,11 @@
             messages : {
                 consignorName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consignorContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consignorPhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1180,15 +1222,15 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consignorAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 },
                 consigneeName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度100"
                 },
                 consigneeContactName:{
                     required:mistake+"必须输入",
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度50"
                 },
                 consigneePhone:{
                     isPhone:mistake+"请输入正确的手机号",
@@ -1196,7 +1238,7 @@
                     maxlength:mistake+"超过最大长度"
                 },
                 consigneeAddress:{
-                    maxlength:mistake+"超过最大长度"
+                    maxlength:mistake+"超过最大长度200"
                 }
             },
             highlight : function(e) {
@@ -1227,6 +1269,8 @@
         countQuantityOrWeightOrCubageCheck();
     }
     function seleGoods(obj) {
+        $("#goodsSelectListTbody").html("");
+        $("#pageBarDivGoods").hide();
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
         $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
@@ -1236,7 +1280,7 @@
         if($("#businessType").val() == 602){
             $(".toggle").css({"display":"inline-block"})
         }else{
-          $(".toggle").css({"display":"none"});
+            $(".toggle").css({"display":"none"});
         };
     })
 
@@ -1254,9 +1298,21 @@
     }
     function countQuantOrWeightOrCubage(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+        if(parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为30000.00</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0"){
+            $(obj).css("border-color","#dd5a43");
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1265,6 +1321,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1275,9 +1332,21 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="") || parseFloat($(obj).val())>9999){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+            $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'>请检查相关金额</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }else{
+                $(obj).val("");
+                countQuantityOrWeightOrCubageCheck();
+            }
+        }else if(parseFloat($(obj).val())>9999){
+            $(obj).css("border-color","#dd5a43");
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1286,6 +1355,7 @@
                 countQuantityOrWeightOrCubageCheck();
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
             countQuantityOrWeightOrCubageCheck();
@@ -1354,7 +1424,6 @@
             var st=tdArr.eq(10).find("input").val();
             if(chargingways=="01"){
                 if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    quantityCount=quantityCount+parseFloat(tdArr.eq(10).find("input").val());
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
                         luggage=luggage+parseFloat(tdArr.eq(10).find("input").val())*parseFloat(tdArr.eq(9).find("input").val());
                     }else{
@@ -1364,10 +1433,9 @@
                     flg1="error";
                 }
             }else if(chargingways=="02"){
-                if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    weightCount=weightCount+parseFloat(tdArr.eq(10).find("input").val());
+                if(tdArr.eq(12).find("input").val()!="" && tdArr.eq(12).find("input").val()!="0"){
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
-                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(10).find("input").val());
+                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(12).find("input").val());
                     }else{
                         flg2="error";
                     }
@@ -1375,10 +1443,9 @@
                     flg2="error";
                 }
             }else if(chargingways=="03"){
-                if(tdArr.eq(10).find("input").val()!="" && tdArr.eq(10).find("input").val()!="0"){
-                    cubageCount=cubageCount+parseFloat(tdArr.eq(10).find("input").val());
+                if(tdArr.eq(13).find("input").val()!="" && tdArr.eq(13).find("input").val()!="0"){
                     if(tdArr.eq(9).find("input").val()!="" && tdArr.eq(9).find("input").val()!="0"){
-                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(10).find("input").val());
+                        luggage=luggage+parseFloat(tdArr.eq(9).find("input").val())*parseFloat(tdArr.eq(13).find("input").val());
                     }else{
                         flg3="error";
                     }
@@ -1389,7 +1456,31 @@
                 alert("计费方式有问题");
             }
         });
-        if(flg1=="error" || flg2=="error" || flg3=="error"){$("#luggage").val(0);}else{$("#luggage").val(luggage)}
+        $('input[name="quantity"]').each(function(){
+            if($(this).val()!=""){
+                quantityCount=quantityCount+parseFloat($(this).val());
+                quantityCount=parseFloat((parseFloat(quantityCount)).toFixed(3));
+            }
+        });
+        $('input[name="weight"]').each(function(){
+            if($(this).val()!=""){
+                weightCount=weightCount+parseFloat($(this).val());
+                weightCount=parseFloat((parseFloat(weightCount)).toFixed(3));
+            }
+        });
+        $('input[name="cubage"]').each(function(){
+            if($(this).val()!=""){
+                cubageCount=cubageCount+parseFloat($(this).val());
+                cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
+            }
+        });
+        if(flg1=="error" || flg2=="error" || flg3=="error"){
+            $("#luggage").val(0);
+        }else{
+            luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage);
+            $('#orderFinanceFormValidate').submit();
+        }
+
         countCostCheck();
         $("#weightCount").html(weightCount);
         $("#quantityCount").html(quantityCount);
@@ -1407,30 +1498,34 @@
         var typeId=$(obj).val();
         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
             data=eval(data);
-            $(obj).parent().next().children().empty();
+            $(obj).parent().next().children("select").empty();
             $.each(data,function (index,CscGoodsTypeVo) {
-                $(obj).parent().next().children().append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
+                $(obj).parent().next().children("select").append("<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>");
             });
-            $(obj).parent().next().children().find("option").each(function() {
-                text = $(this).text();
-                if($(obj).parent().next().children().find("option:contains("+text+")")){
-                    $(obj).parent().next().children().find("option:contains("+text+"):gt(0)").remove();
+            $(obj).parent().next().children("select").find("option").each(function() {
+                text = $(this).val();
+                if($(obj).parent().next().children("select").find("option[value='"+text+"']")){
+                    $(obj).parent().next().children("select").find("option[value='"+text+"']:gt(0)").remove();
                 }
             });
+            $(obj).parent().next().children("select").trigger("chosen:updated");
+
         });
     }
 
     function checkBillingWeight(obj){
         var value=onlyNumber($(obj).val());
         if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value))) || $(obj).val()=="0" || parseFloat($(obj).val())>30000){
+            $(obj).css("border-color","#dd5a43")
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>请检查相关数字</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
             }else{
                 $(obj).val("");
             }
         }else{
+            $(obj).css("border-color","#cacaca")
             $(obj).val(value);
             $(obj).parent().find("div").remove();
         };
@@ -1736,6 +1831,7 @@
                     outConsignee(cscContact,cscContactCompany,groupId,customerCode);
                 });
             }else{
+                // 如果发货方条数大于1条，默认带出cookie中上次选择的
                 clearConsignor();
                 cscContact.purpose = "1";
                 outConsignee(cscContact,cscContactCompany,groupId,customerCode);
@@ -1788,8 +1884,8 @@
         $("#consignorContactCode").val("");
         $("#consignorType").val("");
         $("#consignorAddress").val("");
-        $("#city-picker3-consignor").val(" / / / ");
-        $("#city-picker3-consignor").citypicker('refresh');
+        //$("#city-picker3-consignor").val(" / / / ");
+        //$("#city-picker3-consignor").citypicker('refresh');
         departurePlace();
     }
     //清空收货方
@@ -1810,20 +1906,20 @@
     function goodsInfoListDivSupple(goodsInfoListDiv){
         goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text'/>"+
-                "<button type='button' class='btn btn-minier btn-inverse no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</button>"
+                "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text' style='min-width:80px;'/>"+
+                "<a  class='blue no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</a>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='goodsName' id='goodsName' type='text'/>"
+                "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text' style='min-width:60px;'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
+                "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='unit' id='unit' type='text'/>"
+                "<input class='col-xs-12'  name='unit' id='unit' type='text'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<select  id='pack' name='pack'>"+
+                "<select  id='pack' class='chosen-select form-control' name='pack' style='width:80px;'>"+
                 "<option value='01'>纸箱</option>"+
                 "<option value='02'>木箱</option>"+
                 "<option value='03'>桶</option>"+
@@ -1839,22 +1935,29 @@
                 "<option value='13'>布袋</option></select>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<select  id='chargingWays' name='chargingWays' onchange='chargingWaysChange(this)'>"+
+                "<select  id='chargingWays' name='chargingWays' class='chosen-select form-control' style='width:75px;' onchange='chargingWaysChange(this)'>"+
                 "<option value='01'>件数</option>"+
                 "<option value='02'>重量Kg</option>"+
                 "<option value='03'>体积m³</option>"+
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='' id='' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
+                "<input class='col-xs-12'  name='' id='' type='text' onblur='countQuantityOrWeightOrCubagePrice(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                "<input class='col-xs-10 col-xs-12'  name='' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                "<input class='col-xs-12'  name='quantity' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
-        goodsInfoListDiv = goodsInfoListDiv + "<td id='1'>"+
-                "<input class='col-xs-10 col-xs-12'  name='billingWeight' id='' type='text' onblur='checkBillingWeight(this)'/>"
+        goodsInfoListDiv = goodsInfoListDiv + "<td id='1' style=\"display:none\">"+
+                "<input class='col-xs-12'  name='billingWeight' id='' type='hidden' onblur='checkBillingWeight(this)'/>"
+                +"</td>";
+        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                "<input class='col-xs-12'  name='weight' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
+                +"</td>";
+        goodsInfoListDiv = goodsInfoListDiv + "<td>"+
+                "<input class='col-xs-12'  name='cubage' id='' type='text' onblur='countQuantOrWeightOrCubage(this)'/>"
                 +"</td>";
         goodsInfoListDiv = goodsInfoListDiv + "</tr>";
         return goodsInfoListDiv;
+        initChosen();
     }
 
     function checkConsignOrEe(){
@@ -1882,6 +1985,209 @@
             $("#consigneePhone-error").parent().parent().parent().removeClass('has-error').addClass('has-success');
             $("#consigneePhone-error").remove();
         }
+    }
+
+    // 分页查询客户列表
+    function queryCustomerData(pageNum) {
+        $("#custListDivTbody").html("");
+        var custName = $("#custNameDiv").val();
+        var param = {};
+        param.pageNum = pageNum;
+        param.pageSize = 10;
+        param.custName = custName;
+        CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
+            if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDiv").hide();
+                layer.msg("暂时未查询到客户信息！！");
+            } else if (result.code == 200) {
+                $("#pageBarDiv").show();
+                loadCustomer(result);
+                laypage({
+                    cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: result.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: result.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryCustomerData(obj.curr);
+                        }
+                    }
+                });
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#custListDivTbody").html("");
+            }
+        },"json");
+    }
+
+    // 加载客户列表
+    function loadCustomer(data) {
+        if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
+            $("#custListDivTbody").html("");
+            return;
+        }
+        var custList = "";
+        $.each(data.result.list,function (index,cscCustomerVo) {
+            var channel = cscCustomerVo.channel;
+            if(null == channel){
+                channel = "";
+            }
+            custList =custList + "<tr role='row' class='odd'>";
+            custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            custList =custList + "<td>"+(index+1)+"</td>";
+            var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+            if(custType == '1'){
+                custList =custList + "<td>公司</td>";
+            }else if (custType == '2'){
+                custList =custList + "<td>个人</td>";
+            }else{
+                custList =custList + "<td>"+custType+"</td>";
+            }
+            custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+            custList =custList + "<td>"+channel+"</td>";
+            custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+            custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
+            custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
+            custList =custList + "</tr>";
+            $("#custListDivTbody").html(custList);
+        });
+    }
+
+    // 分页查询收货方或发货方列表
+    function queryContactData(param,customerCode,contactType,pageNum) {
+        param.pageNum = pageNum;
+        param.pageSize = 10;
+        var param1=param;
+        param = JSON.stringify(param);
+        var type= contactType == 1?"收货方":"发货方";
+        var ptype= contactType == 1?"ee":"or";
+        CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(result) {
+            if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
+                $("#pageBarDivConsign"+ptype).hide();
+                layer.msg("暂时未查询到"+type+"信息！！");
+            } else if (result.code == 200) {
+                $("#pageBarDivConsign"+ptype).show();
+                loadConsignOrEE(result,contactType);
+                laypage({
+                    cont: $("#pageBarDivConsign"+ptype), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: result.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: result.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+
+                            queryContactData(param1,customerCode,contactType,obj.curr);
+                        }
+                    }
+                });
+            } else if (result.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#contactSelectListTbody1").html("");
+                $("#contactSelectListTbody2").html("");
+            }
+        },"json");
+    }
+
+    // 加载收货方或发货方列表
+    function loadConsignOrEE(data,contactType) {
+        var contactList = "";
+        $.each(data.result.list,function (index,CscContantAndCompanyDto) {
+            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            contactList =contactList + "<td>"+(index+1)+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
+            contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
+            contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
+            contactList =contactList + "</tr>";
+        });
+        if(contactType==1){
+            $("#contactSelectListTbody1").html(contactList);
+        }else if(contactType==2){
+            $("#contactSelectListTbody2").html(contactList);
+        }else{
+            layer.msg("收发货方类型有误");
+        }
+
+    }
+
+    // 分页查询货品列表
+    function queryGoodsData(pageNum) {
+
+        $("#goodsSelectListTbody").html("");
+        var cscGoods = {};
+        var groupId = $("#custGroupId").val();
+        var customerCode = $("#customerCode").val();
+        var goodsCode = $("#goodsCodeCondition").val();
+        var goodsName = $("#goodsNameCondition").val();
+        cscGoods.goodsCode = goodsCode;
+        cscGoods.goodsName = goodsName;
+        cscGoods.pNum = pageNum;
+        cscGoods.pSize = 10;
+        var param = JSON.stringify(cscGoods);
+        CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+
+            if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                $("#pageBarDivGoods").hide();
+                layer.msg("暂时未查询到货品信息！！");
+            } else if (data.code == 200) {
+                $("#pageBarDivGoods").show();
+                loadGoods(data.result.list);
+                laypage({
+                    cont: $("#pageBarDivGoods"), // 容器。值支持id名、原生dom对象，jquery对象,
+                    pages: data.result.pages, // 总页数
+                    skip: true, // 是否开启跳页
+                    skin: "molv",
+                    groups: 3, // 连续显示分页数
+                    curr: data.result.pageNum, // 当前页
+                    jump: function (obj, first) { // 触发分页后的回调
+                        if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                            queryGoodsData(obj.curr);
+                        }
+                    }
+                });
+            } else if (data.code == 403) {
+                alert("没有权限")
+            } else {
+                $("#goodsSelectListTbody").html("");
+            }
+            data=eval(data);
+
+        },"json");
+    }
+
+    // 加载货品列表
+    function loadGoods(data) {
+        var goodsList = "";
+        $.each(data,function (index,cscGoodsVo) {
+            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
+            goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
+            goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
+            goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
+            goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
+            goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
+            goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
+            goodsList =goodsList + "</tr>";
+        });
+        $("#goodsSelectListTbody").html(goodsList);
     }
 
     $(function(){
@@ -1963,20 +2269,23 @@
         });
 
         $("#orderPlaceConTableBtn").click(function () {
-            $("input[name='billingWeight']").each(function(){
-                var value=onlyNumber($(this).val());
-                if(value==""){
-                    if($(this).parent().children().length<2){
-                        $("<div id='price-error' class='help-block has-error'>请检查相关数字</div>").insertAfter($(this));
-                        $(this).parent().removeClass('has-info').addClass('has-error');
-                        $(this).val("");
-                    }else{
-                        $(this).val("");
-                    }
-                }else{
-                    $(this).val(value);
-                    $(this).parent().find("div").remove();
+            $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
+            $("#goodsInfoListDiv tr td div.has-error").remove();
+            $("select[name='chargingWays']").each(function(){
+                if($(this).val()=="01"){
+                    var value=onlyNumber($(this).parent().next().next().children().val());
+                    checkValue($(this).parent().next().next().children(),value,"件数计件数量必填");
+                }else if($(this).val()=="02"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().children(),value,"重量计件重量必填");
+                }else if($(this).val()=="03"){
+                    var value=onlyNumber($(this).parent().next().next().next().next().next().children().val());
+                    checkValue($(this).parent().next().next().next().next().next().children(),value,"体积计件体积必填");
                 }
+            });
+            $("input[name='weight']").each(function(){
+                var value=onlyNumber($(this).val());
+                checkValue($(this),value,"添加货品重量必输")
             });
             $('#orderFundamentalFormValidate').submit();
             $('#orderFinanceFormValidate').submit();
@@ -2010,12 +2319,13 @@
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
             jsonStr.custCode = $("#customerCode").val();//000
+            jsonStr.custOrderCode = $("#custOrderCode").val();  // 客户订单号
             jsonStr.notes = $("#transRequire").val();//
             jsonStr.weight = $("#weightCount").html();
             jsonStr.quantity = $("#quantityCount").html();
             var cubageAmount ="";
             if($("#cubageCountHidden").html()!=""){
-                cubageAmount = $("#cubageCountHidden").html() + "*1*1";
+                cubageAmount = $("#cubageCountHidden").html();
             }
             jsonStr.cubage = cubageAmount;
             jsonStr=orderFinanceInfo(jsonStr);
@@ -2037,11 +2347,17 @@
                         case 7 :orderGoods.pack = param.getElementsByTagName("select")[0].value;break;
                         case 8 :orderGoods.chargingWays = param.getElementsByTagName("select")[0].value;break;
                         case 9 :orderGoods.chargingUnitPrice = param.getElementsByTagName("input")[0].value;break;
-                        case 10 :orderGoods.chargingQuantity = param.getElementsByTagName("input")[0].value;break;
+                        case 10 :orderGoods.quantity = param.getElementsByTagName("input")[0].value;break;
                         case 11 :orderGoods.billingWeight = param.getElementsByTagName("input")[0].value;break;
+                        case 12 :orderGoods.weight = param.getElementsByTagName("input")[0].value;break;
+                        case 13 :orderGoods.cubage = param.getElementsByTagName("input")[0].value;break;
+                    }
+                    if(tableRows == 1 && tableCells == 1){
+                        jsonStr.goodsType = param.getElementsByTagName("select")[0].value;
+                        jsonStr.goodsTypeName=orderGoods.goodsType;
                     }
                 }
-                if(orderGoods.chargingWays=="01"){
+                /*if(orderGoods.chargingWays=="01"){
                     orderGoods.quantity=orderGoods.chargingQuantity;
                     orderGoods.quantityUnitPrice=orderGoods.chargingUnitPrice;
                 }else if(orderGoods.chargingWays=="02"){
@@ -2050,7 +2366,7 @@
                 }else if(orderGoods.chargingWays=="03"){
                     orderGoods.cubage=orderGoods.chargingQuantity;
                     orderGoods.volumeUnitPrice=orderGoods.chargingUnitPrice;
-                }
+                }*/
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
             var tag = "tranplace";
@@ -2069,45 +2385,20 @@
                         ,"tag":tag}
                     ,"您确认提交订单吗?"
                     ,function () {
+                        // 更新开单员
+                        updateLastUserData();
                         location.reload();
+//                        var getTimestamp  = new Date().getTime();
+//                        xescm.common.loadPage("/ofc/tranLoad"+"?timestamp="+getTimestamp);
                         //xescm.common.goBack("/ofc/orderPlace");
                     });
 
         });
 
 
-
-        $("#custSelectFormBtn").click(function () {
-            var custName = $("#custNameDiv").val();
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"queryCustomerName":custName,"currPage":"1"}, function(data) {
-                data=eval(data);
-                var custList = "";
-                $.each(data,function (index,cscCustomerVo) {
-                    var channel = cscCustomerVo.channel;
-                    if(null == channel){
-                        channel = "";
-                    }
-                    custList =custList + "<tr role='row' class='odd'>";
-                    custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    custList =custList + "<td>"+(index+1)+"</td>";
-                    var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
-                    if(custType == '1'){
-                        custList =custList + "<td>公司</td>";
-                    }else if (custType == '2'){
-                        custList =custList + "<td>个人</td>";
-                    }else{
-                        custList =custList + "<td>"+custType+"</td>";
-                    }
-                    custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
-                    custList =custList + "<td>"+channel+"</td>";
-                    custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
-                    custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
-                    custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
-                    custList =custList + "</tr>";
-                    $("#custListDivTbody").html(custList);
-                });
-            },"json");
-
+        // 分页查询客户
+        $("#custSelectFormBtn").click(function() {
+            queryCustomerData(1);
         });
 
         $("#custEnter").click(function () {
@@ -2132,6 +2423,8 @@
                         cscContact.purpose = "2";
                         outConsignor(cscContact,cscContactCompany,groupId,customerCode);
                         $("#goodsInfoListDiv").html("");
+
+                        countQuantityOrWeightOrCubageCheck();
                     }
                 }
             });
@@ -2142,48 +2435,24 @@
             }
         });
 
+        // 发货方地址选择
         $("#city-picker-consignor").click(function () {
             departurePlace();
         });
 
+        // 收货方地址选择
         $("#city-picker-consignee").click(function () {
             destination();
         });
 
         $("#goodsSelectFormBtn").click(function () {
-            var cscGoods = {};
-            var groupId = $("#custGroupId").val();
-            var customerCode = $("#customerCode").val();
-            var goodsCode = $("#goodsCodeCondition").val();
-            var goodsName = $("#goodsNameCondition").val();
-            cscGoods.goodsCode = goodsCode;
-            cscGoods.goodsName = goodsName;
-            var param = JSON.stringify(cscGoods);
-            CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-
-                var goodsList = "";
-                $.each(data,function (index,cscGoodsVo) {
-                    goodsList =goodsList + "<tr role='row' class='odd'>";
-                    goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
-                    goodsList =goodsList + "<td>"+cscGoodsVo.brand+"</td>";//品牌
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsCode+"</td>";//货品编码
-                    goodsList =goodsList + "<td>"+cscGoodsVo.goodsName+"</td>";//货品名称
-                    goodsList =goodsList + "<td>"+cscGoodsVo.specification+"</td>";//规格
-                    goodsList =goodsList + "<td>"+cscGoodsVo.unit+"</td>";//单位
-                    goodsList =goodsList + "<td>"+cscGoodsVo.barCode+"</td>";//条形码
-                    goodsList =goodsList + "<td style=\"display:none\">"+cscGoodsVo.goodsTypeId+"</td>";//大类ID
-                    goodsList =goodsList + "</tr>";
-                });
-                $("#goodsSelectListTbody").html(goodsList);
-            },"json");
+            queryGoodsData(1);
         });
 
 
 
         $("#consignorSelectFormBtn").click(function () {
+            $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -2196,36 +2465,11 @@
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
             var customerCode = $("#customerCode").val();
 
-            var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var contactList = "";
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consignorCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
-                    consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                    consignorTypeHide = CscContantAndCompanyDto.type;*/
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                    contactList =contactList + "</tr>";
-                });
-                $("#contactSelectListTbody2").html(contactList);
-            },"json");
+            queryContactData(cscContantAndCompanyDto,customerCode,2,1);
         });
 
         $("#consigneeSelectFormBtn").click(function () {
+            $("#contactSelectListTbody1").html("");
             var cscContantAndCompanyDto = {};
             var cscContact = {};
             var cscContactCompany = {};
@@ -2236,36 +2480,9 @@
             cscContantAndCompanyDto.cscContact = cscContact;
             cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
 
-            var groupId = $("#custGroupId").val();
             var customerCode = $("#customerCode").val();
 
-            var param = JSON.stringify(cscContantAndCompanyDto);
-            CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-                data=eval(data);
-                var contactList = "";
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanySerialNo;
-                    consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
-                    consigneeTypeHide = CscContantAndCompanyDto.type;*/
-                    contactList =contactList + "<tr role='row' class='odd'>";
-                    contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-                    contactList =contactList + "<td>"+(index+1)+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.contactName+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.phone+"</td>";
-                    contactList =contactList + "<td>"+CscContantAndCompanyDto.detailAddress+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactCompanySerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.contactSerialNo+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.type+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.address+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.provinceName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.cityName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.areaName+"</td>";
-                    contactList =contactList + "<td style='display: none'>"+CscContantAndCompanyDto.streetName+"</td>";
-                    contactList =contactList + "</tr>";
-                    $("#contactSelectListTbody1").html(contactList);
-                });
-            },"json");
+            queryContactData(cscContantAndCompanyDto,customerCode,1,1);
         });
 
 
@@ -2355,8 +2572,9 @@
 
         $("#consignorListDivBlock").click(function(){
             if(!validateCustChosen()){
-                alert("请先选择客户")
+                alert("请先选择客户");
             }else{
+                $("#pageBarDivConsignor").hide();
                 $("#contactSelectListTbody2").html("");
                 $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2378,6 +2596,7 @@
             if(!validateCustChosen()){
                 alert("请先选择客户")
             }else{
+                $("#pageBarDivConsignee").hide();
                 $("#contactSelectListTbody1").html("");
                 $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
             }
@@ -2416,9 +2635,9 @@
                 var groupId = $("#custGroupId").val();
                 var firstGoodsType = null;
                 goodsInfoListDiv = goodsInfoListDiv + "<tr role='row' class='odd' align='center'>";
-                goodsInfoListDiv = goodsInfoListDiv + "<td><button type='button' onclick='deleteGood(this)' class='btn btn-minier btn-danger' style='margin-top:5px;'>删除</button></td>";
+                goodsInfoListDiv = goodsInfoListDiv + "<td><a onclick='deleteGood(this)' class='red' style='margin-top:5px;'>删除</a></td>";
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<select  id='goodsType' name='goodsType' onchange='goodsTypeParentChange(this)'>";
+                        "<select  id='goodsType' name='goodsType' class='chosen-select' style='width:100px;' onchange='goodsTypeParentChange(this)'>";
                 if($("#goodsInfoListDiv").find("tr").length<1){
 
                     CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(data) {
@@ -2430,23 +2649,31 @@
                             goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.id + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                         });
                         if($("#goodsInfoListDiv").find("tr").length==1){
-                            $("select option").each(function() {
-                                text = $(this).text();
-                                if($("select option:contains("+text+")").length > 1)
-                                    $("select option:contains("+text+"):gt(0)").remove();
+                            $("#goodsInfoListDiv tr:eq(0) td:eq(0) select option").each(function() {
+                                text = $(this).val();
+                                if($("select option[value='"+text+"']").length > 1)
+                                    $("select option[value='"+text+"']:gt(0)").remove();
                             });
                         }
                     });
                 }else{
-                    $("#goodsInfoListDiv tr:first-child").children().eq(1).find("select:first").find("option").each(function() {
+                    $("#goodsInfoListDiv tr:eq(0) td:eq(1)").find("select:first").find("option").each(function() {
+                        var provale=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(1)").find("select:first").val();
                         text = $(this).text();
                         value = $(this).val();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
-                    });
+                        if(provale==value){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+value+"'>"+text+"</option>";
+                        }
 
+                    });
                 }
+                goodsInfoListDiv = goodsInfoListDiv + "</select>";
+
+
                 goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-                        "<select  id='goodsCategory' name='goodsCategory'>";
+                        "<select  id='goodsCategory' name='goodsCategory' class='chosen-select form-control' style='width:80px;'>";
                 if($("#goodsInfoListDiv").find("tr").length<1){
                     if(null != firstGoodsType){
                         CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":firstGoodsType},function(data) {
@@ -2454,26 +2681,38 @@
                             $.each(data,function (index,CscGoodsTypeVo) {
                                 goodsInfoListDiv = goodsInfoListDiv + "<option value='" + CscGoodsTypeVo.goodsTypeName + "'>" + CscGoodsTypeVo.goodsTypeName + "</option>";
                             });
+                            goodsInfoListDiv = goodsInfoListDiv + "</select>";
                             goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                             $("#goodsInfoListDiv").append(goodsInfoListDiv);
                             if($("#goodsInfoListDiv").find("tr").length==1){
-                                $("select option").each(function() {
-                                    text = $(this).text();
-                                    if($("select option:contains("+text+")").length > 1)
-                                        $("select option:contains("+text+"):gt(0)").remove();
+                                $("#goodsInfoListDiv tr:eq(0) td:eq(1) select option").each(function() {
+                                    text = $(this).val();
+                                    if($("select option[value='"+text+"']").length > 1)
+                                        $("select option[value='"+text+"']:gt(0)").remove();
+
                                 });
                             }
                         });
                     }
                 }else{
-                    $("#goodsInfoListDiv tr:first-child").children().eq(2).find("select:first").find("option").each(function() {
+                    $("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").find("option").each(function() {
+                        var gateVal=$("#goodsInfoListDiv tr:eq("+($("#goodsInfoListDiv").find("tr").length-1)+") td:eq(2)").find("select:first").val();
                         text = $(this).text();
-                        goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        if(gateVal==text){
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"' selected = 'selected'>"+text+"</option>";
+                        }else{
+                            goodsInfoListDiv = goodsInfoListDiv +"<option value='"+text+"'>"+text+"</option>";
+                        }
                     });
+                    goodsInfoListDiv = goodsInfoListDiv + "</select>";
                     goodsInfoListDiv=goodsInfoListDivSupple(goodsInfoListDiv);
                     $("#goodsInfoListDiv").append(goodsInfoListDiv);
+
                 }
+                initChosen();
             }
+            initChosen();
+
         });
 
         $("#consignorName,#consigneeName").blur(function () {
@@ -2544,9 +2783,11 @@
                     var unit = tdArr.eq(7).text();//单位
                     var typeID = tdArr.eq(9).text();//单位
                     $("#typeSel").val(typeID);
+                    $("#typeSel").trigger("chosen:updated");
                     goodsTypeParentChange($("#typeSel"));
                     //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+                    $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
                     $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
@@ -2588,6 +2829,166 @@
 
     $("#merchandiser").editableSelect();
 
+    function initChosen() {
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        //resize the chosen on window resize
+        $(window).off('resize.chosen').on('resize.chosen', function () {
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    }
+
+    // 设置当前用户上次选择的开单员
+    function setLastUserData() {
+        // 设置当前用户上次选择的开单员
+        var loginUser = $('#login_user').html();
+        var lastSelMer = getCookie(loginUser);
+        var lastSelConsignor = getCookie(loginUser+"@consignor");
+//        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
+//        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
+
+        if (lastSelMer != '') {
+            $("#merchandiser").val(lastSelMer);
+//            $("#merchandiser").find("option[text='"+lastSelMer+"']").attr("selected",true);
+        }
+
+        // 发货方地址
+        if (lastSelConsignor != '') {
+            var consignor = lastSelConsignor.split('~');
+            $("#city-picker3-consignor").val(consignor[0]);
+            $("#city-picker3-consignor").citypicker('refresh');
+        }
+
+    }
+
+    // 更新开单员
+    function updateLastUserData() {
+        var loginUser = $('#login_user').html();
+
+        // 设置上次开单员
+        var merchandiser = $("#merchandiser").val();
+        checkAndSetCookie(loginUser, merchandiser);
+
+        // 发货方地址
+        var consignor = $("#city-picker3-consignor").val();
+        checkAndSetCookie(loginUser+"@consignor" ,consignor);
+
+    }
+
+    // 检查cookie是否存在旧值，如果不存在则创建，
+    // 如果存在则判断新旧值是否相同，不同的更新
+    function checkAndSetCookie(keyName, value) {
+        var oldVal = getCookie(keyName);
+        if(oldVal != '') {
+            if (oldVal != value) {
+                editCookie(keyName, value, -1);
+            }
+        } else {
+            addCookie(keyName, value, -1)
+        }
+    }
+
+    // 添加cookie
+    function addCookie(name,value,expiresHours){
+        var cookieString=name+"="+escape(value);
+        //判断是否设置过期时间,0代表关闭浏览器时失效
+        if(expiresHours>0){
+            var date=new Date();
+            date.setTime(date.getTime+expiresHours*3600*1000);
+            cookieString=cookieString+"; expires="+date.toGMTString();
+        }
+        document.cookie=cookieString;
+    }
+
+    // 根据指定名称的cookie修改cookie的值
+    function editCookie(name,value,expiresHours){
+        var cookieString=name+"="+escape(value);
+        //判断是否设置过期时间,0代表关闭浏览器时失效
+        if(expiresHours>0){
+            var date=new Date();
+            date.setTime(date.getTime+expiresHours*3600*1000); //单位是多少小时后失效
+            cookieString=cookieString+"; expires="+date.toGMTString();
+        }
+        document.cookie=cookieString;
+    }
+
+    // 获取指定名称的cookie值
+    function getCookie(name){
+        var strCookie=document.cookie;
+        var arrCookie=strCookie.split("; ");
+        for(var i=0;i<arrCookie.length;i++){
+            var arr=arrCookie[i].split("=");
+            if(arr[0]==name){
+                return unescape(arr[1]);
+            } else{
+                continue;
+            }
+        }
+        return "";
+    }
+
+    // 删除指定名称的cookie
+    function deleteCookie(name){
+        var date=new Date();
+        date.setTime(-1); //设定一个过去的时间即可
+        document.cookie=name+"=v; expires="+date.toGMTString();
+    }
+    //货品行校验数据并提示
+    function checkValue(obj,value,msg){
+        if(value==""){
+            $(obj).css("border-color","#dd5a43")
+            if($(obj).parent().children().length<2){
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+                $(obj).parent().removeClass('has-info').addClass('has-error');
+                $(obj).val("");
+            }else{
+                $(obj).val("");
+            }
+        }else{
+            $(obj).css("border-color","#cacaca")
+            $(obj).val(value);
+            $(obj).parent().find("div").remove();
+        }
+    }
+    //验证开单员不为空
+    $(".es-list").click(function(){
+        checkType();
+    })
+
+    function checkType() {
+        var type = $("#merchandiser").val();
+        if(type == null || type == ""){
+            $("#merchandiser-error").html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>请选择开单员");
+        }else{
+            $("#merchandiser-error").css("display","none")
+            /*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
+               $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
+        }
+    }
+    //验证临时客户
+    $("#custEnter").click(function(){
+      if( $("#custName").val()=="临时客户"){
+          $("#currentAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#toPayAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#returnAmount").val("").attr("disabled","true").css("cursor","default");
+          $("#monthlyAmount").val("").attr("disabled","true").css("cursor","default");
+      }else{
+          $("#currentAmount").removeAttr("disabled");
+          $("#toPayAmount").removeAttr("disabled");
+          $("#returnAmount").removeAttr("disabled");
+          $("#monthlyAmount").removeAttr("disabled");
+      }
+    })
+
 </script>
 <script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>
-</body>

@@ -318,6 +318,36 @@ public class OfcTransplanInfo {
     private String transportType;
 
     /**
+     * 基地名称(电商)
+     */
+    @Column(name = "base_name")
+    private String baseName;
+
+    /**
+     * 货品种类
+     */
+    @Column(name = "goods_type")
+    private String goodsType;
+
+    /**
+     * 货品种类名称
+     */
+    @Column(name = "goods_type_name")
+    private String goodsTypeName;
+
+    /**
+     * 货主名称
+     */
+    @Column(name = "cust_name")
+    private String custName;
+
+    /**
+     * 是否二次配送
+     */
+    @Column(name = "two_distribution")
+    private String twoDistribution;
+
+    /**
      * 获取计划单编号
      *
      * @return plan_code - 计划单编号
@@ -1242,5 +1272,95 @@ public class OfcTransplanInfo {
      */
     public void setTransportType(String transportType) {
         this.transportType = transportType;
+    }
+
+    /**
+     * 获取基地名称(电商)
+     *
+     * @return base_name - 基地名称(电商)
+     */
+    public String getBaseName() {
+        return baseName;
+    }
+
+    /**
+     * 设置基地名称(电商)
+     *
+     * @param baseName 基地名称(电商)
+     */
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
+    }
+
+    /**
+     * 获取货品种类
+     *
+     * @return goods_type - 货品种类
+     */
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    /**
+     * 设置货品种类
+     *
+     * @param goodsType 货品种类
+     */
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    /**
+     * 获取货品种类名称
+     *
+     * @return goods_type_name - 货品种类名称
+     */
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    /**
+     * 设置货品种类名称
+     *
+     * @param goodsTypeName 货品种类名称
+     */
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
+    }
+
+    /**
+     * 获取货主名称
+     *
+     * @return cust_name - 货主名称
+     */
+    public String getCustName() {
+        return custName;
+    }
+
+    /**
+     * 设置货主名称
+     *
+     * @param custName 货主名称
+     */
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+
+    /**
+     * 获取是否二次配送
+     *
+     * @return two_distribution - 是否二次配送
+     */
+    public String getTwoDistribution() {
+        return twoDistribution;
+    }
+
+    /**
+     * 设置是否二次配送
+     *
+     * @param twoDistribution 是否二次配送
+     */
+    public void setTwoDistribution(String twoDistribution) {
+        this.twoDistribution = twoDistribution;
     }
 }

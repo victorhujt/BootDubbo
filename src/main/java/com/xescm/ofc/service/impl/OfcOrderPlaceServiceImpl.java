@@ -2,10 +2,9 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
 import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.csc.QueryCustomerCodeDto;
@@ -15,14 +14,16 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PublicUtil;
 import com.xescm.uam.utils.wrap.WrapMapper;
 import com.xescm.uam.utils.wrap.Wrapper;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,9 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Transactional//既能注解在方法上,也能注解在类上.当注解在类上的时候,意味着这个类的所有public方法都是开启事务的,如果类级别和方法级别同事使用了该注解,则方法覆盖类.
 //@Transactional(rollbackFor={xxx.class})
 public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
     @Resource
@@ -88,7 +92,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     private void saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation){
         for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+            if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                if((ofcGoodsDetails.getWeight() != null && ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) != 0 ) || (ofcGoodsDetails.getCubage() != null && ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+
+                }else{
+                    continue;
+                }
+            }
             String orderCode = ofcFundamentalInformation.getOrderCode();
+            ofcGoodsDetails.setGoodsCode(ofcGoodsDetails.getGoodsCode().split("\\@")[0]);
             ofcGoodsDetails.setOrderCode(orderCode);
             ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
@@ -323,6 +335,20 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 ofcFundamentalInformationService.update(ofcFundamentalInformation);
             }else if(PubUtils.trimAndNullAsEmpty(tag).equals("tranplace")){
+                // 校验当前客户的客户订单号是否重复
+                String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
+                String custCode = ofcFundamentalInformation.getCustCode();
+                if (!PubUtils.isSEmptyOrNull(custOrderCode) && !PubUtils.isSEmptyOrNull(custCode)) {
+                    boolean isDup = checkOrderCode(custOrderCode, custCode);
+                    if (isDup) {
+                        throw new BusinessException("当前客户存在重复客户订单号！");
+                    }
+                } else {
+                    if (PubUtils.isSEmptyOrNull(custCode)) {
+                        throw new BusinessException("客户不能为空！");
+                    }
+                }
+
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                     int orderCodeByTransCode = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
                     if(orderCodeByTransCode>=1){
@@ -376,8 +402,18 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
                     goodsDetailsList.add(ofcGoodsDetails);
                 }
-                //添加基本信息
-                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                try {
+                    //添加基本信息
+                    ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                } catch (Exception ex) {
+                    if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
+                        logger.error("获取订单号发生重复，导致保存计划单基本信息发生错误！{}", ex);
+                        throw new BusinessException("获取订单号发生重复，导致保存计划单基本信息发生错误！");
+                    } else {
+                        logger.error("保存计划单信息发生错误！", ex);
+                        throw new BusinessException("保存计划单信息发生错误！", ex);
+                    }
+                }
                 if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
                     ofcMerchandiserService.save(ofcMerchandiser);
                 }
@@ -395,11 +431,30 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else if("manage".equals(tag)){
             return "您的订单修改成功!";
         }else {
-            return "异常";
+            return ResultCodeEnum.ERROROPER.getName();
         }
     }
 
-
+    /**
+     * 根据客户编号和客户订单号校验重复
+     * @param custOrderCode
+     * @param custCode
+     * @return
+     */
+    private boolean checkOrderCode (String custOrderCode, String custCode) {
+        boolean isDup = false;
+        // 校验客户订单号
+        if(!PubUtils.isStrsEmptyOrNull(custOrderCode)) {
+            OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
+            ofcFundamentalInfo.setCustOrderCode(custOrderCode);
+            ofcFundamentalInfo.setCustCode(custCode);
+            int count = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInfo);
+            if (count >= 1) {
+                isDup = true;
+            }
+        }
+        return isDup;
+    }
 
     /**
      * 更新并保存订单状态
@@ -658,6 +713,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
                 }
                 if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
+                    String consingneeSerialNo = cscContantAndCompanyDtoConsignee.getCscContact().getSerialNo();
+                    cscContantAndCompanyDtoConsignee.getCscContact().setSerialNo(consingneeSerialNo.split("\\@")[0]);
                     Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());
@@ -817,13 +874,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * 校验运输基本信息
      */
     private void checkDistibutionBaseMsg(OfcDistributionBasicInfo ofcDistributionBasicInfo){
-        String volume = ofcDistributionBasicInfo.getCubage();
+        /*String volume = ofcDistributionBasicInfo.getCubage();
         if(!PubUtils.isSEmptyOrNull(volume)){
             boolean matches = volume.matches("\\d{1,10}\\*\\d{1,10}\\*\\d{1,10}");
             if(!matches){
                 throw new BusinessException("您输入的体积不符合规则! 请重新输入!");
             }
-        }
+        }*/
 
 
     }

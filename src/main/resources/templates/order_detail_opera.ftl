@@ -192,7 +192,7 @@
                         <label class="control-label col-label no-padding-right" for="name">体积</label>
                         <div class="w-width-220 col-float">
                             <input id="cubage" name="cubage" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">
+                                   aria-controls="dynamic-table" value="${(ofcDistributionBasicInfo.cubage)!""}">m³
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">运输要求</label>
                         <div class="w-width-220 col-float">
@@ -221,7 +221,7 @@
                         <div class="w-width-220 col-float">
                             <input id="consignorContactName" name="consignorContactName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcDistributionBasicInfo.consigneeContactName)!""}">
+                                   value="${(ofcDistributionBasicInfo.consignorContactName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                         <div class="w-width-220 col-float">
@@ -464,6 +464,9 @@
                     aria-label="Clicks: activate to sort column ascending">仓库名称
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">调度单位
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">完成时间
                 </th>
             </thead>
@@ -508,6 +511,9 @@
                     ${stroage.warehouseName!""}
                     </td>
                     <td class="center">
+                    ${stroage.baseName!""}
+                    </td>
+                    <td class="center">
                     ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
                     </td>
                 </tr>
@@ -538,7 +544,7 @@
                     aria-label="Clicks: activate to sort column ascending">货品名称
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">货品规格
+                    aria-label="Clicks: activate to sort column ascending">规格
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">单位
@@ -553,10 +559,13 @@
                     aria-label="Clicks: activate to sort column ascending">计费单价
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                    aria-label="Clicks: activate to sort column ascending">计费数量
+                    aria-label="Clicks: activate to sort column ascending">数量
                 </th>
                 <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                     aria-label="Clicks: activate to sort column ascending">重量(kg)
+                </th>
+                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                    aria-label="Clicks: activate to sort column ascending">体积(m³)
                 </th>
             </tr>
             </thead>
@@ -611,8 +620,9 @@
                         </#if>
                     </td>
                     <td class="center">${goods.chargingUnitPrice!"" }</td>
-                    <td class="center">${goods.chargingQuantity!"" }</td>
-                    <td class="center">${goods.billingWeight!"" }</td>
+                    <td class="center">${goods.quantity!"" }</td>
+                    <td class="center">${goods.weight!"" }</td>
+                    <td class="center">${goods.cubage!"" }</td>
                 </tr>
                 </#list>
             </#if>

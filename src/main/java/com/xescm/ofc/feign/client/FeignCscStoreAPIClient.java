@@ -8,6 +8,7 @@ import com.xescm.ofc.feign.api.csc.FeignCscStoreAPI;
 import com.xescm.uam.domain.feign.AuthRequestInterceptor;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Feign;
+import feign.RetryableException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.slf4j.Logger;
@@ -35,11 +36,20 @@ public class FeignCscStoreAPIClient {
         return res;
     }
     public Wrapper<List<CscStorevo>> getStoreByCustomerId(QueryStoreDto queryStoreDto){
+        Wrapper<List<CscStorevo>> storeByCustomerId = null;
         logger.info("==>queryStoreDto={}",queryStoreDto);
         if(null == queryStoreDto){
             throw new BusinessException("参数为空");
         }
-        Wrapper<List<CscStorevo>> storeByCustomerId = getApi().getStoreByCustomerId(queryStoreDto);
+        try {
+            storeByCustomerId = getApi().getStoreByCustomerId(queryStoreDto);
+        } catch (RetryableException ex) {
+            logger.error("==>调用接口发生异常：调用查询客户下店铺接口(/api/csc/store/getStoreByCustomerId)无法连接或超时. {}", ex);
+            throw new BusinessException("调用查询客户下店铺接口无法连接或超时！");
+        } catch (Exception ex){
+            logger.error("==>调用接口发生异常：通过查询客户下店铺接口(/api/csc/store/getStoreByCustomerId). {}", ex);
+            throw new BusinessException("调用查询客户下店铺接口异常！");
+        }
         return  storeByCustomerId;
     }
 

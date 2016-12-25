@@ -79,6 +79,9 @@
       <if test="selfCustOrderCode != null and selfCustOrderCode != ''" >
         cust_order_code != #{selfCustOrderCode}
       </if>
+      <if test="custCode != null and custCode != ''">
+        and cust_code = #{custCode}
+      </if>
       AND
       cust_order_code = #{custOrderCode}
     </where>

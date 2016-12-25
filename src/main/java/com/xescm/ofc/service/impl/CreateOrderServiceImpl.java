@@ -5,10 +5,13 @@ import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
+import com.xescm.ofc.model.dto.epc.CancelOrderDto;
+import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
@@ -51,6 +54,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcCreateOrderService ofcCreateOrderService;
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
+    @Autowired
+    private OfcCreateOrderMapper ofcCreateOrderMapper;
 
 
     @Override
@@ -88,19 +93,20 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             //订单已存在,获取订单的最新状态,只有待审核的才能更新
                             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                addCreateOrderEntityList(true, reason, custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
                                 return "";
                             }
                         }
                         String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                            addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
-                            logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
+                            addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
+                            reason = resultModel == null ? "" : resultModel.getDesc();
+                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
                         } else {
                             result = true;
-                            addCreateOrderEntityList(true, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
-                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{}", custOrderCode, custCode);
+                            addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                            logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
                         }
                     } catch (Exception ex) {
                         addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
@@ -145,6 +151,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return null;
     }
 
+
     /**
      * 组装返回信息封装到 List<CreateOrderResult>
      *
@@ -167,16 +174,25 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     /**
      * 取消订单
-     * @param custOrderCode
+     * 客户订单编号以及货主编码 判断客户订单编号的订单是否存在
+     * 不存在，返回结果代码为0,原因:发货单号不存在！
+     * 若取消成功，返回结果代码为1;
+     * 若取消失败，返回结果代码为0,并将执行失败的原因返回
+     * 若订单状态为【待审核】、【已审核】、【执行中】则允许取消
+     * 其他状态不允许取消
+     * 状态已经已取消：返回订单已经取消
+     * 状态已经已完成：订单已完成，无法取消
+     * 状态是待审核，直接删除订单
+     *
+     * @param cancelOrderDto
      * @return
      */
     @Transactional
     @Override
-    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(String custOrderCode) {
+    public Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(CancelOrderDto cancelOrderDto) {
         CannelOrderVo cannelOrderVo = new CannelOrderVo();
-        cannelOrderVo.setCustOrderCode(custOrderCode);
-        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-        ofcFundamentalInformation = ofcFundamentalInformationService.queryDataByCustOrderCode(custOrderCode);
+        cannelOrderVo.setCustOrderCode(cancelOrderDto.getCustOrderCode());
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(cancelOrderDto.getCustOrderCode(), cancelOrderDto.getCustCode());
         if (ofcFundamentalInformation == null) {
             cannelOrderVo.setReason("发货单号不存在");
             cannelOrderVo.setResultCode("0");
@@ -234,6 +250,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         ofcCreateOrderErrorLog.setOrderTime(DateUtils.String2Date(DateUtils.dateSubStringGetYMD(orderTime), DateUtils.DateFormatType.TYPE2));
         ofcCreateOrderErrorLog.setErrorLog(ex.toString());
         ofcCreateOrderErrorLogService.save(ofcCreateOrderErrorLog);
+    }
+
+
+    @Override
+    public List<QueryOrderStatusDto> queryOrderStatusList(QueryOrderStatusDto queryOrderStatusDto) {
+        return ofcCreateOrderMapper.queryOrderStatusList(queryOrderStatusDto);
     }
 
 }

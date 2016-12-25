@@ -1,10 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.domain.OfcTransplanNewstatus;
-import com.xescm.ofc.domain.OfcTransplanStatus;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.DmsCallbackStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
@@ -15,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +32,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcTransplanInfoService ofcTransplanInfoService;
+    @Autowired
+    private OfcFinanceInformationService ofcFinanceInformationService;
 
     /**
      * 接收分拣中心回传的状态,并更新相应的运输计划单和订单的状态
@@ -59,7 +57,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);//SO161210000047
             ofcTransplanInfo.setBusinessType("602");
-            List<OfcTransplanInfo> ofcTransplanInfoList = ofcTransplanInfoService.select(ofcTransplanInfo);
+            List<OfcTransplanInfo> ofcTransplanInfoList = ofcTransplanInfoService.select(ofcTransplanInfo);//去掉作废的
             if(ofcTransplanInfoList.size() < 1){
                 throw new BusinessException("查不到相应运输订单");
             }
@@ -85,7 +83,37 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             ofcOrderStatus.setNotes(sdf.format(operTime) + " " + description);
             ofcOrderStatus.setLastedOperTime(operTime);
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
-                //更新运输计划单状态
+
+                //如果有上门取货,则判断上门取货的运输计划单的状态是否是已完成, 如果不是, 则更新该订单的计划单的状态为已完成
+                OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+                //如果该卡班订单有上门取货的业务, 那么在卡班单签收的时候判断一下上门取货的运输计划单的状态是否是已完成, 如果不是则将该计划单的状态也改变为已完成
+                //取当前订单下的第一截计划单
+                List<String> ofcTranCodeListActive = ofcTransplanInfoService.queryPlanCodesByOrderCode(orderCode);
+                if(ofcFinanceInformation != null
+                        && "1".equals(PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()))
+                        && ofcTranCodeListActive.size() > 1){
+                    String pickUpTranCode = ofcTranCodeListActive.get(0);
+                    for(String transCodeActive : ofcTranCodeListActive){
+                        if(transCodeActive.compareTo(pickUpTranCode) == -1){
+                            pickUpTranCode = transCodeActive;
+                        }
+                    }
+                    //获取该计划单的最新状态
+                    OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
+                    ofcTransplanStatus.setPlanCode(pickUpTranCode);
+                    List<OfcTransplanStatus> ofcTransplanStatusPickUpList =  ofcTransplanStatusService.select(ofcTransplanStatus);
+                    if(ofcTransplanStatusPickUpList.size() < 1){
+                        throw new BusinessException("没有查到该计划单下运输计划单状态");
+                    }
+                    OfcTransplanStatus ofcTransplanStatusPickUp = ofcTransplanStatusPickUpList.get(0);
+                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIQIANSHOU)
+                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIHUIDAN)){
+                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.YIQIANSHOU);
+                        ofcTransplanStatusPickUp.setTaskCompletionTime(new Date());
+                        ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatusPickUp);
+                    }
+                }
+                //更新卡班运输计划单状态
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(planCode);
                 ofcTransplanStatus.setOrderCode(orderCode);

@@ -17,6 +17,7 @@
         <result column="destination" property="destination" jdbcType="VARCHAR"/>
         <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
         <result column="finished_time" property="finishedTime" jdbcType="TIMESTAMP"/>
+        <result column="base_name" property="baseName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="queryPlanAndStorage" resultMap="BaseResultMap">
@@ -45,7 +46,8 @@
                 IFNULL(dbi.destination_district,''),
                 IFNULL(dbi.destination_towns, ''),
                 IFNULL(dbi.destination, '')
-            ) AS destination
+            ) AS destination,
+            '' AS base_name
         FROM
             ofc_siloprogram_info osi
         LEFT JOIN ofc_silopro_status oss ON osi.plan_code = oss.plan_code
@@ -79,7 +81,8 @@
                 IFNULL(oti.destination_district,''),
                 IFNULL(oti.destination_town, ''),
                 IFNULL(oti.receiving_customer_address,'')
-            ) AS destination
+            ) AS destination,
+            oti.base_name
         FROM
             ofc_transplan_info oti
         LEFT JOIN

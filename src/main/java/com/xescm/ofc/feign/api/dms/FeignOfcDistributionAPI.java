@@ -1,6 +1,7 @@
 package com.xescm.ofc.feign.api.dms;
 
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
@@ -17,5 +18,5 @@ public interface FeignOfcDistributionAPI {
      */
     @RequestLine("POST /api/ofc/distribution/addDistributionBasicInfo")
     @Headers("Content-Type: application/json")
-    public Wrapper<?> addDistributionBasicInfo(OfcDistributionBasicInfo ofcDistributionBasicInfo);
+    public Wrapper<?> addDistributionBasicInfo(OfcDistributionBasicInfoDto ofcDistributionBasicInfo);
 }

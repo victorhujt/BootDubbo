@@ -1,11 +1,16 @@
 package com.xescm.ofc.model.dto.csc;
 
+import com.xescm.ofc.model.dto.PageInfoDto;
+
 import java.io.Serializable;
 
 /**
  * Created by Liqd on 2016/11/22.
  */
-public class CscGoodsApiDto implements Serializable {
+public class CscGoodsApiDto extends PageInfoDto implements Serializable {
+
+    private static final long serialVersionUID = -4266759139844877947L;
+
 
     /**
      * 客户code
@@ -79,4 +84,5 @@ public class CscGoodsApiDto implements Serializable {
     public void setBarCode(String barCode) {
         this.barCode = barCode;
     }
+
 }

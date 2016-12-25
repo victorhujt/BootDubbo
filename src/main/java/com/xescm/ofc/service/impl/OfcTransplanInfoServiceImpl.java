@@ -7,8 +7,6 @@ import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.OfcTransplanInfoService;
 import com.xescm.ofc.utils.PubUtils;
-//import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +52,26 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
     public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
         int result = ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
         return result;
+    }
+
+    /**
+     * 根据订单编号查询计划单编号列表
+     * @param orderCode
+     * @return
+     */
+    @Override
+    public List<String> queryPlanCodesByOrderCode(String orderCode) {
+        return ofcTransplanInfoMapper.queryTransCodeByOrderCode(orderCode);
+    }
+
+    /**
+     * 根据订单编号查询未完成运输计划单编号列表
+     * @param orderCode
+     * @return
+     */
+    @Override
+    public List<String> queryUncompletedPlanCodesByOrderCode(String orderCode) {
+        return ofcTransplanInfoMapper.queryUncompletedPlanCodesByOrderCode(orderCode);
     }
 
 

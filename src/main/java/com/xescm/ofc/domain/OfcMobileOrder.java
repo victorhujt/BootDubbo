@@ -1,5 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,6 +21,8 @@ public class OfcMobileOrder {
      * 上传日期
      */
     @Column(name = "upload_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date uploadDate;
 
     /**
@@ -40,8 +45,8 @@ public class OfcMobileOrder {
     /**
      * 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    @Column(name = "buniess_type")
-    private String buniessType;
+    @Column(name = "business_type")
+    private String businessType;
 
     /**
      * 运输单号
@@ -70,31 +75,15 @@ public class OfcMobileOrder {
      * 受理时间
      */
     @Column(name = "appcet_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date appcetDate;
 
     /**
-     * 图片1路径
+     * 附件流水号
      */
-    @Column(name = "img1_url")
-    private String img1Url;
-
-    /**
-     * 图片2的路径
-     */
-    @Column(name = "img2_url")
-    private String img2Url;
-
-    /**
-     * 图片3的路径
-     */
-    @Column(name = "img3_url")
-    private String img3Url;
-
-    /**
-     * 图片4路径
-     */
-    @Column(name = "img4_url")
-    private String img4Url;
+    @Column(name = "serial_no")
+    private String serialNo;
 
     /**
      * 获取流水号
@@ -191,17 +180,17 @@ public class OfcMobileOrder {
      *
      * @return buniess_type - 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    public String getBuniessType() {
-        return buniessType;
+    public String getBusinessType() {
+        return businessType;
     }
 
     /**
      * 设置业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      *
-     * @param buniessType 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
+     * @param businessType 业务类型 【602】-卡班    ,【601】－干线，【600】－城配
      */
-    public void setBuniessType(String buniessType) {
-        this.buniessType = buniessType;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     /**
@@ -285,6 +274,16 @@ public class OfcMobileOrder {
         return appcetDate;
     }
 
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+
+
     /**
      * 设置受理时间
      *
@@ -294,75 +293,5 @@ public class OfcMobileOrder {
         this.appcetDate = appcetDate;
     }
 
-    /**
-     * 获取图片1路径
-     *
-     * @return img1_url - 图片1路径
-     */
-    public String getImg1Url() {
-        return img1Url;
-    }
-
-    /**
-     * 设置图片1路径
-     *
-     * @param img1Url 图片1路径
-     */
-    public void setImg1Url(String img1Url) {
-        this.img1Url = img1Url;
-    }
-
-    /**
-     * 获取图片2的路径
-     *
-     * @return img2_url - 图片2的路径
-     */
-    public String getImg2Url() {
-        return img2Url;
-    }
-
-    /**
-     * 设置图片2的路径
-     *
-     * @param img2Url 图片2的路径
-     */
-    public void setImg2Url(String img2Url) {
-        this.img2Url = img2Url;
-    }
-
-    /**
-     * 获取图片3的路径
-     *
-     * @return img3_url - 图片3的路径
-     */
-    public String getImg3Url() {
-        return img3Url;
-    }
-
-    /**
-     * 设置图片3的路径
-     *
-     * @param img3Url 图片3的路径
-     */
-    public void setImg3Url(String img3Url) {
-        this.img3Url = img3Url;
-    }
-
-    /**
-     * 获取图片4路径
-     *
-     * @return img4_url - 图片4路径
-     */
-    public String getImg4Url() {
-        return img4Url;
-    }
-
-    /**
-     * 设置图片4路径
-     *
-     * @param img4Url 图片4路径
-     */
-    public void setImg4Url(String img4Url) {
-        this.img4Url = img4Url;
-    }
 }
+

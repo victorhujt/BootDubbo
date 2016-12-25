@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.OfcFinanceInformation;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.model.dto.ac.AcOrderDto;
+import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
 import com.xescm.uam.utils.wrap.Wrapper;
 import feign.Headers;
 import feign.RequestLine;
@@ -21,5 +22,14 @@ public interface PushOrderApi {
     @RequestLine("POST /api/ofc/order/pullOfcOrder")
     @Headers("Content-Type: application/json")
     Wrapper<?> pullOfcOrder(AcOrderDto acOrderDto);
+
+    /**
+     * 订单中心取消订单
+     * @param cancelOfcOrderDto
+     * @return
+     */
+    @RequestLine("POST /api/ofc/order/cancelOfcOrder")
+    @Headers("Content-Type: application/json")
+    Wrapper<?> cancelOfcOrder(CancelOfcOrderDto cancelOfcOrderDto);
 
 }

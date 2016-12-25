@@ -250,7 +250,7 @@
         }, function (result) {
 
             if (result == undefined || result == null) {
-                alert("HTTP请求无数据返回！");
+                layer.msg("暂时未查询到相关订单跟踪记录！");
             } else if (result.code == 200) {// 1:normal
                 reloadGrid(result);// 刷新页面数据
             } else if (result.code == 403) {
@@ -408,6 +408,8 @@
             value = "城配"
         } else if (businessType == "601") {
             value = "干线";
+        } else if (businessType == "602") {
+            value = "卡班";
         } else if (businessType == "610") {
             value = "销售出库";
         } else if (businessType == "611") {

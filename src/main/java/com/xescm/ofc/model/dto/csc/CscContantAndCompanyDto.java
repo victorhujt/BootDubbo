@@ -20,6 +20,10 @@ public class CscContantAndCompanyDto extends AuthDto implements Serializable {
     // 联系人所属公司实体
     private CscContactCompany cscContactCompany;
 
+    private int pageNum;
+
+    private int pageSize;
+
     public CscContact getCscContact() {
         return cscContact;
     }
@@ -34,6 +38,22 @@ public class CscContantAndCompanyDto extends AuthDto implements Serializable {
 
     public void setCscContactCompany(CscContactCompany cscContactCompany) {
         this.cscContactCompany = cscContactCompany;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override

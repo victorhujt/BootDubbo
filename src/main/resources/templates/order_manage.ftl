@@ -13,12 +13,22 @@
             <div class="col-xs-12">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-label no-padding-right" style="margin-right:20px;" for="name">订单日期</label>
-                        <div class="y-float">
-                            <div class="clearfix">
+                        <label class="control-label col-label no-padding-right" for="name">订单日期</label>
+                        <div class="w-width-220">
+                            <div class="clearfix position-relative">
                                 <input id="orderTimePre" name="orderTimePre" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                                <label class="control-label col-label no-padding-right y-float" style="margin:0 20px;text-align:center;" for="name">至</label>
+                                <label for="orderTimePre" class="initBtn">
+                                    <i class="fa fa-calendar bigger-130"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <label class="control-label col-label no-padding-right y-float" style="text-align:center;" for="name">至</label>
+                        <div class="w-width-220">
+                            <div class="clearfix position-relative">
                                 <input id="orderTimeSuf" name="orderTimeSuf" type="search" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                <label for="orderTimeSuf" class="initBtn">
+                                    <i class="fa fa-calendar bigger-130"></i>
+                                </label>
                             </div>
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单编号</label>
@@ -334,12 +344,12 @@
     function getOperatorByStatus(order,index) {
         var value = "";
 
-        var newStatus = "<button type=\"button\" id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"btn btn-minier btn-yellow\">审核</button>"
-                +"<button type=\"button\" id=\"edit\" "+index+" onclick=\"editOrder('"+order.orderCode+"')\" class=\"btn btn-minier btn-success\">编辑</button>"
-                +"<button type=\"button\" id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-danger\">删除</button>";
+        var newStatus = "<a id=\"review\" "+index+ " onclick=\"reviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\" class=\"blue\">审核&nbsp;|</a>"
+                +"<a id=\"edit\" "+index+" onclick=\"editOrder('"+order.orderCode+"')\" class=\"blue\">&nbsp;编辑&nbsp;|</a>"
+                +"<a id=\"delete\" "+index+" onclick=\"deleteOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"red\">&nbsp;删除</a>";
 
-        var unApproveStatus = "<button type=\"button\" id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
-        var cancelStatus = "<button type=\"button\" id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"btn btn-minier btn-default\">取消</button>";
+        var unApproveStatus = "<a id=\"rereview\" "+index+ " onclick=\"reReviewOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"blue\">反审核</a>";
+        var cancelStatus = "<a id=\"cancel\" "+index+ " onclick=\"cancelOrder('"+order.orderCode+"','"+order.orderStatus+"')\"  class=\"blue\">取消</a>";
 
         if (order.orderStatus == "10") {
             value = newStatus;

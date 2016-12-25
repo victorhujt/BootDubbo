@@ -1,6 +1,11 @@
 <head>
     <title>订单追踪</title>
     <!-- bootstrap & fontawesome -->
+    <style>
+        .w-width-220{
+            width:250px;
+        }
+    </style>
 </head>
 <body class="no-skin">
 
@@ -20,8 +25,8 @@
                             </div>
                             <label class="control-label col-label no-padding-right" for="code"></label>
                             <div class="w-width-220 col-float">
-                                <div class="clearfix" style="margin-left:-20px;width:196px;">
-                                <input id = "code" name="code" type="search" class="col-xs-2 col-sm-12" placeholder="" aria-controls="dynamic-table">
+                                <div class="clearfix">
+                                <input id = "code" name="code" type="search" style="margin-left:-20px;"  class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
                               </div>
                             </div>
                         </div>
@@ -189,7 +194,7 @@
                             </div>
                             <div class="form-group y-float" style="clear:left">
                                 <label class="control-label col-label no-padding-right" for="name">收货地址</label>
-                                <div class="w-width-220 col-float" style="width:517px;">
+                                <div class="w-width-220 col-float" style="width:577px;">
                                     <div class="clearfix">
                                         <input id="destinationPlace" readonly="readonly" style="color: #000" name="" type="text" class="form-control input-sm no-padding-right" placeholder="" aria-controls="dynamic-table">
                                     </div>

@@ -39,7 +39,9 @@ public class BaseController {
 		model.addAttribute(OrderConstConstant.CROSS_DOMAIN_URL, restConfig.getUamUrl());
 		model.addAttribute(OrderConstConstant.OFC_URL, restConfig.getOfcUrl());
 		model.addAttribute(OrderConstConstant.CSC_URL, restConfig.getCscWebUrl());
+		model.addAttribute(OrderConstConstant.CSC_URL_LOCAL, restConfig.getCscUrl());
 		model.addAttribute(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
+		model.addAttribute(OrderConstConstant.REPORT, restConfig.getReport());
 	}
 	protected AuthResDto getAuthResDtoByToken(){
 		AuthResDto authResDto = (AuthResDto) ThreadLocalMap.get(UamConstant.TOKEN_AUTH_DTO);

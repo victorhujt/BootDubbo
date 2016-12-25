@@ -1,21 +1,48 @@
-<head>
-    <title>城配开单Excel导入</title>
-    <style type="text/css">
-        #goodsAndConsigneeDiv{
-            position:fixed;
-            left:50%;
-            top:77px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 2px;
-        }
+<title>城配开单Excel导入</title>
+<style type="text/css">
+    #goodsAndConsigneeDiv{
+        position:fixed;
+        left:50%;
+        top:77px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 2px;
+    }
 
-    </style>
-    <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
-</head>
+    #acrossImg{
+        position:fixed;
+        left:14%;
+        top:230px;
+        overflow: auto;
+        z-index: 3
+    }
+
+    #broadwiseImg{
+        position:fixed;
+        left:14%;
+        top:270px;
+        overflow: auto;
+        z-index: 3
+    }
+
+
+</style>
+<link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css" type="text/css">
+
+<span hidden="true" id = "csc_url">${(CSC_URL)!}</span>
+<div class="modal-content" id="acrossImg" style="display: none;" >
+    <div class="modal-body">
+        <img  src="${(OFC_WEB_URL)!}/templates/across.png">
+    </div>
+</div>
+<div class="modal-content" id="broadwiseImg" style="display: none;">
+    <div class="modal-body">
+        <img   src="${(OFC_WEB_URL)!}/templates/boradwise.png">
+    </div>
+</div>
 <!--goods&Consigee-->
 <div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
     <div class="modal-body">
@@ -74,12 +101,68 @@
         <div class="modal-footer"><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
     </div>
 </div>
+
+<div id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
+     aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close" id="errorExcelImportCloseBtn">×</button>
+                <h4 class="modal-title">提示</h4></div>
+            <div class="modal-body">
+                <div class="bootbox-body">
+                    <div class="form-group">
+                         导入源数据中收货方名称与货品档案在系统中不存在,您可以进行批量创建:
+                    </div>
+                    <div class="form-group">
+                        创建成功后请重新加载Excel
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-xs-3 tktp-1">
+                            <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">收货方档案</button>
+                        </div>
+                        <div class="col-xs-3 tktp-1">
+                            <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
         <div class="form-group">
-            <label class="control-label col-label no-padding-right" for="name">下载模板</label>
+            <label class="control-label col-label no-padding-right" for="name"></label>
             <div class="col-xs-3">
-                    <a href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>
+                <input type="button" id="templatesConfig"  name="templatesConfig"  value="模板映射配置" style="display:none;" disabled="disabled" />
+                <label for="templatesConfig" class="btn btn-white btn-info btn-bold "  style="top:10px;border-color:#999;color:#666 !important;cursor:default">模板映射配置</label>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:20px;">
+            <label class="control-label col-label no-padding-right" for="name">下载模板</label>
+            <div class="col-xs-6">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">序号</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">模板类型</th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">模板名称</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>交叉</td>
+                        <td><a  id="acrossA" href="${(OFC_WEB_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>明细列表</td>
+                        <td><a  id="broadwiseA" href="${(OFC_WEB_URL)!}/templates/template_for_cp_orderlist.xlsx">订单批量导入_明细列表_模板(点击下载)</a></td>
+                    </tr>
+                    </tbody>
+                </table>
                     <#--<a href="${(OFC_URL)!}/templates/template_for_cp.xlsx">批量下单导入模版_商超配送(点击下载)</a>-->
                     <p style="color: red">(提示:必须与模版中的列名保持一致，货品信息与收货方信息必须在基本信息中维护)</p>
 
@@ -89,28 +172,65 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-label no-padding-right" for="name">上传文件</label>
+            <label class="control-label col-label no-padding-right" for="name">模板类型</label>
             <div class="col-xs-3">
+               <#-- <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked type="radio"/>交叉
+                <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio"/>明细列表-->
+                <div class="radio y-float">
+                    <label style="width:56px;padding-left:10px;">
+                        <input id="templatesTypeAcross" value="MODEL_TYPE_ACROSS" name="templatesType" checked="checked" type="radio" class="ace"/>
+                        <span class="lbl">交叉</span>
+                    </label>
+                </div>
+                <div class="radio y-float">
+                    <label>
+                        <input id="templatesTypeBoradwise" value="MODEL_TYPE_BORADWISE" name="templatesType" type="radio" class="ace"/>
+                        <span class="lbl">明细列表</span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">模板映射</label>
+            <div class="col-xs-3">
+                <select class="col-xs-12 chosen-select" id="templatesMapping" >
+                    <option value="standard">标准</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">上传文件</label>
+            <div class="col-xs-3 y-float">
                 <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
                 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
+                <span hidden="true" id = "csc_url_local">${(CSC_URL_LOCAL)!}</span>
                 <input id = "uploadFileShow" name="" type="text"  readonly class="col-xs-12 form-control input-sm " aria-controls="dynamic-table">
             </div>
-            <div class="col-xs-3">
-                <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" <#--enctype="multipart/form-data"--> >
-                    <p><input type="file" id="uploadFile" name="uploadFile" /></p>
-                    <p><input type="button" id="uploadFileInput"  value="上传"/></p>
-                </form>
+           <#-- <form method="POST" name="uploadFileForm" id="uploadFileForm" role="form" &lt;#&ndash;enctype="multipart/form-data"&ndash;&gt; >-->
+            <div class="y-float">
+                <p class="y-float">
+                    <input type="file" id="uploadFile" name="uploadFile" style="display:none;" />
+                    <label for="uploadFile" class="btn btn-white btn-info btn-bold ">选择文件</label>
+                </p>
+                <p class="y-float padding-12">
+                    <input type="button" id="uploadFileInput" name="uploadFileInput"  value="上传" style="display:none;"/>
+                    <label for="uploadFileInput" class="btn btn-primary" style="padding:2px 12px;">上传</label>
+                </p>
+
             </div>
+            <#--</form>-->
+
+            <#-- <div class="col-xs-6 y-float"></div>-->
         </div>
         <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
             <div class="col-xs-3">
-                    <select class="col-xs-12" id="uploadExcelSheet">
-                    </select>
+                <select class="col-xs-12 chosen-select" id="uploadExcelSheet">
+                    <option value=""></option>
+                </select>
             </div>
-            <div class="col-xs-3">
-                <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">加载</button>
-            </div>
+            <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold">加载</button>
         </div>
     </form>
 </div>
@@ -130,7 +250,7 @@
 <div id="goodsListDiv">
 
     <div class="col-sm-12">
-        <div class="tabbable" style="width:1000px;">
+        <div class="tabbable" style="margin:20px 0;">
             <ul class="nav nav-tabs" id="myTab4">
                 <li class="goodsLi disable" >
                     <a data-toggle="tab" href="#home4" aria-expanded="false">货品信息</a>
@@ -155,7 +275,7 @@
                             </th>
                         <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">序号</th>-->
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Domain: activate to sort column ascending">序号
+                                aria-label="Domain: activate to sort column ascending" style="width:42px;">序号
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Domain: activate to sort column ascending">货品编码
@@ -168,6 +288,9 @@
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Clicks: activate to sort column ascending">单位
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">销售单价
                             </th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Clicks: activate to sort column ascending">数量
@@ -203,11 +326,20 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer"><button id="excelImportEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button><span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span></div>
+    <div class="modal-footer" style="text-align:left;margin-left:-2px;">
+        <button id="excelImportEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">确认导入</button>
+        <span id="ExcelNoneBottom" style="cursor:pointer"><button id="ExcelNoneBtnBottom"  data-bb-handler="cancel" type="button" class="btn btn-default">不导入</button></span>
+    </div>
 
 </div>
 
-
+<#--
+<form action="/index#/open/csc/batchimport/toMaintainBatchGoodsImportPage" id="toMaintainBatchGoodsImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" id="goodsJsonStr" name="goodsJsonStr"></textarea>
+</form>
+<form action="/index#/open/csc/batchimport/toMaintainBatchCustomerImportPage" id="toMaintainBatchCustomerImportPage" target="_blank" method="post">
+    <textarea rows="30" cols="30" id="cscContantAndCompanyInportDtos" name="cscContantAndCompanyInportDtos"></textarea>
+</form>-->
 <script type="text/javascript">
     var scripts = [null,
         "/plugins/bootstrap-fileinput/js/fileinput.min.js",
@@ -235,14 +367,20 @@
     });
 
     function main() {
-
+        initChosen();
     }
 
     var ofc_url = $("#ofc_url").html();
+    var csc_url = $("#csc_url").html();
     var ofc_web_url = $("#ofc_web_url").html();
+    var csc_url_local = $("#csc_url_local").html();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
-        xescm.common.loadPage(historyUrl);
+        var url = '';
+        if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
+            url = "/ofc/operationDistributing";
+            xescm.common.loadPage(url);
+        }
     })
 
     function HashMap() {
@@ -331,10 +469,13 @@
         }
     }
     function goodsAndConsignee(obj){
-        $("#goodsAndConsigneeDiv").fadeIn("slow");
+        
+        $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
+        var useGoodsCode = goodsCode;
+        goodsCode = goodsCode.split('@')[0];
         var goodsName = $(obj).parent().parent().children().eq(3).text();
         var specification = $(obj).parent().parent().children().eq(4).text();
         var unit = $(obj).parent().parent().children().eq(5).text();
@@ -355,7 +496,7 @@
             var consigneeType = tdArr.eq(4).text();//
             var consigneeCode = tdArr.eq(5).text();
             var consigneeContactCode = tdArr.eq(6).text();
-            var mapKey = goodsCode + "@" + goodsIndex;
+            var mapKey = useGoodsCode + "@" + goodsIndex;
             var num = "0";
 
 
@@ -364,9 +505,9 @@
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
-                console.log(cadj)
+
                 num = preGoodsAndConsigneeJsonMsg[cadj];
-                console.log(num)
+
             }
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -389,11 +530,45 @@
     var viewMap = null;
     var loadSheetTag = false;
     var consigneeList = null;
+    var batchconsingeeKey = null;
+    var batchgoodsKey = '';
+    var errorEEsNum = 0;
+    var errorGoodsNum = 0;
+
 
     function uploadFileChange(target) {
 
     }
     $(function () {
+
+        $("#templatesConfig").click(function () {
+            var custCode = $("#customerCode").val();
+            var custName = $("#custName").val();
+            var historyUrl = $("#historyUrl").val();
+            var url = '';
+            if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
+                url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+            }
+            xescm.common.loadPage(url);
+        })
+
+        document.getElementById("acrossA").onmouseover = function(){
+            document.getElementById("acrossImg").style.display="block";
+            document.getElementById("broadwiseImg").style.display="none";
+        }
+        document.getElementById("broadwiseA").onmouseover = function(){
+            document.getElementById("acrossImg").style.display="none";
+            document.getElementById("broadwiseImg").style.display="block";
+        }
+        document.getElementById("acrossA").onmouseout = function(){
+            document.getElementById("broadwiseImg").style.display="none";
+            document.getElementById("acrossImg").style.display="none";
+        }
+        document.getElementById("broadwiseA").onmouseout = function(){
+            document.getElementById("broadwiseImg").style.display="none";
+            document.getElementById("acrossImg").style.display="none";
+        }
+
         var file;
         var fileName;
         var uploadFileTag = false;
@@ -405,7 +580,7 @@
             $("#consigneeInfoListDiv").html("");
             $("#goodsListDiv").show();
             $("#errorMsgDiv").hide();
-            debugger
+            
             file = this.files[0];
             var fileSize = file.size;
             if(fileSize / 1024 > 1000){
@@ -434,13 +609,12 @@
         $("#uploadFileInput").click(function () {//上传
 
             if(uploadFileTag){
-                debugger
+                
                 var formData = new FormData();
                 var customerCode = $("#customerCode").val();
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
-//                var url = ofc_url + '/ofc/distributing/fileUploadAndCheck';
                 var url = ofc_web_url + '/ofc/distributing/fileUploadAndCheck';
 
                 $.ajax({
@@ -463,19 +637,21 @@
                             $.each(sheetMsg,function (index,sheet) {
                                 var sh = sheet.split("@");
                                 if("active" == sh[1]){
-                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option selected value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }else{
-                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>");
+                                    $("#uploadExcelSheet").append("<option value='" + index + "'>" + sh[0] + "</option>").trigger("chosen:updated");
                                 }
                             })
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 1
+                                icon: 1,
+                                time:500
                             });
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
                         }
                     },
@@ -501,11 +677,14 @@
                 var sheetNum = $("#uploadExcelSheet").val();
                 var formData = new FormData();
                 var customerCode = $("#customerCode").val();
+                var templatesMapping = $("#templatesMapping").val();
+                var templatesType = $('input[name="templatesType"]:checked ').val();
                 formData.append('file',file);
                 formData.append('fileName',fileName);
                 formData.append('customerCode',customerCode);
                 formData.append('sheetNum',sheetNum);
-//                var url = ofc_url + '/ofc/distributing/excelCheckBySheet';
+                formData.append('templatesType',templatesType);
+                formData.append('templatesMapping',templatesMapping);
                 var url = ofc_web_url + '/ofc/distributing/excelCheckBySheet';
                 $.ajax({
                     url: url,
@@ -516,7 +695,7 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        debugger
+                        
                         if (result == undefined || result == null) {
                             layer.msg("HTTP请求无数据返回", {
                                 icon: 1
@@ -529,15 +708,17 @@
                             //如果校验成功!
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 1
+                                icon: 1,
+                                time:500
                             });
                             var resultMap =  JSON.parse(result.result);
 
                             var consigneeTag = true;
+                           // var goodsAndEETag = true;
                             var indexView = 0;
                             for(var key in resultMap){
                                 indexView += 1;
-                                debugger
+                                
                                 var resultMapValue = resultMap[key]; //一条货品记录
                                 var viewMapValue = [];
                                 var consigeeMsg = {};
@@ -547,15 +728,24 @@
                                     if(index == 0){//货品详细信息
                                         viewMapValue[0] = data;
                                         //顺便在页面中进行展示
+                                        var goodsCode = data.goodsCode;
+                                        var realGoodsCode0 = goodsCode.split('@')[0];
+                                        var realGoodsCode1 = '';
+                                        if(goodsCode.split('@').length > 1){
+                                            realGoodsCode1 = '@' + goodsCode.split('@')[1];
+                                        }
+
                                         $("#goodsInfoListDiv").append("<tr class='odd' role='row'>" +
-                                                "<td><button type='button' onclick='goodsAndConsignee(this)' class='btn btn-minier btn-success'>查看</button></td>" +
-                                                "<td>" + indexView + "</td>" +
-                                                "<td>" + data.goodsCode + "</td>" +
-                                                "<td>" + data.goodsName + "</td>" +
-                                                "<td>" + data.specification + "</td>" +
-                                                "<td>" + data.unit + "</td>" +
-                                                "<td>" + data.goodsAmount + "</td>" +
+                                                "<td><a onclick='goodsAndConsignee(this)' class='blue'>查看</a></td>" +
+                                                "<td class='center'>" + indexView + "</td>" +
+                                                "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.goodsName) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.specification) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.unit) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.unitPrice) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.goodsAmount) + "</td>" +
                                                 "</tr>");
+//                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
                                     }else if(index % 3 == 1){//收货人和货品需求量
                                         for(var inkey in data){
                                             consigeeMsg[inkey] = data[inkey];
@@ -563,13 +753,13 @@
                                     }else if(index % 3 == 2 && consigneeTag){//收货人详细信息
                                         consigneeList.push(data);
                                         $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
-                                                "<td>" + data.contactCompanyName + "</td>" +
-                                                "<td>" + data.contactName + "</td>" +
-                                                "<td>" + data.phone + "</td>" +
-                                                "<td>" + data.detailAddress + "</td>" +
-                                                "<td style='display:none'>" + data.type + "</td>" +
-                                                "<td style='display:none'>" + data.contactCompanySerialNo + "</td>" +
-                                                "<td style='display:none'>" + data.contactSerialNo + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.contactCompanyName) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.contactName) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.phone) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.detailAddress) + "</td>" +
+                                                "<td style='display:none'>" + StringUtil.nullToEmpty(data.type) + "</td>" +
+                                                "<td style='display:none'>" + StringUtil.nullToEmpty(data.contactCompanySerialNo) + "</td>" +
+                                                "<td style='display:none'>" + StringUtil.nullToEmpty(data.contactSerialNo) + "</td>" +
                                                 "</tr>");
                                     }
                                 }
@@ -583,19 +773,40 @@
                             //如果校验失败!
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
                             $("#goodsListDiv").hide();
                             $("#errorMsgDiv").show();
                             $("#errorMsgTbody").html("");
-                            var errorMsgList = result.result;
+                            var errorMsgList = result.result.xlsErrorMsg;
                             $.each(errorMsgList,function (index, errorMsg) {
                                 $("#errorMsgTbody").append("<tr class='odd' role='row'><td>" + (index + 1) + ". " + errorMsg + "</td></tr>");
                             })
+                            var cscContantAndCompanyInportDtoList = result.result.cscContantAndCompanyInportDtoList;
+                            var cscGoodsImportDtoList = result.result.cscGoodsImportDtoList;
+                            if(null != cscContantAndCompanyInportDtoList){
+                                errorEEsNum = cscContantAndCompanyInportDtoList.length;
+                            }
+                            if(null != cscGoodsImportDtoList){
+                                errorGoodsNum = cscGoodsImportDtoList.length;
+                            }
+                            if(errorEEsNum > 0 || errorGoodsNum > 0){
+                                $("#errorExcelImport").show();
+                                if(errorGoodsNum > 0){
+                                    batchgoodsKey = result.result.batchgoodsKey;
+                                }
+                                if (errorEEsNum > 0){
+                                    batchconsingeeKey = result.result.batchconsingeeKey;
+                                }
+
+                            }
+
                         } else {
                             layer.msg(result.message, {
                                 skin: 'layui-layer-molv',
-                                icon: 5
+                                icon: 5,
+                                time:500
                             });
 
 
@@ -611,7 +822,7 @@
         })
 
         $("#goodsAndConsigneeDivNoneBottom").click(function () {
-            $("#goodsAndConsigneeDiv").fadeOut("slow");
+            $("#goodsAndConsigneeDiv").fadeOut(0);
         });
 
         $("#excelImportEnter").click(function () {
@@ -629,7 +840,7 @@
                         icon : 3,
                         title : '确认操作'
                     }, function(index){
-                        debugger
+                        
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
                         var custName = $("#custName").val();
@@ -648,9 +859,56 @@
         $("#ExcelNoneBtnBottom").click(function () {
             var excelImportTag = "cancel";
             var customerCode = $("#customerCode").val();
-            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
+            var custName = $("#custName").val();
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
             xescm.common.loadPage(url);
         })
+        $("#errorExcelImportCloseBtn").click(function () {
+            $("#errorExcelImport").hide()
+        })
+
+
     })
+    $("#errorExcelImportEEBtn").click(function(){//toMaintainBatchCustomerImportPage
+        if(errorEEsNum < 1){
+            alert("您无需添加收货人")
+            return;
+        }
+        var url = "/csc/batchimport/toMaintainBatchCustomerImportPage/" + batchconsingeeKey;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+        $("#errorExcelImport").hide();
+    })
+    $("#errorExcelImportGoodsBtn").click(function () {
+        if(errorGoodsNum < 1){
+            alert("您无需添加货品")
+            return;
+        }
+
+        var url = "/csc/batchimport/toMaintainBatchGoodsImportPage/" + batchgoodsKey;
+        var html = window.location.href;
+        var index = html.indexOf("/index#");
+        window.open(html.substring(0,index) + "/index#" + url);
+        $("#errorExcelImport").hide();
+    })
+    function initChosen() {
+        $('.chosen-select').chosen({allow_single_deselect: true});
+        //resize the chosen on window resize
+        $(window).off('resize.chosen').on('resize.chosen', function () {
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        }).trigger('resize.chosen');
+        //resize chosen on sidebar collapse/expand
+        $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+            if (event_name != 'sidebar_collapsed') return;
+            $('.chosen-select').each(function () {
+                var $this = $(this);
+                $this.next().css({'width': $this.parent().width()});
+            })
+        });
+    }
 
 </script>

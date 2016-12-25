@@ -1,12 +1,21 @@
 package com.xescm.ofc.service;
 
-import com.xescm.uam.domain.dto.AuthResDto;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import com.xescm.ofc.domain.OfcAttachment;
+
+import java.io.UnsupportedEncodingException;
 
 /**
- * Created by hujintao on 2016/12/12.
+ * Created by hujintao on 2016/12/17.
  */
-public interface OfcAttachmentService {
+public interface OfcAttachmentService extends IService<OfcAttachment>{
 
-    public  String uploadFile(MultipartHttpServletRequest multipartRequest, AuthResDto authResDto);
+     OfcAttachment saveAttachment(OfcAttachment attachment);
+
+     void deleteAttachmentByserialNo(OfcAttachment attachment);
+
+      void  updatePicParamByserialNo(OfcAttachment attachment);
+
+      String  operateAttachMent(String style,String serialNo) throws UnsupportedEncodingException;
+
+
 }

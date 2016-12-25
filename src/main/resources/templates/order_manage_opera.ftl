@@ -15,7 +15,7 @@
         .date_a {
             line-height: 21px !important;
         }
-
+/*
         .initBtn{
             height:34px;
             width:34px;
@@ -25,12 +25,13 @@
             outline:none;
             position:absolute;
             top:0;
-            right:0
+            right:0;
+          padding-left:9px;
         }
         .initBtn:hover{
             background:#fff !important;
             border:1px solid #cacaca !important;
-        }
+        }*/
         .col-label{
             margin-left:10px;
 
@@ -52,12 +53,12 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                 <input type="hidden" value="${(OFC_URL)!""}">
-                <div style="width:310px;margin-right:15px;" class="padding-12 y-float position-relative">
-                    <input readonly="readonly" id="custName" class="y-float" style="width:265px;" name="custName" type="search" placeholder=""
+                <div style="width:380px;margin-right:15px;" class="padding-12 y-float position-relative">
+                    <input readonly="readonly" id="custName" class="y-float" style="width:335px;" name="custName" type="search" placeholder=""
                            aria-controls="dynamic-table">
-                    <button type="button" class="initBtn" onclick="selectCust();">
-                        <i class="fa fa-search"></i>
-                    </button>
+                    <label for="custName" class="initBtn" onclick="selectCust();">
+                        <i class="fa fa-user bigger-130"></i>
+                    </label>
                   <#--  <button type="button" style="height:34px;" onclick="selectCust();" class="btn btn-minier no-padding-right initBtn" id="">
                         <i class="fa fa-user l-cor"></i>
                     </button>-->
@@ -69,7 +70,7 @@
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单状态</label>
                 <div class="col-width-168" style="margin:0 12px;">
-                    <select data-placeholder="请选择订单状态" id="orderStatus" name="orderStatus" class=" chosen-select">
+                    <select data-placeholder="请选择订单状态" id="orderState" name="orderState" class=" chosen-select">
                         <option value=""></option>
                         <option value="10">待审核</option>
                         <option value="20">已审核</option>
@@ -81,19 +82,19 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
-                <div class="padding-12 y-float" style="width:325px;">
+                <div class="padding-12 y-float" style="width:395px;">
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <button type="button" class="initBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <label for="startDate" class="initBtn">
+                            <i class="fa fa-calendar bigger-130"></i>
+                        </label>
                     </div>
-                   <p class="y-float" style="margin:0 3px;line-height:34px;">至</p>
+                   <p class="y-float" style="margin:0 8px;line-height:34px;">至</p>
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 140px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                        <button type="button" class="initBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
+                        <label for="endDate" class="initBtn">
+                            <i class="fa fa-calendar bigger-130"></i>
+                        </label>
                     </div>
                 </div>
                 <label class="control-label col-label no-padding-right" for="name">订单类型</label>
@@ -118,11 +119,14 @@
                         <option value="602">卡班</option>
                     </select>
                 </div>
-                <span>
-                    <button class="btn btn-primary btn-xs" id="doSearch" style="margin-left:10px;">查询</button>
-                </span>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name"></label>
+                <button class="btn btn-white btn-info btn-bold filters" id="doSearch" style="margin-left:12px;">筛选</button>
+                <button class="btn btn-white btn-info btn-bold filters rtn-btn" id="resetBtn">重置</button>
 
             </div>
+
         </div>
     </div>
 </div>
@@ -136,7 +140,7 @@
     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
            aria-describedby="dynamic-table_info" style="margin-bottom:20px;">
         <thead>
-        <th>序号</th>
+        <th style="width:42px;">序号</th>
         <th>操作列</th>
         <th>客户名称</th>
         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
@@ -173,7 +177,7 @@
         </tbody>
     </table>
     <div class="row">
-        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+        <div id="DataPageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
         </div>
     </div>
 
@@ -217,6 +221,7 @@
                                     <span class="lbl"></span>
                                 </label>
                             </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                                 aria-label="Price: activate to sort column ascending">类型
                             </th>
@@ -233,7 +238,7 @@
                         <tbody id="custListDivTbody"></tbody>
                     </table>
                     <div class="row">
-                        <div id="selectCustPage" style="float: right;padding-top: 0px;margin-top: 0px;">
+                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
                         </div>
                     </div>
                 </form>
@@ -241,7 +246,7 @@
             </div>
         </div>
         <div class="form-group" style="width:100%;">
-            <div class="modal-footer" style="background-color:#fff;"><button style="float: left" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+            <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
                 <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
                 <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
         </div>
@@ -317,17 +322,17 @@
             param.startDate = startDate;
             param.endDate = endDate;
             param.orderCode = $("#orderCode").val();
-            param.orderStatus = $("#orderStatus").val();
+            param.orderState= $("#orderState").val();
             param.orderType = $("#orderType").val();
             param.businessType = $("#businessType").val();
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
-                if (result == undefined || result == null) {
-                    alert("HTTP请求无数据返回！");
+                if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                    layer.msg("暂时未查询到相关订单信息！");
                 } else if (result.code == 200) {// 1:normal
                     reloadGrid(result);// 刷新页面数据
                     laypage({
-                        cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                        cont: $("#DataPageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
                         pages: result.result.pages, // 总页数
                         skip: true, // 是否开启跳页
                         skin: "molv",
@@ -370,8 +375,8 @@
                 }
                 htmlText += "<tr role=\"row\" class=\"odd\">"
                         + "<td>" + [index + 1] + "</td>"
-                        + "<td class=\"center\">" + getOperatorByStatusOper(order, index) + "</td>"
-                        + "<td class=\"center\">" + StringUtil.nullToEmpty(order.custName) + "</td>"
+                        + "<td>" + getOperatorByStatusOper(order, index) + "</td>"
+                        + "<td>" + StringUtil.nullToEmpty(order.custName) + "</td>"
                         + "<td>"
                         + "<a onclick=\"orderDetailOper('" + order.orderCode + "')\">" + StringUtil.nullToEmpty(order.orderCode) + "</a>"
                         + "</td>"
@@ -466,11 +471,11 @@
         function getOperatorByStatusOper(order, index) {
             var value = "";
 
-            var newStatus = "<button type=\"button\" id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"btn btn-minier btn-yellow\">审核</button>"
-                    + "<button type=\"button\" id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"btn btn-minier btn-danger\">删除</button>";
+            var newStatus = "<a id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"blue\">审核</a>"
+                    + "<a id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"red\">删除</a>";
 
-            var unApproveStatus = "<button type=\"button\" id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"btn btn-minier btn-inverse\">反审核</button>";
-            var cancelStatus = "<button type=\"button\" id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"btn btn-minier btn-default\">取消</button>";
+            var unApproveStatus = "<a id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">反审核</a>";
+            var cancelStatus = "<a id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">取消</a>";
 
             if (order.orderStatus == "10") {
                 value = newStatus;
@@ -550,31 +555,72 @@
 
         $("#custSelectFormBtn").on("click", function () {
             var custName = $("#custNameDiv").val();
-            loadCust(custName);
+            queryCustomerData(custName, 1);
         });
 
-        function loadCust(custName) {
-            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {
-                "queryCustomerName": custName,
-                "currPage": "1"
-            }, function (data) {
-                data = eval(data);
-                var custList = "";
-                $.each(data, function (index, cscCustomerVo) {
-                    var channel = cscCustomerVo.channel;
-                    if (null == channel) {
-                        channel = "";
-                    }
-                    custList = custList + "<tr role='row' class='odd'>";
-                    custList = custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
-                    custList = custList + "<td>" + (cscCustomerVo.type == "1" ? "个人" : "企业") + "</td>";
-                    custList = custList + "<td>" + cscCustomerVo.customerName + "</td>";
-                    custList = custList + "<td>" + channel + "</td>";
-                    custList = custList + "<td>" + cscCustomerVo.productType + "</td>";
-                    custList = custList + "</tr>";
-                    $("#custListDivTbody").empty().html(custList);
-                });
-            }, "json");
+        // 分页查询客户列表
+        function queryCustomerData(custName, pageNum) {
+            $("#custListDivTbody").html("");
+            var custName = $("#custNameDiv").val();
+            var param = {};
+            param.pageNum = pageNum;
+            param.pageSize = 10;
+            param.custName = custName;
+            CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
+                if (result == undefined || result == null || result.result == null || result.result.size == 0 || result.result.list == null) {
+                    layer.msg("暂时未查询到客户信息！");
+                } else if (result.code == 200) {
+                    loadCustomer(result);
+                    laypage({
+                        cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
+                        pages: result.result.pages, // 总页数
+                        skip: true, // 是否开启跳页
+                        skin: "molv",
+                        groups: 3, // 连续显示分页数
+                        curr: result.result.pageNum, // 当前页
+                        jump: function (obj, first) { // 触发分页后的回调
+                            if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
+                                queryCustomerData(obj.curr);
+                            }
+                        }
+                    });
+                } else if (result.code == 403) {
+                    alert("没有权限")
+                } else {
+                    $("#custListDivTbody").html("");
+                }
+            },"json");
+        }
+
+        // 加载客户列表
+        function loadCustomer(data) {
+            if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
+                $("#custListDivTbody").html("");
+                return;
+            }
+            var custList = "";
+            $.each(data.result.list,function (index,cscCustomerVo) {
+                var channel = cscCustomerVo.channel;
+                if(null == channel){
+                    channel = "";
+                }
+                custList =custList + "<tr role='row' class='odd'>";
+                custList =custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
+                custList =custList + "<td>"+(index+1)+"</td>";
+                var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
+                if(custType == '1'){
+                    custList =custList + "<td>公司</td>";
+                }else if (custType == '2'){
+                    custList =custList + "<td>个人</td>";
+                }else{
+                    custList =custList + "<td>"+custType+"</td>";
+                }
+                custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
+                custList =custList + "<td>"+channel+"</td>";
+                custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
+                custList =custList + "</tr>";
+                $("#custListDivTbody").html(custList);
+            });
         }
 
         $("#custEnter").on("click", function () {
@@ -624,6 +670,15 @@
             var url = csc_url + "/csc/customer/toAddCustomerPage";
             xescm.common.loadPage(url);
         });
+        $("#resetBtn").click(function(){
+            $("#custName").val("");
+            $("#orderCode").val("");
+            $("#startDate").val("");
+            $("#endDate").val("");
+            $("#orderState").val("").trigger("chosen:updated");
+            $("#orderType").val("").trigger("chosen:updated");
+            $("#businessType").val("").trigger("chosen:updated");
+        })
 
     </script>
 

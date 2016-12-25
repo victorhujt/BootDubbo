@@ -82,4 +82,16 @@ public class CscGoodsTypeVo {
     public void setGoodsTypeName(String goodsTypeName) {
         this.goodsTypeName = goodsTypeName;
     }
+
+    @Override
+    public String toString() {
+        return "CscGoodsTypeVo{" +
+                "id='" + id + '\'' +
+                ", goodsTypeName='" + goodsTypeName + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", code='" + code + '\'' +
+                ", pid='" + pid + '\'' +
+                ", serialNo='" + serialNo + '\'' +
+                '}';
+    }
 }
