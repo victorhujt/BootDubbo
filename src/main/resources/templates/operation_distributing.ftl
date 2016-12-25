@@ -1226,6 +1226,9 @@
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
                 num = preGoodsAndConsigneeJsonMsg[cadj];
+                if(undefined == num || null == num){
+                    num = "0";
+                }
             }
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
