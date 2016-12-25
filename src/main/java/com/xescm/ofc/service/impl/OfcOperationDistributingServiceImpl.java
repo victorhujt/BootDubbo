@@ -144,7 +144,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new BusinessException("校验客户订单编号转换异常",e);
+                throw new BusinessException("校验客户订单编号转换DTO异常",e);
             }
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
             if(!PubUtils.isSEmptyOrNull(custOrderCode)){

@@ -833,7 +833,10 @@
                 viewMapIndexOf += 1;
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
-                var goodsCode = goodsDetail.goodsCode;
+                if(null == goodsDetail || undefined == goodsDetail){
+                    continue;
+                }
+                var goodsCode = goodsDetail.goodsCode; //这儿报错?
                 var realGoodsCode0 = goodsCode.split('@')[0];
                 var realGoodsCode1 = '';
                 if(goodsCode.split('@').length > 1){
@@ -847,11 +850,11 @@
                         "</td>" +
                         "<td>" + viewMapIndexOf + "</td>" +
                         "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
-                        "<td>" + goodsDetail.goodsName + "</td>" +
-                        "<td>" + goodsDetail.specification + "</td>" +
-                        "<td>" + goodsDetail.unit + "</td>" +
-                        "<td>" + goodsDetail.unitPrice + "</td>" +
-                        "<td>" + goodsDetail.goodsAmount + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(goodsDetail.goodsName) + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(goodsDetail.specification) + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(goodsDetail.unit) + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(goodsDetail.unitPrice) + "</td>" +
+                        "<td>" + StringUtil.nullToEmpty(goodsDetail.goodsAmount) + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeName + "</td>" +
                         "<td  style='display:none'>" + goodsDetail.goodsTypeParentName + "</td>" +
                         "</tr>");

@@ -739,11 +739,11 @@
                                                 "<td><a onclick='goodsAndConsignee(this)' class='blue'>查看</a></td>" +
                                                 "<td class='center'>" + indexView + "</td>" +
                                                 "<td>" + realGoodsCode0 + "<textarea hidden>" + realGoodsCode1 + "</textarea>" + "</td>" +
-                                                "<td>" + data.goodsName + "</td>" +
-                                                "<td>" + data.specification + "</td>" +
-                                                "<td>" + data.unit + "</td>" +
-                                                "<td>" + data.unitPrice + "</td>" +
-                                                "<td>" + data.goodsAmount + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.goodsName) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.specification) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.unit) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.unitPrice) + "</td>" +
+                                                "<td>" + StringUtil.nullToEmpty(data.goodsAmount) + "</td>" +
                                                 "</tr>");
 //                                    }else if(index % 3 == 1 && goodsAndEETag){//收货人和货品需求量
                                     }else if(index % 3 == 1){//收货人和货品需求量
