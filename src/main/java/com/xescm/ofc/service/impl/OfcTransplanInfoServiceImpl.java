@@ -2,7 +2,6 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.OfcTransplanInfoService;
@@ -23,7 +22,7 @@ import java.util.Map;
 @Service
 @Transactional
 public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> implements OfcTransplanInfoService {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(OfcTransplanInfoServiceImpl.class);
     @Autowired
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
     @Override

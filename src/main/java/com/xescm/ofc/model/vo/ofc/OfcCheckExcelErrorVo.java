@@ -1,13 +1,10 @@
 package com.xescm.ofc.model.vo.ofc;
 
-import com.alibaba.fastjson.JSONArray;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyInportDto;
-import com.xescm.ofc.model.dto.csc.CscGoodsImportDto;
+import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
+import com.xescm.csc.model.dto.CscGoodsImportDto;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lyh on 2016/12/16.

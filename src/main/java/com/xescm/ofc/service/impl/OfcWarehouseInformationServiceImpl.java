@@ -1,14 +1,15 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.domain.CscWarehouse;
+import com.xescm.csc.model.dto.QueryWarehouseDto;
+import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
-import com.xescm.ofc.model.dto.csc.CscWarehouse;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Autowired
     private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
     @Autowired
-    private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    private CscWarehouseEdasService cscWarehouseEdasService;
     @Autowired
     private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
 
@@ -54,10 +55,10 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Override
     public List<RmcWarehouse> getWarehouseListByCustCode(String customerCode) {///1
         try{
-            CscWarehouse cscWarehouse = new CscWarehouse();
+            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
             cscWarehouse.setCustomerCode(customerCode);
             logger.info("###################################当前的客户编码为："+customerCode);
-            Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
+            Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouse>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
             if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
             }

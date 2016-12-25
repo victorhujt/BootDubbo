@@ -1,6 +1,6 @@
 package com.xescm.ofc.web.interceptor;
 
-import com.xescm.uam.service.TokenService;
+import com.xescm.ofc.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

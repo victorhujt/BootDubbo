@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:hsf="http://www.taobao.com/hsf" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.taobao.com/hsf
+        http://www.taobao.com/hsf/hsf.xsd"
+       default-autowire="byName">
+
+    <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscCustomerEdasService" interface="com.xescm.csc.provider.CscCustomerEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscGoodsEdasService" interface="com.xescm.csc.provider.CscGoodsEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscGoodsTypeEdasService" interface="com.xescm.csc.provider.CscGoodsTypeEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscStoreEdasService" interface="com.xescm.csc.provider.CscStoreEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscSupplierEdasService" interface="com.xescm.csc.provider.CscSupplierEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscWarehouseEdasService" interface="com.xescm.csc.provider.CscWarehouseEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+</beans>

@@ -1,19 +1,18 @@
 package com.xescm.ofc.web.controller;
 
-import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.MD5Util;
+import com.xescm.csc.model.dto.QueryStoreDto;
+import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
-import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.MD5Util;
-import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -42,7 +41,7 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscStoreAPIClient feignCscStoreAPIClient;
+    private CscStoreEdasService cscStoreEdasService;
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
     @Autowired
@@ -59,7 +58,7 @@ public class OfcJumpontroller extends BaseController{
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             String customerCode = authResDtoByToken.getGroupRefCode();
             queryStoreDto.setCustomerCode(customerCode);
-            Wrapper<List<CscStorevo>> storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
+            Wrapper<List<CscStorevo>> storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 

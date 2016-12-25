@@ -1,9 +1,8 @@
 package com.xescm.ofc.web.jwt;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
-import com.xescm.base.util.JacksonUtil;
-import com.xescm.uam.exception.BusinessException;
-import com.xescm.uam.model.enums.ResultCodeEnum;
+import com.xescm.core.exception.BusinessException;
+import com.xescm.core.utils.JacksonUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -108,7 +107,7 @@ public class TokenUtils {
             authResDto = JacksonUtil.parseJson(authResDtoString, AuthResDto.class);
         } catch (Exception e) {
         	logger.error("token解密失败={} ", e.getMessage(), e );
-            throw new BusinessException(ResultCodeEnum.ES000006.code(), ResultCodeEnum.ES000006.msg());
+            throw new BusinessException("token解密失败");
         }
         return authResDto;
     }

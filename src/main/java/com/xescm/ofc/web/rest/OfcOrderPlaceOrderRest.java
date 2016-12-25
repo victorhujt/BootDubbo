@@ -1,20 +1,27 @@
 package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.domain.CscGoodsType;
+import com.xescm.csc.model.dto.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscGoodsTypeEdasService;
+import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
 import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
@@ -22,10 +29,6 @@ import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.ofc.wrap.WrapMapper;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PubUtils;
-import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -57,11 +60,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    private CscGoodsEdasService cscGoodsEdasService;
     @Autowired
-    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+    private CscGoodsTypeEdasService cscGoodsTypeEdasService;
     @Autowired
-    private FeignCscContactAPIClient feignCscContactAPIClient;
+    private CscSupplierEdasService cscSupplierEdasService;
+    @Autowired
+    private CscContactEdasService cscContactEdasService;
 
     /**
      * 编辑
@@ -71,8 +76,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      */
     @RequestMapping("/orderEdit")
     @ResponseBody
-    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
-            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
+    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         String result = null;
@@ -323,7 +328,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGoods.setCustomerCode(authResDtoByToken.getGroupRefCode());
             cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
             cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));
-            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = (Wrapper<List<CscGoodsApiVo>>) cscGoodsEdasService.queryCscGoodsList(cscGoods);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
@@ -353,7 +358,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsPageList(cscGood);
+            cscGoodsLists = (Wrapper<PageInfo<CscGoodsApiVo>>) cscGoodsEdasService.queryCscGoodsPageList(cscGood);
             //response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
@@ -380,7 +385,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
-            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoList(csc);
+            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
 
             /*csc.getCscContact().setPurpose("3");
@@ -411,7 +416,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
             csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
             csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
-            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoListWithPage(csc);
+            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<PageInfo<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
             result = cscReceivingInfoList;
             /*
             csc.getCscContact().setPurpose("3");
@@ -441,7 +446,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
             cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
             cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
-            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
         }catch (IOException ex) {
@@ -514,7 +519,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
                 cscGoodType.setPid(cscGoodsType);
             }
-            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
+            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
             logger.info("###############返回货品类别列表为{}####################",JSONUtils.objectToJson(CscGoodsType.getResult()));

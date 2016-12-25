@@ -7,8 +7,10 @@ public enum ResultCodeEnum {
 	ERROROPER("SEC000001","用户操作异常"),
 
 
+
 	//业务异常
 	JUMPPAGEERROR("BEC000001","页面跳转出错");
+
 
 	String type;
 	String name;

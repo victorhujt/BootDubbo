@@ -1,7 +1,7 @@
 package com.xescm.ofc.web.jwt;
 
-import com.xescm.base.constant.UamConstant;
-import com.xescm.uam.service.TokenService;
+import com.xescm.core.constant.UamConstant;
+import com.xescm.ofc.service.TokenService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

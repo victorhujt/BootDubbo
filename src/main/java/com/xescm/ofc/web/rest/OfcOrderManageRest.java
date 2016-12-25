@@ -1,14 +1,17 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryStoreDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscStoreAPIClient;
 import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.dto.csc.QueryStoreDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
@@ -18,9 +21,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class OfcOrderManageRest extends BaseController{
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
-    private FeignCscStoreAPIClient feignCscStoreAPIClient;
+    private CscStoreEdasService cscStoreEdasService;
     @Autowired
     private OfcTransplanInfoService ofcTransplanInfoService;
 
@@ -183,7 +183,7 @@ public class OfcOrderManageRest extends BaseController{
             }
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerCode(customerCode);
-            storeByCustomerId = feignCscStoreAPIClient.getStoreByCustomerId(queryStoreDto);
+            storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
         }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);

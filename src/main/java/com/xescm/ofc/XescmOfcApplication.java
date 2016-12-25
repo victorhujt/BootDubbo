@@ -13,10 +13,12 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.servlet.MultipartConfigElement;
 
+@ImportResource(locations={"classpath:ofc-hsf-provider.xml","classpath:ofc-hsf-consumer.xml"})
 @EnableTransactionManagement // 开启注解事务管理，等同于xml配置文件中的 <tx:annotation-driven />
 @EnableAutoConfiguration
 @ComponentScan
