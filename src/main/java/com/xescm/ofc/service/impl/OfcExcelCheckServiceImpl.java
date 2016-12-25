@@ -1108,6 +1108,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
                         HSSFRow hssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
+                boolean hasGoods = false;
                 JSONArray jsonArray = new JSONArray();
                 if (null == hssfRow) {
                     //标记当前行出错,并跳出当前循环
@@ -1230,6 +1231,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
                             if(null != result && result.size() > 0){
+                                hasGoods = true;
                                 //如果校验成功,就往结果集里堆
                                 CscGoodsApiVo cscGoodsApiVo = result.get(0);
                                 mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
@@ -1245,16 +1247,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }*/
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
-
-                            if(cellNum == 1){
-                                cscGoodsImportDto.setGoodsName(cellValue);
-                            }else if(cellNum == 2){
-                                cscGoodsImportDto.setSpecification(cellValue);
-                            }else if(cellNum == 3){
-                                cscGoodsImportDto.setUnit(cellValue);
-                            }else if(cellNum == 4){
-                                cscGoodsImportDto.setUnitPrice(cellValue);
+                            if(!hasGoods){
+                                if(cellNum == 1){
+                                    cscGoodsImportDto.setGoodsName(cellValue);
+                                }else if(cellNum == 2){
+                                    cscGoodsImportDto.setSpecification(cellValue);
+                                }else if(cellNum == 3){
+                                    cscGoodsImportDto.setUnit(cellValue);
+                                }else if(cellNum == 4){
+                                    cscGoodsImportDto.setUnitPrice(cellValue);
+                                }
                             }
+
 
 
                             //收货人的货品需求数量
@@ -1313,7 +1317,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 }
 
                 if(rowNum > 0){//避免第一行
-                    cscGoodsImportDtoList.add(cscGoodsImportDto);
+                    if(!PubUtils.isSEmptyOrNull(cscGoodsImportDto.getGoodsCode())){
+                        cscGoodsImportDtoList.add(cscGoodsImportDto);
+                    }
+
                     resultMap.put(mapKey,jsonArray);//一条结果
                 }
             }
@@ -1389,6 +1396,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
                 XSSFRow xssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
+                boolean hasGoods = false;
                 JSONArray jsonArray = new JSONArray();
                 if (null == xssfRow) {
                     //标记当前行出错,并跳出当前循环
@@ -1510,6 +1518,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
                             if(null != result && result.size() > 0){
                                 //如果校验成功,就往结果集里堆
+                                hasGoods = true;
                                 CscGoodsApiVo cscGoodsApiVo = result.get(0);
                                 mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                                 goodsApiVoList.add(cscGoodsApiVo); //
@@ -1524,15 +1533,18 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }*/
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
-                            if(cellNum == 1){
-                                cscGoodsImportDto.setGoodsName(cellValue);
-                            }else if(cellNum == 2){
-                                cscGoodsImportDto.setSpecification(cellValue);
-                            }else if(cellNum == 3){
-                                cscGoodsImportDto.setUnit(cellValue);
-                            }else if(cellNum == 4){
-                                cscGoodsImportDto.setUnitPrice(cellValue);
+                            if(!hasGoods){
+                                if(cellNum == 1){
+                                    cscGoodsImportDto.setGoodsName(cellValue);
+                                }else if(cellNum == 2){
+                                    cscGoodsImportDto.setSpecification(cellValue);
+                                }else if(cellNum == 3){
+                                    cscGoodsImportDto.setUnit(cellValue);
+                                }else if(cellNum == 4){
+                                    cscGoodsImportDto.setUnitPrice(cellValue);
+                                }
                             }
+
 
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
@@ -1589,7 +1601,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 }
 
                 if(rowNum > 0){             //避免第一行
-                    cscGoodsImportDtoList.add(cscGoodsImportDto);
+                    if(!PubUtils.isSEmptyOrNull(cscGoodsImportDto.getGoodsCode())){
+                        cscGoodsImportDtoList.add(cscGoodsImportDto);
+                    }
+
                     resultMap.put(mapKey,jsonArray);//一条结果
                 }
             }

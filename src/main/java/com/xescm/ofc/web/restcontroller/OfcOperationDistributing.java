@@ -321,7 +321,7 @@ public class OfcOperationDistributing extends BaseController{
                 List<CscGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
-                    String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime();
+                    String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime() + (int)Math.random()*100000;
                     ValueOperations<String,String> ops  = rt.opsForValue();
                     ops.set(batchgoodsKey, JSONUtils.objectToJson(cscGoodsImportDtoList));
                     rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
@@ -330,7 +330,7 @@ public class OfcOperationDistributing extends BaseController{
                     ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey);
                 }
                 if(cscContantAndCompanyInportDtoList.size() > 0){
-                    String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime();
+                    String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime() + (int)Math.random()*100000;
                     ValueOperations<String,String> ops  = rt.opsForValue();
                     ops.set(batchconsingeeKey, JSONUtils.objectToJson(cscContantAndCompanyInportDtoList));
                     rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
