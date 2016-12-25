@@ -1,13 +1,10 @@
 package com.xescm.ofc;
 
-import com.xescm.uam.domain.feign.AuthRequestInterceptor;
-import com.xescm.uam.domain.feign.FeignUamAPIClient;
+import com.xescm.ofc.web.interceptor.AuthApiInterceptor;
+import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
+import com.xescm.ofc.web.jwt.AppkeyLoader;
+import com.xescm.ofc.web.jwt.SimpleCORSFilter;
 import com.xescm.uam.exception.MyHandlerExceptionResolver;
-import com.xescm.uam.utils.jwt.AppkeyLoader;
-import com.xescm.uam.utils.jwt.SimpleCORSFilter;
-import com.xescm.uam.utils.jwt.TokenUtils;
-import com.xescm.uam.web.interceptor.AuthApiInterceptor;
-import com.xescm.uam.web.interceptor.AuthViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,10 +22,6 @@ import javax.servlet.MultipartConfigElement;
 @ComponentScan
 @SpringBootApplication
 public class XescmOfcApplication {
-
-
-
-	private TokenUtils tokenUtils;
 
 	@Value("${env}")
 	private String env;
@@ -63,28 +56,9 @@ public class XescmOfcApplication {
 	}
 
 	@Bean
-	public AuthRequestInterceptor authRequestInterceptor() { return new AuthRequestInterceptor();}
-
-	@Bean
 	public AppkeyLoader appkeyLoader(){
 		return new AppkeyLoader();
 	}
-
-	@Bean
-	public FeignUamAPIClient feignUamAPIClient(){
-		return new FeignUamAPIClient();
-	}
-
-	@Bean(name = "tokenUtils")
-	public TokenUtils getTokenUtils(){
-		if(tokenUtils == null){
-			tokenUtils = new TokenUtils();
-		}
-		return tokenUtils;
-	}
-
-
-
 
 	@Bean
 	public MyHandlerExceptionResolver myHandlerExceptionResolver() {
