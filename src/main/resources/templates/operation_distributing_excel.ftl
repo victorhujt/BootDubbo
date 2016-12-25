@@ -507,6 +507,9 @@
                 var cadj = consigneeCode + "@" + consigneeContactCode;
 
                 num = preGoodsAndConsigneeJsonMsg[cadj];
+                if(undefined == num || null == num){
+                    num = "0";
+                }
 
             }
 

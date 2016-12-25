@@ -1269,7 +1269,15 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             try{
                                 //校验是否数字
                                 Double goodsAmount = 0.0;
-                                Double goodsAndConsigneeNum = hssfCell.getNumericCellValue();
+                                Double goodsAndConsigneeNum =  null;
+                                if(XSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                    goodsAndConsigneeNum = Double.valueOf("0");
+                                }else{
+                                    goodsAndConsigneeNum = hssfCell.getNumericCellValue();
+                                    if(null == goodsAndConsigneeNum){
+                                        goodsAndConsigneeNum = Double.valueOf("0");
+                                    }
+                                }
                                 //使用正则对数字进行校验
                                 boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
                                 //如果校验成功,就往结果集里堆
@@ -1554,7 +1562,15 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             try{
                                 //校验是否数字
                                 Double goodsAmount = 0.0;
-                                Double goodsAndConsigneeNum = xssfCell.getNumericCellValue();
+                                Double goodsAndConsigneeNum =  null;
+                                if(XSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                                    goodsAndConsigneeNum = Double.valueOf("0");
+                                }else{
+                                    goodsAndConsigneeNum = xssfCell.getNumericCellValue();
+                                    if(null == goodsAndConsigneeNum){
+                                        goodsAndConsigneeNum = Double.valueOf("0");
+                                    }
+                                }
                                 //使用正则对数字进行校验
                                 boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
                                 //如果校验成功,就往结果集里堆
