@@ -14,4 +14,7 @@
     <hsf:consumer id="cscStoreEdasService" interface="com.xescm.csc.provider.CscStoreEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscSupplierEdasService" interface="com.xescm.csc.provider.CscSupplierEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscWarehouseEdasService" interface="com.xescm.csc.provider.CscWarehouseEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
+
+    <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac" version="1.0" clientTimeout="60000"/>
+
 </beans>

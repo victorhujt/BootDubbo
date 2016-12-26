@@ -41,6 +41,12 @@
 			<artifactId>xescm-csc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.xescm.ac</groupId>
+			<artifactId>xescm-ac-api</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>com.xescm.core</groupId>
 			<artifactId>xescm-core</artifactId>

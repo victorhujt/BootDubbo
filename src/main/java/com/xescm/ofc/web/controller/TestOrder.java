@@ -1,19 +1,17 @@
 package com.xescm.ofc.web.controller;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ac.provider.AcOrderEdasService;
+import com.xescm.ofc.domain.OfcPlanFedBackCondition;
+import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.enums.DmsCallbackStatusEnum;
-import com.xescm.ofc.feign.client.FeignAddressCodeClient;
-import com.xescm.ofc.feign.client.FeignPushOrderApiClient;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
-import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +44,6 @@ public class TestOrder extends BaseController {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
-    private FeignPushOrderApiClient pushOrderApiClient;
     @Autowired
     private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
     @Autowired

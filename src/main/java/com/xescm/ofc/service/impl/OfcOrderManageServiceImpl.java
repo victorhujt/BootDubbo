@@ -1,5 +1,12 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ac.domain.AcDistributionBasicInfo;
+import com.xescm.ac.domain.AcFinanceInformation;
+import com.xescm.ac.domain.AcFundamentalInformation;
+import com.xescm.ac.domain.AcGoodsDetailsInfo;
+import com.xescm.ac.model.dto.AcOrderDto;
+import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
+import com.xescm.ac.provider.AcOrderEdasService;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -14,7 +21,6 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
@@ -104,8 +110,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
     @Autowired
     private CscContactEdasService cscContactEdasService;
-    @Autowired
-    private FeignPushOrderApiClient feignPushOrderApiClient;
+    @Resource
+    private AcOrderEdasService acOrderEdasService;
 
     /**
      * 订单审核和反审核
@@ -956,10 +962,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcDistributionBasicInfo.setOrderCode(orderCode);
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
             if(ofcDistributionBasicInfo != null){
-                CancelOfcOrderDto cancelOfcOrderDto = new CancelOfcOrderDto();
+                CancelAcOrderDto cancelOfcOrderDto = new CancelAcOrderDto();
                 cancelOfcOrderDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 cancelOfcOrderDto.setTransCode(ofcDistributionBasicInfo.getTransCode());
-                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
+                Wrapper<?> wrapper = acOrderEdasService.cancelOfcOrder(cancelOfcOrderDto);
+//                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
                 if(wrapper == null) {
                     logger.info("取消订单推送到结算中心,code:{},message:{},返回信息:{},", wrapper.getCode(), wrapper.getMessage(), ToStringBuilder.reflectionToString(wrapper.getResult()));
                 }
@@ -2076,7 +2083,35 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //暂时只推卡班订单
         if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
                 && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
-            Wrapper<?> wrapper = feignPushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+            AcOrderDto acOrderDto = new AcOrderDto();
+            try {
+                AcFundamentalInformation acFundamentalInformation =new AcFundamentalInformation();
+                BeanUtils.copyProperties(acFundamentalInformation,ofcFundamentalInformation);
+
+                AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
+                BeanUtils.copyProperties(acFinanceInformation,ofcFinanceInformation);
+
+                AcDistributionBasicInfo acDistributionBasicInfo= new AcDistributionBasicInfo();
+                BeanUtils.copyProperties(acDistributionBasicInfo,ofcDistributionBasicInfo);
+
+                List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
+                for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:ofcGoodsDetailsInfos) {
+                    AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
+                    BeanUtils.copyProperties(acGoodsDetailsInfo,ofcGoodsDetailsInfo);
+                    acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
+                }
+
+                acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
+                acOrderDto.setAcFinanceInformation(acFinanceInformation);
+                acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
+                acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
             }
