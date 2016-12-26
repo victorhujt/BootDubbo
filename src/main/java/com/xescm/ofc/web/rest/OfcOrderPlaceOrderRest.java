@@ -7,9 +7,9 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.domain.CscGoodsType;
-import com.xescm.csc.model.dto.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscGoodsTypeVo;
@@ -382,9 +382,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
-            csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
-            csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
-            csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
+            csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
+            csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
+            csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
             Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
 
@@ -413,9 +413,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
-            csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
-            csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
-            csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
+            csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
+            csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
+            csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
             Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<PageInfo<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
             result = cscReceivingInfoList;
             /*

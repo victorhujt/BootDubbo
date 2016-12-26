@@ -4,9 +4,9 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.csc.model.dto.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
@@ -814,45 +814,45 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         if(null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参为空");
         }
-        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompany() || null == cscContantAndCompanyDtoConsignee.getCscContactCompany()){
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompanyDto() || null == cscContantAndCompanyDtoConsignee.getCscContactCompanyDto()){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方信息为空");
         }
-        if(null == cscContantAndCompanyDtoConsignor.getCscContact() || null == cscContantAndCompanyDtoConsignee.getCscContact()){
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactDto() || null == cscContantAndCompanyDtoConsignee.getCscContactDto()){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方联系人信息为空");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompany().getContactCompanyName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompanyDto().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getContactName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getContactName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人名称未填写");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getPhone())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getPhone())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人电话未填写");
         }
         //二级地址还需特殊处理
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getProvinceName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getProvinceName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址未选择");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getCityName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }
         /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }*/
 
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompany().getContactCompanyName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompanyDto().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getContactName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getContactName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人名称未填写");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getPhone())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getPhone())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人电话未填写");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getProvinceName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getProvinceName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getCityName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
         }
         /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){

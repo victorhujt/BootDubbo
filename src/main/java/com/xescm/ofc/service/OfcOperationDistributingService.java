@@ -3,7 +3,7 @@ package com.xescm.ofc.service;
 import com.alibaba.fastjson.JSONArray;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.csc.model.dto.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import org.springframework.web.multipart.MultipartFile;
 
