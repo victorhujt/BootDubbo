@@ -17,7 +17,6 @@ import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
@@ -25,8 +24,6 @@ import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.model.dto.whc.*;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
-import com.xescm.ofc.model.vo.rmc.RmcPickup;
-import com.xescm.ofc.model.vo.rmc.RmcRecipient;
 import com.xescm.ofc.model.vo.rmc.RmcServiceCoverageForOrderVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
@@ -91,8 +88,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private OfcSiloproSourceStatusService ofcSiloproSourceStatusService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
-    @Autowired
-    private FeignRmcPickUpOrRecipientAPIClient feignRmcPickUpOrRecipientAPIClient;
     @Autowired
     private FeignRmcServiceCoverageAPIClient feignRmcServiceCoverageAPIClient;
     @Autowired
@@ -1902,29 +1897,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("组装数据产生异常",e);
-        }
-
-    }
-
-    public Object RmcPickUpOrRecipientByRmcApi(RmcDistrictQO rmcDistrictQO,String tag){
-        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-        //先判断是上门提货还是二次配送
-        if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
-            Wrapper<List<RmcPickup>> rmcPickupList = feignRmcPickUpOrRecipientAPIClient.queryPickUp(rmcDistrictQO);
-            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
-                return rmcPickupList.getResult().get(0);
-            }else {
-                return null;
-            }
-        }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
-            Wrapper<List<RmcRecipient>> RmcRecipientList = feignRmcPickUpOrRecipientAPIClient.queryRecipient(rmcDistrictQO);
-            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
-                return RmcRecipientList.getResult().get(0);
-            }else{
-                return null;
-            }
-        }else{
-            throw new BusinessException("缺少提货或配送标志位");
         }
 
     }
