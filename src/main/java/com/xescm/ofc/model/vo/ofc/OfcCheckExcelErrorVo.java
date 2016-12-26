@@ -1,7 +1,7 @@
 package com.xescm.ofc.model.vo.ofc;
 
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
-import com.xescm.csc.model.dto.CscGoodsImportDto;
+import com.xescm.ofc.model.dto.csc.OfcGoodsImportDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class OfcCheckExcelErrorVo {
     private List<String> xlsErrorMsg = new ArrayList<>();
     private List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
-    private List<CscGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+    private List<OfcGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
     private String batchconsingeeKey;
     private String batchgoodsKey;
 
@@ -49,11 +49,11 @@ public class OfcCheckExcelErrorVo {
         this.cscContantAndCompanyInportDtoList = cscContantAndCompanyInportDtoList;
     }
 
-    public List<CscGoodsImportDto> getCscGoodsImportDtoList() {
+    public List<OfcGoodsImportDto> getCscGoodsImportDtoList() {
         return cscGoodsImportDtoList;
     }
 
-    public void setCscGoodsImportDtoList(List<CscGoodsImportDto> cscGoodsImportDtoList) {
+    public void setCscGoodsImportDtoList(List<OfcGoodsImportDto> cscGoodsImportDtoList) {
         this.cscGoodsImportDtoList = cscGoodsImportDtoList;
     }
 }

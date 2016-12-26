@@ -3,24 +3,25 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.domain.CscWarehouse;
-import com.xescm.csc.model.dto.*;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
+import com.xescm.csc.model.dto.QueryStoreDto;
+import com.xescm.csc.model.dto.QueryWarehouseDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.*;
-import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.*;
+import com.xescm.ofc.feign.client.FeignAddressCodeClient;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.model.dto.wms.AddressDto;
-import com.xescm.ofc.model.vo.csc.CscCustomerVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.model.vo.csc.CscStorevo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
-
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -198,44 +199,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resultModel;
     }
 
-    /**
-     * 校验供应商是否寻在
-     * 不存在添加供应商
-     *
-     * @param createOrderEntity
-     * @param custCode
-     */
-    public void checkSupport(CreateOrderEntity createOrderEntity, String custCode) {
-        String supportName = createOrderEntity.getSupportName();
-        CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-        cscSupplierInfoDto.setCustomerCode(custCode);
-        cscSupplierInfoDto.setSupplierCode(supportName);
-        Wrapper<List<CscSupplierInfoDto>> listWrapper = (Wrapper<List<CscSupplierInfoDto>>) cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
-        String supportCode = CheckUtils.checkSupport(listWrapper, supportName);
-        if (StringUtils.isBlank(supportCode)) {
-            logger.info("查询不到供应商信息，添加供应商");
-            addSupplier(createOrderEntity, cscSupplierInfoDto, custCode);
-        }
-    }
-
-    /**
-     * 保存供应商信息
-     */
-    public void addSupplier(CreateOrderEntity createOrderEntity, CscSupplierInfoDto cscSupplierInfoDto, String custId) {
-        cscSupplierInfoDto.setCustomerCode(custId);
-        cscSupplierInfoDto.setUserId(CreateOrderApiConstant.USER_ID);
-        cscSupplierInfoDto.setUserName(CreateOrderApiConstant.USER_NAME);
-        cscSupplierInfoDto.setProvinceName(createOrderEntity.getSupportProvince());
-        cscSupplierInfoDto.setCityName(createOrderEntity.getSupportCity());
-        cscSupplierInfoDto.setAreaName(createOrderEntity.getSupportCounty());
-        cscSupplierInfoDto.setStreetName(createOrderEntity.getSupportTown());
-        cscSupplierInfoDto.setAddress(createOrderEntity.getSupportAddress());
-        cscSupplierInfoDto.setEmail(createOrderEntity.getSupportEmail());
-        cscSupplierInfoDto.setContactName(createOrderEntity.getSupportContact());
-        cscSupplierInfoDto.setContactPhone(createOrderEntity.getSupportPhone());
-        Wrapper<?> wrapper = cscSupplierEdasService.addSupplierBySupplierCode(cscSupplierInfoDto);
-        logger.info("创建供应商：{}", wrapper.getCode());
-    }
 
     /**
      * 保存收货信息

@@ -9,16 +9,16 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.domain.CscGoodsType;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
-import com.xescm.csc.model.dto.CscGoodsImportDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.model.vo.CscGoodsTypeVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.csc.provider.CscGoodsTypeEdasService;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.csc.OfcGoodsImportDto;
 import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.model.vo.csc.CscCustomerVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
@@ -33,7 +33,9 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -319,7 +321,7 @@ public class OfcOperationDistributing extends BaseController{
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
-                List<CscGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
+                List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
                     String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime() + (int)Math.random()*100000;

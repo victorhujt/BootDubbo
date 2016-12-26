@@ -1020,7 +1020,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscSupplierInfoDto.setCustomerCode(customerCode);
         Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
         try {
-            listWrapper =  cscContactEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+            listWrapper = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("查询供应商接口返回结果为null");
             }
