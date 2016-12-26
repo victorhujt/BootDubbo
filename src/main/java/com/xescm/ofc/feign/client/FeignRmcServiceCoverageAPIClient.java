@@ -5,7 +5,6 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.api.rmc.FeignRMcServiceCoverageAPI;
-import com.xescm.ofc.feign.api.rmc.FeignRmcPickUpOrRecipientAPI;
 import com.xescm.ofc.model.vo.rmc.RmcServiceCoverageForOrderVo;
 import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import feign.Feign;
@@ -25,7 +24,7 @@ import java.util.List;
 
 @Service
 public class FeignRmcServiceCoverageAPIClient {
-    private static final Logger logger = LoggerFactory.getLogger(FeignRmcPickUpOrRecipientAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeignRmcServiceCoverageAPIClient.class);
     @Resource
     private AuthRequestInterceptor authRequestInterceptor;
     @Resource
