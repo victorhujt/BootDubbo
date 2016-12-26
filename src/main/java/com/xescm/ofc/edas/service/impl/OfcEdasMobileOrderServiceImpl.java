@@ -62,7 +62,8 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
 
 
     @Override
-    public  Wrapper<?> queryMobileOrderByCode(OfcMobileOrderDto dto){
+    public Wrapper<MobileOrderVo> queryMobileOrderByCode(OfcMobileOrderDto dto){
+        MobileOrderVo resultVo = new MobileOrderVo();
         OfcMobileOrderVo result;
         try {
             if(dto == null){
@@ -75,11 +76,12 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
             BeanUtils.copyProperties(condition,dto);
             condition.setMobileOrderCode(dto.getMobileOrderCode());
             result= ofcMobileOrderService.selectOneOfcMobileOrder(condition);
+            BeanUtils.copyProperties(resultVo,result);
         } catch (Exception e) {
             logger.error("订单号查询出错：orderCode{},{}",dto.getMobileOrderCode(), e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, resultVo);
     }
 
     @Override
