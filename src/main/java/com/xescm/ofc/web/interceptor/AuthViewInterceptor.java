@@ -9,15 +9,13 @@
   
 package com.xescm.ofc.web.interceptor;
 
-import com.xescm.base.constant.UamConstant;
 import com.xescm.base.model.dto.auth.AuthResDto;
-import com.xescm.base.util.ThreadLocalMap;
+import com.xescm.core.constant.UamConstant;
+import com.xescm.core.utils.ThreadLocalMap;
 import com.xescm.ofc.web.jwt.TokenUtils;
-import com.xescm.uam.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

@@ -3,16 +3,18 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.domain.CscContact;
+import com.xescm.csc.model.domain.CscContactCompany;
+import com.xescm.csc.model.dto.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.*;
 import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.dto.csc.domain.CscContact;
-import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
 import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
@@ -70,7 +72,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcFinanceInformationService ofcFinanceInformationService;
     @Autowired
-    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+    private CscSupplierEdasService cscSupplierEdasService;
     @Autowired
     private OfcPlannedDetailService ofcPlannedDetailService;
     @Autowired
@@ -106,7 +108,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private DefaultMqProducer defaultMqProducer;
     @Autowired
-    private FeignCscContactAPIClient feignCscContactAPIClient;
+    private CscContactEdasService cscContactEdasService;
     @Autowired
     private FeignPushOrderApiClient feignPushOrderApiClient;
 
@@ -975,7 +977,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose,String customerCode,AuthResDto authResDtoByToken) {
+    public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String customerCode, AuthResDto authResDtoByToken) {
         //Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
@@ -987,7 +989,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.setCustomerCode(customerCode);
         Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
         try {
-            listWrapper = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            listWrapper = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("接口返回结果为null");
             }
@@ -1011,14 +1013,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public CscSupplierInfoDto getSupportMessage(String supportName, String supportContactName,String customerCode, AuthResDto authResDtoByToken) {
+    public CscSupplierInfoDto getSupportMessage(String supportName, String supportContactName, String customerCode, AuthResDto authResDtoByToken) {
         CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
         cscSupplierInfoDto.setSupplierName(supportName);
         cscSupplierInfoDto.setContactName(supportContactName);
         cscSupplierInfoDto.setCustomerCode(customerCode);
         Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
         try {
-            listWrapper =  feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            listWrapper = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("查询供应商接口返回结果为null");
             }

@@ -49,7 +49,7 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 ///BUG
                 orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
             }
-            if(com.xescm.uam.utils.PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
+            if(PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
                 throw new BusinessException("找不到该订单编号");
             }else{
                 OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();

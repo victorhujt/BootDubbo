@@ -2,7 +2,6 @@ package com.xescm.ofc.feign.client;
 
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.feign.api.tfc.FeignTfcTransPlanApi;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.utils.Response;
@@ -17,14 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.net.ConnectException;
 
 /**
  * Created by lyh on 2016/11/15.
  */
 @Service
 public class FeignTfcTransPlanApiClient {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeignTfcTransPlanApiClient.class);
 
     @Resource
     RestConfig restConfig;

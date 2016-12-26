@@ -37,6 +37,16 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.xescm.csc</groupId>
+			<artifactId>xescm-csc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.core</groupId>
+			<artifactId>xescm-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>hsf.schema</artifactId>
 			<version>edas1.0.1</version>

@@ -6,7 +6,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
 
     <!-- 异常信息 拦截 -->
-    <bean id="exceptionInterceptorLog" class="com.xescm.uam.exception.ExceptionInterceptorLog"></bean>
+    <bean id="exceptionInterceptorLog" class="com.xescm.core.exception.ExceptionInterceptorLog"></bean>
     <aop:config>
         <aop:pointcut id="exceptionTrade" expression="execution(* com.xescm.ofc.web.restcontroller.*.*(..))
         or execution(* com.xescm.ofc.web.controller.*.*(..))

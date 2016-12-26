@@ -1,12 +1,12 @@
 package com.xescm.ofc.utils;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.domain.CscWarehouse;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.dto.csc.CscWarehouse;
-import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.model.vo.csc.CscStorevo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,12 +1,11 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.PubUtils;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Service
 @Transactional
 public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(OfcPlanFedBackServiceImpl.class);
     @Autowired
     private OfcTransplanInfoService ofcTransplanInfoService;
     @Autowired

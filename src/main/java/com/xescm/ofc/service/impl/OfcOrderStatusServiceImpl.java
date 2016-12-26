@@ -2,7 +2,6 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.utils.PubUtils;
@@ -22,7 +21,7 @@ import java.util.Map;
 @Service
 @Transactional
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(OfcOrderStatusServiceImpl.class);
     @Autowired
     private OfcOrderStatusMapper ofcOrderStatusMapper;
 
