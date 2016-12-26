@@ -7,6 +7,7 @@
         http://www.taobao.com/hsf/hsf.xsd"
        default-autowire="byName">
 
+    <!-- 客户中心 -->
     <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscCustomerEdasService" interface="com.xescm.csc.provider.CscCustomerEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscGoodsEdasService" interface="com.xescm.csc.provider.CscGoodsEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
@@ -14,7 +15,14 @@
     <hsf:consumer id="cscStoreEdasService" interface="com.xescm.csc.provider.CscStoreEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscSupplierEdasService" interface="com.xescm.csc.provider.CscSupplierEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscWarehouseEdasService" interface="com.xescm.csc.provider.CscWarehouseEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
-
+    <!-- 结算中心 -->
     <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac" version="1.0" clientTimeout="60000"/>
+
+    <!-- 资源中心 -->
+    <hsf:consumer id="rmcEdasAddressService" interface="com.xescm.rmc.edas.service.RmcEdasAddressService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcEdasCarService" interface="com.xescm.rmc.edas.service.RmcEdasCarService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcEdasCompanyInfoService" interface="com.xescm.rmc.edas.service.RmcEdasCompanyInfoService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcEdasServiceCoverageService" interface="com.xescm.rmc.edas.service.RmcEdasServiceCoverageService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcEdasWarehouseService" interface="com.xescm.rmc.edas.service.RmcEdasWarehouseService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
 
 </beans>

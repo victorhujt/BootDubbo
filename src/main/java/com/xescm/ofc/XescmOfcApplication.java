@@ -4,12 +4,10 @@ import com.xescm.ofc.web.interceptor.AuthApiInterceptor;
 import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
 import com.xescm.ofc.web.jwt.AppkeyLoader;
 import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
-import com.xescm.ofc.web.jwt.SimpleCORSFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,15 +29,6 @@ public class XescmOfcApplication {
 	@Bean
 	public AuthRequestInterceptor authRequestInterceptor(){
 		return new AuthRequestInterceptor();
-	}
-
-	@Bean
-	public FilterRegistrationBean simpleCORSFilter() {
-		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-		registrationBean.setFilter(new SimpleCORSFilter());
-		registrationBean.addUrlPatterns("/*");
-		registrationBean.setOrder(Integer.MAX_VALUE-2);
-		return registrationBean;
 	}
 
 	@Bean

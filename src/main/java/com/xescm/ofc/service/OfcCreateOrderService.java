@@ -1,9 +1,10 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.wms.AddressDto;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
+
 import java.util.Map;
 
 /**
@@ -21,6 +22,6 @@ public interface OfcCreateOrderService {
      * @param addressDto
      * @return
      */
-    Map<String, String> getAddressCode(AddressDto addressDto);
+    Map<String, String> getAddressCode(RmcAddressNameVo addressDto);
 
 }

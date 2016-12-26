@@ -14,14 +14,14 @@ import com.xescm.csc.provider.*;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignAddressCodeClient;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
-import com.xescm.ofc.model.dto.wms.AddressDto;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
+import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
+import com.xescm.rmc.edas.service.RmcEdasAddressService;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +69,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Autowired
     private CscGoodsEdasService cscGoodsEdasService;
     @Autowired
-    private FeignAddressCodeClient feignAddressCodeClient;
+    private RmcEdasAddressService rmcEdasAddressService;
     @Autowired
     private OfcCreateOrderMapper createOrdersMapper;
 
@@ -376,14 +376,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param addressDto
      * @return
      */
-    public Map<String, String> getAddressCode(AddressDto addressDto) {
+    public Map<String, String> getAddressCode(RmcAddressNameVo addressDto) {
         if (StringUtils.isBlank(addressDto.getProvinceName())
                 || StringUtils.isBlank(addressDto.getCityName())
                 || StringUtils.isBlank(addressDto.getDistrictName())) {
             throw new BusinessException("省市区地址信息不全");
         }
         Map<String, String> resuteMap = new HashMap<>();
-        String result = feignAddressCodeClient.findCodeByName(addressDto);
+        Wrapper<?> wrapperResult = rmcEdasAddressService.findCodeByName(addressDto);
+        String result = (String) wrapperResult.getResult();
         if (StringUtils.isBlank(result)) {
             throw new BusinessException("无法获取收货方省市区地址编码");
         }

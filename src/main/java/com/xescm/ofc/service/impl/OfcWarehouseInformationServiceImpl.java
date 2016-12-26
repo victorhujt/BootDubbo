@@ -6,10 +6,10 @@ import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignRmcWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.service.RmcEdasWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Autowired
     private CscWarehouseEdasService cscWarehouseEdasService;
     @Autowired
-    private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
+    private RmcEdasWarehouseService rmcEdasWarehouseService;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -72,7 +72,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
                 RmcWarehouse rmcWarehouse = new RmcWarehouse();
                 rmcWarehouse.setWarehouseCode(cscWH.getWarehouseCode());
                 RmcWarehouse rmcWarehouseResult = new RmcWarehouse();
-                Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
+                Wrapper<RmcWarehouse> rmcWarehouseByid = (Wrapper<RmcWarehouse>) rmcEdasWarehouseService.queryRmcWarehouseByCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
                     //throw new BusinessException(rmcWarehouseByid.getMessage());
                     continue;

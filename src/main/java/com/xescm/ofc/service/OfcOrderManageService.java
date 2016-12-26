@@ -5,8 +5,8 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
+import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
+import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 
 import java.util.List;
 
