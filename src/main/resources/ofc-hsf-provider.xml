@@ -7,5 +7,5 @@
         http://www.taobao.com/hsf/hsf.xsd"
        default-autowire="byName">
     <!-- 订单中心 钉钉微应用相关接口 -->
-    <hsf:provider id="ofcEdasMobileOrderService" interface="com.xescm.ofc.edas.service.OfcEdasMobileOrderService" ref="ofcEdasMobileOrderServiceImpl" group="xescm-ofc" version="1.0" clientTimeout="600000"/>
+    <hsf:provider id="ofcMobileOrderEdasService" interface="com.xescm.ofc.edas.service.OfcMobileOrderEdasService" ref="ofcMobileOrderEdasServiceImpl" group="xescm-ofc" version="1.0" clientTimeout="600000"/>
 </beans>
