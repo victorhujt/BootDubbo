@@ -36,9 +36,9 @@ import com.xescm.rmc.edas.domain.RmcWarehouse;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
-import com.xescm.rmc.edas.service.RmcEdasCompanyInfoService;
-import com.xescm.rmc.edas.service.RmcEdasServiceCoverageService;
-import com.xescm.rmc.edas.service.RmcEdasWarehouseService;
+import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
+import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -68,7 +68,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
-    private RmcEdasCompanyInfoService rmcEdasCompanyInfoService;
+    private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
@@ -100,9 +100,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
     @Autowired
-    private RmcEdasServiceCoverageService rmcEdasServiceCoverageService;
+    private RmcServiceCoverageEdasService rmcServiceCoverageEdasService;
     @Autowired
-    private RmcEdasWarehouseService rmcEdasWarehouseService;
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
     private CodeGenUtils codeGenUtils;
     @Autowired
@@ -1172,7 +1172,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
         try{
-            rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcEdasCompanyInfoService.queryCompanyLine(rmcCompanyLineQO);
+            rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         }catch (Exception ex){
             throw new BusinessException("服务商查询出错", ex);
         }
@@ -1920,7 +1920,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcEdasServiceCoverageService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);
@@ -1932,7 +1932,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcEdasServiceCoverageService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);
@@ -1952,7 +1952,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(wareHouseCode).equals("")){
             rmcWarehouse.setWarehouseCode(wareHouseCode);
 
-            Wrapper<RmcWarehouse> rmcWarehouseByid=(Wrapper<RmcWarehouse>)rmcEdasWarehouseService.queryRmcWarehouseByCode(rmcWarehouse);
+            Wrapper<RmcWarehouse> rmcWarehouseByid=(Wrapper<RmcWarehouse>)rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
             rmcWarehouse=rmcWarehouseByid.getResult();
             return rmcWarehouse;
         }else{

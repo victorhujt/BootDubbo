@@ -6,11 +6,11 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.csc.model.domain.CscGoodsType;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscGoodsTypeVo;
 import com.xescm.csc.provider.CscContactEdasService;
@@ -515,7 +515,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
         try{
-            CscGoodsType cscGoodType=new CscGoodsType();
+            CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
             if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
                 cscGoodType.setPid(cscGoodsType);
             }

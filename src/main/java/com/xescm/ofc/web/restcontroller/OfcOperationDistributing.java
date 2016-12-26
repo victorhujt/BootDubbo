@@ -6,10 +6,10 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.csc.model.domain.CscGoodsType;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
+import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscGoodsTypeVo;
@@ -134,7 +134,7 @@ public class OfcOperationDistributing extends BaseController{
     public void queryGoodsTypeByCustId(String customerCode,Model model,HttpServletResponse response){
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
-            CscGoodsType cscGoodsType = new CscGoodsType();
+            CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
             wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
@@ -158,7 +158,7 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("城配开单根据选择的客户和货品一级种类查询货品二级小类==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
-            CscGoodsType cscGoodsType = new CscGoodsType();
+            CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
             cscGoodsType.setPid(goodsType);
             wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
@@ -247,7 +247,7 @@ public class OfcOperationDistributing extends BaseController{
             queryParam.setCustomerName(custName);
             queryParam.setPageNum(pageNum);
             queryParam.setPageSize(pageSize);
-            result = (Wrapper<PageInfo<CscCustomerVo>>)cscCustomerEdasService.QueryCustomerByNameAvgue(queryParam);
+            result = (Wrapper<PageInfo<CscCustomerVo>>)cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
             if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询客户列表失败,查询结果有误!");
             }

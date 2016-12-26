@@ -2,11 +2,11 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.csc.model.domain.CscWarehouse;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
+import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
@@ -21,7 +21,7 @@ import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
-import com.xescm.rmc.edas.service.RmcEdasAddressService;
+import com.xescm.rmc.edas.service.RmcAddressEdasService;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +69,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Autowired
     private CscGoodsEdasService cscGoodsEdasService;
     @Autowired
-    private RmcEdasAddressService rmcEdasAddressService;
+    private RmcAddressEdasService rmcAddressEdasService;
     @Autowired
     private OfcCreateOrderMapper createOrdersMapper;
 
@@ -157,7 +157,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String warehouseCode = createOrderEntity.getWarehouseCode();
         QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
         cscWarehouse.setCustomerCode(custCode);
-        Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouse>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+        Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouseDto>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
         resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "仓库编码", resultModel.getCode());
@@ -383,7 +383,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             throw new BusinessException("省市区地址信息不全");
         }
         Map<String, String> resuteMap = new HashMap<>();
-        Wrapper<?> wrapperResult = rmcEdasAddressService.findCodeByName(addressDto);
+        Wrapper<?> wrapperResult = rmcAddressEdasService.findCodeByName(addressDto);
         String result = (String) wrapperResult.getResult();
         if (StringUtils.isBlank(result)) {
             throw new BusinessException("无法获取收货方省市区地址编码");

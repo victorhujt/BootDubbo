@@ -1,8 +1,8 @@
 package com.xescm.ofc.utils;
 
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.csc.model.domain.CscWarehouse;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.ofc.constant.ResultModel;
@@ -178,7 +178,7 @@ public class CheckUtils {
      * 判断仓库编码是否在仓库档案信息中存在，若不存在，则返回错误信息，“仓库不存在！”
      * 若不存在，则返回错误信息，“仓库不存在！”
      */
-    public static ResultModel checkWarehouseCode(Wrapper<List<CscWarehouse>> listWrapper, String warehouse, String orderType) {
+    public static ResultModel checkWarehouseCode(Wrapper<List<CscWarehouseDto>> listWrapper, String warehouse, String orderType) {
         warehouse = StringUtils.trim(warehouse);
         orderType = StringUtils.trim(orderType);
         if (StringUtils.equals("60", orderType)) {
@@ -188,8 +188,8 @@ public class CheckUtils {
             if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0004);
             }
-            List<CscWarehouse> cscWarehouseList = listWrapper.getResult();
-            for (CscWarehouse c : cscWarehouseList) {
+            List<CscWarehouseDto> cscWarehouseList = listWrapper.getResult();
+            for (CscWarehouseDto c : cscWarehouseList) {
                 if (StringUtils.equals(c.getCustomerCode(), warehouse)) {
                     return new ResultModel(ResultModel.ResultEnum.CODE_0000);
                 }

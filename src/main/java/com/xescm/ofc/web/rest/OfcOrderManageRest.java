@@ -20,7 +20,7 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.RmcWarehouse;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
-import com.xescm.rmc.edas.service.RmcEdasCompanyInfoService;
+import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class OfcOrderManageRest extends BaseController{
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
-    private RmcEdasCompanyInfoService rmcEdasCompanyInfoService;
+    private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
@@ -340,7 +340,7 @@ public class OfcOrderManageRest extends BaseController{
         }else {
             rmcCompanyLineQO.setArriveCityName(null);
         }
-        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcEdasCompanyInfoService.queryCompanyLine(rmcCompanyLineQO);
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         try{
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
