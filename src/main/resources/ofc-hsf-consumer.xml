@@ -19,10 +19,10 @@
     <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac" version="1.0" clientTimeout="60000"/>
 
     <!-- 资源中心 -->
-    <hsf:consumer id="rmcEdasAddressService" interface="com.xescm.rmc.edas.service.RmcEdasAddressService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="rmcEdasCarService" interface="com.xescm.rmc.edas.service.RmcEdasCarService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="rmcEdasCompanyInfoService" interface="com.xescm.rmc.edas.service.RmcEdasCompanyInfoService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="rmcEdasServiceCoverageService" interface="com.xescm.rmc.edas.service.RmcEdasServiceCoverageService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="rmcEdasWarehouseService" interface="com.xescm.rmc.edas.service.RmcEdasWarehouseService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcAddressEdasService" interface="com.xescm.rmc.edas.service.RmcAddressEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcCarEdasService" interface="com.xescm.rmc.edas.service.RmcCarEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcCompanyInfoEdasService" interface="com.xescm.rmc.edas.service.RmcCompanyInfoEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcServiceCoverageEdasService" interface="com.xescm.rmc.edas.service.RmcServiceCoverageEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="rmcWarehouseEdasService" interface="com.xescm.rmc.edas.service.RmcWarehouseEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
 
 </beans>
