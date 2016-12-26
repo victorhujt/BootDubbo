@@ -5,19 +5,22 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.exception.BusinessException;
 import com.xescm.ofc.domain.OfcAttachment;
 import com.xescm.ofc.domain.OfcMobileOrder;
-import com.xescm.ofc.edas.dto.mobile.AttachmentDto;
-import com.xescm.ofc.edas.dto.mobile.OfcMobileOrderDto;
+import com.xescm.ofc.edas.model.dto.attachment.AttachmentDto;
+import com.xescm.ofc.edas.model.dto.mobile.OfcMobileOrderDto;
+import com.xescm.ofc.edas.model.vo.attachment.AttachmentVo;
+import com.xescm.ofc.edas.model.vo.mobile.MobileOrderVo;
 import com.xescm.ofc.edas.service.OfcEdasMobileOrderService;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,9 +37,10 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
     private OfcAttachmentService ofcAttachmentService;
 
     @Override
-    public Wrapper<?> saveMobileOrder(OfcMobileOrderDto ofcMobileOrderDto) {
+    public Wrapper<MobileOrderVo> saveMobileOrder(OfcMobileOrderDto ofcMobileOrderDto) {
         logger.debug("==>保存拍照录单信息 mobileOrder={}", ofcMobileOrderDto);
         OfcMobileOrder order=new OfcMobileOrder();
+        MobileOrderVo resVo = new MobileOrderVo();
         try {
             if(ofcMobileOrderDto == null){
                 throw new BusinessException("参数不能为空");
@@ -44,6 +48,8 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
             OfcMobileOrder ofcMobileOrder=new OfcMobileOrder();
             BeanUtils.copyProperties(ofcMobileOrder,ofcMobileOrderDto);
             order=ofcMobileOrderService.saveOfcMobileOrder(ofcMobileOrder);
+
+            BeanUtils.copyProperties(resVo,order);
         } catch (BusinessException ex) {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
@@ -51,7 +57,7 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
             e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,order);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resVo);
     }
 
 
@@ -77,30 +83,39 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
     }
 
     @Override
-    public Wrapper<?> queryMobileOrderList(OfcMobileOrderDto ofcMobileOrderDto){
+    public Wrapper<List<MobileOrderVo>> queryMobileOrderList(OfcMobileOrderDto ofcMobileOrderDto){
         logger.debug("==> 查询手机订单前20条");
         List<OfcMobileOrder> list = null;
+        List<MobileOrderVo> resList = new ArrayList<>();
         OfcMobileOrder condition=new OfcMobileOrder();
         try {
             BeanUtils.copyProperties(condition,ofcMobileOrderDto);
             list=ofcMobileOrderService.queryOrderNotes(condition);
+
+            for (OfcMobileOrder order:list) {
+                MobileOrderVo vo = new MobileOrderVo();
+                BeanUtils.copyProperties(vo,order);
+                resList.add(vo);
+            }
         } catch (Exception e){
             logger.error("查询手机订单出现异常:{},{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, resList);
     }
 
     @Override
-    public Wrapper<?> saveAttachment(AttachmentDto attachmentDto) {
+    public Wrapper<AttachmentVo> saveAttachment(AttachmentDto attachmentDto) {
         OfcAttachment ofcAttachment=new OfcAttachment();
-        OfcAttachment result=new OfcAttachment();
+        OfcAttachment result;
+        AttachmentVo resultVo = new AttachmentVo();
         try {
             if(attachmentDto == null){
                 throw new BusinessException("参数不能为空");
             }
             BeanUtils.copyProperties(ofcAttachment,attachmentDto);
             result =ofcAttachmentService.saveAttachment(ofcAttachment);
+            BeanUtils.copyProperties(resultVo,result);
         } catch (BusinessException ex) {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
@@ -108,7 +123,7 @@ public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService 
             e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resultVo);
     }
 
     @Override
