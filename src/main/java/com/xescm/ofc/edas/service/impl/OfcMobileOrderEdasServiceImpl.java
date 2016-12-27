@@ -9,7 +9,7 @@ import com.xescm.ofc.edas.model.dto.attachment.AttachmentDto;
 import com.xescm.ofc.edas.model.dto.mobile.OfcMobileOrderDto;
 import com.xescm.ofc.edas.model.vo.attachment.AttachmentVo;
 import com.xescm.ofc.edas.model.vo.mobile.MobileOrderVo;
-import com.xescm.ofc.edas.service.OfcEdasMobileOrderService;
+import com.xescm.ofc.edas.service.OfcMobileOrderEdasService;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
@@ -27,7 +27,7 @@ import java.util.List;
  * Created by wangsongtao on 2016/12/25.
  */
 @Service
-public class OfcEdasMobileOrderServiceImpl implements OfcEdasMobileOrderService {
+public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired

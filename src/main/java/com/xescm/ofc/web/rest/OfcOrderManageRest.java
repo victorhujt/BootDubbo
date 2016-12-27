@@ -12,15 +12,15 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignRmcCompanyAPIClient;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
+import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
+import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class OfcOrderManageRest extends BaseController{
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
-    private FeignRmcCompanyAPIClient feignRmcCompanyAPIClient;
+    private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
     @Autowired
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Autowired
@@ -340,7 +340,7 @@ public class OfcOrderManageRest extends BaseController{
         }else {
             rmcCompanyLineQO.setArriveCityName(null);
         }
-        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         try{
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));

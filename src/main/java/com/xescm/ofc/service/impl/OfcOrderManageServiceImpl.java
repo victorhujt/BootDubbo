@@ -1,36 +1,44 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ac.domain.AcDistributionBasicInfo;
+import com.xescm.ac.domain.AcFinanceInformation;
+import com.xescm.ac.domain.AcFundamentalInformation;
+import com.xescm.ac.domain.AcGoodsDetailsInfo;
+import com.xescm.ac.model.dto.AcOrderDto;
+import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
+import com.xescm.ac.provider.AcOrderEdasService;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.csc.model.domain.CscContact;
-import com.xescm.csc.model.domain.CscContactCompany;
-import com.xescm.csc.model.dto.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
+import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
+import com.xescm.ofc.feign.client.FeignTfcTransPlanApiClient;
+import com.xescm.ofc.feign.client.FeignWhcSiloprogramAPIClient;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
-import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.model.dto.whc.*;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
-import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
-import com.xescm.ofc.model.vo.rmc.RmcPickup;
-import com.xescm.ofc.model.vo.rmc.RmcRecipient;
-import com.xescm.ofc.model.vo.rmc.RmcServiceCoverageForOrderVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.*;
+import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
+import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
+import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
+import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
+import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -60,7 +68,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
-    private FeignRmcCompanyAPIClient feignRmcCompanyAPIClient;
+    private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
@@ -92,11 +100,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
     @Autowired
-    private FeignRmcPickUpOrRecipientAPIClient feignRmcPickUpOrRecipientAPIClient;
+    private RmcServiceCoverageEdasService rmcServiceCoverageEdasService;
     @Autowired
-    private FeignRmcServiceCoverageAPIClient feignRmcServiceCoverageAPIClient;
-    @Autowired
-    private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
     private CodeGenUtils codeGenUtils;
     @Autowired
@@ -109,8 +115,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
     @Autowired
     private CscContactEdasService cscContactEdasService;
-    @Autowired
-    private FeignPushOrderApiClient feignPushOrderApiClient;
+    @Resource
+    private AcOrderEdasService acOrderEdasService;
 
     /**
      * 订单审核和反审核
@@ -961,10 +967,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcDistributionBasicInfo.setOrderCode(orderCode);
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
             if(ofcDistributionBasicInfo != null){
-                CancelOfcOrderDto cancelOfcOrderDto = new CancelOfcOrderDto();
+                CancelAcOrderDto cancelOfcOrderDto = new CancelAcOrderDto();
                 cancelOfcOrderDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 cancelOfcOrderDto.setTransCode(ofcDistributionBasicInfo.getTransCode());
-                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
+                Wrapper<?> wrapper = acOrderEdasService.cancelOfcOrder(cancelOfcOrderDto);
+//                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
                 if(wrapper == null) {
                     logger.info("取消订单推送到结算中心,code:{},message:{},返回信息:{},", wrapper.getCode(), wrapper.getMessage(), ToStringBuilder.reflectionToString(wrapper.getResult()));
                 }
@@ -981,11 +988,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-        cscContantAndCompanyDto.setCscContact(new CscContact());
-        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
-        cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
-        cscContantAndCompanyDto.getCscContact().setContactName(contactName);
-        cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(contactCompanyName);
+        cscContantAndCompanyDto.setCscContactDto(new CscContactDto());
+        cscContantAndCompanyDto.setCscContactCompanyDto(new CscContactCompanyDto());
+        cscContantAndCompanyDto.getCscContactDto().setPurpose(purpose);
+        cscContantAndCompanyDto.getCscContactDto().setContactName(contactName);
+        cscContantAndCompanyDto.getCscContactCompanyDto().setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setCustomerCode(customerCode);
         Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
         try {
@@ -1165,7 +1172,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
         try{
-            rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+            rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         }catch (Exception ex){
             throw new BusinessException("服务商查询出错", ex);
         }
@@ -1906,29 +1913,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
-    public Object RmcPickUpOrRecipientByRmcApi(RmcDistrictQO rmcDistrictQO,String tag){
-        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-        //先判断是上门提货还是二次配送
-        if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
-            Wrapper<List<RmcPickup>> rmcPickupList = feignRmcPickUpOrRecipientAPIClient.queryPickUp(rmcDistrictQO);
-            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
-                return rmcPickupList.getResult().get(0);
-            }else {
-                return null;
-            }
-        }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
-            Wrapper<List<RmcRecipient>> RmcRecipientList = feignRmcPickUpOrRecipientAPIClient.queryRecipient(rmcDistrictQO);
-            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
-                return RmcRecipientList.getResult().get(0);
-            }else{
-                return null;
-            }
-        }else{
-            throw new BusinessException("缺少提货或配送标志位");
-        }
-
-    }
-
     public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         //先判断是上门提货还是二次配送
@@ -1936,7 +1920,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);
@@ -1948,7 +1932,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);
@@ -1967,7 +1951,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         RmcWarehouse rmcWarehouse=new RmcWarehouse();
         if(!PubUtils.trimAndNullAsEmpty(wareHouseCode).equals("")){
             rmcWarehouse.setWarehouseCode(wareHouseCode);
-            Wrapper<RmcWarehouse> rmcWarehouseByid=feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
+
+            Wrapper<RmcWarehouse> rmcWarehouseByid=(Wrapper<RmcWarehouse>)rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
             rmcWarehouse=rmcWarehouseByid.getResult();
             return rmcWarehouse;
         }else{
@@ -2104,7 +2089,35 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //暂时只推卡班订单
         if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
                 && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
-            Wrapper<?> wrapper = feignPushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+            AcOrderDto acOrderDto = new AcOrderDto();
+            try {
+                AcFundamentalInformation acFundamentalInformation =new AcFundamentalInformation();
+                BeanUtils.copyProperties(acFundamentalInformation,ofcFundamentalInformation);
+
+                AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
+                BeanUtils.copyProperties(acFinanceInformation,ofcFinanceInformation);
+
+                AcDistributionBasicInfo acDistributionBasicInfo= new AcDistributionBasicInfo();
+                BeanUtils.copyProperties(acDistributionBasicInfo,ofcDistributionBasicInfo);
+
+                List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
+                for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:ofcGoodsDetailsInfos) {
+                    AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
+                    BeanUtils.copyProperties(acGoodsDetailsInfo,ofcGoodsDetailsInfo);
+                    acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
+                }
+
+                acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
+                acOrderDto.setAcFinanceInformation(acFinanceInformation);
+                acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
+                acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
             }
