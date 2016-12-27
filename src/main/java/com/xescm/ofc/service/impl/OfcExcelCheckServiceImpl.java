@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
@@ -21,7 +22,6 @@ import com.xescm.ofc.model.dto.csc.OfcGoodsImportDto;
 import com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise;
 import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcExcelCheckService;
-import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -283,13 +283,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 //取客户订单编号, 订单日期, 收货方名称, 联系人, 联系电话, 地址, 货品编码,货品名称,规格,单位,数量,单价, 往设定好的数据结构里放
                 //去接口查该收货方名称是否在客户中心维护
                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-                CscContactCompanyDto cscContactCompany = new CscContactCompanyDto();
-                CscContactDto cscContact = new CscContactDto();
+                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+                CscContactDto cscContactDto = new CscContactDto();
                 cscContantAndCompanyDto.setCustomerCode(customerCode);
-                cscContactCompany.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
-                cscContact.setPurpose("1");//用途为收货方
-                cscContantAndCompanyDto.setCscContactDto(cscContact);
-                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompany);
+                cscContactCompanyDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
+                cscContactDto.setPurpose("1");//用途为收货方
+                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
                 Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>) cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                     throw new BusinessException(queryCscCustomerResult.getMessage());
@@ -791,13 +791,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 //取客户订单编号, 订单日期, 收货方名称, 联系人, 联系电话, 地址, 货品编码,货品名称,规格,单位,数量,单价, 往设定好的数据结构里放
                 //去接口查该收货方名称是否在客户中心维护
                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-                CscContactCompanyDto cscContactCompany = new CscContactCompanyDto();
-                CscContactDto cscContact = new CscContactDto();
+                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+                CscContactDto cscContactDto = new CscContactDto();
                 cscContantAndCompanyDto.setCustomerCode(customerCode);
-                cscContactCompany.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
-                cscContact.setPurpose("1");//用途为收货方
-                cscContantAndCompanyDto.setCscContactDto(cscContact);
-                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompany);
+                cscContactCompanyDto.setContactCompanyName(ofcExcelBoradwise.getConsigneeName());
+                cscContactDto.setPurpose("1");//用途为收货方
+                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
                 Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                     throw new BusinessException(queryCscCustomerResult.getMessage());
@@ -1212,13 +1212,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //如果校验失败,就标记该单元格
                             CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-                            CscContactCompanyDto cscContactCompany = new CscContactCompanyDto();
-                            CscContactDto cscContact = new CscContactDto();
+                            CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+                            CscContactDto cscContactDto = new CscContactDto();
                             cscContantAndCompanyDto.setCustomerCode(customerCode);
-                            cscContactCompany.setContactCompanyName(cellValue);
-                            cscContact.setPurpose("1");//用途为收货方
-                            cscContantAndCompanyDto.setCscContactDto(cscContact);
-                            cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompany);
+                            cscContactCompanyDto.setContactCompanyName(cellValue);
+                            cscContactDto.setPurpose("1");//用途为收货方
+                            cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+                            cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
                             Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                             if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                 throw new BusinessException(queryCscCustomerResult.getMessage());
@@ -1515,13 +1515,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //如果校验失败,就标记该单元格
                             CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-                            CscContactCompanyDto cscContactCompany = new CscContactCompanyDto();
-                            CscContactDto cscContact = new CscContactDto();
+                            CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+                            CscContactDto cscContactDto = new CscContactDto();
                             cscContantAndCompanyDto.setCustomerCode(custId);
-                            cscContactCompany.setContactCompanyName(cellValue);
-                            cscContact.setPurpose("1");//用途为收货方
-                            cscContantAndCompanyDto.setCscContactDto(cscContact);
-                            cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompany);
+                            cscContactCompanyDto.setContactCompanyName(cellValue);
+                            cscContactDto.setPurpose("1");//用途为收货方
+                            cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+                            cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
                             Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                             if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                 throw new BusinessException(queryCscCustomerResult.getMessage());

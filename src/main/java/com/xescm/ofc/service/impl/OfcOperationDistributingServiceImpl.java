@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
@@ -17,8 +19,6 @@ import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.OfcExcelCheckService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
-import com.xescm.ofc.utils.JsonUtil;
-import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -131,7 +131,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = null;
             try {
-                ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+                ofcOrderDTO = JacksonUtil.parseJsonWithFormat(json, OfcOrderDTO.class);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new BusinessException("校验客户订单编号转换DTO异常",e);
@@ -231,14 +231,14 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             String json = jsonArray.get(i).toString();
             OfcOrderDTO ofcOrderDTO = null;
             try {
-                ofcOrderDTO = (OfcOrderDTO) JsonUtil.json2Object(json, OfcOrderDTO.class);
+                ofcOrderDTO = JacksonUtil.parseJsonWithFormat(json, OfcOrderDTO.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             validateOperationDistributingMsg(ofcOrderDTO);
             String orderGoodsListStr = null;
             try {
-                orderGoodsListStr = JsonUtil.list2Json(ofcOrderDTO.getGoodsList());
+                orderGoodsListStr = JacksonUtil.toJson(ofcOrderDTO.getGoodsList());
             } catch (Exception e) {
                 e.printStackTrace();
             }

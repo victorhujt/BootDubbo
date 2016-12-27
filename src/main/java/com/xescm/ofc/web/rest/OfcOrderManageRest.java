@@ -3,6 +3,8 @@ package com.xescm.ofc.web.rest;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
@@ -14,8 +16,6 @@ import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.RmcWarehouse;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
@@ -264,7 +264,7 @@ public class OfcOrderManageRest extends BaseController{
             lineVos1.get(0).setCompanyName("孙悟空");
             rmcCompanyLists.setResult(lineVos1);*/
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
         }
@@ -343,7 +343,7 @@ public class OfcOrderManageRest extends BaseController{
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         try{
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(rmcCompanyLists.getResult()));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcCompanyLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
         }

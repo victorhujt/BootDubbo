@@ -7,6 +7,8 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.config.RestConfig;
@@ -22,8 +24,6 @@ import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -135,35 +135,35 @@ public class OfcMobileOrderRest extends BaseController {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+                ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
             // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
             logger.info(cscContantAndCompanyDtoConsignorStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             logger.info(cscContantAndCompanyDtoConsigneeStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             if(cscContantAndCompanyDtoConsignor==null){
                 throw new BusinessException("发货人信息不允许为空！");
             }
             if(cscContantAndCompanyDtoConsignee==null){
                 throw new BusinessException("收货人信息不允许为空！");
             }
-            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
                 if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
@@ -256,7 +256,7 @@ public class OfcMobileOrderRest extends BaseController {
             logger.info("操作的附件流水号为:{}",attachmentDto.getSerialNo());
             BeanUtils.copyProperties(ofcAttachment,attachmentDto);
             url= ofcAttachmentService.operateAttachMent(attachmentDto.getPicParam(),attachmentDto.getSerialNo());
-            response.getWriter().print(JSONUtils.objectToJson(url));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(url));
 
         } catch (BusinessException ex) {
         } catch (Exception e) {

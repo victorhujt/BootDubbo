@@ -5,12 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcOrderScreenService;
-import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,10 +41,16 @@ public class OfcOrderScreenRest extends BaseController {
     public String orderScreenByCondition(Model model,@PathVariable String orderScreenConditionJSON, Map<String,Object> map,@PathVariable("tag") String tag, @PathVariable("currPage") String currPagePath, @PathVariable("pageSize") String pageSizePath) throws IOException {
         logger.debug("==>订单中心订单查询条件 orderScreenCondition={}", orderScreenConditionJSON);
         logger.debug("==>订单中心订单查询标志位 tag={}", tag);
-        if(PubUtils.isSEmptyOrNull(orderScreenConditionJSON)){
-            orderScreenConditionJSON = JSONUtils.objectToJson(new OrderScreenCondition());
+        OrderScreenCondition orderScreenCondition = null;
+        try {
+            if(PubUtils.isSEmptyOrNull(orderScreenConditionJSON)){
+                orderScreenConditionJSON = JacksonUtil.toJsonWithFormat(new OrderScreenCondition());
+            }
+            orderScreenCondition = JacksonUtil.parseJsonWithFormat(orderScreenConditionJSON, OrderScreenCondition.class);
+        } catch (Exception e) {
+            logger.error("订单查询转换Json异常",e);
+            throw new BusinessException("订单查询转换Json异常",e);
         }
-        OrderScreenCondition orderScreenCondition = JSONUtils.jsonToPojo(orderScreenConditionJSON, OrderScreenCondition.class);
         int pageSize = Integer.parseInt(pageSizePath);
         int currPage = Integer.parseInt(currPagePath);
         PageHelper.startPage(currPage,pageSize);

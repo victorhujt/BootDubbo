@@ -189,12 +189,12 @@
         <div class="modal-body">
             <div class="bootbox-body">
                 <form id="consignorSelConditionForm" class="form-horizontal" role="form" style="margin-bottom:15px;">
-                <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+                <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                     <div class="form-group" style="width:100%;">
                         <label class="control-label col-label no-padding-right" for="name">名称</label>
                         <div class="col-width-220 padding-15 y-float">
                             <div class="clearfix">
-                                <input id="custNameDiv" name="cscContactCompany.contactCompanyName" type="text"
+                                <input id="custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text"
                                        style="color: black" class="form-control input-sm" placeholder=""
                                        aria-controls="dynamic-table">
                             </div>

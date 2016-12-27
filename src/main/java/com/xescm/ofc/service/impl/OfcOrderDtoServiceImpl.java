@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
@@ -7,7 +8,6 @@ import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -6,6 +6,8 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
@@ -22,9 +24,6 @@ import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.JacksonUtil;
-import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.RmcWarehouse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +116,7 @@ public class OfcOperationDistributing extends BaseController{
         try{
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcWarehouseByCustCode));
         }catch (Exception ex){
             logger.error("城配下单查询仓库列表失败!{}",ex.getMessage(),ex);
         }
@@ -138,7 +137,7 @@ public class OfcOperationDistributing extends BaseController{
             wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
             logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
@@ -163,7 +162,7 @@ public class OfcOperationDistributing extends BaseController{
             wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
             logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
@@ -185,7 +184,7 @@ public class OfcOperationDistributing extends BaseController{
             wrapper = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
             logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage(),ex);
@@ -218,9 +217,9 @@ public class OfcOperationDistributing extends BaseController{
 //            }
 //            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
 //            if(null == cscCustomerVoList){
-//                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
+//                response.getWriter().print(JacksonUtil.toJsonWithFormat(new ArrayList<CscCustomerVo>()));
 //            }else{
-//                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
+//                response.getWriter().print(JacksonUtil.toJsonWithFormat(cscCustomerVoList));
 //            }
 //        }catch (Exception ex){
 //            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
@@ -326,7 +325,7 @@ public class OfcOperationDistributing extends BaseController{
                 if(cscGoodsImportDtoList.size() > 0){
                     String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime() + (int)Math.random()*100000;
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchgoodsKey, JSONUtils.objectToJson(cscGoodsImportDtoList));
+                    ops.set(batchgoodsKey, JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
                     rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
                     String s = ops.get(batchgoodsKey);
                     String s1 = ops.get(batchgoodsKey);
@@ -335,7 +334,7 @@ public class OfcOperationDistributing extends BaseController{
                 if(cscContantAndCompanyInportDtoList.size() > 0){
                     String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime() + (int)Math.random()*100000;
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchconsingeeKey, JSONUtils.objectToJson(cscContantAndCompanyInportDtoList));
+                    ops.set(batchconsingeeKey, JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
                     rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
                     ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey);
                 }

@@ -10,6 +10,8 @@ import com.xescm.ac.provider.AcOrderEdasService;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
@@ -17,21 +19,22 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
+import com.xescm.epc.edas.dto.TransportNoDTO;
+import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
-import com.xescm.ofc.feign.client.FeignTfcTransPlanApiClient;
 import com.xescm.ofc.feign.client.FeignWhcSiloprogramAPIClient;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
-import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
 import com.xescm.ofc.model.dto.whc.*;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.*;
+import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.Response;
 import com.xescm.rmc.edas.domain.RmcWarehouse;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
@@ -106,7 +109,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Resource
     private CodeGenUtils codeGenUtils;
     @Autowired
-    private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
+    private EpcOrderCancelEdasService epcOrderCancelEdasService;
     @Autowired
     private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
     @Autowired
@@ -807,7 +810,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         //defaultMqProducer.toSendMQTfcCancelPlanOrder(JacksonUtil.toJsonWithFormat(ofcTransplanInfo.getPlanCode()));
                         TransportNoDTO transportNoDTO = new TransportNoDTO();
                         transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
-                        Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
+                        Wrapper response = epcOrderCancelEdasService.cancelTransport(transportNoDTO);
                         if(Response.ERROR_CODE == response.getCode()){
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败
@@ -1834,7 +1837,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detailList .add(detail);
                 }
                 wsv.setDetailsList(detailList);
-                jsonStr=JSONUtils.objectToJson(wsv);
+                jsonStr=JacksonUtil.toJsonWithFormat(wsv);
             }else if(OFC_WHC_IN_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcInStock wp=new WhcInStock();
@@ -1888,7 +1891,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detailList.add(detail);
                 }
                 wp.setDetailsList(detailList);
-                jsonStr=JSONUtils.objectToJson(wp);
+                jsonStr=JacksonUtil.toJsonWithFormat(wp);
             }
             if(!StringUtils.isEmpty(jsonStr)){
             logger.info("send to whc json is :" +jsonStr);

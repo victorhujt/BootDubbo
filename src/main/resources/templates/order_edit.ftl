@@ -1467,15 +1467,15 @@
     function getCscContantAndCompanyDtoConsignorStr() {
         var paramConsignor = {};
         var paramConsignee = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consignorName").val();
-        cscContact.contactName = $("#consignorContactName").val();
-        cscContact.purpose = "2";
-        cscContact.phone = $("#consignorPhone").val();
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consignorName").val();
+        cscContactDto.contactName = $("#consignorContactName").val();
+        cscContactDto.purpose = "2";
+        cscContactDto.phone = $("#consignorPhone").val();
         /*var cscContantAndCompanyDto = {};
-       cscContantAndCompanyDto.cscContact = cscContact;
-       cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+       cscContantAndCompanyDto.cscContactDto = cscContactDto;
+       cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
        var param = JSON.stringify(cscContantAndCompanyDto);
 
       CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
@@ -1492,13 +1492,13 @@
           });
       });*/
 
-        cscContact.serialNo = $("#consignorContactCode").val();
-        cscContactCompany.type = $("#consignorType").val();
-        //cscContactCompany.id = $("#consignorCode").val();
+        cscContactDto.serialNo = $("#consignorContactCode").val();
+        cscContactCompanyDto.type = $("#consignorType").val();
+        //cscContactCompanyDto.id = $("#consignorCode").val();
 
-        cscContact.fax = $("#consignorFax").val();
-        cscContact.email = $("#consignorEmail").val();
-        cscContact.postCode = $("#consignorPostCode").val();
+        cscContactDto.fax = $("#consignorFax").val();
+        cscContactDto.email = $("#consignorEmail").val();
+        cscContactDto.postCode = $("#consignorPostCode").val();
 
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
 
@@ -1507,24 +1507,24 @@
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
 
 
-        cscContact.province = consignorAddressCodeMessage[0];
-        cscContact.city = consignorAddressCodeMessage[1];
-        cscContact.area = consignorAddressCodeMessage[2];
-//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContactDto.province = consignorAddressCodeMessage[0];
+        cscContactDto.city = consignorAddressCodeMessage[1];
+        cscContactDto.area = consignorAddressCodeMessage[2];
+//        cscContactDto.streetCode = consigneeAddressCodeMessage[3];
         if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
-            cscContact.street = consignorAddressCodeMessage[3];
+            cscContactDto.street = consignorAddressCodeMessage[3];
         }
-        cscContact.provinceName = consignorAddressNameMessage[0];
-        cscContact.cityName = consignorAddressNameMessage[1];
-        cscContact.areaName = consignorAddressNameMessage[2];
+        cscContactDto.provinceName = consignorAddressNameMessage[0];
+        cscContactDto.cityName = consignorAddressNameMessage[1];
+        cscContactDto.areaName = consignorAddressNameMessage[2];
         if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-            cscContact.streetName = consignorAddressNameMessage[3];
+            cscContactDto.streetName = consignorAddressNameMessage[3];
         }
-        cscContact.address = $("#consigneeAddress").val();
+        cscContactDto.address = $("#consigneeAddress").val();
 
-//        cscContact.address = $("#consignorAddress").val();
-        paramConsignor.cscContact = cscContact;
-        paramConsignor.cscContactCompany = cscContactCompany;
+//        cscContactDto.address = $("#consignorAddress").val();
+        paramConsignor.cscContactDto = cscContactDto;
+        paramConsignor.cscContactCompanyDto = cscContactCompanyDto;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
         return cscContantAndCompanyDtoConsignorStr;
 
@@ -1533,41 +1533,41 @@
     function getCscContantAndCompanyDtoConsigneeStr() {
         var paramConsignor = {};
         var paramConsignee = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consigneeName").val();
-        cscContact.contactName = $("#consigneeContactName").val();
-        cscContact.purpose = "1";
-        cscContact.phone = $("#consigneePhone").val();
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consigneeName").val();
+        cscContactDto.contactName = $("#consigneeContactName").val();
+        cscContactDto.purpose = "1";
+        cscContactDto.phone = $("#consigneePhone").val();
 
-        cscContact.serialNo = $("#consigneeContactCode").val();
-        cscContactCompany.type = $("#consigneeType").val();
-        cscContact.fax = $("#consigneeFax").val();
-        cscContact.email = $("#consigneeEmail").val();
-        cscContact.postCode = $("#consigneePostCode").val();
+        cscContactDto.serialNo = $("#consigneeContactCode").val();
+        cscContactCompanyDto.type = $("#consigneeType").val();
+        cscContactDto.fax = $("#consigneeFax").val();
+        cscContactDto.email = $("#consigneeEmail").val();
+        cscContactDto.postCode = $("#consigneePostCode").val();
 
         var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
-        cscContact.province = consigneeAddressCodeMessage[0];
-        cscContact.city = consigneeAddressCodeMessage[1];
-        cscContact.area = consigneeAddressCodeMessage[2];
-//        cscContact.streetCode = consigneeAddressCodeMessage[3];
+        cscContactDto.province = consigneeAddressCodeMessage[0];
+        cscContactDto.city = consigneeAddressCodeMessage[1];
+        cscContactDto.area = consigneeAddressCodeMessage[2];
+//        cscContactDto.streetCode = consigneeAddressCodeMessage[3];
         if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
-            cscContact.street = consigneeAddressCodeMessage[3];
+            cscContactDto.street = consigneeAddressCodeMessage[3];
         }
 
-        cscContact.provinceName = consigneeAddressNameMessage[0];
-        cscContact.cityName = consigneeAddressNameMessage[1];
-        cscContact.areaName = consigneeAddressNameMessage[2];
+        cscContactDto.provinceName = consigneeAddressNameMessage[0];
+        cscContactDto.cityName = consigneeAddressNameMessage[1];
+        cscContactDto.areaName = consigneeAddressNameMessage[2];
         if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-            cscContact.streetName = consigneeAddressNameMessage[3];
+            cscContactDto.streetName = consigneeAddressNameMessage[3];
         }
-        cscContact.address = $("#consigneeAddress").val();
+        cscContactDto.address = $("#consigneeAddress").val();
 
 
-        paramConsignee.cscContact = cscContact;
-        paramConsignee.cscContactCompany = cscContactCompany;
+        paramConsignee.cscContactDto = cscContactDto;
+        paramConsignee.cscContactCompanyDto = cscContactCompanyDto;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
         return cscContantAndCompanyDtoConsigneeStr;
     }
@@ -1640,14 +1640,14 @@
         $("#consignorSelectFormBtn").click(function () {
             //$.post("/ofc/contactSelect",$("#consignorSelConditionForm").serialize(),function (data) {
             var cscContantAndCompanyDto = {};
-            var cscContact = {};
-            var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = $("#consignorName2").value;
-            cscContact.purpose = "2";
-            cscContact.contactName = $("#consignorPerson2").value;
-            cscContact.phone = $("#consignorPhoneNumber2").value;
-            cscContantAndCompanyDto.cscContact = cscContact;
-            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
+            cscContactCompanyDto.contactCompanyName = $("#consignorName2").value;
+            cscContactDto.purpose = "2";
+            cscContactDto.contactName = $("#consignorPerson2").value;
+            cscContactDto.phone = $("#consignorPhoneNumber2").value;
+            cscContantAndCompanyDto.cscContactDto = cscContactDto;
+            cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             var param = JSON.stringify(cscContantAndCompanyDto);
             CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
@@ -1674,14 +1674,14 @@
 
         $("#consigneeSelectFormBtn").click(function () {
             var cscContantAndCompanyDto = {};
-            var cscContact = {};
-            var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = $("#consignorName2").value;
-            cscContact.purpose = "1";
-            cscContact.contactName = $("#consignorPerson2").value;
-            cscContact.phone = $("#consignorPhoneNumber2").value;
-            cscContantAndCompanyDto.cscContact = cscContact;
-            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
+            cscContactCompanyDto.contactCompanyName = $("#consignorName2").value;
+            cscContactDto.purpose = "1";
+            cscContactDto.contactName = $("#consignorPerson2").value;
+            cscContactDto.phone = $("#consignorPhoneNumber2").value;
+            cscContantAndCompanyDto.cscContactDto = cscContactDto;
+            cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             var param = JSON.stringify(cscContantAndCompanyDto);
             CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param}, function(data) {
                 data=eval(data);
@@ -1751,15 +1751,15 @@
                     /*$("#consigneeAddress").val(address);*/
                     var paramConsignor = {};
                     var paramConsignee = {};
-                    var cscContact = {};
-                    var cscContactCompany = {};
-                    cscContactCompany.contactCompanyName = $("#consigneeName").val();
-                    cscContact.contactName = $("#consigneeContactName").val();
-                    cscContact.purpose = "1";
-                    cscContact.phone = $("#consigneePhone").val();
+                    var cscContactDto = {};
+                    var cscContactCompanyDto = {};
+                    cscContactCompanyDto.contactCompanyName = $("#consigneeName").val();
+                    cscContactDto.contactName = $("#consigneeContactName").val();
+                    cscContactDto.purpose = "1";
+                    cscContactDto.phone = $("#consigneePhone").val();
                     var cscContantAndCompanyDto = {};
-                    cscContantAndCompanyDto.cscContact = cscContact;
-                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    cscContantAndCompanyDto.cscContactDto = cscContactDto;
+                    cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
                     var param = JSON.stringify(cscContantAndCompanyDto);
                     CommonClient.syncpost(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param},function (data) {
                         data = eval(data);
@@ -1891,15 +1891,15 @@
                     //在这里将所有的信息补全!!
                     var paramConsignor = {};
                     var paramConsignee = {};
-                    var cscContact = {};
-                    var cscContactCompany = {};
-                    cscContactCompany.contactCompanyName = consignorName;
-                    cscContact.contactName = contacts;
-                    cscContact.purpose = "2";
-                    cscContact.phone = contactsNumber;
+                    var cscContactDto = {};
+                    var cscContactCompanyDto = {};
+                    cscContactCompanyDto.contactCompanyName = consignorName;
+                    cscContactDto.contactName = contacts;
+                    cscContactDto.purpose = "2";
+                    cscContactDto.phone = contactsNumber;
                     var cscContantAndCompanyDto = {};
-                    cscContantAndCompanyDto.cscContact = cscContact;
-                    cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+                    cscContantAndCompanyDto.cscContactDto = cscContactDto;
+                    cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
                     var param = JSON.stringify(cscContantAndCompanyDto);
 
 

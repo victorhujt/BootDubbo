@@ -4,8 +4,6 @@ import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.Producer;
 import com.aliyun.openservices.ons.api.SendResult;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
-import com.xescm.ofc.utils.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -65,13 +63,13 @@ public class DefaultMqProducer {
 //        listp.add(d);
 //        c1.setPlannedDetails(listp);
 //        list2.add(c1);
-//        String shjson= JSONUtils.objectToJson(list2);
+//        String shjson= JacksonUtil.toJsonWithFormat(list2);
 //        tag="620";
 //        c.setStatus("00");
 //        c.setTraceTime(new Date());
 //        List<ofcSiloprogramStatusFedBackCondition> list=new ArrayList<>();
 //        list.add(c);
-//        String json= JSONUtils.objectToJson(list);
+//        String json= JacksonUtil.toJsonWithFormat(list);
 //        Message message1 = new Message(mqConfig.getOfcOrderStatusTopic(), tag,json.getBytes());
 //        Message message2 = new Message(mqConfig.getOfc2WhcOrderTopic(), tag,shjson.getBytes());
             message.setKey(code);
@@ -84,20 +82,5 @@ public class DefaultMqProducer {
         }
         return isSend;
     }
-
-
-    public void testSendWhcOrderStatus(){
-        ofcSiloprogramStatusFedBackCondition c=new ofcSiloprogramStatusFedBackCondition();
-        c.setPlanCode("");
-        c.setStatus("开始");
-        c.setTraceTime(new Date());
-        String json= JSONUtils.objectToJson(c);
-        Message message = new Message(mqConfig.getOfc2WhcOrderTopic(),"",json.getBytes());
-        SendResult sendResult = producer.send(message);
-
-
-    }
-
-
 
 }

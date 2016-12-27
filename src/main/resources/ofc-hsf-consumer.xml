@@ -25,4 +25,9 @@
     <hsf:consumer id="rmcServiceCoverageEdasService" interface="com.xescm.rmc.edas.service.RmcServiceCoverageEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="rmcWarehouseEdasService" interface="com.xescm.rmc.edas.service.RmcWarehouseEdasService" group="xescm-rmc" version="1.0" clientTimeout="600000"/>
 
+    <!--Epc订单取消 -->
+    <hsf:consumer id="epcOrderCancelEdasService" interface="com.xescm.epc.edas.service.EpcOrderCancelEdasService" group="xescm-epc" version="1.0" clientTimeout="600000"/>
+    <!-- Epc返回映射表-->
+    <hsf:consumer id="epcRecordMappedEdasService" interface="com.xescm.epc.edas.service.EpcRecordMappedEdasService" group="xescm-epc" version="1.0" clientTimeout="600000"/>
+
 </beans>
