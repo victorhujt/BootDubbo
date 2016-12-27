@@ -1,11 +1,11 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
-import com.xescm.ofc.utils.PubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

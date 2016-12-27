@@ -1,28 +1,27 @@
 package com.xescm.ofc.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
+import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
-import com.xescm.ofc.model.dto.epc.CancelOrderDto;
-import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
-import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
-import com.xescm.ofc.utils.JsonUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +74,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         //组装接口的返回信息
         List<CreateOrderResult> createOrderResultList = null;
         try {
-            List<CreateOrderEntity> createOrderEntityList = (List<CreateOrderEntity>) JsonUtil.json2List(data, new TypeReference<List<CreateOrderEntity>>() {
+            List<CreateOrderEntity> createOrderEntityList = (List<CreateOrderEntity>) JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
                 createOrderResultList = new ArrayList<>();
@@ -144,7 +143,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 createOrderResultDto.setMessage(typeIdList);
 
                 //要反回的json格式的字符串
-                String createOrderResultDtoJson = JsonUtil.object2Json(createOrderResultDto);
+                String createOrderResultDtoJson = JacksonUtil.toJson(createOrderResultDto);
                 return createOrderResultDtoJson;
             }
             logger.debug("订单中心创建订单接口结束");

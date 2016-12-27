@@ -53,7 +53,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 
 	@Override
 	public void feedBackSiloproStatusFromWhc(
-			ofcSiloprogramStatusFedBackCondition condition) {
+			OfcSiloprogramStatusFedBackCondition condition) {
 		try {
 			String orderCode;
 			String planCode=condition.getPlanCode();

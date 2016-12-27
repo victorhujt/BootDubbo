@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by hujintao on 2016/12/1.
  */
-public class ofcSiloprogramStatusFedBackCondition {
+public class OfcSiloprogramStatusFedBackCondition {
 
     private String planCode;
     private String status;

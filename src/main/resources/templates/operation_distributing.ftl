@@ -186,12 +186,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label  col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix" >
-                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContactDto.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -325,12 +325,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label  col-label no-padding-right" for="name" style="line-height:34px;">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -1331,14 +1331,14 @@
             $("#pageBarDivConsignor").hide();
             $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
-            var cscContact = {};
-            var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = "";
-            cscContact.purpose = "2";
-            cscContact.contactName = "";
-            cscContact.phone = "";
-            cscContantAndCompanyDto.cscContact = cscContact;
-            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
+            cscContactCompanyDto.contactCompanyName = "";
+            cscContactDto.purpose = "2";
+            cscContactDto.contactName = "";
+            cscContactDto.phone = "";
+            cscContantAndCompanyDto.cscContactDto = cscContactDto;
+            cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             cscContantAndCompanyDto.pageNum = 1;
             cscContantAndCompanyDto.pageSize = 20;
             var customerCode = $("#customerCode").val();
@@ -1462,15 +1462,15 @@
     function queryConsignorDataDistri(pageNum){
         $("#contactSelectListTbody2").html("");
         var cscContantAndCompanyDto = {};
-        var cscContact = {};
-        var cscContactCompany = {};
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
 
-        cscContactCompany.contactCompanyName = $("#consignorName2").val();
-        cscContact.purpose = "2";
-        cscContact.contactName = $("#consignorPerson2").val();
-        cscContact.phone = $("#consignorPhoneNumber2").val();
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        cscContactCompanyDto.contactCompanyName = $("#consignorName2").val();
+        cscContactDto.purpose = "2";
+        cscContactDto.contactName = $("#consignorPerson2").val();
+        cscContactDto.phone = $("#consignorPhoneNumber2").val();
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
         cscContantAndCompanyDto.pageSize = 20;
         var customerCode = $("#customerCode").val();
@@ -1632,14 +1632,14 @@
 
     /*$("#consigneeSelectFormBtn").click(function () {
         var cscContantAndCompanyDto = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consignorName1").val();
-        cscContact.purpose = "1";
-        cscContact.contactName = $("#consignorPerson1").val();
-        cscContact.phone = $("#consignorPhoneNumber1").val();
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consignorName1").val();
+        cscContactDto.purpose = "1";
+        cscContactDto.contactName = $("#consignorPerson1").val();
+        cscContactDto.phone = $("#consignorPhoneNumber1").val();
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
 
         var customerCode = $("#customerCode").val();
 
@@ -1684,14 +1684,14 @@
         $("#contactSelectListTbody1").html("");
 
         var cscContantAndCompanyDto = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consignorName1").val();
-        cscContact.purpose = "1";
-        cscContact.contactName = $("#consignorPerson1").val();
-        cscContact.phone = $("#consignorPhoneNumber1").val();
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consignorName1").val();
+        cscContactDto.purpose = "1";
+        cscContactDto.contactName = $("#consignorPerson1").val();
+        cscContactDto.phone = $("#consignorPhoneNumber1").val();
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
         cscContantAndCompanyDto.pageSize = 20;
         var customerCode = $("#customerCode").val();

@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcSiloproStatus;
-import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
+import com.xescm.ofc.domain.OfcSiloprogramStatusFedBackCondition;
 import com.xescm.ofc.domain.ofcWarehouseFeedBackCondition;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface OfcSiloproStatusService extends IService<OfcSiloproStatus> {
     int updateByPlanCode(Object key);
-    public void feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackCondition condition);
+    public void feedBackSiloproStatusFromWhc(OfcSiloprogramStatusFedBackCondition condition);
     public void ofcWarehouseFeedBackFromWhc(ofcWarehouseFeedBackCondition condition);
     List<OfcSiloproStatus> queryUncompletedPlanCodesByOrderCode(String orderCode);
 }
