@@ -1280,6 +1280,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                                 try {
                                     BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiDto);
+                                    ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                                 } catch (IllegalAccessException e) {
                                     throw new BusinessException(e.getMessage(),e);
                                 } catch (InvocationTargetException e) {
@@ -1582,6 +1583,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                                 try {
                                     BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                                    ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                                 } catch (IllegalAccessException e) {
                                     throw new BusinessException(e.getMessage(),e);
                                 } catch (InvocationTargetException e) {
