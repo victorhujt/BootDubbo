@@ -1175,7 +1175,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
         try{
-            rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
+            rmcCompanyLists = rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         }catch (Exception ex){
             throw new BusinessException("服务商查询出错", ex);
         }
@@ -1923,7 +1923,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);

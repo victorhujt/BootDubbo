@@ -44,13 +44,13 @@
     AND ofi.cust_code = #{custCode}
   </select>
 
-  <resultMap id="queryOrderStatusMap" type="com.xescm.ofc.model.dto.epc.QueryOrderStatusDto">
+  <resultMap id="queryOrderStatusMap" type="com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto">
     <result column="cust_order_code" property="custOrderCode"></result>
     <result column="order_code" property="orderCode"></result>
     <result column="order_status" property="orderStatus"></result>
   </resultMap>
 
-  <select id="queryOrderStatusList" resultMap="queryOrderStatusMap" parameterType="com.xescm.ofc.model.dto.epc.QueryOrderStatusDto">
+  <select id="queryOrderStatusList" resultMap="queryOrderStatusMap" parameterType="com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto">
     SELECT
       ofi.order_code,
       ofi.cust_order_code,

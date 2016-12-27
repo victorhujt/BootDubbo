@@ -1,29 +1,25 @@
-package com.xescm.ofc.web.api;
+package com.xescm.ofc.edas.service.impl;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
+import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
+import com.xescm.ofc.edas.service.OfcOrderCancelEdasServie;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.epc.CancelOrderDto;
-import com.xescm.ofc.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.web.controller.BaseController;
-
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 /**
- * 订单取消接口
- * Created by hiyond on 2016/11/30.
+ * Created by wangsongtao on 2016/12/27.
  */
-@RestController
-public class OfcOrderCancelApiController extends BaseController {
-
+@Service
+public class OfcOrderCancelEdasServieImpl implements OfcOrderCancelEdasServie{
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private CreateOrderService createOrderService;
 
@@ -33,10 +29,8 @@ public class OfcOrderCancelApiController extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/api/epc/order/orderCancel", produces = {"application/json;charset=UTF-8"})
-    @ResponseBody
-    @ApiOperation(value = "鲜易网取消接口", notes = "返回是否成功", response = Wrapper.class)
-    public Wrapper<CannelOrderVo> orderCancel(@RequestBody CancelOrderDto cancelOrderDto) {
+    @Override
+    public Wrapper<CannelOrderVo> orderCancel(CancelOrderDto cancelOrderDto) {
         logger.info("取消订单接口参数：custOrderCode：{}", ToStringBuilder.reflectionToString(cancelOrderDto));
         try {
             if (cancelOrderDto == null) {
@@ -61,5 +55,4 @@ public class OfcOrderCancelApiController extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
-
 }

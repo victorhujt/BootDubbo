@@ -1,45 +1,33 @@
-package com.xescm.ofc.web.api;
+package com.xescm.ofc.edas.service.impl;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.web.controller.BaseController;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by hiyond on 2016/12/19.
+ * Created by wangsongtao on 2016/12/27.
  */
-@Controller
-@RequestMapping(value = "api", produces = {"application/json;charset=UTF-8"})
-public class OfcQueryOrderStatusApiController extends BaseController {
+@Service
+public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     @Autowired
     private CreateOrderService createOrderService;
 
-    /**
-     * 对接平台定时获取订单中心的鲜易网七天内待发货状态中的订单
-     * 参数：客户编码 订单日期开始日期 订单日期结束日期
-     * 仅需要订单状态为【待审核】、【已审核】、【任务中】 三种状态的订单列表
-     * 返回：List
-     *
-     * @param queryOrderStatusDto
-     * @return
-     */
-    @RequestMapping(value = "epc/order/queryOrderStatus")
-    @ResponseBody
-    @ApiOperation(value = "对接平台定时获取订单中心的鲜易网", notes = "list", response = Wrapper.class)
-    public Wrapper<List<QueryOrderStatusDto>> queryOrderStatus(@RequestBody QueryOrderStatusDto queryOrderStatusDto) {
+    @Override
+    public Wrapper<List<QueryOrderStatusDto>> queryOrderStatus(QueryOrderStatusDto queryOrderStatusDto) {
         logger.info("取消订单接口参数：queryOrderStatusDto：{}", ToStringBuilder.reflectionToString(queryOrderStatusDto));
         try {
             if (queryOrderStatusDto == null) {
