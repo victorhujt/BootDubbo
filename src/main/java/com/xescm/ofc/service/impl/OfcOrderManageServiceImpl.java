@@ -25,11 +25,13 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
-import com.xescm.ofc.feign.client.FeignWhcSiloprogramAPIClient;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
-import com.xescm.ofc.model.dto.whc.*;
+import com.xescm.ofc.model.dto.whc.WhcDelivery;
+import com.xescm.ofc.model.dto.whc.WhcDeliveryDetails;
+import com.xescm.ofc.model.dto.whc.WhcInStock;
+import com.xescm.ofc.model.dto.whc.WhcInStockDetails;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
@@ -42,6 +44,8 @@ import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.whc.edas.Dto.OfcCancelOrderDTO;
+import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -111,7 +115,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private EpcOrderCancelEdasService epcOrderCancelEdasService;
     @Autowired
-    private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
+    private WhcOrderCancelEdasService whcOrderCancelEdasService;
     @Autowired
     private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
     @Autowired
@@ -849,7 +853,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
         for(int i=0;i<ofcSiloprogramInfoList.size();i++){
             OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
-            Response response=null;
+            Wrapper response=null;
             OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
             ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
             ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
@@ -866,21 +870,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
                 try {
-                        CancelOrderDTO dto=new CancelOrderDTO();
-                        dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
-                        dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
-                        if(OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
-                            dto.setBillType(ORDER_TYPE_IN);
-                        }else if(OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
-                            dto.setBillType(ORDER_TYPE_OUT);
-                        }
-                        dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
-                        dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
-                        dto.setReason("");
+                    OfcCancelOrderDTO dto=new OfcCancelOrderDTO();
+                    dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
+                    dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
+                    if(OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                        dto.setBillType(ORDER_TYPE_IN);
+                    }else if(OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                        dto.setBillType(ORDER_TYPE_OUT);
+                    }
+                    dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
+                    dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
+                    dto.setReason("");
                     logger.info("==> 仓储计划单号{}开始取消,业务类型为{}",ofcSiloprogramInfo.getPlanCode(),ofcSiloprogramInfo.getDocumentType());
                         //调用接口尝试3次
                         for (int j = 0; j <3; j++) {
-                            response=feignWhcSiloprogramAPIClient.cancelOrder(dto);
+                            response=whcOrderCancelEdasService.cancelOrder(dto);
                             if(response!=null){
                                 break;
                             }

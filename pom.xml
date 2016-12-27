@@ -57,6 +57,11 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.xescm.whc</groupId>
+			<artifactId>xescm-whc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.xescm.core</groupId>
 			<artifactId>xescm-core</artifactId>
 			<version>1.0</version>
