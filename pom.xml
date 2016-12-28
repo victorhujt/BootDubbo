@@ -27,33 +27,38 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.xescm.uam</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>3.0</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xescm.ofc</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-ofc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xescm.csc</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-csc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xescm.ac</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-ac-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xescm.rmc</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-rmc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xescm.epc</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-epc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-whc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
