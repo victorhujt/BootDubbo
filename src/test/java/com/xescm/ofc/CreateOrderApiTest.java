@@ -1,50 +1,39 @@
 package com.xescm.ofc;
 
-import com.xescm.ofc.service.OfcOssManagerService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-
 /**
  * Created by hiyond on 2016/11/18.
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = XescmOfcApplication.class)
-@WebAppConfiguration
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringApplicationConfiguration(classes = XescmOfcApplication.class)
+//@WebAppConfiguration
 public class CreateOrderApiTest {
 
-    @Autowired
-    private OfcOssManagerService ofcOssManagerService;
+   // @Autowired
+  //  private OfcOssManagerService ofcOssManagerService;
 
   //  @Autowired
    // private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
 
-    @Test
-    public void getStyleUrl(){
-        String url= null;
-
-        try {
-            url = ofcOssManagerService.operateImage("image/resize,m_fixed,w_300,h_300/rotate,270","AT161222000061");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        URL urlNew=ofcOssManagerService.getFileURL("ofc/file/1482405840769_IMG_2224.JPG");
-        //URL  urlNew=ofcOssManagerService.getFileURL("ofc/file/ example-rotate.jpg.PNG");
-        System.out.println("处理后的图片:"+urlNew.toString());
-
-
-
-
-        System.out.println(url);
-    }
+//    @Test
+//    public void getStyleUrl(){
+//        String url= null;
+//
+//        try {
+//            url = ofcOssManagerService.operateImage("image/resize,m_fixed,w_300,h_300/rotate,270","AT161222000061");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//
+//        URL urlNew=ofcOssManagerService.getFileURL("ofc/file/1482405840769_IMG_2224.JPG");
+//        //URL  urlNew=ofcOssManagerService.getFileURL("ofc/file/ example-rotate.jpg.PNG");
+//        System.out.println("处理后的图片:"+urlNew.toString());
+//
+//
+//
+//
+//        System.out.println(url);
+//    }
 
 
     /*@Test
