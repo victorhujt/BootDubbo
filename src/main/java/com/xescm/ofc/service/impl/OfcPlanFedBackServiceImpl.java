@@ -116,8 +116,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             }
                         }else if(status.equals("已签收")){
                             flag=false;
-                            flag=checkStatus(flag,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-                                    +" "+"客户已签收");
+                            flag=checkStatus(flag,statusList,"end","客户已签收");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
