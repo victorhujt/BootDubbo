@@ -142,6 +142,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }*/
                     //至此, 已经能拿到每一列的值
                     if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
+                        if(PubUtils.isSEmptyOrNull(cellValue)){
+                            break;
+                        }
                         String refCellValue = cellReflectToDomain(cellValue); //标准表字段映射成对应实体的字段的值
                         modelNameStr.put(cellNum,refCellValue);
                     }else if(rowNum > 0){ // 表格的数据体
@@ -260,9 +263,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
-        if(modelNameStr.size() < 12){
+        /*if(modelNameStr.size() < 12){
             throw new BusinessException("Excel字段不全!");//
-        }
+        }*/
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,OfcContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
@@ -347,7 +350,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
                             cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                             cscGoodsApiVo.setGoodsCode(cscGoodsApiDto.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
-                            jsonArray.add(cscGoodsApiVo);
+                            OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
+                            try {
+                                BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                                ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
+                            } catch (IllegalAccessException e) {
+                                throw new BusinessException(e.getMessage(),e);
+                            } catch (InvocationTargetException e) {
+                                throw new BusinessException(e.getMessage(),e);
+                            }
+                            jsonArray.add(ofcGoodsApiVo);
                             jsonArray.add(jsonObject);
                             jsonArray.add(ofcContantAndCompanyResponseDto);
 
@@ -466,6 +478,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                         try {
                             BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                            ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                         } catch (IllegalAccessException e) {
                             throw new BusinessException(e.getMessage(),e);
                         } catch (InvocationTargetException e) {
@@ -656,6 +669,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }*/
                     //至此, 已经能拿到每一列的值
                     if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
+                        if(PubUtils.isSEmptyOrNull(cellValue)){
+                            break;
+                        }
                         String refCellValue = cellReflectToDomain(cellValue); //标准表字段映射成对应实体的字段的值
                         modelNameStr.put(cellNum,refCellValue);
                     }else if(rowNum > 0){ // 表格的数据体
@@ -770,9 +786,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             ofcCheckExcelErrorVo.setXlsErrorMsg(xlsErrorMsg);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
-        if(modelNameStr.size() < 12){
+        /*if(modelNameStr.size() < 12){
             throw new BusinessException("Excel字段不全!");//
-        }
+        }*/
         Map<String,JSONArray> resultMap = new LinkedHashMap<>();
         Map<String,OfcContantAndCompanyResponseDto> getEEByCustOrderCode = new HashMap<>();
         Map<String,Boolean> orderByCustOrderCode = new HashMap<>();
@@ -848,7 +864,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
                             cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                             cscGoodsApiVo.setGoodsCode(cscGoodsApiDto.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
-                            jsonArray.add(cscGoodsApiVo);
+                            OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
+                            try {
+                                BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                                ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
+                            } catch (IllegalAccessException e) {
+                                throw new BusinessException(e.getMessage(),e);
+                            } catch (InvocationTargetException e) {
+                                throw new BusinessException(e.getMessage(),e);
+                            }
+                            jsonArray.add(ofcGoodsApiVo);
                             jsonArray.add(jsonObject);
                             jsonArray.add(ofcContantAndCompanyResponseDto);
 
@@ -968,6 +993,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                         try {
                             BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                            ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                         } catch (IllegalAccessException e) {
                             throw new BusinessException(e.getMessage(),e);
                         } catch (InvocationTargetException e) {
@@ -1069,29 +1095,29 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
      * 列名和实体的映射
      */
     private String cellReflectToDomain(String cellName){
-        if(cellName.equals("客户订单号")){
+        if(StringUtils.equals(cellName,"客户订单号")){
             return "custOrderCode";
-        }else if(cellName.equals("订单日期")){
+        }else if(StringUtils.equals(cellName,"订单日期")){
             return "orderTime";
-        }else if(cellName.equals("收货方名称")){
+        }else if(StringUtils.equals(cellName,"收货方名称")){
             return "consigneeName";
-        }else if(cellName.equals("联系人")){
+        }else if(StringUtils.equals(cellName,"联系人")){
             return "consigneeContactName";
-        }else if(cellName.equals("联系电话")){
+        }else if(StringUtils.equals(cellName,"联系电话")){
             return "consigneeContactPhone";
-        }else if(cellName.equals("地址")){
+        }else if(StringUtils.equals(cellName,"地址")){
             return "consigneeAddress";
-        }else if(cellName.equals("货品编码")){
+        }else if(StringUtils.equals(cellName,"货品编码")){
             return "goodsCode";
-        }else if(cellName.equals("货品名称")){
+        }else if(StringUtils.equals(cellName,"货品名称")){
             return "goodsName";
-        }else if(cellName.equals("规格")){
+        }else if(StringUtils.equals(cellName,"规格")){
             return "goodsSpec";
-        }else if(cellName.equals("单位")){
+        }else if(StringUtils.equals(cellName,"单位")){
             return "goodsUnit";
-        }else if(cellName.equals("数量")){
+        }else if(StringUtils.equals(cellName,"数量")){
             return "goodsAmount";
-        }else if(cellName.equals("单价")){
+        }else if(StringUtils.equals(cellName,"单价")){
             return "goodsUnitPirce";
         }else {
             return "";
@@ -1798,7 +1824,15 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         cscGoodsImportDtoSet.addAll(cscGoodsImportDtoList);
         cscGoodsImportDtoList = new ArrayList<>();
         for(OfcGoodsImportDto cscGoodsImportDto : cscGoodsImportDtoSet){
-            cscGoodsImportDtoList.add(cscGoodsImportDto);
+            boolean noRepeat = true;
+            for(OfcGoodsImportDto ofcGoodsImportDtoIn : cscGoodsImportDtoList){
+                if(StringUtils.equals(cscGoodsImportDto.getGoodsCode(),ofcGoodsImportDtoIn.getGoodsCode())){
+                    noRepeat = false;
+                }
+            }
+            if(noRepeat){
+                cscGoodsImportDtoList.add(cscGoodsImportDto);
+            }
         }
         return cscGoodsImportDtoList;
     }

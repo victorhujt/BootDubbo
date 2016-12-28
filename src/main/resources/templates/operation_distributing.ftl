@@ -2535,7 +2535,11 @@
     }
 
     function onlyNumAndAbc(value){
-        return value = value.replace(/[^\w]/ig,'');
+        value = value.replace(/[^\w]/ig,'');
+        if(/\d{31}/.test(value)){
+            value = value.replace(/\d$/gi,'');
+        }
+        return value;
     }
     $(".es-list").click(function(){
         checkType();
