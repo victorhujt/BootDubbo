@@ -443,11 +443,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                     continue;
                 }*/
-                OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
-                if(null == cscContantAndCompanyResponseDto){
-                    continue;
-                }
-                String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+
                 //其中货品编码要判断一下是否在Map中存在,
                 if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
                     //如果不存在则去接口判断该货品是否在客户中心中进行维护了
@@ -470,7 +466,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 //                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                         mapKey = cscGoodsApiVo.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce();
                         JSONObject jsonObject = new JSONObject();
-
+                        OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
+                        if(null == cscContantAndCompanyResponseDto){
+                            continue;
+                        }
+                        String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
                         cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                         cscGoodsApiVo.setGoodsCode(cscGoodsApiDto.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
@@ -506,6 +506,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         //相同货品编码的当前订单编号下的做累加
                         BigDecimal laterGoodsAmount = ofcExcelBoradwise.getGoodsAmount();
+                        OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
+                        if(null == cscContantAndCompanyResponseDto){
+                            continue;
+                        }
+                        String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
                         BigDecimal goodsAmount = (BigDecimal) jsonObjectExistGoods.get(jsonObjectKey);
                         if(null == goodsAmount){
                             goodsAmount = new BigDecimal(0);
@@ -958,11 +963,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 //                }
 
 
-                OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
-                if(null == cscContantAndCompanyResponseDto){
-                    continue;
-                }
-                String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+
                 //其中货品编码要判断一下是否在Map中存在,
                 if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
                     //如果不存在则去接口判断该货品是否在客户中心中进行维护了
@@ -985,7 +986,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 //                            mapKey = cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                         mapKey = cscGoodsApiVo.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce();
                         JSONObject jsonObject = new JSONObject();
-
+                        OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
+                        if(null == cscContantAndCompanyResponseDto){
+                            continue;
+                        }
+                        String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
                         jsonObject.put(jsonObjectKey,ofcExcelBoradwise.getGoodsAmount());
                         cscGoodsApiVo.setUnitPrice(String.valueOf(ofcExcelBoradwise.getGoodsUnitPirce()));
                         cscGoodsApiVo.setGoodsCode(cscGoodsApiDto.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
@@ -1021,6 +1026,11 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         JSONObject jsonObjectExistGoods = (JSONObject) jsonArrayExistGoods.get(1);
                         //相同货品编码的当前订单编号下的做累加
                         BigDecimal laterGoodsAmount = ofcExcelBoradwise.getGoodsAmount();
+                        OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(ofcExcelBoradwise.getCustOrderCode());
+                        if(null == cscContantAndCompanyResponseDto){
+                            continue;
+                        }
+                        String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
                         BigDecimal goodsAmount = (BigDecimal) jsonObjectExistGoods.get(jsonObjectKey);
                         if(null == goodsAmount){
                             goodsAmount = new BigDecimal(0);
