@@ -90,7 +90,7 @@
         var historyUrl = $("#historyUrl").val();
         var url = '';
         if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
-            url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+            url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + historyUrl;
             xescm.common.loadPage(url);
         }
     })

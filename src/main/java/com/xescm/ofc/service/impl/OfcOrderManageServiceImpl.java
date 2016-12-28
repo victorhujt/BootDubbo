@@ -19,13 +19,13 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
+import com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto;
 import com.xescm.epc.edas.dto.TransportNoDTO;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.whc.WhcDelivery;
@@ -44,7 +44,7 @@ import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import com.xescm.whc.edas.Dto.OfcCancelOrderDTO;
+import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -695,7 +695,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getTwoDistribution()).equals("")){
             pushDistributionBasicInfo.setTwoDistribution(ofcTransplanInfo.getTwoDistribution());
         }
-        com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto ofcDistributionBasicInfoDtoEpc = new com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto();
+       OfcDistributionBasicInfoDto ofcDistributionBasicInfoDtoEpc = new OfcDistributionBasicInfoDto();
         try {
             BeanUtils.copyProperties(ofcDistributionBasicInfoDtoEpc,pushDistributionBasicInfo);
         } catch (IllegalAccessException e) {
@@ -823,6 +823,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         TransportNoDTO transportNoDTO = new TransportNoDTO();
                         transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                         Wrapper response = epcOrderCancelEdasService.cancelTransport(transportNoDTO);
+                        if(response == null) {
+                            logger.error("调用epc接口出现异常!取消订单失败!{}", "epc返回的订单取消状态为空");
+                            throw new BusinessException("您无法取消!");
+                        }
                         if(Response.ERROR_CODE == response.getCode()){
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败

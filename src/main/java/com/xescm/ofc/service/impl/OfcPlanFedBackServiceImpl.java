@@ -141,7 +141,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 if(ofcFundamentalInformation != null
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)
-                                        && planCodesByOrderCode.size() == 3){
+                                        && planCodesByOrderCode.size() <= 3 && planCodesByOrderCode.size() >=2){
                                     String lastPlanCode = planCodesByOrderCode.get(0);
                                     for(String planCode : planCodesByOrderCode){
                                         if(planCode.compareTo(lastPlanCode) == 1){

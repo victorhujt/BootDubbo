@@ -2081,8 +2081,7 @@
             alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
-            var custName = $("#custName").val();
-            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode;
             xescm.common.loadPage(url);
         }
     })

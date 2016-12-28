@@ -89,15 +89,15 @@ public class CreateOrderTrans {
             List<CreateOrderGoodsInfo> list = createOrderEntity.getCreateOrderGoodsInfos();
             if (null != list && !list.isEmpty()) {
                 this.ofcGoodsDetailsInfoList = new ArrayList<>();
+                modelMapper.addMappings(new PropertyMap<CreateOrderGoodsInfo, OfcGoodsDetailsInfo>() {
+                    @Override
+                    protected void configure() {
+                        skip().setInvalidTime(null);
+                        skip().setProductionTime(null);
+                    }
+                });
                 for (CreateOrderGoodsInfo goodsInfo : list) {
                     OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-                    modelMapper.addMappings(new PropertyMap<CreateOrderGoodsInfo, OfcGoodsDetailsInfo>() {
-                        @Override
-                        protected void configure() {
-                            skip().setInvalidTime(null);
-                            skip().setProductionTime(null);
-                        }
-                    });
                     modelMapper.map(goodsInfo, ofcGoodsDetailsInfo);
                     ofcGoodsDetailsInfo.setOrderCode(this.orderCode);
                     ofcGoodsDetailsInfo.setCreationTime(nowDate);
