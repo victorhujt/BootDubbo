@@ -1176,7 +1176,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //标记当前列出错, 并跳过当前循环
                         break;
                     }else if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
-                        continue;
+                        if(rowNum == 1 && cellNum > (staticCell -1)){
+                        }else{
+                            continue;
+                        }
                     }
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
@@ -1331,8 +1334,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 }
                                 //使用正则对数字进行校验
                                 boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = goodsAndConsigneeNum.toString().matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
-                                if(matches){
+                                if(matches || matchesInt){
+                                    if((cellNum - staticCell) >= consigneeNameList.size()){
+                                        break;
+                                    }
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                     if(null == cscContantAndCompanyVo){
                                         continue;
@@ -1346,10 +1353,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                     if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
 //                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
-                                        //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
-                                        //throw new BusinessException("收货方编码或收货方联系人编码为空!");
                                         checkPass = false;
-                                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!收货方编码或收货方联系人编码为空!");
+                                        //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方在档案中不存在或信息不完整!");
                                         break;
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
@@ -1481,7 +1486,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         //标记当前列出错, 并跳过当前循环
                         break;
                     }else if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
-                        continue;
+                        if(rowNum == 1 && cellNum > (staticCell -1)){
+                        }else{
+                            continue;
+                        }
                     }
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
@@ -1633,8 +1641,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 }
                                 //使用正则对数字进行校验
                                 boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
+                                boolean matchesInt = goodsAndConsigneeNum.toString().matches("\\d{1,6}");
                                 //如果校验成功,就往结果集里堆
-                                if(matches){
+                                if(matches || matchesInt){
+                                    if((cellNum - staticCell) >= consigneeNameList.size()){
+                                        break;
+                                    }
                                     CscContantAndCompanyResponseDto cscContantAndCompanyVo = consigneeNameList.get(cellNum - staticCell);
                                     if(null == cscContantAndCompanyVo){
                                         continue;
@@ -1648,9 +1660,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     String consigneeContactCode = cscContantAndCompanyVo.getContactSerialNo();
                                     if(PubUtils.isSEmptyOrNull(consigneeCode) || PubUtils.isSEmptyOrNull(consigneeContactCode)){
 //                                        throw new BusinessException("收货方编码或收货方联系人编码为空!");
-                                            checkPass = false;
-                                            xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方在档案中不存在或信息不完整!");
-                                            break;
+                                        checkPass = false;
+                                        //xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方在档案中不存在或信息不完整!");
+                                        break;
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);

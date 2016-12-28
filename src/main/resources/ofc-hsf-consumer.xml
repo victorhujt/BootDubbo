@@ -29,7 +29,7 @@
     <hsf:consumer id="epcOrderCancelEdasService" interface="com.xescm.epc.edas.service.EpcOrderCancelEdasService" group="xescm-epc" version="1.0" clientTimeout="600000"/>
     <!-- Epc返回映射表-->
     <hsf:consumer id="epcRecordMappedEdasService" interface="com.xescm.epc.edas.service.EpcRecordMappedEdasService" group="xescm-epc" version="1.0" clientTimeout="600000"/>
-
+    <hsf:consumer id="epcOfc2DmsEdasService" interface="com.xescm.epc.edas.service.EpcOfc2DmsEdasService" group="xescm-epc" version="1.0" clientTimeout="600000"/>
 
     <hsf:consumer id="whcOrderCancelEdasService" interface="com.xescm.whc.edas.service.WhcOrderCancelEdasService" group="xescm-whc" version="1.0" clientTimeout="600000"/>
 

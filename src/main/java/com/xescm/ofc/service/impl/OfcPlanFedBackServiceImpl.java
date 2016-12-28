@@ -118,8 +118,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             }
                         }else if(status.equals("已签收")){
                             flag=false;
-                            flag=checkStatus(flag,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-                                    +" "+"客户已签收");
+                            flag=checkStatus(flag,statusList,"end","客户已签收");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
@@ -142,7 +141,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 if(ofcFundamentalInformation != null
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)
-                                        && planCodesByOrderCode.size() == 3){
+                                        && planCodesByOrderCode.size() <= 3 && planCodesByOrderCode.size() >=2){
                                     String lastPlanCode = planCodesByOrderCode.get(0);
                                     for(String planCode : planCodesByOrderCode){
                                         if(planCode.compareTo(lastPlanCode) == 1){

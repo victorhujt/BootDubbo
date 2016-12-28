@@ -1915,16 +1915,18 @@
         }
     });//custListDiv
     $("#custListDivBlock").click(function () {
-        if(couldChangeCust){
+//        if(couldChangeCust){
+//            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+//        }else{
+        var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
+        if(consigneeNum == 0){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
-        }else{
-            var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
-            if(consigneeNum == 0){
-                $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
-            }else{
-                alert("您不能再选择客户! 如需重选, 请重置收发货方!")
-            }
+        }else if(consigneeNum > 0){
+            alert("您不能再选择客户! 如需重选, 请重置收发货方!")
+        }else if(couldChangeCust){
+            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }
+        ///}
     });
     $("#custListDivNoneBottom").click(function () {
         $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
@@ -2079,8 +2081,7 @@
             alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
-            var custName = $("#custName").val();
-            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode;
             xescm.common.loadPage(url);
         }
     })

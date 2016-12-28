@@ -3,9 +3,14 @@ package com.xescm.ofc.web.controller;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.MD5Util;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscStorevo;
+import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
+import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
@@ -46,6 +51,8 @@ public class OfcJumpontroller extends BaseController{
     private OfcMerchandiserService ofcMerchandiserService;
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private CscCustomerEdasService cscCustomerEdasService;
 
 
     @RequestMapping(value="/ofc/orderPlace")
@@ -142,8 +149,8 @@ public class OfcJumpontroller extends BaseController{
      * @param map
      * @return
      */
-    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{customerCode}/{custName}")
-    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String customerCode, @PathVariable String custName , Map<String,Object> map){
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{customerCode}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String customerCode,  Map<String,Object> map){
         logger.info("城配开单Excel导入==> historyUrl={}", historyUrl);
         logger.info("城配开单Excel导入==> custId={}", customerCode);
         /*if("operation_distributing".equals(historyUrl)){
@@ -151,8 +158,18 @@ public class OfcJumpontroller extends BaseController{
         }*/
         setDefaultModel(model);
         map.put("historyUrl",historyUrl);
-        map.put("customerCode",customerCode);
-        map.put("custName",custName);
+        if(!PubUtils.isSEmptyOrNull(customerCode)) {
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(customerCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+            if (customerVoWrapper.getResult() == null || customerVoWrapper.getCode() == Wrapper.ERROR_CODE) {
+                logger.error("获取客戶信息失败：custId:{}，{}", customerCode, customerVoWrapper.getMessage());
+                return "/error/error-500";
+            }
+            String custName = customerVoWrapper.getResult().getCustomerName();
+            map.put("customerCode",customerCode);
+            map.put("custName",custName);
+        }
         return "operation_distributing_excel";
     }
 
@@ -162,28 +179,47 @@ public class OfcJumpontroller extends BaseController{
      * @param excelImportTag
      * @return
      */
-    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}/{custName}")
-    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode, @PathVariable String custName){
+    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}")
+    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode){
         logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", excelImportTag);
         logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", customerCode);
-        logger.info("Excel确认导入,跳转城配开单==> custName={}", custName);
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
         setDefaultModel(model);
         model.addAttribute("merchandiserList",merchandiserList);
         model.addAttribute("currentTime",new Date());
         model.addAttribute("excelImportTag",excelImportTag);
-        model.addAttribute("custIdFromExcelImport",customerCode);
-        model.addAttribute("custNameFromExcelImport",custName);
+        if(!PubUtils.isSEmptyOrNull(customerCode)){
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(customerCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+            if (customerVoWrapper.getResult() == null || customerVoWrapper.getCode() == Wrapper.ERROR_CODE) {
+                logger.error("获取客戶信息失败：custId:{}，{}", customerCode, customerVoWrapper.getMessage());
+                return "/error/error-500";
+            }
+            String custName = customerVoWrapper.getResult().getCustomerName();
+            model.addAttribute("custIdFromExcelImport",customerCode);
+            model.addAttribute("custNameFromExcelImport",custName);
+        }
         return "operation_distributing";
     }
     /**
      * Excel导入跳转模板配置页
      */
-    @RequestMapping(value = "/ofc/distributing/toTemplatesList/{custCode}/{custName}/{historyUrl}")
-    public String toTemplatesList( Model model,  @PathVariable String custCode, @PathVariable String custName, @PathVariable String historyUrl){
+    @RequestMapping(value = "/ofc/distributing/toTemplatesList/{custCode}/{historyUrl}")
+    public String toTemplatesList( Model model,  @PathVariable String custCode,  @PathVariable String historyUrl){
         setDefaultModel(model);
-        model.addAttribute("customerCode",custCode);
-        model.addAttribute("custName",custName);
+        if(!PubUtils.isSEmptyOrNull(custCode)) {
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(custCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+            if (customerVoWrapper.getResult() == null || customerVoWrapper.getCode() == Wrapper.ERROR_CODE) {
+                logger.error("获取客戶信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
+                return "/error/error-500";
+            }
+            String custName = customerVoWrapper.getResult().getCustomerName();
+            model.addAttribute("customerCode",custCode);
+            model.addAttribute("custName",custName);
+        }
         model.addAttribute("historyUrl",historyUrl);
         return "operation_distributing_templateslist";
     }
@@ -192,16 +228,25 @@ public class OfcJumpontroller extends BaseController{
      * 模板配置页跳转模板添加, 编辑, 查看页面, 用同一个页面做这个事儿
      * @param model
      * @param custCode
-     * @param custName
      * @param historyUrl
      * @param tag  add
      * @return
      */
-    @RequestMapping(value = "/ofc/distributing/toTemplatesoper/{custCode}/{custName}/{historyUrl}/{tag}")
-    public String toTemplates(Model model,@PathVariable String custCode, @PathVariable String custName,  @PathVariable String tag, @PathVariable String historyUrl){
+    @RequestMapping(value = "/ofc/distributing/toTemplatesoper/{custCode}/{historyUrl}/{tag}")
+    public String toTemplates(Model model,@PathVariable String custCode,  @PathVariable String tag, @PathVariable String historyUrl){
         setDefaultModel(model);
-        model.addAttribute("customerCode",custCode);
-        model.addAttribute("custName",custName);
+        if(!PubUtils.isSEmptyOrNull(custCode)) {
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(custCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+            if (customerVoWrapper.getResult() == null || customerVoWrapper.getCode() == Wrapper.ERROR_CODE) {
+                logger.error("获取客戶信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
+                return "/error/error-500";
+            }
+            String custName = customerVoWrapper.getResult().getCustomerName();
+            model.addAttribute("customerCode",custCode);
+            model.addAttribute("custName",custName);
+        }
         model.addAttribute("historyUrl",historyUrl);
         return "operation_distributing_templatesoper";
     }
