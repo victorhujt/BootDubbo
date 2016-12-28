@@ -1915,16 +1915,18 @@
         }
     });//custListDiv
     $("#custListDivBlock").click(function () {
-        if(couldChangeCust){
+//        if(couldChangeCust){
+//            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+//        }else{
+        var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
+        if(consigneeNum == 0){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
-        }else{
-            var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
-            if(consigneeNum == 0){
-                $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
-            }else{
-                alert("您不能再选择客户! 如需重选, 请重置收发货方!")
-            }
+        }else if(consigneeNum > 0){
+            alert("您不能再选择客户! 如需重选, 请重置收发货方!")
+        }else if(couldChangeCust){
+            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }
+        ///}
     });
     $("#custListDivNoneBottom").click(function () {
         $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
