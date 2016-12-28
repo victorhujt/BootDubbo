@@ -192,40 +192,6 @@ public class OfcOperationDistributing extends BaseController{
     }
 
 
-//    /**
-//     * 根据客户名称查询客户
-//     * @param queryCustomerName
-//     * @param currPage
-//     * @param response
-//     */
-//    @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
-//    @ResponseBody
-//    public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
-//        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
-//        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
-//        try{
-//            QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
-//            if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
-//                queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
-//                queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
-//            }
-//            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
-//            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
-//            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
-//            if(wrapper.getCode() == Wrapper.ERROR_CODE){
-//                logger.error("查询客户列表失败,查询结果有误!");
-//            }
-//            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
-//            if(null == cscCustomerVoList){
-//                response.getWriter().print(JacksonUtil.toJsonWithFormat(new ArrayList<CscCustomerVo>()));
-//            }else{
-//                response.getWriter().print(JacksonUtil.toJsonWithFormat(cscCustomerVoList));
-//            }
-//        }catch (Exception ex){
-//            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
-//        }
-//
-//    }
 
     /**
      * 根据客户名称分页查询客户
