@@ -815,6 +815,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         TransportNoDTO transportNoDTO = new TransportNoDTO();
                         transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                         Wrapper response = epcOrderCancelEdasService.cancelTransport(transportNoDTO);
+                        if(response == null) {
+                            logger.error("调用epc接口出现异常!取消订单失败!{}", "epc返回的订单取消状态为空");
+                            throw new BusinessException("您无法取消!");
+                        }
                         if(Response.ERROR_CODE == response.getCode()){
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败
