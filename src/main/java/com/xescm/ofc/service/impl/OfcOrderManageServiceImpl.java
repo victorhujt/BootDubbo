@@ -20,11 +20,11 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.epc.edas.dto.TransportNoDTO;
+import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignOfcDistributionAPIClient;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
@@ -117,7 +117,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
     @Autowired
-    private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
+    private EpcOfc2DmsEdasService epcOfc2DmsEdasService;
     @Autowired
     private DefaultMqProducer defaultMqProducer;
     @Autowired
@@ -695,7 +695,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getTwoDistribution()).equals("")){
             pushDistributionBasicInfo.setTwoDistribution(ofcTransplanInfo.getTwoDistribution());
         }
-        Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
+        com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto ofcDistributionBasicInfoDtoEpc = new com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto();
+        try {
+            BeanUtils.copyProperties(ofcDistributionBasicInfoDtoEpc,pushDistributionBasicInfo);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        Wrapper<?> wrapper = epcOfc2DmsEdasService.addDistributionBasicInfo(ofcDistributionBasicInfoDtoEpc);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){
             throw new BusinessException("向分拣中心推送卡班订单失败");
         }else if("100101".equals(wrapper.getCode())){
