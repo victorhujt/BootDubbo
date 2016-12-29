@@ -2125,7 +2125,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     BeanUtils.copyProperties(acGoodsDetailsInfo,ofcGoodsDetailsInfo);
                     acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
                 }
-
+                if(acGoodsDetailsInfoList.size() < 1){
+                    throw new BusinessException("订单货品明细不能为空!");
+                }
                 acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
                 acOrderDto.setAcFinanceInformation(acFinanceInformation);
                 acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);

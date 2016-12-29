@@ -30,8 +30,8 @@ public class CreateOrderApiTest {
     @Test
     public void sdf(){
         OfcPlanFedBackCondition ofcPlanFedBackCondition = new OfcPlanFedBackCondition();
-        ofcPlanFedBackCondition.setTransportNo("TP161229000016");
-        ofcPlanFedBackCondition.setStatus("已签收");
+        ofcPlanFedBackCondition.setTransportNo("TP161229000032");
+        ofcPlanFedBackCondition.setStatus("已回单");
         ofcPlanFedBackCondition.setTraceTime(new Date());
         ofcPlanFedBackService.planFedBack(ofcPlanFedBackCondition,"123");
     }
