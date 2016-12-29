@@ -124,7 +124,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "goodsName" name="goodsName" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"   onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">条形码</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "barCode" name="barCode" type="text" style="color: black" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
                             <input id="customerCodeForGoods" name ="customerCode" type="hidden"/>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix" >
-                            <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContactDto.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContactDto.contactName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                     <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorName1" name="contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName1" name="contactCompanyName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
                     <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson1" name="contactName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -277,7 +277,7 @@
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber1" name="phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber1" name="phone" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -330,7 +330,7 @@
                     <label class="control-label  col-label no-padding-right" for="name" style="line-height:34px;">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -391,7 +391,7 @@
                     <label class="control-label col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameDiv" name="" type="text" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -399,7 +399,7 @@
                     <label class="control-label col-label no-padding-right" for="name">规格</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "specificationDiv" name="" type="text" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"   onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -475,7 +475,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
                 <div class="width-267">
                     <div class="clearfix">
-                        <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
+                        <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
                             <#list merchandiserList! as merchandiser>
                                 <option>${(merchandiser.merchandiser)!""}</option>
                             </#list>
@@ -522,7 +522,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
             <div class="width-267">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
                 </div>
             </div></div>
         </div>
@@ -801,7 +801,7 @@
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><a onclick='deleteConsignee(this)'  class='red'>删除</a></td>"+
                         "<td>" + StringUtil.nullToEmpty(consignee.contactCompanyName) + "</td>" +
-                        "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
+                        "<td><input onpaste='return false' onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
                         "<td>" + StringUtil.nullToEmpty(consignee.contactName) + "</td>" +
                         "<td>" + StringUtil.nullToEmpty(consignee.phone) + "</td>" +
                         "<td>" + StringUtil.nullToEmpty(consignee.detailAddress) + "</td>" +
@@ -1806,7 +1806,7 @@
             consignorout =consignorout + "<tr role='row' class='odd'>";
             consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
+            consignorout =consignorout + "<td><input onpaste='return false' onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1859,7 +1859,7 @@
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
                 consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
-                consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca; ' /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
+                consignorout =consignorout + "<td><input onpaste='return false'  onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca; ' /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";

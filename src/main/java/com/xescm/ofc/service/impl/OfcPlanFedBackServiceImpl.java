@@ -147,7 +147,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 List<String> planCodesByOrderCode = ofcTransplanInfoService.queryPlanCodesByOrderCode(orderCode);
                                 //当前所有未作废未完成的运输计划单单号
                                 List<String> planCodesUncompletedByOrderCode = ofcTransplanInfoService.queryUncompletedPlanCodesByOrderCode(orderCode);
-                                //如果是卡班订单, 而且是拆三段的第三段
+                                //如果是卡班订单, 而且是拆三段的第三段,拆两段的第二段
                                 if(ofcFundamentalInformation != null
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)
@@ -158,7 +158,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                             lastPlanCode = planCode;
                                         }
                                     }
-                                    if(lastPlanCode.equals(ofcPlanFedBackCondition.getTransportNo()) && ofcTransplanInfos.size() > 1){
+                                    if(lastPlanCode.equals(ofcPlanFedBackCondition.getTransportNo()) && ofcTransplanInfos.size() > 0){
                                         //如果是最后一个,且未完成的运输计划单超过1个, 就将其他运输计划单的状态也改为已完成.
                                         for(String planCode : planCodesByOrderCode){
                                             //其他未完成的运输计划单的状态如果是未完成
