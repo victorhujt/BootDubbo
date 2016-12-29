@@ -208,7 +208,7 @@
     function invoicePrint() {
         var sel = "";
         var post = $("#REPORT").html();
-        var url = post+"/WebReport/ReportServer?reportlets=";
+        var url = post+"/OfcReport/ReportServer?reportlets=";
         var code="";
         $("#dataTbody").find("tr").each(function(index){
             var tdArr = $(this).children();
