@@ -2307,7 +2307,7 @@
 
                 }
 
-                if(goodsAmount != 0){
+                if(goodsAmount != 0 && undefined != goodsAmount && null != goodsAmount){
 
                     consigneeGoodsIsEmpty = false;
                     //return false;
