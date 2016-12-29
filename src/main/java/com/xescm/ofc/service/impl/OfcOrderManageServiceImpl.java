@@ -1210,7 +1210,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
                 TransportDTO transportDTO = null;
-                if (ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode()) != null) {
+                if (PubUtils.isNotNullAndBiggerSize(ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode()),0)) {
                     String planCode = ofcTransplanInfo.getPlanCode();
                     List<OfcPlannedDetail> ofcPlannedDetail = ofcPlannedDetailMap.get(planCode);
                     transportDTO = createOfcTransplanInfoToTfc(ofcTransplanInfo, ofcPlannedDetail, userName, custOrderCodes.get(planCode));
