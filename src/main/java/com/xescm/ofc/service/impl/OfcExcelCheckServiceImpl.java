@@ -528,6 +528,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             //将MapKey更改为适合前端模板的格式
             Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
             Boolean consigneeTag = false;
+            List<String> goodsCodeNoAmountList = new ArrayList<>();
             int consigneeNum = 1;
             for(String mapKey : resultMap.keySet()){
                 JSONArray jsonArray = resultMap.get(mapKey);
@@ -542,6 +543,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         OfcGoodsApiVo cscGoodsApiVo = (OfcGoodsApiVo) jsonArray.get(0);
 
                         Double goodsAmout = cscGoodsApiVo.getGoodsAmount();
+                        if(goodsAmout == 0){
+                            goodsCodeNoAmountList.add(cscGoodsApiVo.getGoodsCode());
+                        }
                         JSONObject jsonObject = (JSONObject) jsonArray.get(1);
                         for(String custOrderCodeIn : getEEByCustOrderCode.keySet()){
                             OfcContantAndCompanyResponseDto cscContantAndCompanyResponseDto = getEEByCustOrderCode.get(custOrderCodeIn);
@@ -569,7 +573,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     consigneeNum ++;
                 }
                 consigneeNum = 1;
-                afterResultMap.put(mapKey + "@" + goodsRowNum++,resultMap.get(mapKey));
+                OfcGoodsApiVo ofcGoodsApiVo = (OfcGoodsApiVo) jsonArray.get(0);
+                if(ofcGoodsApiVo.getGoodsAmount() != 0){
+                    afterResultMap.put(mapKey + "@" + goodsRowNum++,resultMap.get(mapKey));
+                }
             }
 
 
@@ -1050,6 +1057,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
             Boolean consigneeTag = false;
             int consigneeNum = 1;
+            List<String> goodsCodeNoAmountList = new ArrayList<>();
             for(String mapKey : resultMap.keySet()){
                 JSONArray jsonArray = resultMap.get(mapKey);
 
@@ -1073,6 +1081,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 goodsAmout = bigDecimal.add(new BigDecimal(goodsAmout.toString())).doubleValue();
                             }
                         }
+                        if(goodsAmout == 0){
+                            goodsCodeNoAmountList.add(cscGoodsApiVo.getGoodsCode());
+                        }
                         cscGoodsApiVo.setGoodsAmount(goodsAmout);
                         jsonArray.remove(1);
                         jsonArray.add(1,jsonObject);
@@ -1089,7 +1100,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     consigneeNum ++;
                 }
                 consigneeNum = 1;
-                afterResultMap.put(mapKey + "@" + goodsRowNum++,resultMap.get(mapKey));
+                OfcGoodsApiVo ofcGoodsApiVo = (OfcGoodsApiVo) jsonArray.get(0);
+                if(ofcGoodsApiVo.getGoodsAmount() != 0){
+                    afterResultMap.put(mapKey + "@" + goodsRowNum++,resultMap.get(mapKey));
+                }
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"校验成功!",afterResultMap );
         }else{

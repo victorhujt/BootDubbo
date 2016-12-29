@@ -384,6 +384,7 @@
                         <div class="clearfix">
                             <input id="goodsIndexDivHidden" type="hidden"/>
                             <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input id="goodsUnitPriceDiv" type="text" hidden/>
                         </div>
                     </div>
                 </div>
@@ -830,6 +831,7 @@
             var viewMapKeys = viewMap.keys();
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
+                
                 viewMapIndexOf += 1;
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
@@ -1191,18 +1193,23 @@
     }
 
     function goodsAndConsignee(obj){
-        
+
        $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
         var useGoodsCode = goodsCode;
-        goodsCode = goodsCode.split('@')[0];
+        var goodsCode1 = goodsCode.split('@')[0];
         var goodsName = $(obj).parent().parent().children().eq(3).text();
         var specification = $(obj).parent().parent().children().eq(4).text();
         var unit = $(obj).parent().parent().children().eq(5).text();
         $("#goodsIndexDivHidden").val(goodsIndex);
-        $("#goodsCodeDiv").val(goodsCode);
+        $("#goodsCodeDiv").val(goodsCode1);
+        var goodsUnitPrice = '';
+        if(goodsCode.split('@').length > 1){
+            goodsUnitPrice = goodsCode.split('@')[1];
+            $("#goodsUnitPriceDiv").val('@' + goodsUnitPrice);
+        }
         $("#goodsNameDiv").val(goodsName);
         $("#specificationDiv").val(specification);
         $("#unitDiv").val(unit);
@@ -1252,7 +1259,7 @@
     //统计货品发货数量
     $("#goodsAndConsigneeEnter").click(function(){
         var sendNum = 0;//统计某个货品的总的发货数量
-
+        
         var mapValue = [];
         var mapKey = "";
         var goodsJson = {};
@@ -1279,6 +1286,10 @@
             var goodsIndex = tdArr.eq(1).text();//货品索引
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsCodeDiv = $("#goodsCodeDiv").val();
+            var goodsUnitPriceDiv = $("#goodsUnitPriceDiv").val();
+            if(!StringUtil.isEmpty(goodsUnitPriceDiv)){
+                goodsCodeDiv = goodsCodeDiv + goodsUnitPriceDiv;
+            }
             var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
             if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
                 tdArr.eq(7).text(sendNum);
