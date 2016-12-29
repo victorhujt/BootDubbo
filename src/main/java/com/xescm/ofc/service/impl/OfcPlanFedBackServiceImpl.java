@@ -72,10 +72,18 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 if(ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo())==null){
                     throw new BusinessException("传送运输单号信息失败，查不到相关计划单");
                 }
-                String orderCode=ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo()).getOrderCode();
-                mapperMap.put("ifFinished","planfinish");
+                OfcTransplanInfo ofcTransplanInfot=ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo());
+                String orderCode=ofcTransplanInfot.getOrderCode();
+                String programSerialNumber = ofcTransplanInfot.getProgramSerialNumber();
                 mapperMap.put("orderCode",orderCode);
-                //当前未完成的运输计划单的LIST
+                //订单下所有非作废计划单列表
+                List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+                int serialNumberCount = -1;
+                if(ofcTransplanInfoList!=null){//订单下运输计划单数量
+                    serialNumberCount=ofcTransplanInfoList.size();
+                }
+                mapperMap.put("ifFinished","planfinish");
+                //当前非作废未完成的运输计划单的LIST
                 List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
                 OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(transPortNo);
                 if(status.equals("")){
@@ -116,7 +124,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         +" "+"车辆已到达目的地："+destination);
                                 logger.info("跟踪状态已到达");
                             }
-                        }else if(status.equals("已签收")){
+                        }else if(status.equals("已签收")
+                                //当前计划单序号等于订单下计划单数量，表示最后一个计划单
+                                && (PubUtils.trimAndNullAsEmpty(programSerialNumber).equals(serialNumberCount+""))){
                             flag=false;
                             flag=checkStatus(flag,statusList,"end","客户已签收");
                             if(!flag){
@@ -330,18 +340,18 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     info+="调度完成";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")){
                         ofcDistributionBasicInfo.setPlateNumber(ofcSchedulingSingleFeedbackCondition.getVehical());
-                        info+="，安排车辆车牌号：【"+ofcSchedulingSingleFeedbackCondition.getVehical()+"】";
                     }
+                    info+="，安排车辆车牌号：【"+ofcSchedulingSingleFeedbackCondition.getVehical()+"】";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")){
                         ofcDistributionBasicInfo.setDriverName(ofcSchedulingSingleFeedbackCondition.getDriver());
-                        info+="，司机姓名：【"+ofcSchedulingSingleFeedbackCondition.getDriver()+"】";
                     }
+                    info+="，司机姓名：【"+ofcSchedulingSingleFeedbackCondition.getDriver()+"】";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")){
                         ofcDistributionBasicInfo.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
-                        info+="，联系电话：【"+ofcSchedulingSingleFeedbackCondition.getTel()+"】";
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                             ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                             }*/
+                    info+="，联系电话：【"+ofcSchedulingSingleFeedbackCondition.getTel()+"】";
                     logger.info("###############调度状态更新信息为{}",info);
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     boolean flag = false;
