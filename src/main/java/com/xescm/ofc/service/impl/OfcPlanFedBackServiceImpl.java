@@ -184,7 +184,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         orderStatus.setOrderStatus(HASBEENCOMPLETED);
                                         orderStatus.setLastedOperTime(new Date());
                                         orderStatus.setStatusDesc("已完成");
-                                        orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                        orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                                 +" "+"订单已完成");
                                         orderStatus.setOperator(userName);
                                     }
@@ -206,7 +206,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus.setOrderStatus(HASBEENCOMPLETED);
                                     orderStatus.setLastedOperTime(new Date());
                                     orderStatus.setStatusDesc("已完成");
-                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
                                 }else if(ofcTransplanInfos.size() == 1
@@ -218,7 +218,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus.setOrderStatus(HASBEENCOMPLETED);
                                     orderStatus.setLastedOperTime(new Date());
                                     orderStatus.setStatusDesc("已完成");
-                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
                                 }

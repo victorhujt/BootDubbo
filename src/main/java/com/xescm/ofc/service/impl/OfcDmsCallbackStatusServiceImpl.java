@@ -125,6 +125,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 if(queryResult == 0){
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            +" "+"订单已完成");
                 }
             }else if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_RECEIPT.getCode(),dmsCallbackStatus)){
                 //如果是回单状态
