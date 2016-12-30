@@ -315,7 +315,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     ofcContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
                     ofcContantAndCompanyResponseDto.setContactSerialNo(cscContantAndCompanyResponseDto.getContactSerialNo() + "@" + custOrderCode);
                     getEEByCustOrderCode.put(ofcExcelBoradwise.getCustOrderCode(),ofcContantAndCompanyResponseDto);
-                    String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+                    String jsonObjectKey = ofcContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + ofcContantAndCompanyResponseDto.getContactSerialNo();
 
                     //其中货品编码要判断一下是否在Map中存在,
                     if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
@@ -848,7 +848,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     ofcContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
                     ofcContantAndCompanyResponseDto.setContactSerialNo(cscContantAndCompanyResponseDto.getContactSerialNo() + "@" + custOrderCode);//___
                     getEEByCustOrderCode.put(ofcExcelBoradwise.getCustOrderCode(),ofcContantAndCompanyResponseDto);
-                    String jsonObjectKey = cscContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + cscContantAndCompanyResponseDto.getContactSerialNo();
+                    String jsonObjectKey = ofcContantAndCompanyResponseDto.getContactCompanySerialNo() + "@" + ofcContantAndCompanyResponseDto.getContactSerialNo();
 
                     //其中货品编码要判断一下是否在Map中存在,
                     if(!resultMap.containsKey(ofcExcelBoradwise.getGoodsCode())){
