@@ -126,6 +126,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                     ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
+                    ofcOrderStatus.setLastedOperTime(new Date());
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                             +" "+"订单已完成");
                 }
