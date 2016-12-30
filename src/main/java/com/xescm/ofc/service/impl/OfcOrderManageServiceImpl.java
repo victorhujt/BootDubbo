@@ -2072,6 +2072,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
+        rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
         String address[]=planeCode.split(",");
         if(address.length>=1){
             if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
