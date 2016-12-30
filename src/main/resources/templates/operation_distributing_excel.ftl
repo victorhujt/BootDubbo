@@ -227,7 +227,7 @@
             <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
             <div class="col-xs-3">
                 <select class="col-xs-12 chosen-select" id="uploadExcelSheet">
-                    <option value=""></option>
+
                 </select>
             </div>
             <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold">加载</button>
