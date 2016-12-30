@@ -2546,7 +2546,7 @@
     }
 
     function onlyNumAndAbc(value){
-        value = value.replace(/[^\w]/ig,'');
+        value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
         if(/\d{31}/.test(value)){
             value = value.replace(/\d$/gi,'');
         }
