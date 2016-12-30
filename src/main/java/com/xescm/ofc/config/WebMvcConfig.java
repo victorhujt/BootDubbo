@@ -24,7 +24,6 @@
 
 package com.xescm.ofc.config;
 
-import com.xescm.ofc.web.interceptor.AuthApiInterceptor;
 import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -42,9 +41,7 @@ import javax.annotation.Resource;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
-	@Resource
-	private AuthApiInterceptor authApiInterceptor;
-	
+
 	@Resource
 	private AuthViewInterceptor authViewInterceptor;
 	
@@ -62,9 +59,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
     	super.addInterceptors(registry);
-    	authApiInterceptor.setEnv(env);
     	authViewInterceptor.setEnv(env);
-    	registry.addInterceptor(authApiInterceptor).addPathPatterns("/api/**");
 		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**");
     }
 
