@@ -855,7 +855,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanInfo.setVoidTime(new Date());
                     /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
                     ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
-                ofcTransplanStatus.setPlannedSingleState("50");
+                ofcTransplanStatus.setPlannedSingleState(YIZUOFEI);
                 //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
                 //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);

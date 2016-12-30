@@ -82,7 +82,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             //如果运输单状态为已签收,则将对应的运输计划单状态改为已完成
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
             ofcOrderStatus.setNotes(sdf.format(operTime) + " " + description);
-            ofcOrderStatus.setLastedOperTime(operTime);
+            ofcOrderStatus.setLastedOperTime(new Date());
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
 
                 //如果有上门取货,则判断上门取货的运输计划单的状态是否是已完成, 如果不是, 则更新该订单的计划单的状态为已完成
@@ -107,9 +107,9 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                         throw new BusinessException("没有查到该计划单下运输计划单状态");
                     }
                     OfcTransplanStatus ofcTransplanStatusPickUp = ofcTransplanStatusPickUpList.get(0);
-                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIQIANSHOU)
-                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIHUIDAN)){
-                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.YIQIANSHOU);
+                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.RENWUWANCH)
+                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIZUOFEI)){
+                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
                         ofcTransplanStatusPickUp.setTaskCompletionTime(new Date());
                         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatusPickUp);
                     }
