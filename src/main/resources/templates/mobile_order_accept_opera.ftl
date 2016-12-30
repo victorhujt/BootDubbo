@@ -601,7 +601,7 @@
                         <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
-                                <input class="col-width-168"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
+                                <input class="col-width-168"  name="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
                             </div>
                         </div>
                     </div>
