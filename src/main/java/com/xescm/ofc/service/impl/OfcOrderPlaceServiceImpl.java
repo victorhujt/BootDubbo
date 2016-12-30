@@ -779,7 +779,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }
 
         }else{
-            throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
+            throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");
         }
     }
 
