@@ -65,6 +65,24 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
         }
     }
 
+    @Override
+    public String getLastedKabanOrderCodeByTransCode(String transCode) {
+        Map<String,String> mapperMap = new HashMap<>();
+        mapperMap.put("transCode",transCode);
+        List<String> orderCodeList = ofcDistributionBasicInfoMapper.getKabanOrderCodeByTransCode(mapperMap);
+        if(orderCodeList.size() > 0){
+            String lastedOrderCode = orderCodeList.get(0);
+            for(String orderCode : orderCodeList){
+                if(orderCode.compareTo(lastedOrderCode) == 1){
+                    lastedOrderCode = orderCode;
+                }
+            }
+            return lastedOrderCode;
+        }else{
+            return null;
+        }
+    }
+
 
     @Override
     public int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {

@@ -1,7 +1,6 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
 
 /**
  * Created by lyh on 2016/10/10.
@@ -15,4 +14,6 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     String getOrderCodeByTransCode(String transCode);
 
     String getKabanOrderCodeByTransCode(String transCode);
+
+    String getLastedKabanOrderCodeByTransCode(String transCode);
 }

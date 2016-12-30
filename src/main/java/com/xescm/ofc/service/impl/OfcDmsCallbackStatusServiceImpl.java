@@ -50,7 +50,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             if(PubUtils.isSEmptyOrNull(transCode) || PubUtils.isSEmptyOrNull(dmsCallbackStatus) || null == operTime || PubUtils.isSEmptyOrNull(description)){
                 throw new BusinessException("DMS回传状态信息不完整!");
             }
-            String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
+//            String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
+            String orderCode = ofcDistributionBasicInfoService.getLastedKabanOrderCodeByTransCode(transCode);
             if(PubUtils.isSEmptyOrNull(orderCode)){
                 throw new BusinessException("没有查到所属订单");
             }
@@ -136,6 +137,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 //如果是异常状态
             }else{
                 //如果是签收之前的状态,计划单状态不变
+
             }
             //无论哪种状态都更新订单状态的描述信息
             ofcOrderStatusService.save(ofcOrderStatus);
