@@ -179,10 +179,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcMerchandiser ofcMerchandiser=modelMapper.map(ofcOrderDTO,OfcMerchandiser.class);
         ofcFundamentalInformation.setCreationTime(new Date());
-        ofcFundamentalInformation.setCreator(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+        ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUserName());
+        ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -385,7 +385,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
 
 
-            ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
+            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
             ofcFundamentalInformation.setOperTime(new Date());
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                     +" "+"订单已更新");

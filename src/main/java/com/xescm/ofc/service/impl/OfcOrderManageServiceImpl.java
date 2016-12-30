@@ -161,8 +161,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setLastedOperTime(new Date());
 
                     OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-                    ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-                    ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+                    ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                    ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                     ofcFundamentalInformation.setOperTime(new Date());
                     List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode, "orderCode");
                     OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
@@ -972,11 +972,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-            ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
             ofcFundamentalInformation.setOperTime(new Date());
-            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getGroupRefName());
-            ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getGroupRefName());
+            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getUserName());
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
@@ -1383,8 +1383,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
-                ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){
                     //运输订单
@@ -1723,8 +1723,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setLastedOperTime(new Date());
                 // ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 ofcOrderStatusService.save(ofcOrderStatus);
-                ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){
                     //运输订单
