@@ -117,7 +117,7 @@
                         <label class="control-label col-label no-padding-right" for="name">创建人员</label>
                         <div class="w-width-220 col-float">
                             <input id="creator" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.creator)!""}">
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.creatorName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">完成日期</label>
                         <div class="w-width-220 col-float">
