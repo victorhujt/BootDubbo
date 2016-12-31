@@ -1,9 +1,6 @@
 package com.xescm.ofc;
 
-import com.xescm.ofc.web.interceptor.AuthApiInterceptor;
 import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
-import com.xescm.ofc.web.jwt.AppkeyLoader;
-import com.xescm.ofc.web.jwt.AuthRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -27,11 +24,6 @@ public class XescmOfcApplication {
 	private String env;
 
 	@Bean
-	public AuthRequestInterceptor authRequestInterceptor(){
-		return new AuthRequestInterceptor();
-	}
-
-	@Bean
 	public MultipartConfigElement multipartConfigElement(){
 		MultipartConfigFactory factory = new MultipartConfigFactory();
 		//设置文件大小限制,超了页面会抛出异常信息,这个时候需要进行异常处理
@@ -42,18 +34,8 @@ public class XescmOfcApplication {
 	}
 
 	@Bean
-	public AuthApiInterceptor authApiInterceptor(){
-		return new AuthApiInterceptor();
-	}
-
-	@Bean
 	public AuthViewInterceptor authViewInterceptor(){
 		return new AuthViewInterceptor();
-	}
-
-	@Bean
-	public AppkeyLoader appkeyLoader(){
-		return new AppkeyLoader();
 	}
 
 	public static void main(String[] args) {

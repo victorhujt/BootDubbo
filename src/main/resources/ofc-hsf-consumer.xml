@@ -7,6 +7,9 @@
         http://www.taobao.com/hsf/hsf.xsd"
        default-autowire="byName">
 
+    <!-- uam 用户中心 -->
+    <hsf:consumer id="uamAuthEdasService" interface="com.xescm.uam.provider.UamAuthEdasService" group="xescm-uam" version="1.0" clientTimeout="60000"/>
+
     <!-- 客户中心 -->
     <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="cscCustomerEdasService" interface="com.xescm.csc.provider.CscCustomerEdasService"  group="xescm-csc" version="1.0" clientTimeout="60000"/>
