@@ -740,6 +740,7 @@
     function main() {
 
         validateFormData();
+        $("body").find(".es-list:last").prevAll("ul").remove();
     }
     //链接到收发货方联系人档案
     $("#to_operation_csc_contact_manage").click(function () {
