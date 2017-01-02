@@ -10,7 +10,6 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
-import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
@@ -31,10 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lyh on 2016/10/18.
@@ -291,6 +287,12 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
         setDefaultModel(model);
+        Date now = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(now);
+        c.add(Calendar.MONTH, -1);
+        model.addAttribute("startDate",c.getTime());
+        model.addAttribute("endDate",now);
         return modelAndView;
     }
 
