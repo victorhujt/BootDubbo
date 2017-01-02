@@ -1196,6 +1196,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             if(sheet.getLastRowNum() == 0){
                 throw new BusinessException("请先上传Excel导入数据，再加载后执行导入！");
             }
+            int realCellNum = 0;
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
                         HSSFRow hssfRow = sheet.getRow(rowNum);
@@ -1205,6 +1206,17 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 if (null == hssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
+                }
+                //有效列共有多少
+                if(0 == rowNum){
+                    for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++) {
+                        HSSFCell hssfCell = hssfRow.getCell(cellNum);
+                        if(null == hssfCell || HSSFCell.CELL_TYPE_BLANK  == hssfCell.getCellType()){
+                            break;
+                        }else{
+                            realCellNum ++;
+                        }
+                    }
                 }
                 //空行
                 HSSFCell cell = hssfRow.getCell(0);
@@ -1224,8 +1236,20 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //空列
                     if(null == hssfCell){
                         //标记当前列出错, 并跳过当前循环
-                        break;
+                        //标记当前列出错, 并跳过当前循环
+                        if(cellNum < realCellNum){
+                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                                hssfCell = hssfRow.createCell(rowNum,XSSFCell.CELL_TYPE_BLANK);
+                            }else{
+                                continue;
+                            }
+                        }else{
+                            break;
+                        }
                     }else if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                        if(cellNum > realCellNum -1){
+                            break;
+                        }
                         if(rowNum == 1 && cellNum > (staticCell -1)){
                         }else{
                             continue;
@@ -1506,16 +1530,31 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             if(sheet.getLastRowNum() == 0){
                 throw new BusinessException("请先上传Excel导入数据，再加载后执行导入！");
             }
+            int realCellNum = 0;
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
                 XSSFRow xssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 boolean hasGoods = false;
                 JSONArray jsonArray = new JSONArray();
+
                 if (null == xssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
+
+                //有效列共有多少
+                if(0 == rowNum){
+                    for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++) {
+                        XSSFCell xssfCell = xssfRow.getCell(cellNum);
+                        if(null == xssfCell || XSSFCell.CELL_TYPE_BLANK  == xssfCell.getCellType()){
+                            break;
+                        }else{
+                            realCellNum ++;
+                        }
+                    }
+                }
+
                 //空行
                 XSSFCell cell = xssfRow.getCell(0);
                 if(null == cell || XSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
@@ -1534,8 +1573,19 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //空列
                     if(null == xssfCell){
                         //标记当前列出错, 并跳过当前循环
-                        break;
+                        if(cellNum < realCellNum){
+                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                                xssfCell = xssfRow.createCell(rowNum,XSSFCell.CELL_TYPE_BLANK);
+                            }else{
+                                continue;
+                            }
+                        }else{
+                            break;
+                        }
                     }else if(HSSFCell.CELL_TYPE_BLANK == xssfCell.getCellType()){
+                        if(cellNum > realCellNum -1){
+                            break;
+                        }
                         if(rowNum == 1 && cellNum > (staticCell -1)){
                         }else{
                             continue;

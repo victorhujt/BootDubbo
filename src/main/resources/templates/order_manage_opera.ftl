@@ -84,14 +84,14 @@
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                 <div class="padding-12 y-float" style="width:395px;">
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="startDate" value="${startDate!?string('yyyy-MM-dd HH:mm:ss')}" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                         <label for="startDate" class="initBtn">
                             <i class="fa fa-calendar bigger-130"></i>
                         </label>
                     </div>
                    <p class="y-float" style="margin:0 8px;line-height:34px;">至</p>
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="endDate" value="${endDate!?string('yyyy-MM-dd HH:mm:ss')}" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
                         <label for="endDate" class="initBtn">
                             <i class="fa fa-calendar bigger-130"></i>
                         </label>
@@ -284,6 +284,11 @@
 //            queryOrderData(1);
             initChosen();
             $("#doSearch").click(function () {
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+                if(StringUtil.isEmpty(startDate) || StringUtil.isEmpty(endDate)){
+                    layer.msg("请补充筛选的时间范围!");
+                }
                 queryOrderData(1);
             });
         }
@@ -328,8 +333,11 @@
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
                 if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                    $("#dataTbody").html("");
+                    $("#DataPageBarDiv").hide();
                     layer.msg("暂时未查询到相关订单信息！");
                 } else if (result.code == 200) {// 1:normal
+                    $("#DataPageBarDiv").show();
                     reloadGrid(result);// 刷新页面数据
                     laypage({
                         cont: $("#DataPageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
