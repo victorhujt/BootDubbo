@@ -108,7 +108,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                             +" "+"车辆已发运，发往目的地：");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIFAYUN);
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"车辆已发运，发往目的地："+destination);
                                 logger.info("跟踪状态已发运");
@@ -119,7 +119,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     +" "+"车辆已到达目的地：");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIDAODA);
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"车辆已到达目的地："+destination);
                                 logger.info("跟踪状态已到达");
@@ -127,6 +127,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         }else if(status.equals("已签收")
                                 //当前计划单序号等于订单下计划单数量，表示最后一个计划单
                                 && (PubUtils.trimAndNullAsEmpty(programSerialNumber).equals(serialNumberCount+""))){
+                            Date now = new Date();
                             flag=false;
                             flag=checkStatus(flag,statusList,"end","客户已签收");
                             if(!flag){
@@ -134,7 +135,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
                                 ofcTransplanStatus.setTaskCompletionTime(traceTime);
 
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已签收");
                                 logger.info("跟踪状态已签收");
@@ -182,9 +183,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         orderStatus=new OfcOrderStatus();
                                         orderStatus.setOrderCode(orderCode);
                                         orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                        orderStatus.setLastedOperTime(new Date());
+                                        orderStatus.setLastedOperTime(now);
                                         orderStatus.setStatusDesc("已完成");
-                                        orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                                        orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                                 +" "+"订单已完成");
                                         orderStatus.setOperator(userName);
                                     }
@@ -204,9 +205,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus=new OfcOrderStatus();
                                     orderStatus.setOrderCode(orderCode);
                                     orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                    orderStatus.setLastedOperTime(new Date());
+                                    orderStatus.setLastedOperTime(now);
                                     orderStatus.setStatusDesc("已完成");
-                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
                                 }else if(ofcTransplanInfos.size() == 1
@@ -216,9 +217,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus=new OfcOrderStatus();
                                     orderStatus.setOrderCode(orderCode);
                                     orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                    orderStatus.setLastedOperTime(new Date());
+                                    orderStatus.setLastedOperTime(now);
                                     orderStatus.setStatusDesc("已完成");
-                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
                                 }
@@ -230,7 +231,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     +" "+"客户已回单");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIHUIDAN);
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已回单");
                                 logger.info("跟踪状态已回单");
@@ -360,7 +361,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             +" 订单"+tag+"调度完成");
                     if (!flag) {
                         OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-                        orderStatus.setLastedOperTime(new Date());
+                        orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
                                 +" "+info);
                         ofcOrderStatusService.save(orderStatus);
