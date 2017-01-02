@@ -204,7 +204,7 @@ public class OfcMobileOrderRest extends BaseController {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
             } else {
                 logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
             }
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage.split(":")[0]);

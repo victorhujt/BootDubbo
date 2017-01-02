@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -310,6 +311,11 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView mobileOrderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
         setDefaultModel(model);
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        model.addAttribute("endTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()));
+        cal.add(Calendar.DATE,-7);
+        model.addAttribute("beginTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()));
         return modelAndView;
     }
 
