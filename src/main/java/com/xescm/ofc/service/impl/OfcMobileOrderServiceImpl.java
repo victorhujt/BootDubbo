@@ -85,7 +85,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     public OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
         //如果运输单号存在，校验运输单号是否重复
         if(StringUtils.isNotEmpty(ofcMobileOrder.getTranCode())){
-            OfcMobileOrder order=selectOne(ofcMobileOrder);
+            OfcMobileOrder condition=new OfcMobileOrder();
+            condition.setTranCode(ofcMobileOrder.getTranCode());
+            condition.setDingdingAccountNo(ofcMobileOrder.getDingdingAccountNo());
+            OfcMobileOrder order=selectOne(condition);
             if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
                 OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");
                 if(orderStatus!=null){
