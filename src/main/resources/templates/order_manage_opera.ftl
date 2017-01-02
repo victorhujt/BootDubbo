@@ -333,8 +333,11 @@
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
                 if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                    $("#dataTbody").html("");
+                    $("#DataPageBarDiv").hide();
                     layer.msg("暂时未查询到相关订单信息！");
                 } else if (result.code == 200) {// 1:normal
+                    $("#DataPageBarDiv").show();
                     reloadGrid(result);// 刷新页面数据
                     laypage({
                         cont: $("#DataPageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
