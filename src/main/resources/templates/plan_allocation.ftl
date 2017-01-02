@@ -417,6 +417,10 @@
         //初始化页面数据
         initPageData();
         initMultiselect();
+
+        $("#orderTimePre").val((new Date()-30).toLocaleDateString());
+        $("#orderTimeSuf").val(new Date().toLocaleDateString());
+
         // 查询
         queryData(1);
 
