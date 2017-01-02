@@ -910,6 +910,7 @@
         // 上次选择的开单员
         setLastUserData();
         /*//$("#orderTime").val(new Date().toLocaleDateString());*/
+        $("body").find(".es-list:last").prevAll("ul").remove();
     }
     /**
      *表单验证

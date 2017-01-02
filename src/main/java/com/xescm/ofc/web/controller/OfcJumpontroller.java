@@ -113,7 +113,17 @@ public class OfcJumpontroller extends BaseController{
     }
 
     @RequestMapping(value = "/ofc/planAllocation")
-    public String planAllocation(Model model){
+    public String planAllocation(Model model,Map<String,Object> map){
+        try{
+            Date now = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(now);
+            c.add(Calendar.MONTH, -1);
+            model.addAttribute("startDate",c.getTime());
+            model.addAttribute("endDate",now);
+        }catch (Exception ex){
+            logger.error("跳转运输计划单分配页面出错!",ex.getMessage(),ex);
+        }
         return "plan_allocation";
     }
 
