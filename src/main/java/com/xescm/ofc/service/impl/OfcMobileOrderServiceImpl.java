@@ -83,6 +83,18 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     @Override
     public OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
+        //如果运输单号存在，校验运输单号是否重复
+        if(StringUtils.isNotEmpty(ofcMobileOrder.getTranCode())){
+            OfcMobileOrder order=selectOne(ofcMobileOrder);
+            if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
+                OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");
+                if(orderStatus!=null){
+                    if(!HASBEENCANCELED.equals(orderStatus.getOrderStatus())){
+                        throw  new BusinessException("运输单号重复");
+                    }
+                }
+            }
+        }
         ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode("SN",6));
         ofcMobileOrder.setUploadDate(new Date());
         ofcMobileOrder.setOrderType(OrderConstConstant.TRANSPORTORDER);
