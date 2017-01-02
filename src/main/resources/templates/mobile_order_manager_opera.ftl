@@ -213,8 +213,6 @@
     <script type="text/javascript">
 
         function queryData(pageNum) {
-            //
-            debugger;
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
@@ -369,12 +367,6 @@
             $("#mobileOrderStatus").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
         })
-
-
-
-
-
-
     </script>
 
 </body>
