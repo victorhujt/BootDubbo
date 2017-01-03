@@ -87,7 +87,6 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         if(StringUtils.isNotEmpty(ofcMobileOrder.getTranCode())){
             OfcMobileOrder condition=new OfcMobileOrder();
             condition.setTranCode(ofcMobileOrder.getTranCode());
-            condition.setDingdingAccountNo(ofcMobileOrder.getDingdingAccountNo());
             OfcMobileOrder order=selectOne(condition);
             if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
                 OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");

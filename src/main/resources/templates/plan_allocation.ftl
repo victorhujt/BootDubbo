@@ -268,7 +268,7 @@
                                <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                                <div style="float:left;width:125px;padding-left:12px;">
                                    <div class="clearfix position-relative ">
-                                       <input id="orderTimePre" class="width-100 laydate-icon" style="display:block;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" value="${(startDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                       <input id="orderTimePre" class="width-100 laydate-icon" style="display:block;float:left;" name="orderTimePre" type="datetime"  placeholder="" aria-controls="dynamic-table" value="${(startDate?string("yyyy-MM-dd"))!""}">
                                        <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTimePre">
                                            <i class="fa fa-calendar l-cor bigger-130"></i>
                                        </label>
@@ -277,7 +277,7 @@
                                <label class="control-label no-padding-right y-float" style="margin:0 5px;" for="name">至</label>
                                <div style="float:left; width:125px;">
                                    <div class="clearfix position-relative">
-                                       <input id="orderTimeSuf" class="width-100 laydate-icon" style="display:block;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table" value="${(endDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                       <input id="orderTimeSuf" class="width-100 laydate-icon" style="display:block;float:left;" name="orderTimeSuf" type="search"  placeholder="" aria-controls="dynamic-table" value="${(endDate?string("yyyy-MM-dd"))!""}">
                                        <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTimeSuf">
                                            <i class="fa fa-calendar l-cor bigger-130"></i>
                                        </label>
@@ -902,8 +902,8 @@
 
         param.pageNum = pageNum;
         param.pageSize = 10;
-        var orderTimePre = $('orderTimePre').val();
-        var orderTimeSuf = $('orderTimeSuf').val();
+        var orderTimePre = $('orderTimePre').val()+" 00:00:00";
+        var orderTimeSuf = $('orderTimeSuf').val()+" 23:59:59";
         param.orderTimePre = orderTimePre;
         param.orderTimeSuf = orderTimeSuf;
         param.custName = $("#custName").val();
@@ -1061,6 +1061,30 @@
             }
         });
     }
+
+    $(function () {
+        $("#orderTimePre").click(function () {
+            var suf=$("#orderTimeSuf").val();
+            if(suf!=null){
+                var startdates = DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(suf),-90));
+                var enddates = $("#orderTimeSuf").val();
+                laydate({elem:'#orderTimePre',istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: startdates,max: enddates})
+            }else{
+                laydate({elem:'#orderTimePre',istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-90),max: laydate.now()})
+            }
+        });
+
+        $("#orderTimeSuf").click(function () {
+            var suf=$("#orderTimePre").val();
+            if(suf!=null){
+                var startdates = $("#orderTimePre").val();
+                var enddates = DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
+                laydate({elem:'#orderTimeSuf',istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: startdates,max: enddates})
+            }else{
+                laydate({elem:'#orderTimeSuf',istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-90),max: laydate.now()})
+            }
+        });
+    });
 
 </script>
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
