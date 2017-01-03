@@ -251,6 +251,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         +" "+"客户已回单");
                                 logger.info("跟踪状态已回单");
                             }
+                        }else {
+                            throw new BusinessException("所给运输计划单状态有误:" + status);
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
                             ofcOrderStatusService.save(orderStatus);
