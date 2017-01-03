@@ -87,6 +87,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
                 OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(transPortNo);
                 if(ofcTransplanInfo==null){
+                    logger.info("相关运输计划单号为：{},未查询到相关计划单",transPortNo);
                     throw new BusinessException("根据所反馈的运输单号未查询到相关计划单！");
                 }
                 if(status.equals("")){
