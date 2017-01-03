@@ -86,6 +86,10 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 //当前非作废未完成的运输计划单的LIST
                 List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
                 OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(transPortNo);
+                if(ofcTransplanInfo==null){
+                    logger.info("相关运输计划单号为：{},未查询到相关计划单",transPortNo);
+                    throw new BusinessException("根据所反馈的运输单号未查询到相关计划单！");
+                }
                 if(status.equals("")){
                     throw new BusinessException("跟踪状态不可以为空");
                 }else {
@@ -251,6 +255,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         +" "+"客户已回单");
                                 logger.info("跟踪状态已回单");
                             }
+                        }else {
+                            throw new BusinessException("所给运输计划单状态有误:" + status);
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
                             ofcOrderStatusService.save(orderStatus);

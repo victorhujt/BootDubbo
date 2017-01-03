@@ -292,7 +292,6 @@
 
     var  dra_Img=function (ev)
     {
-        console.log('////')
         var oEvent=ev||event;
         //距离存起来
 
