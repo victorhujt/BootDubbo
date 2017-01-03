@@ -81,7 +81,7 @@
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">平台类型</label>
                         <div class="w-width-220 col-float">
-                            <input id="platformType" name="custName" type="search" placeholder=""
+                            <input id="platformType" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.platformType)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单来源</label>
@@ -681,7 +681,24 @@
         $("#payment").val(getPayment(payment));
         var orderStatus = "${(ofcOrderStatus.orderStatus)!""}";
         $("#orderStatus").val(getOrderStatus(orderStatus));
+        var platformType = $("#platformType").val();
+        $("#platformType").val(getPlatformType(platformType));
+        var orderSorce = $("#orderSource").val();
+        $("#orderSource").val(getOrderSource(orderSorce));
     });
+
+    function getOrderSource(type) {
+        if("6001" == type) {
+            return "鲜易网";
+        }
+        return type;
+    }
+    function getPlatformType(type) {
+        if(type == "4"){
+            return "EDI";
+        }
+        return type;
+    }
 
     function getOrderStatus(status) {
         var value ="";

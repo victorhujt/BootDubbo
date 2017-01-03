@@ -16,6 +16,7 @@ import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.RmcWarehouse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -311,6 +312,13 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView mobileOrderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
         setDefaultModel(model);
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+       // model.addAttribute("endTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()));
+        model.addAttribute("endTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
+        cal.add(Calendar.DATE,-7);
+       // model.addAttribute("beginTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()));
+        model.addAttribute("beginTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
         return modelAndView;
     }
 

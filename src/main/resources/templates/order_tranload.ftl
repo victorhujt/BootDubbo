@@ -379,7 +379,7 @@
                                     </select></div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
+                    <div><label class="control-label col-label" for="name" style="margin-right:18px;margin-left:52px;"><span class="w-label-icon">*</span>运输类型</label>
 
                         <div class="radio y-float">
                             <label>
@@ -400,7 +400,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="clearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -412,7 +412,7 @@
                             </div>
                         </div></div>
                     <div>
-                        <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+                        <label class="control-label col-label no-padding-right" style="margin-left:52px;" for="custOrderCode">客户订单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="custOrderCode" id="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" type="text" placeholder="客户订单号" style="padding-left:8px;" />
@@ -421,7 +421,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custName" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
+                    <div style="float:left;">
+                        <label class="control-label col-label no-padding-right" for="custName" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -432,8 +433,19 @@
                                 </button>
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
-                        </div></div>
-
+                        </div>
+                    </div>
+                    <div style="float:left;">
+                        <label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;">承诺到达时间</label>
+                        <div class="col-width-168 padding-15">
+                            <div class="clearfix" >
+                                <div class="col-width-168 position-relative" style="height:34px;">
+                                    <input class="col-width-168 es-input" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate">
+                                    <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
@@ -868,7 +880,7 @@
 <script src="../js/city-picker.data.js"></script><#--111-->
 <script src="../js/city-picker.js"></script><#--111-->
 
-
+<!-- inline scripts related to this page -->
 <script type="text/javascript">
     var scripts = [ null,
         "/components/jquery-validation/dist/jquery.validate.min.js",
@@ -912,6 +924,9 @@
         /*//$("#orderTime").val(new Date().toLocaleDateString());*/
         $("body").find(".es-list:last").prevAll("ul").remove();
     }
+
+
+
     /**
      *表单验证
      */
@@ -1260,11 +1275,6 @@
         });
     }
 
-
-
-</script>
-<!-- inline scripts related to this page -->
-<script type="text/javascript">
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
         countQuantityOrWeightOrCubageCheck();
@@ -1333,7 +1343,7 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,4})?$/.test(value)) && $(obj).val()!="")){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
@@ -2192,6 +2202,15 @@
     }
 
     $(function(){
+        $("#orderTime").click(function () {
+            laydate({elem:'#orderTime', istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()});
+        })
+
+        $("#expectedArrivedTime").click(function () {
+            var startdates=$("#orderTime").val();
+            //var enddates =DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
+            laydate({elem:'#expectedArrivedTime', istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
+        })
 
         $("#pickUpGoodsV").change(function(){
             if($(this).prop("checked")){
@@ -2316,6 +2335,9 @@
             jsonStr.transportType = $("#transportType").val();
             if($('#orderTime').val()!=""){
                 jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
+            }
+            if($('#expectedArrivedTime').val()!=""){
+                jsonStr.expectedArrivedTime = $('#expectedArrivedTime').val();
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
