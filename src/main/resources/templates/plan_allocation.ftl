@@ -928,7 +928,6 @@
 
 
         CommonClient.post(sys.rootPath + "/ofc/queryPlanPageByCondition", param, function(result) {
-            debugger;
             if (result == undefined || result == null || result.result==null || result.result.size==0) {
                 layer.msg("暂时未查询到相关数据！");
             } else if (result.code == 200) {// 1:normal
