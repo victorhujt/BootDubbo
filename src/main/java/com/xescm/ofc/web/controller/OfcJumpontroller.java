@@ -298,12 +298,6 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
         setDefaultModel(model);
-        Date now = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(now);
-        c.add(Calendar.MONTH, -1);
-        model.addAttribute("startDate",c.getTime());
-        model.addAttribute("endDate",now);
         return modelAndView;
     }
 
@@ -313,10 +307,8 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         Calendar cal=Calendar.getInstance();
         cal.setTime(new Date());
-       // model.addAttribute("endTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()));
         model.addAttribute("endTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
         cal.add(Calendar.DATE,-7);
-       // model.addAttribute("beginTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()));
         model.addAttribute("beginTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
         return modelAndView;
     }
