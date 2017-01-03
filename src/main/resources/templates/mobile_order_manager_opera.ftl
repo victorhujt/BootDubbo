@@ -55,7 +55,7 @@
                     <label class="control-label col-label no-padding-right" for="name" style="margin-left: 33px">至</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix position-relative">
-                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table"  value="${(endTime)!""}"    onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD')})">
+                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table"  value="${(endTime)!""}"    onclick="laydate({istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD')})">
                             <input type="hidden" id="defaultEndTime" value="${(endTime)!""}"/>
                             <label for="orderTimeSuf" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                         </div>
@@ -373,7 +373,7 @@
             $("#orderTimeSuf").val("");
             var defaultEndTime=$("#defaultEndTime").val();
             $("#orderTimeSuf").val(defaultEndTime);
-            $("#mobileOrderStatus").val("").trigger("chosen:updated");
+            $("#mobileOrderStatus").val("0").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
         })
     </script>
