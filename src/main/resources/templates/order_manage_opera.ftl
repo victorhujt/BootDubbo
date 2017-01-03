@@ -322,49 +322,54 @@
 
         var now = new Date();
         //当月1号
-        var mon1st = now.getFullYear() + "-" + (now.getMonth() + 1) + "-01";
+        var mon = now.getMonth() + 1;
+        if(mon < 10){
+            mon = "0" + mon;
+        }
+        var mon1st = now.getFullYear() + "-" + mon + "-01";
         //当天
         $("#startDate").val(mon1st);
         $("#endDate").val(DateUtil.formatDate(now));
         var start = {
             elem: '#startDate',
             format: 'YYYY-MM-DD',
-            min: laydate.now(-90), //设定最小日期为当前日期
             max: laydate.now(), //最大日期
             istime: false,
             istoday: false,
             isclear: false,
             choose: function(datas){
-                end.min = datas; //开始日选好后，重置结束日的最小日期
-                //90天后的日期
                 var add90 = DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(datas),90))
-                if(add90 < laydate.now()){
-                    start.max = add90;
-                    end.max = add90;
-                }else{
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                if(endDate > add90 && endDate != datas){
+                    $("#endDate").val(add90);
                 }
-                start.min = datas;
+                if(startDate > endDate){
+                    var nowI = DateUtil.formatDate(now);
+                    if(endDate > add90){
+                        $("#endDate").val(nowI);
+                    }else{
+                        $("#endDate").val(add90 < nowI ? add90 : nowI);
+                    }
+                }
 
             }
         };
         var end = {
             elem: '#endDate',
             format: 'YYYY-MM-DD',
-            min: laydate.now(-90),
             max: laydate.now(),
             istime: false,
             istoday: false,
             isclear: false,
             choose: function(datas){
                 var sub90 = DateUtil.formatDate(subDays(DateUtil.parse(datas),90));
-                start.max = datas; //结束日选好后，重置开始日的最大日期
-                end.max = datas;
-                start.min = sub90;
-                end.min = sub90;
-                start.start = sub90;
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
-                if(startDate > sub90){
+                if(startDate < sub90 && startDate != datas){
+                    $("#startDate").val(sub90);
+                }
+                if(startDate > endDate){
                     $("#startDate").val(sub90);
                 }
             }
