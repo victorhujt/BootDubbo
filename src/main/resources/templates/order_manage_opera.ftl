@@ -284,8 +284,8 @@
 //            queryOrderData(1);
             initChosen();
             $("#doSearch").click(function () {
-                var startDate = $('#startDate').val();
-                var endDate = $('#endDate').val();
+                var startDate = $('#startDate').val() + " 00:00:00";
+                var endDate = $('#endDate').val() + " 23:59:59";
                 if(StringUtil.isEmpty(startDate) || StringUtil.isEmpty(endDate)){
                     layer.msg("请补充筛选的时间范围!");
                     return;
@@ -341,8 +341,10 @@
                 if(add90 < laydate.now()){
                     start.max = add90;
                     end.max = add90;
+                }else{
                 }
                 start.min = datas;
+
             }
         };
         var end = {
@@ -354,30 +356,27 @@
             istoday: false,
             isclear: false,
             choose: function(datas){
+                var sub90 = DateUtil.formatDate(subDays(DateUtil.parse(datas),90));
                 start.max = datas; //结束日选好后，重置开始日的最大日期
                 end.max = datas;
-                start.min = DateUtil.formatDate(subDays(DateUtil.parse(datas),90));
-                end.min = DateUtil.formatDate(subDays(DateUtil.parse(datas),90));
+                start.min = sub90;
+                end.min = sub90;
+                start.start = sub90;
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                if(startDate > sub90){
+                    $("#startDate").val(sub90);
+                }
             }
         };
         laydate(start);
         laydate(end);
 
         $("#startDate").change(function () {
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            if(startDate > endDate){
-                $("#endDate").val("");
-            }
             laydate(start);
             laydate(end);
         });
         $("#endDate").change(function () {
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            if(startDate > endDate){
-                $("#startDate").val("");
-            }
             laydate(start);
             laydate(end);
         });
@@ -753,8 +752,6 @@
         $("#resetBtn").click(function(){
             $("#custName").val("");
             $("#orderCode").val("");
-            $("#startDate").val("");
-            $("#endDate").val("");
             $("#orderState").val("").trigger("chosen:updated");
             $("#orderType").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
