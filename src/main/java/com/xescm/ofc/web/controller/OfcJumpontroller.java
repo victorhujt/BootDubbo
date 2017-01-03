@@ -299,12 +299,6 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
         setDefaultModel(model);
-        Date now = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(now);
-        c.add(Calendar.MONTH, -1);
-        model.addAttribute("startDate",c.getTime());
-        model.addAttribute("endDate",now);
         return modelAndView;
     }
 
