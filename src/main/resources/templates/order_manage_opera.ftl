@@ -284,8 +284,8 @@
 //            queryOrderData(1);
             initChosen();
             $("#doSearch").click(function () {
-                var startDate = $('#startDate').val() + " 00:00:00";
-                var endDate = $('#endDate').val() + " 23:59:59";
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
                 if(StringUtil.isEmpty(startDate) || StringUtil.isEmpty(endDate)){
                     layer.msg("请补充筛选的时间范围!");
                     return;
@@ -369,6 +369,7 @@
                 }
             }
         };
+
         laydate(start);
         laydate(end);
 
@@ -376,6 +377,7 @@
             laydate(start);
             laydate(end);
         });
+
         $("#endDate").change(function () {
             laydate(start);
             laydate(end);
@@ -386,15 +388,13 @@
             return date;
         }
 
-
-
         function queryOrderData(pageNum) {
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
             param.custName = $("#custName").val();
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
+            var startDate = $('#startDate').val() + " 00:00:00";
+            var endDate = $('#endDate').val() + " 23:59:59";
             param.startDate = startDate;
             param.endDate = endDate;
             param.orderCode = $("#orderCode").val();

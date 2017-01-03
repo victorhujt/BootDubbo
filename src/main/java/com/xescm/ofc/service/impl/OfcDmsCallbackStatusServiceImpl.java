@@ -34,6 +34,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
     private OfcTransplanInfoService ofcTransplanInfoService;
     @Autowired
     private OfcFinanceInformationService ofcFinanceInformationService;
+    @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
 
     /**
      * 接收分拣中心回传的状态,并更新相应的运输计划单和订单的状态
@@ -120,16 +122,26 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 ofcTransplanStatus.setOrderCode(orderCode);
                 ofcTransplanStatus.setPlannedCompletionTime(operTime);
                 ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+                ofcTransplanStatus.setTaskCompletionTime(operTime);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
                 //再查询该运输计划单是否是该该订单下最后一个待完成的运输计划单, 如果是就把订单的状态改为已完成
                 int queryResult = ofcTransplanInfoService.queryNotInvalidAndNotCompleteTransOrder(orderCode);
                 if(queryResult == 0){
+
                     ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
                     ofcOrderStatus.setLastedOperTime(now);
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                             +" "+"订单已完成");
+                    OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+                    if(null == ofcFundamentalInformation){
+                        throw new BusinessException("无法查到该订单相应基本信息");
+                    }
+                    if(null != ofcFundamentalInformation.getFinishedTime()){
+                        ofcFundamentalInformation.setFinishedTime(now);
+                    }
+                    ofcFundamentalInformationService.update(ofcFundamentalInformation);
                 }
             }else if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_RECEIPT.getCode(),dmsCallbackStatus)){
                 //如果是回单状态
