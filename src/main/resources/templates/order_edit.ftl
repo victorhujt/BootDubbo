@@ -2203,7 +2203,6 @@
 
     });
     function subOrder() {
-        debugger
         var jsonStr = {};
         //订单基本信息
         jsonStr.orderCode = $("#orderCode").val();
