@@ -230,10 +230,11 @@
             }
              var orderTimePre = orderTimeBegin+" 00:00:00";
              var orderTimeSuf = orderTimeEnd+" 23:59:59";
-            if(!DateUtil.dateCompare(orderTimePre,orderTimeSuf)){
-                alert("上传起始时间不能大于结束时间!");
-                return;
-            }
+//
+//            if(!DateUtil.dateCompare(orderTimePre,orderTimeSuf)){
+//                alert("上传起始时间不能大于结束时间!");
+//                return;
+//            }
             param.startDate = orderTimePre;
             param.endDate = orderTimeSuf;
             param.mobileOrderStatus = $("#mobileOrderStatus").val();
