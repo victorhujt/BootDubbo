@@ -288,6 +288,7 @@
                 var endDate = $('#endDate').val();
                 if(StringUtil.isEmpty(startDate) || StringUtil.isEmpty(endDate)){
                     layer.msg("请补充筛选的时间范围!");
+                    return;
                 }
                 queryOrderData(1);
             });

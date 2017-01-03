@@ -82,9 +82,9 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             //如果运输单状态为已签收,则将对应的运输计划单状态改为已完成
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
             ofcOrderStatus.setNotes(sdf.format(operTime) + " " + description);
-            ofcOrderStatus.setLastedOperTime(new Date());
+            ofcOrderStatus.setLastedOperTime(operTime);
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
-
+                Date now = new Date();
                 //如果有上门取货,则判断上门取货的运输计划单的状态是否是已完成, 如果不是, 则更新该订单的计划单的状态为已完成
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
                 //如果该卡班订单有上门取货的业务, 那么在卡班单签收的时候判断一下上门取货的运输计划单的状态是否是已完成, 如果不是则将该计划单的状态也改变为已完成
@@ -110,7 +110,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                     if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.RENWUWANCH)
                             && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIZUOFEI)){
                         ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
-                        ofcTransplanStatusPickUp.setTaskCompletionTime(new Date());
+                        ofcTransplanStatusPickUp.setTaskCompletionTime(operTime);
                         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatusPickUp);
                     }
                 }
@@ -127,8 +127,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                     ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
-                    ofcOrderStatus.setLastedOperTime(new Date());
-                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                    ofcOrderStatus.setLastedOperTime(now);
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                             +" "+"订单已完成");
                 }
             }else if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_RECEIPT.getCode(),dmsCallbackStatus)){

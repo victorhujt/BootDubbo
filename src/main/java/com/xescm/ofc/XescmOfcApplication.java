@@ -1,10 +1,12 @@
 package com.xescm.ofc;
 
+import com.xescm.core.xss.XSSFilter;
 import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -36,6 +38,15 @@ public class XescmOfcApplication {
 	@Bean
 	public AuthViewInterceptor authViewInterceptor(){
 		return new AuthViewInterceptor();
+	}
+
+	@Bean
+	public FilterRegistrationBean myXssFilter() {
+		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+		registrationBean.setFilter(new XSSFilter());
+		registrationBean.addUrlPatterns("/*");
+		registrationBean.setOrder(Integer.MAX_VALUE);
+		return registrationBean;
 	}
 
 	public static void main(String[] args) {
