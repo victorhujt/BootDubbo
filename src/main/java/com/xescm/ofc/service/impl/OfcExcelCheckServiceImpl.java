@@ -1176,7 +1176,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
-            throw new BusinessException("校验Excel读取内部异常");
+            throw new BusinessException("校验Excel读取内部异常",e);
         }
         int numberOfSheets = hssfWorkbook.getNumberOfSheets();
 
@@ -1199,14 +1199,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             int realCellNum = 0;
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++){
                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = null;
-                        HSSFRow hssfRow = sheet.getRow(rowNum);
+                HSSFRow hssfRow = sheet.getRow(rowNum);
                 String mapKey = "";
                 boolean hasGoods = false;
                 JSONArray jsonArray = new JSONArray();
+
                 if (null == hssfRow) {
                     //标记当前行出错,并跳出当前循环
                     break;
                 }
+
                 //有效列共有多少
                 if(0 == rowNum){
                     for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++) {
@@ -1218,17 +1220,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         }
                     }
                 }
+
                 //空行
                 HSSFCell cell = hssfRow.getCell(0);
                 if(null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType()){
                     continue;
                 }
-                /*//空行
-                HSSFCell cell = hssfRow.getCell(0);
-                if(null == hssfRow  || null == cell || HSSFCell.CELL_TYPE_BLANK  == cell.getCellType() ){
-                    //标记当前行出错,并跳出当前循环
-                    break;
-                }*/
+
                 //遍历cell
                 OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
                 for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
@@ -1236,10 +1234,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     //空列
                     if(null == hssfCell){
                         //标记当前列出错, 并跳过当前循环
-                        //标记当前列出错, 并跳过当前循环
                         if(cellNum < realCellNum){
                             if(rowNum == 1 && cellNum > (staticCell -1)){
-                                hssfCell = hssfRow.createCell(rowNum,XSSFCell.CELL_TYPE_BLANK);
+                                hssfCell = hssfRow.createCell(rowNum,HSSFCell.CELL_TYPE_BLANK);
                             }else{
                                 continue;
                             }
@@ -1266,7 +1263,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     }
                     if(rowNum == 0){
                         //第一行全为字符串
-//                            String cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
 
                         //校验模板第一行前5列的固定名称是否被改变
                         if(cellNum >= 0 && cellNum <= (staticCell -1)){
@@ -1303,14 +1299,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
                             if(null != result && result.size() > 0){
                                 //如果能在客户中心查到,就将该收货人名称记录下来,往consigneeNameList里放
-                                consigneeNameList.add(result.get(0));
-                                consigneeNameListForCheck.add(result.get(0).getContactCompanyName());
+                                CscContantAndCompanyResponseDto cscContantAndCompanyVo = result.get(0);
+                                consigneeNameList.add(cscContantAndCompanyVo);
+                                consigneeNameListForCheck.add(cscContantAndCompanyVo.getContactCompanyName());
                             }else{
                                 //收货人列表不在联系人档案中,则需要对当前格子进行报错处理
                                 checkPass = false;
                                 consigneeNameList.add(new CscContantAndCompanyResponseDto());
                                 consigneeNameListForCheck.add("");
-
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该收货方名称在联系人档案中不存在!");
                                 CscContantAndCompanyInportDto cscContantAndCompanyInportDto = addCscContantAndCompanyInportDto("across",customerCode,null,authResDto,cellValue);
                                 cscContantAndCompanyInportDtoList.add(cscContantAndCompanyInportDto);
@@ -1346,17 +1342,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 cscGoodsImportDto.setCustomerCode(customerCode);
                                 cscGoodsImportDto.setGoodsCode(goodsCode);
                                 //只有货品编码
-
                             }
                             List<CscGoodsApiVo> result = queryCscGoodsList.getResult();
                             if(null != result && result.size() > 0){
-                                hasGoods = true;
                                 //如果校验成功,就往结果集里堆
+                                hasGoods = true;
                                 CscGoodsApiVo cscGoodsApiVo = result.get(0);
                                 mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                                 OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                                 try {
-                                    BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiDto);
+                                    BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
                                     ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                                 } catch (IllegalAccessException e) {
                                     throw new BusinessException(e.getMessage(),e);
@@ -1388,7 +1383,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
 
 
-
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
@@ -1398,7 +1392,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 //校验是否数字
                                 Double goodsAmount = 0.0;
                                 Double goodsAndConsigneeNum =  null;
-                                if(XSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
+                                if(HSSFCell.CELL_TYPE_BLANK == hssfCell.getCellType()){
                                     goodsAndConsigneeNum = Double.valueOf("0");
                                 }else{
                                     goodsAndConsigneeNum = hssfCell.getNumericCellValue();
@@ -1441,7 +1435,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     //如果数字格式不对,就标记该单元格
                                 }else{
                                     checkPass = false;
-                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                    xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!最大999999.999!");
                                 }
                                 //这里只抓不是数字的情况
                             }catch (IllegalStateException ex){
@@ -1449,12 +1443,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                 checkPass = false;
                                 throw new BusinessException(ex.getMessage(), ex);
+
                             }
                         }
                     }
                 }
 
-                if(rowNum > 0){//避免第一行
+                if(rowNum > 0){             //避免第一行
                     if(!PubUtils.isSEmptyOrNull(cscGoodsImportDto.getGoodsCode())){
                         cscGoodsImportDtoList.add(cscGoodsImportDto);
                     }
@@ -1462,6 +1457,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     resultMap.put(mapKey,jsonArray);//一条结果
                 }
             }
+
         }
         Wrapper<List<String>> consigneeRepeatCheckResult = checkRepeat(consigneeNameListForCheck,Integer.valueOf(sheetNumChosen),"consignee");
         if(consigneeRepeatCheckResult.getCode() == Wrapper.ERROR_CODE){
@@ -1482,7 +1478,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             ofcCheckExcelErrorVo.setCscContantAndCompanyInportDtoList(removeConsigneeRepeat(cscContantAndCompanyInportDtoList));
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验失败!我们已为您显示校验结果,请改正后重新上传!",ofcCheckExcelErrorVo);
         }
-
     }
 
 
