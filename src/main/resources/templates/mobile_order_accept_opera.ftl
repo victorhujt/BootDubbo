@@ -1,6 +1,4 @@
-<head>
     <title>订单详情</title>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
     <style type="text/css">
         #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
@@ -160,9 +158,6 @@
             transform:scale(0.6)!important;
         }*/
     </style>
-</head>
-
-<body class="no-skin">
 <div class="page-header">
     <p>
         订单详情
@@ -220,7 +215,7 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">开单员</label>
                 <div class="col-width-168">
-                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                    <input class="width-100" id="dingdingOperator" name="" type="search" placeholder=""
                            aria-controls="dynamic-table"
                            value="${(mobileOrder.operator)!""}">
                 </div>
@@ -555,11 +550,11 @@
                             </div>
                         </div></div>
 
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
+                    <div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                                    <input class="width-100" id="merchandiser" name="" type="search" placeholder=""
                                            aria-controls="dynamic-table"
                                            value="${(mobileOrder.operator)!""}">
                             </div>
@@ -3104,8 +3099,6 @@
             }
         });
 
-        //$('#merchandiser').editableSelect();
-
         $("#createCustBtn").click(function () {
             /*var csc_url = $("#csc_url").html();
             var url = csc_url + "/csc/customer/toAddCustomerPage";
@@ -3125,8 +3118,6 @@
     $("#custListDivNoneTop").click(function () {
         $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
-
-    $("#merchandiser").editableSelect();
 
     function initChosen() {
         $('.chosen-select').chosen({allow_single_deselect: true});
@@ -3261,8 +3252,3 @@
         }
     }
 </script>
-<#--<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>-->
-
-<#--<script type="text/javascript" src="../js/drag_map.js"></script>-->
-
-</body>
