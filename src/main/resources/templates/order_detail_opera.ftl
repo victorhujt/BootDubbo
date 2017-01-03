@@ -689,13 +689,13 @@
 
     function getOrderSource(type) {
         if("6001" == type) {
-            return "鲜易网";
+            return "EDI";
         }
         return type;
     }
     function getPlatformType(type) {
         if(type == "4"){
-            return "EDI";
+            return "鲜易网";
         }
         return type;
     }
