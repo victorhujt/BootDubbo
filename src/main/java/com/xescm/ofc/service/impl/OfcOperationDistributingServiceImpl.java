@@ -62,7 +62,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             cscContantAndCompanyDto.getCscContactDto().setContactName(ofcOrderDTO.getConsignorContactName());
             cscContantAndCompanyDto.getCscContactDto().setPhone(ofcOrderDTO.getConsignorContactPhone());
 //            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsignorCode());
-            cscContantAndCompanyDto.getCscContactDto().setContactCode(ofcOrderDTO.getConsignorContactCode());
+            cscContantAndCompanyDto.getCscContactDto().setSerialNo(ofcOrderDTO.getConsignorContactCode());
             cscContantAndCompanyDto.getCscContactDto().setProvinceName(ofcOrderDTO.getDepartureProvince());
             cscContantAndCompanyDto.getCscContactDto().setCityName(ofcOrderDTO.getDepartureCity());
             cscContantAndCompanyDto.getCscContactDto().setAreaName(ofcOrderDTO.getDepartureDistrict());
@@ -91,7 +91,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             cscContantAndCompanyDto.getCscContactDto().setContactName(ofcOrderDTO.getConsigneeContactName());
             cscContantAndCompanyDto.getCscContactDto().setPhone(ofcOrderDTO.getConsigneeContactPhone());
 //            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsigneeCode());
-            cscContantAndCompanyDto.getCscContactDto().setContactCode(ofcOrderDTO.getConsigneeContactCode());
+            cscContantAndCompanyDto.getCscContactDto().setSerialNo(ofcOrderDTO.getConsigneeContactCode());
             cscContantAndCompanyDto.getCscContactDto().setProvinceName(ofcOrderDTO.getDestinationProvince());
             cscContantAndCompanyDto.getCscContactDto().setCityName(ofcOrderDTO.getDestinationCity());
             cscContantAndCompanyDto.getCscContactDto().setAreaName(ofcOrderDTO.getDestinationDistrict());

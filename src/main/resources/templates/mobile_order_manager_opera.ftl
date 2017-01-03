@@ -373,12 +373,7 @@
             $("#orderTimeSuf").val("");
             var defaultEndTime=$("#defaultEndTime").val();
             $("#orderTimeSuf").val(defaultEndTime);
-            $("#mobileOrderStatus").val("").trigger("chosen:updated");
-            //debugger;
-           // $("#mobileOrderStatus").val("0");
-           // $("#mobileOrderStatus option[value='0']").attr("selected",true);
-            //$("#mobileOrderStatus").find("option[text='未处理']").attr("selected",true);
-           // $("#mobileOrderStatus").find('option').eq(1).attr("selected",true);
+            $("#mobileOrderStatus").val("0").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
         })
     </script>
