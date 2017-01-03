@@ -715,6 +715,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
                 if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
                     String consingneeSerialNo = cscContantAndCompanyDtoConsignee.getCscContactDto().getSerialNo();
+                    if(null == consingneeSerialNo){
+                        throw new BusinessException("该收货方联系人编码为空");
+                    }
                     cscContantAndCompanyDtoConsignee.getCscContactDto().setSerialNo(consingneeSerialNo.split("\\@")[0]);
                     Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
