@@ -45,7 +45,7 @@
                     <label class="control-label col-label no-padding-right" for="name">上传日期</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix position-relative">
-                            <input id="orderTimePre" name="startDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" value="${(beginTime)!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                            <input id="orderTimePre" name="startDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" value="${(beginTime)!""}" onclick="laydate({istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                             <label for="orderTimePre" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                     <label class="control-label col-label no-padding-right" for="name" style="margin-left: 33px">至</label>
                     <div class="w-width-220 y-float">
                         <div class="clearfix position-relative">
-                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table"  value="${(endTime)!""}"    onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
+                            <input id="orderTimeSuf" name="endDate" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table"  value="${(endTime)!""}"    onclick="laydate({istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD')})">
                             <label for="orderTimeSuf" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                         </div>
                     </div>
@@ -216,16 +216,18 @@
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
-            var orderTimePre = $('#orderTimePre').val();
-            var orderTimeSuf = $('#orderTimeSuf').val();
-            if(!orderTimePre){
+            var orderTimeBegin = $('#orderTimePre').val();
+            var orderTimeEnd = $('#orderTimeSuf').val();
+            if(!orderTimeBegin){
                 alert("请选择上传开始日期");
                 return;
             }
-            if(!orderTimeSuf){
+            if(!orderTimeEnd){
                 alert("请选择上传结束日期");
                 return;
             }
+             var orderTimePre = orderTimeBegin+" 00:00:00";
+             var orderTimeSuf = orderTimeEnd+" 23:59:59";
             if(!DateUtil.dateCompare(orderTimePre,orderTimeSuf)){
                 alert("上传起始时间不能大于结束时间!");
                 return;
@@ -362,8 +364,8 @@
         }
 
         $("#resetBtn").click(function(){
-            $("#orderTimePre").val("");
-            $("#orderTimeSuf").val("");
+            //$("#orderTimePre").val("");
+           // $("#orderTimeSuf").val("");
             $("#mobileOrderStatus").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
         })
