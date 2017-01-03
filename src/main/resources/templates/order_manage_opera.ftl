@@ -317,8 +317,6 @@
     </script>
     <!-- inline scripts related to this page -->
     <script type="text/javascript">
-//        var startdates=$("#orderTime").val();
-//        date=DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),30));//前端日期加减
 
         var now = new Date();
         //当月1号
@@ -755,6 +753,8 @@
             xescm.common.loadPage(url);
         });
         $("#resetBtn").click(function(){
+            $("#startDate").val(mon1st);
+            $("#endDate").val(DateUtil.formatDate(now));
             $("#custName").val("");
             $("#orderCode").val("");
             $("#orderState").val("").trigger("chosen:updated");
