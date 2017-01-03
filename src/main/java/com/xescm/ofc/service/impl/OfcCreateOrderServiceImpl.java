@@ -321,7 +321,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 ofcGoodsDetailsInfo.setOrderCode(orderCode);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
-            ofcOrderStatusService.save(ofcOrderStatus);
+//            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
