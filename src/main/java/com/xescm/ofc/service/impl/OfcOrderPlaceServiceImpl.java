@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,11 +91,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcGoodsDetailsInfos 订单货品明细信息
      * @param ofcFundamentalInformation 基本信息
      */
-    private void saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation){
+    private BigDecimal saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation){
+        BigDecimal goodsAmountCount = new BigDecimal(0);
         for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
             if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                 if((ofcGoodsDetails.getWeight() != null && ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) != 0 ) || (ofcGoodsDetails.getCubage() != null && ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) != 0 )){
-
                 }else{
                     continue;
                 }
@@ -106,8 +107,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            goodsAmountCount.add(ofcGoodsDetails.getQuantity(), new MathContext(3));
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
+        return goodsAmountCount;
     }
 
     @Override
@@ -217,7 +220,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcOrderStatus.setNotes(notes.toString());
                     upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                     //添加该订单的货品信息 modify by wangst 做抽象处理
-                    saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+                    BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+                    ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
                     //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                     if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
@@ -329,9 +333,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
                 ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
                 //添加该订单的货品信息 modify by wangst 做抽象处理
-                saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
-
-
+                BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+                ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
@@ -781,7 +784,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
             //添加该订单的货品信息 modify by wangst 做抽象处理
-            saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+            BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+            ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
             //添加基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
             if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
