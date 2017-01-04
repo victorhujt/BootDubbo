@@ -505,7 +505,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
-        ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+        ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
