@@ -112,7 +112,7 @@
                         <div class="w-width-220 col-float">
                             <input id="creationTime" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcFundamentalInformation.creationTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
+                                   value="${(ofcFundamentalInformation.creationTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">创建人员</label>
                         <div class="w-width-220 col-float">
@@ -123,7 +123,20 @@
                         <div class="w-width-220 col-float">
                             <input id="finishedTime" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcFundamentalInformation.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
+                                   value="${(ofcFundamentalInformation.finishedTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-label no-padding-right" for="name">取消日期</label>
+                        <div class="w-width-220 col-float">
+                            <input id="creationTime" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.abolishTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">取消人</label>
+                        <div class="w-width-220 col-float">
+                            <input id="creator" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.abolisher)!""}">
                         </div>
                     </div>
                 </form>
@@ -514,7 +527,7 @@
                     ${stroage.baseName!""}
                     </td>
                     <td class="center">
-                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
+                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:ss"))!""}
                     </td>
                 </tr>
                 </#list>
