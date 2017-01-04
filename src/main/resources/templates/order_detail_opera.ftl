@@ -136,7 +136,7 @@
                         <label class="control-label col-label no-padding-right" for="name">取消人</label>
                         <div class="w-width-220 col-float">
                             <input id="creator" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.abolisher)!""}">
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.abolisherName)!""}">
                         </div>
                     </div>
                 </form>
