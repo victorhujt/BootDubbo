@@ -283,7 +283,7 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>服务商名称", serviceProviderName);
         String result = null;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        String userName=authResDtoByToken.getGroupRefName();
+        String userName=authResDtoByToken.getUserName();
 
         try {
             result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,serviceProviderContact,serviceProviderContactPhone,userName);
