@@ -335,7 +335,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3 l-dw">
                         <div class="clearfix">
                             <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -1352,7 +1351,7 @@
             cscContantAndCompanyDto.cscContactDto = cscContactDto;
             cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             cscContantAndCompanyDto.pageNum = 1;
-            cscContantAndCompanyDto.pageSize = 20;
+            cscContantAndCompanyDto.pageSize = 10;
             var customerCode = $("#customerCode").val();
             var param = JSON.stringify(cscContantAndCompanyDto);
             var contactList = 0;
@@ -1484,7 +1483,7 @@
         cscContantAndCompanyDto.cscContactDto = cscContactDto;
         cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
-        cscContantAndCompanyDto.pageSize = 20;
+        cscContantAndCompanyDto.pageSize = 10;
         var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
@@ -1705,7 +1704,7 @@
         cscContantAndCompanyDto.cscContactDto = cscContactDto;
         cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
-        cscContantAndCompanyDto.pageSize = 20;
+        cscContantAndCompanyDto.pageSize = 10;
         var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
@@ -1978,7 +1977,7 @@
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
-        param.pageSize = 20;
+        param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
