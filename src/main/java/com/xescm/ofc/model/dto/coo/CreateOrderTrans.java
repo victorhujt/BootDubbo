@@ -1,6 +1,7 @@
 package com.xescm.ofc.model.dto.coo;
 
 import com.xescm.ofc.constant.CreateOrderApiConstant;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.OrderSourceEnum;
 import com.xescm.ofc.exception.BusinessException;
@@ -9,12 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
-import static com.xescm.ofc.constant.OrderConstConstant.PENDINGAUDIT;
 
 /**
  * 订单中心创建订单（鲜易网） 转换为数据库DO
@@ -69,10 +70,11 @@ public class CreateOrderTrans {
 
     public OfcOrderStatus getOfcOrderStatus() throws BusinessException {
         if (createOrderEntity != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ofcOrderStatus = new OfcOrderStatus();
+            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDINGAUDIT);
             ofcOrderStatus.setOrderCode(orderCode);
-            ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setNotes(simpleDateFormat.format(new Date())+" 订单已创建");
             ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);
             ofcOrderStatus.setLastedOperTime(nowDate);
         }
@@ -89,15 +91,15 @@ public class CreateOrderTrans {
             List<CreateOrderGoodsInfo> list = createOrderEntity.getCreateOrderGoodsInfos();
             if (null != list && !list.isEmpty()) {
                 this.ofcGoodsDetailsInfoList = new ArrayList<>();
+                modelMapper.addMappings(new PropertyMap<CreateOrderGoodsInfo, OfcGoodsDetailsInfo>() {
+                    @Override
+                    protected void configure() {
+                        skip().setInvalidTime(null);
+                        skip().setProductionTime(null);
+                    }
+                });
                 for (CreateOrderGoodsInfo goodsInfo : list) {
                     OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-                    modelMapper.addMappings(new PropertyMap<CreateOrderGoodsInfo, OfcGoodsDetailsInfo>() {
-                        @Override
-                        protected void configure() {
-                            skip().setInvalidTime(null);
-                            skip().setProductionTime(null);
-                        }
-                    });
                     modelMapper.map(goodsInfo, ofcGoodsDetailsInfo);
                     ofcGoodsDetailsInfo.setOrderCode(this.orderCode);
                     ofcGoodsDetailsInfo.setCreationTime(nowDate);
@@ -177,7 +179,7 @@ public class CreateOrderTrans {
             //收货方
             ofcDistributionBasicInfo.setConsigneeContactName(createOrderEntity.getConsigneeContact());
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
-            ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsignorPhone());
+            ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsigneePhone());
             ofcDistributionBasicInfo.setConsigneeType("2");
             //收货方传真、收货方Email、收货方邮编 暂无字段
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());

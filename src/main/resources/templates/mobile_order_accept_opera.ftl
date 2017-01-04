@@ -1,6 +1,4 @@
-<head>
     <title>订单详情</title>
-    <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
     <style type="text/css">
         #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
@@ -160,9 +158,6 @@
             transform:scale(0.6)!important;
         }*/
     </style>
-</head>
-
-<body class="no-skin">
 <div class="page-header">
     <p>
         订单详情
@@ -220,7 +215,7 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">开单员</label>
                 <div class="col-width-168">
-                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                    <input class="width-100" id="dingdingOperator" name="" type="search" placeholder=""
                            aria-controls="dynamic-table"
                            value="${(mobileOrder.operator)!""}">
                 </div>
@@ -330,12 +325,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -343,7 +338,7 @@
                     <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContact.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContactDto.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -351,7 +346,7 @@
                     <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -467,12 +462,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
                     <div class="col-width-220 padding-15 y-float">
                         <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
 
@@ -555,11 +550,11 @@
                             </div>
                         </div></div>
 
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode"><span class="w-label-icon">*</span>开单员</label>
+                    <div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <div class="clearfix">
-                                    <input class="width-100" id="operator" name="" type="search" placeholder=""
+                                    <input class="width-100" id="merchandiser" name="" type="search" placeholder=""
                                            aria-controls="dynamic-table"
                                            value="${(mobileOrder.operator)!""}">
                             </div>
@@ -586,7 +581,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -601,7 +596,7 @@
                         <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
-                                <input class="col-width-168"  name="custOrderCode" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
+                                <input class="col-width-168"  name="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
                             </div>
                         </div>
                     </div>
@@ -1975,37 +1970,37 @@
     function getCscContantAndCompanyDtoConsignorStr() {
         var paramConsignor = {};
         var paramConsignee = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consignorName").val();
-        cscContact.contactName = $("#consignorContactName").val();
-        cscContact.purpose = "2";
-        cscContact.phone = $("#consignorPhone").val();
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consignorName").val();
+        cscContactDto.contactName = $("#consignorContactName").val();
+        cscContactDto.purpose = "2";
+        cscContactDto.phone = $("#consignorPhone").val();
 
-        cscContact.contactCompanyName = $("#consignorName").val();
-        cscContact.contactCode = $("#consignorContactCode").val();
-        cscContactCompany.type = $("#consignorType").val();
-        //cscContactCompany.id = $("#consignorCode").val();
+        cscContactDto.contactCompanyName = $("#consignorName").val();
+        cscContactDto.contactCode = $("#consignorContactCode").val();
+        cscContactCompanyDto.type = $("#consignorType").val();
+        //cscContactCompanyDto.id = $("#consignorCode").val();
         var consignorAddressMessage = $("#city-picker3-consignor").val().split('~');
         var consignorAddressCodeMessage = consignorAddressMessage[1].split(',');
         var consignorAddressNameMessage = consignorAddressMessage[0].split('/');
-        cscContact.province = consignorAddressCodeMessage[0];
-        cscContact.city = consignorAddressCodeMessage[1];
-        cscContact.area = consignorAddressCodeMessage[2];
+        cscContactDto.province = consignorAddressCodeMessage[0];
+        cscContactDto.city = consignorAddressCodeMessage[1];
+        cscContactDto.area = consignorAddressCodeMessage[2];
         if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
-            cscContact.street = consignorAddressCodeMessage[3];
+            cscContactDto.street = consignorAddressCodeMessage[3];
         }
 
-        cscContact.provinceName = consignorAddressNameMessage[0];
-        cscContact.cityName = consignorAddressNameMessage[1];
-        cscContact.areaName = consignorAddressNameMessage[2];
+        cscContactDto.provinceName = consignorAddressNameMessage[0];
+        cscContactDto.cityName = consignorAddressNameMessage[1];
+        cscContactDto.areaName = consignorAddressNameMessage[2];
         if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-            cscContact.streetName = consignorAddressNameMessage[3];
+            cscContactDto.streetName = consignorAddressNameMessage[3];
         }
 
-        cscContact.address = $("#consignorAddress").val();
-        paramConsignor.cscContact = cscContact;
-        paramConsignor.cscContactCompany = cscContactCompany;
+        cscContactDto.address = $("#consignorAddress").val();
+        paramConsignor.cscContactDto = cscContactDto;
+        paramConsignor.cscContactCompanyDto = cscContactCompanyDto;
         var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
         return cscContantAndCompanyDtoConsignorStr;
 
@@ -2013,39 +2008,39 @@
     function getCscContantAndCompanyDtoConsigneeStr() {
         var paramConsignor = {};
         var paramConsignee = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consigneeName").val();
-        cscContact.contactName = $("#consigneeContactName").val();
-        cscContact.purpose = "1";
-        cscContact.phone = $("#consigneePhone").val();
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consigneeName").val();
+        cscContactDto.contactName = $("#consigneeContactName").val();
+        cscContactDto.purpose = "1";
+        cscContactDto.phone = $("#consigneePhone").val();
 
-        cscContact.contactCompanyName = $("#consigneeName").val();
-        cscContact.contactCode = $("#consigneeContactCode").val();
-        cscContactCompany.type = $("#consigneeType").val();
+        cscContactDto.contactCompanyName = $("#consigneeName").val();
+        cscContactDto.contactCode = $("#consigneeContactCode").val();
+        cscContactCompanyDto.type = $("#consigneeType").val();
 
         var consigneeAddressMessage = $("#city-picker3-consignee").val().split('~');
         var consigneeAddressCodeMessage = consigneeAddressMessage[1].split(',');
         var consigneeAddressNameMessage = consigneeAddressMessage[0].split('/');
-        cscContact.province = consigneeAddressCodeMessage[0];
-        cscContact.city = consigneeAddressCodeMessage[1];
-        cscContact.area = consigneeAddressCodeMessage[2];
+        cscContactDto.province = consigneeAddressCodeMessage[0];
+        cscContactDto.city = consigneeAddressCodeMessage[1];
+        cscContactDto.area = consigneeAddressCodeMessage[2];
         if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
-            cscContact.street = consigneeAddressCodeMessage[3];
+            cscContactDto.street = consigneeAddressCodeMessage[3];
         }
 
-        cscContact.provinceName = consigneeAddressNameMessage[0];
-        cscContact.cityName = consigneeAddressNameMessage[1];
-        cscContact.areaName = consigneeAddressNameMessage[2];
+        cscContactDto.provinceName = consigneeAddressNameMessage[0];
+        cscContactDto.cityName = consigneeAddressNameMessage[1];
+        cscContactDto.areaName = consigneeAddressNameMessage[2];
         if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-            cscContact.streetName = consigneeAddressNameMessage[3];
+            cscContactDto.streetName = consigneeAddressNameMessage[3];
         }
 
-        cscContact.address = $("#consigneeAddress").val();
+        cscContactDto.address = $("#consigneeAddress").val();
 
 
-        paramConsignee.cscContact = cscContact;
-        paramConsignee.cscContactCompany = cscContactCompany;
+        paramConsignee.cscContactDto = cscContactDto;
+        paramConsignee.cscContactCompanyDto = cscContactCompanyDto;
         var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
         return cscContantAndCompanyDtoConsigneeStr;
     }
@@ -2102,10 +2097,10 @@
         $("#destination").html(destination);
     }
     //带出发货方
-    function outConsignor(cscContact,cscContactCompany,groupId,customerCode){
+    function outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode){
         var cscContantAndCompanyDto = {};
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         var param = JSON.stringify(cscContantAndCompanyDto);
         CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
@@ -2129,25 +2124,25 @@
                     $("#city-picker3-consignor").val(paramAddressNameToPage);
                     $("#city-picker3-consignor").citypicker('refresh');
                     departurePlace();
-                    cscContact.purpose = "1";
+                    cscContactDto.purpose = "1";
                     checkConsignOrEe();
-                    outConsignee(cscContact,cscContactCompany,groupId,customerCode);
+                    outConsignee(cscContactDto,cscContactCompanyDto,groupId,customerCode);
                 });
             }else{
                 // 如果发货方条数大于1条，默认带出cookie中上次选择的
                 clearConsignor();
-                cscContact.purpose = "1";
-                outConsignee(cscContact,cscContactCompany,groupId,customerCode);
+                cscContactDto.purpose = "1";
+                outConsignee(cscContactDto,cscContactCompanyDto,groupId,customerCode);
                 checkConsignOrEe();
             }
         },"json");
 
     }
     //带出收货方
-    function outConsignee(cscContact,cscContactCompany,groupId,customerCode){
+    function outConsignee(cscContactDto,cscContactCompanyDto,groupId,customerCode){
         var cscContantAndCompanyDto = {};
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         var param = JSON.stringify(cscContantAndCompanyDto);
         CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
@@ -2718,10 +2713,10 @@
                         $("#custGroupId").val(groupId);
                         $("#customerCode").val(customerCode);
 
-                        var cscContact = {};
-                        var cscContactCompany = {};
-                        cscContact.purpose = "2";
-                        outConsignor(cscContact,cscContactCompany,groupId,customerCode);
+                        var cscContactDto = {};
+                        var cscContactCompanyDto = {};
+                        cscContactDto.purpose = "2";
+                        outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode);
                         $("#goodsInfoListDiv").html("");
                         countQuantityOrWeightOrCubageCheck();
                     }
@@ -2753,15 +2748,15 @@
         $("#consignorSelectFormBtn").click(function () {
             $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
-            var cscContact = {};
-            var cscContactCompany = {};
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
 
-            cscContactCompany.contactCompanyName = $("#consignorName2").val();
-            cscContact.purpose = "2";
-            cscContact.contactName = $("#consignorPerson2").val();
-            cscContact.phone = $("#consignorPhoneNumber2").val();
-            cscContantAndCompanyDto.cscContact = cscContact;
-            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            cscContactCompanyDto.contactCompanyName = $("#consignorName2").val();
+            cscContactDto.purpose = "2";
+            cscContactDto.contactName = $("#consignorPerson2").val();
+            cscContactDto.phone = $("#consignorPhoneNumber2").val();
+            cscContantAndCompanyDto.cscContactDto = cscContactDto;
+            cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             var customerCode = $("#customerCode").val();
 
             queryContactData(cscContantAndCompanyDto,customerCode,2,1);
@@ -2770,14 +2765,14 @@
         $("#consigneeSelectFormBtn").click(function () {
             $("#contactSelectListTbody1").html("");
             var cscContantAndCompanyDto = {};
-            var cscContact = {};
-            var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = $("#consignorName1").val();
-            cscContact.purpose = "1";
-            cscContact.contactName = $("#consignorPerson1").val();
-            cscContact.phone = $("#consignorPhoneNumber1").val();
-            cscContantAndCompanyDto.cscContact = cscContact;
-            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
+            cscContactCompanyDto.contactCompanyName = $("#consignorName1").val();
+            cscContactDto.purpose = "1";
+            cscContactDto.contactName = $("#consignorPerson1").val();
+            cscContactDto.phone = $("#consignorPhoneNumber1").val();
+            cscContantAndCompanyDto.cscContactDto = cscContactDto;
+            cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
 
             var customerCode = $("#customerCode").val();
 
@@ -3104,8 +3099,6 @@
             }
         });
 
-        //$('#merchandiser').editableSelect();
-
         $("#createCustBtn").click(function () {
             /*var csc_url = $("#csc_url").html();
             var url = csc_url + "/csc/customer/toAddCustomerPage";
@@ -3125,8 +3118,6 @@
     $("#custListDivNoneTop").click(function () {
         $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
     });
-
-    $("#merchandiser").editableSelect();
 
     function initChosen() {
         $('.chosen-select').chosen({allow_single_deselect: true});
@@ -3153,8 +3144,6 @@
         var loginUser = $('#login_user').html();
         var lastSelMer = getCookie(loginUser);
         var lastSelConsignor = getCookie(loginUser+"@consignor");
-        console.log("用户:" + loginUser + " 最后选择的开单员为：" + lastSelMer);
-        console.log("用户:" + loginUser + " 最后选择的发货地址为：" + lastSelConsignor);
 
         if (lastSelMer != '') {
             $("#merchandiser").val(lastSelMer);
@@ -3261,8 +3250,3 @@
         }
     }
 </script>
-<#--<script type="text/javascript" src="../js/jquery.editable-select.min.js"></script>-->
-
-<#--<script type="text/javascript" src="../js/drag_map.js"></script>-->
-
-</body>

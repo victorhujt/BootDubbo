@@ -100,7 +100,7 @@ public final class OrderConstConstant {
 
 
     //通过接口创建的订单
-    public static final String CREATE_ORDER_BYAPI = "createOrderByApi";
+    public static final String CREATE_ORDER_BYAPI = "系统对接";
 
     //是或者不是
     public static final Integer SHI=1;      //是

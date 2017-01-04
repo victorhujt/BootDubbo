@@ -81,7 +81,7 @@
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">平台类型</label>
                         <div class="w-width-220 col-float">
-                            <input id="platformType" name="custName" type="search" placeholder=""
+                            <input id="platformType" name="" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.platformType)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">订单来源</label>
@@ -112,18 +112,31 @@
                         <div class="w-width-220 col-float">
                             <input id="creationTime" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcFundamentalInformation.creationTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
+                                   value="${(ofcFundamentalInformation.creationTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">创建人员</label>
                         <div class="w-width-220 col-float">
                             <input id="creator" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.creator)!""}">
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.creatorName)!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">完成日期</label>
                         <div class="w-width-220 col-float">
                             <input id="finishedTime" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
-                                   value="${(ofcFundamentalInformation.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}">
+                                   value="${(ofcFundamentalInformation.finishedTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-label no-padding-right" for="name">取消日期</label>
+                        <div class="w-width-220 col-float">
+                            <input id="creationTime" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcFundamentalInformation.abolishTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
+                        </div>
+                        <label class="control-label col-label no-padding-right" for="name">取消人</label>
+                        <div class="w-width-220 col-float">
+                            <input id="creator" name="custName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.abolisher)!""}">
                         </div>
                     </div>
                 </form>
@@ -514,7 +527,7 @@
                     ${stroage.baseName!""}
                     </td>
                     <td class="center">
-                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:SS"))!""}
+                    ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:ss"))!""}
                     </td>
                 </tr>
                 </#list>
@@ -681,7 +694,24 @@
         $("#payment").val(getPayment(payment));
         var orderStatus = "${(ofcOrderStatus.orderStatus)!""}";
         $("#orderStatus").val(getOrderStatus(orderStatus));
+        var platformType = $("#platformType").val();
+        $("#platformType").val(getPlatformType(platformType));
+        var orderSorce = $("#orderSource").val();
+        $("#orderSource").val(getOrderSource(orderSorce));
     });
+
+    function getOrderSource(type) {
+        if("6001" == type) {
+            return "EDI";
+        }
+        return type;
+    }
+    function getPlatformType(type) {
+        if(type == "4"){
+            return "鲜易网";
+        }
+        return type;
+    }
 
     function getOrderStatus(status) {
         var value ="";

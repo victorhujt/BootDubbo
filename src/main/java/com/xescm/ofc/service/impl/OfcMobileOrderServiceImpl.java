@@ -1,25 +1,25 @@
 package com.xescm.ofc.service.impl;
 
 
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
 import com.xescm.ofc.mapper.OfcMobileOrderMapper;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.dto.csc.QueryCustomerCodeDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.csc.CscCustomerVo;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.PubUtils;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -74,7 +74,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     @Resource
     private CodeGenUtils codeGenUtils;
     @Resource
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
+    private CscCustomerEdasService cscCustomerEdasService;
 
     @Resource
     private OfcAttachmentService ofcAttachmentService;
@@ -83,6 +83,20 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     @Override
     public OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
+        //如果运输单号存在，校验运输单号是否重复
+        if(StringUtils.isNotEmpty(ofcMobileOrder.getTranCode())){
+            OfcMobileOrder condition=new OfcMobileOrder();
+            condition.setTranCode(ofcMobileOrder.getTranCode());
+            OfcMobileOrder order=selectOne(condition);
+            if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
+                OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");
+                if(orderStatus!=null){
+                    if(!HASBEENCANCELED.equals(orderStatus.getOrderStatus())){
+                        throw  new BusinessException("运输单号重复");
+                    }
+                }
+            }
+        }
         ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode("SN",6));
         ofcMobileOrder.setUploadDate(new Date());
         ofcMobileOrder.setOrderType(OrderConstConstant.TRANSPORTORDER);
@@ -179,12 +193,13 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         OfcWarehouseInformation  ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcMerchandiser ofcMerchandiser=modelMapper.map(ofcOrderDTO,OfcMerchandiser.class);
         ofcFundamentalInformation.setCreationTime(new Date());
-        ofcFundamentalInformation.setCreator(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+        ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUserName());
+        ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        StringBuffer notes = new StringBuffer();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
@@ -204,7 +219,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
                     QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
                     queryCustomerCodeDto.setCustomerCode(custId);
-                    Wrapper<CscCustomerVo> cscCustomerVo = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                    Wrapper<CscCustomerVo> cscCustomerVo = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
                     if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
                         throw new BusinessException(cscCustomerVo.getMessage());
                     }else if(null == cscCustomerVo.getResult()){
@@ -266,8 +281,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                     throw new BusinessException("您选择的订单类型系统无法识别!");
                 }
 
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单已创建");
+                notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                notes.append(" 订单已创建");
+                notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+                notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setNotes(notes.toString());
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 //添加该订单的货品信息 modify by wangst 做抽象处理
                 saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
@@ -385,7 +403,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
 
 
-            ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
+            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
             ofcFundamentalInformation.setOperTime(new Date());
             ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                     +" "+"订单已更新");
@@ -431,8 +450,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 throw new BusinessException("您选择的订单类型系统无法识别!");
             }
 
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已创建");
+            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(" 订单已创建");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
             //添加该订单的货品信息
             List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<OfcGoodsDetailsInfo>();
@@ -490,7 +512,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
-        ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+        ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
@@ -709,6 +731,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                                         OfcOrderStatus ofcOrderStatus,
                                         OfcMerchandiser ofcMerchandiser) {
         int custOrderCode = 0;
+        StringBuffer notes = new StringBuffer();
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
             custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
         }
@@ -721,7 +744,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
                 QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
                 queryCustomerCodeDto.setCustomerCode(custId);
-                Wrapper<CscCustomerVo> cscCustomerVo = feignCscCustomerAPIClient.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                Wrapper<CscCustomerVo> cscCustomerVo = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
                 if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
                     throw new BusinessException(cscCustomerVo.getMessage());
                 }else if(null == cscCustomerVo.getResult()){
@@ -783,8 +806,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 throw new BusinessException("您选择的订单类型系统无法识别!");
             }
 
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已创建");
+            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(" 订单已创建");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
             //添加该订单的货品信息 modify by wangst 做抽象处理
             saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
@@ -814,45 +840,45 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         if(null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参为空");
         }
-        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompany() || null == cscContantAndCompanyDtoConsignee.getCscContactCompany()){
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompanyDto() || null == cscContantAndCompanyDtoConsignee.getCscContactCompanyDto()){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方信息为空");
         }
-        if(null == cscContantAndCompanyDtoConsignor.getCscContact() || null == cscContantAndCompanyDtoConsignee.getCscContact()){
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactDto() || null == cscContantAndCompanyDtoConsignee.getCscContactDto()){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方联系人信息为空");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompany().getContactCompanyName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompanyDto().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getContactName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getContactName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人名称未填写");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getPhone())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getPhone())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人电话未填写");
         }
         //二级地址还需特殊处理
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getProvinceName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getProvinceName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址未选择");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getCityName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }
         /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }*/
 
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompany().getContactCompanyName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompanyDto().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getContactName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getContactName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人名称未填写");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getPhone())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getPhone())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人电话未填写");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getProvinceName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getProvinceName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
         }
-        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getCityName())){
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
         }
         /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){

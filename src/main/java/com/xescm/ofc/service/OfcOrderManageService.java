@@ -1,12 +1,12 @@
 package com.xescm.ofc.service;
 
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
+import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface OfcOrderManageService {
     String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
     String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
     CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String custId, AuthResDto authResDtoByToken);
-    CscSupplierInfoDto getSupportMessage(String suppulierName, String suppulierContactName,String custId, AuthResDto authResDtoByToken);
+    CscSupplierInfoDto getSupportMessage(String suppulierName, String suppulierContactName, String custId, AuthResDto authResDtoByToken);
     String planUpdate(String planCode, String planStatus,String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userId);
     Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO);
     Wrapper<?> orderAutoAuditFromOperation(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList,

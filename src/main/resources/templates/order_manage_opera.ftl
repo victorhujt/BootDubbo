@@ -84,14 +84,14 @@
                 <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                 <div class="padding-12 y-float" style="width:395px;">
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="startDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="startDate" >
                         <label for="startDate" class="initBtn">
                             <i class="fa fa-calendar bigger-130"></i>
                         </label>
                     </div>
                    <p class="y-float" style="margin:0 8px;line-height:34px;">至</p>
                     <div class="y-float position-relative">
-                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="endDate" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now(),festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
+                        <input type="search" placeholder="" aria-controls="dynamic-table" readonly style="width: 170px;" class="laydate-icon" id="endDate" >
                         <label for="endDate" class="initBtn">
                             <i class="fa fa-calendar bigger-130"></i>
                         </label>
@@ -189,12 +189,12 @@
         <div class="modal-body">
             <div class="bootbox-body">
                 <form id="consignorSelConditionForm" class="form-horizontal" role="form" style="margin-bottom:15px;">
-                <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+                <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                     <div class="form-group" style="width:100%;">
                         <label class="control-label col-label no-padding-right" for="name">名称</label>
                         <div class="col-width-220 padding-15 y-float">
                             <div class="clearfix">
-                                <input id="custNameDiv" name="cscContactCompany.contactCompanyName" type="text"
+                                <input id="custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text"
                                        style="color: black" class="form-control input-sm" placeholder=""
                                        aria-controls="dynamic-table">
                             </div>
@@ -284,6 +284,12 @@
 //            queryOrderData(1);
             initChosen();
             $("#doSearch").click(function () {
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+                if(StringUtil.isEmpty(startDate) || StringUtil.isEmpty(endDate)){
+                    layer.msg("请补充筛选的时间范围!");
+                    return;
+                }
                 queryOrderData(1);
             });
         }
@@ -312,13 +318,86 @@
     <!-- inline scripts related to this page -->
     <script type="text/javascript">
 
+        var now = new Date();
+        //当月1号
+        var mon = now.getMonth() + 1;
+        if(mon < 10){
+            mon = "0" + mon;
+        }
+        var mon1st = now.getFullYear() + "-" + mon + "-01";
+        //当天
+        $("#startDate").val(mon1st);
+        $("#endDate").val(DateUtil.formatDate(now));
+        var start = {
+            elem: '#startDate',
+            format: 'YYYY-MM-DD',
+            max: laydate.now(), //最大日期
+            istime: false,
+            istoday: false,
+            isclear: false,
+            choose: function(datas){
+                var add90 = DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(datas),90))
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                if(endDate > add90 && endDate != datas){
+                    $("#endDate").val(add90);
+                }
+                if(startDate > endDate){
+                    var nowI = DateUtil.formatDate(now);
+                    if(endDate > add90){
+                        $("#endDate").val(nowI);
+                    }else{
+                        $("#endDate").val(add90 < nowI ? add90 : nowI);
+                    }
+                }
+
+            }
+        };
+        var end = {
+            elem: '#endDate',
+            format: 'YYYY-MM-DD',
+            max: laydate.now(),
+            istime: false,
+            istoday: false,
+            isclear: false,
+            choose: function(datas){
+                var sub90 = DateUtil.formatDate(subDays(DateUtil.parse(datas),90));
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                if(startDate < sub90 && startDate != datas){
+                    $("#startDate").val(sub90);
+                }
+                if(startDate > endDate){
+                    $("#startDate").val(sub90);
+                }
+            }
+        };
+
+        laydate(start);
+        laydate(end);
+
+        $("#startDate").change(function () {
+            laydate(start);
+            laydate(end);
+        });
+
+        $("#endDate").change(function () {
+            laydate(start);
+            laydate(end);
+        });
+
+        function subDays(date,value) {
+            date.setDate(date.getDate() - value);
+            return date;
+        }
+
         function queryOrderData(pageNum) {
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
             param.custName = $("#custName").val();
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
+            var startDate = $('#startDate').val() + " 00:00:00";
+            var endDate = $('#endDate').val() + " 23:59:59";
             param.startDate = startDate;
             param.endDate = endDate;
             param.orderCode = $("#orderCode").val();
@@ -328,8 +407,11 @@
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
                 if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                    $("#dataTbody").html("");
+                    $("#DataPageBarDiv").hide();
                     layer.msg("暂时未查询到相关订单信息！");
                 } else if (result.code == 200) {// 1:normal
+                    $("#DataPageBarDiv").show();
                     reloadGrid(result);// 刷新页面数据
                     laypage({
                         cont: $("#DataPageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
@@ -580,7 +662,7 @@
                         curr: result.result.pageNum, // 当前页
                         jump: function (obj, first) { // 触发分页后的回调
                             if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
-                                queryCustomerData(obj.curr);
+                                queryCustomerData(custName,obj.curr);
                             }
                         }
                     });
@@ -671,10 +753,10 @@
             xescm.common.loadPage(url);
         });
         $("#resetBtn").click(function(){
+            $("#startDate").val(mon1st);
+            $("#endDate").val(DateUtil.formatDate(now));
             $("#custName").val("");
             $("#orderCode").val("");
-            $("#startDate").val("");
-            $("#endDate").val("");
             $("#orderState").val("").trigger("chosen:updated");
             $("#orderType").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");

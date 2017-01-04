@@ -1,12 +1,12 @@
 package com.xescm.ofc.mapper;
 
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.uam.domain.dto.AuthResDto;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 

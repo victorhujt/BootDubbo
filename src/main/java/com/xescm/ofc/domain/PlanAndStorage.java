@@ -1,13 +1,15 @@
 package com.xescm.ofc.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 仓储-计划
  * Created by hiyond on 2016/11/25.
  */
-public class PlanAndStorage {
+public class PlanAndStorage implements Serializable {
 
+    private static final long serialVersionUID = -6636402636202541680L;
     private String orderCode;
 
     private String planCode;

@@ -4,12 +4,13 @@ import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.domain.ofcSiloprogramStatusFedBackCondition;
+import com.xescm.ofc.domain.OfcSiloprogramStatusFedBackCondition;
 import com.xescm.ofc.service.OfcSiloproStatusService;
-import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,11 @@ public class SiloprogramOrderStatusConsumer extends BaseController implements Me
 		logger.info("仓储计划单开始消费");
 		try {
     	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-			 List<ofcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
+			 List<OfcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
 			 try {
-				 ofcSiloprogramStatusFedBackConditions= JSONUtils.jsonToList(messageBody , ofcSiloprogramStatusFedBackCondition.class);
+				 TypeReference<List<OfcSiloprogramStatusFedBackCondition>> typeReference = new TypeReference<List<OfcSiloprogramStatusFedBackCondition>>() {
+				 };
+				 ofcSiloprogramStatusFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,typeReference);
 				 for(int i=0;i<ofcSiloprogramStatusFedBackConditions.size();i++){
 					 ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
 				 }

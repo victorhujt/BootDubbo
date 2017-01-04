@@ -1,35 +1,51 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ac.domain.AcDistributionBasicInfo;
+import com.xescm.ac.domain.AcFinanceInformation;
+import com.xescm.ac.domain.AcFundamentalInformation;
+import com.xescm.ac.domain.AcGoodsDetailsInfo;
+import com.xescm.ac.model.dto.AcOrderDto;
+import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
+import com.xescm.ac.provider.AcOrderEdasService;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscSupplierEdasService;
+import com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto;
+import com.xescm.epc.edas.dto.TransportNoDTO;
+import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
+import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.*;
-import com.xescm.ofc.model.dto.ac.CancelOfcOrderDto;
-import com.xescm.ofc.model.dto.ac.CancelOfcOrderResultDto;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyResponseDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
-import com.xescm.ofc.model.dto.csc.domain.CscContact;
-import com.xescm.ofc.model.dto.csc.domain.CscContactCompany;
-import com.xescm.ofc.model.dto.ofc.OfcDistributionBasicInfoDto;
-import com.xescm.ofc.model.dto.rmc.RmcCompanyLineQO;
-import com.xescm.ofc.model.dto.rmc.RmcDistrictQO;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
-import com.xescm.ofc.model.dto.tfc.TransportNoDTO;
-import com.xescm.ofc.model.dto.whc.*;
+import com.xescm.ofc.model.dto.whc.WhcDelivery;
+import com.xescm.ofc.model.dto.whc.WhcDeliveryDetails;
+import com.xescm.ofc.model.dto.whc.WhcInStock;
+import com.xescm.ofc.model.dto.whc.WhcInStockDetails;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
-import com.xescm.ofc.model.vo.rmc.RmcCompanyLineVo;
-import com.xescm.ofc.model.vo.rmc.RmcPickup;
-import com.xescm.ofc.model.vo.rmc.RmcRecipient;
-import com.xescm.ofc.model.vo.rmc.RmcServiceCoverageForOrderVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.*;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.Response;
+import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
+import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
+import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
+import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
+import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
+import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -59,7 +75,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
     @Autowired
-    private FeignRmcCompanyAPIClient feignRmcCompanyAPIClient;
+    private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
     @Autowired
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Autowired
@@ -71,7 +87,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcFinanceInformationService ofcFinanceInformationService;
     @Autowired
-    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+    private CscSupplierEdasService cscSupplierEdasService;
     @Autowired
     private OfcPlannedDetailService ofcPlannedDetailService;
     @Autowired
@@ -91,25 +107,23 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService;
     @Autowired
-    private FeignRmcPickUpOrRecipientAPIClient feignRmcPickUpOrRecipientAPIClient;
+    private RmcServiceCoverageEdasService rmcServiceCoverageEdasService;
     @Autowired
-    private FeignRmcServiceCoverageAPIClient feignRmcServiceCoverageAPIClient;
-    @Autowired
-    private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
     private CodeGenUtils codeGenUtils;
     @Autowired
-    private FeignTfcTransPlanApiClient feignTfcTransPlanApiClient;
+    private EpcOrderCancelEdasService epcOrderCancelEdasService;
     @Autowired
-    private FeignWhcSiloprogramAPIClient feignWhcSiloprogramAPIClient;
+    private WhcOrderCancelEdasService whcOrderCancelEdasService;
     @Autowired
-    private FeignOfcDistributionAPIClient feignOfcDistributionAPIClient;
+    private EpcOfc2DmsEdasService epcOfc2DmsEdasService;
     @Autowired
     private DefaultMqProducer defaultMqProducer;
     @Autowired
-    private FeignCscContactAPIClient feignCscContactAPIClient;
-    @Autowired
-    private FeignPushOrderApiClient feignPushOrderApiClient;
+    private CscContactEdasService cscContactEdasService;
+    @Resource
+    private AcOrderEdasService acOrderEdasService;
 
     /**
      * 订单审核和反审核
@@ -130,7 +144,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEENCANCELED))) {
                 if (ofcOrderStatus.getOrderStatus().equals(ALREADYEXAMINE) && reviewTag.equals("rereview")) {
-                    planCancle(orderCode, authResDtoByToken.getGroupRefName());
+                    planCancle(orderCode, authResDtoByToken.getUserName());
 
                     logger.debug("作废计划单完成");
                     ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
@@ -143,12 +157,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatus.setStatusDesc("已审核");
                     ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         + " " + "订单审核完成");
-                    ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+                    ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                     ofcOrderStatus.setLastedOperTime(new Date());
 
                     OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-                    ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-                    ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+                    ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                    ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                     ofcFundamentalInformation.setOperTime(new Date());
                     List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode, "orderCode");
                     OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
@@ -179,7 +193,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                 ofcSiloprogramInfo.setProgramSerialNumber("2");
                             }
                             transPlanCreate(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFundamentalInformation.getCustName(), ofcFinanceInformation);
-                            String planCode = siloProCreate(ofcSiloprogramInfo, ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo, authResDtoByToken.getGroupRefName());
+                            String planCode = siloProCreate(ofcSiloprogramInfo, ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo, authResDtoByToken.getUserName());
                             //仓储计划单生成以后通过MQ推送到仓储中心
                             List<OfcSiloprogramInfoVo> infos = ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode, ZIYUANFENPEIZ);
                             List<OfcPlannedDetail> pds = ofcPlannedDetailService.planDetailsScreenList(planCode, "planCode");
@@ -193,7 +207,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             logger.info("不需要提供运输");
                             //不需要提供运输
                             ofcSiloprogramInfo.setProgramSerialNumber("1");
-                            String planCode = siloProCreate(ofcSiloprogramInfo, ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo, authResDtoByToken.getGroupRefName());
+                            String planCode = siloProCreate(ofcSiloprogramInfo, ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo, authResDtoByToken.getUserName());
                             //仓储计划单生成以后通过MQ推送到仓储中心
                             List<OfcSiloprogramInfoVo> infos = ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode, ZIYUANFENPEIZ);
                             if (StringUtils.isEmpty(planCode)) {
@@ -222,7 +236,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 } else {
                     throw new BusinessException("缺少标志位");
                 }
-                ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
                 return String.valueOf(Wrapper.SUCCESS_CODE);
@@ -681,7 +695,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getTwoDistribution()).equals("")){
             pushDistributionBasicInfo.setTwoDistribution(ofcTransplanInfo.getTwoDistribution());
         }
-        Wrapper<?> wrapper = feignOfcDistributionAPIClient.addDistributionBasicInfo(pushDistributionBasicInfo);
+       OfcDistributionBasicInfoDto ofcDistributionBasicInfoDtoEpc = new OfcDistributionBasicInfoDto();
+        try {
+            BeanUtils.copyProperties(ofcDistributionBasicInfoDtoEpc,pushDistributionBasicInfo);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        Wrapper<?> wrapper = epcOfc2DmsEdasService.addDistributionBasicInfo(ofcDistributionBasicInfoDtoEpc);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){
             throw new BusinessException("向分拣中心推送卡班订单失败");
         }else if("100101".equals(wrapper.getCode())){
@@ -800,7 +822,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         //defaultMqProducer.toSendMQTfcCancelPlanOrder(JacksonUtil.toJsonWithFormat(ofcTransplanInfo.getPlanCode()));
                         TransportNoDTO transportNoDTO = new TransportNoDTO();
                         transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
-                        Response response = feignTfcTransPlanApiClient.cancelTransport(transportNoDTO);
+                        Wrapper response = epcOrderCancelEdasService.cancelTransport(transportNoDTO);
+                        if(response == null) {
+                            logger.error("调用epc接口出现异常!取消订单失败!{}", "epc返回的订单取消状态为空");
+                            throw new BusinessException("您无法取消!");
+                        }
                         if(Response.ERROR_CODE == response.getCode()){
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败
@@ -829,7 +855,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTransplanInfo.setVoidTime(new Date());
                     /*OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
                     ofcTransplanNewstatus.setPlanCode(ofcTransplanInfo.getPlanCode());*/
-                ofcTransplanStatus.setPlannedSingleState("50");
+                ofcTransplanStatus.setPlannedSingleState(YIZUOFEI);
                 //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
                 //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
@@ -839,7 +865,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
         for(int i=0;i<ofcSiloprogramInfoList.size();i++){
             OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
-            Response response=null;
+            Wrapper response=null;
             OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
             ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
             ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
@@ -856,30 +882,25 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(YITUISONG)){
                 try {
-                        CancelOrderDTO dto=new CancelOrderDTO();
-                        dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
-                        dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
-                        if(OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
-                            dto.setBillType(ORDER_TYPE_IN);
-                        }else if(OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
-                            dto.setBillType(ORDER_TYPE_OUT);
-                        }
-                        dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
-                        dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
-                        dto.setReason("");
+                    OfcCancelOrderDTO dto=new OfcCancelOrderDTO();
+                    dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
+                    dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
+                    if(OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                        dto.setBillType(ORDER_TYPE_IN);
+                    }else if(OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                        dto.setBillType(ORDER_TYPE_OUT);
+                    }
+                    dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
+                    dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
+                    dto.setReason("");
                     logger.info("==> 仓储计划单号{}开始取消,业务类型为{}",ofcSiloprogramInfo.getPlanCode(),ofcSiloprogramInfo.getDocumentType());
-                        //调用接口尝试3次
-                        for (int j = 0; j <3; j++) {
-                            response=feignWhcSiloprogramAPIClient.cancelOrder(dto);
-                            if(response!=null){
-                                break;
-                            }
-                        }
+                     response=whcOrderCancelEdasService.cancelOrder(dto);
                 } catch (Exception e) {
                     logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage(),e);
-                    e.printStackTrace();
                     throw new BusinessException(e.getMessage(),e);
-
+                }
+                if(response==null){
+                    throw new BusinessException("仓储计划单调用WHC取消端口出现异常");
                 }
                 if(Response.ERROR_CODE == response.getCode()){
                     logger.error("仓储计划单调用WHC响应状态码{}",response.getCode());
@@ -935,22 +956,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(PENDINGAUDIT))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEENCOMPLETED))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEENCANCELED))){
-            planCancle(orderCode,authResDtoByToken.getGroupRefName());
+            StringBuilder notes = new StringBuilder();
+            planCancle(orderCode,authResDtoByToken.getUserName());
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setOrderStatus(HASBEENCANCELED);
             ofcOrderStatus.setStatusDesc("已取消");
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已取消");
-            ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(" 订单已取消");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
+            ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatusService.save(ofcOrderStatus);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-            ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
             ofcFundamentalInformation.setOperTime(new Date());
-            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getGroupRefName());
-            ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getGroupRefName());
+            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUserId());
+            ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getUserName());
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
@@ -960,10 +985,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcDistributionBasicInfo.setOrderCode(orderCode);
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
             if(ofcDistributionBasicInfo != null){
-                CancelOfcOrderDto cancelOfcOrderDto = new CancelOfcOrderDto();
+                CancelAcOrderDto cancelOfcOrderDto = new CancelAcOrderDto();
                 cancelOfcOrderDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 cancelOfcOrderDto.setTransCode(ofcDistributionBasicInfo.getTransCode());
-                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
+                Wrapper<?> wrapper = acOrderEdasService.cancelOfcOrder(cancelOfcOrderDto);
+//                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
                 if(wrapper == null) {
                     logger.info("取消订单推送到结算中心,code:{},message:{},返回信息:{},", wrapper.getCode(), wrapper.getMessage(), ToStringBuilder.reflectionToString(wrapper.getResult()));
                 }
@@ -976,19 +1002,19 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose,String customerCode,AuthResDto authResDtoByToken) {
+    public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String customerCode, AuthResDto authResDtoByToken) {
         //Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-        cscContantAndCompanyDto.setCscContact(new CscContact());
-        cscContantAndCompanyDto.setCscContactCompany(new CscContactCompany());
-        cscContantAndCompanyDto.getCscContact().setPurpose(purpose);
-        cscContantAndCompanyDto.getCscContact().setContactName(contactName);
-        cscContantAndCompanyDto.getCscContactCompany().setContactCompanyName(contactCompanyName);
+        cscContantAndCompanyDto.setCscContactDto(new CscContactDto());
+        cscContantAndCompanyDto.setCscContactCompanyDto(new CscContactCompanyDto());
+        cscContantAndCompanyDto.getCscContactDto().setPurpose(purpose);
+        cscContantAndCompanyDto.getCscContactDto().setContactName(contactName);
+        cscContantAndCompanyDto.getCscContactCompanyDto().setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setCustomerCode(customerCode);
         Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
         try {
-            listWrapper = feignCscContactAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            listWrapper = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("接口返回结果为null");
             }
@@ -1012,14 +1038,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     @Override
-    public CscSupplierInfoDto getSupportMessage(String supportName, String supportContactName,String customerCode, AuthResDto authResDtoByToken) {
+    public CscSupplierInfoDto getSupportMessage(String supportName, String supportContactName, String customerCode, AuthResDto authResDtoByToken) {
         CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
         cscSupplierInfoDto.setSupplierName(supportName);
         cscSupplierInfoDto.setContactName(supportContactName);
         cscSupplierInfoDto.setCustomerCode(customerCode);
         Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
         try {
-            listWrapper =  feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            listWrapper = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("查询供应商接口返回结果为null");
             }
@@ -1164,7 +1190,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
         try{
-            rmcCompanyLists = feignRmcCompanyAPIClient.queryCompanyLine(rmcCompanyLineQO);
+            rmcCompanyLists = rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         }catch (Exception ex){
             throw new BusinessException("服务商查询出错", ex);
         }
@@ -1183,7 +1209,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
                 TransportDTO transportDTO = null;
-                if (ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode()) != null) {
+                if (PubUtils.isNotNullAndBiggerSize(ofcPlannedDetailMap.get(ofcTransplanInfo.getPlanCode()),0)) {
                     String planCode = ofcTransplanInfo.getPlanCode();
                     List<OfcPlannedDetail> ofcPlannedDetail = ofcPlannedDetailMap.get(planCode);
                     transportDTO = createOfcTransplanInfoToTfc(ofcTransplanInfo, ofcPlannedDetail, userName, custOrderCodes.get(planCode));
@@ -1351,13 +1377,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
-                ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
-                ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){
                     //运输订单
@@ -1690,14 +1716,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
                         +" "+"订单审核完成");
-                ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatus.setOperator(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 // ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 ofcOrderStatusService.save(ofcOrderStatus);
-                ofcFundamentalInformation.setOperator(authResDtoByToken.getGroupRefName());
-                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getGroupRefName());
+                ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){
                     //运输订单
@@ -1712,7 +1738,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //000创建仓储计划单
                     OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
                     ofcSiloprogramInfo.setProgramSerialNumber("1");
-                    siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getGroupRefName());
+                    siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getUserName());
 
                     if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
                         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
@@ -1763,7 +1789,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wsv.setBillType(documentType);//订单类型
                 // wsv.setOutDate(new Date());//出库日期
                 wsv.setCreateTime(info.getCreationTime()==null?new Date():info.getCreationTime());//创建时间
-                wsv.setOpetator(authResDtoByToken.getGroupRefName());//创建人
+                wsv.setOpetator(authResDtoByToken.getUserName());//创建人
                 //wsv.setOperatingTime(new Date());//操作日期
                 // wsv.setStatus("");//出库单状态
                 wsv.setWareHouseCode(PubUtils.trimAndNullAsEmpty(info.getWarehouseCode()));//仓库编号
@@ -1826,7 +1852,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detailList .add(detail);
                 }
                 wsv.setDetailsList(detailList);
-                jsonStr=JSONUtils.objectToJson(wsv);
+                jsonStr=JacksonUtil.toJsonWithFormat(wsv);
             }else if(OFC_WHC_IN_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcInStock wp=new WhcInStock();
@@ -1836,7 +1862,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 wp.setBillType(documentType);//入库单类型
                 //wp.setStorageDate(new Date());//入库日期
                 wp.setCreateTime(info.getCreationTime()==null?new Date():info.getCreationTime());//创建时间
-                wp.setCreator(authResDtoByToken.getGroupRefName());//创建人
+                wp.setCreator(authResDtoByToken.getUserName());//创建人
                 wp.setOperator("");//操作人
                 //wp.setOperatingTime(new Date());//操作时间
                 wp.setStatus("");//入库单状态
@@ -1880,7 +1906,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     detailList.add(detail);
                 }
                 wp.setDetailsList(detailList);
-                jsonStr=JSONUtils.objectToJson(wp);
+                jsonStr=JacksonUtil.toJsonWithFormat(wp);
             }
             if(!StringUtils.isEmpty(jsonStr)){
             logger.info("send to whc json is :" +jsonStr);
@@ -1905,29 +1931,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
-    public Object RmcPickUpOrRecipientByRmcApi(RmcDistrictQO rmcDistrictQO,String tag){
-        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
-        //先判断是上门提货还是二次配送
-        if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
-            Wrapper<List<RmcPickup>> rmcPickupList = feignRmcPickUpOrRecipientAPIClient.queryPickUp(rmcDistrictQO);
-            if(rmcPickupList!=null && rmcPickupList.getResult().size()>0){
-                return rmcPickupList.getResult().get(0);
-            }else {
-                return null;
-            }
-        }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
-            Wrapper<List<RmcRecipient>> RmcRecipientList = feignRmcPickUpOrRecipientAPIClient.queryRecipient(rmcDistrictQO);
-            if(RmcRecipientList!=null && RmcRecipientList.getResult().size()>0){
-                return RmcRecipientList.getResult().get(0);
-            }else{
-                return null;
-            }
-        }else{
-            throw new BusinessException("缺少提货或配送标志位");
-        }
-
-    }
-
     public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         //先判断是上门提货还是二次配送
@@ -1935,7 +1938,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
                 return rmcPickupList.getResult().get(0);
@@ -1947,7 +1950,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = feignRmcServiceCoverageAPIClient.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);
@@ -1966,7 +1969,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         RmcWarehouse rmcWarehouse=new RmcWarehouse();
         if(!PubUtils.trimAndNullAsEmpty(wareHouseCode).equals("")){
             rmcWarehouse.setWarehouseCode(wareHouseCode);
-            Wrapper<RmcWarehouse> rmcWarehouseByid=feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
+
+            Wrapper<RmcWarehouse> rmcWarehouseByid=(Wrapper<RmcWarehouse>)rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
             rmcWarehouse=rmcWarehouseByid.getResult();
             return rmcWarehouse;
         }else{
@@ -2067,6 +2071,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
+        rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
         String address[]=planeCode.split(",");
         if(address.length>=1){
             if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
@@ -2103,7 +2108,37 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //暂时只推卡班订单
         if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
                 && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
-            Wrapper<?> wrapper = feignPushOrderApiClient.pullOfcOrder(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+            AcOrderDto acOrderDto = new AcOrderDto();
+            try {
+                AcFundamentalInformation acFundamentalInformation =new AcFundamentalInformation();
+                BeanUtils.copyProperties(acFundamentalInformation,ofcFundamentalInformation);
+
+                AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
+                BeanUtils.copyProperties(acFinanceInformation,ofcFinanceInformation);
+
+                AcDistributionBasicInfo acDistributionBasicInfo= new AcDistributionBasicInfo();
+                BeanUtils.copyProperties(acDistributionBasicInfo,ofcDistributionBasicInfo);
+
+                List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
+                for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:ofcGoodsDetailsInfos) {
+                    AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
+                    BeanUtils.copyProperties(acGoodsDetailsInfo,ofcGoodsDetailsInfo);
+                    acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
+                }
+                if(acGoodsDetailsInfoList.size() < 1){
+                    throw new BusinessException("订单货品明细不能为空!");
+                }
+                acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
+                acOrderDto.setAcFinanceInformation(acFinanceInformation);
+                acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
+                acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
             }

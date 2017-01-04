@@ -1,31 +1,34 @@
 package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.model.vo.CscGoodsTypeVo;
+import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscGoodsTypeEdasService;
+import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscContactAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.feign.client.FeignCscSupplierAPIClient;
-import com.xescm.ofc.model.dto.csc.*;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.csc.CscCustomerVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
-import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.ofc.wrap.WrapMapper;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PubUtils;
-import com.xescm.uam.utils.wrap.Wrapper;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,11 +59,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    private CscGoodsEdasService cscGoodsEdasService;
     @Autowired
-    private FeignCscSupplierAPIClient feignCscSupplierAPIClient;
+    private CscGoodsTypeEdasService cscGoodsTypeEdasService;
     @Autowired
-    private FeignCscContactAPIClient feignCscContactAPIClient;
+    private CscSupplierEdasService cscSupplierEdasService;
+    @Autowired
+    private CscContactEdasService cscContactEdasService;
 
     /**
      * 编辑
@@ -71,8 +75,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      */
     @RequestMapping("/orderEdit")
     @ResponseBody
-    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
-            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
+    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
         String result = null;
@@ -85,27 +89,27 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
            /* if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
                 logger.debug(ofcOrderDTOJson);
-                ofcOrderDTOJson = JSONUtils.objectToJson(new OfcOrderDTO());
+                ofcOrderDTOJson = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
             }*/
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             if (null == ofcOrderDTO.getOrderTime()){
                 ofcOrderDTO.setOrderTime(new Date());
             }
@@ -151,29 +155,29 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+                ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
 
            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
             logger.info(cscContantAndCompanyDtoConsignorStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             logger.info(cscContantAndCompanyDtoConsigneeStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             if(cscContantAndCompanyDtoConsignor==null){
                 throw new BusinessException("发货人信息不允许为空！");
             }
@@ -181,7 +185,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 throw new BusinessException("收货人信息不允许为空！");
             }
 
-            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
                 if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
@@ -241,35 +245,35 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+                ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
             // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
             logger.info(cscContantAndCompanyDtoConsignorStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             logger.info(cscContantAndCompanyDtoConsigneeStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             if(cscContantAndCompanyDtoConsignor==null){
                 throw new BusinessException("发货人信息不允许为空！");
             }
             if(cscContantAndCompanyDtoConsignee==null){
                 throw new BusinessException("收货人信息不允许为空！");
             }
-            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
                 if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
@@ -323,9 +327,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGoods.setCustomerCode(authResDtoByToken.getGroupRefCode());
             cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
             cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));
-            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsList(cscGoods);
+            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = (Wrapper<List<CscGoodsApiVo>>) cscGoodsEdasService.queryCscGoodsList(cscGoods);
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
@@ -353,8 +357,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            cscGoodsLists = feignCscGoodsAPIClient.queryCscGoodsPageList(cscGood);
-            //response.getWriter().print(JSONUtils.objectToJson(cscGoodsLists.getResult()));
+            cscGoodsLists = (Wrapper<PageInfo<CscGoodsApiVo>>) cscGoodsEdasService.queryCscGoodsPageList(cscGood);
+            //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
@@ -371,16 +375,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
         try {
-            CscContantAndCompanyDto csc = JSONUtils.jsonToPojo(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto csc = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(PubUtils.isSEmptyOrNull(customerCode)){
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
-            csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
-            csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
-            csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
-            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoList(csc);
+            csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
+            csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
+            csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
+            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
 
             /*csc.getCscContact().setPurpose("3");
@@ -388,7 +392,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
             result.addAll(resultOfBoth);*/
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(result));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(result));
         } catch (Exception ex) {
             logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
         }
@@ -402,16 +406,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         //调用外部接口,最低传CustomerCode和purpose
         Wrapper<PageInfo<CscContantAndCompanyResponseDto>> result=null;
         try {
-            CscContantAndCompanyDto csc = JSONUtils.jsonToPojo(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto csc = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(PubUtils.isSEmptyOrNull(customerCode)){
                 customerCode = authResDtoByToken.getGroupRefCode();
             }
             csc.setCustomerCode(customerCode);
-            csc.getCscContactCompany().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompany().getContactCompanyName()));
-            csc.getCscContact().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getContactName()));
-            csc.getCscContact().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContact().getPhone()));
-            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = feignCscContactAPIClient.queryCscReceivingInfoListWithPage(csc);
+            csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
+            csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
+            csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
+            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<PageInfo<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
             result = cscReceivingInfoList;
             /*
             csc.getCscContact().setPurpose("3");
@@ -441,10 +445,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
             cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
             cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
-            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
+            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(cscSupplierList.getResult()));
-        }catch (IOException ex) {
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(cscSupplierList.getResult()));
+        }catch (Exception ex) {
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
     }
@@ -510,14 +514,14 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
         try{
-            CscGoodsType cscGoodType=new CscGoodsType();
+            CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
             if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
                 cscGoodType.setPid(cscGoodsType);
             }
-            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = feignCscGoodsAPIClient.getCscGoodsTypeList(cscGoodType);
+            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(CscGoodsType.getResult()));
-            logger.info("###############返回货品类别列表为{}####################",JSONUtils.objectToJson(CscGoodsType.getResult()));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
+            logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
             CscGoodsTypeVo cscGoodsTypeVo=new CscGoodsTypeVo();
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);

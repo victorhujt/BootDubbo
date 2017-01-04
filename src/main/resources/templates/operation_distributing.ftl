@@ -124,7 +124,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "goodsName" name="goodsName" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsName" name="goodsName" type="text" style="color: black" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"   onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm bk-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">条形码</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "barCode" name="barCode" type="text" style="color: black"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "barCode" name="barCode" type="text" style="color: black" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" class="form-control input-sm  bk-1" placeholder="" aria-controls="dynamic-table">
                             <input id="customerCodeForGoods" name ="customerCode" type="hidden"/>
                         </div>
                     </div>
@@ -186,12 +186,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label  col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix" >
-                            <input  id = "consignorName2" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContact.contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson2" name="cscContactDto.contactName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     <label class="control-label  col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContact.phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                     <label class="control-label col-label no-padding-right" for="name">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorName1" name="contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorName1" name="contactCompanyName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
                     <label class="control-label col-label no-padding-right" for="name">联系人</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPerson1" name="contactName"onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPerson1" name="contactName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -277,7 +277,7 @@
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "consignorPhoneNumber1" name="phone" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "consignorPhoneNumber1" name="phone" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -325,12 +325,12 @@
     <div class="modal-body">
         <div class="bootbox-body">
             <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContact.purpose" type="hidden" value="2">-->
+            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                 <div class="form-group">
                     <label class="control-label  col-label no-padding-right" for="name" style="line-height:34px;">名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompany.contactCompanyName" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" type="text" style="color: black" class="form-control input-sm tktp-1" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -384,6 +384,7 @@
                         <div class="clearfix">
                             <input id="goodsIndexDivHidden" type="hidden"/>
                             <input  id = "goodsCodeDiv" name="" type="text" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input id="goodsUnitPriceDiv" type="text" hidden/>
                         </div>
                     </div>
                 </div>
@@ -391,7 +392,7 @@
                     <label class="control-label col-label no-padding-right" for="name">货品名称</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "goodsNameDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "goodsNameDiv" name="" type="text" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -399,7 +400,7 @@
                     <label class="control-label col-label no-padding-right" for="name">规格</label>
                     <div class="col-xs-3">
                         <div class="clearfix">
-                            <input  id = "specificationDiv" name="" type="text" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            <input  id = "specificationDiv" name="" type="text" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"   onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  readonly="readonly" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                 </div>
@@ -475,7 +476,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
                 <div class="width-267">
                     <div class="clearfix">
-                        <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
+                        <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
                             <#list merchandiserList! as merchandiser>
                                 <option>${(merchandiser.merchandiser)!""}</option>
                             </#list>
@@ -522,7 +523,7 @@
             <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
             <div class="width-267">
                 <div class="clearfix">
-                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
+                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
                 </div>
             </div></div>
         </div>
@@ -739,6 +740,7 @@
     function main() {
 
         validateFormData();
+        $("body").find(".es-list:last").prevAll("ul").remove();
     }
     //链接到收发货方联系人档案
     $("#to_operation_csc_contact_manage").click(function () {
@@ -801,7 +803,7 @@
                 $("#consigneeInfoListDiv").append("<tr class='odd' role='row'>" +
                         "<td><a onclick='deleteConsignee(this)'  class='red'>删除</a></td>"+
                         "<td>" + StringUtil.nullToEmpty(consignee.contactCompanyName) + "</td>" +
-                        "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
+                        "<td><input onpaste='return false' onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' value='"+ StringUtil.nullToEmpty(consignee.custOrderCode) +"' style='border:1px solid #cacaca'/></td>" +//===
                         "<td>" + StringUtil.nullToEmpty(consignee.contactName) + "</td>" +
                         "<td>" + StringUtil.nullToEmpty(consignee.phone) + "</td>" +
                         "<td>" + StringUtil.nullToEmpty(consignee.detailAddress) + "</td>" +
@@ -830,6 +832,7 @@
             var viewMapKeys = viewMap.keys();
             var viewMapIndexOf = 0;
             for(var key in viewMapKeys){
+                
                 viewMapIndexOf += 1;
                 var viewMapValue = viewMapKeys[key];
                 var goodsDetail = viewMap.get(viewMapValue)[0];
@@ -1191,18 +1194,23 @@
     }
 
     function goodsAndConsignee(obj){
-        
+
        $("#goodsAndConsigneeDiv").fadeIn(0);
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
         var useGoodsCode = goodsCode;
-        goodsCode = goodsCode.split('@')[0];
+        var goodsCode1 = goodsCode.split('@')[0];
         var goodsName = $(obj).parent().parent().children().eq(3).text();
         var specification = $(obj).parent().parent().children().eq(4).text();
         var unit = $(obj).parent().parent().children().eq(5).text();
         $("#goodsIndexDivHidden").val(goodsIndex);
-        $("#goodsCodeDiv").val(goodsCode);
+        $("#goodsCodeDiv").val(goodsCode1);
+        var goodsUnitPrice = '';
+        if(goodsCode.split('@').length > 1){
+            goodsUnitPrice = goodsCode.split('@')[1];
+            $("#goodsUnitPriceDiv").val('@' + goodsUnitPrice);
+        }
         $("#goodsNameDiv").val(goodsName);
         $("#specificationDiv").val(specification);
         $("#unitDiv").val(unit);
@@ -1226,6 +1234,9 @@
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
                 num = preGoodsAndConsigneeJsonMsg[cadj];
+                if(undefined == num || null == num){
+                    num = "0";
+                }
             }
 
             consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
@@ -1249,7 +1260,7 @@
     //统计货品发货数量
     $("#goodsAndConsigneeEnter").click(function(){
         var sendNum = 0;//统计某个货品的总的发货数量
-
+        
         var mapValue = [];
         var mapKey = "";
         var goodsJson = {};
@@ -1276,6 +1287,10 @@
             var goodsIndex = tdArr.eq(1).text();//货品索引
             var goodsCode = tdArr.eq(2).text();//货品编码
             var goodsCodeDiv = $("#goodsCodeDiv").val();
+            var goodsUnitPriceDiv = $("#goodsUnitPriceDiv").val();
+            if(!StringUtil.isEmpty(goodsUnitPriceDiv)){
+                goodsCodeDiv = goodsCodeDiv + goodsUnitPriceDiv;
+            }
             var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
             if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
                 tdArr.eq(7).text(sendNum);
@@ -1328,14 +1343,14 @@
             $("#pageBarDivConsignor").hide();
             $("#contactSelectListTbody2").html("");
             var cscContantAndCompanyDto = {};
-            var cscContact = {};
-            var cscContactCompany = {};
-            cscContactCompany.contactCompanyName = "";
-            cscContact.purpose = "2";
-            cscContact.contactName = "";
-            cscContact.phone = "";
-            cscContantAndCompanyDto.cscContact = cscContact;
-            cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
+            cscContactCompanyDto.contactCompanyName = "";
+            cscContactDto.purpose = "2";
+            cscContactDto.contactName = "";
+            cscContactDto.phone = "";
+            cscContantAndCompanyDto.cscContactDto = cscContactDto;
+            cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             cscContantAndCompanyDto.pageNum = 1;
             cscContantAndCompanyDto.pageSize = 20;
             var customerCode = $("#customerCode").val();
@@ -1459,15 +1474,15 @@
     function queryConsignorDataDistri(pageNum){
         $("#contactSelectListTbody2").html("");
         var cscContantAndCompanyDto = {};
-        var cscContact = {};
-        var cscContactCompany = {};
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
 
-        cscContactCompany.contactCompanyName = $("#consignorName2").val();
-        cscContact.purpose = "2";
-        cscContact.contactName = $("#consignorPerson2").val();
-        cscContact.phone = $("#consignorPhoneNumber2").val();
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        cscContactCompanyDto.contactCompanyName = $("#consignorName2").val();
+        cscContactDto.purpose = "2";
+        cscContactDto.contactName = $("#consignorPerson2").val();
+        cscContactDto.phone = $("#consignorPhoneNumber2").val();
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
         cscContantAndCompanyDto.pageSize = 20;
         var customerCode = $("#customerCode").val();
@@ -1629,14 +1644,14 @@
 
     /*$("#consigneeSelectFormBtn").click(function () {
         var cscContantAndCompanyDto = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consignorName1").val();
-        cscContact.purpose = "1";
-        cscContact.contactName = $("#consignorPerson1").val();
-        cscContact.phone = $("#consignorPhoneNumber1").val();
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consignorName1").val();
+        cscContactDto.purpose = "1";
+        cscContactDto.contactName = $("#consignorPerson1").val();
+        cscContactDto.phone = $("#consignorPhoneNumber1").val();
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
 
         var customerCode = $("#customerCode").val();
 
@@ -1681,14 +1696,14 @@
         $("#contactSelectListTbody1").html("");
 
         var cscContantAndCompanyDto = {};
-        var cscContact = {};
-        var cscContactCompany = {};
-        cscContactCompany.contactCompanyName = $("#consignorName1").val();
-        cscContact.purpose = "1";
-        cscContact.contactName = $("#consignorPerson1").val();
-        cscContact.phone = $("#consignorPhoneNumber1").val();
-        cscContantAndCompanyDto.cscContact = cscContact;
-        cscContantAndCompanyDto.cscContactCompany = cscContactCompany;
+        var cscContactDto = {};
+        var cscContactCompanyDto = {};
+        cscContactCompanyDto.contactCompanyName = $("#consignorName1").val();
+        cscContactDto.purpose = "1";
+        cscContactDto.contactName = $("#consignorPerson1").val();
+        cscContactDto.phone = $("#consignorPhoneNumber1").val();
+        cscContantAndCompanyDto.cscContactDto = cscContactDto;
+        cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
         cscContantAndCompanyDto.pageSize = 20;
         var customerCode = $("#customerCode").val();
@@ -1803,7 +1818,7 @@
             consignorout =consignorout + "<tr role='row' class='odd'>";
             consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
-            consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
+            consignorout =consignorout + "<td><input onpaste='return false' onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
             consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
             consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1856,7 +1871,7 @@
                 consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
                 consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
-                consignorout =consignorout + "<td><input onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca; ' /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
+                consignorout =consignorout + "<td><input onpaste='return false'  onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca; ' /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"
                 consignorout =consignorout + "<td>"+consigneeContactName+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactPhone+"</td>";
                 consignorout =consignorout + "<td>"+consigneeContactAddress+"</td>";
@@ -1912,16 +1927,18 @@
         }
     });//custListDiv
     $("#custListDivBlock").click(function () {
-        if(couldChangeCust){
+//        if(couldChangeCust){
+//            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+//        }else{
+        var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
+        if(consigneeNum == 0){
             $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
-        }else{
-            var consigneeNum = $("#consigneeInfoListDiv").find('tr').length;
-            if(consigneeNum == 0){
-                $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
-            }else{
-                alert("您不能再选择客户! 如需重选, 请重置收发货方!")
-            }
+        }else if(consigneeNum > 0){
+            alert("您不能再选择客户! 如需重选, 请重置收发货方!")
+        }else if(couldChangeCust){
+            $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
         }
+        ///}
     });
     $("#custListDivNoneBottom").click(function () {
         $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
@@ -2076,8 +2093,7 @@
             alert("该客户没有客户编码,请维护!")
         }else{
             var historyUrl = "operation_distributing";
-            var custName = $("#custName").val();
-            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + custName;
+            var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode;
             xescm.common.loadPage(url);
         }
     })
@@ -2292,7 +2308,7 @@
 
                 }
 
-                if(goodsAmount != 0){
+                if(goodsAmount != 0 && undefined != goodsAmount && null != goodsAmount){
 
                     consigneeGoodsIsEmpty = false;
                     //return false;
@@ -2531,7 +2547,11 @@
     }
 
     function onlyNumAndAbc(value){
-        return value = value.replace(/[^\w]/ig,'');
+        value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
+        if(/\d{31}/.test(value)){
+            value = value.replace(/\d$/gi,'');
+        }
+        return value;
     }
     $(".es-list").click(function(){
         checkType();

@@ -2,37 +2,39 @@ package com.xescm.ofc.web.restcontroller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
+import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.model.vo.CscGoodsTypeVo;
+import com.xescm.csc.provider.CscCustomerEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscGoodsTypeEdasService;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscCustomerAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsAPIClient;
-import com.xescm.ofc.feign.client.FeignCscGoodsTypeAPIClient;
-import com.xescm.ofc.model.dto.csc.*;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
-import com.xescm.ofc.model.vo.csc.CscCustomerVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsApiVo;
-import com.xescm.ofc.model.vo.csc.CscGoodsTypeVo;
+import com.xescm.ofc.model.dto.csc.OfcGoodsImportDto;
 import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcOperationDistributingService;
-import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.ofc.utils.JacksonUtil;
-import com.xescm.ofc.utils.PubUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.rmc.edas.domain.RmcWarehouse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -57,11 +59,11 @@ public class OfcOperationDistributing extends BaseController{
     @Autowired
     private OfcOperationDistributingService ofcOperationDistributingService;
     @Autowired
-    private FeignCscCustomerAPIClient feignCscCustomerAPIClient;
+    private CscCustomerEdasService cscCustomerEdasService;
     @Autowired
-    private FeignCscGoodsTypeAPIClient feignCscGoodsTypeAPIClient;
+    private CscGoodsEdasService cscGoodsEdasService;
     @Autowired
-    private FeignCscGoodsAPIClient feignCscGoodsAPIClient;
+    private CscGoodsTypeEdasService cscGoodsTypeEdasService;
     @Autowired
     private StringRedisTemplate rt;
     @Resource
@@ -114,7 +116,7 @@ public class OfcOperationDistributing extends BaseController{
         try{
             List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JSONUtils.objectToJson(rmcWarehouseByCustCode));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcWarehouseByCustCode));
         }catch (Exception ex){
             logger.error("城配下单查询仓库列表失败!{}",ex.getMessage(),ex);
         }
@@ -131,11 +133,11 @@ public class OfcOperationDistributing extends BaseController{
     public void queryGoodsTypeByCustId(String customerCode,Model model,HttpServletResponse response){
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
-            CscGoodsType cscGoodsType = new CscGoodsType();
-            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
+            wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
             logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
@@ -155,12 +157,12 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("城配开单根据选择的客户和货品一级种类查询货品二级小类==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
-            CscGoodsType cscGoodsType = new CscGoodsType();
+            CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
             cscGoodsType.setPid(goodsType);
-            wrapper = feignCscGoodsTypeAPIClient.queryCscGoodsTypeList(cscGoodsType);
+            wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
             logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
@@ -179,10 +181,10 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("城配开单查询货品列表==> cscGoodsApiDto={}", cscGoodsApiDto);
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
-            wrapper = feignCscGoodsAPIClient.queryCscGoodsList(cscGoodsApiDto);
+            wrapper = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JSONUtils.objectToJson(wrapper.getResult()));
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
             logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage(),ex);
@@ -190,40 +192,6 @@ public class OfcOperationDistributing extends BaseController{
     }
 
 
-//    /**
-//     * 根据客户名称查询客户
-//     * @param queryCustomerName
-//     * @param currPage
-//     * @param response
-//     */
-//    @RequestMapping(value = "/queryCustomerByName",method = RequestMethod.POST)
-//    @ResponseBody
-//    public void queryCustomerByName(String queryCustomerName, String currPage, HttpServletResponse response){
-//        logger.info("城配开单根据客户名称查询客户==> queryCustomerName={}", queryCustomerName);
-//        logger.info("城配开单根据客户名称查询客户==> currPage={}", currPage);
-//        try{
-//            QueryCustomerNameDto queryCustomerNameDto = new QueryCustomerNameDto();
-//            if(!PubUtils.isSEmptyOrNull(queryCustomerName)){
-//                queryCustomerNameDto.setCustomerNames(new ArrayList<String>());
-//                queryCustomerNameDto.getCustomerNames().add(queryCustomerName);
-//            }
-//            QueryCustomerNameAvgueDto queryCustomerNameAvgueDto = new QueryCustomerNameAvgueDto();
-//            queryCustomerNameAvgueDto.setCustomerName(queryCustomerName);
-//            Wrapper<?> wrapper = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryCustomerNameAvgueDto);
-//            if(wrapper.getCode() == Wrapper.ERROR_CODE){
-//                logger.error("查询客户列表失败,查询结果有误!");
-//            }
-//            List<CscCustomerVo> cscCustomerVoList = (List<CscCustomerVo>) wrapper.getResult();
-//            if(null == cscCustomerVoList){
-//                response.getWriter().print(JSONUtils.objectToJson(new ArrayList<CscCustomerVo>()));
-//            }else{
-//                response.getWriter().print(JSONUtils.objectToJson(cscCustomerVoList));
-//            }
-//        }catch (Exception ex){
-//            logger.error("查询客户列表失败!异常信息为:{}{}",ex.getMessage(),ex);
-//        }
-//
-//    }
 
     /**
      * 根据客户名称分页查询客户
@@ -244,7 +212,7 @@ public class OfcOperationDistributing extends BaseController{
             queryParam.setCustomerName(custName);
             queryParam.setPageNum(pageNum);
             queryParam.setPageSize(pageSize);
-            result = feignCscCustomerAPIClient.QueryCustomerByNameAvgue(queryParam);
+            result = (Wrapper<PageInfo<CscCustomerVo>>)cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
             if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询客户列表失败,查询结果有误!");
             }
@@ -318,12 +286,12 @@ public class OfcOperationDistributing extends BaseController{
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
-                List<CscGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
+                List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
                     String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime() + (int)Math.random()*100000;
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchgoodsKey, JSONUtils.objectToJson(cscGoodsImportDtoList));
+                    ops.set(batchgoodsKey, JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
                     rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
                     String s = ops.get(batchgoodsKey);
                     String s1 = ops.get(batchgoodsKey);
@@ -332,7 +300,7 @@ public class OfcOperationDistributing extends BaseController{
                 if(cscContantAndCompanyInportDtoList.size() > 0){
                     String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime() + (int)Math.random()*100000;
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchconsingeeKey, JSONUtils.objectToJson(cscContantAndCompanyInportDtoList));
+                    ops.set(batchconsingeeKey, JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
                     rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
                     ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey);
                 }
@@ -345,11 +313,11 @@ public class OfcOperationDistributing extends BaseController{
         } catch (BusinessException e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
-            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
-            result = com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return result;
     }

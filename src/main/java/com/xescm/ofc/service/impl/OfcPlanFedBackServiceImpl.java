@@ -1,12 +1,11 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.api.csc.FeignCscCustomerAPI;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.PubUtils;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
@@ -24,7 +26,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Service
 @Transactional
 public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
-    private static final Logger logger = LoggerFactory.getLogger(FeignCscCustomerAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(OfcPlanFedBackServiceImpl.class);
     @Autowired
     private OfcTransplanInfoService ofcTransplanInfoService;
     @Autowired
@@ -70,12 +72,24 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 if(ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo())==null){
                     throw new BusinessException("传送运输单号信息失败，查不到相关计划单");
                 }
-                String orderCode=ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo()).getOrderCode();
-                mapperMap.put("ifFinished","planfinish");
+                OfcTransplanInfo ofcTransplanInfot=ofcTransplanInfoService.selectByKey(ofcPlanFedBackCondition.getTransportNo());
+                String orderCode=ofcTransplanInfot.getOrderCode();
+                String programSerialNumber = ofcTransplanInfot.getProgramSerialNumber();
                 mapperMap.put("orderCode",orderCode);
-                //当前未完成的运输计划单的LIST
+                //订单下所有非作废计划单列表
+                List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
+                int serialNumberCount = -1;
+                if(ofcTransplanInfoList!=null){//订单下运输计划单数量
+                    serialNumberCount=ofcTransplanInfoList.size();
+                }
+                mapperMap.put("ifFinished","planfinish");
+                //当前非作废未完成的运输计划单的LIST
                 List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
                 OfcTransplanInfo ofcTransplanInfo=ofcTransplanInfoService.selectByKey(transPortNo);
+                if(ofcTransplanInfo==null){
+                    logger.info("相关运输计划单号为：{},未查询到相关计划单",transPortNo);
+                    throw new BusinessException("根据所反馈的运输单号未查询到相关计划单！");
+                }
                 if(status.equals("")){
                     throw new BusinessException("跟踪状态不可以为空");
                 }else {
@@ -98,7 +112,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                             +" "+"车辆已发运，发往目的地：");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIFAYUN);
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"车辆已发运，发往目的地："+destination);
                                 logger.info("跟踪状态已发运");
@@ -109,21 +123,23 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     +" "+"车辆已到达目的地：");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIDAODA);
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"车辆已到达目的地："+destination);
                                 logger.info("跟踪状态已到达");
                             }
-                        }else if(status.equals("已签收")){
+                        }else if(status.equals("已签收")
+                                //当前计划单序号等于订单下计划单数量，表示最后一个计划单
+                                && (PubUtils.trimAndNullAsEmpty(programSerialNumber).equals(serialNumberCount+""))){
+                            Date now = new Date();
                             flag=false;
-                            flag=checkStatus(flag,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
-                                    +" "+"客户已签收");
+                            flag=checkStatus(flag,statusList,"end","客户已签收");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
                                 ofcTransplanStatus.setTaskCompletionTime(traceTime);
 
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已签收");
                                 logger.info("跟踪状态已签收");
@@ -132,22 +148,25 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 //当前订单下的未完成未作废的仓储计划单的订单状态
                                 List<OfcSiloproStatus> ofcSiloproStatusList = ofcSiloproStatusService.queryUncompletedPlanCodesByOrderCode(orderCode);
                                 OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+                                if(null == ofcFundamentalInformation){
+                                    throw new BusinessException("无法查到该订单相应基本信息");
+                                }
                                 //当前所有未作废的运输计划单单号
                                 List<String> planCodesByOrderCode = ofcTransplanInfoService.queryPlanCodesByOrderCode(orderCode);
                                 //当前所有未作废未完成的运输计划单单号
                                 List<String> planCodesUncompletedByOrderCode = ofcTransplanInfoService.queryUncompletedPlanCodesByOrderCode(orderCode);
-                                //如果是卡班订单, 而且是拆三段的第三段
+                                //如果是卡班订单, 而且是拆三段的第三段,拆两段的第二段
                                 if(ofcFundamentalInformation != null
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)
-                                        && planCodesByOrderCode.size() == 3){
+                                        && planCodesByOrderCode.size() <= 3 && planCodesByOrderCode.size() >=2){
                                     String lastPlanCode = planCodesByOrderCode.get(0);
                                     for(String planCode : planCodesByOrderCode){
                                         if(planCode.compareTo(lastPlanCode) == 1){
                                             lastPlanCode = planCode;
                                         }
                                     }
-                                    if(lastPlanCode.equals(ofcPlanFedBackCondition.getTransportNo()) && ofcTransplanInfos.size() > 1){
+                                    if(lastPlanCode.equals(ofcPlanFedBackCondition.getTransportNo()) && ofcTransplanInfos.size() > 0){
                                         //如果是最后一个,且未完成的运输计划单超过1个, 就将其他运输计划单的状态也改为已完成.
                                         for(String planCode : planCodesByOrderCode){
                                             //其他未完成的运输计划单的状态如果是未完成
@@ -171,11 +190,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         orderStatus=new OfcOrderStatus();
                                         orderStatus.setOrderCode(orderCode);
                                         orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                        orderStatus.setLastedOperTime(new Date());
+                                        orderStatus.setLastedOperTime(now);
                                         orderStatus.setStatusDesc("已完成");
-                                        orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                        orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                                 +" "+"订单已完成");
                                         orderStatus.setOperator(userName);
+                                        if(null != ofcFundamentalInformation.getFinishedTime()){
+                                            ofcFundamentalInformation.setFinishedTime(now);
+                                        }
+                                        ofcFundamentalInformationService.update(ofcFundamentalInformation);
                                     }
                                     //如果是出库带运输的仓储订单(先仓储计划单, 后运输计划单)
                                 }else if(ofcFundamentalInformation != null
@@ -193,11 +216,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus=new OfcOrderStatus();
                                     orderStatus.setOrderCode(orderCode);
                                     orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                    orderStatus.setLastedOperTime(new Date());
+                                    orderStatus.setLastedOperTime(now);
                                     orderStatus.setStatusDesc("已完成");
-                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
+                                    if(null != ofcFundamentalInformation.getFinishedTime()){
+                                        ofcFundamentalInformation.setFinishedTime(now);
+                                    }
+                                    ofcFundamentalInformationService.update(ofcFundamentalInformation);
                                 }else if(ofcTransplanInfos.size() == 1
                                         && ofcFundamentalInformation.getOrderType().equals(TRANSPORTORDER)
                                         && !ofcFundamentalInformation.getBusinessType().equals(WITHTHEKABAN)){
@@ -205,11 +232,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus=new OfcOrderStatus();
                                     orderStatus.setOrderCode(orderCode);
                                     orderStatus.setOrderStatus(HASBEENCOMPLETED);
-                                    orderStatus.setLastedOperTime(new Date());
+                                    orderStatus.setLastedOperTime(now);
                                     orderStatus.setStatusDesc("已完成");
-                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                                    orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
+                                    if(null != ofcFundamentalInformation.getFinishedTime()){
+                                        ofcFundamentalInformation.setFinishedTime(now);
+                                    }
+                                    ofcFundamentalInformationService.update(ofcFundamentalInformation);
                                 }
                                 logger.info("跟踪状态已完成");
                             }
@@ -219,11 +250,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     +" "+"客户已回单");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIHUIDAN);
-                                orderStatus.setLastedOperTime(new Date());
+                                orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已回单");
                                 logger.info("跟踪状态已回单");
                             }
+                        }else {
+                            throw new BusinessException("所给运输计划单状态有误:" + status);
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
                             ofcOrderStatusService.save(orderStatus);
@@ -329,18 +362,18 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     info+="调度完成";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")){
                         ofcDistributionBasicInfo.setPlateNumber(ofcSchedulingSingleFeedbackCondition.getVehical());
-                        info+="，安排车辆车牌号：【"+ofcSchedulingSingleFeedbackCondition.getVehical()+"】";
                     }
+                    info+="，安排车辆车牌号：【"+ofcSchedulingSingleFeedbackCondition.getVehical()+"】";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")){
                         ofcDistributionBasicInfo.setDriverName(ofcSchedulingSingleFeedbackCondition.getDriver());
-                        info+="，司机姓名：【"+ofcSchedulingSingleFeedbackCondition.getDriver()+"】";
                     }
+                    info+="，司机姓名：【"+ofcSchedulingSingleFeedbackCondition.getDriver()+"】";
                     if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")){
                         ofcDistributionBasicInfo.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
-                        info+="，联系电话：【"+ofcSchedulingSingleFeedbackCondition.getTel()+"】";
                     }/*else if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")){
                             ofcDistributionBasicInfo.setTransCode(ofcSchedulingSingleFeedbackCondition.getDeliveryNo());
                             }*/
+                    info+="，联系电话：【"+ofcSchedulingSingleFeedbackCondition.getTel()+"】";
                     logger.info("###############调度状态更新信息为{}",info);
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                     boolean flag = false;
@@ -349,7 +382,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             +" 订单"+tag+"调度完成");
                     if (!flag) {
                         OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-                        orderStatus.setLastedOperTime(new Date());
+                        orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
                                 +" "+info);
                         ofcOrderStatusService.save(orderStatus);
@@ -363,17 +396,19 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public boolean checkStatus(boolean flag,List<OfcOrderStatus> statusList,String position,String msg){
         if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
             for (OfcOrderStatus status : statusList) {
-                String statusNote = status.getNotes();
-                if (!PubUtils.isSEmptyOrNull(statusNote)) {
-                    if(PubUtils.trimAndNullAsEmpty(position).equals("start")){
-                        if(statusNote.startsWith(msg)){
-                            flag = true;
-                            break;
-                        }
-                    }else if(PubUtils.trimAndNullAsEmpty(position).equals("end")){
-                        if(statusNote.endsWith(msg)){
-                            flag = true;
-                            break;
+                if (status != null) {
+                    String statusNote = status.getNotes();
+                    if (!PubUtils.isSEmptyOrNull(statusNote)) {
+                        if (PubUtils.trimAndNullAsEmpty(position).equals("start")) {
+                            if (statusNote.startsWith(msg)) {
+                                flag = true;
+                                break;
+                            }
+                        } else if (PubUtils.trimAndNullAsEmpty(position).equals("end")) {
+                            if (statusNote.endsWith(msg)) {
+                                flag = true;
+                                break;
+                            }
                         }
                     }
                 }

@@ -1,12 +1,12 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.DmsCallbackStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.PubUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
     private OfcTransplanInfoService ofcTransplanInfoService;
     @Autowired
     private OfcFinanceInformationService ofcFinanceInformationService;
+    @Autowired
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
 
     /**
      * 接收分拣中心回传的状态,并更新相应的运输计划单和订单的状态
@@ -50,7 +52,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             if(PubUtils.isSEmptyOrNull(transCode) || PubUtils.isSEmptyOrNull(dmsCallbackStatus) || null == operTime || PubUtils.isSEmptyOrNull(description)){
                 throw new BusinessException("DMS回传状态信息不完整!");
             }
-            String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
+//            String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
+            String orderCode = ofcDistributionBasicInfoService.getLastedKabanOrderCodeByTransCode(transCode);
             if(PubUtils.isSEmptyOrNull(orderCode)){
                 throw new BusinessException("没有查到所属订单");
             }
@@ -83,7 +86,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             ofcOrderStatus.setNotes(sdf.format(operTime) + " " + description);
             ofcOrderStatus.setLastedOperTime(operTime);
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
-
+                Date now = new Date();
                 //如果有上门取货,则判断上门取货的运输计划单的状态是否是已完成, 如果不是, 则更新该订单的计划单的状态为已完成
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
                 //如果该卡班订单有上门取货的业务, 那么在卡班单签收的时候判断一下上门取货的运输计划单的状态是否是已完成, 如果不是则将该计划单的状态也改变为已完成
@@ -106,10 +109,10 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                         throw new BusinessException("没有查到该计划单下运输计划单状态");
                     }
                     OfcTransplanStatus ofcTransplanStatusPickUp = ofcTransplanStatusPickUpList.get(0);
-                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIQIANSHOU)
-                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIHUIDAN)){
-                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.YIQIANSHOU);
-                        ofcTransplanStatusPickUp.setTaskCompletionTime(new Date());
+                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.RENWUWANCH)
+                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIZUOFEI)){
+                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+                        ofcTransplanStatusPickUp.setTaskCompletionTime(operTime);
                         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatusPickUp);
                     }
                 }
@@ -119,12 +122,26 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 ofcTransplanStatus.setOrderCode(orderCode);
                 ofcTransplanStatus.setPlannedCompletionTime(operTime);
                 ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+                ofcTransplanStatus.setTaskCompletionTime(operTime);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
                 //再查询该运输计划单是否是该该订单下最后一个待完成的运输计划单, 如果是就把订单的状态改为已完成
                 int queryResult = ofcTransplanInfoService.queryNotInvalidAndNotCompleteTransOrder(orderCode);
                 if(queryResult == 0){
+
+                    ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
+                    ofcOrderStatus.setLastedOperTime(now);
+                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
+                            +" "+"订单已完成");
+                    OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+                    if(null == ofcFundamentalInformation){
+                        throw new BusinessException("无法查到该订单相应基本信息");
+                    }
+                    if(null != ofcFundamentalInformation.getFinishedTime()){
+                        ofcFundamentalInformation.setFinishedTime(now);
+                    }
+                    ofcFundamentalInformationService.update(ofcFundamentalInformation);
                 }
             }else if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_RECEIPT.getCode(),dmsCallbackStatus)){
                 //如果是回单状态
@@ -132,6 +149,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 //如果是异常状态
             }else{
                 //如果是签收之前的状态,计划单状态不变
+
             }
             //无论哪种状态都更新订单状态的描述信息
             ofcOrderStatusService.save(ofcOrderStatus);

@@ -6,7 +6,7 @@
 	<groupId>com.xescm.ofc</groupId>
 	<artifactId>xescm-ofc</artifactId>
 	<version>2.0</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>xescm-ofc</name>
 	<description>Demo project for Spring Boot</description>
@@ -27,16 +27,51 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.xescm.uam</groupId>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>2.2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>tk.mybatis</groupId>
-					<artifactId>mapper</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-ofc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-csc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-ac-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-rmc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-epc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-whc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.common</groupId>
+			<artifactId>xescm-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>hsf.schema</artifactId>
+			<version>edas1.0.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -44,6 +79,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -245,6 +286,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.hsf</groupId>
+			<artifactId>LightApi</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
 		</dependency>
 
     </dependencies>

@@ -5,6 +5,8 @@ import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
@@ -13,9 +15,8 @@ import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.ofc.service.OfcSiloproStatusService;
-import com.xescm.ofc.utils.JSONUtils;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,8 +106,10 @@ public class CreateOrderApiConsumer implements MessageListener {
                 if(message.getTag().equals("DeliveryTag")){
                     logger.info("调度单：{}",message);
                     List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions = null;
+                    TypeReference<List<OfcSchedulingSingleFeedbackCondition>> ofcSchedulingTypeRef = new TypeReference<List<OfcSchedulingSingleFeedbackCondition>>() {
+                    };
                     try {
-                        ofcSchedulingSingleFeedbackConditions= JSONUtils.jsonToList(messageBody , OfcSchedulingSingleFeedbackCondition.class);
+                        ofcSchedulingSingleFeedbackConditions= JacksonUtil.parseJsonWithFormat(messageBody , ofcSchedulingTypeRef);
                         for(int i=0;i<ofcSchedulingSingleFeedbackConditions.size();i++){
                             // 保存到数
                             Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.schedulingSingleFeedback(ofcSchedulingSingleFeedbackConditions.get(i),userName);
@@ -118,8 +121,10 @@ public class CreateOrderApiConsumer implements MessageListener {
                     logger.info("运输单消费 :{}",message);
                     // 将获取的json格式字符串转换成相应对象
                     List<OfcPlanFedBackCondition> ofcPlanFedBackConditions = null;
+                    TypeReference<List<OfcPlanFedBackCondition>> ofcPlanFedBackTypeRef = new TypeReference<List<OfcPlanFedBackCondition>>() {
+                    };
                     try {
-                        ofcPlanFedBackConditions= JSONUtils.jsonToList(messageBody , OfcPlanFedBackCondition.class);
+                        ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,ofcPlanFedBackTypeRef);
                         for(int i=0;i<ofcPlanFedBackConditions.size();i++){
                             // 保存到数
                             Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBack(ofcPlanFedBackConditions.get(i),userName);
@@ -137,9 +142,11 @@ public class CreateOrderApiConsumer implements MessageListener {
 			logger.info("仓储计划单状态开始消费");
 			try {
 	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-				 List<ofcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
+				 List<OfcSiloprogramStatusFedBackCondition> ofcSiloprogramStatusFedBackConditions = null;
+				 TypeReference<List<OfcSiloprogramStatusFedBackCondition>> ofcSiloprogramStatusTypeRef = new TypeReference<List<OfcSiloprogramStatusFedBackCondition>>() {
+                 };
 				 try {
-					 ofcSiloprogramStatusFedBackConditions= JSONUtils.jsonToList(messageBody , ofcSiloprogramStatusFedBackCondition.class);
+                     ofcSiloprogramStatusFedBackConditions = JacksonUtil.parseJsonWithFormat(messageBody,ofcSiloprogramStatusTypeRef);
 					 if(ofcSiloprogramStatusFedBackConditions!=null&&ofcSiloprogramStatusFedBackConditions.size()>0){
                          for(int i=0;i<ofcSiloprogramStatusFedBackConditions.size();i++){
                              ofcSiloproStatusService.feedBackSiloproStatusFromWhc(ofcSiloprogramStatusFedBackConditions.get(i));
@@ -157,8 +164,10 @@ public class CreateOrderApiConsumer implements MessageListener {
                 {
                     logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                     List<ofcWarehouseFeedBackCondition> ofcWarehouseFeedBackConditions = null;
+                    TypeReference<List<ofcWarehouseFeedBackCondition>> ofcWarehouseFeedBackTypeRef = new TypeReference<List<ofcWarehouseFeedBackCondition>>() {
+                    };
                     try {
-                        ofcWarehouseFeedBackConditions= JSONUtils.jsonToList(messageBody,ofcWarehouseFeedBackCondition.class);
+                        ofcWarehouseFeedBackConditions= JacksonUtil.parseJson(messageBody,ofcWarehouseFeedBackTypeRef);
                         if(ofcWarehouseFeedBackConditions!=null&&ofcWarehouseFeedBackConditions.size()>0){
                             for(int i=0;i<ofcWarehouseFeedBackConditions.size();i++){
 

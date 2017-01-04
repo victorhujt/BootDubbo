@@ -86,6 +86,21 @@ public class RestConfig {
      */
     private String report;
 
+    /**
+     * 移动代理
+     */
+    private String mproxy;
+
+    public String getMproxy() {
+        return mproxy;
+    }
+
+    public void setMproxy(String mproxy) {
+        this.mproxy = mproxy;
+    }
+
+
+
 
     public String getWhcUrl() {
         return whcUrl;

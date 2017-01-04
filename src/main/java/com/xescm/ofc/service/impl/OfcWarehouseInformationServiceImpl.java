@@ -1,14 +1,15 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.dto.QueryWarehouseDto;
+import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
+import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.feign.client.FeignCscWarehouseAPIClient;
-import com.xescm.ofc.feign.client.FeignRmcWarehouseAPIClient;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
-import com.xescm.ofc.model.dto.csc.CscWarehouse;
-import com.xescm.ofc.model.dto.rmc.RmcWarehouse;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.uam.utils.wrap.Wrapper;
+import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +26,9 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Autowired
     private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
     @Autowired
-    private FeignCscWarehouseAPIClient feignCscWarehouseAPIClient;
+    private CscWarehouseEdasService cscWarehouseEdasService;
     @Autowired
-    private FeignRmcWarehouseAPIClient feignRmcWarehouseAPIClient;
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -54,24 +55,24 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Override
     public List<RmcWarehouse> getWarehouseListByCustCode(String customerCode) {///1
         try{
-            CscWarehouse cscWarehouse = new CscWarehouse();
+            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
             cscWarehouse.setCustomerCode(customerCode);
             logger.info("###################################当前的客户编码为："+customerCode);
-            Wrapper<List<CscWarehouse>> cscWarehouseByCustomerId = feignCscWarehouseAPIClient.getCscWarehouseByCustomerId(cscWarehouse);
+            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouseDto>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
             if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
             }
-            List<CscWarehouse> result = cscWarehouseByCustomerId.getResult();
+            List<CscWarehouseDto> result = cscWarehouseByCustomerId.getResult();
             logger.info("###############################查询该客户对应的仓库信息为："+result+"###########");
             if(null == result){
                 return new ArrayList<>();
             }
             List<RmcWarehouse> warehouseList = new ArrayList<>();
-            for(CscWarehouse cscWH : result){
+            for(CscWarehouseDto cscWH : result){
                 RmcWarehouse rmcWarehouse = new RmcWarehouse();
                 rmcWarehouse.setWarehouseCode(cscWH.getWarehouseCode());
                 RmcWarehouse rmcWarehouseResult = new RmcWarehouse();
-                Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
+                Wrapper<RmcWarehouse> rmcWarehouseByid = (Wrapper<RmcWarehouse>) rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
                     //throw new BusinessException(rmcWarehouseByid.getMessage());
                     continue;

@@ -227,7 +227,7 @@
             <label class="control-label col-label no-padding-right" for="name">Sheet页</label>
             <div class="col-xs-3">
                 <select class="col-xs-12 chosen-select" id="uploadExcelSheet">
-                    <option value=""></option>
+
                 </select>
             </div>
             <button id="loadSheetAndCheckBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold">加载</button>
@@ -507,6 +507,9 @@
                 var cadj = consigneeCode + "@" + consigneeContactCode;
 
                 num = preGoodsAndConsigneeJsonMsg[cadj];
+                if(undefined == num || null == num){
+                    num = "0";
+                }
 
             }
 
@@ -547,7 +550,7 @@
             var historyUrl = $("#historyUrl").val();
             var url = '';
             if(!StringUtil.isEmpty(historyUrl) && 'operation_distributing' == historyUrl){
-                url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + custName + "/" + historyUrl;
+                url = "/ofc/distributing/toTemplatesList/" + custCode + "/" + historyUrl;
             }
             xescm.common.loadPage(url);
         })
@@ -843,8 +846,7 @@
                         
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
-                        var custName = $("#custName").val();
-                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
+                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
                         xescm.common.loadPage(url);
                         layer.close(index);
                     }, function(index){
@@ -859,8 +861,7 @@
         $("#ExcelNoneBtnBottom").click(function () {
             var excelImportTag = "cancel";
             var customerCode = $("#customerCode").val();
-            var custName = $("#custName").val();
-            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + custName;
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
             xescm.common.loadPage(url);
         })
         $("#errorExcelImportCloseBtn").click(function () {

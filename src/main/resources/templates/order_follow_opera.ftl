@@ -36,19 +36,19 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <form id="" method="post" class="form-horizontal" role="form">
+            <form id="resultForm" method="post" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">订单编号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="orderCode" readonly="readonly" style="color: #000" name="orderTime" type="text"
+                            <input id="orderCode" readonly="readonly" style="" name="orderTime" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="custOrderCode" readonly="readonly" style="color: #000" name="orderTime"
+                            <input id="custOrderCode" readonly="readonly" style="" name="orderTime"
                                    type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -66,21 +66,21 @@
                     <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="orderTime" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="orderTime" readonly="readonly" name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">客户名称</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="custName" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="custName" readonly="readonly"  name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">订单状态</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="orderStatus" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="orderStatus" readonly="readonly"  name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -89,21 +89,21 @@
                     <label class="control-label col-label no-padding-right" for="name">订单类型</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="orderType" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="orderType" readonly="readonly"  name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="businessType" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="businessType" readonly="readonly"  name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">运输类型</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="transportType" readonly="readonly" style="color: #000" name="" type="text"
+                            <input id="transportType" readonly="readonly"  name="" type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
                     </div>
@@ -113,20 +113,20 @@
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input class="form-control input-sm" id="departurePlace" readonly="readonly"
-                                   style="color: #000" type="text">
+                                    type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">目的地</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
                             <input class="form-control input-xl" id="destination" readonly="readonly"
-                                   style="color: #000" type="text">
+                                    type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">运输单号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="transCode" class="form-control input-xl" readonly="readonly" style="color: #000" type="text">
+                            <input id="transCode" class="form-control input-xl" readonly="readonly" type="text">
                         </div>
                     </div>
                 </div>
@@ -135,19 +135,19 @@
                     <label class="control-label col-label no-padding-right" for="name">车牌号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input class="form-control input-xl" id="plateNumber" readonly="readonly" style="color: #000;" type="text">
+                            <input class="form-control input-xl" id="plateNumber" readonly="readonly"  type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">司机姓名</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input class="form-control input-xl" id="driverName" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="driverName" readonly="readonly"  type="text">
                         </div>
                     </div>
                     <label class="control-label col-label no-padding-right" for="name">联系电话</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input class="form-control input-xl" id="contactNumber" readonly="readonly" style="color: #000" type="text">
+                            <input class="form-control input-xl" id="contactNumber" readonly="readonly"  type="text">
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                     <label class="control-label col-label no-padding-right" for="name">收货地址</label>
                     <div class="col-xs-6">
                         <div class="clearfix">
-                            <input id="destinationPlace" readonly="readonly" style="color: #000;width:516px;" type="text" class="form-control input-sm">
+                            <input id="destinationPlace" readonly="readonly"  type="text" class="form-control input-sm">
                         </div>
                     </div>
                 </div>
@@ -248,7 +248,7 @@
             "code": code,
             "searchType": followTag
         }, function (result) {
-
+            $("#resultForm").find("input").val('');
             if (result == undefined || result == null) {
                 layer.msg("暂时未查询到相关订单跟踪记录！");
             } else if (result.code == 200) {// 1:normal

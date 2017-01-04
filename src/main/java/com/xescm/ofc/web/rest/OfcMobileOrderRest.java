@@ -4,6 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcAttachment;
@@ -11,20 +18,13 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.csc.CscContantAndCompanyDto;
-import com.xescm.ofc.model.dto.csc.CscSupplierInfoDto;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.model.dto.ofc.AttachmentDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
-import com.xescm.ofc.utils.JSONUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.uam.domain.dto.AuthResDto;
-import com.xescm.uam.utils.PubUtils;
-import com.xescm.uam.utils.wrap.WrapMapper;
-import com.xescm.uam.utils.wrap.Wrapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,35 +135,35 @@ public class OfcMobileOrderRest extends BaseController {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-                ofcOrderDTOStr = JSONUtils.objectToJson(new OfcOrderDTO());
+                ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JSONUtils.objectToJson(new CscContantAndCompanyDto());
+                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JSONUtils.objectToJson(new CscSupplierInfoDto());
+                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
             // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JSONUtils.objectToJson(new OfcGoodsDetailsInfo());
+                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            OfcOrderDTO ofcOrderDTO = JSONUtils.jsonToPojo(ofcOrderDTOStr, OfcOrderDTO.class);
+            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
             logger.info(cscContantAndCompanyDtoConsignorStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             logger.info(cscContantAndCompanyDtoConsigneeStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JSONUtils.jsonToPojo(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             if(cscContantAndCompanyDtoConsignor==null){
                 throw new BusinessException("发货人信息不允许为空！");
             }
             if(cscContantAndCompanyDtoConsignee==null){
                 throw new BusinessException("收货人信息不允许为空！");
             }
-            CscSupplierInfoDto cscSupplierInfoDto = JSONUtils.jsonToPojo(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
                 if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
@@ -178,13 +178,13 @@ public class OfcMobileOrderRest extends BaseController {
                     ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
                 }
             }else{
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
             }
             resultMessage = ofcMobileOrderService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto,orderCode);
 
             if("未定义错误".equals(resultMessage)||"用户操作异常".equals(resultMessage)||"页面跳转出错".equals(resultMessage)){
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
             }
             orderCode=resultMessage.split(":")[1];
             //更新拍照订单的状态，订单号
@@ -197,17 +197,17 @@ public class OfcMobileOrderRest extends BaseController {
             ofcMobileOrderService.updateByMobileCode(order);
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心下单或编辑出现异常");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                 logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
             } else {
                 logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-                return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
             }
         }
-        return com.xescm.ofc.wrap.WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage.split(":")[0]);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage.split(":")[0]);
     }
 
     @RequestMapping(value = "/mobileOrder/updatePicParamByserialNo", method = RequestMethod.POST)
@@ -256,7 +256,7 @@ public class OfcMobileOrderRest extends BaseController {
             logger.info("操作的附件流水号为:{}",attachmentDto.getSerialNo());
             BeanUtils.copyProperties(ofcAttachment,attachmentDto);
             url= ofcAttachmentService.operateAttachMent(attachmentDto.getPicParam(),attachmentDto.getSerialNo());
-            response.getWriter().print(JSONUtils.objectToJson(url));
+            response.getWriter().print(JacksonUtil.toJsonWithFormat(url));
 
         } catch (BusinessException ex) {
         } catch (Exception e) {
