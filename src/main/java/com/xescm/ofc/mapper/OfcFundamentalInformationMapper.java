@@ -23,4 +23,11 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
     OfcFundamentalInformation queryDataByCustOrderCode(@Param("custOrderCode") String custOrderCode);
 
     OfcFundamentalInformation getLastMerchandiser(@Param("operatorName") String operatorName);
+
+    /**
+     * 根据客户订单编号与货主编码查询不是已经取消的订单
+     * @param ofcFundamentalInformation
+     * @return
+     */
+    OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(OfcFundamentalInformation ofcFundamentalInformation);
 }
