@@ -199,6 +199,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        StringBuffer notes = new StringBuffer();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
@@ -280,8 +281,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                     throw new BusinessException("您选择的订单类型系统无法识别!");
                 }
 
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单已创建");
+                notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                notes.append(" 订单已创建");
+                notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+                notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setNotes(notes.toString());
                 upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
                 //添加该订单的货品信息 modify by wangst 做抽象处理
                 saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
@@ -446,8 +450,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 throw new BusinessException("您选择的订单类型系统无法识别!");
             }
 
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已创建");
+            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(" 订单已创建");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
             //添加该订单的货品信息
             List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<OfcGoodsDetailsInfo>();
@@ -724,6 +731,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                                         OfcOrderStatus ofcOrderStatus,
                                         OfcMerchandiser ofcMerchandiser) {
         int custOrderCode = 0;
+        StringBuffer notes = new StringBuffer();
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
             custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
         }
@@ -798,8 +806,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 throw new BusinessException("您选择的订单类型系统无法识别!");
             }
 
-            ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                    +" "+"订单已创建");
+            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(" 订单已创建");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
             //添加该订单的货品信息 modify by wangst 做抽象处理
             saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
