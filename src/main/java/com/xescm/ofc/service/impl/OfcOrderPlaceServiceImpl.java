@@ -160,6 +160,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
                     }
                     ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+                    //添加该订单的货品信息 modify by wangst 做抽象处理
+                    BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+                    ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
                     if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){
 
                         if(null == ofcWarehouseInformation.getProvideTransport()){
@@ -219,9 +222,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
                     ofcOrderStatus.setNotes(notes.toString());
                     upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
-                    //添加该订单的货品信息 modify by wangst 做抽象处理
-                    BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
-                    ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
+
                     //添加基本信息
                     ofcFundamentalInformationService.save(ofcFundamentalInformation);
                     if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
@@ -246,6 +247,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcFundamentalInformation.setOrderCode(ofcFundamentalInformationService.selectOne(ofcFundamentalInformation).getOrderCode());
                 }*/
                 //仓配订单
+                //删除之前订单的货品信息
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
+                ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
+                //添加该订单的货品信息 modify by wangst 做抽象处理
+                BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+                ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
                 if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){//编辑时仓配订单
                     if(null == ofcWarehouseInformation.getProvideTransport()){
                         ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
@@ -328,13 +336,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }else{
                     throw new BusinessException("您的订单类型系统无法识别!");
                 }
-                //删除之前订单的货品信息
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-                ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
-                ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
-                //添加该订单的货品信息 modify by wangst 做抽象处理
-                BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
-                ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
+
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
@@ -720,6 +722,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
             }
             ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+            //添加该订单的货品信息 modify by wangst 做抽象处理
+            BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
+            ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
             if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){
 
                 if(null == ofcWarehouseInformation.getProvideTransport()){
@@ -783,9 +788,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
-            //添加该订单的货品信息 modify by wangst 做抽象处理
-            BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
-            ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
+
             //添加基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
             if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
