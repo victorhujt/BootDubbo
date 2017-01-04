@@ -396,17 +396,19 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public boolean checkStatus(boolean flag,List<OfcOrderStatus> statusList,String position,String msg){
         if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
             for (OfcOrderStatus status : statusList) {
-                String statusNote = status.getNotes();
-                if (!PubUtils.isSEmptyOrNull(statusNote)) {
-                    if(PubUtils.trimAndNullAsEmpty(position).equals("start")){
-                        if(statusNote.startsWith(msg)){
-                            flag = true;
-                            break;
-                        }
-                    }else if(PubUtils.trimAndNullAsEmpty(position).equals("end")){
-                        if(statusNote.endsWith(msg)){
-                            flag = true;
-                            break;
+                if (status != null) {
+                    String statusNote = status.getNotes();
+                    if (!PubUtils.isSEmptyOrNull(statusNote)) {
+                        if (PubUtils.trimAndNullAsEmpty(position).equals("start")) {
+                            if (statusNote.startsWith(msg)) {
+                                flag = true;
+                                break;
+                            }
+                        } else if (PubUtils.trimAndNullAsEmpty(position).equals("end")) {
+                            if (statusNote.endsWith(msg)) {
+                                flag = true;
+                                break;
+                            }
                         }
                     }
                 }

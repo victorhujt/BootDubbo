@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
-import static com.xescm.ofc.constant.OrderConstConstant.PENDINGAUDIT;
 
 /**
  * 订单中心创建订单（鲜易网） 转换为数据库DO
@@ -180,7 +179,7 @@ public class CreateOrderTrans {
             //收货方
             ofcDistributionBasicInfo.setConsigneeContactName(createOrderEntity.getConsigneeContact());
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
-            ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsignorPhone());
+            ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsigneePhone());
             ofcDistributionBasicInfo.setConsigneeType("2");
             //收货方传真、收货方Email、收货方邮编 暂无字段
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
