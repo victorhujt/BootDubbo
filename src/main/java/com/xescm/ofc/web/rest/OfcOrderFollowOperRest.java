@@ -61,9 +61,7 @@ public class OfcOrderFollowOperRest extends BaseController {
             }
             Map<String, Object> map = new HashMap<>();
             List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
-//            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
-//            ofcOrderStatuses = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatuses);
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {
                 if (ofcOrderDTOs.size() == 1) {
                     map.put("size", 1);
@@ -97,10 +95,8 @@ public class OfcOrderFollowOperRest extends BaseController {
     public Object queryOrderFollowByCode(String code) {
         try {
             final String searchType = "orderCode";
-//            List<OfcFundamentalInformation> ofcOrderDTOs = orderFollowOperService.queryOrder(code, searchType);
             List<OrderFollowOperResult> ofcOrderDTOs = ofcOrderManageOperService.queryOrder(code, searchType);
             List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(code, searchType);
-//            ofcOrderStatuses = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatuses);
             Map<String, Object> map = new HashMap<>();
             OrderFollowOperResult ofcFundamentalInformation = null;
             if (!CollectionUtils.isEmpty(ofcOrderDTOs)) {

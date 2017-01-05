@@ -129,14 +129,14 @@
                     <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">取消日期</label>
                         <div class="w-width-220 col-float">
-                            <input id="creationTime" name="custName" type="search" placeholder=""
+                            <input id="abolishTime" name="abolishTime" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(ofcFundamentalInformation.abolishTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
                         </div>
                         <label class="control-label col-label no-padding-right" for="name">取消人</label>
                         <div class="w-width-220 col-float">
-                            <input id="creator" name="custName" type="search" placeholder=""
-                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.abolisher)!""}">
+                            <input id="abolisherName" name="abolisherName" type="search" placeholder=""
+                                   aria-controls="dynamic-table" value="${(ofcFundamentalInformation.abolisherName)!""}">
                         </div>
                     </div>
                 </form>
@@ -530,8 +530,7 @@
                     ${(stroage.finishedTime?string("yyyy-MM-dd HH:mm:ss"))!""}
                     </td>
                 </tr>
-                </#list>
-            </#if>
+                </#list>            </#if>
             </tbody>
         </table>
 

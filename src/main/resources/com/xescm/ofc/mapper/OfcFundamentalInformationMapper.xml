@@ -173,4 +173,12 @@
     ofc_fundamental_information ofi
     WHERE ofi.operator_name =#{operatorName} ORDER BY ofi.oper_time DESC LIMIT 1
   </select>
+
+  <select id="queryOfcFundInfoByCustOrderCodeAndCustCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation">
+    SELECT *
+    FROM ofc_fundamental_information ofi
+    WHERE ofi.cust_order_code = #{custOrderCode}
+    AND ofi.cust_code = #{custCode}
+    AND ofi.abolish_mark != 1
+  </select>
 </mapper>
