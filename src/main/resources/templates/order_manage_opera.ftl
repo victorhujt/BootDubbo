@@ -411,6 +411,7 @@
                     $("#dataTbody").html("");
                     $("#DataPageBarDiv").hide();
                     layer.msg("暂时未查询到相关订单信息！");
+                    $('#view7').html("");
                 } else if (result.code == 200) {// 1:normal
                     $("#DataPageBarDiv").show();
                     reloadGrid(result);// 刷新页面数据
