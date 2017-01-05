@@ -303,11 +303,12 @@
 
 
     function queryData(code, followTag) {
+        $("#resultForm").find("input").val('');
+        $("#orderFollowStatusListTBody").empty();
         CommonClient.post(sys.rootPath + "/ofc/orderFollowOperSearch", {
             "code": code,
             "searchType": followTag
         }, function (result) {
-            $("#resultForm").find("input").val('');
             if (result == undefined || result == null) {
                 layer.msg("暂时未查询到相关订单跟踪记录！");
             } else if (result.code == 200) {// 1:normal
