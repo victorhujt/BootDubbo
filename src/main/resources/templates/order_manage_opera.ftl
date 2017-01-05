@@ -177,8 +177,9 @@
         </tbody>
     </table>
     <div class="row">
-        <div id="DataPageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
-        </div>
+        <span id="view7"></span>
+        <span id="DataPageBarDiv" style="float: right;padding-top: 0px;margin-top: 0px;">
+        </span>
     </div>
 
     <div class="modal-content" id="custListDiv" style="display: none;">
@@ -424,6 +425,7 @@
                             if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
                                 queryOrderData(obj.curr);
                             }
+                            $('#view7').html('共有'+ obj.pages +'条记录');
                         }
                     });
                 } else if (result.code == 403) {

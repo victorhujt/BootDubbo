@@ -2128,6 +2128,12 @@
                 orderInfo.provideTransport = "1";//需要运输
             }
             orderInfo.orderTime = $('#orderTime').val() + " 00:00:00";//000
+            orderInfo.transportType = "20";//运输类型默认整车
+            orderInfo.pickUpGoods = "0";//是否上门提货 默认否
+            orderInfo.twoDistribution = "0";//是否二次配送 默认否
+            orderInfo.returnList = "0";//是否签单返回 默认否
+            orderInfo.insure = "0";//是否货物保险 默认否
+            orderInfo.collectFlag = "0";//是否代收货款 默认否
             orderInfo.merchandiser = $("#merchandiser").val();
             if("" != $("#expectedArrivedTime").val()){
                 orderInfo.expectedArrivedTime = $('#expectedArrivedTime').val()+ ":00";

@@ -788,7 +788,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
-
+            addFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
             //添加基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
             if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
