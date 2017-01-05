@@ -614,7 +614,17 @@
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
                         </div></div>
-
+                    <div style="margin-left:50px;">
+                        <label  class="control-label col-label no-padding-right" style="margin-left:90px;">承诺到达时间</label>
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
+                            <div class="col-width-168" >
+                                <div class="col-width-168 position-relative" style="height:34px;">
+                                    <input class="col-width-168 es-input" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon">
+                                    <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
@@ -1630,7 +1640,7 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,4})?$/.test(value)) && $(obj).val()!="")){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
@@ -1644,7 +1654,7 @@
         }else if(parseFloat($(obj).val())>9999){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.0000</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -2331,7 +2341,7 @@
             if(null == channel){
                 channel = "";
             }
-            custList =custList + "<tr role='row' class='odd'>";
+            custList =custList + "<tr ondblclick=\"selectCustomer(this);\"role='row' class='odd'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             custList =custList + "<td>"+(index+1)+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
@@ -2351,6 +2361,34 @@
             $("#custListDivTbody").html(custList);
         });
     }
+        function selectCustomer(tr){
+        debugger;
+        var custEnterTag = "";
+            var tdArr =$(tr).children();
+           // if(tdArr.eq(0).find("input").prop("checked")){
+                custEnterTag = "1";
+                if($("#customerCode").val()!=tdArr.eq(7).text()){
+                    var type = tdArr.eq(2).text();//类型
+                    var customerName = tdArr.eq(3).text();//公司名称
+                    var channel = tdArr.eq(4).text();//    渠道
+                    var productType = tdArr.eq(5).text();//    产品类别
+                    var groupId = tdArr.eq(6).text();//    产品类别
+                    var customerCode = tdArr.eq(7).text();//    产品类别
+                    $("#custName").val(customerName);
+                    $("#custGroupId").val(groupId);
+                    $("#customerCode").val(customerCode);
+
+                    var cscContactDto = {};
+                    var cscContactCompanyDto = {};
+                    cscContactDto.purpose = "2";
+                    outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode);
+                    $("#goodsInfoListDiv").html("");
+                    countQuantityOrWeightOrCubageCheck();
+                    $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+                }
+          //  }
+    }
+
 
     // 分页查询收货方或发货方列表
     function queryContactData(param,customerCode,contactType,pageNum) {
@@ -2394,7 +2432,7 @@
     function loadConsignOrEE(data,contactType) {
         var contactList = "";
         $.each(data.result.list,function (index,CscContantAndCompanyDto) {
-            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this); role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
@@ -2463,12 +2501,49 @@
 
         },"json");
     }
+    function selectConsignOrEE(tr){
+            debugger;
+           var tdArr = $(tr).children();
+            consignorin = "1";
+            var consignorName = tdArr.eq(2).text();//名称
+            var contacts = tdArr.eq(3).text();//联系人
+            var contactsNumber = tdArr.eq(4).text();//    联系电话
+            var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+            var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
+            var type = tdArr.eq(8).text();//    发货方类型
+            var address = tdArr.eq(9).text();//    门牌号
+            var provinceName = tdArr.eq(10).text();//    省
+            var cityName = tdArr.eq(11).text();//    市
+            var areaName = tdArr.eq(12).text();//    区
+            var streetName = tdArr.eq(13).text();//    县
+            $("#consignorName").val(consignorName);
+            $("#consignorContactName").val(contacts);
+            $("#consignorPhone").val(contactsNumber);
+            $("#consignorCode").val(contactCompanySerialNo);
+            $("#consignorContactCode").val(contactSerialNo);
+            $("#consignorType").val(type);
+            $("#consignorAddress").val(address);
+            var paramAddressNameToPage = provinceName
+                    + "/" + cityName
+                    + "/" + areaName
+                    + "/" + streetName;
+            $("#city-picker3-consignor").val(paramAddressNameToPage);
+            $("#city-picker3-consignor").citypicker('refresh');
+            departurePlace();
+            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+            checkConsignOrEe();
+    }
+
+
+
+
+
 
     // 加载货品列表
     function loadGoods(data) {
         var goodsList = "";
         $.each(data,function (index,cscGoodsVo) {
-            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<tr ondblclick=\"selectGoods(this); role='row' class='odd'>";
             goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
@@ -2482,6 +2557,32 @@
             goodsList =goodsList + "</tr>";
         });
         $("#goodsSelectListTbody").html(goodsList);
+    }
+
+    function selectGoods(tr){
+            var tdArr = $(tr).children();
+            var goodsType = tdArr.eq(1).text();//货品种类
+            var goodsGate = tdArr.eq(2).text();//货品类别
+            var goodsCode = tdArr.eq(4).text();//货品编码
+            var goodsName = tdArr.eq(5).text();//货品名称
+            var specification = tdArr.eq(6).text();//规格
+            var unit = tdArr.eq(7).text();//单位
+            var typeID = tdArr.eq(9).text();//单位
+            $("#typeSel").val(typeID);
+            $("#typeSel").trigger("chosen:updated");
+            goodsTypeParentChange($("#typeSel"));
+            //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+            $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+            $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
+            $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
+            $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            goodsInfoListDiv="true";
+            $("#goodsListDiv").fadeOut(0);
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            $("#typeSel").attr("id","");
     }
 
     $(function(){
@@ -2498,6 +2599,13 @@
             }
 
         });
+
+        $("#expectedArrivedTime").click(function () {
+            var startdates=$("#orderTime").val();
+            //var enddates =DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
+            laydate({elem:'#expectedArrivedTime', istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
+        })
+
         $("#insureV").change(function(){
             if($(this).prop("checked")){
                 $("#insure").val("1");
@@ -2608,6 +2716,9 @@
             jsonStr.transportType = $("#transportType").val();
             if($('#orderTime').val()!=""){
                 jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
+            }
+            if($('#expectedArrivedTime').val()!=""){
+                jsonStr.expectedArrivedTime = $('#expectedArrivedTime').val();
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
@@ -3110,6 +3221,7 @@
         });
     })
     $("#custListDivBlock").click(function () {
+        debugger;
         $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
     });
     $("#custListDivNoneBottom").click(function () {
