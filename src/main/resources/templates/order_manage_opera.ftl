@@ -425,7 +425,7 @@
                             if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
                                 queryOrderData(obj.curr);
                             }
-                            $('#view7').html('共有'+ obj.pages +'条记录');
+                            $('#view7').html('共有'+ result.result.total +'条记录');
                         }
                     });
                 } else if (result.code == 403) {
