@@ -1817,37 +1817,40 @@
         var param = JSON.stringify(cscContantAndCompanyDto);
         CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
-            if(data.length==1){
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    $("#consignorName").val(CscContantAndCompanyDto.contactCompanyName);
-                    $("#consignorContactName").val(CscContantAndCompanyDto.contactName);
-                    $("#consignorPhone").val(CscContantAndCompanyDto.phone);
-                    $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
-                    $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
-                    $("#consignorType").val(CscContantAndCompanyDto.type);
-                    $("#consignorAddress").val(CscContantAndCompanyDto.address);
-                    var provinceName = CscContantAndCompanyDto.provinceName;
-                    var cityName = CscContantAndCompanyDto.cityName;
-                    var areaName = CscContantAndCompanyDto.areaName;
-                    var streetName = CscContantAndCompanyDto.streetName;
-                    var paramAddressNameToPage = provinceName
-                            + "/" + cityName
-                            + "/" + areaName
-                            + "/" + streetName;
-                    $("#city-picker3-consignor").val(paramAddressNameToPage);
-                    $("#city-picker3-consignor").citypicker('refresh');
-                    departurePlace();
+            if(data != undefined){
+                if(data.length==1){
+                    $.each(data,function (index,CscContantAndCompanyDto) {
+                        $("#consignorName").val(CscContantAndCompanyDto.contactCompanyName);
+                        $("#consignorContactName").val(CscContantAndCompanyDto.contactName);
+                        $("#consignorPhone").val(CscContantAndCompanyDto.phone);
+                        $("#consignorCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                        $("#consignorContactCode").val(CscContantAndCompanyDto.contactSerialNo);
+                        $("#consignorType").val(CscContantAndCompanyDto.type);
+                        $("#consignorAddress").val(CscContantAndCompanyDto.address);
+                        var provinceName = CscContantAndCompanyDto.provinceName;
+                        var cityName = CscContantAndCompanyDto.cityName;
+                        var areaName = CscContantAndCompanyDto.areaName;
+                        var streetName = CscContantAndCompanyDto.streetName;
+                        var paramAddressNameToPage = provinceName
+                                + "/" + cityName
+                                + "/" + areaName
+                                + "/" + streetName;
+                        $("#city-picker3-consignor").val(paramAddressNameToPage);
+                        $("#city-picker3-consignor").citypicker('refresh');
+                        departurePlace();
+                        cscContactDto.purpose = "1";
+                        checkConsignOrEe();
+                        outConsignee(cscContactDto,cscContactCompanyDto,groupId,customerCode);
+                    });
+                }else{
+                    // 如果发货方条数大于1条，默认带出cookie中上次选择的
+                    clearConsignor();
                     cscContactDto.purpose = "1";
-                    checkConsignOrEe();
                     outConsignee(cscContactDto,cscContactCompanyDto,groupId,customerCode);
-                });
-            }else{
-                // 如果发货方条数大于1条，默认带出cookie中上次选择的
-                clearConsignor();
-                cscContactDto.purpose = "1";
-                outConsignee(cscContactDto,cscContactCompanyDto,groupId,customerCode);
-                checkConsignOrEe();
+                    checkConsignOrEe();
+                }
             }
+
         },"json");
 
     }
@@ -1859,31 +1862,34 @@
         var param = JSON.stringify(cscContantAndCompanyDto);
         CommonClient.post(sys.rootPath + "/ofc/contactSelect",{"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
             data=eval(data);
-            if(data.length==1){
-                $.each(data,function (index,CscContantAndCompanyDto) {
-                    $("#consigneeName").val(CscContantAndCompanyDto.contactCompanyName);
-                    $("#consigneeContactName").val(CscContantAndCompanyDto.contactName);
-                    $("#consigneePhone").val(CscContantAndCompanyDto.phone);
-                    $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
-                    $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
-                    $("#consigneeType").val(CscContantAndCompanyDto.type);
-                    $("#consigneeAddress").val(CscContantAndCompanyDto.address);
-                    var provinceName = CscContantAndCompanyDto.provinceName;
-                    var cityName = CscContantAndCompanyDto.cityName;
-                    var areaName = CscContantAndCompanyDto.areaName;
-                    var streetName = CscContantAndCompanyDto.streetName;
-                    var paramAddressNameToPage = provinceName
-                            + "/" + cityName
-                            + "/" + areaName
-                            + "/" + streetName;
-                    $("#city-picker3-consignee").val(paramAddressNameToPage);
-                    $("#city-picker3-consignee").citypicker('refresh');
-                    checkConsignOrEe();
-                    destination();
-                });
-            }else{
-                clearConsignee();
+            if(data != undefined){
+                if(data.length==1){
+                    $.each(data,function (index,CscContantAndCompanyDto) {
+                        $("#consigneeName").val(CscContantAndCompanyDto.contactCompanyName);
+                        $("#consigneeContactName").val(CscContantAndCompanyDto.contactName);
+                        $("#consigneePhone").val(CscContantAndCompanyDto.phone);
+                        $("#consigneeCode").val(CscContantAndCompanyDto.contactCompanySerialNo);
+                        $("#consigneeContactCode").val(CscContantAndCompanyDto.contactSerialNo);
+                        $("#consigneeType").val(CscContantAndCompanyDto.type);
+                        $("#consigneeAddress").val(CscContantAndCompanyDto.address);
+                        var provinceName = CscContantAndCompanyDto.provinceName;
+                        var cityName = CscContantAndCompanyDto.cityName;
+                        var areaName = CscContantAndCompanyDto.areaName;
+                        var streetName = CscContantAndCompanyDto.streetName;
+                        var paramAddressNameToPage = provinceName
+                                + "/" + cityName
+                                + "/" + areaName
+                                + "/" + streetName;
+                        $("#city-picker3-consignee").val(paramAddressNameToPage);
+                        $("#city-picker3-consignee").citypicker('refresh');
+                        checkConsignOrEe();
+                        destination();
+                    });
+                }else{
+                    clearConsignee();
+                }
             }
+
         },"json");
     }
     //清空发货方
@@ -2034,7 +2040,6 @@
         },"json");
     }
 
-    // 加载客户列表
     function loadCustomer(data) {
         if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
             $("#custListDivTbody").html("");
