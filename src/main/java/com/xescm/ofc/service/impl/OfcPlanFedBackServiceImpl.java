@@ -195,7 +195,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                                 +" "+"订单已完成");
                                         orderStatus.setOperator(userName);
-                                        if(null != ofcFundamentalInformation.getFinishedTime()){
+                                        if(null == ofcFundamentalInformation.getFinishedTime()){
                                             ofcFundamentalInformation.setFinishedTime(now);
                                         }
                                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
@@ -221,7 +221,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
-                                    if(null != ofcFundamentalInformation.getFinishedTime()){
+                                    if(null == ofcFundamentalInformation.getFinishedTime()){
                                         ofcFundamentalInformation.setFinishedTime(now);
                                     }
                                     ofcFundamentalInformationService.update(ofcFundamentalInformation);
@@ -237,7 +237,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
-                                    if(null != ofcFundamentalInformation.getFinishedTime()){
+                                    if(null == ofcFundamentalInformation.getFinishedTime()){
                                         ofcFundamentalInformation.setFinishedTime(now);
                                     }
                                     ofcFundamentalInformationService.update(ofcFundamentalInformation);

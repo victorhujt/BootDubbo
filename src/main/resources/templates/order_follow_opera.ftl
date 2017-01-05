@@ -1,8 +1,24 @@
 <head>
     <title>订单追踪</title>
-    <!-- bootstrap & fontawesome -->
+    <style type="text/css">
+        .col-width-376 {
+            width: 380px;
+            float: left
+        }
+        .modal-dialog {
+            width: 600px;
+            margin: 100px auto;
+        }
+        .dataTables_wrapper label {
+            display: inline-block;
+            font-size: 12px;
+        }
+        .form-group {
+            height: 34px;
+        }
+    </style>
 </head>
-<body class="no-skin">
+
     <div class="page-header">
         <p>
             查询条件
@@ -14,8 +30,9 @@
         <div class="w-width-220 col-float">
             <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
                 <option value="orderCode">订单编号</option>
-                <option value="custOrderCode">客户订单编号</option>
                 <option value="transCode">运输单号</option>
+                <option value="planCode">计划单编号</option>
+                <option value="custOrderCode">客户订单编号</option>
             </select>
         </div>
         <label class="control-label col-label no-padding-right" for="code"></label>
@@ -175,6 +192,44 @@
         </tbody>
     </table>
 
+    <div id="selectOrderDiv" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
+         aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="bootbox-close-button close" id="selectOrderDivClose">×</button>
+                    <p style="font-size:14px;margin-top:7px">选择订单,根据筛选条件检索到多个结果</p>
+                </div>
+                <div class="modal-body" style="overflow: auto">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
+                           aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">订单编号
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">客户订单编号
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">运输单号
+                            </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                aria-label="Clicks: activate to sort column ascending">客户名称
+                            </th>
+                        </thead>
+                        <tbody id="selectOrderTbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="cancel" type="button" class="btn btn-default" id="selectOrderCancelBtn">取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div><!-- /.col -->
 <div id="ofcOrderDTOData"></div>
 <div id="ofcOrderStatusData"></div>
@@ -207,6 +262,11 @@
     function main() {
         //初始化页面数据
         initPageData();
+
+        $("#selectOrderCancelBtn").on('click',function(){
+            $("#selectOrderDiv").hide();
+            $("#selectOrderTbody").empty();
+        })
     }
 
     //页面数据初始化
@@ -227,7 +287,6 @@
             if (this.checked) $row.addClass(active_class);
             else $row.removeClass(active_class);
         });
-        //xxxx();
     }
 
 
@@ -266,34 +325,24 @@
             size = 1;
         }
         if (size == 1) {
-            appendOrderState(data.result);
+            appendOrderState(data.result.ofcOrderStatus);
             appendInput(data.result.ofcOrderDTO);
         } else if (size > 1) {
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 0,
-                area: ['500px', '200px'],
-                shadeClose: true,
-                skin: 'yourclass',
-                content: appendSearchResult(data.result.ofcOrderDTO)
-            });
+            appendSearchResult(data.result.ofcOrderDTO);
         }
     }
 
     function appendSearchResult(data) {
         var html = "";
-        html += "<table class='table table-striped table-bordered table-hover dataTable no-footer'>";
-        html += "<tr><th>订单编号</th><th>客户订单编号</th><th>运输单号</th><th>客户名称</th></tr>";
         $.each(data, function (index, item) {
-            html += "<tr onclick=\"selectOrderCode('"+item.orderCode+"')\">"+
+            html += "<tr style='cursor: pointer;' title='双击选中' ondblclick=\"selectOrderCode('"+item.orderCode+"')\">"+
                     "<td>" + stringToEmpty(item.orderCode) + "</td>" +
                     "<td>" + stringToEmpty(item.custOrderCode) + "</td>" +
                     "<td>" + stringToEmpty(item.transCode) + "</td>" +
                     "<td>" + stringToEmpty(item.custName) + "</td></tr>";
         })
-        html += "</table>";
-        return html;
+        $("#selectOrderTbody").append(html);
+        $("#selectOrderDiv").show();
     }
 
     function stringToEmpty(e){
@@ -301,7 +350,8 @@
     }
 
     function selectOrderCode(code) {
-        layer.closeAll();
+        $("#selectOrderDiv").hide();
+        $("#selectOrderTbody").empty();
         CommonClient.post(sys.rootPath + "/ofc/queryOrderFollowByCode", {
             "code": code
         }, function (result) {
@@ -324,7 +374,7 @@
             return;
         }
         var htmlText = "";
-        var orderStatusList = data.ofcOrderStatus;
+        var orderStatusList = data;
         if (orderStatusList != null && orderStatusList != "" && orderStatusList != undefined) {
             $.each(orderStatusList, function (index, orderStatus) {
                 if(orderStatus != null && orderStatus != "" && orderStatus != undefined ){
@@ -441,4 +491,3 @@
 
     }
 </script>
-</body>

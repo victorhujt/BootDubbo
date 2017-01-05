@@ -335,7 +335,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label  col-label no-padding-right" for="name"></label>
                     <div class="col-xs-3 l-dw">
                         <div class="clearfix">
                             <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
@@ -1352,7 +1351,7 @@
             cscContantAndCompanyDto.cscContactDto = cscContactDto;
             cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
             cscContantAndCompanyDto.pageNum = 1;
-            cscContantAndCompanyDto.pageSize = 20;
+            cscContantAndCompanyDto.pageSize = 10;
             var customerCode = $("#customerCode").val();
             var param = JSON.stringify(cscContantAndCompanyDto);
             var contactList = 0;
@@ -1484,7 +1483,7 @@
         cscContantAndCompanyDto.cscContactDto = cscContactDto;
         cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
-        cscContantAndCompanyDto.pageSize = 20;
+        cscContantAndCompanyDto.pageSize = 10;
         var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
@@ -1705,7 +1704,7 @@
         cscContantAndCompanyDto.cscContactDto = cscContactDto;
         cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         cscContantAndCompanyDto.pageNum = pageNum;
-        cscContantAndCompanyDto.pageSize = 20;
+        cscContantAndCompanyDto.pageSize = 10;
         var customerCode = $("#customerCode").val();
 
         var param = JSON.stringify(cscContantAndCompanyDto);
@@ -1978,7 +1977,7 @@
         var custName = $("#custNameDiv").val();
         var param = {};
         param.pageNum = pageNum;
-        param.pageSize = 20;
+        param.pageSize = 10;
         param.custName = custName;
         CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
             if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
@@ -2129,6 +2128,12 @@
                 orderInfo.provideTransport = "1";//需要运输
             }
             orderInfo.orderTime = $('#orderTime').val() + " 00:00:00";//000
+            orderInfo.transportType = "20";//运输类型默认整车
+            orderInfo.pickUpGoods = "0";//是否上门提货 默认否
+            orderInfo.twoDistribution = "0";//是否二次配送 默认否
+            orderInfo.returnList = "0";//是否签单返回 默认否
+            orderInfo.insure = "0";//是否货物保险 默认否
+            orderInfo.collectFlag = "0";//是否代收货款 默认否
             orderInfo.merchandiser = $("#merchandiser").val();
             if("" != $("#expectedArrivedTime").val()){
                 orderInfo.expectedArrivedTime = $('#expectedArrivedTime').val()+ ":00";
