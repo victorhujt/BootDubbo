@@ -1,163 +1,163 @@
-    <title>订单详情</title>
-    <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }
-        .date_a{
-            line-height:21px !important;
-        }
-        .form-group > label[class*="col-"]{
-            margin-top:0;
-            line-height:34px;
-        }
-        .form-horizontal .control-label{
-            padding-top:0;
-            line-height:30px;
-        }
-        input[type=checkbox], input[type=radio]{
-            margin:10px 0 0;
-        }
-        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-            color:#393939;
-        }
-        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-            color:#393939;
-        }
-        .dataTable > thead > tr > th[class*=sort]:hover{
-            color:#707070;
-        }
-        .dataTable > thead > tr > th[class*=sorting_]{
-            color:#707070;
-        }
-        .has-success .form-control{
-            border-color:#cacaca;
-        }
-        .help-block{
-            color:#f00 !important;
-        }
-        .has-error .form-control{
-            border-color:#b5b5b5 !important;
-        }
-        .custNameIcon:hover{color:#2868c6 !important;}
-        .initBtn{
-            line-height:32px;
-            width:34px;
-            border:1px solid #cacaca;
-            background:#f7f7f7!important;
-            cursor:pointer;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-        .initBtn:hover{
-            background:#fff!important;
-            border:1px solid #cacaca!important;
-        }
-        .col-label{
-            margin-right:2px;
-            margin-bottom:0;
-        }
-        #goodsInfoListDiv .help-block{
-            line-height:20px;
-        }
+<title>订单详情</title>
+<style type="text/css">
+    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+        position:fixed;
+        left:50%;
+        top:85px;
+        margin-left:-400px;
+        width:946px;
+        height:500px;
+        z-index:3;
+        overflow: auto;
+        border:solid #7A7A7A 1px;
+    }
+    .date_a{
+        line-height:21px !important;
+    }
+    .form-group > label[class*="col-"]{
+        margin-top:0;
+        line-height:34px;
+    }
+    .form-horizontal .control-label{
+        padding-top:0;
+        line-height:30px;
+    }
+    input[type=checkbox], input[type=radio]{
+        margin:10px 0 0;
+    }
+    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+        color:#393939;
+    }
+    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+        color:#393939;
+    }
+    .dataTable > thead > tr > th[class*=sort]:hover{
+        color:#707070;
+    }
+    .dataTable > thead > tr > th[class*=sorting_]{
+        color:#707070;
+    }
+    .has-success .form-control{
+        border-color:#cacaca;
+    }
+    .help-block{
+        color:#f00 !important;
+    }
+    .has-error .form-control{
+        border-color:#b5b5b5 !important;
+    }
+    .custNameIcon:hover{color:#2868c6 !important;}
+    .initBtn{
+        line-height:32px;
+        width:34px;
+        border:1px solid #cacaca;
+        background:#f7f7f7!important;
+        cursor:pointer;
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .initBtn:hover{
+        background:#fff!important;
+        border:1px solid #cacaca!important;
+    }
+    .col-label{
+        margin-right:2px;
+        margin-bottom:0;
+    }
+    #goodsInfoListDiv .help-block{
+        line-height:20px;
+    }
 
-        .imgClass{
-            float: left;
-            width:138px;
-            height:96px;
-            overflow: hidden;
-            margin: 2px;
-            box-sizing: border-box;
-        }
-        .imgClass img{
-            border:1px solid #c2c2c2;
-            width: 100%;
-            height:100%;
-        }
-      /*  .row{
-            max-width: 1250px;
-            min-width: 1250px;
-            margin-left: -21px;
-        }*/
-     /*   .no-padding-right{
-            margin-left: 71px;
+    .imgClass{
+        float: left;
+        width:138px;
+        height:96px;
+        overflow: hidden;
+        margin: 2px;
+        box-sizing: border-box;
+    }
+    .imgClass img{
+        border:1px solid #c2c2c2;
+        width: 100%;
+        height:100%;
+    }
+    /*  .row{
+          max-width: 1250px;
+          min-width: 1250px;
+          margin-left: -21px;
+      }*/
+    /*   .no-padding-right{
+           margin-left: 71px;
 
-        }*/
+       }*/
     /*    .w-width-220{
             margin-top: 24px;
         }*/
-     /*   .imgone{
-            margin-right: 148px;
-        }*/
+    /*   .imgone{
+           margin-right: 148px;
+       }*/
     /*    .col-width-376{
             float: left;
             width:220px;
         }*/
-        .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
-            padding-top:0;
-        }
-       .pay .chosen-container-single .chosen-search:after{
-           top:3px;
-       }
+    .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
+        padding-top:0;
+    }
+    .pay .chosen-container-single .chosen-search:after{
+        top:3px;
+    }
 
-        .scales,.closes{
-            position: relative;
-            z-index: 2;
-            width: 50px;height: 50px;
-            float: right;
-            background: #dbdbdb;
-            line-height: 50px;
-        }
-        .scales img,.closes img{
-            background-size: 100% 100%;
-            margin-left: 14px;
-            width: 24px;
-            height: 22px;
-            display: block;
-            margin-top: 15px;
-        }
-        .MaxImg{
-            margin-right: 5px;
-            width: 144px;
-            height: 401px;
-            border: 1px solid #c2c2c2;
-            float: left;
-            margin-bottom: 20px;
-        }
-        .drag_con {
-            background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
-            background-size: 100% 100%;
-            float: left;
-            max-width: 900px;
-            width:60%;
-            height: 401px;
-            overflow: hidden;
-            position: relative;
-        }
-        #drag_img {
-            width: 1050px;
-            height: 1050px;
-            position: absolute;
-            left: 0;
-            top: 0;
+    .scales,.closes{
+        position: relative;
+        z-index: 2;
+        width: 50px;height: 50px;
+        float: right;
+        background: #dbdbdb;
+        line-height: 50px;
+    }
+    .scales img,.closes img{
+        background-size: 100% 100%;
+        margin-left: 14px;
+        width: 24px;
+        height: 22px;
+        display: block;
+        margin-top: 15px;
+    }
+    .MaxImg{
+        margin-right: 5px;
+        width: 144px;
+        height: 401px;
+        border: 1px solid #c2c2c2;
+        float: left;
+        margin-bottom: 20px;
+    }
+    .drag_con {
+        background-image: url("${OFC_WEB_URL!}/docs/images/moren.png");
+        background-size: 100% 100%;
+        float: left;
+        max-width: 900px;
+        width:60%;
+        height: 401px;
+        overflow: hidden;
+        position: relative;
+    }
+    #drag_img {
+        width: 1050px;
+        height: 1050px;
+        position: absolute;
+        left: 0;
+        top: 0;
 
-        }
-        #drag_img img {
-            width: 100%;
-            height: 100%;
-        }
-      /*  #viewBiggerImg{
-            transform:scale(0.6)!important;
-        }*/
-    </style>
+    }
+    #drag_img img {
+        width: 100%;
+        height: 100%;
+    }
+    /*  #viewBiggerImg{
+          transform:scale(0.6)!important;
+      }*/
+</style>
 <div class="page-header">
     <p>
         订单详情
@@ -181,10 +181,10 @@
         </div>
         <div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>
     </div>
-    <#--<div class="Apend" id="BApen">-->
-        <#--<img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">-->
-        <#--<div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>-->
-    <#--</div>-->
+<#--<div class="Apend" id="BApen">-->
+<#--<img id="viewBiggerImg" src="" alt=""  class="dragAble"  style="position: absolute">-->
+<#--<div class="scales"><img src="${OFC_WEB_URL!}/docs/images/scales.png" alt=""></div>-->
+<#--</div>-->
 
 
     <form id="" method="post" class="form-horizontal y-float" role="form">
@@ -223,19 +223,19 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">业务类型</label>
                 <div class="col-width-168">
-                    <#if mobileOrder.businessType  =="602">
-                        <input class="width-100" id="mbusinessType" readonly="readonly"  name="" type="search" placeholder=""
-                               aria-controls="dynamic-table"
-                               value="卡班">
-                    <#elseif  mobileOrder.businessType =="600">
-                        <input class="width-100" id="mbusinessType" readonly="readonly" name="" type="search" placeholder=""
-                               aria-controls="dynamic-table"
-                               value="城配">
-                    <#elseif  mobileOrder.businessType =="601">
-                        <input class="width-100" id="mbusinessType" readonly="readonly" name="" type="search" placeholder=""
-                               aria-controls="dynamic-table"
-                               value="干线">
-                    </#if>
+                <#if mobileOrder.businessType  =="602">
+                    <input class="width-100" id="mbusinessType" readonly="readonly"  name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="卡班">
+                <#elseif  mobileOrder.businessType =="600">
+                    <input class="width-100" id="mbusinessType" readonly="readonly" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="城配">
+                <#elseif  mobileOrder.businessType =="601">
+                    <input class="width-100" id="mbusinessType" readonly="readonly" name="" type="search" placeholder=""
+                           aria-controls="dynamic-table"
+                           value="干线">
+                </#if>
                 </div>
             </div>
             <div class="form-group">
@@ -247,271 +247,271 @@
                 </div>
             </div>
         </div>
-       <#-- <div class="form-group y-float">
-            <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
+    <#-- <div class="form-group y-float">
+         <label class="control-label col-label no-padding-right" for="name" style="margin-right:23px"></label>
 
 
-        </div>-->
+     </div>-->
     </form>
 
-<#--</div>--><!-- /.col -->
-<div class="modal-content" id="goodsListDiv" style="display: none;">
-    <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
-    <div class="modal-body">
-        <div class="bootbox-body">
-            <form id="goodsSelConditionForm" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品编码</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+    <#--</div>--><!-- /.col -->
+    <div class="modal-content" id="goodsListDiv" style="display: none;">
+        <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
+        <div class="modal-body">
+            <div class="bootbox-body">
+                <form id="goodsSelConditionForm" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">货品编码</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-            <form class="bootbox-form">
-                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row">
-                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                </form>
+                <form class="bootbox-form">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                <label class="pos-rel">
+                                    选择
+                                    <span class="lbl"></span>
+                                </label>
+                            </th>
+                        <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品类别</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品小类</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">品牌</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品编码</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">规格</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">条形码</th>
+
+                        </thead>
+                        <tbody id="goodsSelectListTbody"></tbody>
+                    </table>
+                    <div class="row">
+                        <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer" style="background-color:#fff;"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    </div>
+    <!--consignorListDiv-->
+    <div class="modal-content" id="consignorListDiv" style="display: none;">
+        <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title"  style="font-size: 14px;font-family:'微软雅黑'">发货方联系人</h4></div>
+        <div class="modal-body">
+            <div class="bootbox-body">
+                <form id="consignorSelConditionForm" class="form-horizontal" role="form">
+                <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "consignorPerson2" name="cscContactDto.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form class="bootbox-form">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
                             <label class="pos-rel">
                                 选择
                                 <span class="lbl"></span>
                             </label>
                         </th>
-                    <#--<th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>-->
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">货品类别</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品小类</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">品牌</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品编码</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">货品名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">规格</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">单位</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">条形码</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
 
-                    </thead>
-                    <tbody id="goodsSelectListTbody"></tbody>
-                </table>
-                <div class="row">
-                    <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        </thead>
+                        <tbody id="contactSelectListTbody2"></tbody>
+                    </table>
+                    <div class="row">
+                        <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer" style="background-color:#fff;"><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    </div>
+
+    <!--consigneeListDiv-->
+    <div class="modal-content" id="consigneeListDiv" style="display: none;">
+        <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">收货方联系人</h4></div>
+        <div class="modal-body">
+            <div class="bootbox-body">
+                <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
+                <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name"></label>
+                        <div class="col-xs-3">
+                            <div class="clearfix">
+                                <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form class="bootbox-form">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+                        </thead>
+                        <tbody id="contactSelectListTbody1"></tbody>
+                    </table>
+                    <div class="row">
+                        <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer" style="background-color:#fff;"><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+    </div>
+
+    <!--custListDiv-->
+    <div class="modal-content" id="custListDiv" style="display: none;">
+        <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">选择客户</h4></div>
+        <div class="modal-body">
+            <div class="bootbox-body">
+                <form id="consignorSelConditionForm" class="form-horizontal" role="form">
+                <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
+                    <div class="form-group">
+                        <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
+                        <div class="col-width-220 padding-15 y-float">
+                            <div class="clearfix">
+                                <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3 y-float">
+                            <div class="clearfix">
+                                <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form class="bootbox-form">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                        <thead>
+                        <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">产品类别</th>
+                        </thead>
+                        <tbody id="custListDivTbody"></tbody>
+                    </table>
+                    <div class="row">
+                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+                <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
         </div>
     </div>
-    <div class="modal-footer" style="background-color:#fff;"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
-</div>
-<!--consignorListDiv-->
-<div class="modal-content" id="consignorListDiv" style="display: none;">
-    <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title"  style="font-size: 14px;font-family:'微软雅黑'">发货方联系人</h4></div>
-    <div class="modal-body">
-        <div class="bootbox-body">
-            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "consignorPerson2" name="cscContactDto.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form class="bootbox-form">
-                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
+    <div class="row">
 
-                    </thead>
-                    <tbody id="contactSelectListTbody2"></tbody>
-                </table>
-                <div class="row">
-                    <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal-footer" style="background-color:#fff;"><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
-</div>
-
-<!--consigneeListDiv-->
-<div class="modal-content" id="consigneeListDiv" style="display: none;">
-    <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">收货方联系人</h4></div>
-    <div class="modal-body">
-        <div class="bootbox-body">
-            <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                    <div class="col-xs-3">
-                        <div class="clearfix">
-                            <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form class="bootbox-form">
-                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系人</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">联系电话</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">地址</th>
-                    </thead>
-                    <tbody id="contactSelectListTbody1"></tbody>
-                </table>
-                <div class="row">
-                    <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal-footer" style="background-color:#fff;"><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
-</div>
-
-<!--custListDiv-->
-<div class="modal-content" id="custListDiv" style="display: none;">
-    <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-        <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">选择客户</h4></div>
-    <div class="modal-body">
-        <div class="bootbox-body">
-            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-            <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
-                    <div class="col-width-220 padding-15 y-float">
-                        <div class="clearfix">
-                            <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                        </div>
-                    </div>
-
-                    <div class="col-xs-3 y-float">
-                        <div class="clearfix">
-                            <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form class="bootbox-form">
-                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                        <label class="pos-rel">
-                            选择
-                            <span class="lbl"></span>
-                        </label>
-                    </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">产品类别</th>
-                    </thead>
-                    <tbody id="custListDivTbody"></tbody>
-                </table>
-                <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
-                    </div>
-                </div>
-            </form>
-
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
-            <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-            <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
-    </div>
-</div>
-<div class="row">
-
-    <!-- /section:basics/content.breadcrumbs -->
+        <!-- /section:basics/content.breadcrumbs -->
 
 
 
@@ -557,7 +557,7 @@
                                     <input class="width-100" id="merchandiser" name="" type="search" placeholder=""
                                            aria-controls="dynamic-table"
                                            value="${(mobileOrder.operator)!""}">
-                            </div>
+                                </div>
                             </div>
                         </div></div>
                     <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
@@ -614,17 +614,7 @@
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
                         </div></div>
-                    <div style="margin-left:50px;">
-                        <label  class="control-label col-label no-padding-right" style="margin-left:90px;">承诺到达时间</label>
-                        <div class="col-width-168 padding-15" style="margin-left:3px;">
-                            <div class="col-width-168" >
-                                <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168 es-input" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon">
-                                    <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
@@ -1051,7 +1041,7 @@
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
-<!-- /.row -->
+    <!-- /.row -->
 </div>
 <link href= "../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="../css/city-picker.css" rel="stylesheet" type="text/css" />
@@ -1640,7 +1630,7 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,4})?$/.test(value)) && $(obj).val()!="")){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
@@ -1654,7 +1644,7 @@
         }else if(parseFloat($(obj).val())>9999){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.0000</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -2341,7 +2331,7 @@
             if(null == channel){
                 channel = "";
             }
-            custList =custList + "<tr ondblclick=\"selectCustomer(this);\"role='row' class='odd'>";
+            custList =custList + "<tr role='row' class='odd'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             custList =custList + "<td>"+(index+1)+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
@@ -2361,33 +2351,6 @@
             $("#custListDivTbody").html(custList);
         });
     }
-        function selectCustomer(tr){
-        var custEnterTag = "";
-            var tdArr =$(tr).children();
-           // if(tdArr.eq(0).find("input").prop("checked")){
-                custEnterTag = "1";
-                if($("#customerCode").val()!=tdArr.eq(7).text()){
-                    var type = tdArr.eq(2).text();//类型
-                    var customerName = tdArr.eq(3).text();//公司名称
-                    var channel = tdArr.eq(4).text();//    渠道
-                    var productType = tdArr.eq(5).text();//    产品类别
-                    var groupId = tdArr.eq(6).text();//    产品类别
-                    var customerCode = tdArr.eq(7).text();//    产品类别
-                    $("#custName").val(customerName);
-                    $("#custGroupId").val(groupId);
-                    $("#customerCode").val(customerCode);
-
-                    var cscContactDto = {};
-                    var cscContactCompanyDto = {};
-                    cscContactDto.purpose = "2";
-                    outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode);
-                    $("#goodsInfoListDiv").html("");
-                    countQuantityOrWeightOrCubageCheck();
-                    $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-                }
-          //  }
-    }
-
 
     // 分页查询收货方或发货方列表
     function queryContactData(param,customerCode,contactType,pageNum) {
@@ -2431,7 +2394,7 @@
     function loadConsignOrEE(data,contactType) {
         var contactList = "";
         $.each(data.result.list,function (index,CscContantAndCompanyDto) {
-            contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this,'" + contactType + "')\"role='row' class='odd'>";
+            contactList =contactList + "<tr role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
@@ -2500,83 +2463,12 @@
 
         },"json");
     }
-    function selectConsignOrEE(tr,contactType){
-            if(contactType=="2"){
-                var tdArr = $(tr).children();
-                consignorin = "1";
-                var consignorName = tdArr.eq(2).text();//名称
-                var contacts = tdArr.eq(3).text();//联系人
-                var contactsNumber = tdArr.eq(4).text();//    联系电话
-                var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
-                var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
-                var type = tdArr.eq(8).text();//    发货方类型
-                var address = tdArr.eq(9).text();//    门牌号
-                var provinceName = tdArr.eq(10).text();//    省
-                var cityName = tdArr.eq(11).text();//    市
-                var areaName = tdArr.eq(12).text();//    区
-                var streetName = tdArr.eq(13).text();//    县
-                $("#consignorName").val(consignorName);
-                $("#consignorContactName").val(contacts);
-                $("#consignorPhone").val(contactsNumber);
-                $("#consignorCode").val(contactCompanySerialNo);
-                $("#consignorContactCode").val(contactSerialNo);
-                $("#consignorType").val(type);
-                $("#consignorAddress").val(address);
-                var paramAddressNameToPage = provinceName
-                        + "/" + cityName
-                        + "/" + areaName
-                        + "/" + streetName;
-                $("#city-picker3-consignor").val(paramAddressNameToPage);
-                $("#city-picker3-consignor").citypicker('refresh');
-                departurePlace();
-                $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-                checkConsignOrEe();
-            }else if(contactType=="1"){
-                var tdArr = $(tr).children();
-                    consignorout = "1";
-                    var consignorName = tdArr.eq(2).text();//名称
-                    var contacts = tdArr.eq(3).text();//联系人
-                    var contactsNumber = tdArr.eq(4).text();//    联系电话
-
-                    var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
-                    var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
-                    var type = tdArr.eq(8).text();//    收货方类型
-                    var address = tdArr.eq(9).text();//    门牌号
-                    var provinceName = tdArr.eq(10).text();//    省
-                    var cityName = tdArr.eq(11).text();//    市
-                    var areaName = tdArr.eq(12).text();//    区
-                    var streetName = tdArr.eq(13).text();//    县
-                    $("#consigneeName").val(consignorName);
-                    $("#consigneeContactName").val(contacts);
-                    $("#consigneePhone").val(contactsNumber);
-                    $("#consigneeCode").val(contactCompanySerialNo);
-                    $("#consigneeContactCode").val(contactSerialNo);
-                    $("#consigneeType").val(type);
-                    $("#consigneeAddress").val(address);
-                    var paramAddressNameToPage = provinceName
-                            + "/" + cityName
-                            + "/" + areaName
-                            + "/" + streetName;
-                    $("#city-picker3-consignee").val(paramAddressNameToPage);
-                    $("#city-picker3-consignee").citypicker('refresh');
-                    destination();
-                    $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-                    checkConsignOrEe();
-
-            }
-
-    }
-
-
-
-
-
 
     // 加载货品列表
     function loadGoods(data) {
         var goodsList = "";
         $.each(data,function (index,cscGoodsVo) {
-            goodsList =goodsList + "<tr ondblclick=\"selectGoods(this);\" role='row' class='odd'>";
+            goodsList =goodsList + "<tr role='row' class='odd'>";
             goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
@@ -2590,32 +2482,6 @@
             goodsList =goodsList + "</tr>";
         });
         $("#goodsSelectListTbody").html(goodsList);
-    }
-
-    function selectGoods(tr){
-            var tdArr = $(tr).children();
-            var goodsType = tdArr.eq(1).text();//货品种类
-            var goodsGate = tdArr.eq(2).text();//货品类别
-            var goodsCode = tdArr.eq(4).text();//货品编码
-            var goodsName = tdArr.eq(5).text();//货品名称
-            var specification = tdArr.eq(6).text();//规格
-            var unit = tdArr.eq(7).text();//单位
-            var typeID = tdArr.eq(9).text();//单位
-            $("#typeSel").val(typeID);
-            $("#typeSel").trigger("chosen:updated");
-            goodsTypeParentChange($("#typeSel"));
-            //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
-            $("#yangdongxushinanshen").attr("id","goodCodeSel");
-            goodsInfoListDiv="true";
-            $("#goodsListDiv").fadeOut(0);
-            $("#yangdongxushinanshen").attr("id","goodCodeSel");
-            $("#typeSel").attr("id","");
     }
 
     $(function(){
@@ -2632,13 +2498,6 @@
             }
 
         });
-
-        $("#expectedArrivedTime").click(function () {
-            var startdates=$("#orderTime").val();
-            //var enddates =DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
-            laydate({elem:'#expectedArrivedTime', istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
-        })
-
         $("#insureV").change(function(){
             if($(this).prop("checked")){
                 $("#insure").val("1");
@@ -2749,9 +2608,6 @@
             jsonStr.transportType = $("#transportType").val();
             if($('#orderTime').val()!=""){
                 jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
-            }
-            if($('#expectedArrivedTime').val()!=""){
-                jsonStr.expectedArrivedTime = $('#expectedArrivedTime').val();
             }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
