@@ -2362,7 +2362,6 @@
         });
     }
         function selectCustomer(tr){
-        debugger;
         var custEnterTag = "";
             var tdArr =$(tr).children();
            // if(tdArr.eq(0).find("input").prop("checked")){
@@ -2432,7 +2431,7 @@
     function loadConsignOrEE(data,contactType) {
         var contactList = "";
         $.each(data.result.list,function (index,CscContantAndCompanyDto) {
-            contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this); role='row' class='odd'>";
+            contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this,'" + contactType + "')\"role='row' class='odd'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
@@ -2501,37 +2500,71 @@
 
         },"json");
     }
-    function selectConsignOrEE(tr){
-            debugger;
-           var tdArr = $(tr).children();
-            consignorin = "1";
-            var consignorName = tdArr.eq(2).text();//名称
-            var contacts = tdArr.eq(3).text();//联系人
-            var contactsNumber = tdArr.eq(4).text();//    联系电话
-            var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
-            var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
-            var type = tdArr.eq(8).text();//    发货方类型
-            var address = tdArr.eq(9).text();//    门牌号
-            var provinceName = tdArr.eq(10).text();//    省
-            var cityName = tdArr.eq(11).text();//    市
-            var areaName = tdArr.eq(12).text();//    区
-            var streetName = tdArr.eq(13).text();//    县
-            $("#consignorName").val(consignorName);
-            $("#consignorContactName").val(contacts);
-            $("#consignorPhone").val(contactsNumber);
-            $("#consignorCode").val(contactCompanySerialNo);
-            $("#consignorContactCode").val(contactSerialNo);
-            $("#consignorType").val(type);
-            $("#consignorAddress").val(address);
-            var paramAddressNameToPage = provinceName
-                    + "/" + cityName
-                    + "/" + areaName
-                    + "/" + streetName;
-            $("#city-picker3-consignor").val(paramAddressNameToPage);
-            $("#city-picker3-consignor").citypicker('refresh');
-            departurePlace();
-            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-            checkConsignOrEe();
+    function selectConsignOrEE(tr,contactType){
+            if(contactType=="2"){
+                var tdArr = $(tr).children();
+                consignorin = "1";
+                var consignorName = tdArr.eq(2).text();//名称
+                var contacts = tdArr.eq(3).text();//联系人
+                var contactsNumber = tdArr.eq(4).text();//    联系电话
+                var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+                var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
+                var type = tdArr.eq(8).text();//    发货方类型
+                var address = tdArr.eq(9).text();//    门牌号
+                var provinceName = tdArr.eq(10).text();//    省
+                var cityName = tdArr.eq(11).text();//    市
+                var areaName = tdArr.eq(12).text();//    区
+                var streetName = tdArr.eq(13).text();//    县
+                $("#consignorName").val(consignorName);
+                $("#consignorContactName").val(contacts);
+                $("#consignorPhone").val(contactsNumber);
+                $("#consignorCode").val(contactCompanySerialNo);
+                $("#consignorContactCode").val(contactSerialNo);
+                $("#consignorType").val(type);
+                $("#consignorAddress").val(address);
+                var paramAddressNameToPage = provinceName
+                        + "/" + cityName
+                        + "/" + areaName
+                        + "/" + streetName;
+                $("#city-picker3-consignor").val(paramAddressNameToPage);
+                $("#city-picker3-consignor").citypicker('refresh');
+                departurePlace();
+                $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+                checkConsignOrEe();
+            }else if(contactType=="1"){
+                var tdArr = $(tr).children();
+                    consignorout = "1";
+                    var consignorName = tdArr.eq(2).text();//名称
+                    var contacts = tdArr.eq(3).text();//联系人
+                    var contactsNumber = tdArr.eq(4).text();//    联系电话
+
+                    var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
+                    var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
+                    var type = tdArr.eq(8).text();//    收货方类型
+                    var address = tdArr.eq(9).text();//    门牌号
+                    var provinceName = tdArr.eq(10).text();//    省
+                    var cityName = tdArr.eq(11).text();//    市
+                    var areaName = tdArr.eq(12).text();//    区
+                    var streetName = tdArr.eq(13).text();//    县
+                    $("#consigneeName").val(consignorName);
+                    $("#consigneeContactName").val(contacts);
+                    $("#consigneePhone").val(contactsNumber);
+                    $("#consigneeCode").val(contactCompanySerialNo);
+                    $("#consigneeContactCode").val(contactSerialNo);
+                    $("#consigneeType").val(type);
+                    $("#consigneeAddress").val(address);
+                    var paramAddressNameToPage = provinceName
+                            + "/" + cityName
+                            + "/" + areaName
+                            + "/" + streetName;
+                    $("#city-picker3-consignee").val(paramAddressNameToPage);
+                    $("#city-picker3-consignee").citypicker('refresh');
+                    destination();
+                    $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+                    checkConsignOrEe();
+
+            }
+
     }
 
 
@@ -2543,7 +2576,7 @@
     function loadGoods(data) {
         var goodsList = "";
         $.each(data,function (index,cscGoodsVo) {
-            goodsList =goodsList + "<tr ondblclick=\"selectGoods(this); role='row' class='odd'>";
+            goodsList =goodsList + "<tr ondblclick=\"selectGoods(this);\" role='row' class='odd'>";
             goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
@@ -3221,7 +3254,6 @@
         });
     })
     $("#custListDivBlock").click(function () {
-        debugger;
         $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
     });
     $("#custListDivNoneBottom").click(function () {
