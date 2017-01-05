@@ -16,7 +16,7 @@
                         <label class="control-label col-label no-padding-right" for="name">订单日期</label>
                         <div class="w-width-220">
                             <div class="clearfix position-relative">
-                                <input id="orderTimePre" name="orderTimePre" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                <input id="orderTimePre" name="orderTimePre" type="datetime" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" >
                                 <label for="orderTimePre" class="initBtn">
                                     <i class="fa fa-calendar bigger-130"></i>
                                 </label>
@@ -25,7 +25,7 @@
                         <label class="control-label col-label no-padding-right y-float" style="text-align:center;" for="name">至</label>
                         <div class="w-width-220">
                             <div class="clearfix position-relative">
-                                <input id="orderTimeSuf" name="orderTimeSuf" type="search" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                <input id="orderTimeSuf" name="orderTimeSuf" type="search" style="width:196px;float:left;margin-right:12px;"  placeholder="" aria-controls="dynamic-table" >
                                 <label for="orderTimeSuf" class="initBtn">
                                     <i class="fa fa-calendar bigger-130"></i>
                                 </label>
@@ -205,12 +205,85 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
+    var now = new Date();
+    //当月1号
+    var mon = now.getMonth() + 1;
+    if(mon < 10){
+        mon = "0" + mon;
+    }
+    var mon1st = now.getFullYear() + "-" + mon + "-01";
+    //当天
+    $("#orderTimePre").val(mon1st);
+    $("#orderTimeSuf").val(DateUtil.formatDate(now));
+    var start = {
+        elem: '#orderTimePre',
+        format: 'YYYY-MM-DD',
+        max: laydate.now(), //最大日期
+        istime: false,
+        istoday: false,
+        isclear: false,
+        choose: function(datas){
+            var add90 = DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(datas),90))
+            var startDate = $("#orderTimePre").val();
+            var endDate = $("#orderTimeSuf").val();
+            if(endDate > add90 && endDate != datas){
+                $("#orderTimeSuf").val(add90);
+            }
+            if(startDate > endDate){
+                var nowI = DateUtil.formatDate(now);
+                if(endDate > add90){
+                    $("#orderTimeSuf").val(nowI);
+                }else{
+                    $("#orderTimeSuf").val(add90 < nowI ? add90 : nowI);
+                }
+            }
+
+        }
+    };
+    var end = {
+        elem: '#orderTimeSuf',
+        format: 'YYYY-MM-DD',
+        max: laydate.now(),
+        istime: false,
+        istoday: false,
+        isclear: false,
+        choose: function(datas){
+            var sub90 = DateUtil.formatDate(subDays(DateUtil.parse(datas),90));
+            var startDate = $("#orderTimePre").val();
+            var endDate = $("#orderTimeSuf").val();
+            if(startDate < sub90 && startDate != datas){
+                $("#orderTimePre").val(sub90);
+            }
+            if(startDate > endDate){
+                $("#orderTimePre").val(sub90);
+            }
+        }
+    };
+
+    laydate(start);
+    laydate(end);
+
+    $("#orderTimePre").change(function () {
+        laydate(start);
+        laydate(end);
+    });
+
+    $("#orderTimeSuf").change(function () {
+        laydate(start);
+        laydate(end);
+    });
+
+    function subDays(date,value) {
+        date.setDate(date.getDate() - value);
+        return date;
+    }
+
     function queryData(pageNum) {
         var param = {};
         param.pageNum = pageNum;
         param.pageSize = 10;
-        var orderTimePre = $('#orderTimePre').val();
-        var orderTimeSuf = $('#orderTimeSuf').val();
+        var orderTimePre = $('#orderTimePre').val() + " 00:00:00";
+        var orderTimeSuf = $('#orderTimeSuf').val() + " 23:59:59";
         param.orderTimePre = orderTimePre;
         param.orderTimeSuf = orderTimeSuf;
         param.orderCode = $("#orderCode").val();
