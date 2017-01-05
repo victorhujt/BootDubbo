@@ -2626,6 +2626,10 @@
             //货品添加
             var orderGoodsList = [];
             var goodsTable = document.getElementById("orderGoodsListTable");
+            if(goodsTable.rows.length < 2){ //==
+                alert('请添加至少一条货品!')
+                return;
+            }
             for(var tableRows = 1; tableRows < goodsTable.rows.length; tableRows ++ ){
                 var orderGoods = {};
                 for(var tableCells = 1; tableCells < goodsTable.rows[tableRows].cells.length; tableCells ++){
