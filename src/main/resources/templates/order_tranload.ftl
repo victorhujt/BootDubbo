@@ -1816,7 +1816,6 @@
         cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
         var param = JSON.stringify(cscContantAndCompanyDto);
         CommonClient.post(sys.rootPath + "/ofc/contactSelect", {"cscContantAndCompanyDto":param,"customerCode":customerCode}, function(data) {
-            debugger;
             data=eval(data);
             if(data != undefined){
                 if(data.length==1){
