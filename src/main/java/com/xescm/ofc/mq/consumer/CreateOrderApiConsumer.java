@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Autowired
     private MqConfig mqConfig;
 
-    private List<String> keyList = new ArrayList<>();
+    private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
@@ -68,10 +69,13 @@ public class CreateOrderApiConsumer implements MessageListener {
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
             if(message.getTag().equals("xeOrderToOfc")){
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
-                keyList.add(key);
                 String result = null;
                 try {
-                    result = createOrderService.createOrder(messageBody);
+                    if(!keyList.contains(key)) {
+                        result = createOrderService.createOrder(messageBody);
+                    } else {
+                        keyList.add(key);
+                    }
                 } catch (Exception ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
                 } finally {
