@@ -361,9 +361,5 @@ public class OfcOrderManageOperaRest extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"根据所选大区查询基地查询成功",ofcGroupVoList);
     }
 
-    /**
-     * 重置加载大区和基地
-     */
-
 
 }

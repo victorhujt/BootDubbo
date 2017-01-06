@@ -277,6 +277,10 @@
         $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
             $(document).ready(main);
         });
+
+        var areaSelect = null;
+        var baseSelect = null;
+
         function initChosen() {
             $('.chosen-select').chosen({allow_single_deselect: true});
             //resize the chosen on window resize
@@ -301,6 +305,7 @@
             // 查询
 //            queryOrderData(1);
             initChosen();
+
             $("#doSearch").click(function () {
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
@@ -331,6 +336,8 @@
                 if (this.checked) $row.addClass(active_class);
                 else $row.removeClass(active_class);
             });
+            areaSelect = $("#areaName").html();
+            baseSelect = $("#baseName").html();
         }
     </script>
     <!-- inline scripts related to this page -->
@@ -819,7 +826,14 @@
             $("#orderType").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
             //重新加载大区和基地
-
+            $("#areaName option").remove();
+            $("#baseName option").remove();
+            $("#areaName").html("")
+            $("#baseName").html("")
+            $("#areaName").html(areaSelect)
+            $("#baseName").html(baseSelect)
+            $("#areaName").trigger("chosen:updated");
+            $("#baseName").trigger("chosen:updated");
         })
 
     </script>
