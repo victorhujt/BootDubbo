@@ -361,5 +361,30 @@ public class OfcOrderManageOperaRest extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"根据所选大区查询基地查询成功",ofcGroupVoList);
     }
 
+    /**
+     * 根据所选基地反查大区
+     */
+    @RequestMapping(value = "queryAreaMsgByBase", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<?> queryAreaMsgByBase(String baseCode){
+        logger.info("运营中心订单管理根据所选基地反查大区,入参:baseCode = {}",baseCode);
+        if(PubUtils.isSEmptyOrNull(baseCode)){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"该基地编码为空!无法查询其所属大区!");
+        }
+        UamGroupDto uamGroupDto = new UamGroupDto();
+        uamGroupDto.setSerialNo(baseCode);
+        OfcGroupVo ofcGroupVo = null;
+        try {
+            ofcGroupVo = ofcOrderManageOperService.queryAreaMsgByBase(uamGroupDto);
+        } catch (BusinessException ex) {
+            logger.info("根据所选基地反查大区出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex){
+            logger.info("根据所选基地反查大区出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"根据所选基地反查大区查询成功",ofcGroupVo);
+    }
+
 
 }

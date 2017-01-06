@@ -47,5 +47,17 @@ public interface OfcOrderManageOperService {
      */
     Map<String,List<OfcGroupVo>> queryGroupList(AuthResDto authResDto);
 
+    /**
+     * 根据所选大区查询基地
+     * @param uamGroupDto
+     * @return
+     */
     List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto);
+
+    /**
+     * 根据所选基地反查大区
+     * @param uamGroupDto
+     * @return
+     */
+    OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto);
 }

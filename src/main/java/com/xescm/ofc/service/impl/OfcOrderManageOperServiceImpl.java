@@ -172,19 +172,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 throw new BusinessException("当前基地"+ uamGroupDto.getGroupName() +"信息不完整!");
             }
             //根据当前基地获取父级大区
-            Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(userSerialNo);
-            checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
-            UamGroupDto uamGroupDtoResult = parentInfoByChildSerilNo.getResult();
-            if(null == uamGroupDtoResult){
-                throw new BusinessException("当前基地"+ uamGroupDto.getGroupName() +"没有所属大区!");
-            }
-            if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())
-                    || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getGroupName())){
-                throw new BusinessException("当前基地"+ uamGroupDto.getGroupName() +"所属大区信息不完整!");
-            }
-            OfcGroupVo ofcGroupVoArea = new OfcGroupVo();
-            ofcGroupVoArea.setSerialNo(uamGroupDtoResult.getSerialNo());
-            ofcGroupVoArea.setGroupName(uamGroupDtoResult.getGroupName());
+            OfcGroupVo ofcGroupVoArea = queryAreaMsgByBase(uamGroupDto);
             areaList.add(ofcGroupVoArea);
             OfcGroupVo ofcGroupVoBase = new OfcGroupVo();
             ofcGroupVoBase.setSerialNo(uamGroupDto.getSerialNo());
@@ -228,6 +216,32 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     }
 
     /**
+     * 根据所选基地反查大区
+     * @param uamGroupDto
+     * @return
+     */
+    @Override
+    public OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto) {
+        if(null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())){
+            throw new BusinessException("根据所选基地反查大区入参为空");
+        }
+        Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(uamGroupDto.getSerialNo());
+        checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
+        UamGroupDto uamGroupDtoResult = parentInfoByChildSerilNo.getResult();
+        if(null == uamGroupDtoResult){
+            throw new BusinessException("当前基地"+ uamGroupDto.getGroupName() +"没有所属大区!");
+        }
+        if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())
+                || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getGroupName())){
+            throw new BusinessException("当前基地"+ uamGroupDto.getGroupName() +"所属大区信息不完整!");
+        }
+        OfcGroupVo ofcGroupVoArea = new OfcGroupVo();
+        ofcGroupVoArea.setSerialNo(uamGroupDtoResult.getSerialNo());
+        ofcGroupVoArea.setGroupName(uamGroupDtoResult.getGroupName());
+        return ofcGroupVoArea;
+    }
+
+    /**
      * 校验UamGroupEdas返回结果
      * @param allGroupByType
      */
@@ -239,13 +253,5 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             throw new BusinessException("查询当前登录用户组织信息出错:{}",allGroupByType.getMessage());
         }
     }
-    /**
-     * Wrapper<List<UamGroupDto>> childGroupInfoByParentSerilNo = uamGroupEdasService.getChildGroupInfoByParentSerilNo(areaCode);
-     if(null == childGroupInfoByParentSerilNo){
 
-     }
-     if(){
-
-     }
-     */
 }

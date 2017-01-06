@@ -426,31 +426,57 @@
             CommonClient.post(sys.rootPath + "/ofc/queryBaseListByArea",{"areaCode":areaCode},function(data) {
                 if (data == undefined || data == null || null == data.result
                         || undefined == data.result || data.result.size == 0) {
-                    $("#baseName option").remove();
-                    $("#baseName").trigger("chosen:updated");
                     layer.msg("暂时未查询到基地信息！！");
-                }else if(data.code == 200){
-                    $("#baseName option").remove();
                     $("#baseName").trigger("chosen:updated");
+                }else if(data.code == 200){
                     data=eval(data.result);
                     $.each(data,function (index,baseMsg) {
-                        $("#baseName").append("<option value='"+baseMsg.groupCode+"'>"+baseMsg.groupName+"</option>");
+                        $("#baseName").append("<option value='"+baseMsg.serialNo+"'>"+baseMsg.groupName+"</option>");
                         $("#baseName").trigger("chosen:updated");
                     });
                 }else if (data.code == 403) {
                     layer.msg("没有权限!")
-                    $("#baseName option").remove();
                     $("#baseName").trigger("chosen:updated");
                 } else if(data.code == 500){
                     layer.msg("查询基地出错!");
-                    $("#baseName option").remove();
                     $("#baseName").trigger("chosen:updated");
                 } else {
                     layer.msg("查询基地出错!");
-                    $("#baseName option").remove();
                     $("#baseName").trigger("chosen:updated");
                 }
             })
+
+        })
+
+        //通过选择的基地反查大区
+        $("#baseName").change(function () {
+            if($("#areaName option").length <= 1 ){
+                return;
+            }
+            var baseCode = $("#baseName").val();
+            CommonClient.post(sys.rootPath + "/ofc/queryAreaMsgByBase",{"baseCode":baseCode},function(data) {
+                if (data == undefined || data == null || null == data.result
+                        || undefined == data.result || data.result.size == 0) {
+                    layer.msg("暂时未查询到所属大区信息！！");
+                    $("#areaName").trigger("chosen:updated");
+                }else if(data.code == 200){
+                    data = data.result;
+                    var $area = $("#areaName option[value = '" + data.serialNo + "']");
+                    $area.removeAttr("selected");
+                    $area.attr({selected:'selected'});
+                    $("#areaName").trigger("chosen:updated");
+                }else if (data.code == 403) {
+                    layer.msg("没有权限!")
+                    $("#areaName").trigger("chosen:updated");
+                } else if(data.code == 500){
+                    layer.msg("查询大区出错!");
+                    $("#areaName").trigger("chosen:updated");
+                } else {
+                    layer.msg("查询大区出错!");
+                    $("#areaName").trigger("chosen:updated");
+                }
+            })
+
         })
         
 
