@@ -1,6 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
@@ -60,4 +61,6 @@ public interface OfcOrderManageOperService {
      * @return
      */
     OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto);
+
+    void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType);
 }

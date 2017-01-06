@@ -46,6 +46,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     @Override
     public List<OrderSearchOperResult> queryOrderList(OrderOperForm form) {
+        if((!PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && PubUtils.isSEmptyOrNull(form.getBaseSerialNo()))
+                || (PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo()))){
+            throw new BusinessException("运营中心订单管理筛选入参: 基地或大区有一个为空");
+        }
         return ofcOrderOperMapper.queryOrderList(form);
     }
 
@@ -74,16 +78,16 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
         checkUamGroupEdasResultNullOrError(allGroupByType);
         if(CollectionUtils.isEmpty(allGroupByType.getResult()) || allGroupByType.getResult().size() > 1){
-            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果为空");
+            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果为空或有误");
         }
         UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
-        Map<String, List<OfcGroupVo>> resultMap = new HashMap<>();
         if(null == uamGroupDtoResult || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getType())){
             throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果有误");
         }
         if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())){
             throw new BusinessException("当前登录的用户没有流水号!");
         }
+        Map<String, List<OfcGroupVo>> resultMap = new HashMap<>();
         String groupType = uamGroupDtoResult.getType();
         if(StringUtils.equals(groupType,"1")){
             //鲜易供应链身份
@@ -245,7 +249,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
      * 校验UamGroupEdas返回结果
      * @param allGroupByType
      */
-    private void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType) {
+    public void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType) {
         if(null == allGroupByType){
             throw new BusinessException("查询当前登录用户组织信息出错,接口返回null");
         }
