@@ -193,6 +193,9 @@
       <if test="form.businessType!=null and form.businessType!=''">
         AND ofi.business_type = #{form.businessType}
       </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
     </where>
     ORDER BY ofi.order_code DESC
   </select>
