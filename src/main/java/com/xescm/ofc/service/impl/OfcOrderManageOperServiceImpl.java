@@ -46,9 +46,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     @Override
     public List<OrderSearchOperResult> queryOrderList(OrderOperForm form) {
-        if((!PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && PubUtils.isSEmptyOrNull(form.getBaseSerialNo()))
-                || (PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo()))){
-            throw new BusinessException("运营中心订单管理筛选入参: 基地或大区有一个为空");
+        if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+            throw new BusinessException("运营中心订单管理筛选入参: 基地所属大区为空");
         }
         return ofcOrderOperMapper.queryOrderList(form);
     }
@@ -102,7 +101,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             resultMap = getGroupMsg(uamGroupDtoResult,"base");
             //仓库身份, 其他身份怎么处理?
         }else{
-
+            resultMap = null;
         }
 
         return resultMap;

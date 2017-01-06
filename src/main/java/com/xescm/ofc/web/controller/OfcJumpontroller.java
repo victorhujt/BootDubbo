@@ -305,7 +305,7 @@ public class OfcJumpontroller extends BaseController{
         }
         if(null == groupMap){
             modelAndView = new ModelAndView("/error/error-500");
-            logger.error("查询当前登录用户所属组织失败");
+            logger.error("查询当前登录用户所属组织失败或您的权限太低");
             return modelAndView;
         }
         model.addAttribute("areaList",groupMap.get("area"));

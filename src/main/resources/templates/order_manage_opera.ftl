@@ -418,10 +418,10 @@
         
         //通过选择的大区加载基地
         $("#areaName").change(function () {
-            if($("#areaName option").length <= 1 ){
+            var areaCode = $("#areaName").val();
+            if($("#areaName option").length <= 1 || StringUtil.isEmpty(areaCode)){
                 return;
             }
-            var areaCode = $("#areaName").val();
             $("#baseName option").remove();
             CommonClient.post(sys.rootPath + "/ofc/queryBaseListByArea",{"areaCode":areaCode},function(data) {
                 if (data == undefined || data == null || null == data.result
@@ -430,6 +430,7 @@
                     $("#baseName").trigger("chosen:updated");
                 }else if(data.code == 200){
                     data=eval(data.result);
+                    $("#baseName").append("<option value=''></option>");
                     $.each(data,function (index,baseMsg) {
                         $("#baseName").append("<option value='"+baseMsg.serialNo+"'>"+baseMsg.groupName+"</option>");
                         $("#baseName").trigger("chosen:updated");
@@ -450,10 +451,11 @@
 
         //通过选择的基地反查大区
         $("#baseName").change(function () {
-            if($("#areaName option").length <= 1 ){
+            var baseCode = $("#baseName").val();
+            if($("#areaName option").length <= 1 || StringUtil.isEmpty(baseCode)){
                 return;
             }
-            var baseCode = $("#baseName").val();
+
             CommonClient.post(sys.rootPath + "/ofc/queryAreaMsgByBase",{"baseCode":baseCode},function(data) {
                 if (data == undefined || data == null || null == data.result
                         || undefined == data.result || data.result.size == 0) {
@@ -462,7 +464,6 @@
                 }else if(data.code == 200){
                     data = data.result;
                     var $area = $("#areaName option[value = '" + data.serialNo + "']");
-                    $area.removeAttr("selected");
                     $area.attr({selected:'selected'});
                     $("#areaName").trigger("chosen:updated");
                 }else if (data.code == 403) {
