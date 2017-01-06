@@ -1772,7 +1772,7 @@
                 cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
-        if(flg1=="error" || flg2=="error" || flg3=="error"){
+        if(flg1=="error" && flg2=="error" && flg3=="error"){
             $("#luggage").val(0);
         }else{
             luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage);
