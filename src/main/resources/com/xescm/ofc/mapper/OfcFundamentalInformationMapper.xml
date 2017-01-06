@@ -84,8 +84,7 @@
       </if>
       AND
       cust_order_code = #{custOrderCode}
-      AND
-      abolish_mark != 1
+      AND (abolish_mark is null OR abolish_mark  = 0)
 
     </where>
   </select>
