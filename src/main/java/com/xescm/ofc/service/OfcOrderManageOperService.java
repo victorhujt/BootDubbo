@@ -29,7 +29,7 @@ public interface OfcOrderManageOperService {
      * @param form
      * @return list
      */
-    List<OrderSearchOperResult> queryOrderList(OrderOperForm form);
+    List<OrderSearchOperResult> queryOrderList(AuthResDto authResDto,OrderOperForm form);
 
     /**
      * 根据订单批次号查询订单列表

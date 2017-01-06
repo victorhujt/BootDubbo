@@ -75,7 +75,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
-            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderList(form);
+            AuthResDto authResDto = getAuthResDtoByToken();
+            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderList(authResDto,form);
             PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (BusinessException ex) {
