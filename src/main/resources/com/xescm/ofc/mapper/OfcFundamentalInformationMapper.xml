@@ -31,7 +31,8 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="base_code" property="baseCode" jdbcType="VARCHAR" />
     <result column="base_name" property="baseName" jdbcType="VARCHAR" />
-
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
 
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
     <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />

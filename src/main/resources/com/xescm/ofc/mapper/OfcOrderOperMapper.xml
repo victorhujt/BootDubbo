@@ -196,6 +196,9 @@
       <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
         AND ofi.base_code = #{form.baseSerialNo}
       </if>
+        <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+            AND ofi.area_code = #{form.areaSerialNo}
+        </if>
     </where>
     ORDER BY ofi.order_code DESC
   </select>
