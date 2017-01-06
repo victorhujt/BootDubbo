@@ -12,10 +12,8 @@ import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.service.OfcDmsCallbackStatusService;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcMerchandiserService;
-import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
+import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.RmcWarehouse;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,7 +45,7 @@ public class OfcJumpontroller extends BaseController{
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
     @Autowired
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    private OfcOrderManageOperService ofcOrderManageOperService;
     @Autowired
     private CscCustomerEdasService cscCustomerEdasService;
 
@@ -298,6 +296,20 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
         setDefaultModel(model);
+        AuthResDto authResDto = getAuthResDtoByToken();
+        Map<String,List<OfcGroupVo>> groupMap = null;
+        try {
+            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+        } catch (Exception e) {
+            logger.error("查询当前登录用户所属组织失败:{},原因:{}",e,e.getMessage());
+        }
+        if(null == groupMap){
+            modelAndView = new ModelAndView("/error/error-500");
+            logger.error("查询当前登录用户所属组织失败");
+            return modelAndView;
+        }
+        model.addAttribute("areaList",groupMap.get("area"));
+        model.addAttribute("baseList",groupMap.get("base"));
         return modelAndView;
     }
 
@@ -312,10 +324,6 @@ public class OfcJumpontroller extends BaseController{
         model.addAttribute("beginTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
         return modelAndView;
     }
-
-
-
-
 
 
     @RequestMapping(value = "/ofc/operDistiExcelAdditions")

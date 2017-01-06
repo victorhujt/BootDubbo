@@ -644,7 +644,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         logger.error("获取单号发生重复，导致保存计划单信息发生错误！{}", ex);
                         throw new BusinessException("获取单号发生重复，导致保存计划单信息发生错误！");
                     } else {
-                        logger.error("保存计划单信息发生错误！", ex);
+                        logger.error("保存计划单信息发生错误:{}", ex);
                         throw ex;
                     }
                 }
@@ -792,7 +792,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.debug("计划单资源状态保存成功");
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
-                logger.error("获取单号发生重复！");
+                logger.error("获取单号发生重复:{}",ex);
                 throw new BusinessException("获取单号发生重复！");
             } else {
                 logger.error("创建仓储计划单发生异常：{}", ex);

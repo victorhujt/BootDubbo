@@ -121,10 +121,27 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">大区名称</label>
+                <div class="col-width-168" style="width:369px;margin:0 12px;">
+                    <select data-placeholder="请选择大区名称" id="baseName" name="baseName" class=" chosen-select">
+                        <#list areaList as area >
+                            <option value="${(area.groupCode)!}">${(area.groupName)!}</option>
+                        </#list>
+                    </select>
+                </div>
+                <label class="control-label col-label no-padding-right" style="margin-left: 12px;" for="name">基地名称</label>
+                <div class="col-width-168" style="margin:0 12px;">
+                    <select data-placeholder="请选择基地名称" id="baseName" name="baseName" class=" chosen-select">
+                        <#list baseList as base >
+                            <option value="${(base.groupCode)!}">${(base.groupName)!}</option>
+                        </#list>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name"></label>
                 <button class="btn btn-white btn-info btn-bold filters" id="doSearch" style="margin-left:12px;">筛选</button>
                 <button class="btn btn-white btn-info btn-bold filters rtn-btn" id="resetBtn">重置</button>
-
             </div>
 
         </div>
@@ -169,7 +186,7 @@
             aria-label="Clicks: activate to sort column ascending">收货方名称
         </th>
         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-            aria-label="Clicks: activate to sort column ascending">仓库名称
+            aria-label="Clicks: activate to sort column ascending">基地名称
         </th>
 
         </thead>

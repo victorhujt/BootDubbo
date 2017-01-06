@@ -424,7 +424,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         logger.error("获取订单号发生重复，导致保存计划单基本信息发生错误！{}", ex);
                         throw new BusinessException("获取订单号发生重复，导致保存计划单基本信息发生错误！");
                     } else {
-                        logger.error("保存计划单信息发生错误！", ex);
+                        logger.error("保存计划单信息发生错误:{}", ex);
                         throw new BusinessException("保存计划单信息发生错误！", ex);
                     }
                 }
