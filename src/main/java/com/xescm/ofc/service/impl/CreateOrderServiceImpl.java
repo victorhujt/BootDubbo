@@ -91,7 +91,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             String orderCode = information.getOrderCode();
                             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
                             //订单已存在,获取订单的最新状态,只有待审核的才能更新
-                            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
+                            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
                                 addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
                                 return "";
