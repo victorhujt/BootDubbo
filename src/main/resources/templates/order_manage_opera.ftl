@@ -123,9 +123,9 @@
             <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name">大区名称</label>
                 <div class="col-width-168" style="width:369px;margin:0 12px;">
-                    <select data-placeholder="请选择大区名称" id="baseName" name="baseName" class=" chosen-select">
+                    <select data-placeholder="请选择大区名称" id="areaName" name="areaName" class=" chosen-select">
                         <#list areaList as area >
-                            <option value="${(area.groupCode)!}">${(area.groupName)!}</option>
+                            <option value="${(area.serialNo)!}">${(area.groupName)!}</option>
                         </#list>
                     </select>
                 </div>
@@ -133,7 +133,7 @@
                 <div class="col-width-168" style="margin:0 12px;">
                     <select data-placeholder="请选择基地名称" id="baseName" name="baseName" class=" chosen-select">
                         <#list baseList as base >
-                            <option value="${(base.groupCode)!}">${(base.groupName)!}</option>
+                            <option value="${(base.serialNo)!}">${(base.groupName)!}</option>
                         </#list>
                     </select>
                 </div>
@@ -408,6 +408,44 @@
             date.setDate(date.getDate() - value);
             return date;
         }
+        
+        //通过选择的大区加载基地
+        $("#areaName").change(function () {
+            if($("#areaName option").length <= 1 ){
+                return;
+            }
+            var areaCode = $("#areaName").val();
+            $("#baseName option").remove();
+            CommonClient.post(sys.rootPath + "/ofc/queryBaseListByArea",{"areaCode":areaCode},function(data) {
+                if (data == undefined || data == null || null == data.result
+                        || undefined == data.result || data.result.size == 0) {
+                    $("#baseName option").remove();
+                    $("#baseName").trigger("chosen:updated");
+                    layer.msg("暂时未查询到基地信息！！");
+                }else if(data.code == 200){
+                    $("#baseName option").remove();
+                    $("#baseName").trigger("chosen:updated");
+                    data=eval(data.result);
+                    $.each(data,function (index,baseMsg) {
+                        $("#baseName").append("<option value='"+baseMsg.groupCode+"'>"+baseMsg.groupName+"</option>");
+                        $("#baseName").trigger("chosen:updated");
+                    });
+                }else if (data.code == 403) {
+                    layer.msg("没有权限!")
+                    $("#baseName option").remove();
+                    $("#baseName").trigger("chosen:updated");
+                } else if(data.code == 500){
+                    layer.msg("查询基地出错!");
+                    $("#baseName option").remove();
+                    $("#baseName").trigger("chosen:updated");
+                } else {
+                    layer.msg("查询基地出错!");
+                    $("#baseName option").remove();
+                    $("#baseName").trigger("chosen:updated");
+                }
+            })
+        })
+        
 
         function queryOrderData(pageNum) {
             var param = {};
@@ -780,6 +818,8 @@
             $("#orderState").val("").trigger("chosen:updated");
             $("#orderType").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
+            //重新加载大区和基地
+
         })
 
     </script>

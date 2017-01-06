@@ -6,6 +6,7 @@ import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
+import com.xescm.uam.model.dto.group.UamGroupDto;
 import org.springframework.stereotype.Service;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 
@@ -45,4 +46,6 @@ public interface OfcOrderManageOperService {
      * @return
      */
     Map<String,List<OfcGroupVo>> queryGroupList(AuthResDto authResDto);
+
+    List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto);
 }

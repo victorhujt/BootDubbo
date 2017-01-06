@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.PlanEnum;
@@ -13,8 +14,11 @@ import com.xescm.ofc.enums.ResourceEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
+import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -35,6 +40,8 @@ import java.util.List;
 @Controller
 public class OfcOrderManageOperaRest extends BaseController {
 
+    @Resource
+    private UamGroupEdasService uamGroupEdasService;
     @Autowired
     private OfcOrderManageOperService ofcOrderManageOperService;
     @Autowired
@@ -328,5 +335,35 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
+
+    /**
+     * 根据所选大区查询基地
+     */
+    @RequestMapping(value = "queryBaseListByArea", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<?> queryBaseListByArea(String areaCode){
+        logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}",areaCode);
+        if(PubUtils.isSEmptyOrNull(areaCode)){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"该大区编码为空!无法查询其基地!");
+        }
+        UamGroupDto uamGroupDto = new UamGroupDto();
+        uamGroupDto.setSerialNo(areaCode);
+        List<OfcGroupVo> ofcGroupVoList = null;
+        try {
+            ofcGroupVoList = ofcOrderManageOperService.getBaseListByCurArea(uamGroupDto);
+        } catch (BusinessException ex) {
+            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex){
+            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"根据所选大区查询基地查询成功",ofcGroupVoList);
+    }
+
+    /**
+     * 重置加载大区和基地
+     */
+
 
 }

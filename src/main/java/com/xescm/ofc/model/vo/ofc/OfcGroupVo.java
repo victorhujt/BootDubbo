@@ -7,6 +7,6 @@ import lombok.Data;
  */
 @Data
 public class OfcGroupVo {
-    private String groupCode;
+    private String serialNo;
     private String groupName;
 }
