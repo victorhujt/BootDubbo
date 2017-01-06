@@ -211,8 +211,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     requiredField = false;
                                     continue;
                                 }
-                                DecimalFormat df = new DecimalFormat("0");
-                                cellValue = df.format(Double.valueOf(cellValue));
+                                //客户订单号
+                                if (hssfCell != null && XSSFCell.CELL_TYPE_STRING == hssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(hssfCell.getStringCellValue());
+                                } else if (hssfCell != null && XSSFCell.CELL_TYPE_NUMERIC == hssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(hssfCell.getNumericCellValue()));
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    cellValue = df.format(Double.valueOf(cellValue));
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
@@ -749,8 +755,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     requiredField = false;
                                     continue;
                                 }
-                                DecimalFormat df = new DecimalFormat("0");
-                                cellValue = df.format(Double.valueOf(cellValue));
+                                //客户订单号
+                                if (xssfCell != null && XSSFCell.CELL_TYPE_STRING == xssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(xssfCell.getStringCellValue());
+                                } else if (xssfCell != null && XSSFCell.CELL_TYPE_NUMERIC == xssfCell.getCellType()) {
+                                    cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(xssfCell.getNumericCellValue()));
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    cellValue = df.format(Double.valueOf(cellValue));
+                                }
                                 Field field = clazz.getDeclaredField(cellNumName);
                                 field.setAccessible(true);
                                 field.set(ofcExcelBoradwise,cellValue);
