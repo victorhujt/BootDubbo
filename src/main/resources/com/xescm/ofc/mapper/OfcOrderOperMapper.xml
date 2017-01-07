@@ -167,7 +167,7 @@
       SELECT MAX(order_status) FROM ofc_order_status
       WHERE temp.order_code = order_code
       AND notes NOT LIKE '%已回单'
-      ) ORDER BY temp.order_status DESC
+      ) ORDER BY temp.order_status DESC limit 1
       ) oos ON ofi.order_code = oos.order_code
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
@@ -218,7 +218,7 @@
         WHERE temp.order_status =
         (SELECT MAX(order_status) FROM ofc_order_status
           WHERE temp.order_code = order_code
-        ) ORDER BY temp.order_status DESC) oos
+        ) ORDER BY temp.order_status DESC limit 1) oos
      ON ofi.order_code = oos.order_code
     LEFT JOIN ofc_distribution_basic_info odb
     ON odb.order_code = ofi.order_code
