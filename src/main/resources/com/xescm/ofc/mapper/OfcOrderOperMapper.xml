@@ -144,7 +144,7 @@
 
   <!-- 运营-订单管理查询 -->
   <select id="queryOrderList" resultMap="Order_Search_Oper_Map">
-    SELECT
+    SELECT DISTINCT
       ofi.cust_name,
       ofi.order_code,
       ofi.cust_order_code,
