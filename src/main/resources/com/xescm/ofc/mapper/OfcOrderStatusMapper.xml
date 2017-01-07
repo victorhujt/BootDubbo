@@ -133,9 +133,9 @@
     FROM
         ofc_order_status
     WHERE
-        lasted_oper_time = (
+        order_status = (
             SELECT
-                MAX(lasted_oper_time)
+                MAX(order_status)
             FROM
                 ofc_order_status
             WHERE
@@ -144,4 +144,22 @@
     LIMIT 1
   </select>
 
+
+  <!--获取最新状态-->
+  <select id="queryLastTimeOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
+    SELECT
+    order_code,order_status,status_desc,lasted_oper_time,notes,operator
+    FROM
+    ofc_order_status
+    WHERE
+    lasted_oper_time = (
+    SELECT
+    MAX(lasted_oper_time)
+    FROM
+    ofc_order_status
+    WHERE
+    order_code = #{orderCode}
+    )
+    LIMIT 1
+  </select>
 </mapper>

@@ -32,4 +32,6 @@ public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
     List<OfcOrderStatus> queryOrderStatus(@Param("code") String code, @Param("searchType") String searchType);
 
     OfcOrderStatus queryLastUpdateOrderByOrderCode(@Param(value = "orderCode") String orderCode);
+
+    OfcOrderStatus queryLastTimeOrderByOrderCode(@Param(value = "orderCode") String orderCode);
 }
