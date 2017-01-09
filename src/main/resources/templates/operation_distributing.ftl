@@ -1,6 +1,6 @@
 <title>城配下单</title>
 <style type="text/css">
-    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+  /*  #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
         position:fixed;
         left:50%;
         top:85px;
@@ -10,7 +10,7 @@
         z-index:3;
         overflow: auto;
         border:solid #7A7A7A 1px;
-    }
+    }*/
     .help-block{
         color:#f00 !important;
     }
@@ -335,12 +335,22 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-xs-3 l-dw">
+                      <div class="col-xs-3">
                         <div class="clearfix">
-                            <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                          <span id="custSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
-                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button style="float: left;display: none;" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+                    <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                    <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
+                  </div>
                 </div>
+               <#-- <div class="form-group">
+                    <label class="control-label  col-label no-padding-right" for="name"></label>
+
+                </div>-->
             </form>
             <form class="bootbox-form">
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -368,7 +378,11 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="modal-footer"><button style="float: left;display: none;" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button><button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+       <#-- <div class="modal-footer">
+          <button style="float: left;display: none;" id="to_csc_createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+          <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+          <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
+        </div>-->
     </div>
 </div>
 <!--goods&Consigee-->
@@ -992,7 +1006,7 @@
         var goodsList = "";
         $.each(data,function (index,cscGoodsVo) {
 
-            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
             goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='checkbox'  class='ace' >"+"<span class='lbl'></span>"+"</label>"+"</td>";
             goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeParentName)+"</td>";//货品种类
             goodsList =goodsList + "<td>"+StringUtil.nullToEmpty(cscGoodsVo.goodsTypeName)+"</td>";//货品小类
@@ -1529,7 +1543,7 @@
             /*consignorCodeHide = CscContantAndCompanyDto.contactCompanyId;
             consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
             consignorTypeHide = CscContantAndCompanyDto.type;*/
-            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
@@ -1746,7 +1760,7 @@
             /*consigneeCodeHide = CscContantAndCompanyDto.contactCompanyId;
             consigneeContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
             consigneeTypeHide = CscContantAndCompanyDto.type;*/
-            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consigneeSel' type='checkbox' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
@@ -1814,7 +1828,7 @@
             contactCodeOut[contactCode] = 1;
 
 
-            consignorout =consignorout + "<tr role='row' class='odd'>";
+            consignorout =consignorout + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
             consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";
             consignorout =consignorout + "<td>"+consigneeName+"</td>";
             consignorout =consignorout + "<td><input onpaste='return false' onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' value='" + consigneeCustOrderCode + "' style='border:1px solid #cacaca;' /></td>";
@@ -2019,7 +2033,7 @@
             if(null == channel){
                 channel = "";
             }
-            custList =custList + "<tr role='row' class='odd'>";
+            custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             custList =custList + "<td class='center'>"+(index+1)+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
@@ -2603,6 +2617,10 @@
                 $this.next().css({'width': $this.parent().width()});
             })
         });
+    }
+    function chosenTr(e){
+      var rd = $(e).children().first().children().first().children().first();
+      rd.prop("checked","checked");
     }
 
 </script>

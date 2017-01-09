@@ -1,73 +1,94 @@
-<title>订单详情</title>
-<style type="text/css">
-    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-        position:fixed;
-        left:50%;
-        top:85px;
-        margin-left:-400px;
-        width:946px;
-        height:500px;
-        z-index:3;
-        overflow: auto;
-        border:solid #7A7A7A 1px;
-    }
-    .date_a{
-        line-height:21px !important;
-    }
-    .form-group > label[class*="col-"]{
-        margin-top:0;
-        line-height:34px;
-    }
-    .form-horizontal .control-label{
-        padding-top:0;
-        line-height:30px;
-    }
-    input[type=checkbox], input[type=radio]{
-        margin:10px 0 0;
-    }
-    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-        color:#393939;
-    }
-    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-        color:#393939;
-    }
-    .dataTable > thead > tr > th[class*=sort]:hover{
-        color:#707070;
-    }
-    .dataTable > thead > tr > th[class*=sorting_]{
-        color:#707070;
-    }
-    .has-success .form-control{
-        border-color:#cacaca;
-    }
-    .help-block{
-        color:#f00 !important;
-    }
-    .has-error .form-control{
-        border-color:#b5b5b5 !important;
-    }
-    .custNameIcon:hover{color:#2868c6 !important;}
-    .initBtn{
-        line-height:32px;
-        width:34px;
-        border:1px solid #cacaca;
-        background:#f7f7f7!important;
-        cursor:pointer;
-        position:absolute;
-        top:0;
-        right:0;
-    }
-    .initBtn:hover{
-        background:#fff!important;
-        border:1px solid #cacaca!important;
-    }
-    .col-label{
-        margin-right:2px;
-        margin-bottom:0;
-    }
-    #goodsInfoListDiv .help-block{
-        line-height:20px;
-    }
+ <title>订单详情</title>
+    <style type="text/css">
+     /*   #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+            position:fixed;
+            left:50%;
+            top:85px;
+            margin-left:-400px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 1px;
+        }*/
+        .date_a{
+            line-height:21px !important;
+        }
+        .form-group > label[class*="col-"]{
+            margin-top:0;
+            line-height:34px;
+        }
+        .form-horizontal .control-label{
+            padding-top:0;
+            line-height:30px;
+        }
+        input[type=checkbox], input[type=radio]{
+            margin:10px 0 0;
+        }
+        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+            color:#393939;
+        }
+        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+            color:#393939;
+        }
+        .dataTable > thead > tr > th[class*=sort]:hover{
+            color:#707070;
+        }
+        .dataTable > thead > tr > th[class*=sorting_]{
+            color:#707070;
+        }
+        .has-success .form-control{
+            border-color:#cacaca;
+        }
+        .help-block{
+            color:#f00 !important;
+        }
+        .has-error .form-control{
+            border-color:#b5b5b5 !important;
+        }
+        .custNameIcon:hover{color:#2868c6 !important;}
+        .initBtn{
+            line-height:32px;
+            width:34px;
+            border:1px solid #cacaca;
+            background:#f7f7f7!important;
+            cursor:pointer;
+            position:absolute;
+            top:0;
+            right:0;
+        }
+        .initBtn:hover{
+            background:#fff!important;
+            border:1px solid #cacaca!important;
+        }
+        .col-label{
+            margin-right:2px;
+            margin-bottom:0;
+        }
+        #goodsInfoListDiv .help-block{
+            line-height:20px;
+        }
+
+        .imgClass{
+            float: left;
+            width:138px;
+            height:96px;
+            overflow: hidden;
+            margin: 2px;
+            box-sizing: border-box;
+        }
+        .imgClass img{
+            border:1px solid #c2c2c2;
+            width: 100%;
+            height:100%;
+        }
+      /*  .row{
+            max-width: 1250px;
+            min-width: 1250px;
+            margin-left: -21px;
+        }*/
+     /*   .no-padding-right{
+            margin-left: 71px;
 
     .imgClass{
         float: left;

@@ -1,7 +1,7 @@
 <head>
     <title>订单管理</title>
     <style type="text/css">
-        #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+     /*   #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
             position:fixed;
             left:50%;
             top:85px;
@@ -11,7 +11,7 @@
             z-index:3;
             overflow: auto;
             border:solid #7A7A7A 1px;
-        }
+        }*/
         .date_a {
             line-height: 21px !important;
         }
@@ -206,6 +206,9 @@
                                 <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
                             </div>
                         </div>
+                      <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+                        <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                        <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
                     </div>
                     <div class="form-group">
 
@@ -247,9 +250,9 @@
             </div>
         </div>
         <div class="form-group" style="width:100%;">
-            <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+            <#--<div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
                 <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-                <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+                <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>-->
         </div>
     </div>
 
@@ -669,6 +672,7 @@
                             }
                         }
                     });
+                  $(".total").html(result.result.total+'&nbsp;条&nbsp;');
                 } else if (result.code == 403) {
                     alert("没有权限")
                 } else {
@@ -689,7 +693,7 @@
                 if(null == channel){
                     channel = "";
                 }
-                custList =custList + "<tr role='row' class='odd'>";
+                custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
                 custList =custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
                 custList =custList + "<td>"+(index+1)+"</td>";
                 var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
@@ -745,8 +749,12 @@
         $("#orderType").on("change", function () {
             var type = $(this).val();
             if (type == "60" || type == "61") {
+                console.log(type)
                 $("#businessType").empty().append(appendSelect(type));
                 $("#businessType").trigger("chosen:updated");
+            }else if(type==''){
+              $("#businessType").empty();
+              $("#businessType").trigger("chosen:updated");
             }
         });
 
@@ -764,7 +772,10 @@
             $("#orderType").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
         })
-
+        //点击一行表示选中单选框
+        function chosenTr(e){
+          $(e).children().first().find("input").prop("checked","checked");
+        }
     </script>
 
 </body>
