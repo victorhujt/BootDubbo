@@ -8,7 +8,8 @@ import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
-import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
 
     @Override
-    public List<RmcWarehouse> getWarehouseListByCustCode(String customerCode) {///1
+    public List<RmcWarehouseRespDto> getWarehouseListByCustCode(String customerCode) {///1
         try{
             QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
             cscWarehouse.setCustomerCode(customerCode);
@@ -67,12 +68,12 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             if(null == result){
                 return new ArrayList<>();
             }
-            List<RmcWarehouse> warehouseList = new ArrayList<>();
+            List<RmcWarehouseRespDto> warehouseList = new ArrayList<>();
             for(CscWarehouseDto cscWH : result){
-                RmcWarehouse rmcWarehouse = new RmcWarehouse();
+                RmcWarehouseDto rmcWarehouse = new RmcWarehouseDto();
                 rmcWarehouse.setWarehouseCode(cscWH.getWarehouseCode());
-                RmcWarehouse rmcWarehouseResult = new RmcWarehouse();
-                Wrapper<RmcWarehouse> rmcWarehouseByid = (Wrapper<RmcWarehouse>) rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
+                RmcWarehouseRespDto rmcWarehouseResult = new RmcWarehouseRespDto();
+                Wrapper<RmcWarehouseRespDto> rmcWarehouseByid =  rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
                     //throw new BusinessException(rmcWarehouseByid.getMessage());
                     continue;
