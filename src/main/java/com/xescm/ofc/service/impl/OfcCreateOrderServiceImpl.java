@@ -303,7 +303,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
         if (information != null) {
             String orderCode = information.getOrderCode();
-            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
             //订单已存在,获取订单的最新状态,只有待审核的才能更新
             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
                 logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);

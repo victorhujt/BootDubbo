@@ -25,4 +25,6 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
     void cancelOrderStateByOrderCode(String orderCode);
 
     OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode);
+
+    OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode);
 }

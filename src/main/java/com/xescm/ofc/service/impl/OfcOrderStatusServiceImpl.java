@@ -98,4 +98,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode) {
         return ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
     }
+
+    public OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode) {
+        return ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
+    }
 }
