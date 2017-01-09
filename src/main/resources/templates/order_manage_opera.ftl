@@ -124,7 +124,7 @@
                 <label class="control-label col-label no-padding-right" for="name">大区名称</label>
                 <div class="col-width-168" style="width:369px;margin:0 12px;">
                     <select data-placeholder="请选择大区名称" id="areaName" name="areaName" class=" chosen-select">
-                        <#list areaList as area >
+                        <#list areaList! as area >
                             <option value="${(area.serialNo)!}">${(area.groupName)!}</option>
                         </#list>
                     </select>
@@ -132,7 +132,7 @@
                 <label class="control-label col-label no-padding-right" style="margin-left: 12px;" for="name">基地名称</label>
                 <div class="col-width-168" style="margin:0 12px;">
                     <select data-placeholder="请选择基地名称" id="baseName" name="baseName" class=" chosen-select">
-                        <#list baseList as base >
+                        <#list baseList! as base >
                             <option value="${(base.serialNo)!}">${(base.groupName)!}</option>
                         </#list>
                     </select>

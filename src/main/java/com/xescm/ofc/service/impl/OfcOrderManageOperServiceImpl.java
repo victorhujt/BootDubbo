@@ -152,7 +152,9 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         }else{
             resultMap = null;
         }
-
+        if(null == resultMap){
+            throw new BusinessException("您所登录的用户大区基地信息不完整!");
+        }
         return resultMap;
     }
 
