@@ -579,7 +579,7 @@
                         + "<td class=\"hidden-480\">" + getBusiType(order) + "</td>"
                         + "<td class=\"hidden-480\">" + getOrderStatus(order.orderStatus) + "</td>"
                         + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(consigneeName) + "</td>"
-                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
+                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.baseName) + "</td>"
                         + "</tr>";
             })
             $("#dataTbody").html(htmlText);
