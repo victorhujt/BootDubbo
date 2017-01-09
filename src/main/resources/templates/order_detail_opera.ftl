@@ -4,10 +4,10 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <div class="col-sm-6" style="float: right">
-        <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-            返回
-        </button>-->
+    <div class="col-sm-6" style="float: left">
+        <button style="float:left;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
+            打印面单
+        </button>
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
