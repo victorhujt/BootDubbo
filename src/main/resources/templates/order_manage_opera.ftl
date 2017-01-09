@@ -419,6 +419,15 @@
         //通过选择的大区加载基地
         $("#areaName").change(function () {
             var areaCode = $("#areaName").val();
+            if(StringUtil.isEmpty(areaCode)){
+                $("#baseName option").remove();
+                $("#baseName").html("")
+                $("#baseName").html(baseSelect)
+                $("#baseName").trigger("chosen:updated");
+                return;
+            }
+
+
             if($("#areaName option").length <= 1 || StringUtil.isEmpty(areaCode)){
                 return;
             }
