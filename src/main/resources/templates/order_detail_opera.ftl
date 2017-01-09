@@ -4,7 +4,7 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <div class="col-sm-6" style="float: left">
+    <div class="col-sm-6" style="float: right>
         <div class="col-sm-6" style="float: right"><span hidden="true" id = "REPORT">${(REPORT)!}</span>
         <button style="float:left;padding-left: 11px;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="facePrint()">
             打印面单
