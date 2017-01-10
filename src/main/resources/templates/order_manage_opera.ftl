@@ -210,9 +210,6 @@
                         <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
                         <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
                     </div>
-                    <div class="form-group">
-
-                    </div>
                 </form>
                 <form class="bootbox-form">
                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer"
@@ -246,13 +243,7 @@
                         </div>
                     </div>
                 </form>
-
             </div>
-        </div>
-        <div class="form-group" style="width:100%;">
-            <#--<div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
-                <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-                <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>-->
         </div>
     </div>
 
