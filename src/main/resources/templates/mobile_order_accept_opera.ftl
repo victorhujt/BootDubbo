@@ -2366,11 +2366,7 @@
             if(null == channel){
                 channel = "";
             }
-<<<<<<< HEAD
-            custList =custList + "<tr ondblclick=\"selectCustomer(this);\"role='row' class='odd'>";
-=======
-            custList =custList + "<tr role='row' class='odd'  onclick='chosenTr(this)'>";
->>>>>>> dev_edas
+            custList =custList + "<tr ondblclick=\"selectCustomer(this);\"role='row' class='odd' onclick='chosenTr(this)'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             custList =custList + "<td>"+(index+1)+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
@@ -2461,11 +2457,7 @@
     function loadConsignOrEE(data,contactType) {
         var contactList = "";
         $.each(data.result.list,function (index,CscContantAndCompanyDto) {
-<<<<<<< HEAD
-            contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this,'" + contactType + "')\"role='row' class='odd'>";
-=======
-            contactList =contactList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
->>>>>>> dev_edas
+            contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this,'" + contactType + "')\"role='row' class='odd'  onclick='chosenTr(this)'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
@@ -2611,11 +2603,7 @@
     function loadGoods(data) {
         var goodsList = "";
         $.each(data,function (index,cscGoodsVo) {
-<<<<<<< HEAD
-            goodsList =goodsList + "<tr ondblclick=\"selectGoods(this);\" role='row' class='odd'>";
-=======
-            goodsList =goodsList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
->>>>>>> dev_edas
+            goodsList =goodsList + "<tr ondblclick=\"selectGoods(this);\" role='row' class='odd' onclick='chosenTr(this)'>";
             goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类

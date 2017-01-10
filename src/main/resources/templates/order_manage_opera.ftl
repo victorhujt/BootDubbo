@@ -455,7 +455,8 @@
         //通过选择的基地反查大区
         $("#baseName").change(function () {
             var baseCode = $("#baseName").val();
-            if($("#areaName option").length <= 1 || StringUtil.isEmpty(baseCode)){
+            var areaCode = $("#areaName").val();
+            if($("#areaName option").length <= 1 || StringUtil.isEmpty(baseCode) || !StringUtil.isEmpty(areaCode)){
                 return;
             }
 
@@ -490,6 +491,12 @@
                 layer.msg("您没有大区或基地！无法进行筛选!");
                 return;
             }
+            var areaName = $("#areaName").val();
+            var baseName = $("#baseName").val();
+            if(!StringUtil.isEmpty(baseName) && StringUtil.isEmpty(areaName)){
+                layer.msg("请选择基地所属大区！无法进行筛选!");
+                return;
+            }
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
@@ -502,8 +509,8 @@
             param.orderState= $("#orderState").val();
             param.orderType = $("#orderType").val();
             param.businessType = $("#businessType").val();
-            param.areaSerialNo = $("#areaName").val();
-            param.baseSerialNo = $("#baseName").val();
+            param.areaSerialNo = areaName;
+            param.baseSerialNo = baseName;
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
                 if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
