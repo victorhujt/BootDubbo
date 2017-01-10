@@ -202,7 +202,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         StringBuffer notes = new StringBuffer();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
-        ofcFundamentalInformation.setOrderSource("钉钉");//订单来源
+        ofcFundamentalInformation.setOrderSource(DING_DING);//订单来源
         if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
             int custOrderCode = 0;
             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){

@@ -23,6 +23,7 @@ import com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto;
 import com.xescm.epc.edas.dto.TransportNoDTO;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
+import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -430,13 +431,20 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
                      rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
                     if (rmcPickup != null){
-                        if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseCode()).equals("")){
+                        if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseCode()).equals("") && !PubUtils.isSEmptyOrNull(ofcTransplanInfo.getBaseId())){
                             ofcTransplanInfo.setBaseId(rmcPickup.getBaseCode());
                         }
                         if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseName()).equals("")){
                             ofcTransplanInfo.setBaseName(rmcPickup.getBaseName());
                         }
                     }
+                }else if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")
+                        && (StringUtils.equals(ofcFundamentalInformation.getCustCode(),CreateOrderApiConstant.XEBEST_CUST_CODE)
+                        || StringUtils.equals(ofcFundamentalInformation.getCustCode(),CreateOrderApiConstant.XEBEST_CUST_CODE))){
+                    //鲜易网, 给的BaseId是有值的, 但不可用!
+                    RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
+                    rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+                    rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
                 }
                 List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
                 ofcTransplanInfoList.add(ofcTransplanInfo);
@@ -451,7 +459,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //订单来源为钉钉录单时
                     if(rmcPickup!=null){
                         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderSource())){
-                            if("钉钉".equals(ofcFundamentalInformation.getOrderSource())){
+                            if(StringUtils.equals(ofcFundamentalInformation.getOrderSource(),DING_DING)
+                                    || StringUtils.equals(ofcFundamentalInformation.getCustCode(), CreateOrderApiConstant.XEBEST_CUST_CODE)
+                                    || StringUtils.equals(ofcFundamentalInformation.getCustCode(), CreateOrderApiConstant.XEBEST_CUST_CODE_TEST)){
                                 OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
                                 UamGroupDto dto=new UamGroupDto();
                                 dto.setSerialNo(rmcPickup.getSerialNo());
@@ -460,8 +470,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     ofcInfo.setAreaCode(vo.getSerialNo());
                                     ofcInfo.setAreaName(vo.getGroupName());
                                 }
-                                ofcInfo.setBaseCode(rmcPickup.getWarehouseCode());
-                                ofcInfo.setBaseName(rmcPickup.getWarehouseName());
+                                ofcInfo.setBaseCode(rmcPickup.getSerialNo());
+                                ofcInfo.setBaseName(rmcPickup.getBaseName());
                                 ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
                                 ofcFundamentalInformationService.update(ofcInfo);
                             }
@@ -1702,7 +1712,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         //订单来源为钉钉录单时
                         if(rmcPickup!=null){
                             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderSource())){
-                                if("钉钉".equals(ofcFundamentalInformation.getOrderSource())){
+                                if(DING_DING.equals(ofcFundamentalInformation.getOrderSource())){
                                     OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
                                     UamGroupDto dto=new UamGroupDto();
                                     dto.setSerialNo(rmcPickup.getSerialNo());
@@ -1711,8 +1721,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         ofcInfo.setAreaCode(vo.getSerialNo());
                                         ofcInfo.setAreaName(vo.getGroupName());
                                     }
-                                    ofcInfo.setBaseCode(rmcPickup.getWarehouseCode());
-                                    ofcInfo.setBaseName(rmcPickup.getWarehouseName());
+                                    ofcInfo.setBaseCode(rmcPickup.getSerialNo());
+                                    ofcInfo.setBaseName(rmcPickup.getBaseName());
                                     ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
                                     ofcFundamentalInformationService.update(ofcInfo);
                                 }

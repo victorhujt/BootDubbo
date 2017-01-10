@@ -114,6 +114,9 @@ public final class OrderConstConstant {
     public static final Integer FAHUOFANG=10;       //发货方
     public static final Integer SHOUHUOFANG=20;        //收货方
 
+    //钉钉
+    public static  final String DING_DING = "钉钉";
+
 
     public static final String OFC_WHC_OUT_TYPE = "出库";
 
