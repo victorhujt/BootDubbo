@@ -121,10 +121,27 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="control-label col-label no-padding-right" for="name">大区名称</label>
+                <div class="col-width-168" style="width:369px;margin:0 12px;">
+                    <select data-placeholder="请选择大区名称" id="areaName" name="areaName" class=" chosen-select">
+                        <#list areaList! as area >
+                            <option value="${(area.serialNo)!}">${(area.groupName)!}</option>
+                        </#list>
+                    </select>
+                </div>
+                <label class="control-label col-label no-padding-right" style="margin-left: 12px;" for="name">基地名称</label>
+                <div class="col-width-168" style="margin:0 12px;">
+                    <select data-placeholder="请选择基地名称" id="baseName" name="baseName" class=" chosen-select">
+                        <#list baseList! as base >
+                            <option value="${(base.serialNo)!}">${(base.groupName)!}</option>
+                        </#list>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label col-label no-padding-right" for="name"></label>
                 <button class="btn btn-white btn-info btn-bold filters" id="doSearch" style="margin-left:12px;">筛选</button>
                 <button class="btn btn-white btn-info btn-bold filters rtn-btn" id="resetBtn">重置</button>
-
             </div>
 
         </div>
@@ -169,7 +186,7 @@
             aria-label="Clicks: activate to sort column ascending">收货方名称
         </th>
         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-            aria-label="Clicks: activate to sort column ascending">仓库名称
+            aria-label="Clicks: activate to sort column ascending">基地名称
         </th>
 
         </thead>
@@ -254,6 +271,10 @@
         $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
             $(document).ready(main);
         });
+
+        var areaSelect = null;
+        var baseSelect = null;
+
         function initChosen() {
             $('.chosen-select').chosen({allow_single_deselect: true});
             //resize the chosen on window resize
@@ -278,6 +299,7 @@
             // 查询
 //            queryOrderData(1);
             initChosen();
+
             $("#doSearch").click(function () {
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
@@ -308,6 +330,8 @@
                 if (this.checked) $row.addClass(active_class);
                 else $row.removeClass(active_class);
             });
+            areaSelect = $("#areaName").html();
+            baseSelect = $("#baseName").html();
         }
     </script>
     <!-- inline scripts related to this page -->
@@ -385,8 +409,87 @@
             date.setDate(date.getDate() - value);
             return date;
         }
+        
+        //通过选择的大区加载基地
+        $("#areaName").change(function () {
+            var areaCode = $("#areaName").val();
+            if(StringUtil.isEmpty(areaCode)){
+                $("#baseName option").remove();
+                $("#baseName").html("")
+                $("#baseName").html(baseSelect)
+                $("#baseName").trigger("chosen:updated");
+                return;
+            }
+
+
+            if($("#areaName option").length <= 1 || StringUtil.isEmpty(areaCode)){
+                return;
+            }
+            $("#baseName option").remove();
+            CommonClient.post(sys.rootPath + "/ofc/queryBaseListByArea",{"areaCode":areaCode},function(data) {
+                if (data == undefined || data == null || null == data.result
+                        || undefined == data.result || data.result.size == 0) {
+                    layer.msg("暂时未查询到基地信息！！");
+                    $("#baseName").trigger("chosen:updated");
+                }else if(data.code == 200){
+                    data=eval(data.result);
+                    $("#baseName").append("<option value=''></option>");
+                    $.each(data,function (index,baseMsg) {
+                        $("#baseName").append("<option value='"+baseMsg.serialNo+"'>"+baseMsg.groupName+"</option>");
+                        $("#baseName").trigger("chosen:updated");
+                    });
+                }else if (data.code == 403) {
+                    layer.msg("没有权限!")
+                    $("#baseName").trigger("chosen:updated");
+                } else if(data.code == 500){
+                    layer.msg("查询基地出错!");
+                    $("#baseName").trigger("chosen:updated");
+                } else {
+                    layer.msg("查询基地出错!");
+                    $("#baseName").trigger("chosen:updated");
+                }
+            })
+
+        })
+
+        //通过选择的基地反查大区
+        $("#baseName").change(function () {
+            var baseCode = $("#baseName").val();
+            if($("#areaName option").length <= 1 || StringUtil.isEmpty(baseCode)){
+                return;
+            }
+
+            CommonClient.post(sys.rootPath + "/ofc/queryAreaMsgByBase",{"baseCode":baseCode},function(data) {
+                if (data == undefined || data == null || null == data.result
+                        || undefined == data.result || data.result.size == 0) {
+                    layer.msg("暂时未查询到所属大区信息！！");
+                    $("#areaName").trigger("chosen:updated");
+                }else if(data.code == 200){
+                    data = data.result;
+                    var $area = $("#areaName option[value = '" + data.serialNo + "']");
+                    $area.attr({selected:'selected'});
+                    $("#areaName").trigger("chosen:updated");
+                }else if (data.code == 403) {
+                    layer.msg("没有权限!")
+                    $("#areaName").trigger("chosen:updated");
+                } else if(data.code == 500){
+                    layer.msg("查询大区出错!");
+                    $("#areaName").trigger("chosen:updated");
+                } else {
+                    layer.msg("查询大区出错!");
+                    $("#areaName").trigger("chosen:updated");
+                }
+            })
+
+        })
+        
 
         function queryOrderData(pageNum) {
+
+            if($("#areaName option").length < 1 || $("#baseName option").length < 1){
+                layer.msg("您没有大区或基地！无法进行筛选!");
+                return;
+            }
             var param = {};
             param.pageNum = pageNum;
             param.pageSize = 10;
@@ -399,6 +502,8 @@
             param.orderState= $("#orderState").val();
             param.orderType = $("#orderType").val();
             param.businessType = $("#businessType").val();
+            param.areaSerialNo = $("#areaName").val();
+            param.baseSerialNo = $("#baseName").val();
             CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
                 if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
@@ -468,7 +573,7 @@
                         + "<td class=\"hidden-480\">" + getBusiType(order) + "</td>"
                         + "<td class=\"hidden-480\">" + getOrderStatus(order.orderStatus) + "</td>"
                         + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(consigneeName) + "</td>"
-                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.warehouseName) + "</td>"
+                        + "<td class=\"hidden-480\">" + StringUtil.nullToEmpty(order.baseName) + "</td>"
                         + "</tr>";
             })
             $("#dataTbody").html(htmlText);
@@ -762,6 +867,15 @@
             $("#orderState").val("").trigger("chosen:updated");
             $("#orderType").val("").trigger("chosen:updated");
             $("#businessType").val("").trigger("chosen:updated");
+            //重新加载大区和基地
+            $("#areaName option").remove();
+            $("#baseName option").remove();
+            $("#areaName").html("")
+            $("#baseName").html("")
+            $("#areaName").html(areaSelect)
+            $("#baseName").html(baseSelect)
+            $("#areaName").trigger("chosen:updated");
+            $("#baseName").trigger("chosen:updated");
         })
         //点击一行表示选中单选框
         function chosenTr(e){

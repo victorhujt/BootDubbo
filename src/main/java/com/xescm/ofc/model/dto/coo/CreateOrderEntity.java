@@ -198,9 +198,19 @@ public class CreateOrderEntity {
     private String consignorProvince;
 
     /**
+     * 发货方省（编码）
+     */
+    private String consignorProvinceCode;
+
+    /**
      * 发货方市（汉字）
      */
     private String consignorCity;
+
+    /**
+     * 发货方市（编码）
+     */
+    private String consignorCityCode;
 
     /**
      * 发货方区县（汉字）
@@ -208,9 +218,19 @@ public class CreateOrderEntity {
     private String consignorCounty;
 
     /**
+     * 发货方区县（编码）
+     */
+    private String consignorCountyCode;
+
+    /**
      * 发货方乡镇街道
      */
     private String consignorTown;
+
+    /**
+     * 发货方乡镇街道(编码)
+     */
+    private String consignorTownCode;
 
     /**
      * 发货方地址
@@ -251,6 +271,10 @@ public class CreateOrderEntity {
      * 收货方省
      */
     private String consigneeProvince;
+    /**
+     * 收货方省(编码)
+     */
+    private String consigneeProvinceCode;
 
     /**
      * 收货方市
@@ -258,14 +282,29 @@ public class CreateOrderEntity {
     private String consigneeCity;
 
     /**
+     * 收货方市(编码)
+     */
+    private String consigneeCityCode;
+
+    /**
      * 收货方区县
      */
     private String consigneeCounty;
 
     /**
+     * 收货方区县 (编码)
+     */
+    private String consigneeCountyCode;
+
+    /**
      * 收货方乡镇街道
      */
     private String consigneeTown;
+
+    /**
+     * 收货方乡镇街道(编码)
+     */
+    private String consigneeTownCode;
 
     /**
      * 收货方地址
@@ -427,9 +466,100 @@ public class CreateOrderEntity {
     private String BaseId;
 
     /**
+     * 基地编码
+     */
+    private String baseCode;
+
+    /**
+     * 基地名称
+     */
+    private String baseName;
+
+    /**
      * API订单货品明细
      */
     private List<CreateOrderGoodsInfo> createOrderGoodsInfos;
+
+
+    public String getConsignorProvinceCode() {
+        return consignorProvinceCode;
+    }
+
+    public void setConsignorProvinceCode(String consignorProvinceCode) {
+        this.consignorProvinceCode = consignorProvinceCode;
+    }
+
+    public String getConsignorCityCode() {
+        return consignorCityCode;
+    }
+
+    public void setConsignorCityCode(String consignorCityCode) {
+        this.consignorCityCode = consignorCityCode;
+    }
+
+    public String getConsignorCountyCode() {
+        return consignorCountyCode;
+    }
+
+    public void setConsignorCountyCode(String consignorCountyCode) {
+        this.consignorCountyCode = consignorCountyCode;
+    }
+
+    public String getConsignorTownCode() {
+        return consignorTownCode;
+    }
+
+    public void setConsignorTownCode(String consignorTownCode) {
+        this.consignorTownCode = consignorTownCode;
+    }
+
+    public String getConsigneeProvinceCode() {
+        return consigneeProvinceCode;
+    }
+
+    public void setConsigneeProvinceCode(String consigneeProvinceCode) {
+        this.consigneeProvinceCode = consigneeProvinceCode;
+    }
+
+    public String getConsigneeCityCode() {
+        return consigneeCityCode;
+    }
+
+    public void setConsigneeCityCode(String consigneeCityCode) {
+        this.consigneeCityCode = consigneeCityCode;
+    }
+
+    public String getConsigneeCountyCode() {
+        return consigneeCountyCode;
+    }
+
+    public void setConsigneeCountyCode(String consigneeCountyCode) {
+        this.consigneeCountyCode = consigneeCountyCode;
+    }
+
+    public String getConsigneeTownCode() {
+        return consigneeTownCode;
+    }
+
+    public void setConsigneeTownCode(String consigneeTownCode) {
+        this.consigneeTownCode = consigneeTownCode;
+    }
+
+    public String getBaseCode() {
+        return baseCode;
+    }
+
+    public void setBaseCode(String baseCode) {
+        this.baseCode = baseCode;
+    }
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
+    }
 
     public String getCustOrderCode() {
         return custOrderCode;

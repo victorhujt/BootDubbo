@@ -48,7 +48,7 @@ public class OfcOrderScreenRest extends BaseController {
             }
             orderScreenCondition = JacksonUtil.parseJsonWithFormat(orderScreenConditionJSON, OrderScreenCondition.class);
         } catch (Exception e) {
-            logger.error("订单查询转换Json异常",e);
+            logger.error("订单查询转换Json异常{}",e);
             throw new BusinessException("订单查询转换Json异常",e);
         }
         int pageSize = Integer.parseInt(pageSizePath);

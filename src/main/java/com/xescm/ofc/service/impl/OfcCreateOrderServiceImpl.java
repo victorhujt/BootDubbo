@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
@@ -98,11 +99,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
         queryCustomerCodeDto.setCustomerCode(custCode);
-        Wrapper<CscCustomerVo> customerVoWrapper = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+        Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
         if (customerVoWrapper.getResult() == null) {
             logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
         }
+
+
 
         //校验数据：订单类型
         String orderType = createOrderEntity.getOrderType();
@@ -144,10 +147,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         createOrderEntity.setStoreCode(storeCode);
 
         //校验：【发货方】与【收货方】
-        resultModel = CheckUtils.checkWaresDist(orderType, createOrderEntity.getConsignorName(), createOrderEntity.getConsignorContact(),
-                createOrderEntity.getConsignorPhone(), createOrderEntity.getConsignorAddress(), createOrderEntity.getConsigneeName(),
-                createOrderEntity.getConsigneeContact(), createOrderEntity.getConsigneePhone(), createOrderEntity.getConsigneeAddress(),
-                createOrderEntity.getProvideTransport());
+        resultModel = CheckUtils.checkWaresDist(createOrderEntity);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
             return resultModel;

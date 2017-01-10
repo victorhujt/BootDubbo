@@ -2214,6 +2214,7 @@
             var goods = null;
             //遍历货品信息
 
+            var orderGoodsType = '';
             $("#goodsInfoListDiv").find("tr").each(function(index) {//&&&
 
                 goods = {};
@@ -2227,6 +2228,9 @@
                 var goodsUnitPrice = tdArr.eq(6).text();
                 var goodsSecType = tdArr.eq(8).text();
                 var goodsFirType = tdArr.eq(9).text();
+                if(0 == index){
+                    orderGoodsType = goodsFirType;
+                }
                 goods.goodsCode = goodsCode;
                 goods.goodsName = goodsName;
                 goods.goodsSpec = goodsSpec;
@@ -2247,6 +2251,7 @@
                 goods.chargingQuantity = goodsAmount;
                 goodsList[index] = goods;
             })
+            orderInfo.goodsTypeName = orderGoodsType;
             orderInfo.goodsList  = goodsList;
             orderLists[index] = orderInfo;
         })
