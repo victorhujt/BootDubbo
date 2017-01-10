@@ -2238,7 +2238,6 @@
                 goods.chargingQuantity = goodsAmount;
                 goodsList[index] = goods;
             })
-            orderInfo.goodsType = orderGoodsType;
             orderInfo.goodsTypeName = orderGoodsType;
             orderInfo.goodsList  = goodsList;
             orderLists[index] = orderInfo;

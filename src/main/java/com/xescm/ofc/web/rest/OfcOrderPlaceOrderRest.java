@@ -357,7 +357,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            cscGoodsLists = (Wrapper<PageInfo<CscGoodsApiVo>>) cscGoodsEdasService.queryCscGoodsPageList(cscGood);
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageList(cscGood);
             //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
