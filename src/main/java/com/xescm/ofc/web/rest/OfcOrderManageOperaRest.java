@@ -183,7 +183,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param orderCode
      * @return
      */
-    @RequestMapping(value = "/orderDetailPageByCode/{orderCode}")
+    @RequestMapping(value = "/orderDetailPageByCode/{orderCode}", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode,Model model) {
         try {
             ModelAndView modelAndView = new ModelAndView("order_detail_opera");
