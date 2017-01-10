@@ -183,8 +183,8 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param orderCode
      * @return
      */
-    @RequestMapping(value = "/orderDetailPageByCode/{orderCode}")
-    public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode) {
+    @RequestMapping(value = "/orderDetailPageByCode/{orderCode}", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode,Model model) {
         try {
             ModelAndView modelAndView = new ModelAndView("order_detail_opera");
             if (StringUtils.isBlank(orderCode)) {
@@ -242,7 +242,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
             modelAndView.addObject("storageList", storageList);
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
-
+            setDefaultModel(model);
             return modelAndView;
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);

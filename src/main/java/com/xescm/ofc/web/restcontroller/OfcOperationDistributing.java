@@ -25,7 +25,7 @@ import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -114,7 +114,7 @@ public class OfcOperationDistributing extends BaseController{
     public void queryCustomerByName(String customerCode,Model model,HttpServletResponse response){
         logger.info("城配开单根据选择的客户查询仓库==> customerCode={}", customerCode);
         try{
-            List<RmcWarehouse> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
+            List<RmcWarehouseRespDto> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcWarehouseByCustCode));
         }catch (Exception ex){

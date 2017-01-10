@@ -4,10 +4,11 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <div class="col-sm-6" style="float: right">
-        <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-            返回
-        </button>-->
+    <div class="col-sm-6" style="float: right>
+        <div class="col-sm-6" style="float: right"><span hidden="true" id = "REPORT">${(REPORT)!}</span>
+        <button style="float:left;padding-left: 11px;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="facePrint()">
+            打印面单
+        </button>
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -671,8 +672,26 @@
 </div><!-- /.col -->
 
 <script type="text/javascript">
-    function detailBackToHistory() {
-        xescm.common.loadPage("/ofc/orderManageOpera");
+    function facePrint() {
+        var sel = "";
+        var post = $("#REPORT").html();
+        var url = post+"/OfcReport/ReportServer?reportlets=";
+        var code="";
+        $("#dataTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+                sel="1";
+                var order_code=tdArr.eq(1).find("a").html();
+                code = code+"{reportlet:'/ofc/invoices/Invoice.cpt',orderCode:'"+order_code+"'},";
+            }
+        });
+        if(sel==""){
+            alert("请至少选择一个订单！");
+        }else{
+            code=code.substring(0,code.length-1);
+            url=url+"["+code+"]";
+            window.open(encodeURI(url));
+        }
     }
 </script>
 <script>

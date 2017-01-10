@@ -132,7 +132,8 @@
     <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR"></result>
     <result column="order_time" property="orderTime" jdbcType="TIMESTAMP"></result>
     <result column="order_type" property="orderType" jdbcType="VARCHAR"></result>
-    <result column="business_type" property="businessType" jdbcType="TIMESTAMP"></result>
+    <result column="business_type" property="businessType" jdbcType="VARCHAR"></result>
+    <result column="base_name" property="baseName" jdbcType="VARCHAR"></result>
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR"></result>
     <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR"></result>
     <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR"></result>
@@ -152,6 +153,7 @@
       ofi.order_time,
       ofi.order_type,
       ofi.business_type,
+      ofi.base_name,
       oos.order_status,
       odbi.consignee_type,
       odbi.consignee_name,

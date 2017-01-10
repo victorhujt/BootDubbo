@@ -6,6 +6,7 @@ import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -114,23 +115,28 @@ public class CheckUtils {
      * 收货方名称、收货方联系人、收货方联系电话、收货方的地址为必填项。
      * 若其中一项未填写，则返回错误信息，“ＸＸＸＸ信息不能为空！“
      *
-     * @param orderType         订单类型
-     * @param consignor_name    发货方名称
-     * @param consignor_contact 发货方联系人
-     * @param consignor_phone   发货方联系电话
-     * @param consignor_address 发货方的地址
-     * @param consignee_name    收货方名称
-     * @param consignee_contact 收货方联系人
-     * @param consignee_phone   收货方联系电话
-     * @param consignee_address 收货方地址
-     * @param provide_transport 是否需要运输
+     *
      * @return
      */
-    public static ResultModel checkWaresDist(String orderType, String consignor_name,
-                                             String consignor_contact, String consignor_phone,
-                                             String consignor_address, String consignee_name,
-                                             String consignee_contact, String consignee_phone,
-                                             String consignee_address, String provide_transport) {
+    public static ResultModel checkWaresDist(CreateOrderEntity createOrderEntity) {
+        String orderType = createOrderEntity.getOrderType();
+        String consignor_name = createOrderEntity.getConsignorName();
+        String consignor_contact = createOrderEntity.getConsignorContact();
+        String consignor_phone = createOrderEntity.getConsignorPhone();
+        String consignor_address = createOrderEntity.getConsignorAddress();
+        String consignor_province_code = createOrderEntity.getConsignorProvinceCode();
+        String consignor_city_code = createOrderEntity.getConsignorCityCode();
+        String consignor_country_code = createOrderEntity.getConsignorCountyCode();
+        String consignor_town_code = createOrderEntity.getConsignorTownCode();
+        String consignee_name = createOrderEntity.getConsigneeName();
+        String consignee_contact = createOrderEntity.getConsigneeContact();
+        String consignee_phone = createOrderEntity.getConsigneePhone();
+        String consignee_address = createOrderEntity.getConsigneeAddress();
+        String consignee_province_code = createOrderEntity.getConsigneeProvinceCode();
+        String consignee_city_code = createOrderEntity.getConsigneeCityCode();
+        String consignee_country_code = createOrderEntity.getConsigneeCountyCode();
+        String consignee_town_code = createOrderEntity.getConsigneeTownCode();
+        String provide_transport = createOrderEntity.getProvideTransport();
         if ("60".equals(orderType) || "61".equals(orderType)) {
             if ("61".equals(orderType)) {
                 if (!StringUtils.equals(provide_transport, "1")) {
@@ -145,6 +151,10 @@ public class CheckUtils {
                 return new ResultModel("1000", "发货方联系电话信息不能为空");
             } else if (StringUtils.isBlank(consignor_address)) {
                 return new ResultModel("1000", "发货方地址信息不能为空");
+            } else if (StringUtils.isBlank(consignor_province_code)) {
+                return new ResultModel("1000", "发货方地址信息省编码不能为空");
+            } else if (StringUtils.isBlank(consignor_city_code)) {
+                return new ResultModel("1000", "发货方地址信息市编码不能为空");
             } else if (StringUtils.isBlank(consignee_name)) {
                 return new ResultModel("1000", "收货方名称信息不能为空");
             } else if (StringUtils.isBlank(consignee_contact)) {

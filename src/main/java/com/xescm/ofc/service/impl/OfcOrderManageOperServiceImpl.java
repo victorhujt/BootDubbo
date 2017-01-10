@@ -13,7 +13,6 @@ import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
-import com.xescm.uam.provider.UamAuthEdasService;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -152,7 +151,9 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         }else{
             resultMap = null;
         }
-
+        if(null == resultMap){
+            throw new BusinessException("您所登录的用户大区基地信息不完整!");
+        }
         return resultMap;
     }
 

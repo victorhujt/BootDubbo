@@ -74,7 +74,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         //组装接口的返回信息
         List<CreateOrderResult> createOrderResultList = null;
         try {
-            List<CreateOrderEntity> createOrderEntityList = (List<CreateOrderEntity>) JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
+            List<CreateOrderEntity> createOrderEntityList = JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
                 createOrderResultList = new ArrayList<>();

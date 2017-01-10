@@ -1,5 +1,6 @@
 package com.xescm.ofc.model.dto.coo;
 
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
@@ -159,6 +160,8 @@ public class CreateOrderTrans {
                 protected void configure() {
                     skip().setPickupTime(null);
                     skip().setExpectedArrivedTime(null);
+                    skip().setConsignorCode(null);
+                    skip().setConsigneeCode(null);
                 }
             });
             modelMapper.map(createOrderEntity, ofcDistributionBasicInfo);
@@ -169,12 +172,20 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setConsignorContactPhone(createOrderEntity.getConsignorPhone());
             ofcDistributionBasicInfo.setConsignorType("2");
             //发货方传真、发货方Email、发货方邮编 数据库暂无字段
-            ofcDistributionBasicInfo.setDeparturePlaceCode(createOrderEntity.getConsignorZip());
             ofcDistributionBasicInfo.setDepartureProvince(createOrderEntity.getConsignorProvince());
             ofcDistributionBasicInfo.setDepartureCity(createOrderEntity.getConsignorCity());
             ofcDistributionBasicInfo.setDepartureDistrict(createOrderEntity.getConsignorCounty());
             ofcDistributionBasicInfo.setDepartureTowns(createOrderEntity.getConsignorTown());
             ofcDistributionBasicInfo.setDeparturePlace(createOrderEntity.getConsignorAddress());
+            StringBuilder departureCode = new StringBuilder(createOrderEntity.getConsignorProvinceCode());
+            departureCode.append(",").append(createOrderEntity.getConsignorCityCode());
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCountyCode())){
+                departureCode.append(",").append(createOrderEntity.getConsignorCountyCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorTownCode())){
+                departureCode.append(",").append(createOrderEntity.getConsignorTownCode());
+            }
+            ofcDistributionBasicInfo.setDeparturePlaceCode(departureCode.toString());
 
             //收货方
             ofcDistributionBasicInfo.setConsigneeContactName(createOrderEntity.getConsigneeContact());

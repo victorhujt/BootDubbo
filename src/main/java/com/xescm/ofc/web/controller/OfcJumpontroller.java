@@ -15,7 +15,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
-import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -52,7 +52,7 @@ public class OfcJumpontroller extends BaseController{
 
     @RequestMapping(value="/ofc/orderPlace")
     public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
-        List<RmcWarehouse> rmcWarehouseByCustCode = null;
+        List<RmcWarehouseRespDto> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);
         try{
