@@ -2027,7 +2027,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         RmcWarehouseDto rmcWarehouse=new RmcWarehouseDto();
         if(!PubUtils.trimAndNullAsEmpty(wareHouseCode).equals("")){
             rmcWarehouse.setWarehouseCode(wareHouseCode);
-            rmcWarehouse.setState(1); //调用Rmc接口查询仓库明细,增加入参, 1为仓库有效
+//            rmcWarehouse.setState(1); //调用Rmc接口查询仓库明细,增加入参, 1为仓库有效
             Wrapper<RmcWarehouseRespDto> rmcWarehouseByid = rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
             return rmcWarehouseByid.getResult();
         }else{

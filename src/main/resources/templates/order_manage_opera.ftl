@@ -455,8 +455,7 @@
         //通过选择的基地反查大区
         $("#baseName").change(function () {
             var baseCode = $("#baseName").val();
-            var areaCode = $("#areaName").val();
-            if($("#areaName option").length <= 1 || StringUtil.isEmpty(baseCode) || !StringUtil.isEmpty(areaCode)){
+            if($("#areaName option").length <= 1 || StringUtil.isEmpty(baseCode)){
                 return;
             }
 
