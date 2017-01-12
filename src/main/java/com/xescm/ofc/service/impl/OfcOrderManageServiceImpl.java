@@ -1411,17 +1411,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEENCANCELED))){
             if(ofcOrderStatus.getOrderStatus().equals(PENDINGAUDIT)&&reviewTag.equals("review")){
+                String userName = authResDtoByToken.getUserName();
                 ofcOrderStatus.setOrderStatus(ALREADYEXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单审核完成");
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
-                ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +" "+"订单审核完成");
+                ofcOrderStatus.setOperator(userName);
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
+
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
-                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
+                ofcFundamentalInformation.setOperatorName(userName);
                 ofcFundamentalInformation.setOperTime(new Date());
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){
                     //运输订单
@@ -1744,7 +1743,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 自动审核
+     * 城配开单自动审核
      * @param ofcFundamentalInformation
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
@@ -1770,20 +1769,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEENCOMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEENCANCELED))){
             if(ofcOrderStatus.getOrderStatus().equals(PENDINGAUDIT)&&reviewTag.equals("review")){
+                String userName = authResDtoByToken.getUserName();
                 ofcOrderStatus.setOrderStatus(ALREADYEXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        +" "+"订单审核完成");
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
+                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +" "+"订单审核完成");
+                ofcOrderStatus.setOperator(userName);
                 ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
-                ofcOrderStatus.setLastedOperTime(new Date());
-                // ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 ofcOrderStatusService.save(ofcOrderStatus);
+
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
-                ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
+                ofcFundamentalInformation.setOperatorName(userName);
                 ofcFundamentalInformation.setOperTime(new Date());
-                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)){  // 运输订单
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
@@ -1792,7 +1789,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSEDISTRIBUTIONORDER)
                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(SALESOUTOFTHELIBRARY)
-                        && ofcWarehouseInformation.getProvideTransport() == WAREHOUSEORDERPROVIDETRANS){
+                        && ofcWarehouseInformation.getProvideTransport() == WAREHOUSEORDERPROVIDETRANS){            // 仓配订单
                     //000创建仓储计划单
                     OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
                     ofcSiloprogramInfo.setProgramSerialNumber("1");
