@@ -15,6 +15,7 @@ import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.model.dto.user.req.UamUserReqDto;
 import com.xescm.uam.model.dto.user.resp.UamUserRespDto;
+import com.xescm.uam.provider.UamGroupEdasService;
 import com.xescm.uam.provider.UamUserEdasService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -55,12 +56,13 @@ public class ScheduledTask{
     @Autowired
     private OfcOrderPlaceService ofcOrderPlaceService;
     @Autowired
-    private UamUserEdasService uamUserEdasService;
+    private UamGroupEdasService uamGroupEdasService;
 
 
     //将历史订单的基地和大区字段补齐
-//    @Scheduled(cron = "0 0 23 * * ?",fixedDelay = 1000*60*60*24*10)
+//    @Scheduled(cron = "0 0 23 * JAN ? 2017")
     @Scheduled(cron = "0 */1 * * * ?")
+//    @Scheduled(cron = "0 10 18 12 JAN ? 2017")
     public void fixHistoryOrder(){
         //查询所有订单
         List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.selectAll();
@@ -191,9 +193,14 @@ public class ScheduledTask{
                     logger.info("普通手录历史订单的基地和大区字段补齐操作,当前订单没有创建人id");
                     continue;
                 }
-                String groupSerialNo = "";
+                Wrapper<UamGroupDto> groupInfoByUserId = uamGroupEdasService.findGroupInfoByUserId(userId);
+                if(null == groupInfoByUserId || Wrapper.ERROR_CODE == groupInfoByUserId.getCode() || null == groupInfoByUserId.getResult()){
+                    logger.info("普通手录历史订单的基地和大区字段补齐操作,当前订单创建人没有组织信息, 或组织信息查询出错!");
+                    continue;
+                }
+                String groupSerialNo = groupInfoByUserId.getResult().getSerialNo();
                 if(PubUtils.isSEmptyOrNull(groupSerialNo)){
-                    logger.info("普通手录历史订单的基地和大区字段补齐操作,查询订单创建人用户信息, 该用户没有流失号");
+                    logger.info("普通手录历史订单的基地和大区字段补齐操作,查询订单创建人用户信息, 该用户没有流水号");
                     continue;
                 }
                 AuthResDto authResDto = new AuthResDto();
