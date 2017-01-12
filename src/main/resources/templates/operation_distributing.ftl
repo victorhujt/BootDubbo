@@ -881,6 +881,8 @@
             }/*else if(!ifConsigneeConfirm){
                 alert("请先确认收货方");
             }*/else{
+                $("#goodcheck").attr("checked", false);
+                $("#goodsSelectListTbody tr td label input[type='checkbox']").attr("checked", false);
                 //加载货品一级种类
                 var customerCode = $("#customerCode").val();
                 $("#goodsTypeId option").remove();
@@ -953,6 +955,7 @@
 
     function queryGoodsDataDisti(pageNum){
         $("#goodsSelectListTbody").html("");
+        $("#goodcheck").attr("checked", false);
         var cscGoods = {};
         var customerCode = $("#customerCodeForGoods").val();
         var goodsTypeId = $("#goodsTypeId").val();
@@ -1704,7 +1707,7 @@
 
     function queryConsigneeDataDistri(pageNum) {
         $("#contactSelectListTbody1").html("");
-
+        $("#consigneecheck").attr("checked", false);
         var cscContantAndCompanyDto = {};
         var cscContactDto = {};
         var cscContactCompanyDto = {};

@@ -73,6 +73,9 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             throw new BusinessException("当前登录的用户没有流水号!");
         }
         String groupType = uamGroupDtoResult.getType();
+        if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+            throw new BusinessException("基地所属大区未选择!");
+        }
         if(StringUtils.equals(groupType,"1")){
             //鲜易供应链身份
             if(StringUtils.equals("GD1625000003",uamGroupDtoResult.getSerialNo())){
@@ -86,8 +89,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             }
             //基地身份
         }else if(StringUtils.equals(groupType,"3")){
-            if(PubUtils.isSEmptyOrNull(form.getBaseSerialNo()) || PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
-                throw new BusinessException("运营中心订单管理筛选入参: 基地为空或基地所属大区为空");
+            if(PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+                throw new BusinessException("运营中心订单管理筛选入参: 基地为空!");
             }
             orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form);
             //仓库身份, 其他身份
