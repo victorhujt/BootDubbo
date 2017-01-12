@@ -63,4 +63,6 @@ public interface OfcOrderManageOperService {
     OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto);
 
     void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType);
+
+
 }

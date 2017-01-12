@@ -249,7 +249,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
      */
     public List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto) {
         if(null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())){
-            throw new BusinessException("获取当前大区下的所有基地入参为空");
+            throw new BusinessException("获取当前大区下的所有基地失败");
         }
         Wrapper<List<UamGroupDto>> childGroupInfoByParentSerilNoBase = uamGroupEdasService.getChildGroupInfoByParentSerilNo(uamGroupDto.getSerialNo());
         checkUamGroupEdasResultNullOrError(childGroupInfoByParentSerilNoBase);
@@ -279,7 +279,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Override
     public OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto) {
         if(null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())){
-            throw new BusinessException("根据所选基地反查大区入参为空");
+            throw new BusinessException("根据所选基地反查大区失败");
         }
         Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(uamGroupDto.getSerialNo());
         checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
