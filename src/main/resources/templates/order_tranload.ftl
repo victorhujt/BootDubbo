@@ -1321,10 +1321,10 @@
     }
     function countQuantOrWeightOrCubage(obj) {
         var value=onlyNumber($(obj).val());
-        if(parseFloat($(obj).val())>30000){
+        if(parseFloat($(obj).val())>50000){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为30000.00</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为50000.00</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();

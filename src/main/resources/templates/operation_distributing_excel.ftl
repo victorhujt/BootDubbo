@@ -108,7 +108,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="bootbox-close-button close" id="errorExcelImportCloseBtn">×</button>
-                <h4 class="modal-title">提示</h4></div>
+                <h4 class="w-font">提示</h4></div>
             <div class="modal-body">
                 <div class="bootbox-body">
                     <div class="form-group">
@@ -117,16 +117,19 @@
                     <div class="form-group">
                         创建成功后请重新加载Excel
                     </div>
-                    <div class="modal-footer">
-                        <div class="col-xs-3 tktp-1">
-                            <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">收货方档案</button>
-                        </div>
-                        <div class="col-xs-3 tktp-1">
-                            <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
+          <div class="modal-footer">
+            <div style="float:right">
+              <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval" style="margin-bottom:0;">收货方档案</button>
+              <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
+            </div>
+
+        <#-- <div class="col-xs-3 tktp-1">
+             <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
+         </div>-->
+        </div>
         </div>
     </div>
 </div>

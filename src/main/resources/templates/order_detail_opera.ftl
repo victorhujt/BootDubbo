@@ -675,23 +675,12 @@
     function facePrint() {
         var sel = "";
         var post = $("#REPORT").html();
-        var url = post+"/OfcReport/ReportServer?reportlets=";
+        var url = post+"/OfcReport/ReportServer?reportlet=";
         var code="";
-        $("#dataTbody").find("tr").each(function(index){
-            var tdArr = $(this).children();
-            if(tdArr.eq(0).find("input").prop("checked")){
-                sel="1";
-                var order_code=tdArr.eq(1).find("a").html();
-                code = code+"{reportlet:'/ofc/invoices/Invoice.cpt',orderCode:'"+order_code+"'},";
-            }
-        });
-        if(sel==""){
-            alert("请至少选择一个订单！");
-        }else{
-            code=code.substring(0,code.length-1);
-            url=url+"["+code+"]";
-            window.open(encodeURI(url));
-        }
+        var order_code=$("#orderCode").val();
+        code = code+"facePrint.cpt&orderCode="+order_code;
+        url=url+code;
+        window.open(encodeURI(url));
     }
 </script>
 <script>

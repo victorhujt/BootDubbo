@@ -856,7 +856,7 @@
                     realGoodsCode1 = '@' + goodsCode.split('@')[1];
                 }
                 goodsAndConsigneeMap.put(viewMapValue,viewMap.get(viewMapValue));//将导入的Map里的值放到当前页面中去! 减少页面改动!
-                $("#goodsInfoListDiv").append("<tr role='row' class='odd' align='center' >" +
+                $("#goodsInfoListDiv").append("<tr role='row' class='odd' >" +
                         "<td>" +
                         "<a onclick='deleteGood(this)' class='red'>删除&nbsp;</a><span style='margin:0 5px;'>|</span>" +
                         "<a onclick='goodsAndConsignee(this)' class='blue'>&nbsp;录入</a>" +
@@ -1882,7 +1882,7 @@
                         && undefined != contactCodeOut[contactCode]&& contactCodeOut[contactCode] == 1){
                     return true;
                 }
-                consignorout =consignorout + "<tr role='row' class='odd' align='center'>";
+                consignorout =consignorout + "<tr role='row' class='odd'  onclick='chosenTr(this)'>";
                 consignorout =consignorout + "<td><a onclick='deleteConsignee(this)' class='red'>删除</a></td>";//###
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
                 consignorout =consignorout + "<td><input onpaste='return false'  onkeydown='this.value = onlyNumAndAbc(this.value)' onkeyup='this.value = onlyNumAndAbc(this.value)' style='border:1px solid #cacaca; ' /></td>";//-=-=onkeyup=\"this.value = this.value.replace(/[^\w]/ig,'')\"

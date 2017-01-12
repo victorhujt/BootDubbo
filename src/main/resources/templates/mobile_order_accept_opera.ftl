@@ -578,7 +578,7 @@
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
+                    <div><label class="control-label col-label" for="name" style="margin-right:18px;margin-left:49px;"><span class="w-label-icon">*</span>运输类型</label>
 
                         <div class="radio y-float">
                             <label>
@@ -611,7 +611,7 @@
                             </div>
                         </div></div>
                     <div>
-                        <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+                        <label class="control-label col-label no-padding-right" style="margin-left:49px;" for="custOrderCode">客户订单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
@@ -620,7 +620,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
+                    <div class="y-float"><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -632,8 +632,8 @@
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
                         </div></div>
-                    <div style="margin-left:50px;">
-                        <label  class="control-label col-label no-padding-right" style="margin-left:90px;">承诺到达时间</label>
+                    <div style="float:left;">
+                        <label class="control-label col-label no-padding-right" >承诺到达时间</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
