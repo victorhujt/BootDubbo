@@ -120,16 +120,16 @@
 
                 </div>
             </div>
-        <#--  <div class="modal-footer">
-            <div style="float:right;margin-right:100px;">
+          <div class="modal-footer">
+            <div style="float:right;">
               <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval" style="margin-bottom:0;">收货方档案</button>
               <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
             </div>
-
-        &lt;#&ndash; <div class="col-xs-3 tktp-1">
+          </div>
+       <#-- &lt;#&ndash; <div class="col-xs-3 tktp-1">
              <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
          </div>&ndash;&gt;
-        </div>-->
+        -->
         </div>
    <#-- </div>-->
 </div>
@@ -873,7 +873,7 @@
 
 
     })
-  /*  $("#errorExcelImportEEBtn").click(function(){//toMaintainBatchCustomerImportPage
+    $("#errorExcelImportEEBtn").click(function(){//toMaintainBatchCustomerImportPage
         if(errorEEsNum < 1){
             alert("您无需添加收货人")
             return;
@@ -895,7 +895,7 @@
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
         $("#errorExcelImport").hide();
-    })*/
+    })
     function initChosen() {
         $('.chosen-select').chosen({allow_single_deselect: true});
         //resize the chosen on window resize
@@ -919,34 +919,12 @@
     $("#loadSheetAndCheckBtn").click(function() {confirm();});
     function confirm() {
       layer.open({
-        btn:['收获方档案','货品档案'],
-
+        btn:['取消'],
         type: 1,
-        area: ['412px', '200px'],
+        area: ['412px', '250px'],
         content: $('#errorExcelImport'), //这里content是一个DOM
         title: '提示',
-        closeBtn:false,
-        yes:function(adoptModalIndex){
-          if(errorEEsNum < 1){
-            alert("您无需添加收货人")
-            return;
-          }
-          var url = "/csc/batchimport/toMaintainBatchCustomerImportPage/" + batchconsingeeKey;
-          var html = window.location.href;
-          var index = html.indexOf("/index#");
-          window.open(html.substring(0,index) + "/index#" + url);
-          layer.close(adoptModalIndex);
-          return false;
-        },
         no: function (adoptModalIndex) {
-          if(errorGoodsNum < 1){
-            alert("您无需添加货品")
-            return;
-          }
-          var url = "/csc/batchimport/toMaintainBatchGoodsImportPage/" + batchgoodsKey;
-          var html = window.location.href;
-          var index = html.indexOf("/index#");
-          window.open(html.substring(0,index) + "/index#" + url);
           layer.close(adoptModalIndex);
           return false;
         }

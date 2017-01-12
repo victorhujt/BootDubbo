@@ -973,7 +973,7 @@
     cscGoods.goodsName = goodsName;
     cscGoods.barCode = barCode;
     cscGoods.pNum = pageNum;
-    cscGoods.pSize = 8;
+    cscGoods.pSize = 9;
     var param = JSON.stringify(cscGoods);
 
 
@@ -1501,7 +1501,7 @@
     cscContantAndCompanyDto.cscContactDto = cscContactDto;
     cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
     cscContantAndCompanyDto.pageNum = pageNum;
-    cscContantAndCompanyDto.pageSize = 9;
+    cscContantAndCompanyDto.pageSize = 10;
     var customerCode = $("#customerCode").val();
 
     var param = JSON.stringify(cscContantAndCompanyDto);
@@ -1724,7 +1724,7 @@
     cscContantAndCompanyDto.cscContactDto = cscContactDto;
     cscContantAndCompanyDto.cscContactCompanyDto = cscContactCompanyDto;
     cscContantAndCompanyDto.pageNum = pageNum;
-    cscContantAndCompanyDto.pageSize = 9;
+    cscContantAndCompanyDto.pageSize = 10;
     var customerCode = $("#customerCode").val();
 
     var param = JSON.stringify(cscContantAndCompanyDto);
@@ -2632,7 +2632,11 @@
   }
   function chosenTr(e){
     var rd = $(e).children().first().children().first().children().first();
-    rd.prop("checked","checked");
+    if(rd.prop("checked")){
+      rd.prop("checked",false);
+    }else{
+      rd.prop("checked","checked");
+    }
   }
   //选择客户
  /* $("#custListDivBlock").click(function() {confirmCus();});*/

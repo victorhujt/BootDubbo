@@ -77,10 +77,11 @@
   .form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline{
     padding-top:0;
   }
-  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+  .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
     padding:6px 8px!important;
-    ling-height:19px!important;
+    line-height:19px!important;
   }
+
 </style>
 <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css" />
 
@@ -2022,7 +2023,7 @@
     var custName = $("#custNameDiv").val();
     var param = {};
     param.pageNum = pageNum;
-    param.pageSize = 9;
+    param.pageSize = 10;
     param.custName = custName;
     CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
       if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
@@ -2088,7 +2089,7 @@
   // 分页查询收货方或发货方列表
   function queryContactData(param,customerCode,contactType,pageNum) {
     param.pageNum = pageNum;
-    param.pageSize = 9;
+    param.pageSize = 10;
     var param1=param;
     param = JSON.stringify(param);
     var type= contactType == 1?"收货方":"发货方";
@@ -3079,7 +3080,7 @@
         }
       },
       type: 1,
-      area: ['946px', '560px'],
+      area: ['946px', '575px'],
       content: $('#custListDiv'), //这里content是一个DOM
       title: '选择客户',
       cancel: function (adoptModalIndex) {
@@ -3135,7 +3136,7 @@
         }
       },
       type: 1,
-      area: ['946px', '560px'],
+      area: ['946px', '575px'],
       content: $('#consignorListDiv'), //这里content是一个DOM
       title: '发货方联系人',
       cancel: function (adoptModalIndex) {
@@ -3191,7 +3192,7 @@
         }
       },
       type: 1,
-      area: ['946px', '560px'],
+      area: ['946px', '575px'],
       content: $('#consigneeListDiv'), //这里content是一个DOM
       title: '收货方联系人',
       cancel: function (adoptModalIndex) {
@@ -3241,7 +3242,7 @@
     }
       },
       type: 1,
-      area: ['946px', '560px'],
+      area: ['946px', '575px'],
       content: $('#goodsListDiv'), //这里content是一个DOM
       title: '货品列表',
       cancel: function (adoptModalIndex) {
