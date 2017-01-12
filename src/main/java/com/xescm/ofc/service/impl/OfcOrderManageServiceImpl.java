@@ -1989,6 +1989,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
+    @Override
     public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         //先判断是上门提货还是二次配送
@@ -2127,6 +2128,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return ofcTransplanInfo;
     }
 
+    @Override
     public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
         rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
         String address[]=planeCode.split(",");

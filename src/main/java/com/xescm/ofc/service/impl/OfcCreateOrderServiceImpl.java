@@ -21,6 +21,7 @@ import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
+import com.xescm.rmc.edas.domain.vo.RmcAddressCodeVo;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 import com.xescm.rmc.edas.service.RmcAddressEdasService;
 import net.sf.json.JSONObject;
@@ -392,6 +393,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String provinceCode = jsonObject.getString("provinceCode");
         String cityCode = jsonObject.getString("cityCode");
         String districtCode = jsonObject.getString("districtCode");
+        resuteMap.put("provinceCode", provinceCode);
+        resuteMap.put("cityCode", cityCode);
+        resuteMap.put("districtCode", districtCode);
+        return resuteMap;
+    }
+    /**
+     * 根据省市区名称获取编码
+     * 补历史订单临时使用
+     * @param addressDto
+     * @return
+     */
+    public Map<String, String> getAddressCodeTemp(RmcAddressNameVo addressDto) {
+        if (StringUtils.isBlank(addressDto.getProvinceName())
+                || StringUtils.isBlank(addressDto.getCityName()) || StringUtils.isBlank(addressDto.getDistrictName())) {
+            logger.info("根据省市区名称获取编码(补历史订单),当前订单入参省或市或区名称为空");
+            return null;
+        }
+        Map<String, String> resuteMap = new HashMap<>();
+        Wrapper<RmcAddressCodeVo> wrapperResult = rmcAddressEdasService.findCodeByName(addressDto);
+        RmcAddressCodeVo result = wrapperResult.getResult();
+        if (PubUtils.isNull(result)) {
+            logger.info("根据省市区名称获取编码(补历史订单),当前订单的省市区找不到对应编码");
+            return null;
+        }
+        String provinceCode = result.getProvinceCode();
+        String cityCode = result.getCityCode();
+        String districtCode = result.getDistrictCode();
         resuteMap.put("provinceCode", provinceCode);
         resuteMap.put("cityCode", cityCode);
         resuteMap.put("districtCode", districtCode);
