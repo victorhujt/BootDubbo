@@ -797,7 +797,8 @@
                                 errorGoodsNum = cscGoodsImportDtoList.length;
                             }
                             if(errorEEsNum > 0 || errorGoodsNum > 0){
-                                $("#errorExcelImport").show();
+                               // $("#errorExcelImport").show();
+                                confirm();
                                 if(errorGoodsNum > 0){
                                     batchgoodsKey = result.result.batchgoodsKey;
                                 }
@@ -918,7 +919,7 @@
     }
 
     //加载弹窗
-    $("#loadSheetAndCheckBtn").click(function() {confirm();});
+   // $("#loadSheetAndCheckBtn").click(function() {confirm();});
     function confirm() {
       layer.open({
         btn:['取消'],
