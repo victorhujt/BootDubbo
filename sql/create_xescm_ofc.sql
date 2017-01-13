@@ -158,6 +158,10 @@ CREATE TABLE `ofc_fundamental_information` (
   `abolisher_name` varchar(50) DEFAULT NULL COMMENT '作废人名称',
   `merchandiser` varchar(20) DEFAULT NULL COMMENT '开单员',
   `transport_type` varchar(20) DEFAULT NULL COMMENT '运输类型',
+  `base_code` varchar(50) DEFAULT NULL COMMENT '基地编码',
+  `base_name` varchar(50) DEFAULT NULL COMMENT '基地名称',
+  `area_code` varchar(50) DEFAULT NULL COMMENT '大区编码',
+  `area_name` varchar(50) DEFAULT NULL COMMENT '大区名称',
   PRIMARY KEY (`order_code`),
   UNIQUE KEY `index:order_code` (`order_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心基本信息';
