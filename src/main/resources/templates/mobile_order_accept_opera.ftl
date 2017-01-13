@@ -403,7 +403,7 @@
                         <tbody id="contactSelectListTbody2"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>
@@ -472,7 +472,7 @@
                         <tbody id="contactSelectListTbody1"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>
@@ -525,7 +525,7 @@
                         <tbody id="custListDivTbody"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>

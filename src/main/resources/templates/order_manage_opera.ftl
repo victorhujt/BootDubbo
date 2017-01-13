@@ -891,6 +891,7 @@
     function chosenTr(e){
       $(e).children().first().find("input").prop("checked","checked");
     }
+
     function confirmCus() {
       layer.open({
         btn:['选中','关闭'],
@@ -905,7 +906,7 @@
           return false;
         },
         type: 1,
-        area: ['946px', '575px'],
+        area: ['946px', '580px'],
         content: $('#custListDiv'), //这里content是一个DOM
         title: '选择客户',
         cancel: function (adoptModalIndex) {

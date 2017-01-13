@@ -175,7 +175,7 @@
           <tbody id="goodsSelectListTbody"></tbody>
         </table>
         <div class="row">
-          <div id="pageBarDivGoodsDistri" style="float: right;padding-top: 0px;margin-top: 5px;">
+          <div id="pageBarDivGoodsDistri" style="float: right;padding-top: 0px;margin-top: 10px;">
           </div>
         </div>
 
@@ -2044,7 +2044,7 @@
         channel = "";
       }
       custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
-      custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+      custList =custList + "<td class='center' onclick='chosenTr(this)'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
       custList =custList + "<td class='center'>"+(index+1)+"</td>";
       var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
       if(custType == '1'){
@@ -2631,8 +2631,10 @@
     });
   }
   function chosenTr(e){
-    var rd = $(e).children().first().children().first().children().first();
-    if(rd.prop("checked")){
+    var rd =  $(e).children().first().find("input");
+    if(rd[type='radio']){
+
+    }else if(rd.prop("checked")){
       rd.prop("checked",false);
     }else{
       rd.prop("checked","checked");
@@ -3026,7 +3028,7 @@
         }
       },
       type: 1,
-      area: ['946px', '575px'],
+      area: ['946px', '585px'],
       content: $('#goodsListDiv'), //这里content是一个DOM
       title: '货品列表',
       cancel: function (adoptModalIndex) {

@@ -574,7 +574,6 @@
             document.getElementById("broadwiseImg").style.display="none";
             document.getElementById("acrossImg").style.display="none";
         }
-
         var file;
         var fileName;
         var uploadFileTag = false;
@@ -882,7 +881,9 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
-        $("#errorExcelImport").hide();
+
+       // $("#errorExcelImport").hide();
+        layer.closeAll('page');
     })
     $("#errorExcelImportGoodsBtn").click(function () {
         if(errorGoodsNum < 1){
@@ -894,7 +895,8 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
-        $("#errorExcelImport").hide();
+       // $("#errorExcelImport").hide();
+        layer.closeAll('page');
     })
     function initChosen() {
         $('.chosen-select').chosen({allow_single_deselect: true});

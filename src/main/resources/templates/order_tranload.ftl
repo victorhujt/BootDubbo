@@ -143,7 +143,7 @@
           <tbody id="goodsSelectListTbody"></tbody>
         </table>
         <div class="row">
-          <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+          <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 10px;">
           </div>
         </div>
       </form>
@@ -3041,6 +3041,7 @@
   function chosenTr(e){
     $(e).children().first().find("input").prop("checked","checked");
   }
+
   //layer风格弹窗
   $("#custListDivBlock").click(function() {confirm();});
   function confirm() {
