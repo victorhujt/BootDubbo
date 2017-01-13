@@ -102,13 +102,13 @@
     </div>
 </div>
 
-<div id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
+<div class="adoptModal" id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
      aria-hidden="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+    <#--<div class="modal-dialog">-->
+        <div>
+           <#-- <div class="modal-header">
                 <button type="button" class="bootbox-close-button close" id="errorExcelImportCloseBtn">×</button>
-                <h4 class="w-font">提示</h4></div>
+                <h4 class="w-font">提示</h4></div>-->
             <div class="modal-body">
                 <div class="bootbox-body">
                     <div class="form-group">
@@ -121,17 +121,17 @@
                 </div>
             </div>
           <div class="modal-footer">
-            <div style="float:right">
+            <div style="float:right;">
               <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval" style="margin-bottom:0;">收货方档案</button>
               <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
             </div>
-
-        <#-- <div class="col-xs-3 tktp-1">
+          </div>
+       <#-- &lt;#&ndash; <div class="col-xs-3 tktp-1">
              <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
-         </div>-->
+         </div>&ndash;&gt;
+        -->
         </div>
-        </div>
-    </div>
+   <#-- </div>-->
 </div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
@@ -915,4 +915,20 @@
         });
     }
 
+    //加载弹窗
+    $("#loadSheetAndCheckBtn").click(function() {confirm();});
+    function confirm() {
+      layer.open({
+        btn:['取消'],
+        type: 1,
+        area: ['412px', '250px'],
+        content: $('#errorExcelImport'), //这里content是一个DOM
+        title: '提示',
+        no: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+
+      });
+    }
 </script>
