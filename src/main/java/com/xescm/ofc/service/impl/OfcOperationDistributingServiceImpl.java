@@ -11,6 +11,7 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.ofc.constant.ExcelCheckConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.ResultCodeEnum;
@@ -30,6 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.xescm.ofc.constant.ExcelCheckConstant.XLSX_EXCEL;
+import static com.xescm.ofc.constant.ExcelCheckConstant.XLS_EXCEL;
 
 /**
  * Created by lyh on 2016/11/30.
@@ -279,6 +283,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
             int staticCell = 5;
             checkResult = acrossCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
+//            checkResult = checkAcrossExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
 
             //明细列表
         }else if(OrderConstConstant.MODEL_TYPE_BORADWISE.equals(modelType)){
@@ -286,6 +291,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
             int staticCell = 5;
             checkResult = boradwiseCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
+//            checkResult = checkBoradwiseExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
         }
         return checkResult;
     }
@@ -300,9 +306,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
      * @return
      * */
     private Wrapper<?> acrossCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen,  String customerCode, Integer staticCell,AuthResDto authResDto) {
-        if("xls".equals(suffix)){
+        if("xls".equals(suffix.toLowerCase())){
             return ofcExcelCheckService.checkXlsAcross(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
-        }else if("xlsx".equals(suffix)){
+        }else if("xlsx".equals(suffix.toLowerCase())){
             return ofcExcelCheckService.checkXlsxAcross(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
@@ -323,6 +329,24 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             return ofcExcelCheckService.checkXlsBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }else if("xlsx".equals(suffix.toLowerCase())){
             return ofcExcelCheckService.checkXlsxBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
+        }
+        return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
+    }
+
+
+
+    private Wrapper<?> checkAcrossExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
+        String suffixTolowerCase = suffix.toLowerCase();
+        if(StringUtils.equals(suffixTolowerCase, XLS_EXCEL) || StringUtils.equals(suffixTolowerCase, XLSX_EXCEL)){
+            return ofcExcelCheckService.checkAcrossExcel(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
+        }
+        return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
+    }
+
+    private Wrapper<?> checkBoradwiseExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
+        String suffixTolowerCase = suffix.toLowerCase();
+        if(StringUtils.equals(suffixTolowerCase, XLS_EXCEL) || StringUtils.equals(suffixTolowerCase, XLSX_EXCEL)){
+            return ofcExcelCheckService.checkBoradwiseExcel(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
         }
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
