@@ -923,6 +923,7 @@
     function confirm() {
       layer.open({
         btn:['取消'],
+        scrollbar:false,
         type: 1,
         area: ['412px', '250px'],
         content: $('#errorExcelImport'), //这里content是一个DOM

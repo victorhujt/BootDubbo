@@ -895,6 +895,7 @@
     function confirmCus() {
       layer.open({
         btn:['选中','关闭'],
+        scrollbar:false,
         yes:function (adoptModalIndex) {
           var val = $('input:radio[name="cust"]:checked').val();
           if (val == "" || val == null || val == undefined) {
