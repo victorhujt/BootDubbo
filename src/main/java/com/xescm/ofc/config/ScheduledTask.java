@@ -60,9 +60,8 @@ public class ScheduledTask{
 
 
     //将历史订单的基地和大区字段补齐
-//    @Scheduled(cron = "0 0 23 * JAN ? 2017")
-    @Scheduled(cron = "0 */1 * * * ?")
-//    @Scheduled(cron = "0 10 18 12 JAN ? 2017")
+//    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 30 20 12 JAN ?")
     public void fixHistoryOrder(){
         //查询所有订单
         List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.selectAll();
