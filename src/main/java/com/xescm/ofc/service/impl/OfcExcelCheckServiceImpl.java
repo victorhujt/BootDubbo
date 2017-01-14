@@ -1248,13 +1248,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                 //遍历cell
                 OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
-                for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
+                for(int cellNum = 0; cellNum < realCellNum; cellNum ++){
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
                     //空列
                     if(null == hssfCell){
                         //标记当前列出错, 并跳过当前循环
                         if(cellNum < realCellNum){
-                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                            if(cellNum > (staticCell -1)){
                                 hssfCell = hssfRow.createCell(rowNum,HSSFCell.CELL_TYPE_BLANK);
                             }else{
                                 continue;
@@ -1582,13 +1582,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 }*/
                 //遍历cell
                 OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
-                for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
+                for(int cellNum = 0; cellNum < realCellNum; cellNum ++){
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
                     //空列
                     if(null == xssfCell){
                         //标记当前列出错, 并跳过当前循环
                         if(cellNum < realCellNum){
-                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                            if(cellNum > (staticCell -1)){
                                 xssfCell = xssfRow.createCell(rowNum,XSSFCell.CELL_TYPE_BLANK);
                             }else{
                                 continue;
