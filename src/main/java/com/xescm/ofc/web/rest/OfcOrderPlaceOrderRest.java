@@ -327,7 +327,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGoods.setCustomerCode(authResDtoByToken.getGroupRefCode());
             cscGoods.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsCode()));
             cscGoods.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGoods.getGoodsName()));
-            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = (Wrapper<List<CscGoodsApiVo>>) cscGoodsEdasService.queryCscGoodsList(cscGoods);
+            Wrapper<List<CscGoodsApiVo>> cscGoodsLists = cscGoodsEdasService.queryCscGoodsList(cscGoods);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
@@ -384,7 +384,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
             csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
             csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
-            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(csc);
+            Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = cscContactEdasService.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
 
             /*csc.getCscContact().setPurpose("3");
@@ -415,7 +415,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
             csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
             csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
-            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = (Wrapper<PageInfo<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
+            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
             result = cscReceivingInfoList;
             /*
             csc.getCscContact().setPurpose("3");
@@ -445,7 +445,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
             cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
             cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
-            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(cscSupplierList.getResult()));
         }catch (Exception ex) {
@@ -518,7 +518,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
                 cscGoodType.setPid(cscGoodsType);
             }
-            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
+            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
             logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));

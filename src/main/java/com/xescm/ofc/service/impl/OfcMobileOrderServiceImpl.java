@@ -219,7 +219,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
                     QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
                     queryCustomerCodeDto.setCustomerCode(custId);
-                    Wrapper<CscCustomerVo> cscCustomerVo = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                    Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
                     if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
                         throw new BusinessException(cscCustomerVo.getMessage());
                     }else if(null == cscCustomerVo.getResult()){
@@ -744,7 +744,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
                 QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
                 queryCustomerCodeDto.setCustomerCode(custId);
-                Wrapper<CscCustomerVo> cscCustomerVo = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
                 if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
                     throw new BusinessException(cscCustomerVo.getMessage());
                 }else if(null == cscCustomerVo.getResult()){

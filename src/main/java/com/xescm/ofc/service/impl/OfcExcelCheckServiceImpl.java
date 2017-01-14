@@ -306,7 +306,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 cscContactDto.setPurpose("1");//用途为收货方
                 cscContantAndCompanyDto.setCscContactDto(cscContactDto);
                 cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>) cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                     throw new BusinessException(queryCscCustomerResult.getMessage());
                 }
@@ -336,7 +336,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                         cscGoodsApiDto.setCustomerCode(customerCode);
-                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                         resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
@@ -420,7 +420,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                         cscGoodsApiDto.setCustomerCode(customerCode);
-                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
@@ -463,7 +463,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                     cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                     cscGoodsApiDto.setCustomerCode(customerCode);
-                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                     if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
@@ -845,7 +845,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 cscContactDto.setPurpose("1");//用途为收货方
                 cscContantAndCompanyDto.setCscContactDto(cscContactDto);
                 cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                     throw new BusinessException(queryCscCustomerResult.getMessage());
                 }
@@ -875,7 +875,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                         cscGoodsApiDto.setCustomerCode(customerCode);
-                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                         resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
@@ -951,7 +951,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                         cscGoodsApiDto.setCustomerCode(customerCode);
-                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
@@ -996,7 +996,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                     cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                     cscGoodsApiDto.setCustomerCode(customerCode);
-                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                     if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
@@ -1248,13 +1248,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                 //遍历cell
                 OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
-                for(int cellNum = 0; cellNum < hssfRow.getLastCellNum() + 1; cellNum ++){
+                for(int cellNum = 0; cellNum < realCellNum; cellNum ++){
                     HSSFCell hssfCell = hssfRow.getCell(cellNum);
                     //空列
                     if(null == hssfCell){
                         //标记当前列出错, 并跳过当前循环
                         if(cellNum < realCellNum){
-                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                            if(cellNum > (staticCell -1)){
                                 hssfCell = hssfRow.createCell(rowNum,HSSFCell.CELL_TYPE_BLANK);
                             }else{
                                 continue;
@@ -1311,7 +1311,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             cscContactDto.setPurpose("1");//用途为收货方
                             cscContantAndCompanyDto.setCscContactDto(cscContactDto);
                             cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                             if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                 throw new BusinessException(queryCscCustomerResult.getMessage());
                             }
@@ -1351,7 +1351,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                             cscGoodsApiDto.setGoodsCode(goodsCode);
                             cscGoodsApiDto.setCustomerCode(customerCode);
-                            queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                            queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                 checkPass = false;
                                 goodsApiVoList.add(new OfcGoodsApiVo());
@@ -1582,13 +1582,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 }*/
                 //遍历cell
                 OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
-                for(int cellNum = 0; cellNum < xssfRow.getLastCellNum() + 1; cellNum ++){
+                for(int cellNum = 0; cellNum < realCellNum; cellNum ++){
                     XSSFCell xssfCell = xssfRow.getCell(cellNum);
                     //空列
                     if(null == xssfCell){
                         //标记当前列出错, 并跳过当前循环
                         if(cellNum < realCellNum){
-                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                            if(cellNum > (staticCell -1)){
                                 xssfCell = xssfRow.createCell(rowNum,XSSFCell.CELL_TYPE_BLANK);
                             }else{
                                 continue;
@@ -1645,7 +1645,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             cscContactDto.setPurpose("1");//用途为收货方
                             cscContantAndCompanyDto.setCscContactDto(cscContactDto);
                             cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                             if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                 throw new BusinessException(queryCscCustomerResult.getMessage());
                             }
@@ -1685,7 +1685,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                             cscGoodsApiDto.setGoodsCode(goodsCode);
                             cscGoodsApiDto.setCustomerCode(custId);
-                            queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                            queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                 checkPass = false;
                                 goodsApiVoList.add(new OfcGoodsApiVo());
@@ -1980,7 +1980,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             cscContactDto.setPurpose("1");//用途为收货方
                             cscContantAndCompanyDto.setCscContactDto(cscContactDto);
                             cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                             if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                                 throw new BusinessException(queryCscCustomerResult.getMessage());
                             }
@@ -2020,7 +2020,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                             cscGoodsApiDto.setGoodsCode(goodsCode);
                             cscGoodsApiDto.setCustomerCode(customerCode);
-                            queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                            queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                 checkPass = false;
                                 goodsApiVoList.add(new OfcGoodsApiVo());
@@ -2417,7 +2417,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                 cscContactDto.setPurpose("1");//用途为收货方
                 cscContantAndCompanyDto.setCscContactDto(cscContactDto);
                 cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
                 if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
                     throw new BusinessException(queryCscCustomerResult.getMessage());
                 }
@@ -2447,7 +2447,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                         cscGoodsApiDto.setCustomerCode(customerCode);
-                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                         resultMap.put(ofcExcelBoradwise.getGoodsCode(),null);
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
@@ -2523,7 +2523,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                         cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                         cscGoodsApiDto.setCustomerCode(customerCode);
-                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                        Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                         if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                             checkPass = false;
                             xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");
@@ -2568,7 +2568,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                     cscGoodsApiDto.setGoodsCode(ofcExcelBoradwise.getGoodsCode().split("\\@")[0]);
                     cscGoodsApiDto.setCustomerCode(customerCode);
-                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                    Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                     if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                         checkPass = false;
                         xlsErrorMsg.add("货品编码为【" + ofcExcelBoradwise.getGoodsCode().split("\\@")[0] + "】在货品档案中不存在!请维护!");

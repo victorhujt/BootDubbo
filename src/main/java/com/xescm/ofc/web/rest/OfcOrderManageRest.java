@@ -340,7 +340,7 @@ public class OfcOrderManageRest extends BaseController{
         }else {
             rmcCompanyLineQO.setArriveCityName(null);
         }
-        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         try{
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcCompanyLists.getResult()));

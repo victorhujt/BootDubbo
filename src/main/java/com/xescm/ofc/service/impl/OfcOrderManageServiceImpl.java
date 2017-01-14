@@ -1052,7 +1052,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.setCustomerCode(customerCode);
         Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
         try {
-            listWrapper = (Wrapper<List<CscContantAndCompanyResponseDto>>)cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            listWrapper = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("接口返回结果为null");
             }
@@ -1083,7 +1083,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscSupplierInfoDto.setCustomerCode(customerCode);
         Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
         try {
-            listWrapper = (Wrapper<List<CscSupplierInfoDto>>)cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+            listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             if(null == listWrapper.getResult()){
                 throw new BusinessException("查询供应商接口返回结果为null");
             }
@@ -2006,7 +2006,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = (Wrapper<List<RmcServiceCoverageForOrderVo>>)rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
             if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
                 logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
                 return rmcRecipientList.getResult().get(0);

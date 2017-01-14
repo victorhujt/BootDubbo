@@ -134,7 +134,7 @@ public class OfcOperationDistributing extends BaseController{
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
-            wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
+            wrapper = cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
@@ -159,7 +159,7 @@ public class OfcOperationDistributing extends BaseController{
         try{
             CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
             cscGoodsType.setPid(goodsType);
-            wrapper = (Wrapper<List<CscGoodsTypeVo>>)cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
+            wrapper = cscGoodsTypeEdasService.queryCscGoodsTypeList(cscGoodsType);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
@@ -181,7 +181,7 @@ public class OfcOperationDistributing extends BaseController{
         logger.info("城配开单查询货品列表==> cscGoodsApiDto={}", cscGoodsApiDto);
         Wrapper<List<CscGoodsApiVo>> wrapper = null;
         try{
-            wrapper = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+            wrapper = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
             if(null != wrapper.getResult()){
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
@@ -212,7 +212,7 @@ public class OfcOperationDistributing extends BaseController{
             queryParam.setCustomerName(custName);
             queryParam.setPageNum(pageNum);
             queryParam.setPageSize(pageSize);
-            result = (Wrapper<PageInfo<CscCustomerVo>>)cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
+            result = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
             if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询客户列表失败,查询结果有误!");
             }
