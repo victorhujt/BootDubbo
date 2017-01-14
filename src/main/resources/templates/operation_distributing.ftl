@@ -392,7 +392,7 @@
 </div>-->
 </div>
 <!--goods&Consigee-->
-<div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
+<div class="adoptModal " id="goodsAndConsigneeDiv" style="display: none;">
   <div class="modal-body">
     <div class="bootbox-body">
       <form class="form-horizontal" role="form">
@@ -445,9 +445,12 @@
     </div>
   </div>
 
-  <div class="form-group" >
-    <div class="modal-footer"><button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span></div>
-  </div>
+ <#-- <div class="form-group" >
+    <div class="modal-footer">
+      <button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button>
+      <span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span>
+    </div>
+  </div>-->
 </div>
 
 <br/>
@@ -1549,7 +1552,7 @@
       consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
       consignorTypeHide = CscContantAndCompanyDto.type;*/
       contactList =contactList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
-      contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+      contactList =contactList + "<td class='center' onclick='chosenTr(this)'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
       contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
       contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
       contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
@@ -2632,9 +2635,7 @@
   }
   function chosenTr(e){
     var rd =  $(e).children().first().find("input");
-    if(rd[type='radio']){
-
-    }else if(rd.prop("checked")){
+    if(rd.prop("checked")){
       rd.prop("checked",false);
     }else{
       rd.prop("checked","checked");
@@ -2645,6 +2646,7 @@
   function confirmCus() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         var custEnterTag = "";
         $("#custListDivTbody").find("tr").each(function(index){
@@ -2710,6 +2712,7 @@
   function confirmSend() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         couldChangeCust = false;
         var consignorin = "";
@@ -2784,6 +2787,7 @@
   function confirmRev() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         couldChangeCust = false;
         var consignorout = "";
@@ -2942,6 +2946,7 @@
   function confirmGood() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         couldChangeCust = false;
         var goodsInfoListDiv = "";

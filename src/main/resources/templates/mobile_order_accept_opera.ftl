@@ -3445,6 +3445,7 @@
     function confirm() {
       layer.open({
         btn:['选中','关闭'],
+        scrollbar:false,
         yes:function (adoptModalIndex) {
           var custEnterTag = "";
           $("#custListDivTbody").find("tr").each(function(index){
@@ -3491,6 +3492,7 @@
     function confirmSend() {
       layer.open({
         btn:['选中','关闭'],
+        scrollbar:false,
         yes:function (adoptModalIndex) {
           var consignorin = "";
           $("#contactSelectListTbody2").find("tr").each(function(index){
@@ -3545,6 +3547,7 @@
     function confirmRev() {
       layer.open({
         btn:['选中','关闭'],
+        scrollbar:false,
         yes:function (adoptModalIndex) {
           var consignorout = "";
           $("#contactSelectListTbody1").find("tr").each(function(index){
@@ -3599,6 +3602,7 @@
     function confirmGood() {
       layer.open({
         btn:['选中','关闭'],
+        scrollbar:false,
         yes:function (adoptModalIndex) {
           var goodsInfoListDiv = "";
           $("#goodsSelectListTbody").find("tr").each(function(index){
