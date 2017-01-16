@@ -1217,7 +1217,8 @@
 
   function goodsAndConsignee(obj){
 
-    $("#goodsAndConsigneeDiv").fadeIn(0);
+   /* $("#goodsAndConsigneeDiv").fadeIn(0);*/
+     confirmBlue();
     //显示货品信息
     var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
     var goodsCode = $(obj).parent().parent().children().eq(2).text();
@@ -3042,6 +3043,22 @@
       }
     });
   }
+
+  function confirmBlue() {
+    layer.open({
+      btn:['关闭'],
+      scrollbar:false,
+      type: 1,
+      area: '946px',
+      content: $('#goodsAndConsigneeDiv'), //这里content是一个DOM
+      title: '货品明细',
+      cancel: function (adoptModalIndex) {
+        layer.close(adoptModalIndex);
+        return false;
+      }
+    });
+  }
+
 
 </script>
 
