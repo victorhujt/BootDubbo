@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by lyh on 2016/12/29.
  */
 public class HsfXml {
-    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("D:\\java\\edas-dev\\edas-tomcat\\taobao-tomcat-ofc\\deploy");
+    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("C:\\taobao-tomcat-7.0.59-ofc\\deploy");
 
     static public void loadConsumer() {
         final String path = "edas\\consumer\\ofc-hsf-consumer.xml";
@@ -27,7 +27,7 @@ public class HsfXml {
         for (Map<String, String> map : list) {
             factory.consumer(map.get("id")).service(map.get("interface")).version(map.get("version")).group(map.get("group")).subscribe();
         }
-        new ClassPathXmlApplicationContext(path);
+        new ClassPathXmlApplicationContext("edas\\consumer\\ofc-hsf-consumer.xml");
     }
 
     private static List<Map<String, String>> getProperties(String path) {

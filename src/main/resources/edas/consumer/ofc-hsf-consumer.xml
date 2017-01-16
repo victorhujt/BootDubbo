@@ -9,6 +9,8 @@
 
     <!-- uam 用户中心 -->
     <hsf:consumer id="uamAuthEdasService" interface="com.xescm.uam.provider.UamAuthEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="uamGroupEdasService" interface="com.xescm.uam.provider.UamGroupEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="uamUserEdasService" interface="com.xescm.uam.provider.UamUserEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
 
     <!-- 客户中心 -->
     <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>

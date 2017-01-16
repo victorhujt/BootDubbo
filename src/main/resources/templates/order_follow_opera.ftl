@@ -192,10 +192,10 @@
         </tbody>
     </table>
 
-    <div id="selectOrderDiv" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
+    <div class="adoptModal" id="selectOrderDiv" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
          aria-hidden="false">
-        <div class="modal-dialog">
-            <div class="modal-content">
+       <#-- <div class="modal-dialog">-->
+            <div>
                 <div class="modal-header">
                     <button type="button" class="bootbox-close-button close" id="selectOrderDivClose">×</button>
                     <p style="font-size:14px;margin-top:7px">选择订单,根据筛选条件检索到多个结果</p>
@@ -222,12 +222,12 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="modal-footer">
+              <#--  <div class="modal-footer">
                     <button data-bb-handler="cancel" type="button" class="btn btn-default" id="selectOrderCancelBtn">取消
                     </button>
-                </div>
+                </div>-->
             </div>
-        </div>
+       <#-- </div>-->
     </div>
 
 </div><!-- /.col -->
@@ -264,7 +264,8 @@
         initPageData();
 
         $("#selectOrderCancelBtn").on('click',function(){
-            $("#selectOrderDiv").hide();
+          /*  $("#selectOrderDiv").hide();*/
+            layer.closeAll('page');
             $("#selectOrderTbody").empty();
         })
     }
@@ -334,6 +335,7 @@
     }
 
     function appendSearchResult(data) {
+      $("#selectOrderTbody").html('');
         var html = "";
         $.each(data, function (index, item) {
             html += "<tr style='cursor: pointer;' title='双击选中' ondblclick=\"selectOrderCode('"+item.orderCode+"')\">"+
@@ -343,7 +345,8 @@
                     "<td>" + stringToEmpty(item.custName) + "</td></tr>";
         })
         $("#selectOrderTbody").append(html);
-        $("#selectOrderDiv").show();
+        /*$("#selectOrderDiv").show();*/
+        confirm()
     }
 
     function stringToEmpty(e){
@@ -351,7 +354,8 @@
     }
 
     function selectOrderCode(code) {
-        $("#selectOrderDiv").hide();
+       /* $("#selectOrderDiv").hide();*/
+        layer.closeAll('page');
         $("#selectOrderTbody").empty();
         CommonClient.post(sys.rootPath + "/ofc/queryOrderFollowByCode", {
             "code": code
@@ -490,5 +494,22 @@
         }
         return value;
 
+    }
+    //查询弹窗
+    function confirm() {
+      layer.open({
+        btn:['取消'],
+        scrollbar:false,
+        type: 1,
+        area: '946px',
+        content: $('#selectOrderDiv'), //这里content是一个DOM
+        title: '选择订单',
+        no: function (adoptModalIndex) {
+          $("#selectOrderTbody").empty();
+          layer.close(adoptModalIndex);
+          return false;
+        }
+
+      });
     }
 </script>

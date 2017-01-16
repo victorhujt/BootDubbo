@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
@@ -20,6 +21,7 @@ import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
+import com.xescm.rmc.edas.domain.vo.RmcAddressCodeVo;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 import com.xescm.rmc.edas.service.RmcAddressEdasService;
 import net.sf.json.JSONObject;
@@ -98,11 +100,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
         queryCustomerCodeDto.setCustomerCode(custCode);
-        Wrapper<CscCustomerVo> customerVoWrapper = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+        Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
         if (customerVoWrapper.getResult() == null) {
             logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
         }
+
+
 
         //校验数据：订单类型
         String orderType = createOrderEntity.getOrderType();
@@ -144,10 +148,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         createOrderEntity.setStoreCode(storeCode);
 
         //校验：【发货方】与【收货方】
-        resultModel = CheckUtils.checkWaresDist(orderType, createOrderEntity.getConsignorName(), createOrderEntity.getConsignorContact(),
-                createOrderEntity.getConsignorPhone(), createOrderEntity.getConsignorAddress(), createOrderEntity.getConsigneeName(),
-                createOrderEntity.getConsigneeContact(), createOrderEntity.getConsigneePhone(), createOrderEntity.getConsigneeAddress(),
-                createOrderEntity.getProvideTransport());
+        resultModel = CheckUtils.checkWaresDist(createOrderEntity);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
             return resultModel;
@@ -157,7 +158,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String warehouseCode = createOrderEntity.getWarehouseCode();
         QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
         cscWarehouse.setCustomerCode(custCode);
-        Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouseDto>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+        Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
         resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "仓库编码", resultModel.getCode());
@@ -173,7 +174,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 cscGoods.setCustomerCode(custCode);
-                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoods);
+                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
                 resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                     logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
@@ -392,6 +393,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String provinceCode = jsonObject.getString("provinceCode");
         String cityCode = jsonObject.getString("cityCode");
         String districtCode = jsonObject.getString("districtCode");
+        resuteMap.put("provinceCode", provinceCode);
+        resuteMap.put("cityCode", cityCode);
+        resuteMap.put("districtCode", districtCode);
+        return resuteMap;
+    }
+    /**
+     * 根据省市区名称获取编码
+     * 补历史订单临时使用
+     * @param addressDto
+     * @return
+     */
+    public Map<String, String> getAddressCodeTemp(RmcAddressNameVo addressDto) {
+        if (StringUtils.isBlank(addressDto.getProvinceName())
+                || StringUtils.isBlank(addressDto.getCityName()) || StringUtils.isBlank(addressDto.getDistrictName())) {
+            logger.info("根据省市区名称获取编码(补历史订单),当前订单入参省或市或区名称为空");
+            return null;
+        }
+        Map<String, String> resuteMap = new HashMap<>();
+        Wrapper<RmcAddressCodeVo> wrapperResult = rmcAddressEdasService.findCodeByName(addressDto);
+        RmcAddressCodeVo result = wrapperResult.getResult();
+        if (PubUtils.isNull(result)) {
+            logger.info("根据省市区名称获取编码(补历史订单),当前订单的省市区找不到对应编码");
+            return null;
+        }
+        String provinceCode = result.getProvinceCode();
+        String cityCode = result.getCityCode();
+        String districtCode = result.getDistrictCode();
         resuteMap.put("provinceCode", provinceCode);
         resuteMap.put("cityCode", cityCode);
         resuteMap.put("districtCode", districtCode);

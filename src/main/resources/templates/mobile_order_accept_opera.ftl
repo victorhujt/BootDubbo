@@ -1,73 +1,98 @@
-<title>订单详情</title>
-<style type="text/css">
-    #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-        position:fixed;
-        left:50%;
-        top:85px;
-        margin-left:-400px;
-        width:946px;
-        height:500px;
-        z-index:3;
-        overflow: auto;
-        border:solid #7A7A7A 1px;
-    }
-    .date_a{
-        line-height:21px !important;
-    }
-    .form-group > label[class*="col-"]{
-        margin-top:0;
-        line-height:34px;
-    }
-    .form-horizontal .control-label{
-        padding-top:0;
-        line-height:30px;
-    }
-    input[type=checkbox], input[type=radio]{
-        margin:10px 0 0;
-    }
-    .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
-        color:#393939;
-    }
-    .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
-        color:#393939;
-    }
-    .dataTable > thead > tr > th[class*=sort]:hover{
-        color:#707070;
-    }
-    .dataTable > thead > tr > th[class*=sorting_]{
-        color:#707070;
-    }
-    .has-success .form-control{
-        border-color:#cacaca;
-    }
-    .help-block{
-        color:#f00 !important;
-    }
-    .has-error .form-control{
-        border-color:#b5b5b5 !important;
-    }
-    .custNameIcon:hover{color:#2868c6 !important;}
-    .initBtn{
-        line-height:32px;
-        width:34px;
-        border:1px solid #cacaca;
-        background:#f7f7f7!important;
-        cursor:pointer;
-        position:absolute;
-        top:0;
-        right:0;
-    }
-    .initBtn:hover{
-        background:#fff!important;
-        border:1px solid #cacaca!important;
-    }
-    .col-label{
-        margin-right:2px;
-        margin-bottom:0;
-    }
-    #goodsInfoListDiv .help-block{
-        line-height:20px;
-    }
+ <title>订单详情</title>
+    <style type="text/css">
+     /*   #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
+            position:fixed;
+            left:50%;
+            top:85px;
+            margin-left:-400px;
+            width:946px;
+            height:500px;
+            z-index:3;
+            overflow: auto;
+            border:solid #7A7A7A 1px;
+        }*/
+     .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+       padding:6px 8px !important;
+       line-height:19px!important;
+     }
+        .date_a{
+            line-height:21px !important;
+        }
+        .form-group > label[class*="col-"]{
+            margin-top:0;
+            line-height:34px;
+        }
+        .form-horizontal .control-label{
+            padding-top:0;
+            line-height:30px;
+        }
+        input[type=checkbox], input[type=radio]{
+            margin:10px 0 0;
+        }
+        .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+            color:#393939;
+        }
+        .has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+            color:#393939;
+        }
+        .dataTable > thead > tr > th[class*=sort]:hover{
+            color:#707070;
+        }
+        .dataTable > thead > tr > th[class*=sorting_]{
+            color:#707070;
+        }
+        .has-success .form-control{
+            border-color:#cacaca;
+        }
+        .help-block{
+            color:#f00 !important;
+        }
+        .has-error .form-control{
+            border-color:#b5b5b5 !important;
+        }
+        .custNameIcon:hover{color:#2868c6 !important;}
+        .initBtn{
+            line-height:32px;
+            width:34px;
+            border:1px solid #cacaca;
+            background:#f7f7f7!important;
+            cursor:pointer;
+            position:absolute;
+            top:0;
+            right:0;
+        }
+        .initBtn:hover{
+            background:#fff!important;
+            border:1px solid #cacaca!important;
+        }
+        .col-label{
+            margin-right:2px;
+            margin-bottom:0;
+        }
+        #goodsInfoListDiv .help-block{
+            line-height:20px;
+        }
+
+        .imgClass{
+            float: left;
+            width:138px;
+            height:96px;
+            overflow: hidden;
+            margin: 2px;
+            box-sizing: border-box;
+        }
+        .imgClass img{
+            border:1px solid #c2c2c2;
+            width: 100%;
+            height:100%;
+        }
+      /*  .row{
+            max-width: 1250px;
+            min-width: 1250px;
+            margin-left: -21px;
+        }*/
+     /*   .no-padding-right{
+            margin-left: 71px;
 
     .imgClass{
         float: left;
@@ -157,6 +182,8 @@
     /*  #viewBiggerImg{
           transform:scale(0.6)!important;
       }*/
+
+
 </style>
 <div class="page-header">
     <p>
@@ -255,9 +282,9 @@
     </form>
 
     <#--</div>--><!-- /.col -->
-    <div class="modal-content" id="goodsListDiv" style="display: none;">
-        <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>
+    <div class="adoptModal" id="goodsListDiv" style="display: none;">
+       <#-- <div class="modal-header"><span id="goodsListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">货品列表</h4></div>-->
         <div class="modal-body">
             <div class="bootbox-body">
                 <form id="goodsSelConditionForm" class="form-horizontal" role="form">
@@ -268,22 +295,21 @@
                                 <input  id = "goodsCodeCondition" name="goodsCode" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                            </div>
+                      <label class="control-label col-xs-1 no-padding-right" for="name">货品名称</label>
+                      <div class="col-xs-3">
+                        <div class="clearfix">
+                          <input  id = "goodsNameCondition" name="goodsName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
-                            </div>
+                      </div>
+                      <div class="col-xs-1">
+                        <div class="clearfix">
+                          <span id="goodsSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
                         </div>
+                      </div>
+                    <#--  <div class="modal-footer" style="background-color:#fff;">
+                        <button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                        <span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
+                      </div>-->
                     </div>
                 </form>
                 <form class="bootbox-form">
@@ -310,54 +336,55 @@
                         <tbody id="goodsSelectListTbody"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="modal-footer" style="background-color:#fff;"><button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+
     </div>
     <!--consignorListDiv-->
-    <div class="modal-content" id="consignorListDiv" style="display: none;">
-        <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-            <h4 class="modal-title"  style="font-size: 14px;font-family:'微软雅黑'">发货方联系人</h4></div>
+    <div class="adoptModal " id="consignorListDiv" style="display: none;">
+     <#--   <div class="modal-header"><span id="consignorListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title"  style="font-size: 14px;font-family:'微软雅黑'">发货方联系人</h4></div>-->
         <div class="modal-body">
             <div class="bootbox-body">
                 <form id="consignorSelConditionForm" class="form-horizontal" role="form">
                 <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
                     <div class="form-group">
                         <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                        <div class="col-xs-3">
+                        <div class="col-xs-2">
                             <div class="clearfix">
                                 <input  id = "consignorName2" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <input  id = "consignorPerson2" name="cscContactDto.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                            </div>
+                      <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                      <div class="col-xs-2">
+                        <div class="clearfix">
+                          <input  id = "consignorPerson2" name="cscContactDto.contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                            </div>
+                      </div>
+                      <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                      <div class="col-xs-2">
+                        <div class="clearfix">
+                          <input  id = "consignorPhoneNumber2" name="cscContactDto.phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
+                      </div>
+                      <div class="col-xs-1">
+                        <div class="clearfix">
+                          <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                      </div>
                     </div>
-                    <div class="form-group">
+                    <#--<div class="form-group">
                         <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <span id="consignorSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
-                            </div>
-                        </div>
-                    </div>
+
+                      <div class="modal-footer" style="background-color:#fff;">
+                        <button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                        <span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
+                      </div>
+                    </div>-->
                 </form>
                 <form class="bootbox-form">
                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -378,55 +405,56 @@
                         <tbody id="contactSelectListTbody2"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDivConsignor" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="modal-footer" style="background-color:#fff;"><button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+
     </div>
 
     <!--consigneeListDiv-->
-    <div class="modal-content" id="consigneeListDiv" style="display: none;">
-        <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">收货方联系人</h4></div>
+    <div class="adoptModal " id="consigneeListDiv" style="display: none;">
+       <#-- <div class="modal-header"><span id="consigneeListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">收货方联系人</h4></div>-->
         <div class="modal-body">
             <div class="bootbox-body">
                 <form id="consigneeSelConditionForm" class="form-horizontal" role="form">
                 <#--<input id="purpose2" name="purpose" type="hidden" value="1">-->
                     <div class="form-group">
                         <label class="control-label col-xs-1 no-padding-right" for="name">名称</label>
-                        <div class="col-xs-3">
+                        <div class="col-xs-2">
                             <div class="clearfix">
                                 <input  id = "consignorName1" name="contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                            </div>
+                      <label class="control-label col-xs-1 no-padding-right" for="name">联系人</label>
+                      <div class="col-xs-2">
+                        <div class="clearfix">
+                          <input  id = "consignorPerson1" name="contactName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-                            </div>
+                      </div>
+                      <label class="control-label col-xs-1 no-padding-right" for="name">联系电话</label>
+                      <div class="col-xs-2">
+                        <div class="clearfix">
+                          <input  id = "consignorPhoneNumber1" name="phone" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
+                      </div>
+                      <div class="col-xs-1">
+                        <div class="clearfix">
+                          <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
+                        </div>
+                      </div>
                     </div>
-                    <div class="form-group">
+                  <#--  <div class="form-group">
                         <label class="control-label col-xs-1 no-padding-right" for="name"></label>
-                        <div class="col-xs-3">
-                            <div class="clearfix">
-                                <span id="consigneeSelectFormBtn" class="btn btn-info btn-sm popover-info">筛选</span>
-                            </div>
-                        </div>
-                    </div>
+
+                      <div class="modal-footer" style="background-color:#fff;">
+                        <button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                        <span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
+                      </div>
+                    </div>-->
                 </form>
                 <form class="bootbox-form">
                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -446,19 +474,19 @@
                         <tbody id="contactSelectListTbody1"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDivConsignee" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="modal-footer" style="background-color:#fff;"><button id="contactoutEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button><span id="consigneeListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
+
     </div>
 
     <!--custListDiv-->
-    <div class="modal-content" id="custListDiv" style="display: none;">
-        <div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">选择客户</h4></div>
+    <div class="adoptModal " id="custListDiv" style="display: none;">
+        <#--<div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer"><button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
+            <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">选择客户</h4></div>-->
         <div class="modal-body">
             <div class="bootbox-body">
                 <form id="consignorSelConditionForm" class="form-horizontal" role="form">
@@ -476,6 +504,9 @@
                                 <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
                             </div>
                         </div>
+                   <#--   <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
+                        <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
+                        <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>-->
                     </div>
                 </form>
                 <form class="bootbox-form">
@@ -487,7 +518,7 @@
                                 <span class="lbl"></span>
                             </label>
                         </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">客户编码</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
                             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
@@ -496,17 +527,12 @@
                         <tbody id="custListDivTbody"></tbody>
                     </table>
                     <div class="row">
-                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
+                        <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 10px;">
                         </div>
                     </div>
                 </form>
 
             </div>
-        </div>
-        <div class="form-group">
-            <div class="modal-footer" style="background-color:#fff;"><button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
-                <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-                <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
         </div>
     </div>
     <div class="row">
@@ -515,7 +541,7 @@
 
 
 
-        <div class="col-xs-12" style="height: 250px;overflow: auto">
+        <div class="col-xs-12" style="height: 250px;overflow: auto" id="Overflow">
             <div class="page-header">
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
@@ -560,7 +586,7 @@
                                 </div>
                             </div>
                         </div></div>
-                    <div><label class="control-label col-label" for="name" style="margin-right:18px;"><span class="w-label-icon">*</span>运输类型</label>
+                    <div><label class="control-label col-label" for="name" style="margin-right:18px;margin-left:49px;"><span class="w-label-icon">*</span>运输类型</label>
 
                         <div class="radio y-float">
                             <label>
@@ -577,9 +603,9 @@
                         <input id="transportType" type="hidden" name="transportType"/></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
+                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;" ><span class="w-label-icon">*</span>订单日期</label>
                         <div class="col-width-168 padding-15">
-                            <div class="cclearfix" >
+                            <div class="cclearfix" id="OrderDate">
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
@@ -593,7 +619,7 @@
                             </div>
                         </div></div>
                     <div>
-                        <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+                        <label class="control-label col-label no-padding-right" style="margin-left:49px;" for="custOrderCode">客户订单号</label>
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168">
                                 <input class="col-width-168"  name="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" id="custOrderCode" type="text" placeholder="客户订单号" style="padding-left:8px;" />
@@ -602,7 +628,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
+                    <div class="y-float"><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;"><span class="w-label-icon">*</span>客户名称</label>
                         <div class="col-xs-2">
                             <div class="position-relative" style="width:433px;">
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
@@ -614,7 +640,17 @@
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
                             </div>
                         </div></div>
-
+                    <div style="float:left;">
+                        <label class="control-label col-label no-padding-right" >承诺到达时间</label>
+                        <div class="col-width-168 padding-15" style="margin-left:3px;">
+                            <div class="col-width-168" >
+                                <div class="col-width-168 position-relative" style="height:34px;">
+                                    <input class="col-width-168 es-input" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon">
+                                    <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div><label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-right:8px;">备注</label>
@@ -1571,7 +1607,8 @@
         $("#pageBarDivGoods").hide();
         $(obj).attr("id","yangdongxushinanshen");
         $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
-        $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
+       // $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
+      confirmGood();
     }
 
     $("#businessType").change(function(){
@@ -1630,7 +1667,7 @@
     }
     function countQuantityOrWeightOrCubagePrice(obj) {
         var value=onlyNumber($(obj).val());
-        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,2})?$/.test(value)) && $(obj).val()!="")){
+        if((!(/^([1-9][\d]{0,6}|0)(\.[\d]{1,4})?$/.test(value)) && $(obj).val()!="")){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
                 $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
@@ -1644,7 +1681,7 @@
         }else if(parseFloat($(obj).val())>9999){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.00</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>最大值为9999.0000</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -1772,7 +1809,7 @@
                 cubageCount=parseFloat((parseFloat(cubageCount)).toFixed(3));
             }
         });
-        if(flg1=="error" && flg2=="error" && flg3=="error"){
+        if(flg1=="error" || flg2=="error" || flg3=="error"){
             $("#luggage").val(0);
         }else{
             luggage=(parseFloat(luggage)).toFixed(2);$("#luggage").val(luggage);
@@ -2317,6 +2354,7 @@
                         }
                     }
                 });
+              $(".total").html(result.result.total+'&nbsp;条&nbsp;');
             } else if (result.code == 403) {
                 alert("没有权限")
             } else {
@@ -2337,9 +2375,10 @@
             if(null == channel){
                 channel = "";
             }
-            custList =custList + "<tr role='row' class='odd'>";
+            custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
+           // custList =custList + "<tr ondblclick=\"selectCustomer(this);\"role='row' class='odd' onclick='chosenTr(this)'>";
             custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-            custList =custList + "<td>"+(index+1)+"</td>";
+            custList =custList + "<td>"+cscCustomerVo.customerCode+"</td>";
             var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
             if(custType == '1'){
                 custList =custList + "<td>公司</td>";
@@ -2357,8 +2396,35 @@
             $("#custListDivTbody").html(custList);
         });
     }
+    function selectCustomer(tr){
+        var custEnterTag = "";
+        var tdArr =$(tr).children();
+        // if(tdArr.eq(0).find("input").prop("checked")){
+        custEnterTag = "1";
+        if($("#customerCode").val()!=tdArr.eq(7).text()){
+            var type = tdArr.eq(2).text();//类型
+            var customerName = tdArr.eq(3).text();//公司名称
+            var channel = tdArr.eq(4).text();//    渠道
+            var productType = tdArr.eq(5).text();//    产品类别
+            var groupId = tdArr.eq(6).text();//    产品类别
+            var customerCode = tdArr.eq(7).text();//    产品类别
+            $("#custName").val(customerName);
+            $("#custGroupId").val(groupId);
+            $("#customerCode").val(customerCode);
 
+            var cscContactDto = {};
+            var cscContactCompanyDto = {};
+            cscContactDto.purpose = "2";
+            outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode);
+            $("#goodsInfoListDiv").html("");
+            countQuantityOrWeightOrCubageCheck();
+            $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+        }
+        //  }
+    }
     // 分页查询收货方或发货方列表
+
+
     function queryContactData(param,customerCode,contactType,pageNum) {
         param.pageNum = pageNum;
         param.pageSize = 10;
@@ -2387,6 +2453,7 @@
                         }
                     }
                 });
+              $(".total").html(result.result.total+'&nbsp;条&nbsp;');
             } else if (result.code == 403) {
                 alert("没有权限")
             } else {
@@ -2400,7 +2467,8 @@
     function loadConsignOrEE(data,contactType) {
         var contactList = "";
         $.each(data.result.list,function (index,CscContantAndCompanyDto) {
-            contactList =contactList + "<tr role='row' class='odd'>";
+            contactList =contactList + "<tr role='row' class='odd'  onclick='chosenTr(this)'>";
+           // contactList =contactList + "<tr ondblclick=\"selectConsignOrEE(this,'" + contactType + "')\"role='row' class='odd'  onclick='chosenTr(this)'>";
             contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             contactList =contactList + "<td>"+(index+1)+"</td>";
             contactList =contactList + "<td>"+CscContantAndCompanyDto.contactCompanyName+"</td>";
@@ -2460,6 +2528,7 @@
                         }
                     }
                 });
+              $(".total").html(data.result.total+'&nbsp;条&nbsp;');
             } else if (data.code == 403) {
                 alert("没有权限")
             } else {
@@ -2469,12 +2538,84 @@
 
         },"json");
     }
+    function selectConsignOrEE(tr,contactType){
+        if(contactType=="2"){
+            var tdArr = $(tr).children();
+            consignorin = "1";
+            var consignorName = tdArr.eq(2).text();//名称
+            var contacts = tdArr.eq(3).text();//联系人
+            var contactsNumber = tdArr.eq(4).text();//    联系电话
+            var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+            var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
+            var type = tdArr.eq(8).text();//    发货方类型
+            var address = tdArr.eq(9).text();//    门牌号
+            var provinceName = tdArr.eq(10).text();//    省
+            var cityName = tdArr.eq(11).text();//    市
+            var areaName = tdArr.eq(12).text();//    区
+            var streetName = tdArr.eq(13).text();//    县
+            $("#consignorName").val(consignorName);
+            $("#consignorContactName").val(contacts);
+            $("#consignorPhone").val(contactsNumber);
+            $("#consignorCode").val(contactCompanySerialNo);
+            $("#consignorContactCode").val(contactSerialNo);
+            $("#consignorType").val(type);
+            $("#consignorAddress").val(address);
+            var paramAddressNameToPage = provinceName
+                    + "/" + cityName
+                    + "/" + areaName
+                    + "/" + streetName;
+            $("#city-picker3-consignor").val(paramAddressNameToPage);
+            $("#city-picker3-consignor").citypicker('refresh');
+            departurePlace();
+            $("#consignorListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+            checkConsignOrEe();
+        }else if(contactType=="1"){
+            var tdArr = $(tr).children();
+            consignorout = "1";
+            var consignorName = tdArr.eq(2).text();//名称
+            var contacts = tdArr.eq(3).text();//联系人
+            var contactsNumber = tdArr.eq(4).text();//    联系电话
+
+            var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
+            var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
+            var type = tdArr.eq(8).text();//    收货方类型
+            var address = tdArr.eq(9).text();//    门牌号
+            var provinceName = tdArr.eq(10).text();//    省
+            var cityName = tdArr.eq(11).text();//    市
+            var areaName = tdArr.eq(12).text();//    区
+            var streetName = tdArr.eq(13).text();//    县
+            $("#consigneeName").val(consignorName);
+            $("#consigneeContactName").val(contacts);
+            $("#consigneePhone").val(contactsNumber);
+            $("#consigneeCode").val(contactCompanySerialNo);
+            $("#consigneeContactCode").val(contactSerialNo);
+            $("#consigneeType").val(type);
+            $("#consigneeAddress").val(address);
+            var paramAddressNameToPage = provinceName
+                    + "/" + cityName
+                    + "/" + areaName
+                    + "/" + streetName;
+            $("#city-picker3-consignee").val(paramAddressNameToPage);
+            $("#city-picker3-consignee").citypicker('refresh');
+            destination();
+            $("#consigneeListDiv").fadeOut(0);//淡入淡出效果 隐藏div
+            checkConsignOrEe();
+
+        }
+
+    }
+
+
+
+
+
 
     // 加载货品列表
     function loadGoods(data) {
         var goodsList = "";
         $.each(data,function (index,cscGoodsVo) {
-            goodsList =goodsList + "<tr role='row' class='odd'>";
+            goodsList =goodsList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
+          //  goodsList =goodsList + "<tr ondblclick=\"selectGoods(this);\" role='row' class='odd' onclick='chosenTr(this)'>";
             goodsList =goodsList + "<td class='center'> "+"<label class='pos-rel'>"+"<input type='radio' class='ace' name='goodse'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeParentName+"</td>";//货品类别
             goodsList =goodsList + "<td>"+cscGoodsVo.goodsTypeName+"</td>";//货品小类
@@ -2488,6 +2629,32 @@
             goodsList =goodsList + "</tr>";
         });
         $("#goodsSelectListTbody").html(goodsList);
+    }
+
+    function selectGoods(tr){
+        var tdArr = $(tr).children();
+        var goodsType = tdArr.eq(1).text();//货品种类
+        var goodsGate = tdArr.eq(2).text();//货品类别
+        var goodsCode = tdArr.eq(4).text();//货品编码
+        var goodsName = tdArr.eq(5).text();//货品名称
+        var specification = tdArr.eq(6).text();//规格
+        var unit = tdArr.eq(7).text();//单位
+        var typeID = tdArr.eq(9).text();//单位
+        $("#typeSel").val(typeID);
+        $("#typeSel").trigger("chosen:updated");
+        goodsTypeParentChange($("#typeSel"));
+        //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+        $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+        $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+        $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+        $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
+        $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
+        $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
+        $("#yangdongxushinanshen").attr("id","goodCodeSel");
+        goodsInfoListDiv="true";
+        $("#goodsListDiv").fadeOut(0);
+        $("#yangdongxushinanshen").attr("id","goodCodeSel");
+        $("#typeSel").attr("id","");
     }
 
     $(function(){
@@ -2504,6 +2671,13 @@
             }
 
         });
+
+        $("#expectedArrivedTime").click(function () {
+            var startdates=$("#orderTime").val();
+            //var enddates =DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
+            laydate({elem:'#expectedArrivedTime', istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
+        })
+
         $("#insureV").change(function(){
             if($(this).prop("checked")){
                 $("#insure").val("1");
@@ -2615,6 +2789,9 @@
             if($('#orderTime').val()!=""){
                 jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
             }
+            if($('#expectedArrivedTime').val()!=""){
+                jsonStr.expectedArrivedTime = $('#expectedArrivedTime').val();
+            }
             jsonStr.transCode = $("#transCode").val();
             jsonStr.custName = $("#custName").val();//000
             jsonStr.custCode = $("#customerCode").val();//000
@@ -2706,7 +2883,7 @@
             queryCustomerData(1);
         });
 
-        $("#custEnter").click(function () {
+       /* $("#custEnter").click(function () {
             var custEnterTag = "";
             $("#custListDivTbody").find("tr").each(function(index){
                 var tdArr = $(this).children();
@@ -2738,7 +2915,7 @@
                 $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
             }
         });
-
+*/
         // 发货方地址选择
         $("#city-picker-consignor").click(function () {
             departurePlace();
@@ -2880,7 +3057,8 @@
             }else{
                 $("#pageBarDivConsignor").hide();
                 $("#contactSelectListTbody2").html("");
-                $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
+               // $("#consignorListDiv").fadeIn(0);//淡入淡出效果 显示div
+              confirmSend()
             }
         });
 
@@ -2902,7 +3080,8 @@
             }else{
                 $("#pageBarDivConsignee").hide();
                 $("#contactSelectListTbody1").html("");
-                $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
+               // $("#consigneeListDiv").fadeIn(0);//淡入淡出效果 显示div
+              confirmRev()
             }
 
         });
@@ -3120,7 +3299,8 @@
         });
     })
     $("#custListDivBlock").click(function () {
-        $("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+        //$("#custListDiv").fadeIn(0);//淡入淡出效果 显示div
+      confirm()
     });
     $("#custListDivNoneBottom").click(function () {
         $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
@@ -3259,4 +3439,237 @@
             $(obj).parent().find("div").remove();
         }
     }
+    //单击选中input
+    function chosenTr(e){
+      $(e).children().first().find("input").prop("checked","checked");
+    }
+
+    function confirm() {
+      layer.open({
+        btn:['选中','关闭'],
+        scrollbar:false,
+        yes:function (adoptModalIndex) {
+          var custEnterTag = "";
+          $("#custListDivTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+              custEnterTag = "1";
+              if($("#customerCode").val()!=tdArr.eq(7).text()){
+                var type = tdArr.eq(2).text();//类型
+                var customerName = tdArr.eq(3).text();//公司名称
+                var channel = tdArr.eq(4).text();//    渠道
+                var productType = tdArr.eq(5).text();//    产品类别
+                var groupId = tdArr.eq(6).text();//    产品类别
+                var customerCode = tdArr.eq(7).text();//    产品类别
+                $("#custName").val(customerName);
+                $("#custGroupId").val(groupId);
+                $("#customerCode").val(customerCode);
+
+                var cscContactDto = {};
+                var cscContactCompanyDto = {};
+                cscContactDto.purpose = "2";
+                outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode);
+                $("#goodsInfoListDiv").html("");
+                countQuantityOrWeightOrCubageCheck();
+              }
+            }
+          });
+          if(custEnterTag==""){
+            alert("请至少选择一行");
+          }else{
+            layer.close(adoptModalIndex);
+            return false;
+          }
+        },
+        type: 1,
+        area: ['946px', '575px'],
+        content: $('#custListDiv'), //这里content是一个DOM
+        title: '选择客户',
+        cancel: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+      });
+    }
+    function confirmSend() {
+      layer.open({
+        btn:['选中','关闭'],
+        scrollbar:false,
+        yes:function (adoptModalIndex) {
+          var consignorin = "";
+          $("#contactSelectListTbody2").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+              consignorin = "1";
+              var consignorName = tdArr.eq(2).text();//名称
+              var contacts = tdArr.eq(3).text();//联系人
+              var contactsNumber = tdArr.eq(4).text();//    联系电话
+              var contactCompanySerialNo = tdArr.eq(6).text();//    发货方编码
+              var contactSerialNo = tdArr.eq(7).text();//    发货方联系人编码
+              var type = tdArr.eq(8).text();//    发货方类型
+              var address = tdArr.eq(9).text();//    门牌号
+              var provinceName = tdArr.eq(10).text();//    省
+              var cityName = tdArr.eq(11).text();//    市
+              var areaName = tdArr.eq(12).text();//    区
+              var streetName = tdArr.eq(13).text();//    县
+
+              $("#consignorName").val(consignorName);
+              $("#consignorContactName").val(contacts);
+              $("#consignorPhone").val(contactsNumber);
+              $("#consignorCode").val(contactCompanySerialNo);
+              $("#consignorContactCode").val(contactSerialNo);
+              $("#consignorType").val(type);
+              $("#consignorAddress").val(address);
+              var paramAddressNameToPage = provinceName
+                      + "/" + cityName
+                      + "/" + areaName
+                      + "/" + streetName;
+              $("#city-picker3-consignor").val(paramAddressNameToPage);
+              $("#city-picker3-consignor").citypicker('refresh');
+              departurePlace();
+            }
+          });
+          if(consignorin==""){
+            alert("请至少选择一行");
+          }else{
+            layer.close(adoptModalIndex);
+            return false;
+          }
+        },
+        type: 1,
+        area: ['946px', '575px'],
+        content: $('#consignorListDiv'), //这里content是一个DOM
+        title: '发货方联系人',
+        cancel: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+      });
+    }
+    function confirmRev() {
+      layer.open({
+        btn:['选中','关闭'],
+        scrollbar:false,
+        yes:function (adoptModalIndex) {
+          var consignorout = "";
+          $("#contactSelectListTbody1").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+              consignorout = "1";
+              var consignorName = tdArr.eq(2).text();//名称
+              var contacts = tdArr.eq(3).text();//联系人
+              var contactsNumber = tdArr.eq(4).text();//    联系电话
+
+              var contactCompanySerialNo = tdArr.eq(6).text();//    收货方编码
+              var contactSerialNo = tdArr.eq(7).text();//    收货方联系人编码
+              var type = tdArr.eq(8).text();//    收货方类型
+              var address = tdArr.eq(9).text();//    门牌号
+              var provinceName = tdArr.eq(10).text();//    省
+              var cityName = tdArr.eq(11).text();//    市
+              var areaName = tdArr.eq(12).text();//    区
+              var streetName = tdArr.eq(13).text();//    县
+              $("#consigneeName").val(consignorName);
+              $("#consigneeContactName").val(contacts);
+              $("#consigneePhone").val(contactsNumber);
+              $("#consigneeCode").val(contactCompanySerialNo);
+              $("#consigneeContactCode").val(contactSerialNo);
+              $("#consigneeType").val(type);
+              $("#consigneeAddress").val(address);
+              var paramAddressNameToPage = provinceName
+                      + "/" + cityName
+                      + "/" + areaName
+                      + "/" + streetName;
+              $("#city-picker3-consignee").val(paramAddressNameToPage);
+              $("#city-picker3-consignee").citypicker('refresh');
+              destination();
+            }
+          });
+          if(consignorin==""){
+            alert("请至少选择一行");
+          }else{
+            layer.close(adoptModalIndex);
+            return false;
+          }
+        },
+        type: 1,
+        area: ['946px', '575px'],
+        content: $('#consigneeListDiv'), //这里content是一个DOM
+        title: '收货方联系人',
+        cancel: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+      });
+    }
+    function confirmGood() {
+      layer.open({
+        btn:['选中','关闭'],
+        scrollbar:false,
+        yes:function (adoptModalIndex) {
+          var goodsInfoListDiv = "";
+          $("#goodsSelectListTbody").find("tr").each(function(index){
+            var tdArr = $(this).children();
+            if(tdArr.eq(0).find("input").prop("checked")){
+              var goodsType = tdArr.eq(1).text();//货品种类
+              var goodsGate = tdArr.eq(2).text();//货品类别
+              var goodsCode = tdArr.eq(4).text();//货品编码
+              var goodsName = tdArr.eq(5).text();//货品名称
+              var specification = tdArr.eq(6).text();//规格
+              var unit = tdArr.eq(7).text();//单位
+              var typeID = tdArr.eq(9).text();//单位
+              $("#typeSel").val(typeID);
+              $("#typeSel").trigger("chosen:updated");
+              goodsTypeParentChange($("#typeSel"));
+              //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+              $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+              $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+              $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+              $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
+              $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
+              $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
+              $("#yangdongxushinanshen").attr("id","goodCodeSel");
+              goodsInfoListDiv="true";
+            }
+          });
+          if(goodsInfoListDiv==""){
+            alert("请至少选择一行");
+          }else{
+            $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            $("#typeSel").attr("id","");
+            layer.close(adoptModalIndex);
+            return false;
+          }
+        },
+        type: 1,
+        area: ['946px', '575px'],
+        content: $('#goodsListDiv'), //这里content是一个DOM
+        title: '货品列表',
+        cancel: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+      });
+    }
+
+
+
+    setInterval(function(){
+        if($("#laydate_box").length>0){
+          if($("#laydate_box").is(":hidden")){
+            $("#Overflow").css({
+              'overflow':'auto'
+            })
+          }else{
+            $("#Overflow").css({
+              'overflow':'hidden'
+            })
+          }
+        }else{
+          $("#Overflow").css({
+            'overflow':'auto'
+          })
+        }
+    },0)
+
+
 </script>

@@ -4,10 +4,11 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <div class="col-sm-6" style="float: right">
-        <#--<button style="float:right;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="detailBackToHistory()">
-            返回
-        </button>-->
+    <div class="col-sm-6" style="float: right>
+        <div class="col-sm-6" style="float: right"><span hidden="true" id = "REPORT">${(REPORT)!}</span>
+        <button style="float:left;padding-left: 11px;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="facePrint()">
+            打印面单
+        </button>
     </div>
     <form id="" method="post" class="form-horizontal" role="form">
         <div class="page-header">
@@ -671,8 +672,15 @@
 </div><!-- /.col -->
 
 <script type="text/javascript">
-    function detailBackToHistory() {
-        xescm.common.loadPage("/ofc/orderManageOpera");
+    function facePrint() {
+        var sel = "";
+        var post = $("#REPORT").html();
+        var url = post+"/OfcReport/ReportServer?reportlet=";
+        var code="";
+        var order_code=$("#orderCode").val();
+        code = code+"facePrint.cpt&orderCode="+order_code;
+        url=url+code;
+        window.open(encodeURI(url));
     }
 </script>
 <script>

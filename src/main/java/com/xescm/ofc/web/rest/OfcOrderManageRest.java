@@ -17,9 +17,9 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.rmc.edas.domain.RmcWarehouse;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -155,7 +155,7 @@ public class OfcOrderManageRest extends BaseController{
         CscContantAndCompanyResponseDto consignorMessage = null;
         CscContantAndCompanyResponseDto consigneeMessage = null;
         CscSupplierInfoDto supportMessage = null;
-        List<RmcWarehouse> rmcWarehouseByCustCode = null;
+        List<RmcWarehouseRespDto> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
         Wrapper<List<CscStorevo>> storeByCustomerId = null;
         try{
@@ -340,7 +340,7 @@ public class OfcOrderManageRest extends BaseController{
         }else {
             rmcCompanyLineQO.setArriveCityName(null);
         }
-        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = (Wrapper<List<RmcCompanyLineVo>>)rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         try{
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcCompanyLists.getResult()));

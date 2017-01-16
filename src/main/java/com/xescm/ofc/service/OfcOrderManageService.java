@@ -7,6 +7,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.ofc.domain.*;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
+import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 
 import java.util.List;
 
@@ -32,4 +33,8 @@ public interface OfcOrderManageService {
                        OfcFinanceInformation ofcFinanceInformation,
                        OfcDistributionBasicInfo ofcDistributionBasicInfo,
                        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
+
+    RmcServiceCoverageForOrderVo copyDestinationPlace(String departurePlaceCode, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo);
+
+    RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String pickup);
 }

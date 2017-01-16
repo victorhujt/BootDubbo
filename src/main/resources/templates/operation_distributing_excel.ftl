@@ -1,6 +1,6 @@
 <title>城配开单Excel导入</title>
 <style type="text/css">
-    #goodsAndConsigneeDiv{
+  /*  #goodsAndConsigneeDiv{
         position:fixed;
         left:50%;
         top:77px;
@@ -11,7 +11,7 @@
         overflow: auto;
         border:solid #7A7A7A 2px;
     }
-
+*/
     #acrossImg{
         position:fixed;
         left:14%;
@@ -44,11 +44,10 @@
     </div>
 </div>
 <!--goods&Consigee-->
-<div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
+<div class="adoptModal " id="goodsAndConsigneeDiv" style="display: none;">
     <div class="modal-body">
         <div class="bootbox-body">
             <form class="form-horizontal" role="form">
-
                 <div class="form-group">
                     <label class="control-label col-sm-1 no-padding-right" for="name">货品编码</label>
                     <div class="col-sm-3">
@@ -83,7 +82,7 @@
                     </div>
                 </div>
 
-                <table id="dynamic-table" style="float: left;width: 30%" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+                <table id="dynamic-table" style="float: left;width: 30%;margin-left:85px;" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
                     <thead>
                     <tr role="row">
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">收货方名称</th>
@@ -97,18 +96,18 @@
 
         </div>
     </div>
-    <div class="form-group" >
+   <#-- <div class="form-group" >
         <div class="modal-footer"><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span></div>
-    </div>
+    </div>-->
 </div>
 
-<div id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
+<div class="adoptModal" id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
      aria-hidden="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+    <#--<div class="modal-dialog">-->
+        <div>
+           <#-- <div class="modal-header">
                 <button type="button" class="bootbox-close-button close" id="errorExcelImportCloseBtn">×</button>
-                <h4 class="modal-title">提示</h4></div>
+                <h4 class="w-font">提示</h4></div>-->
             <div class="modal-body">
                 <div class="bootbox-body">
                     <div class="form-group">
@@ -117,18 +116,21 @@
                     <div class="form-group">
                         创建成功后请重新加载Excel
                     </div>
-                    <div class="modal-footer">
-                        <div class="col-xs-3 tktp-1">
-                            <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">收货方档案</button>
-                        </div>
-                        <div class="col-xs-3 tktp-1">
-                            <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
+          <div class="modal-footer">
+            <div style="float:right;">
+              <button id="errorExcelImportEEBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval" style="margin-bottom:0;">收货方档案</button>
+              <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
+            </div>
+          </div>
+       <#-- &lt;#&ndash; <div class="col-xs-3 tktp-1">
+             <button id="errorExcelImportGoodsBtn" data-bb-handler="confirm" type="button" class="btn btn-white btn-info btn-bold btn-interval">货品档案</button>
+         </div>&ndash;&gt;
+        -->
         </div>
-    </div>
+   <#-- </div>-->
 </div>
 <div class="col-sm-12">
     <form class="form-horizontal" role="form">
@@ -469,8 +471,9 @@
         }
     }
     function goodsAndConsignee(obj){
-        
-        $("#goodsAndConsigneeDiv").fadeIn(0);
+
+       // $("#goodsAndConsigneeDiv").fadeIn(0);
+
         //显示货品信息
         var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
         var goodsCode = $(obj).parent().parent().children().eq(2).text();
@@ -501,7 +504,7 @@
 
 
             if(undefined != viewMap.get(mapKey)){
-                
+
                 var preGoodsAndConsigneeJsonMsg = viewMap.get(mapKey)[1];
                 //preGoodsAndConsigneeJsonMsg = JSON.stringify(preGoodsAndConsigneeJsonMsg);
                 var cadj = consigneeCode + "@" + consigneeContactCode;
@@ -521,12 +524,13 @@
             }else{
                 consignorout =consignorout + "<td>"+consigneeName+"</td>";
             }
-            consignorout =consignorout + "<td><input readonly value='"+num+"' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
+            consignorout =consignorout + "<td><input readonly value='"+num+"' style='border:1px solid #c3c3c3;' onpause='return false' onkeypress='onlyNumber(this)' onkeyup='onlyNumber(this)'/></td>";
             consignorout =consignorout + "<td style='display:none'>"+consigneeCode+"</td>";
             consignorout =consignorout + "<td style='display:none'>"+consigneeContactCode+"</td>";
             consignorout =consignorout + "</tr>";
         });
         $("#goodsAndConsigneeTbody").html(consignorout);
+      confirmBlue();
 
 
     }//
@@ -571,7 +575,6 @@
             document.getElementById("broadwiseImg").style.display="none";
             document.getElementById("acrossImg").style.display="none";
         }
-
         var file;
         var fileName;
         var uploadFileTag = false;
@@ -583,7 +586,7 @@
             $("#consigneeInfoListDiv").html("");
             $("#goodsListDiv").show();
             $("#errorMsgDiv").hide();
-            
+
             file = this.files[0];
             var fileSize = file.size;
             if(fileSize / 1024 > 1000){
@@ -612,7 +615,7 @@
         $("#uploadFileInput").click(function () {//上传
 
             if(uploadFileTag){
-                
+
                 var formData = new FormData();
                 var customerCode = $("#customerCode").val();
                 formData.append('file',file);
@@ -698,7 +701,7 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        
+
                         if (result == undefined || result == null) {
                             layer.msg("HTTP请求无数据返回", {
                                 icon: 1
@@ -721,7 +724,7 @@
                             var indexView = 0;
                             for(var key in resultMap){
                                 indexView += 1;
-                                
+
                                 var resultMapValue = resultMap[key]; //一条货品记录
                                 var viewMapValue = [];
                                 var consigeeMsg = {};
@@ -795,7 +798,8 @@
                                 errorGoodsNum = cscGoodsImportDtoList.length;
                             }
                             if(errorEEsNum > 0 || errorGoodsNum > 0){
-                                $("#errorExcelImport").show();
+                               // $("#errorExcelImport").show();
+                                confirm();
                                 if(errorGoodsNum > 0){
                                     batchgoodsKey = result.result.batchgoodsKey;
                                 }
@@ -843,7 +847,7 @@
                         icon : 3,
                         title : '确认操作'
                     }, function(index){
-                        
+
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
                         var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
@@ -879,7 +883,9 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
-        $("#errorExcelImport").hide();
+
+       // $("#errorExcelImport").hide();
+        layer.closeAll('page');
     })
     $("#errorExcelImportGoodsBtn").click(function () {
         if(errorGoodsNum < 1){
@@ -891,7 +897,8 @@
         var html = window.location.href;
         var index = html.indexOf("/index#");
         window.open(html.substring(0,index) + "/index#" + url);
-        $("#errorExcelImport").hide();
+       // $("#errorExcelImport").hide();
+        layer.closeAll('page');
     })
     function initChosen() {
         $('.chosen-select').chosen({allow_single_deselect: true});
@@ -912,4 +919,35 @@
         });
     }
 
+    //加载弹窗
+   // $("#loadSheetAndCheckBtn").click(function() {confirm();});
+    function confirm() {
+      layer.open({
+        btn:['取消'],
+        scrollbar:false,
+        type: 1,
+        area: ['412px', '250px'],
+        content: $('#errorExcelImport'), //这里content是一个DOM
+        title: '提示',
+        no: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+
+      });
+    }
+    function confirmBlue() {
+      layer.open({
+        btn:['关闭'],
+        scrollbar:false,
+        type: 1,
+        area:'946px',
+        content: $('#goodsAndConsigneeDiv'), //这里content是一个DOM
+        title: '货品明细',
+        cancel: function (adoptModalIndex) {
+          layer.close(adoptModalIndex);
+          return false;
+        }
+      });
+    }
 </script>

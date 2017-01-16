@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
-import com.xescm.rmc.edas.domain.RmcWarehouse;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface OfcWarehouseInformationService extends IService<OfcWarehouseInf
     int updateByOrderCode(Object key);
     OfcWarehouseInformation warehouseInformationSelect(String code);
     /*List<String> getWarehouseNameListByCustCode(String custCode);*/
-    List<RmcWarehouse> getWarehouseListByCustCode(String custCode);
+    List<RmcWarehouseRespDto> getWarehouseListByCustCode(String custCode);
 }
