@@ -1917,13 +1917,13 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                 //遍历cell
                 OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
-                for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++){
+                for(int cellNum = 0; cellNum < realCellNum; cellNum ++){
                     Cell commonCell = commonRow.getCell(cellNum);
                     //空列
                     if(null == commonCell){
                         //标记当前列出错, 并跳过当前循环
                         if(cellNum < realCellNum){
-                            if(rowNum == 1 && cellNum > (staticCell -1)){
+                            if(cellNum > (staticCell -1)){
                                 commonCell = commonRow.createCell(rowNum,Cell.CELL_TYPE_BLANK);
                             }else{
                                 continue;
