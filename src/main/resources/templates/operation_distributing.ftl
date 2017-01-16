@@ -1319,7 +1319,7 @@
 
   //统计货品发货数量
   $("#goodsAndConsigneeEnter").click(function(){
-    var sendNum = 0;//统计某个货品的总的发货数量
+   /* var sendNum = 0;//统计某个货品的总的发货数量
 
     var mapValue = [];
     var mapKey = "";
@@ -1371,15 +1371,15 @@
         mapKey = goodsCodeIn + "@" + indexIn;
       }
     });
-    /*
+    /!*
     往Map里放的数据结构
     key(货品编码@货品行号用来表示唯一一行):  value(json数组):[{"货品编码":xxx,"货品名称":xxx,...},{"收货人1code":20,"收货人2code":30}]
-    */
+    *!/
     mapValue[0] = goodsJson;
     mapValue[1] = consigneeAndGoodsJson;
     goodsAndConsigneeMap.put(mapKey,mapValue);
 
-    $("#goodsAndConsigneeDiv").fadeOut(0);
+    $("#goodsAndConsigneeDiv").fadeOut(0);*/
   })
 
 
@@ -3085,12 +3085,76 @@
 
   function confirmBlue() {
     layer.open({
-      btn:['关闭'],
+      btn:['保存','不保存'],
       scrollbar:false,
       type: 1,
       area: '946px',
       content: $('#goodsAndConsigneeDiv'), //这里content是一个DOM
       title: '货品明细',
+      yes:function(adoptModalIndex){
+        var sendNum = 0;//统计某个货品的总的发货数量
+
+        var mapValue = [];
+        var mapKey = "";
+        var goodsJson = {};
+        var consigneeAndGoodsJson = {};
+
+        $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
+
+          var tdArr = $(this).children();
+          var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
+          var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
+          var consigneeContactCode = tdArr.eq(3).text();
+          //某个收货方联系人的编码
+          if(StringUtil.isEmpty(num)){
+            num = 0;
+          }
+          var cadj = consigneeCode + "@" + consigneeContactCode;
+          consigneeAndGoodsJson[cadj] = num;
+//            sendNum =( parseInt(Number(num) * 1000) + parseInt(Number(sendNum) * 1000) ) /1000;
+          sendNum = (Number(num) + Number(sendNum)).toFixed(3)
+        })
+        var goodsInfoListDiv = "";
+        $("#goodsInfoListDiv").find("tr").each(function(index) {
+          var tdArr = $(this).children();
+          var goodsIndex = tdArr.eq(1).text();//货品索引
+          var goodsCode = tdArr.eq(2).text();//货品编码
+          var goodsCodeDiv = $("#goodsCodeDiv").val();
+          var goodsUnitPriceDiv = $("#goodsUnitPriceDiv").val();
+          if(!StringUtil.isEmpty(goodsUnitPriceDiv)){
+            goodsCodeDiv = goodsCodeDiv + goodsUnitPriceDiv;
+          }
+          var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
+          if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
+            tdArr.eq(7).text(sendNum);
+            var indexIn = tdArr.eq(1).text();
+            var goodsCodeIn = tdArr.eq(2).text();
+            var goodsNameIn = tdArr.eq(3).text();
+            var goodsSpecIn = tdArr.eq(4).text();
+            var goodsUnitIn = tdArr.eq(5).text();
+            var goodsUnitPriceIn = tdArr.eq(6).text();
+            var goodsAmountIn = tdArr.eq(7).text();
+            goodsJson.indexIn = indexIn;
+            goodsJson.goodsCodeIn = goodsCodeIn;
+            goodsJson.goodsNameIn = goodsNameIn;
+            goodsJson.goodsSpecIn = goodsSpecIn;
+            goodsJson.goodsUnitIn = goodsUnitIn;
+            goodsJson.goodsUnitPriceIn = goodsUnitPriceIn;
+            goodsJson.goodsAmountIn = goodsAmountIn;
+            mapKey = goodsCodeIn + "@" + indexIn;
+          }
+        });
+        /*
+        往Map里放的数据结构
+        key(货品编码@货品行号用来表示唯一一行):  value(json数组):[{"货品编码":xxx,"货品名称":xxx,...},{"收货人1code":20,"收货人2code":30}]
+        */
+        mapValue[0] = goodsJson;
+        mapValue[1] = consigneeAndGoodsJson;
+        goodsAndConsigneeMap.put(mapKey,mapValue);
+
+        layer.close(adoptModalIndex);
+        return false;
+    },
       cancel: function (adoptModalIndex) {
         layer.close(adoptModalIndex);
         return false;
