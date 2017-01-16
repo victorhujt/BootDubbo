@@ -356,5 +356,7 @@
         AND otss.destination_town = #{destinationTown}
       </if>
     </where>
+    ORDER BY
+      plan_code DESC
   </select>
 </mapper>
