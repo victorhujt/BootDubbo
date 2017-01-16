@@ -1,5 +1,7 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
@@ -78,8 +80,18 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
     }
 
     @Override
-    public Wrapper<List<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO) {
+    public Wrapper<PageInfo<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO) {
+        PageInfo<TranPlanOfcRespDTO> tranPlanOfcRespDTOPageInfo=null;
         List<TranPlanOfcRespDTO> tranPlanOfcRespDTOList=ofcTransplanInfoMapper.tranPlanSel(tranPlanOfcReqDTO);
-        return  WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,tranPlanOfcRespDTOList);
+        PageHelper.startPage(tranPlanOfcReqDTO.getPageNum() ,tranPlanOfcReqDTO.getPageSize());
+        if(PubUtils.isNotNullAndBiggerSize(tranPlanOfcRespDTOList,0)){
+            tranPlanOfcRespDTOPageInfo=new PageInfo<>(tranPlanOfcRespDTOList);
+        }else{
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "暂时未查询到相关计划单信息");
+        }
+        if(tranPlanOfcRespDTOPageInfo==null){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "查询相关任务单信息失败");
+        }
+        return  WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,tranPlanOfcRespDTOPageInfo);
     }
 }

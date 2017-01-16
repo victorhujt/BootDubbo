@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO;
@@ -17,5 +18,5 @@ public interface OfcTransplanInfoService extends IService<OfcTransplanInfo> {
     int queryNotInvalidAndNotCompleteTransOrder(String orderCode);
     List<String> queryPlanCodesByOrderCode(String orderCode);
     List<String> queryUncompletedPlanCodesByOrderCode(String orderCode);
-    Wrapper<List<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO);
+    Wrapper<PageInfo<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO);
 }

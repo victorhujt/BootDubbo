@@ -1,5 +1,6 @@
 package com.xescm.ofc.edas.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO;
@@ -31,13 +32,13 @@ public class OfcTranPlanDpcEdasServieImpl implements OfcTranPlanDpcEdasServie{
      * @return
      */
     @Override
-    public Wrapper<List<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO) {
+    public Wrapper<PageInfo<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO) {
         logger.info("调度中心查询参数：dicTranPlanOfcSDTO：{}", ToStringBuilder.reflectionToString(tranPlanOfcReqDTO));
         try {
             if (tranPlanOfcReqDTO == null) {
                 throw new IllegalArgumentException("查询条件有误");
             }
-            Wrapper<List<TranPlanOfcRespDTO>> wrapper = ofcTransplanInfoService.tranPlanSel(tranPlanOfcReqDTO);
+            Wrapper<PageInfo<TranPlanOfcRespDTO>> wrapper = ofcTransplanInfoService.tranPlanSel(tranPlanOfcReqDTO);
             return wrapper;
         } catch (IllegalArgumentException ex) {
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
