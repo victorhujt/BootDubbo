@@ -63,6 +63,29 @@
     <result column="two_distribution" property="twoDistribution" jdbcType="VARCHAR" />
   </resultMap>
 
+  <resultMap id="DpcTranPlanResultMap" type="com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDTO" >
+    <id column="plan_code" property="planCode" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
+    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
+    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
+    <result column="destination_town" property="destinationTown" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="transport_type" jdbcType="VARCHAR" property="transportType" />
+    <result column="goods_type" jdbcType="VARCHAR" property="goodsType" />
+    <result column="goods_type_name" jdbcType="VARCHAR" property="goodsTypeName" />
+    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR" />
+    <result column="scheduling_state" property="schedulingState" jdbcType="VARCHAR" />
+  </resultMap>
 
   <resultMap id="ofcTransplanInfoVoResultMap" type="com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo" >
     <!--
@@ -257,6 +280,81 @@
       </if>
       AND ots.planned_single_state <![CDATA[ <> ]]> '50'
       AND ots.planned_single_state <![CDATA[ <> ]]> '40'
+    </where>
+  </select>
+
+  <!--调度中心计划单列表查询-->
+  <select id="tranPlanSel" parameterType="com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO" resultMap="DpcTranPlanResultMap">
+    SELECT DISTINCT
+    oti.plan_code,
+    oti.order_code,
+    ofi.cust_order_code,
+    ofi.order_type,
+    oti.scheduling_state,
+    otss.plate_number,
+    oti.cust_code,
+    oti.cust_name,
+    oti.departure_province,
+    oti.departure_city,
+    oti.departure_district,
+    oti.departure_towns,
+    oti.destination_province,
+    oti.destination_city,
+    oti.destination_district,
+    oti.destination_town,
+    oti.goods_type,
+    oti.goods_type_name,
+    oti.transport_type,
+    oti.weight,
+    oti.transport_pool,
+    oti.matching_mode
+    FROM
+    ofc_transplan_info oti
+    LEFT JOIN ofc_fundamental_information ofi ON oti.order_code = ofi.order_code
+    LEFT JOIN ofc_traplan_source_status otss ON oti.plan_code = otss.plan_code
+    <where>
+      <if test="orderTimeStart!=null and orderTimeStart!=''">
+        oti.creation_time <![CDATA[ >= ]]> #{orderTimeStart}
+      </if>
+      <if test="orderTimeEnd!=null and orderTimeEnd!=''">
+        AND oti.creation_time <![CDATA[ <= ]]> #{orderTimeEnd}
+      </if>
+      <if test="resourceAllocationStatus!=null and resourceAllocationStatus!=''">
+        AND otss.resource_allocation_status = #{resourceAllocationStatus}
+      </if>
+      <if test="TransportPool!=null and TransportPool!=''">
+        AND otss.transport_pool = #{TransportPool}
+      </if>
+      <if test="custCode!=null and custCode!=''">
+        AND otss.cust_code = #{custCode}
+      </if>
+      <if test="custName!=null and custName!=''">
+        AND otss.cust_name = #{custName}
+      </if>
+      <if test="departureProvince!=null and departureProvince!=''">
+        AND otss.departure_province = #{departureProvince}
+      </if>
+      <if test="departureCity!=null and departureCity!=''">
+        AND otss.departure_city = #{departureCity}
+      </if>
+      <if test="departureDistrict!=null and departureDistrict!=''">
+        AND otss.departure_district = #{departureDistrict}
+      </if>
+      <if test="departureTowns!=null and departureTowns!=''">
+        AND otss.departure_towns = #{departureTowns}
+      </if>
+      <if test="destinationProvince!=null and destinationProvince!=''">
+        AND otss.destination_province = #{destinationProvince}
+      </if>
+      <if test="destinationCity!=null and destinationCity!=''">
+        AND otss.destination_city = #{destinationCity}
+      </if>
+      <if test="destinationDistrict!=null and destinationDistrict!=''">
+        AND otss.destination_district = #{destinationDistrict}
+      </if>
+      <if test="destinationTown!=null and destinationTown!=''">
+        AND otss.destination_town = #{destinationTown}
+      </if>
     </where>
   </select>
 </mapper>
