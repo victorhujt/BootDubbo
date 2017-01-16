@@ -182,6 +182,8 @@
     /*  #viewBiggerImg{
           transform:scale(0.6)!important;
       }*/
+
+
 </style>
 <div class="page-header">
     <p>
@@ -539,7 +541,7 @@
 
 
 
-        <div class="col-xs-12" style="height: 250px;overflow: auto">
+        <div class="col-xs-12" style="height: 250px;overflow: auto" id="Overflow">
             <div class="page-header">
                 <p style="font-size: 14px;font-family:'微软雅黑'">
                     基本信息
@@ -601,9 +603,9 @@
                         <input id="transportType" type="hidden" name="transportType"/></div>
                 </div>
                 <div class="form-group">
-                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
+                    <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;" ><span class="w-label-icon">*</span>订单日期</label>
                         <div class="col-width-168 padding-15">
-                            <div class="cclearfix" >
+                            <div class="cclearfix" id="OrderDate">
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
@@ -3648,4 +3650,26 @@
         }
       });
     }
+
+
+
+    setInterval(function(){
+        if($("#laydate_box").length>0){
+          if($("#laydate_box").is(":hidden")){
+            $("#Overflow").css({
+              'overflow':'auto'
+            })
+          }else{
+            $("#Overflow").css({
+              'overflow':'hidden'
+            })
+          }
+        }else{
+          $("#Overflow").css({
+            'overflow':'auto'
+          })
+        }
+    },0)
+
+
 </script>
