@@ -455,6 +455,13 @@
 
 <br/>
 <div class="col-xs-9">
+
+  <div class="page-header">
+    <p style="font-size: 14px;font-family:'微软雅黑'">
+      <span hidden="true" id = "login_user">${(loginUser)!}</span>
+    </p>
+  </div>
+
   <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
     <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
     历史订单选择
@@ -755,9 +762,41 @@
     });
   });
 
+  // 设置当前用户上次选择的开单员
+  function setLastUserData() {
+    // 设置当前用户上次选择的开单员
+    var loginUser = $('#login_user').html();
+    var lastSelMer = getCookie(loginUser);
+
+    if (lastSelMer != '') {
+      $("#merchandiser").val(lastSelMer);
+    }
+
+  }
+
+  // 获取指定名称的cookie值
+  function getCookie(name){
+    var strCookie=document.cookie;
+    var arrCookie=strCookie.split("; ");
+    for(var i=0;i<arrCookie.length;i++){
+      var arr=arrCookie[i].split("=");
+      if(arr[0]==name){
+        return unescape(arr[1]);
+      } else{
+        continue;
+      }
+    }
+    return "";
+  }
+
+
   function main() {
 
     validateFormData();
+
+    // 上次选择的开单员
+    setLastUserData();
+
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
   //链接到收发货方联系人档案

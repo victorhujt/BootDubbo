@@ -140,6 +140,9 @@ public class OfcJumpontroller extends BaseController{
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
+            // 加密登录用户名，用于前端缓存cookie的key
+            String loginUser = MD5Util.encodeByAES(getAuthResDtoByToken().getUserName());
+            map.put("loginUser", loginUser);
             setDefaultModel(model);
         } catch (Exception ex) {
             logger.error("跳转城配开单页面出错!",ex.getMessage(),ex);
