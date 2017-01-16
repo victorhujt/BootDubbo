@@ -253,7 +253,7 @@ public class OfcOrderManageOperaRest extends BaseController {
     }
 
     private String defalutString(String str) {
-        return StringUtils.equals(str, "1") ? "是" : StringUtils.equals(str, "0") ? "否" : "";
+        return StringUtils.equals(str, "1") ? "是" : "否";
     }
 
     /**

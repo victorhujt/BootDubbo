@@ -243,7 +243,7 @@
                   <span class="lbl"></span>
                 </label>
               </th>
-              <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+              <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">客户编码</th>
               <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                   aria-label="Price: activate to sort column ascending">类型
               </th>
@@ -801,7 +801,7 @@
         }
         custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
         custList =custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
-        custList =custList + "<td>"+(index+1)+"</td>";
+        custList =custList + "<td>"+cscCustomerVo.customerCode+"</td>";
         var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
         if(custType == '1'){
           custList =custList + "<td>公司</td>";
@@ -891,9 +891,11 @@
     function chosenTr(e){
       $(e).children().first().find("input").prop("checked","checked");
     }
+
     function confirmCus() {
       layer.open({
         btn:['选中','关闭'],
+        scrollbar:false,
         yes:function (adoptModalIndex) {
           var val = $('input:radio[name="cust"]:checked').val();
           if (val == "" || val == null || val == undefined) {
@@ -905,7 +907,7 @@
           return false;
         },
         type: 1,
-        area: ['946px', '575px'],
+        area: ['946px', '580px'],
         content: $('#custListDiv'), //这里content是一个DOM
         title: '选择客户',
         cancel: function (adoptModalIndex) {

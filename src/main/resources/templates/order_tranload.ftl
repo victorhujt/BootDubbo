@@ -1,16 +1,5 @@
 <title>运输开单</title>
 <style type="text/css">
-  /* #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-       position:fixed;
-       left:50%;
-       top:48px;
-       margin-left:-400px;
-       width:946px;
-       height:547px;
-       z-index:3;
-       overflow: auto;
-       border:solid #7A7A7A 1px;
-   }*/
   .date_a{
     line-height:21px !important;
   }
@@ -22,9 +11,9 @@
     padding-top:0;
     line-height:30px;
   }
-  input[type=checkbox], input[type=radio]{
-    margin:10px 0 0;
-  }
+ /* input[type=checkbox], input[type=radio]{
+    margin:4px 0 0;
+  }*/
   .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
     color:#393939;
   }
@@ -143,7 +132,7 @@
           <tbody id="goodsSelectListTbody"></tbody>
         </table>
         <div class="row">
-          <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 20px;">
+          <div id="pageBarDivGoods" style="float: right;padding-top: 0px;margin-top: 10px;">
           </div>
         </div>
       </form>
@@ -329,7 +318,7 @@
               <span class="lbl"></span>
             </label>
           </th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">客户编码</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
@@ -478,8 +467,8 @@
           </div>
           <span style="cursor:pointer" id="consignorListDivBlock">
                     <button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consignorselbtn">选择</button></span>
-          <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          <label class="control-label" style="float:right;" for="name">出发地：</label>
+         <#-- <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>-->
+         <#-- <label class="control-label" style="float:right;" for="name">出发地：</label>-->
           <div id="consignorin" style="margin-top:15px;">
             <div class="form-group" >
               <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
@@ -525,6 +514,15 @@
                 </div>
               </div>
             </div>
+          <div class="form-group">
+            <label class="control-label col-label no-padding-right" for="name">出发地</label>
+            <div class="col-width-376 padding-15">
+              <div class="clearfix">
+                <input id="departure_place" name="departure_place" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly />
+              </div>
+            </div>
+          </div>
+
           </div>
 
 
@@ -537,8 +535,8 @@
           </div>
           <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
           <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          <label id="destination" class="control-label" style="float:right;" for="name"></label>
-          <label class="control-label" style="float:right;" for="name">目的地：</label>
+         <#-- <label id="destination" class="control-label" style="float:right;" for="name"></label>
+          <label class="control-label" style="float:right;" for="name">目的地：</label>-->
           <div id="consignorout" style="margin-top:15px;">
             <div class="form-group" >
               <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
@@ -583,6 +581,15 @@
               <div class="col-width-376 padding-15">
                 <div class="clearfix">
                   <input id="consigneeAddress" name="consigneeAddress" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-label no-padding-right" for="name">目的地</label>
+             <#-- <label id="destination" class="control-label" style="float:left;padding:0 15px;line-height:34px;" for="name"></label>-->
+              <div class="col-width-376 padding-15">
+                <div class="clearfix">
+                  <input id="destination" name="destination" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly />
                 </div>
               </div>
             </div>
@@ -1799,7 +1806,7 @@
     if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
       departure_place =departure_place + consignorAddressNameMessage[3];
     }
-    $("#departure_place").html(departure_place);
+    $("#departure_place").val(departure_place);
   }
 
   //目的地
@@ -1820,7 +1827,7 @@
     if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
       destination =destination + consignorAddressNameMessage[3];
     }
-    $("#destination").html(destination);
+    $("#destination").val(destination);
   }
   //带出发货方
   function outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode){
@@ -2067,7 +2074,7 @@
       }
       custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)' >";
       custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-      custList =custList + "<td>"+(index+1)+"</td>";
+      custList =custList + "<td>"+cscCustomerVo.customerCode+"</td>";
       var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
       if(custType == '1'){
         custList =custList + "<td>公司</td>";
@@ -2620,7 +2627,7 @@
 */
     $("#consignorListDivBlock").click(function(){
       if(!validateCustChosen()){
-        alert("请先选择客户");
+        alert("请先选择客户名称");
       }else{
         $("#pageBarDivConsignor").hide();
         $("#contactSelectListTbody2").html("");
@@ -2643,7 +2650,7 @@
 
     $("#consigneeListDivBlock").click(function(){
       if(!validateCustChosen()){
-        alert("请先选择客户")
+        alert("请先选择客户名称")
       }else{
         $("#pageBarDivConsignee").hide();
         $("#contactSelectListTbody1").html("");
@@ -2679,7 +2686,7 @@
 
     $("#addGoods").click(function () {
       if(!validateCustChosen()){
-        alert("请先选择客户")
+        alert("请先选择客户名称")
       }else{
         var goodsInfoListDiv = "";
         var groupId = $("#custGroupId").val();
@@ -3041,11 +3048,13 @@
   function chosenTr(e){
     $(e).children().first().find("input").prop("checked","checked");
   }
+
   //layer风格弹窗
   $("#custListDivBlock").click(function() {confirm();});
   function confirm() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         var custEnterTag = "";
         $("#custListDivTbody").find("tr").each(function(index){
@@ -3094,6 +3103,7 @@
   function confirmSend() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         var consignorin = "";
         $("#contactSelectListTbody2").find("tr").each(function(index){
@@ -3150,6 +3160,7 @@
   function confirmRev() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         var consignorout = "";
         $("#contactSelectListTbody1").find("tr").each(function(index){
@@ -3206,6 +3217,7 @@
   function confirmGood() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         var goodsInfoListDiv = "";
         $("#goodsSelectListTbody").find("tr").each(function(index){

@@ -59,7 +59,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
             cscWarehouse.setCustomerCode(customerCode);
             logger.info("###################################当前的客户编码为："+customerCode);
-            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouseDto>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
             if(Wrapper.ERROR_CODE == cscWarehouseByCustomerId.getCode()){
                 throw new BusinessException(cscWarehouseByCustomerId.getMessage());
             }

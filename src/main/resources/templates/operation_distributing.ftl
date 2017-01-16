@@ -175,7 +175,7 @@
           <tbody id="goodsSelectListTbody"></tbody>
         </table>
         <div class="row">
-          <div id="pageBarDivGoodsDistri" style="float: right;padding-top: 0px;margin-top: 5px;">
+          <div id="pageBarDivGoodsDistri" style="float: right;padding-top: 0px;margin-top: 10px;">
           </div>
         </div>
 
@@ -367,7 +367,7 @@
                 选择
               </label>
             </th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending" style="width:42px;">序号</th>
+            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending" style="width:100px;">客户编码</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
@@ -392,7 +392,7 @@
 </div>-->
 </div>
 <!--goods&Consigee-->
-<div class="modal-content" id="goodsAndConsigneeDiv" style="display: none;">
+<div class="adoptModal " id="goodsAndConsigneeDiv" style="display: none;">
   <div class="modal-body">
     <div class="bootbox-body">
       <form class="form-horizontal" role="form">
@@ -445,9 +445,12 @@
     </div>
   </div>
 
-  <div class="form-group" >
-    <div class="modal-footer"><button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button><span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span></div>
-  </div>
+ <#-- <div class="form-group" >
+    <div class="modal-footer">
+      <button id="goodsAndConsigneeEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">保存</button>
+      <span id="goodsAndConsigneeDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">不保存</button></span>
+    </div>
+  </div>-->
 </div>
 
 <br/>
@@ -1214,7 +1217,7 @@
 
   function goodsAndConsignee(obj){
 
-    $("#goodsAndConsigneeDiv").fadeIn(0);
+   /* $("#goodsAndConsigneeDiv").fadeIn(0);*/
     //显示货品信息
     var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
     var goodsCode = $(obj).parent().parent().children().eq(2).text();
@@ -1272,11 +1275,12 @@
       consignorout =consignorout + "</tr>";
     });
     $("#goodsAndConsigneeTbody").html(consignorout);
+    confirmBlue();
   }//
 
   //统计货品发货数量
   $("#goodsAndConsigneeEnter").click(function(){
-    var sendNum = 0;//统计某个货品的总的发货数量
+   /* var sendNum = 0;//统计某个货品的总的发货数量
 
     var mapValue = [];
     var mapKey = "";
@@ -1328,15 +1332,15 @@
         mapKey = goodsCodeIn + "@" + indexIn;
       }
     });
-    /*
+    /!*
     往Map里放的数据结构
     key(货品编码@货品行号用来表示唯一一行):  value(json数组):[{"货品编码":xxx,"货品名称":xxx,...},{"收货人1code":20,"收货人2code":30}]
-    */
+    *!/
     mapValue[0] = goodsJson;
     mapValue[1] = consigneeAndGoodsJson;
     goodsAndConsigneeMap.put(mapKey,mapValue);
 
-    $("#goodsAndConsigneeDiv").fadeOut(0);
+    $("#goodsAndConsigneeDiv").fadeOut(0);*/
   })
 
 
@@ -1549,7 +1553,7 @@
       consignorContactCodeHide = CscContantAndCompanyDto.contactSerialNo;
       consignorTypeHide = CscContantAndCompanyDto.type;*/
       contactList =contactList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
-      contactList =contactList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+      contactList =contactList + "<td class='center' onclick='chosenTr(this)'> "+"<label class='pos-rel'>"+"<input name='consignorSel' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
       contactList =contactList + "<td class='center'>"+(index+1)+"</td>";
       contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactCompanyName)+"</td>";
       contactList =contactList + "<td>"+StringUtil.nullToEmpty(CscContantAndCompanyDto.contactName)+"</td>";
@@ -2044,8 +2048,8 @@
         channel = "";
       }
       custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
-      custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-      custList =custList + "<td class='center'>"+(index+1)+"</td>";
+      custList =custList + "<td class='center' onclick='chosenTr(this)'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
+      custList =custList + "<td class='center'>"+cscCustomerVo.customerCode+"</td>";
       var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
       if(custType == '1'){
         custList =custList + "<td>公司</td>";
@@ -2631,7 +2635,7 @@
     });
   }
   function chosenTr(e){
-    var rd = $(e).children().first().children().first().children().first();
+    var rd =  $(e).children().first().find("input");
     if(rd.prop("checked")){
       rd.prop("checked",false);
     }else{
@@ -2643,6 +2647,7 @@
   function confirmCus() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         var custEnterTag = "";
         $("#custListDivTbody").find("tr").each(function(index){
@@ -2708,6 +2713,7 @@
   function confirmSend() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         couldChangeCust = false;
         var consignorin = "";
@@ -2782,6 +2788,7 @@
   function confirmRev() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         couldChangeCust = false;
         var consignorout = "";
@@ -2940,6 +2947,7 @@
   function confirmGood() {
     layer.open({
       btn:['选中','关闭'],
+      scrollbar:false,
       yes:function (adoptModalIndex) {
         couldChangeCust = false;
         var goodsInfoListDiv = "";
@@ -3026,7 +3034,7 @@
         }
       },
       type: 1,
-      area: ['946px', '575px'],
+      area: ['946px', '585px'],
       content: $('#goodsListDiv'), //这里content是一个DOM
       title: '货品列表',
       cancel: function (adoptModalIndex) {
@@ -3035,6 +3043,86 @@
       }
     });
   }
+
+  function confirmBlue() {
+    layer.open({
+      btn:['保存','不保存'],
+      scrollbar:false,
+      type: 1,
+      area: '946px',
+      content: $('#goodsAndConsigneeDiv'), //这里content是一个DOM
+      title: '货品明细',
+      yes:function(adoptModalIndex){
+        var sendNum = 0;//统计某个货品的总的发货数量
+
+        var mapValue = [];
+        var mapKey = "";
+        var goodsJson = {};
+        var consigneeAndGoodsJson = {};
+
+        $("#goodsAndConsigneeTbody").find("tr").each(function (index) {
+
+          var tdArr = $(this).children();
+          var num = tdArr.eq(1).children().val();//某个收货方该货品的需求量
+          var consigneeCode = tdArr.eq(2).text();//某个收货方的编码
+          var consigneeContactCode = tdArr.eq(3).text();
+          //某个收货方联系人的编码
+          if(StringUtil.isEmpty(num)){
+            num = 0;
+          }
+          var cadj = consigneeCode + "@" + consigneeContactCode;
+          consigneeAndGoodsJson[cadj] = num;
+//            sendNum =( parseInt(Number(num) * 1000) + parseInt(Number(sendNum) * 1000) ) /1000;
+          sendNum = (Number(num) + Number(sendNum)).toFixed(3)
+        })
+        var goodsInfoListDiv = "";
+        $("#goodsInfoListDiv").find("tr").each(function(index) {
+          var tdArr = $(this).children();
+          var goodsIndex = tdArr.eq(1).text();//货品索引
+          var goodsCode = tdArr.eq(2).text();//货品编码
+          var goodsCodeDiv = $("#goodsCodeDiv").val();
+          var goodsUnitPriceDiv = $("#goodsUnitPriceDiv").val();
+          if(!StringUtil.isEmpty(goodsUnitPriceDiv)){
+            goodsCodeDiv = goodsCodeDiv + goodsUnitPriceDiv;
+          }
+          var goodsIndexDivHidden = $("#goodsIndexDivHidden").val();
+          if(goodsCode == goodsCodeDiv && goodsIndex == goodsIndexDivHidden){ //而且行号要卡
+            tdArr.eq(7).text(sendNum);
+            var indexIn = tdArr.eq(1).text();
+            var goodsCodeIn = tdArr.eq(2).text();
+            var goodsNameIn = tdArr.eq(3).text();
+            var goodsSpecIn = tdArr.eq(4).text();
+            var goodsUnitIn = tdArr.eq(5).text();
+            var goodsUnitPriceIn = tdArr.eq(6).text();
+            var goodsAmountIn = tdArr.eq(7).text();
+            goodsJson.indexIn = indexIn;
+            goodsJson.goodsCodeIn = goodsCodeIn;
+            goodsJson.goodsNameIn = goodsNameIn;
+            goodsJson.goodsSpecIn = goodsSpecIn;
+            goodsJson.goodsUnitIn = goodsUnitIn;
+            goodsJson.goodsUnitPriceIn = goodsUnitPriceIn;
+            goodsJson.goodsAmountIn = goodsAmountIn;
+            mapKey = goodsCodeIn + "@" + indexIn;
+          }
+        });
+        /*
+        往Map里放的数据结构
+        key(货品编码@货品行号用来表示唯一一行):  value(json数组):[{"货品编码":xxx,"货品名称":xxx,...},{"收货人1code":20,"收货人2code":30}]
+        */
+        mapValue[0] = goodsJson;
+        mapValue[1] = consigneeAndGoodsJson;
+        goodsAndConsigneeMap.put(mapKey,mapValue);
+
+        layer.close(adoptModalIndex);
+        return false;
+    },
+      cancel: function (adoptModalIndex) {
+        layer.close(adoptModalIndex);
+        return false;
+      }
+    });
+  }
+
 
 </script>
 

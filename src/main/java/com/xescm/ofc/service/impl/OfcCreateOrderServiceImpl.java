@@ -158,7 +158,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String warehouseCode = createOrderEntity.getWarehouseCode();
         QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
         cscWarehouse.setCustomerCode(custCode);
-        Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = (Wrapper<List<CscWarehouseDto>>)cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+        Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
         resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "仓库编码", resultModel.getCode());
@@ -174,7 +174,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 cscGoods.setCustomerCode(custCode);
-                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = (Wrapper<List<CscGoodsApiVo>>)cscGoodsEdasService.queryCscGoodsList(cscGoods);
+                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
                 resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                     logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
