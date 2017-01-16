@@ -1218,7 +1218,6 @@
   function goodsAndConsignee(obj){
 
    /* $("#goodsAndConsigneeDiv").fadeIn(0);*/
-     confirmBlue();
     //显示货品信息
     var goodsIndex = $(obj).parent().parent().children().eq(1).text();//000
     var goodsCode = $(obj).parent().parent().children().eq(2).text();
@@ -1276,6 +1275,7 @@
       consignorout =consignorout + "</tr>";
     });
     $("#goodsAndConsigneeTbody").html(consignorout);
+    confirmBlue();
   }//
 
   //统计货品发货数量
