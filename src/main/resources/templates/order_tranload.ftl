@@ -329,7 +329,7 @@
               <span class="lbl"></span>
             </label>
           </th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">序号</th>
+            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">客户编码</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
             <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
@@ -2067,7 +2067,7 @@
       }
       custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)' >";
       custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-      custList =custList + "<td>"+(index+1)+"</td>";
+      custList =custList + "<td>"+cscCustomerVo.customerCode+"</td>";
       var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
       if(custType == '1'){
         custList =custList + "<td>公司</td>";
