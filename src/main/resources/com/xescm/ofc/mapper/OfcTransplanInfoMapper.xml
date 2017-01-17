@@ -85,6 +85,8 @@
     <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
     <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR" />
     <result column="scheduling_state" property="schedulingState" jdbcType="VARCHAR" />
+    <result column="departure_place_code" jdbcType="VARCHAR" property="departurePlaceCode" />
+    <result column="destination_code" jdbcType="VARCHAR" property="destinationCode" />
   </resultMap>
 
   <resultMap id="ofcTransplanInfoVoResultMap" type="com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo" >
@@ -319,41 +321,23 @@
       <if test="orderTimeEnd!=null and orderTimeEnd!=''">
         AND oti.creation_time <![CDATA[ <= ]]> #{orderTimeEnd}
       </if>
-      <if test="resourceAllocationStatus!=null and resourceAllocationStatus!=''">
-        AND otss.resource_allocation_status = #{resourceAllocationStatus}
+      <if test="schedulingState!=null and schedulingState!=''">
+        AND oti.scheduling_state = #{schedulingState}
       </if>
-      <if test="TransportPool!=null and TransportPool!=''">
-        AND otss.transport_pool = #{TransportPool}
+      <if test="transportPool!=null and transportPool!=''">
+        AND oti.transport_pool = #{transportPool}
       </if>
       <if test="custCode!=null and custCode!=''">
-        AND otss.cust_code = #{custCode}
+        AND oti.cust_code = #{custCode}
       </if>
       <if test="custName!=null and custName!=''">
-        AND otss.cust_name = #{custName}
+        AND oti.cust_name = #{custName}
       </if>
-      <if test="departureProvince!=null and departureProvince!=''">
-        AND otss.departure_province = #{departureProvince}
+      <if test="departurePlaceCode!=null and departurePlaceCode!=''">
+        AND oti.departure_place_code = #{departurePlaceCode}
       </if>
-      <if test="departureCity!=null and departureCity!=''">
-        AND otss.departure_city = #{departureCity}
-      </if>
-      <if test="departureDistrict!=null and departureDistrict!=''">
-        AND otss.departure_district = #{departureDistrict}
-      </if>
-      <if test="departureTowns!=null and departureTowns!=''">
-        AND otss.departure_towns = #{departureTowns}
-      </if>
-      <if test="destinationProvince!=null and destinationProvince!=''">
-        AND otss.destination_province = #{destinationProvince}
-      </if>
-      <if test="destinationCity!=null and destinationCity!=''">
-        AND otss.destination_city = #{destinationCity}
-      </if>
-      <if test="destinationDistrict!=null and destinationDistrict!=''">
-        AND otss.destination_district = #{destinationDistrict}
-      </if>
-      <if test="destinationTown!=null and destinationTown!=''">
-        AND otss.destination_town = #{destinationTown}
+      <if test="destinationCode!=null and destinationCode!=''">
+        AND oti.destination_code = #{destinationCode}
       </if>
     </where>
     ORDER BY

@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * Created by wangsongtao on 2016/12/27.
  */
@@ -41,13 +39,13 @@ public class OfcTranPlanDpcEdasServieImpl implements OfcTranPlanDpcEdasServie{
             Wrapper<PageInfo<TranPlanOfcRespDTO>> wrapper = ofcTransplanInfoService.tranPlanSel(tranPlanOfcReqDTO);
             return wrapper;
         } catch (IllegalArgumentException ex) {
-            logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
+            logger.error(" 任务单查询接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (BusinessException ex) {
-            logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
+            logger.error("任务单查询接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
-            logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
+            logger.error("任务单查询接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
