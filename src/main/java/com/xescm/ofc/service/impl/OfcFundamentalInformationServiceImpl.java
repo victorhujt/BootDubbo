@@ -54,7 +54,7 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
     }
 
     /**
-     * 根据客户订单编号与客户编号查询订单
+     * 根据客户订单编号与客户编号查询不是已经取消的订单
      * @param custOrderCode
      * @param custCode
      * @return
@@ -63,10 +63,6 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
         OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
         ofcFundamentalInformation.setCustOrderCode(custOrderCode);
         ofcFundamentalInformation.setCustCode(custCode);
-        List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationMapper.select(ofcFundamentalInformation);
-        if(CollectionUtils.isNotEmpty(ofcFundamentalInformations)){
-            return ofcFundamentalInformations.get(0);
-        }
-        return null;
+        return ofcFundamentalInformationMapper.queryOfcFundInfoByCustOrderCodeAndCustCode(ofcFundamentalInformation);
     }
 }

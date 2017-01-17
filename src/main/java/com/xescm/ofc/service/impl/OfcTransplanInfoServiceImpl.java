@@ -1,7 +1,13 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcTransplanInfo;
+import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO;
+import com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDTO;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
@@ -73,5 +79,53 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         return ofcTransplanInfoMapper.queryUncompletedPlanCodesByOrderCode(orderCode);
     }
 
-
+    @Override
+    public Wrapper<PageInfo<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO) {
+        PageInfo<TranPlanOfcRespDTO> tranPlanOfcRespDTOPageInfo=null;
+        StringBuffer departurePlaceCode = new StringBuffer();
+        StringBuffer destinationCode = new StringBuffer();
+        if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDepartureProvince()).equals("")){
+            departurePlaceCode.append(tranPlanOfcReqDTO.getDepartureProvince());
+            if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDepartureCity()).equals("")){
+                departurePlaceCode.append(",");
+                departurePlaceCode.append(tranPlanOfcReqDTO.getDepartureCity());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDepartureDistrict()).equals("")){
+                departurePlaceCode.append(",");
+                departurePlaceCode.append(tranPlanOfcReqDTO.getDepartureDistrict());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDepartureTowns()).equals("")){
+                departurePlaceCode.append(",");
+                departurePlaceCode.append(tranPlanOfcReqDTO.getDepartureTowns());
+            }
+            tranPlanOfcReqDTO.setDeparturePlaceCode(departurePlaceCode.toString());
+        }
+        if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDestinationProvince()).equals("")){
+            destinationCode.append(tranPlanOfcReqDTO.getDestinationProvince());
+            if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDestinationCity()).equals("")){
+                destinationCode.append(",");
+                destinationCode.append(tranPlanOfcReqDTO.getDestinationCity());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDestinationDistrict()).equals("")){
+                destinationCode.append(",");
+                destinationCode.append(tranPlanOfcReqDTO.getDestinationDistrict());
+            }
+            if(!PubUtils.trimAndNullAsEmpty(tranPlanOfcReqDTO.getDestinationTown()).equals("")){
+                destinationCode.append(",");
+                destinationCode.append(tranPlanOfcReqDTO.getDestinationTown());
+            }
+            tranPlanOfcReqDTO.setDestinationCode(destinationCode.toString());
+        }
+        List<TranPlanOfcRespDTO> tranPlanOfcRespDTOList=ofcTransplanInfoMapper.tranPlanSel(tranPlanOfcReqDTO);
+        PageHelper.startPage(tranPlanOfcReqDTO.getPageNum() ,tranPlanOfcReqDTO.getPageSize());
+        if(PubUtils.isNotNullAndBiggerSize(tranPlanOfcRespDTOList,0)){
+            tranPlanOfcRespDTOPageInfo=new PageInfo<>(tranPlanOfcRespDTOList);
+        }else{
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "暂时未查询到相关计划单信息");
+        }
+        if(tranPlanOfcRespDTOPageInfo==null){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "查询相关任务单信息失败");
+        }
+        return  WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,tranPlanOfcRespDTOPageInfo);
+    }
 }

@@ -74,7 +74,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         //组装接口的返回信息
         List<CreateOrderResult> createOrderResultList = null;
         try {
-            List<CreateOrderEntity> createOrderEntityList = (List<CreateOrderEntity>) JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
+            List<CreateOrderEntity> createOrderEntityList = JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
                 createOrderResultList = new ArrayList<>();
@@ -83,34 +83,36 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String reason = null;
                 String custOrderCode = null;
                 for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
-                    try {
-                        custOrderCode = createOrderEntity.getCustOrderCode();
-                        String custCode = createOrderEntity.getCustCode();
-                        OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
-                        if (information != null) {
-                            String orderCode = information.getOrderCode();
-                            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
-                            //订单已存在,获取订单的最新状态,只有待审核的才能更新
-                            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderCode(), PENDINGAUDIT)) {
-                                logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
-                                return "";
+                    synchronized (this) {
+                        try {
+                            custOrderCode = createOrderEntity.getCustOrderCode();
+                            String custCode = createOrderEntity.getCustCode();
+                            OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+                            if (information != null) {
+                                String orderCode = information.getOrderCode();
+                                OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
+                                //订单已存在,获取订单的最新状态,只有待审核的才能更新
+                                if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
+                                    logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
+                                    addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                    return "";
+                                }
                             }
+                            String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
+                            resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
+                            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                                addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
+                                reason = resultModel == null ? "" : resultModel.getDesc();
+                                logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
+                            } else {
+                                result = true;
+                                addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                                logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
+                            }
+                        } catch (Exception ex) {
+                            addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
+                            saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
                         }
-                        String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
-                        resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
-                        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                            addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
-                            reason = resultModel == null ? "" : resultModel.getDesc();
-                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
-                        } else {
-                            result = true;
-                            addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
-                            logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
-                        }
-                    } catch (Exception ex) {
-                        addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
-                        saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
                     }
                 }
             }
@@ -207,7 +209,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             cannelOrderVo.setResultCode("0");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         }
-        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
+        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
         if (null == ofcOrderStatus) {
             cannelOrderVo.setReason("发货单号不存在");
             cannelOrderVo.setResultCode("0");

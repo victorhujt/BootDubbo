@@ -24,4 +24,6 @@ public interface OfcCreateOrderService {
      */
     Map<String, String> getAddressCode(RmcAddressNameVo addressDto);
 
+    Map<String, String> getAddressCodeTemp(RmcAddressNameVo addressDto);
+
 }

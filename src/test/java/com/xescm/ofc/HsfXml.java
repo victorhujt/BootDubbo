@@ -22,12 +22,12 @@ public class HsfXml {
     private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("C:\\taobao-tomcat-7.0.59-ofc\\deploy");
 
     static public void loadConsumer() {
-        final String path = "ofc-hsf-consumer.xml";
+        final String path = "edas\\consumer\\ofc-hsf-consumer.xml";
         List<Map<String, String>> list = getProperties(path);
         for (Map<String, String> map : list) {
             factory.consumer(map.get("id")).service(map.get("interface")).version(map.get("version")).group(map.get("group")).subscribe();
         }
-        new ClassPathXmlApplicationContext("ofc-hsf-consumer.xml");
+        new ClassPathXmlApplicationContext("edas\\consumer\\ofc-hsf-consumer.xml");
     }
 
     private static List<Map<String, String>> getProperties(String path) {

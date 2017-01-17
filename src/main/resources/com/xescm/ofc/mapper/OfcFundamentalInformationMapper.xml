@@ -29,6 +29,11 @@
     <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
     <result column="creator" property="creator" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="base_code" property="baseCode" jdbcType="VARCHAR" />
+    <result column="base_name" property="baseName" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+
     <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
     <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
     <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
@@ -84,6 +89,8 @@
       </if>
       AND
       cust_order_code = #{custOrderCode}
+      AND (abolish_mark is null OR abolish_mark  = 0)
+
     </where>
   </select>
 
@@ -170,4 +177,13 @@
     ofc_fundamental_information ofi
     WHERE ofi.operator_name =#{operatorName} ORDER BY ofi.oper_time DESC LIMIT 1
   </select>
+
+  <select id="queryOfcFundInfoByCustOrderCodeAndCustCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation">
+    SELECT *
+    FROM ofc_fundamental_information ofi
+    WHERE ofi.cust_order_code = #{custOrderCode}
+    AND ofi.cust_code = #{custCode}
+    AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+  </select>
+
 </mapper>

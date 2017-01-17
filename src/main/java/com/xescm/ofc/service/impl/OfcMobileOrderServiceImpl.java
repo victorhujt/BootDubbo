@@ -202,7 +202,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         StringBuffer notes = new StringBuffer();
         //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
-        ofcFundamentalInformation.setOrderSource("手动");//订单来源
+        ofcFundamentalInformation.setOrderSource(DING_DING);//订单来源
         if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
             int custOrderCode = 0;
             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
@@ -219,7 +219,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
                     QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
                     queryCustomerCodeDto.setCustomerCode(custId);
-                    Wrapper<CscCustomerVo> cscCustomerVo = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                    Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
                     if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
                         throw new BusinessException(cscCustomerVo.getMessage());
                     }else if(null == cscCustomerVo.getResult()){
@@ -744,7 +744,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
                 QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
                 queryCustomerCodeDto.setCustomerCode(custId);
-                Wrapper<CscCustomerVo> cscCustomerVo = (Wrapper<CscCustomerVo>)cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
                 if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
                     throw new BusinessException(cscCustomerVo.getMessage());
                 }else if(null == cscCustomerVo.getResult()){

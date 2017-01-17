@@ -132,7 +132,8 @@
     <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR"></result>
     <result column="order_time" property="orderTime" jdbcType="TIMESTAMP"></result>
     <result column="order_type" property="orderType" jdbcType="VARCHAR"></result>
-    <result column="business_type" property="businessType" jdbcType="TIMESTAMP"></result>
+    <result column="business_type" property="businessType" jdbcType="VARCHAR"></result>
+    <result column="base_name" property="baseName" jdbcType="VARCHAR"></result>
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR"></result>
     <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR"></result>
     <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR"></result>
@@ -144,7 +145,7 @@
 
   <!-- 运营-订单管理查询 -->
   <select id="queryOrderList" resultMap="Order_Search_Oper_Map">
-    SELECT
+    SELECT DISTINCT
       ofi.cust_name,
       ofi.order_code,
       ofi.cust_order_code,
@@ -152,7 +153,8 @@
       ofi.order_time,
       ofi.order_type,
       ofi.business_type,
-      oos.order_status,
+      ofi.base_name,
+      (SELECT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code AND notes NOT LIKE '%已回单' LIMIT 1)order_status,
       odbi.consignee_type,
       odbi.consignee_name,
       odbi.consignee_contact_name,
@@ -161,14 +163,6 @@
       ofi.store_name
     FROM
     ofc_fundamental_information ofi
-      LEFT JOIN (
-      SELECT temp.* FROM ofc_order_status temp
-      WHERE temp.lasted_oper_time = (
-      SELECT MAX(lasted_oper_time) FROM ofc_order_status
-      WHERE temp.order_code = order_code
-      AND notes NOT LIKE '%已回单'
-      ) ORDER BY temp.lasted_oper_time DESC
-      ) oos ON ofi.order_code = oos.order_code
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     <where>
@@ -193,12 +187,18 @@
       <if test="form.businessType!=null and form.businessType!=''">
         AND ofi.business_type = #{form.businessType}
       </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+        <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+            AND ofi.area_code = #{form.areaSerialNo}
+        </if>
     </where>
     ORDER BY ofi.order_code DESC
   </select>
 
   <select id="queryOrderByOrderBatchNumber" resultMap="Order_Search_Oper_Map">
-    SELECT
+    SELECT DISTINCT
       ofi.order_code,
       ofi.cust_order_code,
       ofi.order_time,
@@ -212,13 +212,13 @@
       ofc_fundamental_information ofi
     LEFT JOIN (
       SELECT
-        temp.*
+        temp.lasted_oper_time,temp.order_code,temp.order_status
         FROM
           ofc_order_status temp
-        WHERE temp.lasted_oper_time =
-        (SELECT MAX(lasted_oper_time) FROM ofc_order_status
+        WHERE temp.order_status =
+        (SELECT MAX(order_status) FROM ofc_order_status
           WHERE temp.order_code = order_code
-        ) ORDER BY temp.lasted_oper_time DESC) oos
+        ) ORDER BY temp.order_status DESC) oos
      ON ofi.order_code = oos.order_code
     LEFT JOIN ofc_distribution_basic_info odb
     ON odb.order_code = ofi.order_code
@@ -283,7 +283,7 @@
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info ofd
     ON ofi.order_code = ofd.order_code
-    LEFT JOIN (SELECT temp.* FROM ofc_order_status temp
+    LEFT JOIN (SELECT temp.lasted_oper_time,temp.order_code,temp.order_status FROM ofc_order_status temp
     WHERE temp.lasted_oper_time = (
     SELECT MAX(lasted_oper_time) FROM ofc_order_status
     WHERE temp.order_code = order_code
@@ -299,6 +299,9 @@
       </when>
       <when test="'transCode'.toString() == searchType">
         AND ofd.trans_code = #{code}
+      </when>
+      <when test=" 'planCode'.toString() == searchType">
+        and ofi.order_code = (SELECT order_code from ofc_transplan_info where plan_code = #{code})
       </when>
       <otherwise></otherwise>
     </choose>
