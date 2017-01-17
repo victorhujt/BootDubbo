@@ -154,7 +154,7 @@
       ofi.order_type,
       ofi.business_type,
       ofi.base_name,
-      oos.order_status,
+      (SELECT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code AND notes NOT LIKE '%已回单' LIMIT 1)order_status,
       odbi.consignee_type,
       odbi.consignee_name,
       odbi.consignee_contact_name,
@@ -163,14 +163,6 @@
       ofi.store_name
     FROM
     ofc_fundamental_information ofi
-      LEFT JOIN (
-      SELECT temp.order_code,temp.order_status  FROM ofc_order_status temp
-      WHERE temp.order_status = (
-      SELECT MAX(order_status) FROM ofc_order_status
-      WHERE temp.order_code = order_code
-      AND notes NOT LIKE '%已回单'
-      ) ORDER BY temp.order_status DESC
-      ) oos ON ofi.order_code = oos.order_code
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     <where>
