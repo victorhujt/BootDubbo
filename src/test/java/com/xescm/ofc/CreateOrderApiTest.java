@@ -1,8 +1,9 @@
 package com.xescm.ofc;
 
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
-import com.xescm.ofc.edas.model.dto.mobile.OfcMobileOrderDto;
+import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO;
 import com.xescm.ofc.edas.service.OfcMobileOrderEdasService;
+import com.xescm.ofc.edas.service.OfcTranPlanDpcEdasServie;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import org.junit.Test;
@@ -36,6 +37,9 @@ public class CreateOrderApiTest {
 
     @Autowired
     private CreateOrderService createOrderService;
+
+    @Autowired
+    private OfcTranPlanDpcEdasServie ofcTranPlanDpcEdasServie;
 
 
     @Test
@@ -153,10 +157,7 @@ public class CreateOrderApiTest {
 
     @Test
     public void checkTranCode(){
-        OfcMobileOrderDto order=new OfcMobileOrderDto();
-        order.setDingdingAccountNo("014007054332891531");
-        order.setTranCode("6901721496230826");
-        order.setBusinessType("600");
-        ofcMobileOrderEdasService.saveMobileOrder(order);
+        TranPlanOfcReqDTO tranPlanOfcReqDTO=new TranPlanOfcReqDTO();
+        ofcTranPlanDpcEdasServie.tranPlanSel(tranPlanOfcReqDTO);
     }
 }
