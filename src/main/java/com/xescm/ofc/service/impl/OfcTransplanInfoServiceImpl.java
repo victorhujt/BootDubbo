@@ -79,7 +79,7 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         return ofcTransplanInfoMapper.queryUncompletedPlanCodesByOrderCode(orderCode);
     }
 
-    @Override
+    /*@Override
     public Wrapper<PageInfo<TranPlanOfcRespDto>> tranPlanSel(TranPlanOfcReqDto TranPlanOfcReqDto) {
         PageInfo<TranPlanOfcRespDto> TranPlanOfcRespDtoPageInfo=null;
         StringBuffer departurePlaceCode = new StringBuffer();
@@ -127,5 +127,5 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "查询相关任务单信息失败");
         }
         return  WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,TranPlanOfcRespDtoPageInfo);
-    }
+    }*/
 }
