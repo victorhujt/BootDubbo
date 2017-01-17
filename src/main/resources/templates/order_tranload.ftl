@@ -2231,13 +2231,13 @@
 
   $(function(){
     $("#orderTime").click(function () {
-      laydate({elem:'#orderTime', istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()});
+      laydate({elem:'#orderTime', istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()});
     })
 
     $("#expectedArrivedTime").click(function () {
       var startdates=$("#orderTime").val();
       //var enddates =DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
-      laydate({elem:'#expectedArrivedTime', istime: false, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
+      laydate({elem:'#expectedArrivedTime', istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
     })
 
     $("#pickUpGoodsV").change(function(){
