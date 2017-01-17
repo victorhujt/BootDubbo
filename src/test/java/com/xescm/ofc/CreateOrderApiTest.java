@@ -1,7 +1,7 @@
 package com.xescm.ofc;
 
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
-import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO;
+import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto;
 import com.xescm.ofc.edas.service.OfcMobileOrderEdasService;
 import com.xescm.ofc.edas.service.OfcTranPlanDpcEdasServie;
 import com.xescm.ofc.service.CreateOrderService;
@@ -157,7 +157,7 @@ public class CreateOrderApiTest {
 
     @Test
     public void checkTranCode(){
-        TranPlanOfcReqDTO tranPlanOfcReqDTO=new TranPlanOfcReqDTO();
-        ofcTranPlanDpcEdasServie.tranPlanSel(tranPlanOfcReqDTO);
+        TranPlanOfcReqDto TranPlanOfcReqDto=new TranPlanOfcReqDto();
+        ofcTranPlanDpcEdasServie.tranPlanSel(TranPlanOfcReqDto);
     }
 }

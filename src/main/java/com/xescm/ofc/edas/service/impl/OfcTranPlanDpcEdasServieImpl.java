@@ -3,8 +3,8 @@ package com.xescm.ofc.edas.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO;
-import com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDTO;
+import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto;
+import com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDto;
 import com.xescm.ofc.edas.service.OfcTranPlanDpcEdasServie;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcTransplanInfoService;
@@ -30,13 +30,13 @@ public class OfcTranPlanDpcEdasServieImpl implements OfcTranPlanDpcEdasServie{
      * @return
      */
     @Override
-    public Wrapper<PageInfo<TranPlanOfcRespDTO>> tranPlanSel(TranPlanOfcReqDTO tranPlanOfcReqDTO) {
-        logger.info("调度中心查询参数：dicTranPlanOfcSDTO：{}", ToStringBuilder.reflectionToString(tranPlanOfcReqDTO));
+    public Wrapper<PageInfo<TranPlanOfcRespDto>> tranPlanSel(TranPlanOfcReqDto TranPlanOfcReqDto) {
+        logger.info("调度中心查询参数：dicTranPlanOfcSDTO：{}", ToStringBuilder.reflectionToString(TranPlanOfcReqDto));
         try {
-            if (tranPlanOfcReqDTO == null) {
+            if (TranPlanOfcReqDto == null) {
                 throw new IllegalArgumentException("查询条件有误");
             }
-            Wrapper<PageInfo<TranPlanOfcRespDTO>> wrapper = ofcTransplanInfoService.tranPlanSel(tranPlanOfcReqDTO);
+            Wrapper<PageInfo<TranPlanOfcRespDto>> wrapper = ofcTransplanInfoService.tranPlanSel(TranPlanOfcReqDto);
             return wrapper;
         } catch (IllegalArgumentException ex) {
             logger.error(" 任务单查询接口处理失败：错误原因：{}", ex.getMessage(), ex);
