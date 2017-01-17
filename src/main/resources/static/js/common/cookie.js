@@ -29,13 +29,6 @@ function setLastUser() {
 }
 
 // 更新开单员
-function updateLastUser(loginUser) {
-
-
-    // 设置上次开单员
-    var merchandiser = $("#merchandiser").val();
-    checkAndSetCookie(loginUser, merchandiser);
-}
 
 // 检查cookie是否存在旧值，如果不存在则创建，
 // 如果存在则判断新旧值是否相同，不同的更新
@@ -65,6 +58,14 @@ function getCookie(name){
     return "";
 }
 
+
+function updateLastUser() {
+
+
+    // 设置上次开单员
+    var merchandiser = $("#merchandiser").val();
+    checkAndSetCookie(loginUser, merchandiser);
+}
 // 根据指定名称的cookie修改cookie的值
 function editCookie(name,value,expiresHours){
     var cookieString=name+"="+escape(value);
