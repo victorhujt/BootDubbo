@@ -762,16 +762,52 @@
     });
   });
 
-  // 设置当前用户上次选择的开单员
-  function setLastUserData() {
-    // 设置当前用户上次选择的开单员
-    var loginUser = $('#login_user').html();
-    var lastSelMer = getCookie(loginUser);
+  // 更新开单员
+  var loginUser = $('#login_user').html();
+  /*function updateLastUserData() {
 
-    if (lastSelMer != '') {
-      $("#merchandiser").val(lastSelMer);
+
+    // 设置上次开单员
+    var merchandiser = $("#merchandiser").val();
+    checkAndSetCookie(loginUser, merchandiser);
+  }
+
+  // 检查cookie是否存在旧值，如果不存在则创建，
+  // 如果存在则判断新旧值是否相同，不同的更新
+  function checkAndSetCookie(keyName, value) {
+    var oldVal = getCookie(keyName);
+    if(oldVal != '') {
+      if (oldVal != value) {
+        editCookie(keyName, value, -1);
+      }
+    } else {
+      addCookie(keyName, value, -1)
     }
+  }
 
+  // 添加cookie
+  function addCookie(name,value,expiresHours){
+    var cookieString=name+"="+escape(value);
+    //判断是否设置过期时间,0代表关闭浏览器时失效
+    if(expiresHours>0){
+      var date=new Date();
+      date.setTime(date.getTime+expiresHours*3600*1000);
+      cookieString=cookieString+"; expires="+date.toGMTString();
+    }
+    document.cookie=cookieString;
+  }
+
+
+  // 根据指定名称的cookie修改cookie的值
+  function editCookie(name,value,expiresHours){
+    var cookieString=name+"="+escape(value);
+    //判断是否设置过期时间,0代表关闭浏览器时失效
+    if(expiresHours>0){
+      var date=new Date();
+      date.setTime(date.getTime+expiresHours*3600*1000); //单位是多少小时后失效
+      cookieString=cookieString+"; expires="+date.toGMTString();
+    }
+    document.cookie=cookieString;
   }
 
   // 获取指定名称的cookie值
@@ -789,13 +825,23 @@
     return "";
   }
 
+  // 设置当前用户上次选择的开单员
+  function setLastUserData() {
+    // 设置当前用户上次选择的开单员
+    var loginUser = $('#login_user').html();
+    var lastSelMer = getCookie(loginUser);
+
+    if (lastSelMer != '') {
+      $("#merchandiser").val(lastSelMer);
+    }
+
+  }*/
 
   function main() {
-
     validateFormData();
 
     // 上次选择的开单员
-    setLastUserData();
+    setLastUser();
 
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
@@ -2150,13 +2196,14 @@
   $("#to_operation_distributing_excel").click(function () {
     var custChosen = $("#custName").val();
     var customerCode = $("#customerCode").val();
+    var cookieKey = loginUser;
     if(StringUtil.isEmpty(custChosen)){
       alert("请先选择客户");
     }else if(StringUtil.isEmpty(customerCode)){
       alert("该客户没有客户编码,请维护!")
     }else{
       var historyUrl = "operation_distributing";
-      var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode;
+      var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + cookieKey;
       xescm.common.loadPage(url);
     }
   })
@@ -2316,6 +2363,7 @@
             ,{"orderLists":param}
             ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
             ,function () {
+              updateLastUser(loginUser);
 //                    location.reload();
               var getTimestamp  = new Date().getTime();
               xescm.common.loadPage("/ofc/operationDistributing");
