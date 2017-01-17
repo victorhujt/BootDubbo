@@ -348,24 +348,6 @@ public class OfcTransplanInfo {
     private String twoDistribution;
 
     /**
-     * 运力池
-     */
-    @Column(name = "transport_pool")
-    private String transportPool;
-
-    /**
-     * 匹配方式
-     */
-    @Column(name = "matching_mode")
-    private String matchingMode;
-
-    /**
-     * 调度状态
-     */
-    @Column(name = "scheduling_state")
-    private String schedulingState;
-
-    /**
      * 获取计划单编号
      *
      * @return plan_code - 计划单编号
@@ -1382,57 +1364,4 @@ public class OfcTransplanInfo {
         this.twoDistribution = twoDistribution;
     }
 
-    /**
-     * 获取运力池
-     *
-     * @return transport_pool - 运力池
-     */
-    public String getTransportPool() {
-        return transportPool;
-    }
-
-    /**
-     * 设置运力池
-     *
-     * @param transportPool 运力池
-     */
-    public void setTransportPool(String transportPool) {
-        this.transportPool = transportPool;
-    }
-
-    /**
-     * 获取匹配方式
-     *
-     * @return matching_mode - 匹配方式
-     */
-    public String getMatchingMode() {
-        return matchingMode;
-    }
-
-    /**
-     * 设置匹配方式
-     *
-     * @param matchingMode 匹配方式
-     */
-    public void setMatchingMode(String matchingMode) {
-        this.matchingMode = matchingMode;
-    }
-
-    /**
-     * 获取调度状态
-     *
-     * @return scheduling_state - 调度状态
-     */
-    public String getSchedulingState() {
-        return schedulingState;
-    }
-
-    /**
-     * 设置调度状态
-     *
-     * @param schedulingState 调度状态
-     */
-    public void setSchedulingState(String schedulingState) {
-        this.schedulingState = schedulingState;
-    }
 }
