@@ -11,6 +11,7 @@
         <aop:pointcut id="exceptionTrade" expression="execution(* com.xescm.ofc.web.restcontroller.*.*(..))
         or execution(* com.xescm.ofc.web.controller.*.*(..))
         or execution(* com.xescm.ofc.web.rest.*.*(..))
+        or execution(* com.xescm.ofc.web.export.*.*(..))
         "/>
 
         <aop:advisor pointcut-ref="exceptionTrade" advice-ref="exceptionInterceptorLog"/>

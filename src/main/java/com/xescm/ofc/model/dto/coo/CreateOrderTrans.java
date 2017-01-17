@@ -133,6 +133,7 @@ public class CreateOrderTrans {
             ofcFundamentalInformation.setOrderTime(DateUtils.String2Date(createOrderEntity.getOrderTime(), DateUtils.DateFormatType.TYPE2));
             ofcFundamentalInformation.setCreationTime(nowDate);
             ofcFundamentalInformation.setOperator(CREATE_ORDER_BYAPI);
+            ofcFundamentalInformation.setCreator(CREATE_ORDER_BYAPI);
             ofcFundamentalInformation.setOperTime(nowDate);
             String custCode = createOrderEntity.getCustCode();
             String orderSource = OrderSourceEnum.getCodeByCustCode(custCode);
