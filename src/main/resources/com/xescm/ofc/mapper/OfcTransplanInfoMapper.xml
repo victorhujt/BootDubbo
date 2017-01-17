@@ -63,7 +63,7 @@
     <result column="two_distribution" property="twoDistribution" jdbcType="VARCHAR" />
   </resultMap>
 
-  <resultMap id="DpcTranPlanResultMap" type="com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDTO" >
+  <resultMap id="DpcTranPlanResultMap" type="com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDto" >
     <id column="plan_code" property="planCode" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="order_type" property="orderType" jdbcType="VARCHAR" />
@@ -286,7 +286,7 @@
   </select>
 
   <!--调度中心计划单列表查询-->
-  <select id="tranPlanSel" parameterType="com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDTO" resultMap="DpcTranPlanResultMap">
+  <select id="tranPlanSel" parameterType="com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto" resultMap="DpcTranPlanResultMap">
     SELECT DISTINCT
     oti.plan_code,
     oti.order_code,
