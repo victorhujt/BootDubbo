@@ -607,7 +607,7 @@
                         <div class="col-width-168 padding-15">
                             <div class="cclearfix" id="OrderDate">
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+                                    <input class="col-width-168 es-input laytime_" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}">
                                     <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -645,7 +645,7 @@
                         <div class="col-width-168 padding-15" style="margin-left:3px;">
                             <div class="col-width-168" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
-                                    <input class="col-width-168 es-input" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon">
+                                    <input class="col-width-168 es-input laytime_" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon">
                                     <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
                                 </div>
                             </div>
@@ -3651,25 +3651,30 @@
       });
     }
 
+    $(".laytime_").click(function(){
+      laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()});
+      toggleScroller();
+    });
+    $("body").click(function(){
+      toggleScroller();
+    });
 
-
-    setInterval(function(){
-        if($("#laydate_box").length>0){
-          if($("#laydate_box").is(":hidden")){
-            $("#Overflow").css({
-              'overflow':'auto'
-            })
-          }else{
-            $("#Overflow").css({
-              'overflow':'hidden'
-            })
-          }
-        }else{
+    function toggleScroller(){
+      if($("#laydate_box").length>0){
+        if($("#laydate_box").is(":hidden")){
           $("#Overflow").css({
             'overflow':'auto'
           })
+        }else{
+          $("#Overflow").css({
+            'overflow':'hidden'
+          })
         }
-    },0)
-
+      }else{
+        $("#Overflow").css({
+          'overflow':'auto'
+        })
+      }
+    }
 
 </script>
