@@ -483,7 +483,7 @@
       <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
         <div class="width-267">
           <div class="position-relative bk-1 ">
-            <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+            <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
             <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTime">
               <i class="fa fa-calendar l-cor bigger-130"></i>
             </label>

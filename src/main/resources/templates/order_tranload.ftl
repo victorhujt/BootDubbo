@@ -2237,7 +2237,7 @@
     $("#expectedArrivedTime").click(function () {
       var startdates=$("#orderTime").val();
       //var enddates =DateUtil.formatDate(DateUtil.addDays(DateUtil.parse(startdates),90));
-      laydate({elem:'#expectedArrivedTime', istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
+      laydate({elem:'#expectedArrivedTime', istime: false, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,min: startdates});
     })
 
     $("#pickUpGoodsV").change(function(){
