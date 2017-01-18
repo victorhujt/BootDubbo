@@ -83,10 +83,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             workbook = WorkbookFactory.create(inputStream);
         } catch (IOException e) {
             logger.error("校验Excel读取内部异常,{}",e);
-            throw new BusinessException("校验Excel读取内部异常",e);
+            throw new BusinessException("校验Excel读取内部异常");
         } catch (InvalidFormatException e) {
             logger.error("校验Excel读取内部异常{}",e);
-            throw new BusinessException("校验Excel读取内部异常",e);
+            throw new BusinessException("校验Excel读取内部异常");
         }
         int numberOfSheets = workbook.getNumberOfSheets();
 
@@ -263,10 +263,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 try {
                                     BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
                                     ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
-                                } catch (IllegalAccessException e) {
-                                    throw new BusinessException(e.getMessage(),e);
-                                } catch (InvocationTargetException e) {
-                                    throw new BusinessException(e.getMessage(),e);
+                                } catch (Exception e) {
+                                    logger.error("Excel导入异常,{}",e);
+                                    throw new BusinessException("Excel导入异常");
                                 }
                                 goodsApiVoList.add(ofcGoodsApiVo); //
                                 goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
@@ -345,7 +344,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                             }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
                                 checkPass = false;
-                                throw new BusinessException(ex.getMessage(), ex);
+                                logger.error("Excel导入异常,{}",ex);
+                                throw new BusinessException("Excel导入异常");
 
                             }
                         }
@@ -403,7 +403,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             workbook = WorkbookFactory.create(inputStream);
         } catch (Exception e) {
             logger.error("校验Excel读取内部异常{}",e);
-            throw new BusinessException("校验Excel读取内部异常",e);
+            throw new BusinessException("校验Excel读取内部异常");
         }
 
         boolean checkPass = true;
@@ -628,10 +628,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     cscContantAndCompanyResponseDto = result.get(0);
                     try {
                         BeanUtils.copyProperties(ofcContantAndCompanyResponseDto,cscContantAndCompanyResponseDto);
-                    } catch (IllegalAccessException e) {
-                        throw new BusinessException(e.getMessage(),e);
-                    } catch (InvocationTargetException e) {
-                        throw new BusinessException(e.getMessage(),e);
+                    } catch (Exception e) {
+                        logger.error("校验明细类型Excel异常,{}",e);
+                        throw new BusinessException("校验明细类型Excel异常");
                     }
                     ofcContantAndCompanyResponseDto.setCustOrderCode(custOrderCode);
                     ofcContantAndCompanyResponseDto.setContactSerialNo(cscContantAndCompanyResponseDto.getContactSerialNo() + "@" + custOrderCode);//___
@@ -667,10 +666,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             try {
                                 BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
                                 ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
-                            } catch (IllegalAccessException e) {
-                                throw new BusinessException(e.getMessage(),e);
-                            } catch (InvocationTargetException e) {
-                                throw new BusinessException(e.getMessage(),e);
+                            } catch (Exception e) {
+                                logger.error("校验明细类型Excel异常,{}",e);
+                                throw new BusinessException("校验明细类型Excel异常");
                             }
                             jsonArray.add(ofcGoodsApiVo);
                             jsonArray.add(jsonObject);
@@ -754,10 +752,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                         try {
                             BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
                             ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
-                        } catch (IllegalAccessException e) {
-                            throw new BusinessException(e.getMessage(),e);
-                        } catch (InvocationTargetException e) {
-                            throw new BusinessException(e.getMessage(),e);
+                        } catch (Exception e) {
+                            logger.error("校验明细类型Excel异常,{}",e);
+                            throw new BusinessException("校验明细类型Excel异常");
                         }
                         jsonArray.add(ofcGoodsApiVo);
                         jsonArray.add(jsonObject);
