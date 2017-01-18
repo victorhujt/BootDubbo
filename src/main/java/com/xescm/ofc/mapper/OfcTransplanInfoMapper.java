@@ -14,4 +14,5 @@ public interface OfcTransplanInfoMapper extends Mapper<OfcTransplanInfo> {
     int queryNotInvalidAndNotCompleteTransOrder(@Param(value = "orderCode") String orderCode);
     List<String> queryTransCodeByOrderCode(@Param(value = "orderCode") String orderCode);
     List<String> queryUncompletedPlanCodesByOrderCode(@Param(value = "orderCode")String orderCode);
+    /*List<TranPlanOfcRespDto> tranPlanSel(TranPlanOfcReqDto TranPlanOfcReqDto);*/
 }

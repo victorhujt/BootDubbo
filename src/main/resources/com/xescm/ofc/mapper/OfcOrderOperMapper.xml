@@ -179,7 +179,7 @@
         AND ofi.cust_name = #{form.custName}
       </if>
       <if test="form.orderState!=null and form.orderState!=''">
-        AND oos.order_status = #{form.orderState}
+        AND (SELECT DISTINCT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code ) = #{form.orderState}
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}

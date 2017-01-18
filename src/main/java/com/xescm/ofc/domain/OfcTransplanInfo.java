@@ -1363,4 +1363,5 @@ public class OfcTransplanInfo {
     public void setTwoDistribution(String twoDistribution) {
         this.twoDistribution = twoDistribution;
     }
+
 }

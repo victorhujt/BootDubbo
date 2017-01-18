@@ -2231,7 +2231,7 @@
 
   $(function(){
     $("#orderTime").click(function () {
-      laydate({elem:'#orderTime', istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()});
+      laydate({elem:'#orderTime', istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()});
     })
 
     $("#expectedArrivedTime").click(function () {
