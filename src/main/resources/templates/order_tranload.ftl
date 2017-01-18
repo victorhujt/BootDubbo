@@ -341,8 +341,8 @@
 <div class="row">
 
   <!-- /section:basics/content.breadcrumbs -->
-  <div class="page-content no-padding-top" >
-      <div class="page-header">
+  <div class="page-content no-padding-top">
+      <div class="page-header" style="margin-top:10px;">
         <p style="font-size: 14px;font-family:'微软雅黑'">
           基本信息
           <span hidden="true" id = "ofc_url">${(OFC_URL)!}</span>
@@ -813,7 +813,7 @@
 
     </div>
 </div>-->
-<div class="page-header" style="clear:left;">
+<div class="page-header" style="clear:left;margin-top:10px;">
   <p style="font-size: 14px;font-family:'微软雅黑'">
     货品信息
   </p>
