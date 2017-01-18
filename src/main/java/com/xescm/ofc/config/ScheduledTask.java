@@ -8,26 +8,18 @@ import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.rmc.edas.domain.vo.RmcAddressCodeVo;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
-import com.xescm.uam.model.dto.user.req.UamUserReqDto;
-import com.xescm.uam.model.dto.user.resp.UamUserRespDto;
 import com.xescm.uam.provider.UamGroupEdasService;
-import com.xescm.uam.provider.UamUserEdasService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +53,8 @@ public class ScheduledTask{
 
     //将历史订单的基地和大区字段补齐
 //    @Scheduled(cron = "0 */1 * * * ?")
-    @Scheduled(cron = "0 30 20 12 JAN ?")
+//    @Scheduled(cron = "0 30 20 12 JAN ?")
+   // @Scheduled(fixedDelay = 300000)
     public void fixHistoryOrder(){
         //查询所有订单
         List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.selectAll();

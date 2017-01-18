@@ -455,6 +455,13 @@
 
 <br/>
 <div class="col-xs-9">
+
+  <div class="page-header">
+    <p style="font-size: 14px;font-family:'微软雅黑'">
+      <span hidden="true" id = "login_user">${(loginUser)!}</span>
+    </p>
+  </div>
+
   <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
     <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
     历史订单选择
@@ -483,7 +490,7 @@
       <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
         <div class="width-267">
           <div class="position-relative bk-1 ">
-            <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+            <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
             <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTime">
               <i class="fa fa-calendar l-cor bigger-130"></i>
             </label>
@@ -764,9 +771,87 @@
     });
   });
 
-  function main() {
+  // 更新开单员
+  var loginUser = $('#login_user').html();
+  /*function updateLastUserData() {
 
+
+    // 设置上次开单员
+    var merchandiser = $("#merchandiser").val();
+    checkAndSetCookie(loginUser, merchandiser);
+  }
+
+  // 检查cookie是否存在旧值，如果不存在则创建，
+  // 如果存在则判断新旧值是否相同，不同的更新
+  function checkAndSetCookie(keyName, value) {
+    var oldVal = getCookie(keyName);
+    if(oldVal != '') {
+      if (oldVal != value) {
+        editCookie(keyName, value, -1);
+      }
+    } else {
+      addCookie(keyName, value, -1)
+    }
+  }
+
+  // 添加cookie
+  function addCookie(name,value,expiresHours){
+    var cookieString=name+"="+escape(value);
+    //判断是否设置过期时间,0代表关闭浏览器时失效
+    if(expiresHours>0){
+      var date=new Date();
+      date.setTime(date.getTime+expiresHours*3600*1000);
+      cookieString=cookieString+"; expires="+date.toGMTString();
+    }
+    document.cookie=cookieString;
+  }
+
+
+  // 根据指定名称的cookie修改cookie的值
+  function editCookie(name,value,expiresHours){
+    var cookieString=name+"="+escape(value);
+    //判断是否设置过期时间,0代表关闭浏览器时失效
+    if(expiresHours>0){
+      var date=new Date();
+      date.setTime(date.getTime+expiresHours*3600*1000); //单位是多少小时后失效
+      cookieString=cookieString+"; expires="+date.toGMTString();
+    }
+    document.cookie=cookieString;
+  }
+
+  // 获取指定名称的cookie值
+  function getCookie(name){
+    var strCookie=document.cookie;
+    var arrCookie=strCookie.split("; ");
+    for(var i=0;i<arrCookie.length;i++){
+      var arr=arrCookie[i].split("=");
+      if(arr[0]==name){
+        return unescape(arr[1]);
+      } else{
+        continue;
+      }
+    }
+    return "";
+  }
+
+  // 设置当前用户上次选择的开单员
+  function setLastUserData() {
+    // 设置当前用户上次选择的开单员
+    var loginUser = $('#login_user').html();
+    var lastSelMer = getCookie(loginUser);
+
+    if (lastSelMer != '') {
+      $("#merchandiser").val(lastSelMer);
+    }
+
+  }*/
+
+  function main() {
     validateFormData();
+
+    // 上次选择的开单员
+    setLastUser();
+
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
   //链接到收发货方联系人档案
@@ -2120,13 +2205,14 @@
   $("#to_operation_distributing_excel").click(function () {
     var custChosen = $("#custName").val();
     var customerCode = $("#customerCode").val();
+    var cookieKey = loginUser;
     if(StringUtil.isEmpty(custChosen)){
       alert("请先选择客户");
     }else if(StringUtil.isEmpty(customerCode)){
       alert("该客户没有客户编码,请维护!")
     }else{
       var historyUrl = "operation_distributing";
-      var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode;
+      var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + cookieKey;
       xescm.common.loadPage(url);
     }
   })
@@ -2286,6 +2372,7 @@
             ,{"orderLists":param}
             ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
             ,function () {
+              updateLastUser(loginUser);
 //                    location.reload();
               var getTimestamp  = new Date().getTime();
               xescm.common.loadPage("/ofc/operationDistributing");

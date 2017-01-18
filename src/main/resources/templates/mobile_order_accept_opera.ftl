@@ -3647,7 +3647,7 @@
     }
 
     $(".laytime_").click(function(){
-      laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()});
+      laydate({istime: false, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()});
       toggleScroller();
     });
     $("body").click(function(){
