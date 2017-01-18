@@ -101,8 +101,7 @@
     </div>-->
 </div>
 
-<div class="adoptModal" id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
-     aria-hidden="false">
+<div class="adoptModal" id="errorExcelImport" class="bootbox modal fade in" style="display: none;">
     <#--<div class="modal-dialog">-->
         <div>
            <#-- <div class="modal-header">

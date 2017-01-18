@@ -14,7 +14,7 @@
   .help-block{
     color:#f00 !important;
   }
-  .initBtn{
+ /* .initBtn{
     line-height:32px;
     width:34px;
     border:1px solid #cacaca;
@@ -27,7 +27,7 @@
   .initBtn:hover{
     background:#fff!important;
     border:1px solid #cacaca!important;
-  }
+  }*/
   .width-267{
     width:267px;
     padding:0 12px;
@@ -51,9 +51,9 @@
   .db-1{
     margin-top: 10px;
   }
-  .l-cor{
+ /* .l-cor{
     color: #666;
-  }
+  }*/
   .bg-1{
     margin-top: 5px;
   }
@@ -519,7 +519,7 @@
           <div class="bk-1 position-relative">
             <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder=""/>
             <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
-            <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
+            <button type="button" class="initBtn" id="custListDivBlock">
               <i class="fa fa-user l-cor bigger-130"></i>
             </button>
           </div>
@@ -550,8 +550,8 @@
   <br/>
   <br/>
   <div class="row" style="margin-right: -10px">
-    <div class="col-xs-12">
-      <div class="form-group"style="border-top:1px solid #ccc;">
+    <div class="col-xs-12" style="padding:0 25px;">
+      <#--<div class="form-group"style="border-top:1px solid #ccc;">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">发货方</b></label>
         <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px">
         </div>
@@ -561,8 +561,17 @@
             <span id="showDepaturePlace" class="l-bj"></span>
           </div>
         </div>
-      </div>
+      </div>-->
+        <div class="page-header">
+          <p>
+            发货方
+          </p>
+        </div>
     </div>
+
+
+
+
     <div class="col-xs-12">
       <div class="form-group" style="margin-left: 0">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">名称</label>
@@ -574,7 +583,7 @@
            <button type="button" class="btn btn-minier btn-inverse no-padding-right y-float"
                    id=""><i class="fa fa-user l-cor"></i>
            </button></span>-->
-            <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
+            <button type="button" class="initBtn" id="consignorListDivBlock" >
               <i class="fa fa-user l-cor bigger-130"></i>
             </button>
           </div>

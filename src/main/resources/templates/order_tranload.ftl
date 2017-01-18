@@ -1,5 +1,8 @@
 <title>运输开单</title>
 <style type="text/css">
+  .col-width-376{
+    width:417px;
+  }
   .date_a{
     line-height:21px !important;
   }
@@ -339,9 +342,6 @@
 
   <!-- /section:basics/content.breadcrumbs -->
   <div class="page-content no-padding-top" >
-
-
-    <div class="col-xs-12">
       <div class="page-header">
         <p style="font-size: 14px;font-family:'微软雅黑'">
           基本信息
@@ -429,7 +429,7 @@
                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                 <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
-                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;color: #666 !important;" >
+                <button type="button" class="initBtn" id="custListDivBlock"style="outline:none;" >
                   <i class="fa fa-user l-cor bigger-130"></i>
                 </button>
               <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
@@ -460,23 +460,24 @@
 
       </form>
 
-      <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:360px;">
-        <div style="width:515px;margin-right:35px;float:left;">
+      <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:250px;">
+        <div style="width:515px;margin-right:20px;float:left;">
           <div class="page-header">
             <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
           </div>
-          <span style="cursor:pointer" id="consignorListDivBlock">
-                    <button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consignorselbtn">选择</button></span>
+        <#--  <span style="cursor:pointer" id="consignorListDivBlock">
+                    <button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consignorselbtn">选择</button></span>-->
          <#-- <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>-->
          <#-- <label class="control-label" style="float:right;" for="name">出发地：</label>-->
           <div id="consignorin" style="margin-top:15px;">
             <div class="form-group" >
               <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
-              <div class="col-width-168 padding-15">
-                <div class="clearfix">
+              <div class="col-width-376 padding-15">
+                <div class="clearfix position-relative">
                   <input id="consignorCode" name="consignorCode" type="hidden">
                   <input id="consignorType" name="consignorType" type="hidden">
                   <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                  <label id="consignorListDivBlock" class="initBtn" for="consignorName"><i class="fa fa-user bigger-130"></i></label>
                 </div>
               </div>
             </div>
@@ -488,16 +489,16 @@
                   <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                 </div>
               </div>
-            </div>
-            <div class="form-group" >
-              <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系电话</label>
+              <label class="control-label col-label no-padding-right" style="margin-left:0;" for="name"><span class="w-label-icon">*</span>联系电话</label>
               <div class="col-width-168 padding-15">
                 <div class="clearfix">
                   <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
                 </div>
               </div>
             </div>
+           <#-- <div class="form-group" >
+
+            </div>-->
             <div class="form-group" >
               <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>地址选择</label>
               <div class="col-width-376 padding-15">
@@ -514,14 +515,14 @@
                 </div>
               </div>
             </div>
-          <div class="form-group">
+         <#-- <div class="form-group">
             <label class="control-label col-label no-padding-right" for="name">出发地</label>
             <div class="col-width-376 padding-15">
               <div class="clearfix">
                 <input id="departure_place" name="departure_place" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly />
               </div>
             </div>
-          </div>
+          </div>-->
 
           </div>
 
@@ -529,23 +530,23 @@
         </div>
 
 
-        <div style="width:450px;float:left;">
+        <div style="width:515px;float:left;">
           <div class="page-header">
             <h4 style="font-size: 14px;font-family:'微软雅黑'">收货方信息</h4>
           </div>
-          <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
-          <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+         <#-- <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
+          <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>-->
          <#-- <label id="destination" class="control-label" style="float:right;" for="name"></label>
           <label class="control-label" style="float:right;" for="name">目的地：</label>-->
           <div id="consignorout" style="margin-top:15px;">
             <div class="form-group" >
               <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
-              <div class="col-width-168 padding-15">
-                <div class="clearfix">
+              <div class="col-width-376 padding-15">
+                <div class="clearfix position-relative">
                   <input id="consigneeCode" name="consigneeCode" type="hidden">
                   <input id="consigneeType" name="consigneeType" type="hidden">
                   <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
+                  <label id="consigneeListDivBlock" class="initBtn" for="consignorName"><i class="fa fa-user bigger-130"></i></label>
                 </div>
               </div>
             </div>
@@ -558,9 +559,7 @@
 
                 </div>
               </div>
-            </div>
-            <div class="form-group" >
-              <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系电话</label>
+              <label class="control-label col-label no-padding-right" style="margin-left:0;" for="name"><span class="w-label-icon">*</span>联系电话</label>
               <div class="col-width-168 padding-15">
                 <div class="clearfix">
                   <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
@@ -568,6 +567,9 @@
                 </div>
               </div>
             </div>
+          <#--  <div class="form-group" >
+
+            </div>-->
             <div class="form-group" >
               <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>地址选择</label>
               <div class="col-width-376 padding-15">
@@ -584,15 +586,15 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
+            <#--<div class="form-group">
               <label class="control-label col-label no-padding-right" for="name">目的地</label>
-             <#-- <label id="destination" class="control-label" style="float:left;padding:0 15px;line-height:34px;" for="name"></label>-->
+             &lt;#&ndash; <label id="destination" class="control-label" style="float:left;padding:0 15px;line-height:34px;" for="name"></label>&ndash;&gt;
               <div class="col-width-376 padding-15">
                 <div class="clearfix">
                   <input id="destination" name="destination" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" readonly />
                 </div>
               </div>
-            </div>
+            </div>-->
           </div>
         </div>
       </form>
@@ -800,7 +802,6 @@
 
       </form>
       <!-- /section:elements.tab.option -->
-    </div>
     <!-- PAGE CONTENT ENDS -->
   </div><!-- /.col -->
 </div><!-- /.row -->
