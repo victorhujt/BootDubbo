@@ -456,11 +456,11 @@
 <br/>
 <div class="col-xs-9">
 
-  <div class="page-header">
+  <#--<div class="page-header">
     <p style="font-size: 14px;font-family:'微软雅黑'">
       <span hidden="true" id = "login_user">${(loginUser)!}</span>
     </p>
-  </div>
+  </div>-->
 
   <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
     <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
@@ -558,7 +558,7 @@
   <br/>
   <div class="row" style="margin-right: -10px">
     <div class="col-xs-12" style="padding:0 25px;">
-      <#--<div class="form-group"style="border-top:1px solid #ccc;">
+     <#-- <div class="form-group"style="border-top:1px solid #ccc;">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">发货方</b></label>
         <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px">
         </div>
@@ -569,11 +569,11 @@
           </div>
         </div>
       </div>-->
-        <div class="page-header">
-          <p>
-            发货方
-          </p>
-        </div>
+       <div class="page-header">
+         <p>
+           发货方
+         </p>
+       </div>
     </div>
 
 
@@ -602,14 +602,25 @@
             <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder=""/>
           </div>
         </div>
-        <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
-        <div class="width-267">
-          <div class="clearfix">
-            <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder=""/>
+
+      </div>
+    </div>
+      <div class="col-xs-12">
+        <div class="form-group" style="margin-left: 0">
+          <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
+          <div class="width-267">
+            <div class="clearfix">
+              <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder=""/>
+            </div>
+          </div>
+          <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:-2px;">出发地</label>
+          <div class="width-267">
+            <div class="clearfix">
+              <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="showDepaturePlace" id="showDepaturePlace" type="text" placeholder=""/>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     <div class="col-xs-12">
       <div class="form-group" style="margin-left: 0">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">地址</label>
@@ -850,7 +861,7 @@
     validateFormData();
 
     // 上次选择的开单员
-    setLastUser();
+   // setLastUser();
 
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
@@ -1548,7 +1559,7 @@
           $("#consignorStreetName").val(streetNameAuto);
           $("#consignorAddress").val(addressAuto);
 
-          $("#showDepaturePlace").html(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
+          $("#showDepaturePlace").val(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
           $("#consignorName-error").html("");
           $("#consignorName-error").parent().parent().removeClass("has-error").addClass("has-success");
 
@@ -2854,7 +2865,7 @@
             $("#consignorStreetName").val(streetName);
             $("#consignorAddress").val(address);
 
-            $("#showDepaturePlace").html(provinceName+cityName+areaName+streetName);
+            $("#showDepaturePlace").val(provinceName+cityName+areaName+streetName);
           }
         });
         if($("#consignorName").val()!==""){
