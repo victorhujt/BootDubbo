@@ -121,7 +121,6 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
             logger.debug("保存附件信息={}", e.getMessage(), e);
-            e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resultVo);
@@ -144,7 +143,6 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
             logger.debug("删除附件信息={}", e.getMessage(), e);
-            e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);

@@ -246,7 +246,6 @@ public class OfcOperationDistributing extends BaseController{
             String suffix = fileName.substring(potIndex, fileName.length());
             excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,suffix);
         }catch (BusinessException e) {
-            e.printStackTrace();
             logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }catch (Exception e) {
@@ -311,11 +310,9 @@ public class OfcOperationDistributing extends BaseController{
                 result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
             }
         } catch (BusinessException e) {
-            e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }

@@ -736,15 +736,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
        OfcDistributionBasicInfoDto ofcDistributionBasicInfoDtoEpc = new OfcDistributionBasicInfoDto();
         try {
             BeanUtils.copyProperties(ofcDistributionBasicInfoDtoEpc,pushDistributionBasicInfo);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("订单中心向DMS推送卡班订单, 实体转换异常,{}",e);
         }
         Wrapper<?> wrapper = epcOfc2DmsEdasService.addDistributionBasicInfo(ofcDistributionBasicInfoDtoEpc);
         if(Wrapper.ERROR_CODE == wrapper.getCode()){
+            logger.error("向分拣中心推送卡班订单失败");
             throw new BusinessException("向分拣中心推送卡班订单失败");
         }else if("100101".equals(wrapper.getCode())){
+            logger.error("分拣中心已存在您所输入的运输单号,请重新输入!");
             throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
         }
         //更新运输计划单状态为已推送, 略过, 因为只更新不记录
@@ -1525,11 +1525,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
                                         try {
                                             BeanUtils.copyProperties(ofcTransplanInfoReflect, ofcTransplanInfo);
-                                        } catch (IllegalAccessException e) {
-                                            e.printStackTrace();
-                                        } catch (InvocationTargetException e) {
-                                            e.printStackTrace();
                                         }catch (Exception ex){
+                                            logger.error("复制计划单信息异常{}",ex);
                                             throw new BusinessException("复制计划单信息异常",ex);
                                         }
                                         //创建第一个卡班单
@@ -1580,11 +1577,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         try {
                                             BeanUtils.copyProperties(ofcTransplanInfoReflect1, ofcTransplanInfo);
                                             BeanUtils.copyProperties(ofcTransplanInfoReflect2, ofcTransplanInfo);
-                                        } catch (IllegalAccessException e) {
-                                            e.printStackTrace();
-                                        } catch (InvocationTargetException e) {
-                                            e.printStackTrace();
                                         }catch (Exception ex){
+                                            logger.error("复制计划单信息异常,{}",ex);
                                             throw new BusinessException("复制计划单信息异常",ex);
                                         }
                                         //创建第一个城配计划单
@@ -1623,11 +1617,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
                                         try {
                                             BeanUtils.copyProperties(ofcTransplanInfoReflect, ofcTransplanInfo);
-                                        } catch (IllegalAccessException e) {
-                                            e.printStackTrace();
-                                        } catch (InvocationTargetException e) {
-                                            e.printStackTrace();
-                                        }catch (Exception ex){
+                                        } catch (Exception ex){
+                                            logger.error("复制基本档案和运输档案异常,{}",ex);
                                             throw new BusinessException("复制基本档案和运输档案异常",ex);
                                         }
                                         //创建第一个城配计划单
@@ -1658,11 +1649,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                         OfcTransplanInfo ofcTransplanInfoReflect = new OfcTransplanInfo();
                                         try {
                                             BeanUtils.copyProperties(ofcTransplanInfoReflect, ofcTransplanInfo);
-                                        } catch (IllegalAccessException e) {
-                                            e.printStackTrace();
-                                        } catch (InvocationTargetException e) {
-                                            e.printStackTrace();
-                                        }catch (Exception ex){
+                                        } catch (Exception ex){
+                                            logger.error("复制基本档案和运输档案异常,{}",ex);
                                             throw new BusinessException("复制基本档案和运输档案异常",ex);
                                         }
                                         //创建第一个卡班单
@@ -1980,8 +1968,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewStatus);//更新仓储计划单最新的状态
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("组装数据产生异常",e);
+            logger.error("组装数据产生异常,{}",e);
         }
 
     }
@@ -2189,16 +2176,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
                 acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
 
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                logger.error("订单信息推送结算中心 转换异常, {}", e);
             }
             Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                logger.error(wrapper.getMessage());
                 throw new BusinessException(wrapper.getMessage());
             }
         }else{
+            logger.error("结算中心暂时不支持该类型的订单");
             throw new BusinessException("结算中心暂时不支持该类型的订单");
         }
     }

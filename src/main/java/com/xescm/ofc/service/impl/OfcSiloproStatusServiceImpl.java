@@ -230,7 +230,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 					ofcOrderStatusService.save(status);
 				}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("ofcWarehouseFeedBackFromWhc, {}",e);
 		}
 
 	}

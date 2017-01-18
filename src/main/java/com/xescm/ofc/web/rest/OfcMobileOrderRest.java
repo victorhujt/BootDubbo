@@ -231,7 +231,6 @@ public class OfcMobileOrderRest extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
             logger.debug("更新附件操作失败={}", e.getMessage(), e);
-            e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
@@ -261,7 +260,6 @@ public class OfcMobileOrderRest extends BaseController {
         } catch (BusinessException ex) {
         } catch (Exception e) {
             logger.debug("更新附件操作失败={}", e.getMessage(), e);
-            e.printStackTrace();
         }
     }
 }
