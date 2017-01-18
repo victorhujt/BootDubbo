@@ -2909,7 +2909,7 @@
   // 设置当前用户上次选择的开单员
   function setLastUserData() {
     // 设置当前用户上次选择的开单员
-    setLastUser();
+    setLastUser("YS");
     var lastSelConsignor = getCookie(loginUser+"@consignor");
 
     // 发货方地址
@@ -2926,7 +2926,7 @@
   function updateLastUserData() {
 
     // 设置上次开单员
-    updateLastUser(loginUser);
+    updateLastUser(loginUser, "YS");
 
     // 发货方地址
     var consignor = $("#city-picker3-consignor").val();

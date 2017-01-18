@@ -3,10 +3,10 @@
  */
 
 // 上次选择的开单员
-function setLastUser() {
+function setLastUser(type) {
     // 设置当前用户上次选择的开单员
     var loginUser = $('#login_user').html();
-    var lastSelMer = getCookie(loginUser);
+    var lastSelMer = getCookie(loginUser+"@"+type);
 
     if (lastSelMer != '') {
         $("#merchandiser").val(lastSelMer);
@@ -59,12 +59,12 @@ function getCookie(name){
 }
 
 
-function updateLastUser() {
+function updateLastUser(loginUser, type) {
 
 
     // 设置上次开单员
     var merchandiser = $("#merchandiser").val();
-    checkAndSetCookie(loginUser, merchandiser);
+    checkAndSetCookie(loginUser+"@"+type, merchandiser);
 }
 // 根据指定名称的cookie修改cookie的值
 function editCookie(name,value,expiresHours){

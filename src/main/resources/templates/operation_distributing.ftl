@@ -456,11 +456,11 @@
 <br/>
 <div class="col-xs-9">
 
-  <#--<div class="page-header">
+  <div>
     <p style="font-size: 14px;font-family:'微软雅黑'">
       <span hidden="true" id = "login_user">${(loginUser)!}</span>
     </p>
-  </div>-->
+  </div>
 
   <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
     <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
@@ -750,6 +750,7 @@
 
 <script type="text/javascript">
   var scripts = [null,
+      "${OFC_WEB_URL!}/../js/common/cookie.js",
     "/components/jquery-validation/dist/jquery.validate.min.js",
     "/components/jquery-validation/src/localization/messages_zh.js",
     "/components/jquery-validation/dist/additional-methods.js",
@@ -861,7 +862,7 @@
     validateFormData();
 
     // 上次选择的开单员
-   // setLastUser();
+    setLastUser("CP");
 
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
@@ -2383,7 +2384,7 @@
             ,{"orderLists":param}
             ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
             ,function () {
-              updateLastUser(loginUser);
+              updateLastUser(loginUser, "CP");
 //                    location.reload();
               var getTimestamp  = new Date().getTime();
               xescm.common.loadPage("/ofc/operationDistributing");
