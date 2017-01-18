@@ -257,7 +257,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw ex;
         } catch (Exception ex) {
             logger.error("==>审核订单发生未知异常！", ex);
-            ex.printStackTrace();
             throw ex;
         }
     }

@@ -1,3 +1,62 @@
+
+<div class="adoptModal" id="custListDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="bootbox-body">
+            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
+                    <div class="col-width-220 padding-15 y-float">
+                        <div class="clearfix">
+                            <input id="custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text"
+                                   style="color: black" class="form-control input-sm" placeholder=""
+                                   aria-controls="dynamic-table">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-3 y-float">
+                        <div class="clearfix">
+                            <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="bootbox-form">
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer"
+                       role="grid" aria-describedby="dynamic-table_info">
+                    <thead>
+                    <tr role="row">
+                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                            <label class="pos-rel">
+                                选择
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Domain: activate to sort column ascending">客户编码
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Price: activate to sort column ascending">类型
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Clicks: activate to sort column ascending">公司名称
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Clicks: activate to sort column ascending">渠道
+                        </th>
+                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                            aria-label="Clicks: activate to sort column ascending">产品类别
+                        </th>
+                    </thead>
+                    <tbody id="custListDivTbody"></tbody>
+                </table>
+                <div class="row">
+                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     // 打开客户窗口
     function showCustomer() {
@@ -19,7 +78,9 @@
 
                             $("#custName").val(customerName);
                             $("#customerCode").val(customerCode);
-
+                            if(undefined != $("#customerCodeForGoods")){
+                                $("#customerCodeForGoods").val(customerCode);
+                            }
                             selectCustCallback();
                         }
                     }
@@ -116,61 +177,3 @@
     }
 
 </script>
-<div class="adoptModal" id="custListDiv" style="display: none;">
-    <div class="modal-body">
-        <div class="bootbox-body">
-            <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
-                    <div class="col-width-220 padding-15 y-float">
-                        <div class="clearfix">
-                            <input id="custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text"
-                                   style="color: black" class="form-control input-sm" placeholder=""
-                                   aria-controls="dynamic-table">
-                        </div>
-                    </div>
-
-                    <div class="col-xs-3 y-float">
-                        <div class="clearfix">
-                            <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <form class="bootbox-form">
-                <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer"
-                       role="grid" aria-describedby="dynamic-table_info">
-                    <thead>
-                    <tr role="row">
-                        <th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-                            <label class="pos-rel">
-                                选择
-                                <span class="lbl"></span>
-                            </label>
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Domain: activate to sort column ascending">客户编码
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Price: activate to sort column ascending">类型
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">公司名称
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">渠道
-                        </th>
-                        <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                            aria-label="Clicks: activate to sort column ascending">产品类别
-                        </th>
-                    </thead>
-                    <tbody id="custListDivTbody"></tbody>
-                </table>
-                <div class="row">
-                    <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
