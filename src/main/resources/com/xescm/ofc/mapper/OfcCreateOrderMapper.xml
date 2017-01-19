@@ -64,7 +64,13 @@
     FROM ofc_fundamental_information ofi
     LEFT JOIN (
         SELECT
-        temp.*
+          temp.order_code,
+          temp.order_status,
+          temp.status_desc,
+          temp.lasted_oper_time,
+          temp.notes,
+          temp.operator,
+          temp.creat_time
         FROM
         ofc_order_status temp
         WHERE temp.lasted_oper_time =

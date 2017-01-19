@@ -33,7 +33,34 @@
   <!--订单货品列表查询-->
   <select id="goodsDetailsScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
-    oos.*
+    oos.goods_code,
+    oos.goods_name,
+    oos.goods_spec,
+    oos.unit,
+    oos.quantity,
+    oos.unit_price,
+    oos.production_batch,
+    oos.production_time,
+    oos.invalid_time,
+    oos.order_code,
+    oos.notes,
+    oos.creation_time,
+    oos.creator,
+    oos.operator,
+    oos.oper_time,
+    oos.weight,
+    oos.cubage,
+    oos.total_box,
+    oos.goods_category,
+    oos.pack,
+    oos.quantity_unit_price,
+    oos.weight_unit_price,
+    oos.volume_unit_price,
+    oos.billing_weight,
+    oos.goods_type,
+    oos.charging_ways,
+    oos.charging_quantity,
+    oos.charging_unit_price
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -59,7 +86,35 @@
   </delete>
 
   <select id="queryByOrderCode" resultMap="BaseResultMap">
-    SELECT gdi.*
+    SELECT
+      gdi.goods_code,
+      gdi.goods_name,
+      gdi.goods_spec,
+      gdi.unit,
+      gdi.quantity,
+      gdi.unit_price,
+      gdi.production_batch,
+      gdi.production_time,
+      gdi.invalid_time,
+      gdi.order_code,
+      gdi.notes,
+      gdi.creation_time,
+      gdi.creator,
+      gdi.operator,
+      gdi.oper_time,
+      gdi.weight,
+      gdi.cubage,
+      gdi.total_box,
+      gdi.goods_category,
+      gdi.pack,
+      gdi.quantity_unit_price,
+      gdi.weight_unit_price,
+      gdi.volume_unit_price,
+      gdi.billing_weight,
+      gdi.goods_type,
+      gdi.charging_ways,
+      gdi.charging_quantity,
+      gdi.charging_unit_price
     FROM ofc_goods_details_info gdi
     LEFT JOIN
     ofc_fundamental_information ofi

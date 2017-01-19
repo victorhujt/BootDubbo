@@ -264,7 +264,13 @@
     FROM
     (
     SELECT
-    s.*
+    s.order_code,
+    s.order_status,
+    s.status_desc,
+    s.lasted_oper_time,
+    s.notes,
+    s.operator,
+    s.creat_time
     FROM
     ofc_order_status s,
     (
