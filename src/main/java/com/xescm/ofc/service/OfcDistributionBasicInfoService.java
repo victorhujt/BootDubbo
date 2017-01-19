@@ -1,5 +1,7 @@
 package com.xescm.ofc.service;
 
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 
 /**
@@ -16,4 +18,7 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     String getKabanOrderCodeByTransCode(String transCode);
 
     String getLastedKabanOrderCodeByTransCode(String transCode);
-}
+
+
+     Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee);
+    }
