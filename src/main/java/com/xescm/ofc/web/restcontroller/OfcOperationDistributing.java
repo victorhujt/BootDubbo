@@ -106,12 +106,11 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据选择的客户查询仓库
      * @param customerCode
-     * @param model
      * @param response
      */
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
     @ResponseBody
-    public void queryCustomerByName(String customerCode,Model model,HttpServletResponse response){
+    public void queryCustomerByName(String customerCode,HttpServletResponse response){
         logger.info("城配开单根据选择的客户查询仓库==> customerCode={}", customerCode);
         try{
             List<RmcWarehouseRespDto> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
@@ -124,13 +123,11 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 查询货品一级种类
-     * @param customerCode
-     * @param model
      * @param response
      */
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsTypeByCustId(String customerCode,Model model,HttpServletResponse response){
+    public void queryGoodsTypeByCustId(HttpServletResponse response){
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
@@ -140,20 +137,19 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
+            logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{},{}"
+                    ,ex.getMessage(),wrapper == null ? "城配下单查询货品种类失败的结果为null": wrapper.getMessage(),ex);
         }
     }
 
     /**
      * 根据货品一级种类查询货品二级小类
-     * @param customerCode
      * @param goodsType
-     * @param model
      * @param response
      */
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsSecTypeByCAndT(String customerCode, String goodsType,Model model,HttpServletResponse response){
+    public void queryGoodsSecTypeByCAndT(String goodsType,HttpServletResponse response){
         logger.info("城配开单根据选择的客户和货品一级种类查询货品二级小类==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
@@ -165,7 +161,8 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
+            logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}"
+                    ,ex.getMessage(),wrapper == null ? "城配下单查询货品小类失败的结果为null": wrapper.getMessage(),ex);
         }
     }
 
@@ -187,7 +184,8 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage(),ex);
+            logger.error("城配下单查询货品列表失败!{}{}{}"
+                    ,ex.getMessage(),wrapper == null ? "城配开单查询货品列表查到的结果为null": wrapper.getMessage(),ex);
         }
     }
 
@@ -234,7 +232,7 @@ public class OfcOperationDistributing extends BaseController{
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> fileUploadAndCheck(HttpServletRequest paramHttpServletRequest){
-        List<String> excelSheet = null;
+        List<String> excelSheet;
         try {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
@@ -284,24 +282,26 @@ public class OfcOperationDistributing extends BaseController{
 
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
+                int tenThousand = 100000;
                 OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
                 List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
-                    String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime() + (int)Math.random()*100000;
+                    StringBuilder batchgoodsKey = new StringBuilder("ofc:batchgoods:");
+                    batchgoodsKey.append(System.nanoTime()).append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchgoodsKey, JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
-                    rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
-                    String s = ops.get(batchgoodsKey);
-                    String s1 = ops.get(batchgoodsKey);
-                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey);
+                    ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
+                    rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
                 }
                 if(cscContantAndCompanyInportDtoList.size() > 0){
-                    String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime() + (int)Math.random()*100000;
+                    StringBuilder batchconsingeeKey = new StringBuilder("ofc:batchconsingee:");
+                    batchconsingeeKey.append(System.nanoTime());
+                    batchconsingeeKey.append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchconsingeeKey, JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
-                    rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
-                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey);
+                    ops.set(batchconsingeeKey.toString(), JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
+                    rt.expire(batchconsingeeKey.toString(), 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey.toString());
                 }
                 result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){

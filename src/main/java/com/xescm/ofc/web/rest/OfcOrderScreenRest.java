@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,7 @@ public class OfcOrderScreenRest extends BaseController {
 
     @RequestMapping(value = "/queryOrderPageByCondition", method=RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page, HttpServletRequest request, OrderScreenCondition orderScreenCondition) {
+    public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page,  OrderScreenCondition orderScreenCondition) {
         logger.debug("==>订单中心订单查询条件 queryOrderPageByCondition={}", orderScreenCondition);
 //        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
         PageInfo<OrderScreenResult> pageInfo = null;

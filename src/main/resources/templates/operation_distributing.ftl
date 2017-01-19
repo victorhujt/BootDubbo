@@ -141,14 +141,6 @@
             </div>
           </div>
         </div>
-       <#-- <div class="form-group">
-          <label class="control-label  col-label no-padding-right" for="name"></label>
-
-          <div class="modal-footer">
-            <button id="goodsEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-            <span id="goodsListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
-          </div>
-        </div>-->
       </form>
       <form class="bootbox-form">
         <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
@@ -216,14 +208,6 @@
             </div>
           </div>
         </div>
-       <#-- <div class="form-group">
-          <label class="control-label  col-xs-1 no-padding-right" style="width:7%;line-height:34px;" for="name"></label>
-
-          <div class="modal-footer">
-            <button id="contactinEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-            <span id="consignorListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
-          </div>
-        </div>-->
 
       </form>
       <form class="bootbox-form">
