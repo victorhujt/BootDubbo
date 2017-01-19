@@ -2934,12 +2934,6 @@
 
   }
 
-  // 删除指定名称的cookie
-  function deleteCookie(name){
-    var date=new Date();
-    date.setTime(-1); //设定一个过去的时间即可
-    document.cookie=name+"=v; expires="+date.toGMTString();
-  }
   //货品行校验数据并提示
   function checkValue(obj,value,msg){
     if(value==""){

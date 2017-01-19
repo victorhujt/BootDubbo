@@ -11,24 +11,15 @@ function setLastUser(type) {
     if (lastSelMer != '') {
         $("#merchandiser").val(lastSelMer);
     }
-
-    // 获取指定名称的cookie值
-    function getCookie(name){
-        var strCookie=document.cookie;
-        var arrCookie=strCookie.split("; ");
-        for(var i=0;i<arrCookie.length;i++){
-            var arr=arrCookie[i].split("=");
-            if(arr[0]==name){
-                return unescape(arr[1]);
-            } else{
-                continue;
-            }
-        }
-        return "";
-    }
 }
 
 // 更新开单员
+function updateLastUser(loginUser, type) {
+
+    // 设置上次开单员
+    var merchandiser = $("#merchandiser").val();
+    checkAndSetCookie(loginUser+"@"+type, merchandiser);
+}
 
 // 检查cookie是否存在旧值，如果不存在则创建，
 // 如果存在则判断新旧值是否相同，不同的更新
@@ -58,14 +49,6 @@ function getCookie(name){
     return "";
 }
 
-
-function updateLastUser(loginUser, type) {
-
-
-    // 设置上次开单员
-    var merchandiser = $("#merchandiser").val();
-    checkAndSetCookie(loginUser+"@"+type, merchandiser);
-}
 // 根据指定名称的cookie修改cookie的值
 function editCookie(name,value,expiresHours){
     var cookieString=name+"="+escape(value);
@@ -88,4 +71,12 @@ function addCookie(name,value,expiresHours){
         cookieString=cookieString+"; expires="+date.toGMTString();
     }
     document.cookie=cookieString;
+}
+
+
+// 删除指定名称的cookie
+function deleteCookie(name){
+    var date=new Date();
+    date.setTime(-1); //设定一个过去的时间即可
+    document.cookie=name+"=v; expires="+date.toGMTString();
 }
