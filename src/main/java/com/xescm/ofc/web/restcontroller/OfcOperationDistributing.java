@@ -67,9 +67,14 @@ public class OfcOperationDistributing extends BaseController{
     @Resource
     private CodeGenUtils codeGenUtils;
 
+    /**
+     * 城配开单确认下单
+     * @param orderLists 下单数据
+     * @return
+     */
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
+    public Wrapper<?> placeOrdersListCon(String orderLists){
         logger.info("城配开单确认下单==> orderLists={}", orderLists);
         String resultMessage = null;
         try{
@@ -103,7 +108,7 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据选择的客户查询仓库
-     * @param customerCode
+     * @param customerCode 客户编码
      * @param response
      */
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
@@ -142,7 +147,7 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据货品一级种类查询货品二级小类
-     * @param goodsType
+     * @param goodsType 货品一级类别
      * @param response
      */
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
@@ -166,7 +171,7 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 查询货品列表
-     * @param cscGoodsApiDto
+     * @param cscGoodsApiDto 前端查询条件
      * @param response
      * 2.0:前端还需再根据未修改的接口再把customerId改了!
      */

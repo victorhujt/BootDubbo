@@ -53,8 +53,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     @Override
     /**
      * 转换页面DTO为CSCCUSTOMERDTO以便复用原有下单逻辑
-     * @param ofcOrderDTO
-     * @param purpose
+     * @param ofcOrderDTO 订单实体
+     * @param purpose 联系人用途: 2 发货方, 1 收货方
      * @return
      */
     public CscContantAndCompanyDto switchOrderDtoToCscCAndCDto(OfcOrderDTO ofcOrderDTO, String purpose) {
@@ -129,7 +129,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     }
     /**
      * 校验客户订单编号
-     * @param jsonArray
+     * @param jsonArray 订单json数组
      * @return
      * @throws Exception
      */
@@ -160,15 +160,15 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 获取用户上传的Excel的sheet页
-     * @param uploadFile
-     * @param suffix
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀 xls,xlsx
      * @return
      */
     @Override
     public List<String> getExcelSheet(MultipartFile uploadFile, String suffix) {
         List<String> sheetMsgList = new ArrayList<>();
         if("xls".equals(suffix)){
-            HSSFWorkbook hssfWorkbook = null;
+            HSSFWorkbook hssfWorkbook;
             try {
                 hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
             } catch (IOException e) {
@@ -185,7 +185,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 }
             }
         }else if("xlsx".equals(suffix)){
-            XSSFWorkbook xssfWorkbook = null;
+            XSSFWorkbook xssfWorkbook;
             try {
                 xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
             } catch (IOException e) {
@@ -210,6 +210,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 城配开单必填项后端校验
+     * @param ofcOrderDTO 订单实体
      */
     @Override
     public void validateOperationDistributingMsg(OfcOrderDTO ofcOrderDTO) {
@@ -230,7 +231,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 城配开单批量下单循环入口
-     * @param jsonArray
+     * @param jsonArray 订单json数组
      * @return
      */
     @Override
@@ -271,17 +272,18 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     /**
      * Excel校验入口
      * 在这里区分模板类型
-     * @param uploadFile
-     * @param suffix
-     * @param sheetNum
-     * @param authResDto
-     * @param customerCode
-     * @param modelType
-     * @param modelMappingCode
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀: xls, xlsx
+     * @param sheetNum 前端选择的Sheet页页码
+     * @param authResDto 当前登录用户
+     * @param customerCode 客户编码
+     * @param modelType Excel模板类型: 交叉, 明细
+     * @param modelMappingCode 保留
      * @return
      */
     @Override
-    public Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNum, AuthResDto authResDto, String customerCode,  String modelType, String modelMappingCode) {
+    public Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNum
+            , AuthResDto authResDto, String customerCode,  String modelType, String modelMappingCode) {
         Wrapper<?> checkResult = null;
         int staticCell = 5;
         //交叉
@@ -298,6 +300,17 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
         return checkResult;
     }
+
+    /**
+     * 校验不同类型Excel模板:Across
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀: xls, xlsx
+     * @param sheetNumChosen 前端选择的Sheet页页码
+     * @param customerCode 客户编码
+     * @param staticCell 从第几列开始是收货方
+     * @param authResDto 当前登录用户
+     * @return
+     */
     private Wrapper<?> checkAcrossExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         String suffixTolowerCase = suffix.toLowerCase();
         if(StringUtils.equals(suffixTolowerCase, XLS_EXCEL) || StringUtils.equals(suffixTolowerCase, XLSX_EXCEL)){
@@ -306,6 +319,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
 
+    /**
+     * 校验不同类型Excel模板:Boradwise
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀: xls, xlsx
+     * @param sheetNumChosen 前端选择的Sheet页页码
+     * @param customerCode 客户编码
+     * @param staticCell 从第几列开始是收货方
+     * @param authResDto 当前登录用户
+     * @return
+     */
     private Wrapper<?> checkBoradwiseExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         String suffixTolowerCase = suffix.toLowerCase();
         if(StringUtils.equals(suffixTolowerCase, XLS_EXCEL) || StringUtils.equals(suffixTolowerCase, XLSX_EXCEL)){

@@ -51,17 +51,16 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     private CscContactEdasService cscContactEdasService;
     @Autowired
     private CscGoodsEdasService cscGoodsEdasService;
-    
 
-    
+
     /**
      * 校验交叉类型Excel
-     * @param uploadFile
-     * @param sheetNumChosen
-     * @param customerCode
-     * @param staticCell
-     * @param authResDto
-     * @return
+     * @param uploadFile 前台上传的文件
+     * @param sheetNumChosen 前端选择的Sheet页页码
+     * @param customerCode 客户编码
+     * @param staticCell 从第几列开始是收货方
+     * @param authResDto 当前登录用户
+     * @return 根据不同结果返回不同泛型
      */
     @Override
     public Wrapper<?> checkAcrossExcel(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell, AuthResDto authResDto) {
@@ -385,12 +384,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 校验明细类型Excel
-     * @param uploadFile
-     * @param sheetNumChosen
-     * @param customerCode
-     * @param staticCell
-     * @param authResDto
-     * @return
+     * @param uploadFile 前台上传的文件
+     * @param sheetNumChosen 前端选择的Sheet页页码
+     * @param customerCode 客户编码
+     * @param staticCell 从第几列开始是收货方
+     * @param authResDto 当前登录用户
+     * @return 根据不同结果返回不同泛型
      */
     @Override
     public Wrapper<?> checkBoradwiseExcel(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell, AuthResDto authResDto) {
@@ -860,10 +859,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 校验收货方或货品出现重复
-     * @param consigneeOrGoodsList
-     * @param sheetNum
-     * @param tag
-     * @return
+     * @param consigneeOrGoodsList 收货方或货品列表
+     * @param sheetNum 当前Sheet页
+     * @param tag 标记验重的是收货方还是货品:   goods 货品, consignee 收货方
+     * @return 校验结果
      */
     private Wrapper<List<String>> checkRepeat(List<String> consigneeOrGoodsList, int sheetNum, String tag){
         List<String> errorConsigneeOrGoodsList = new ArrayList<>();
@@ -916,7 +915,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 向客户中心批量添加收货方时去重
-     * @param cscContantAndCompanyInportDtoList
+     * @param cscContantAndCompanyInportDtoList 批量添加收货方List
      * @return
      */
     private List<CscContantAndCompanyInportDto> removeConsigneeRepeat(List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList){
@@ -932,7 +931,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 向客户中心批量添加货品时去重
-     * @param cscGoodsImportDtoList
+     * @param cscGoodsImportDtoList 批量添加货品List
      * @return
      */
     private List<OfcGoodsImportDto> removeGoodsRepeat(List<OfcGoodsImportDto> cscGoodsImportDtoList){
@@ -956,6 +955,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 批量添加收货方
+     * @param tag 标记是交叉还是明细Excel
+     * @param customerCode 客户编码
+     * @param ofcExcelBoradwise 明细Excel实体
+     * @param authResDto 当前登录用户
+     * @param cellValue 单元格的内容
+     * @return
      */
 
     private CscContantAndCompanyInportDto addCscContantAndCompanyInportDto(String tag,String customerCode,OfcExcelBoradwise ofcExcelBoradwise,AuthResDto authResDto, String cellValue){
@@ -983,6 +988,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 批量添加货品
+     * @param tag 标记是交叉还是明细Excel
+     * @param customerCode 客户编码
+     * @param ofcExcelBoradwise 明细Excel实体
+     * @return
      */
     private OfcGoodsImportDto addCscGoodsImportDto(String tag, String customerCode, OfcExcelBoradwise ofcExcelBoradwise){
         OfcGoodsImportDto cscGoodsImportDto = new OfcGoodsImportDto();
@@ -1000,6 +1009,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     /**
      * 列名和实体的映射
+     * @param cellName 明细Excel当前列名
+     * @return
      */
     private String cellReflectToDomain(String cellName){
         if(StringUtils.equals(cellName,"客户订单号")){
