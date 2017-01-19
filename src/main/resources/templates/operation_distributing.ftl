@@ -646,9 +646,6 @@
 </div>
 
 
-
-
-
 <script type="text/javascript">
   var scripts = [null,
     "/components/jquery-validation/dist/jquery.validate.min.js",

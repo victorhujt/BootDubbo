@@ -35,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -69,15 +68,15 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
         boolean checkPass = true;
         Map<String,JSONArray> resultMap = null;
-        List<CscContantAndCompanyResponseDto> consigneeNameList = null;
+        List<CscContantAndCompanyResponseDto> consigneeNameList;
         List<String> consigneeNameListForCheck = null;
         List<OfcGoodsApiVo> goodsApiVoList = null;
         List<String> goodsCodeListForCheck = null;
         List<String> xlsErrorMsg = null;
         List<OfcGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
         List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
-        InputStream inputStream = null;
-        Workbook workbook = null;
+        InputStream inputStream;
+        Workbook workbook;
         try {
             inputStream = uploadFile.getInputStream();
             workbook = WorkbookFactory.create(inputStream);
@@ -396,8 +395,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     @Override
     public Wrapper<?> checkBoradwiseExcel(MultipartFile uploadFile, String sheetNumChosen, String customerCode, int staticCell, AuthResDto authResDto) {
 
-        InputStream inputStream = null;
-        Workbook workbook = null;
+        InputStream inputStream ;
+        Workbook workbook;
         try {
             inputStream = uploadFile.getInputStream();
             workbook = WorkbookFactory.create(inputStream);
@@ -421,7 +420,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
         //遍历sheet
         for (int sheetNum = 0; sheetNum < numberOfSheets; sheetNum ++) {
-            if (sheetNum != Integer.valueOf(sheetNumChosen)) {
+            if (sheetNum != Integer.parseInt(sheetNumChosen)) {
                 continue;
             }
             Sheet sheet = workbook.getSheetAt(sheetNum);
@@ -991,8 +990,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
             cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
             cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
-        }else if(StringUtils.equals(tag,"across")){
-        }
+        }/*else if(StringUtils.equals(tag,"across")){
+        }*/
         return cscGoodsImportDto;
     }
 
