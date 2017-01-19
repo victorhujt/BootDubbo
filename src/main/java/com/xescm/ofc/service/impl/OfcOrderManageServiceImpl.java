@@ -1974,7 +1974,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     @Override
     public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
-        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         //先判断是上门提货还是二次配送
         if(PubUtils.trimAndNullAsEmpty(tag).equals("Pickup")){
             rmcServiceCoverageForOrderVo.setIsPickup(1);

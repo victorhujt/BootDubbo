@@ -389,7 +389,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 setCityOrTrunk(ofcDistributionBasicInfo,ofcFundamentalInformation);
                 if(select.size() > 0){//有运输信息
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
-                }else if (select.size() < 0){
+                }else{
                     addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                 }
             }else{

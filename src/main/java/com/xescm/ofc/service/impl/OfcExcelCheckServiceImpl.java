@@ -91,7 +91,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
         //遍历sheet
         for (int sheetNum = 0; sheetNum < numberOfSheets; sheetNum ++){
-            if(sheetNum != Integer.valueOf(sheetNumChosen)){
+            if(sheetNum != Integer.parseInt(sheetNumChosen)){
                 continue;
             }
             Sheet sheet = workbook.getSheetAt(sheetNum);
@@ -361,12 +361,12 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             }
 
         }
-        Wrapper<List<String>> consigneeRepeatCheckResult = checkRepeat(consigneeNameListForCheck,Integer.valueOf(sheetNumChosen),"consignee");
+        Wrapper<List<String>> consigneeRepeatCheckResult = checkRepeat(consigneeNameListForCheck,Integer.parseInt(sheetNumChosen),"consignee");
         if(consigneeRepeatCheckResult.getCode() == Wrapper.ERROR_CODE){
             checkPass = false;
             xlsErrorMsg.addAll(consigneeRepeatCheckResult.getResult());
         }
-        Wrapper<List<String>> goodsRepeatCheckResult = checkRepeat(goodsCodeListForCheck,Integer.valueOf(sheetNumChosen),"goods");
+        Wrapper<List<String>> goodsRepeatCheckResult = checkRepeat(goodsCodeListForCheck,Integer.parseInt(sheetNumChosen),"goods");
         if(goodsRepeatCheckResult.getCode() == Wrapper.ERROR_CODE){
             checkPass = false;
             xlsErrorMsg.addAll(goodsRepeatCheckResult.getResult());

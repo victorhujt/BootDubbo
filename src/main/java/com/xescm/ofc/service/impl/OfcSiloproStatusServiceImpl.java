@@ -26,7 +26,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Service
 @Transactional
 public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> implements OfcSiloproStatusService {
-	protected Logger logger = LoggerFactory.getLogger(OfcSiloproStatusServiceImpl.class);
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private OfcSiloproStatusMapper ofcSiloproStatusMapper;
     
