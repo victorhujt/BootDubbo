@@ -799,7 +799,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             int goodsRowNum = 1;
             //将MapKey更改为适合前端模板的格式
             Map<String,JSONArray> afterResultMap = new LinkedHashMap<>();
-            Boolean consigneeTag = false;
             int consigneeNum = 1;
             List<String> goodsCodeNoAmountList = new ArrayList<>();
             for(String mapKey : resultMap.keySet()){
@@ -869,11 +868,14 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
     private Wrapper<List<String>> checkRepeat(List<String> consigneeOrGoodsList, int sheetNum, String tag){
         List<String> errorConsigneeOrGoodsList = new ArrayList<>();
         Map<String,String> consigneeOrGoodsRepeatMap = new HashMap<>();
-        Integer consigneeOrGoodsNum = null;
+        Integer consigneeOrGoodsNum;
         if("goods".equals(tag)){
             consigneeOrGoodsNum = 2;
         }else if("consignee".equals(tag)){
             consigneeOrGoodsNum = 5;
+        }else {
+            logger.error("校验收货方或货品出现重复,tag位入参有误");
+            throw new BusinessException("校验收货方或货品出现重复错误");
         }
         for(String consigneeOrGoodsName : consigneeOrGoodsList){
             if(PubUtils.isSEmptyOrNull(consigneeOrGoodsName)){
@@ -990,8 +992,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
             cscGoodsImportDto.setGoodsName(ofcExcelBoradwise.getGoodsName());
             cscGoodsImportDto.setSpecification(ofcExcelBoradwise.getGoodsSpec());
             cscGoodsImportDto.setUnit(ofcExcelBoradwise.getGoodsUnit());
-        }/*else if(StringUtils.equals(tag,"across")){
-        }*/
+        }else if(StringUtils.equals(tag,"across")){
+        }
         return cscGoodsImportDto;
     }
 

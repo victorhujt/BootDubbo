@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-//import org.apache.commons.lang.StringUtils;
-
 /**
  * Created by lyh on 2016/10/10.
  */

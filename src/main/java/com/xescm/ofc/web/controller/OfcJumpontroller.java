@@ -13,7 +13,9 @@ import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcMerchandiserService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import io.swagger.annotations.ApiImplicitParam;
@@ -126,8 +128,6 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
-    @Autowired
-    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
     /**
      * 城配开单
      * @param model

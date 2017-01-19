@@ -18,7 +18,6 @@ import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.model.dto.group.UamGroupDto;
-import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,9 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import java.util.List;
-
 /**
  * 运营 订单管理
  * Created by hiyond on 2016/11/22.
@@ -40,8 +37,6 @@ import java.util.List;
 @Controller
 public class OfcOrderManageOperaRest extends BaseController {
 
-    @Resource
-    private UamGroupEdasService uamGroupEdasService;
     @Autowired
     private OfcOrderManageOperService ofcOrderManageOperService;
     @Autowired
@@ -349,7 +344,7 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(areaCode);
-        List<OfcGroupVo> ofcGroupVoList = null;
+        List<OfcGroupVo> ofcGroupVoList;
         try {
             ofcGroupVoList = ofcOrderManageOperService.getBaseListByCurArea(uamGroupDto);
         } catch (BusinessException ex) {
@@ -374,7 +369,7 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(baseCode);
-        OfcGroupVo ofcGroupVo = null;
+        OfcGroupVo ofcGroupVo;
         try {
             ofcGroupVo = ofcOrderManageOperService.queryAreaMsgByBase(uamGroupDto);
         } catch (BusinessException ex) {

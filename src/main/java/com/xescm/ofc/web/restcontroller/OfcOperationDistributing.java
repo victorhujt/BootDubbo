@@ -31,7 +31,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +40,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -288,7 +286,8 @@ public class OfcOperationDistributing extends BaseController{
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
                     StringBuilder batchgoodsKey = new StringBuilder("ofc:batchgoods:");
-                    batchgoodsKey.append(System.nanoTime()).append((int)(Math.random()*tenThousand));
+                    batchgoodsKey.append(System.nanoTime());
+                    batchgoodsKey.append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();
                     ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
                     rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
@@ -317,32 +316,6 @@ public class OfcOperationDistributing extends BaseController{
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return result;
-    }
-    /**
-     * 城配开单下载模板
-     * @param response
-     */
-    @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
-    @Deprecated
-    public void downloadTemplate( HttpServletResponse response){
-        try {
-            File f = ResourceUtils.getFile("classpath:templates/xlsx/template_for_cp.xlsx");
-            response.reset();
-            response.setHeader("Content-Disposition", "attachment; filename=template_for_cp.xlsx");
-            response.addHeader("Content-Length", "" + f.length());
-            response.setContentType("application/octet-stream;charset=UTF-8");
-            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
-            int b;
-            while((b = bis.read()) != -1) {
-                outputStream.write(b);
-            }
-            bis.close();
-            outputStream.close();
-        } catch (Exception e){
-            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
-        }
-
     }
 
 

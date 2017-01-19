@@ -29,7 +29,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -113,23 +112,21 @@ public class OfcMobileOrderRest extends BaseController {
 
     /**
      *
-     * @param model
      * @param ofcOrderDTOStr        订单基本信息、收发货方信息
      * @param orderGoodsListStr     货品信息
      * @param cscContantAndCompanyDtoConsignorStr   发货人信息
      * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
      * @param cscSupplierInfoDtoStr                 供应商信息
      * @param tag           标识下单、编辑、运输开单
-     * @param response
      * @return
      */
     @RequestMapping("/mobileorderPlaceCon")
     @ResponseBody
-    public Wrapper<?> mobileOrderPlace(Model model, String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
-            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, HttpServletResponse response, String mobileOrderCode){
+    public Wrapper<?> mobileOrderPlace(String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, String mobileOrderCode){
         logger.debug("==>拍照下单订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.debug("==>拍照下单订单中心下单或编辑标志位 tag={}", tag);
-        String resultMessage = null;
+        String resultMessage;
         String orderCode="";
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
@@ -238,7 +235,7 @@ public class OfcMobileOrderRest extends BaseController {
 
 
     @RequestMapping(value ="/mobileOrder/operateImage", method = RequestMethod.POST)
-    public void operateImage(Model model,AttachmentDto attachmentDto,HttpServletResponse response) {
+    public void operateImage(AttachmentDto attachmentDto,HttpServletResponse response) {
         OfcAttachment ofcAttachment=new OfcAttachment();
         String url="";
         try {
@@ -257,7 +254,8 @@ public class OfcMobileOrderRest extends BaseController {
             url= ofcAttachmentService.operateAttachMent(attachmentDto.getPicParam(),attachmentDto.getSerialNo());
             response.getWriter().print(JacksonUtil.toJsonWithFormat(url));
 
-        } catch (BusinessException ex) {
+        } catch (BusinessException e) {
+            logger.debug("更新附件操作失败={}", e.getMessage(), e);
         } catch (Exception e) {
             logger.debug("更新附件操作失败={}", e.getMessage(), e);
         }
