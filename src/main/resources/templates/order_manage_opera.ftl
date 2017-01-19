@@ -516,7 +516,7 @@
       param.baseSerialNo = baseName;
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
-        if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+        if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {
           $("#dataTbody").html("");
           $("#DataPageBarDiv").hide();
           layer.msg("暂时未查询到相关订单信息！");

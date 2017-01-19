@@ -752,16 +752,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     /**
      * 城配开单下单
      */
-    private void distributionOrderPlace(OfcFundamentalInformation ofcFundamentalInformation,
-                                        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,
-                                        OfcDistributionBasicInfo ofcDistributionBasicInfo,
-                                        OfcWarehouseInformation ofcWarehouseInformation,
-                                        OfcFinanceInformation ofcFinanceInformation,String custId,
-                                        CscContantAndCompanyDto cscContantAndCompanyDtoConsignor,
-                                        CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,
-                                        AuthResDto authResDtoByToken,
-                                        OfcOrderStatus ofcOrderStatus,
-                                        OfcMerchandiser ofcMerchandiser) {
+    private void distributionOrderPlace(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,
+                                        OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcWarehouseInformation ofcWarehouseInformation,
+                                        OfcFinanceInformation ofcFinanceInformation,String custId,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor,
+                                        CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,AuthResDto authResDtoByToken,
+                                        OfcOrderStatus ofcOrderStatus,OfcMerchandiser ofcMerchandiser) {
         int custOrderCode = 0;
         StringBuffer notes = new StringBuffer();
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
@@ -874,7 +869,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param cscContantAndCompanyDtoConsignee
      * @return
      */
-    private Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
+    private Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
+            , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
         if(null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参为空");
         }

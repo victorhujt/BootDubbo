@@ -70,7 +70,7 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 城配开单确认下单
      * @param orderLists 下单数据
-     * @return
+     * @return 根据不同结果返回不同泛型
      */
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
