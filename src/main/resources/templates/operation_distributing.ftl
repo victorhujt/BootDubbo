@@ -14,7 +14,7 @@
   .help-block{
     color:#f00 !important;
   }
-  .initBtn{
+ /* .initBtn{
     line-height:32px;
     width:34px;
     border:1px solid #cacaca;
@@ -27,7 +27,7 @@
   .initBtn:hover{
     background:#fff!important;
     border:1px solid #cacaca!important;
-  }
+  }*/
   .width-267{
     width:267px;
     padding:0 12px;
@@ -51,9 +51,9 @@
   .db-1{
     margin-top: 10px;
   }
-  .l-cor{
+ /* .l-cor{
     color: #666;
-  }
+  }*/
   .bg-1{
     margin-top: 5px;
   }
@@ -455,6 +455,13 @@
 
 <br/>
 <div class="col-xs-9">
+
+  <div>
+    <p style="font-size: 14px;font-family:'微软雅黑'">
+      <span hidden="true" id = "login_user">${(loginUser)!}</span>
+    </p>
+  </div>
+
   <button id="historyOrderSelect" class="btn btn-white btn-info btn-bold btn-interval tp-1 disabled" disabled style="border-color:#999;color:#666 !important;cursor:default">
     <i class="ace-icon fa fa-floppy-o bigger-120 blue" style="color:#666 !important"></i>
     历史订单选择
@@ -483,7 +490,7 @@
       <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>订单日期</label>
         <div class="width-267">
           <div class="position-relative bk-1 ">
-            <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
+            <input class="col-xs-10 col-label2 bk-1" name="orderTime" id="orderTime" value="${(currentTime?string("yyyy-MM-dd"))!""}" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: false, format: 'YYYY-MM-DD',isclear: false,istoday: true,min: laydate.now(-30),max: laydate.now()})">
             <label class="btn btn-minier no-padding-right initBtn" id="" for="orderTime">
               <i class="fa fa-calendar l-cor bigger-130"></i>
             </label>
@@ -519,7 +526,7 @@
           <div class="bk-1 position-relative">
             <input class="bk-1" name="custName" value=""  id="custName" type="text" readonly="readonly" placeholder=""/>
             <input class="bk-1" name=""  id="customerCode" type="text"  style="display: none"  />
-            <button type="button" class="btn btn-minier no-padding-right initBtn" id="custListDivBlock">
+            <button type="button" class="initBtn" id="custListDivBlock">
               <i class="fa fa-user l-cor bigger-130"></i>
             </button>
           </div>
@@ -550,8 +557,8 @@
   <br/>
   <br/>
   <div class="row" style="margin-right: -10px">
-    <div class="col-xs-12">
-      <div class="form-group"style="border-top:1px solid #ccc;">
+    <div class="col-xs-12" style="padding:0 25px;">
+     <#-- <div class="form-group"style="border-top:1px solid #ccc;">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0;margin-top:1px;"><b class="l-bj" style="border-bottom:1px solid #ccc;padding-bottom: 5px;">发货方</b></label>
         <div class="width-267" style="border-bottom: 1px solid #ccc;height: 32px">
         </div>
@@ -561,8 +568,17 @@
             <span id="showDepaturePlace" class="l-bj"></span>
           </div>
         </div>
-      </div>
+      </div>-->
+       <div class="page-header">
+         <p>
+           发货方
+         </p>
+       </div>
     </div>
+
+
+
+
     <div class="col-xs-12">
       <div class="form-group" style="margin-left: 0">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">名称</label>
@@ -574,7 +590,7 @@
            <button type="button" class="btn btn-minier btn-inverse no-padding-right y-float"
                    id=""><i class="fa fa-user l-cor"></i>
            </button></span>-->
-            <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="consignorListDivBlock" >
+            <button type="button" class="initBtn" id="consignorListDivBlock" >
               <i class="fa fa-user l-cor bigger-130"></i>
             </button>
           </div>
@@ -586,14 +602,25 @@
             <input style="margin-left: -2px" class="col-xs-10 col-xs-12 bk-1"  readonly="readonly" name="consignorContactName" id="consignorContactName" type="text" placeholder=""/>
           </div>
         </div>
-        <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
-        <div class="width-267">
-          <div class="clearfix">
-            <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder=""/>
+
+      </div>
+    </div>
+      <div class="col-xs-12">
+        <div class="form-group" style="margin-left: 0">
+          <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">联系电话</label>
+          <div class="width-267">
+            <div class="clearfix">
+              <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="consignorContactPhone" id="consignorContactPhone" type="text" placeholder=""/>
+            </div>
+          </div>
+          <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:-2px;">出发地</label>
+          <div class="width-267">
+            <div class="clearfix">
+              <input class="col-xs-10 col-xs-12 bk-1" readonly="readonly" name="showDepaturePlace" id="showDepaturePlace" type="text" placeholder=""/>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     <div class="col-xs-12">
       <div class="form-group" style="margin-left: 0">
         <label class="control-label col-label no-padding-right l-bj" for="" style="margin-right:0">地址</label>
@@ -723,6 +750,7 @@
 
 <script type="text/javascript">
   var scripts = [null,
+      "${OFC_WEB_URL!}/../js/common/cookie.js",
     "/components/jquery-validation/dist/jquery.validate.min.js",
     "/components/jquery-validation/src/localization/messages_zh.js",
     "/components/jquery-validation/dist/additional-methods.js",
@@ -755,9 +783,15 @@
     });
   });
 
-  function main() {
+  // 更新开单员
+  var loginUser = $('#login_user').html();
 
+  function main() {
     validateFormData();
+
+    // 上次选择的开单员
+    setLastUser("CP");
+
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
   //链接到收发货方联系人档案
@@ -1454,7 +1488,7 @@
           $("#consignorStreetName").val(streetNameAuto);
           $("#consignorAddress").val(addressAuto);
 
-          $("#showDepaturePlace").html(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
+          $("#showDepaturePlace").val(provinceNameAuto+cityNameAuto+areaNameAuto+streetNameAuto);
           $("#consignorName-error").html("");
           $("#consignorName-error").parent().parent().removeClass("has-error").addClass("has-success");
 
@@ -2111,13 +2145,14 @@
   $("#to_operation_distributing_excel").click(function () {
     var custChosen = $("#custName").val();
     var customerCode = $("#customerCode").val();
+    var cookieKey = loginUser;
     if(StringUtil.isEmpty(custChosen)){
       alert("请先选择客户");
     }else if(StringUtil.isEmpty(customerCode)){
       alert("该客户没有客户编码,请维护!")
     }else{
       var historyUrl = "operation_distributing";
-      var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode;
+      var url = "/ofc/operationDistributingExcel" + "/" + historyUrl + "/" + customerCode + "/" + cookieKey;
       xescm.common.loadPage(url);
     }
   })
@@ -2277,6 +2312,7 @@
             ,{"orderLists":param}
             ,"您即将进行批量下单，自动对本批订单审核订单，请确认订单准确无误！是否继续下单？"
             ,function () {
+              updateLastUser(loginUser, "CP");
 //                    location.reload();
               var getTimestamp  = new Date().getTime();
               xescm.common.loadPage("/ofc/operationDistributing");
@@ -2758,7 +2794,7 @@
             $("#consignorStreetName").val(streetName);
             $("#consignorAddress").val(address);
 
-            $("#showDepaturePlace").html(provinceName+cityName+areaName+streetName);
+            $("#showDepaturePlace").val(provinceName+cityName+areaName+streetName);
           }
         });
         if($("#consignorName").val()!==""){

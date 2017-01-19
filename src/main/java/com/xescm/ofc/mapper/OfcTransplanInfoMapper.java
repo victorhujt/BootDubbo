@@ -1,8 +1,6 @@
 package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto;
-import com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDto;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
@@ -16,5 +14,5 @@ public interface OfcTransplanInfoMapper extends Mapper<OfcTransplanInfo> {
     int queryNotInvalidAndNotCompleteTransOrder(@Param(value = "orderCode") String orderCode);
     List<String> queryTransCodeByOrderCode(@Param(value = "orderCode") String orderCode);
     List<String> queryUncompletedPlanCodesByOrderCode(@Param(value = "orderCode")String orderCode);
-    List<TranPlanOfcRespDto> tranPlanSel(TranPlanOfcReqDto TranPlanOfcReqDto);
+    /*List<TranPlanOfcRespDto> tranPlanSel(TranPlanOfcReqDto TranPlanOfcReqDto);*/
 }

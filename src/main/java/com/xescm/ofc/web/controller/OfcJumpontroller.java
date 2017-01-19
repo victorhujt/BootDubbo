@@ -140,6 +140,9 @@ public class OfcJumpontroller extends BaseController{
             List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
             map.put("merchandiserList",merchandiserList);
             map.put("currentTime",new Date());
+            // 加密登录用户名，用于前端缓存cookie的key
+            String loginUser = MD5Util.encodeByAES(getAuthResDtoByToken().getUserName());
+            map.put("loginUser", loginUser);
             setDefaultModel(model);
         } catch (Exception ex) {
             logger.error("跳转城配开单页面出错!",ex.getMessage(),ex);
@@ -154,8 +157,8 @@ public class OfcJumpontroller extends BaseController{
      * @param map
      * @return
      */
-    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{customerCode}")
-    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String customerCode,  Map<String,Object> map){
+    @RequestMapping(value = "/ofc/operationDistributingExcel/{historyUrl}/{customerCode}/{cookieKey}")
+    public String operationDistributingExcel(Model model, @PathVariable String historyUrl,@PathVariable String customerCode,@PathVariable String cookieKey,  Map<String,Object> map){
         logger.info("城配开单Excel导入==> historyUrl={}", historyUrl);
         logger.info("城配开单Excel导入==> custId={}", customerCode);
         /*if("operation_distributing".equals(historyUrl)){
@@ -174,6 +177,7 @@ public class OfcJumpontroller extends BaseController{
             String custName = customerVoWrapper.getResult().getCustomerName();
             map.put("customerCode",customerCode);
             map.put("custName",custName);
+            map.put("cookieKey",cookieKey);
         }
         return "operation_distributing_excel";
     }
@@ -184,8 +188,8 @@ public class OfcJumpontroller extends BaseController{
      * @param excelImportTag
      * @return
      */
-    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}")
-    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode){
+    @RequestMapping(value = "/ofc/distributing/excelImportConfirm/{excelImportTag}/{customerCode}/{cookieKey}")
+    public String excelImportConfirm(Model model, @PathVariable String excelImportTag, @PathVariable String customerCode, @PathVariable String cookieKey){
         logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", excelImportTag);
         logger.info("Excel确认导入,跳转城配开单==> excelImportTag={}", customerCode);
         List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
@@ -204,6 +208,7 @@ public class OfcJumpontroller extends BaseController{
             String custName = customerVoWrapper.getResult().getCustomerName();
             model.addAttribute("custIdFromExcelImport",customerCode);
             model.addAttribute("custNameFromExcelImport",custName);
+            model.addAttribute("loginUser",cookieKey);
         }
         return "operation_distributing";
     }
