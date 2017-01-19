@@ -17,4 +17,7 @@ public interface OfcOrderPlaceService{
                       , String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
                       , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto);
     OfcFundamentalInformation getAreaAndBaseMsg(AuthResDto authResDtoByToken, OfcFundamentalInformation ofcFundamentalInformation);
+
+
+
 }

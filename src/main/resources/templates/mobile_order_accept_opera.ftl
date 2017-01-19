@@ -2849,7 +2849,6 @@
                 }*/
                 orderGoodsList[tableRows - 1] = orderGoods;
             }
-            var tag = "tranplace";
             var ofcOrderDTO = JSON.stringify(jsonStr);
             var orderGoodsListStr = JSON.stringify(orderGoodsList);
             var mobileOrderCode=$("#mobileOrderCode").val();
@@ -2863,9 +2862,7 @@
                         ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
                         ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
                         ,"cscSupplierInfoDtoStr":null
-                        ,"tag":tag
                         ,"mobileOrderCode":mobileOrderCode
-
                     }
                     ,"您确认提交订单吗?"
                     ,function () {
