@@ -10,4 +10,6 @@ public class GenCodePreffixConstant {
     public static final String PLAN_PRE = "TP";
     //订单批次号前缀
     public static final String BATCH_PRE = "BN";
+    //钉钉录单前缀
+    public static final String MOBILE_PRE = "SN";
 }

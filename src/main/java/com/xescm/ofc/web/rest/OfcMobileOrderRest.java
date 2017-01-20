@@ -177,7 +177,7 @@ public class OfcMobileOrderRest extends BaseController {
                 order.setMobileOrderCode(mobileOrderCode);
                 order.setAccepter(authResDtoByToken.getUserName());
                 order.setAppcetDate(new Date());
-                order.setMobileOrderStatus("1");//已处理
+                order.setMobileOrderStatus(OrderConstConstant.TREATED);//已处理
                 order.setOrderCode(orderCode);
                 ofcMobileOrderService.updateByMobileCode(order);
             }

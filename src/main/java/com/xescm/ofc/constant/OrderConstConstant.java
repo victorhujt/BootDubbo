@@ -114,8 +114,10 @@ public final class OrderConstConstant {
     public static final Integer FAHUOFANG=10;       //发货方
     public static final Integer SHOUHUOFANG=20;        //收货方
 
-    //钉钉
+    //钉钉 订单来源
     public static  final String DING_DING = "钉钉";
+
+    public static  final String MANUAL = "手动";
 
 
     public static final String OFC_WHC_OUT_TYPE = "出库";
@@ -147,6 +149,10 @@ public final class OrderConstConstant {
     public static final String MODEL_TYPE_ACROSS = "MODEL_TYPE_ACROSS";
 
     public static final String MODEL_TYPE_BORADWISE = "MODEL_TYPE_BORADWISE";
+
+    public static final String UN_TREATED="0";//钉钉录单状态  未处理
+
+    public static final String TREATED="1";//钉钉录单状态  已处理
 
     public OrderConstConstant() {
     }

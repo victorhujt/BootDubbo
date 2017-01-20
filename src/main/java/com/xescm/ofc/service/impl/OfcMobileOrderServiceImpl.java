@@ -90,10 +90,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
             }
         }
-        ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode("SN",6));
+        ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.MOBILE_PRE,6));
         ofcMobileOrder.setUploadDate(new Date());
         ofcMobileOrder.setOrderType(OrderConstConstant.TRANSPORTORDER);
-        ofcMobileOrder.setMobileOrderStatus("0");
+        ofcMobileOrder.setMobileOrderStatus(UN_TREATED);
         save(ofcMobileOrder);
         return ofcMobileOrder;
     }

@@ -201,6 +201,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
             }
 
+            if(null == ofcOrderDTO.getOrderTime()){
+                throw new BusinessException("请选择订单日期");
+            }
+
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
         } catch (BusinessException ex){
