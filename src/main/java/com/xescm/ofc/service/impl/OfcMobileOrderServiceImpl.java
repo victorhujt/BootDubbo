@@ -246,7 +246,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                     "review",authResDtoByToken);
 
             if(!"".equals(PubUtils.trimAndNullAsEmpty(code))){
-                if(code.equals(Wrapper.SUCCESS_CODE)){
+                if(code.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
                     return orderCode;
                 }
             }
