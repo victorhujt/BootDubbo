@@ -201,76 +201,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     }
 
 
-    /**
-     * 保存收货信息
-     * （收发货信息不维护到客户中心 date:2016-11-20）
-     *
-     * @param purpose
-     * @param custId
-     * @param createOrderEntity
-     */
-    /*public void addCscContantAndCompanyDto(String purpose, String custId, CreateOrderEntity createOrderEntity, String groupId) {
-        CscContantAndCompanyDto cscContantAndCompanyVo = new CscContantAndCompanyDto();
-        cscContantAndCompanyVo.setGroupId(groupId);
-        cscContantAndCompanyVo.setCustomerId(custId);
-        cscContantAndCompanyVo.setUserId(CreateOrderApiConstant.USER_ID);
-        cscContantAndCompanyVo.setUserName(CreateOrderApiConstant.USER_NAME);
-        if (StringUtils.equals("1", purpose)) {
-            AddressDto addressDto = new AddressDto();
-            addressDto.setProvinceName(createOrderEntity.getConsignorProvince());
-            addressDto.setCityName(createOrderEntity.getConsignorCity());
-            addressDto.setDistrictName(createOrderEntity.getConsignorCounty());
-            Map<String, String> addressMap = getAddressCode(addressDto);
-            String provinceCode = addressMap.get("provinceCode");
-            String cityCode = addressMap.get("cityCode");
-            String districtCode = addressMap.get("districtCode");
-            CscContact cscContactDto = new CscContact();
-            cscContactDto.setPurpose("1");
-            cscContactDto.setContactCode(createOrderEntity.getConsignorName());
-            cscContactDto.setContactName(createOrderEntity.getConsignorContact());
-            cscContactDto.setPhone(createOrderEntity.getConsignorPhone());
-            cscContactDto.setProvinceName(createOrderEntity.getConsignorProvince());
-            cscContactDto.setProvince(provinceCode);
-            cscContactDto.setCityName(createOrderEntity.getConsignorCity());
-            cscContactDto.setCity(cityCode);
-            cscContactDto.setAreaName(createOrderEntity.getConsignorCounty());
-            cscContactDto.setArea(districtCode);
-            cscContactDto.setStreetName(createOrderEntity.getConsignorTown());
-            cscContactDto.setDetailAddress(createOrderEntity.getConsignorAddress());
-            cscContantAndCompanyVo.setCscContact(cscContactDto);
-            CscContactCompany cscContactCompanyDto = new CscContactCompany();
-            cscContactCompanyDto.setContactCompanyName(createOrderEntity.getConsignorName());
-            cscContantAndCompanyVo.setCscContactCompany(cscContactCompanyDto);
-        } else if (StringUtils.equals("2", purpose)) {
-            AddressDto addressDto = new AddressDto();
-            addressDto.setProvinceName(createOrderEntity.getConsignorProvince());
-            addressDto.setCityName(createOrderEntity.getConsignorCity());
-            addressDto.setDistrictName(createOrderEntity.getConsignorCounty());
-            Map<String, String> addressMap = getAddressCode(addressDto);
-            String provinceCode = addressMap.get("provinceCode");
-            String cityCode = addressMap.get("cityCode");
-            String districtCode = addressMap.get("districtCode");
-            CscContact cscContactDto = new CscContact();
-            cscContactDto.setPurpose("2");
-            cscContactDto.setContactCode(createOrderEntity.getConsigneeName());
-            cscContactDto.setContactName(createOrderEntity.getConsigneeContact());
-            cscContactDto.setPhone(createOrderEntity.getConsigneePhone());
-            cscContactDto.setProvinceName(createOrderEntity.getConsigneeProvince());
-            cscContactDto.setProvince(provinceCode);
-            cscContactDto.setCityName(createOrderEntity.getConsigneeCity());
-            cscContactDto.setCity(cityCode);
-            cscContactDto.setAreaName(createOrderEntity.getConsigneeCounty());
-            cscContactDto.setArea(districtCode);
-            cscContactDto.setStreetName(createOrderEntity.getConsigneeTown());
-            cscContactDto.setDetailAddress(createOrderEntity.getConsigneeAddress());
-            cscContantAndCompanyVo.setCscContact(cscContactDto);
-            CscContactCompany cscContactCompanyDto = new CscContactCompany();
-            cscContactCompanyDto.setContactCompanyName(createOrderEntity.getConsigneeName());
-            cscContantAndCompanyVo.setCscContactCompany(cscContactCompanyDto);
-        }
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyVo);
-        logger.info("创建收发货方信息：{}", wrapper.getMessage());
-    }*/
+
 
 
 
@@ -291,7 +222,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @throws BusinessException
      */
     @Transactional
-    public ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
+    private ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
                                     OfcDistributionBasicInfo ofcDistributionBasicInfo,
                                     OfcFinanceInformation ofcFinanceInformation,
                                     OfcWarehouseInformation ofcWarehouseInformation,
@@ -359,7 +290,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param ofcWarehouseInformation
      * @param ofcGoodsDetailsInfoList
      */
-    public void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
+    private void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
                            OfcDistributionBasicInfo ofcDistributionBasicInfo,
                            OfcFinanceInformation ofcFinanceInformation,
                            OfcWarehouseInformation ofcWarehouseInformation,

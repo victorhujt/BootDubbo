@@ -13,7 +13,6 @@ public class OfcTransplanNewstatusServiceImpl extends BaseService<OfcTransplanNe
     @Autowired
     private OfcTransplanNewstatusMapper ofcTransplanNewstatusMapper;
     public int updateByPlanCode(Object key){
-        int num = ofcTransplanNewstatusMapper.updateByPlanCode(key);
-        return num;
+        return ofcTransplanNewstatusMapper.updateByPlanCode(key);
     }
 }

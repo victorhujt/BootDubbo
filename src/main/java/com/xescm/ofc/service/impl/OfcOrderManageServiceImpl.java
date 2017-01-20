@@ -270,7 +270,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
      */
-    public void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userName,OfcFinanceInformation ofcFinanceInformation){
+    private void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userName,OfcFinanceInformation ofcFinanceInformation){
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
@@ -525,7 +525,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
      */
-    public void transPlanCreateKaBan(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFinanceInformation ofcFinanceInformation,String userName){
+    private void transPlanCreateKaBan(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFinanceInformation ofcFinanceInformation,String userName){
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
@@ -767,7 +767,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcWarehouseInformation
      * @param ofcFinanceInformation
      */
-    public String siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userId){
+    private String siloProCreate(OfcSiloprogramInfo ofcSiloprogramInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcWarehouseInformation ofcWarehouseInformation,OfcFinanceInformation ofcFinanceInformation,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userId){
         String planCode="";
         OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
         OfcSiloproNewstatus ofcSiloproNewstatus=new OfcSiloproNewstatus();
@@ -846,7 +846,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param orderCode
      * @param userName
      */
-    public void planCancle(String orderCode,String userName){
+    private void planCancle(String orderCode,String userName){
         logger.info("==> orderCode={}",orderCode);
         logger.info("==> userName={}",userName);
         List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
@@ -1118,35 +1118,6 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
 
-    /**
-     * 去本地数据库拿该订单号的仓库信息
-     */
-   /* @Override
-    public OfcWarehouseInformation getWarehouseMessage(String orderCode) {
-        OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
-        return ofcWarehouseInformation;
-    }*/
-
-    /*@Override
-    public RmcWarehouse getWarehouseMessage(String warehouseId, String custId) {
-        RmcWarehouse rmcWarehouse = new RmcWarehouse();
-        rmcWarehouse.setId(warehouseId);
-        Wrapper<RmcWarehouse> rmcWarehouseByid = feignRmcWarehouseAPIClient.queryByWarehouseCode(rmcWarehouse);
-        RmcWarehouse result = rmcWarehouseByid.getResult();
-        if(null == result){
-            throw new BusinessException("没有查到仓库的信息!");
-        }
-        if(String.valueOf(Wrapper.ERROR_CODE).equals(rmcWarehouseByid.getCode())){
-            throw new BusinessException("查询仓库信息错误!");
-        }
-        return result;
-    }*/
-
-    /**
-     * 计划单状态自动更新
-     */
-
-    /*private Wrapper<?> autoPlanUpdate*/
 
     /**
      * 计划单更新
@@ -1264,7 +1235,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcPlannedDetailMap
      * @param userName
      */
-    public void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList, Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap,String userName, Map<String, String> custOrderCodes) {
+    private void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList, Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap,String userName, Map<String, String> custOrderCodes) {
         List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
@@ -1912,7 +1883,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param info
      * @param planDetails
      */
-    public void sendToWhc(OfcSiloprogramInfoVo info,OfcWarehouseInformation ofcWarehouseInformation,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
+    private void sendToWhc(OfcSiloprogramInfoVo info,OfcWarehouseInformation ofcWarehouseInformation,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
         try {
             String tag="";
             String jsonStr="";
@@ -2116,7 +2087,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param wareHouseCode
      * @return
      */
-    public RmcWarehouseRespDto getWareHouseByCodeToPlan(String wareHouseCode){
+    private RmcWarehouseRespDto getWareHouseByCodeToPlan(String wareHouseCode){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         RmcWarehouseDto rmcWarehouse=new RmcWarehouseDto();
         if(!PubUtils.trimAndNullAsEmpty(wareHouseCode).equals("")){
@@ -2134,7 +2105,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param rmcWarehouse
      * @return
      */
-    public OfcTransplanInfo copyDarturePlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
+    private OfcTransplanInfo copyDarturePlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){
             ofcTransplanInfo.setShippinCustomerCode(rmcWarehouse.getWarehouseCode());
         }
@@ -2186,7 +2157,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param rmcWarehouse
      * @return
      */
-    public OfcTransplanInfo copyDestinationPlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
+    private OfcTransplanInfo copyDestinationPlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){
             ofcTransplanInfo.setReceivingCustomerCode(rmcWarehouse.getWarehouseCode());
         }

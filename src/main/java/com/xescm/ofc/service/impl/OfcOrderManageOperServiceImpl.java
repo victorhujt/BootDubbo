@@ -57,7 +57,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if(null == authResDto || null == form){
             throw new BusinessException("订单管理筛选后端权限校验入参有误");
         }
-        List<OrderSearchOperResult> orderSearchOperResults = new ArrayList<>();
+        List<OrderSearchOperResult> orderSearchOperResults;
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
         Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
@@ -137,7 +137,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())){
             throw new BusinessException("当前登录的用户没有流水号!");
         }
-        Map<String, List<OfcGroupVo>> resultMap = new HashMap<>();
+        Map<String, List<OfcGroupVo>> resultMap;
         String groupType = uamGroupDtoResult.getType();
         if(StringUtils.equals(groupType,"1")){
             //鲜易供应链身份

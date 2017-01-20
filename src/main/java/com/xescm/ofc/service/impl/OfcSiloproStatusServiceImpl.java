@@ -237,7 +237,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 
 
 
-	public String translateStatusToDesc(String statusCode,String businessType){
+	private String translateStatusToDesc(String statusCode,String businessType){
 		String statusDesc="";
 		if(statusCode.equals(TRACE_STATUS_1)){
 			if(OFC_WHC_IN_TYPE.equals(businessType)){

@@ -49,8 +49,7 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
 
     @Override
     public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
-        int result = ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
-        return result;
+        return ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
     }
 
     /**

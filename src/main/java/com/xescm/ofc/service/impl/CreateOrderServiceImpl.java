@@ -124,11 +124,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             //转换返回结果
             if (!CollectionUtils.isEmpty(createOrderResultList)) {
                 String code = "200";
-                StringBuffer reason = new StringBuffer();
+                StringBuilder reason = new StringBuilder();
                 List<MessageDto> typeIdList = new ArrayList<>();
                 for (int index = 0; index < createOrderResultList.size(); index++) {
                     CreateOrderResult orderResult = createOrderResultList.get(index);
-                    if (orderResult.getResult() == false) {
+                    if (!orderResult.getResult()) {
                         code = "500";
                     }
                     String typeIdAndReason = "typeId:" + orderResult.getTypeId() + "||reason:" + orderResult.getReason();
@@ -248,7 +248,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @param orderTime
      * @param ex
      */
-    public void saveErroeLog(String cCustOrderCode, String custCode, String orderTime, Exception ex) {
+    private void saveErroeLog(String cCustOrderCode, String custCode, String orderTime, Exception ex) {
         OfcCreateOrderErrorLog ofcCreateOrderErrorLog = new OfcCreateOrderErrorLog();
         ofcCreateOrderErrorLog.setCustOrderCode(cCustOrderCode);
         ofcCreateOrderErrorLog.setCustCode(custCode);

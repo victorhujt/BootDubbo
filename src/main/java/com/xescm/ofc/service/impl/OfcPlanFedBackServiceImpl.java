@@ -108,8 +108,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         String orstatus=orderStatus.getNotes();
                         boolean flag=false;
                         if(status.equals("已发运")){
-                            flag=false;
-                            flag=checkStatus(flag,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                            flag=checkStatus(false,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                             +" "+"车辆已发运，发往目的地：");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIFAYUN);
@@ -119,8 +118,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 logger.info("跟踪状态已发运");
                             }
                         }else if(status.equals("已到达")){
-                            flag=false;
-                            flag=checkStatus(flag,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                            flag=checkStatus(false,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                     +" "+"车辆已到达目的地：");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIDAODA);
@@ -133,8 +131,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 //当前计划单序号等于订单下计划单数量，表示最后一个计划单
                                 && (PubUtils.trimAndNullAsEmpty(programSerialNumber).equals(serialNumberCount+""))){
                             Date now = new Date();
-                            flag=false;
-                            flag=checkStatus(flag,statusList,"end","客户已签收");
+                            flag=checkStatus(false,statusList,"end","客户已签收");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
@@ -157,8 +154,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 //当前所有未作废未完成的运输计划单单号
                                 List<String> planCodesUncompletedByOrderCode = ofcTransplanInfoService.queryUncompletedPlanCodesByOrderCode(orderCode);
                                 //如果是卡班订单, 而且是拆三段的第三段,拆两段的第二段
-                                if(ofcFundamentalInformation != null
-                                        && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
+                                if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)
                                         && planCodesByOrderCode.size() <= 3 && planCodesByOrderCode.size() >=2){
                                     String lastPlanCode = planCodesByOrderCode.get(0);
@@ -202,8 +198,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
                                     }
                                     //如果是出库带运输的仓储订单(先仓储计划单, 后运输计划单)
-                                }else if(ofcFundamentalInformation != null
-                                        && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSEDISTRIBUTIONORDER)
+                                }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSEDISTRIBUTIONORDER)
                                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")
                                         && planCodesByOrderCode.size() == 1
                                         && ofcSiloproStatusList.size() > 0){
@@ -246,8 +241,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 logger.info("跟踪状态已完成");
                             }
                         }else if(status.equals("已回单")){
-                            flag=false;
-                            flag=checkStatus(flag,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
+                            flag=checkStatus(false,statusList,"start",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                     +" "+"客户已回单");
                             if(!flag){
                                 ofcTransplanNewstatus.setTransportSingleLatestStatus(YIHUIDAN);
@@ -296,7 +290,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     logger.info("##################transPortNo为：{}",transPortNo);
                     OfcTraplanSourceStatus traplanSourceStatus=ofcTraplanSourceStatusService.selectOne(ofcTraplanSourceStatus);
                     if(traplanSourceStatus==null){
-                        logger.info("##################traplanSourceStatus为：{}",traplanSourceStatus);
+                        logger.info("##################traplanSourceStatus为：{}","null");
                         throw new BusinessException("获取transSourceStatus实体异常，NULL");
                     }else{
                         String tranNo=traplanSourceStatus.getTransCode();
@@ -394,7 +388,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         return null;
     }
 
-    public boolean checkStatus(boolean flag,List<OfcOrderStatus> statusList,String position,String msg){
+    private boolean checkStatus(boolean flag,List<OfcOrderStatus> statusList,String position,String msg){
         if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
             for (OfcOrderStatus status : statusList) {
                 if (status != null) {

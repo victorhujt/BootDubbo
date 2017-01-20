@@ -31,7 +31,7 @@ public class OfcPlannedDetailServiceImpl extends BaseService<OfcPlannedDetail> i
             if(followTag.equals("planCode")){
                 planCode = code;
             }
-            Map<String,String> mapperMap = new HashMap<String,String>();
+            Map<String,String> mapperMap = new HashMap<>();
             mapperMap.put("planCode",planCode);
             return ofcPlannedDetailMapper.plannedDetailsScreen(mapperMap);
         }else {

@@ -83,7 +83,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcDistributionBasicInfo 运输信息
      * @param ofcFundamentalInformation 基本信息
      */
-    public  void setCityOrTrunk(OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFundamentalInformation ofcFundamentalInformation){
+    private  void setCityOrTrunk(OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFundamentalInformation ofcFundamentalInformation){
         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
             String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
             String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
@@ -199,7 +199,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcOrderStatus 订单状态
      */
     private void orderPlaceTagTransPlace(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
-        StringBuffer notes = new StringBuffer();
+        StringBuilder notes = new StringBuilder();
         // 校验当前客户的客户订单号是否重复
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
         String custCode = ofcFundamentalInformation.getCustCode();
@@ -233,15 +233,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             checkDistibutionBaseMsg(ofcDistributionBasicInfo);
 
             //运输订单
-            if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
-                String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
-                /*if(depatrueCode.equals(destinationCode)){
-                    ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
-                }else {
-                    ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
-                }*/
-            }else{
+            if(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) || ofcDistributionBasicInfo.getDeparturePlaceCode().length() <= 12){
                 throw new BusinessException("四级地址编码为空!");
             }
             addFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
@@ -259,7 +251,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setNotes(notes.toString());
         upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
         //添加该订单的货品信息
-        List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<OfcGoodsDetailsInfo>();
+        List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<>();
         for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
             String orderCode = ofcFundamentalInformation.getOrderCode();
             ofcGoodsDetails.setOrderCode(orderCode);
@@ -424,7 +416,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcOrderStatus 订单状态
      */
     private void orderPlaceTagPlace(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
-        StringBuffer notes = new StringBuffer();
+        StringBuilder notes = new StringBuilder();
         int custOrderCode = 0;
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
             custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
@@ -568,7 +560,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcFundamentalInformation.setBaseName(uamGroupDtoResult.getGroupName());
             //仓库身份, 其他身份怎么处理?
         }else{
-
+            logger.info("当前下单的登陆用户的身份无法匹配大区基地");
         }
 
         return ofcFundamentalInformation;
@@ -704,104 +696,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
         return Wrapper.SUCCESS_MESSAGE;
     }
-    /**
-     * 下单或编辑时保存发货方收货方及其联系人
-     * saveContactMessage(cscContantAndCompanyDtoConsignee,custId
-     ,authResDtoByToken.getUserId(),authResDtoByToken.getGroupRefName(),authResDtoByToken.getGroupId());
-     */
-    /*public String saveContactMessage(CscContantAndCompanyDto cscContantAndCompanyDto,String custId,AuthResDto authResDtoByToken){//AuthResDto authResDtoByToken,//String custId,String userId,String userName,String groupId
-        if(null == cscContantAndCompanyDto){
-            throw new BusinessException("未添加联系人信息");
-        }
-        try {
-            cscContantAndCompanyDto.setCustomerId(custId);
-            Wrapper<List<CscContantAndCompanyVo>> listWrapper = feignCscCustomerAPIClient.queryCscReceivingInfoList(cscContantAndCompanyDto);
-            if(listWrapper.getResult().size() > 0){
-                return "该联系人信息已在资源中心中存在,无需再次添加!";
-            }
-            cscContantAndCompanyDto.setUserId(authResDtoByToken.getUserId());
-            cscContantAndCompanyDto.setUserName(authResDtoByToken.getGroupRefName());
-            cscContantAndCompanyDto.setGroupId(authResDtoByToken.getGroupId());
-            *//*cscContantAndCompanyDto.getCscContact().setProvince("ofc001");
-            cscContantAndCompanyDto.getCscContact().setCity("ofc001");
-            cscContantAndCompanyDto.getCscContact().setArea("ofc001");
-            cscContantAndCompanyDto.getCscContact().setStreet("ofc001");*//*
-            *//**
-             * 校验地址编码和名称是否完整
-             *//*
-            String provinceCode = cscContantAndCompanyDto.getCscContact().getProvince();
-            String provinceName = cscContantAndCompanyDto.getCscContact().getProvinceName();
-            String cityCode = cscContantAndCompanyDto.getCscContact().getCity();
-            String cityName = cscContantAndCompanyDto.getCscContact().getCityName();
-            String areaCode = cscContantAndCompanyDto.getCscContact().getArea();
-            String areaName = cscContantAndCompanyDto.getCscContact().getAreaName();
-            String streetCode = cscContantAndCompanyDto.getCscContact().getStreet();
-//            String streetName = cscContantAndCompanyDto.getCscContact().getStreetName();
-            if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
-                    || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
-                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)
-                   *//* || PubUtils.isSEmptyOrNull(streetCode) || PubUtils.isSEmptyOrNull(streetName)*//*){
-                throw new BusinessException("联系人地址不完整");
-            }
 
-
-
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyDto);
-            if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                throw new BusinessException(wrapper.getMessage());
-            }
-        }catch (Exception ex){
-            throw new BusinessException(ex.getMessage());
-        }
-        return Wrapper.SUCCESS_MESSAGE;
-    }*/
-    /**
-     * 下单或编辑时保存供应商及供应商联系人
-     */
-   /* public String saveSupportMessage(CscSupplierInfoDto cscSupplierInfoDto,String custId,AuthResDto authResDtoByToken){
-        if(null == cscSupplierInfoDto){
-            throw new BusinessException( "未添加供应商信息");
-        }
-        try {
-            String provinceCode = cscSupplierInfoDto.getProvince();
-            String provinceName = cscSupplierInfoDto.getProvinceName();
-            String cityCode = cscSupplierInfoDto.getCity();
-            String cityName = cscSupplierInfoDto.getCityName();
-            String areaCode = cscSupplierInfoDto.getArea();
-            String areaName = cscSupplierInfoDto.getAreaName();
-            String streetCode = cscSupplierInfoDto.getStreet();
-//            String streetName = cscSupplierInfoDto.getStreetName();
-            if(PubUtils.isSEmptyOrNull(provinceCode) || PubUtils.isSEmptyOrNull(provinceName)
-                    || PubUtils.isSEmptyOrNull(cityCode) || PubUtils.isSEmptyOrNull(cityName)
-                    || PubUtils.isSEmptyOrNull(areaCode) || PubUtils.isSEmptyOrNull(areaName)
-                    *//*|| PubUtils.isSEmptyOrNull(streetCode) || PubUtils.isSEmptyOrNull(streetName)*//*){
-                throw new BusinessException("联系人地址不完整");
-            }
-            cscSupplierInfoDto.setCustomerId(custId);
-            Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
-            try{
-                listWrapper = feignCscSupplierAPIClient.querySupplierByAttribute(cscSupplierInfoDto);
-            }catch (Exception ex){
-                if(Wrapper.ERROR_CODE != listWrapper.getCode()){
-                    return listWrapper.getMessage();
-                }
-            }
-            if(listWrapper.getResult().size() > 0){
-                return "该供应商信息已在资源中心中存在,无需再次添加!";
-            }
-            cscSupplierInfoDto.setSupplierCode("spofc" + System.currentTimeMillis());
-            cscSupplierInfoDto.setUserId(authResDtoByToken.getUserId());
-            cscSupplierInfoDto.setUserName(authResDtoByToken.getGroupRefName());
-            cscSupplierInfoDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscSupplierAPIClient.addSupplierBySupplierCode(cscSupplierInfoDto);
-            if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                throw new BusinessException(wrapper.getMessage());
-            }
-        }catch (Exception ex){
-            throw new BusinessException("添加供应商信息出错!");
-        }
-        return Wrapper.SUCCESS_MESSAGE;
-    }*/
     /**
      * 下单或编辑时在订单中心为用户保存订单中的仓库信息
      */
@@ -826,7 +721,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcOrderDTO
      * @return
      */
-    public Wrapper<?> validateFundamentalMessage(OfcOrderDTO ofcOrderDTO){
+    private Wrapper<?> validateFundamentalMessage(OfcOrderDTO ofcOrderDTO){
         if(null == ofcOrderDTO.getOrderTime()){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请选择订单日期");
         }
@@ -853,7 +748,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                                         CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,AuthResDto authResDtoByToken,
                                         OfcOrderStatus ofcOrderStatus,OfcMerchandiser ofcMerchandiser) {
         int custOrderCode = 0;
-        StringBuffer notes = new StringBuffer();
+        StringBuilder notes = new StringBuilder();
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
             custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
         }

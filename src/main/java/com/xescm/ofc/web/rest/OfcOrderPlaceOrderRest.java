@@ -143,7 +143,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
      * @param cscSupplierInfoDtoStr                 供应商信息
      * @param tag           标识下单、编辑、运输开单
-     * @param response
      * @return
      */
     @RequestMapping("/orderPlaceCon")
