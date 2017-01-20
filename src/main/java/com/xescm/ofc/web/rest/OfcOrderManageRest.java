@@ -65,7 +65,7 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
+    public Wrapper<?> orderAudit(String orderCode, String orderStatus, String reviewTag){
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
         logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
@@ -90,10 +90,10 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderDelete(Model model, String orderCode, String orderStatus){
+    public Wrapper<?> orderDelete( String orderCode, String orderStatus){
         logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单删除订单状态code orderStatus={}", orderStatus);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderDelete(orderCode,orderStatus,authResDtoByToken);
@@ -114,10 +114,10 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
+    public Wrapper<?> orderCancel( String orderCode, String orderStatus){
         logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单取消订单状态code orderStatus={}", orderStatus);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
@@ -157,7 +157,7 @@ public class OfcOrderManageRest extends BaseController{
         CscSupplierInfoDto supportMessage = null;
         List<RmcWarehouseRespDto> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
-        Wrapper<List<CscStorevo>> storeByCustomerId = null;
+        Wrapper<List<CscStorevo>> storeByCustomerId;
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
@@ -211,7 +211,7 @@ public class OfcOrderManageRest extends BaseController{
      * @return
      */
     @RequestMapping("/goodsDelete")
-    public void goodsDelete(Model model, OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
+    public void goodsDelete( OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
         logger.debug("==>订单中心订单管理订单删除实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
@@ -230,10 +230,9 @@ public class OfcOrderManageRest extends BaseController{
             //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/companySelect",method = RequestMethod.POST)
-    public void companySelByApi(Model model, RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
+    public void companySelByApi(RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         try{
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
                     && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
                     && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
@@ -277,11 +276,12 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> planUpdate(Model model, String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,HttpServletResponse response){
+    public Wrapper<?> planUpdate(String planCode, String planStatus, String serviceProviderName
+            ,String serviceProviderContact,String serviceProviderContactPhone){
         logger.debug("==>计划单编号", planCode);
         logger.debug("==>计划单资源分配状态", planStatus);
         logger.debug("==>服务商名称", serviceProviderName);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         String userName=authResDtoByToken.getUserName();
 
@@ -304,9 +304,8 @@ public class OfcOrderManageRest extends BaseController{
     })
     @RequestMapping(value = "/planSeleForTime", method = RequestMethod.POST)
     @ResponseBody
-    public void planSeleForTime(Model model, String planCode,ServletResponse response){
+    public void planSeleForTime( String planCode,ServletResponse response){
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
-        String result = null;
         OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
         RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
         if(ofcTransplanInfo.getExpectedArrivedTime()!=null){

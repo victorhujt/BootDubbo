@@ -177,7 +177,6 @@ public class OfcOperationDistributing extends BaseController{
      * 查询货品列表
      * @param cscGoodsApiDto 前端查询条件
      * @param response
-     * 2.0:前端还需再根据未修改的接口再把customerId改了!
      */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody

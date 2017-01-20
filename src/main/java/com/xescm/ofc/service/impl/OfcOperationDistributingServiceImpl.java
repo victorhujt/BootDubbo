@@ -138,7 +138,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         List<String> custOrderCodeList = new ArrayList<>();
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
-            OfcOrderDTO ofcOrderDTO = null;
+            OfcOrderDTO ofcOrderDTO;
             try {
                 ofcOrderDTO = JacksonUtil.parseJsonWithFormat(json, OfcOrderDTO.class);
             } catch (Exception e) {

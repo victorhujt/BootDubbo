@@ -1040,6 +1040,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    /**
+     *
+     * @param contactCompanyName
+     * @param contactName
+     * @param purpose
+     * @param customerCode
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String customerCode, AuthResDto authResDtoByToken) {
         //Map<String,Object> map = new HashMap<String,Object>();
@@ -1076,6 +1085,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return cscContantAndCompanyResponseDto;
     }
 
+    /**
+     * @param supportName
+     * @param supportContactName
+     * @param customerCode
+     * @param authResDtoByToken
+     * @return
+     */
     @Override
     public CscSupplierInfoDto getSupportMessage(String supportName, String supportContactName, String customerCode, AuthResDto authResDtoByToken) {
         CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
@@ -1225,6 +1241,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return null;
     }
 
+    /**
+     *
+     * @param rmcCompanyLineQO
+     * @return
+     */
     @Override
     public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
         Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
@@ -1498,20 +1519,20 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         RmcServiceCoverageForOrderVo rmcPickup=null;
         if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI.toString())
                 && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
-
+            //需要上门提货
             rmcPickup = kabanAuditWithPickup(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation, ofcTransplanInfo, rmcServiceCoverageForOrderVo);
         } else if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(FOU.toString())
                 && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI.toString())) {
-
+            //需要二次配送
             rmcPickup = kabanAuditWithTwoDistri(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation, ofcTransplanInfo, rmcServiceCoverageForOrderVo);
         } else if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI.toString())
                 && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(SHI.toString())) {
+            //需要上门提货和二次配送
             rmcPickup = kabanAuditWithBoth(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation, ofcTransplanInfo, rmcServiceCoverageForOrderVo);
-
         } else if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(FOU.toString())
                 && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
+            //不需要上门提货和二次配送
             rmcPickup = kabanAuditWithoutBoth(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation, ofcTransplanInfo, rmcServiceCoverageForOrderVo);
-
         } else {
             throw new BusinessException("订单信息是否上门提货或是否二次配送传值有误，请检查");
         }
@@ -2051,6 +2072,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
+    /**
+     * 调用区域覆盖接口
+     * @param rmcServiceCoverageForOrderVo
+     * @param tag
+     * @return
+     */
     @Override
     public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
         //先判断是上门提货还是二次配送
@@ -2084,6 +2111,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
+    /**
+     * 根据仓库编码获取仓库信息
+     * @param wareHouseCode
+     * @return
+     */
     public RmcWarehouseRespDto getWareHouseByCodeToPlan(String wareHouseCode){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         RmcWarehouseDto rmcWarehouse=new RmcWarehouseDto();
@@ -2097,6 +2129,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
     }
 
+    /**
+     * @param ofcTransplanInfo
+     * @param rmcWarehouse
+     * @return
+     */
     public OfcTransplanInfo copyDarturePlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){
             ofcTransplanInfo.setShippinCustomerCode(rmcWarehouse.getWarehouseCode());
@@ -2143,6 +2180,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return ofcTransplanInfo;
     }
 
+    /**
+     *
+     * @param ofcTransplanInfo
+     * @param rmcWarehouse
+     * @return
+     */
     public OfcTransplanInfo copyDestinationPlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){
             ofcTransplanInfo.setReceivingCustomerCode(rmcWarehouse.getWarehouseCode());
@@ -2189,6 +2232,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         return ofcTransplanInfo;
     }
 
+    /**
+     *
+     * @param planeCode
+     * @param rmcServiceCoverageForOrderVo
+     * @return
+     */
     @Override
     public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
         rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
