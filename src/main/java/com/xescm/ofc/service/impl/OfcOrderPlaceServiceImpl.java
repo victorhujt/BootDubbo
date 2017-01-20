@@ -9,6 +9,7 @@ import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
+import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.ResultCodeEnum;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
@@ -218,7 +220,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
             }
         }
-        ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+        ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
         // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(TRANSPORTORDER);
@@ -429,7 +431,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
 
         if (custOrderCode < 1){//根据客户订单编号查询唯一性
-            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE,6));
             //"SO"+ PrimaryGenerater.getInstance()
             //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
             ofcFundamentalInformation.setCustCode(custId);
@@ -857,7 +859,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
 
         if (custOrderCode < 1){//根据客户订单编号查询唯一性
-            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE,6));
             //"SO"+ PrimaryGenerater.getInstance()
             //        .generaterNextNumber(PrimaryGenerater.getInstance().getLastNumber())
             ofcFundamentalInformation.setCustCode(custId);

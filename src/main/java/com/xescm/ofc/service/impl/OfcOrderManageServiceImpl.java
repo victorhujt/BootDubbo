@@ -26,6 +26,8 @@ import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.OrderSourceEnum;
+import com.xescm.ofc.enums.PlatformTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
@@ -65,6 +67,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
@@ -275,7 +278,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try {
             BeanUtils.copyProperties(ofcTransplanInfo, ofcFundamentalInformation);
             BeanUtils.copyProperties(ofcTransplanInfo, ofcDistributionBasicInfo);
-            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP", 6));
+            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode(PLAN_PRE, 6));
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userName);
             ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
@@ -351,14 +354,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 /**
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
                  */
-                if ("4".equals(ofcFundamentalInformation.getPlatformType())) {
-                    ofcTransplanInfo.setSingleSourceOfTransport("6001");
+                if (PlatformTypeEnum.XIAN_YI.getCode().equals(ofcFundamentalInformation.getPlatformType())) {
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.XEBEST.getCode());
                 } else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("100003")){
-                    ofcTransplanInfo.setSingleSourceOfTransport("6002");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.SAP.getCode());
                 } else if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())) {
-                    ofcTransplanInfo.setSingleSourceOfTransport("6003");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.OTHERS.getCode());
                 } else {
-                    ofcTransplanInfo.setSingleSourceOfTransport("6003");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.OTHERS.getCode());
                 }
                 if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()).equals("")) {
                     ofcTransplanInfo.setShippinCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
@@ -528,7 +531,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
         OfcPlannedDetail ofcPlannedDetail=null;
         try {
-            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode("TP",6));
+            ofcTransplanInfo.setPlanCode(codeGenUtils.getNewWaterCode(PLAN_PRE,6));
             ofcTransplanInfo.setCreationTime(new Date());
             ofcTransplanInfo.setCreatePersonnel(userName);
             //ofcTransplanInfo.setNotes(ofcDistributionBasicInfo.getTransRequire());
@@ -606,13 +609,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
                  */
                 if("4".equals(ofcFundamentalInformation.getPlatformType())){
-                    ofcTransplanInfo.setSingleSourceOfTransport("6001");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.XEBEST.getCode());
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("100003")){
-                    ofcTransplanInfo.setSingleSourceOfTransport("6002");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.SAP.getCode());
                 }else if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getPlatformType())){
-                    ofcTransplanInfo.setSingleSourceOfTransport("6003");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.OTHERS.getCode());
                 }else{
-                    ofcTransplanInfo.setSingleSourceOfTransport("6003");
+                    ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.OTHERS.getCode());
                 }
 
                 if(!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getCubage()).equals("")){

@@ -44,6 +44,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_CONSIGNEE;
+import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_GOODS;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
+
 /*
 *
  * Created by lyh on 2016/11/19.
@@ -84,7 +88,7 @@ public class OfcOperationDistributing extends BaseController{
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"您没有添加任何信息,请检查!");
             }
             JSONArray jsonArray = JSON.parseArray(orderLists);
-            String batchNumber = codeGenUtils.getNewWaterCode("BN",4);//生成订单批次号,保证一批单子属于一个批次
+            String batchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);//生成订单批次号,保证一批单子属于一个批次
 
             Wrapper<?> validateCustOrderCodeResult =  ofcOperationDistributingService.validateCustOrderCode(jsonArray);
             if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
@@ -290,7 +294,7 @@ public class OfcOperationDistributing extends BaseController{
                 List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
-                    StringBuilder batchgoodsKey = new StringBuilder("ofc:batchgoods:");
+                    StringBuilder batchgoodsKey = new StringBuilder(BATCH_GOODS);
                     batchgoodsKey.append(System.nanoTime());
                     batchgoodsKey.append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();
@@ -299,7 +303,7 @@ public class OfcOperationDistributing extends BaseController{
                     ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
                 }
                 if(cscContantAndCompanyInportDtoList.size() > 0){
-                    StringBuilder batchconsingeeKey = new StringBuilder("ofc:batchconsingee:");
+                    StringBuilder batchconsingeeKey = new StringBuilder(BATCH_CONSIGNEE);
                     batchconsingeeKey.append(System.nanoTime());
                     batchconsingeeKey.append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();

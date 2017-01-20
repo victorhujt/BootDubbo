@@ -4,6 +4,7 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
@@ -98,7 +99,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                     return "";
                                 }
                             }
-                            String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
+                            String orderCode = codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE, 6);
                             resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                                 addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);

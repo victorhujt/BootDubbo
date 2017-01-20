@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
@@ -284,7 +285,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedback(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
         for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getTransportNo().size();i++){
             String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getTransportNo().get(i));
-            if(transPortNo.equals("") || !PubUtils.trimAndNullAsEmpty(transPortNo).startsWith("TP")){
+            if(transPortNo.equals("") || !PubUtils.trimAndNullAsEmpty(transPortNo).startsWith(PLAN_PRE)){
                 throw new BusinessException("运输计划单号为空或者格式不正确");
             }else{
                 OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();

@@ -6,6 +6,7 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -162,7 +163,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             }
         }
 
-        ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+        ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
         orderCode=ofcFundamentalInformation.getOrderCode();
         // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
