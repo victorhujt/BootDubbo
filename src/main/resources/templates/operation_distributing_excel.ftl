@@ -101,8 +101,7 @@
     </div>-->
 </div>
 
-<div class="adoptModal" id="errorExcelImport" class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: none;"
-     aria-hidden="false">
+<div class="adoptModal" id="errorExcelImport" class="bootbox modal fade in" style="display: none;">
     <#--<div class="modal-dialog">-->
         <div>
            <#-- <div class="modal-header">
@@ -171,6 +170,7 @@
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
                 <input id="customerCode" value="${customerCode!""}" hidden/>
                 <input id="custName" value="${custName!""}" hidden/>
+                <input id="cookieKey" value="${cookieKey!""}" hidden/>
             </div>
         </div>
         <div class="form-group">
@@ -376,6 +376,7 @@
     var csc_url = $("#csc_url").html();
     var ofc_web_url = $("#ofc_web_url").html();
     var csc_url_local = $("#csc_url_local").html();
+    var cookieKey = $("#cookieKey").val();
     $("#ExcelNoneBottom").click(function () {
         var historyUrl = $("#historyUrl").val();
         var url = '';
@@ -850,7 +851,7 @@
 
                         var excelImportTag = "confirm";
                         var customerCode = $("#customerCode").val();
-                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
+                        var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode  + "/" + cookieKey;
                         xescm.common.loadPage(url);
                         layer.close(index);
                     }, function(index){
@@ -865,7 +866,7 @@
         $("#ExcelNoneBtnBottom").click(function () {
             var excelImportTag = "cancel";
             var customerCode = $("#customerCode").val();
-            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode;
+            var url = "/ofc/distributing/excelImportConfirm/" + excelImportTag + "/" + customerCode + "/" + cookieKey;
             xescm.common.loadPage(url);
         })
         $("#errorExcelImportCloseBtn").click(function () {

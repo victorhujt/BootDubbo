@@ -1,37 +1,9 @@
 <head>
   <title>订单管理</title>
   <style type="text/css">
-    /*   #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-           position:fixed;
-           left:50%;
-           top:85px;
-           margin-left:-400px;
-           width:946px;
-           height:500px;
-           z-index:3;
-           overflow: auto;
-           border:solid #7A7A7A 1px;
-       }*/
     .date_a {
       line-height: 21px !important;
     }
-    /*
-            .initBtn{
-                height:34px;
-                width:34px;
-                border:1px solid #cacaca;
-                background:#f7f7f7!important;
-                cursor:pointer;
-                outline:none;
-                position:absolute;
-                top:0;
-                right:0;
-              padding-left:9px;
-            }
-            .initBtn:hover{
-                background:#fff !important;
-                border:1px solid #cacaca !important;
-            }*/
     .col-label{
       margin-left:10px;
 
@@ -113,14 +85,13 @@
           </div>
         </div>
         <label class="control-label col-label no-padding-right" for="name">业务类型</label>
-
         <div class="col-width-168" style="margin:0 12px;">
           <select data-placeholder="请选择业务类型" style="width: 168px;" id="businessType" class="chosen-select"
                   name="businessType">
             <option value=""></option>
-            <option value="600">城配</option>
+           <#-- <option value="600">城配</option>
             <option value="601">干线</option>
-            <option value="602">卡班</option>
+            <option value="602">卡班</option>-->
           </select>
         </div>
       </div>

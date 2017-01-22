@@ -14,4 +14,5 @@ public interface OfcTransplanInfoService extends IService<OfcTransplanInfo> {
     int queryNotInvalidAndNotCompleteTransOrder(String orderCode);
     List<String> queryPlanCodesByOrderCode(String orderCode);
     List<String> queryUncompletedPlanCodesByOrderCode(String orderCode);
+    /*Wrapper<PageInfo<TranPlanOfcRespDto>> tranPlanSel(TranPlanOfcReqDto TranPlanOfcReqDto);*/
 }

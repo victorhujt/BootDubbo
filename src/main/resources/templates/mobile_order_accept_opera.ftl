@@ -1,19 +1,11 @@
  <title>订单详情</title>
     <style type="text/css">
-     /*   #goodsListDiv,#consignorListDiv,#consigneeListDiv,#custListDiv,#goodsAndConsigneeDiv {
-            position:fixed;
-            left:50%;
-            top:85px;
-            margin-left:-400px;
-            width:946px;
-            height:500px;
-            z-index:3;
-            overflow: auto;
-            border:solid #7A7A7A 1px;
-        }*/
      .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
        padding:6px 8px !important;
        line-height:19px!important;
+     }
+     .col-width-376{
+       width:417px;
      }
         .date_a{
             line-height:21px !important;
@@ -26,9 +18,9 @@
             padding-top:0;
             line-height:30px;
         }
-        input[type=checkbox], input[type=radio]{
+      /*  input[type=checkbox], input[type=radio]{
             margin:10px 0 0;
-        }
+        }*/
         .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
             color:#393939;
         }
@@ -608,7 +600,7 @@
                             <div class="cclearfix" id="OrderDate">
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(mobileOrder.uploadDate?string("yyyy-MM-dd"))!""}" onclick="laydate({istime: true, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()})">
-                                    <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                    <label for="orderTime" class="initBtn" style="height:34px;"><i class="fa fa-calendar bigger-130"></i></label>
                                 </div>
                             </div>
                         </div></div>
@@ -634,7 +626,7 @@
                                 <input readonly name="custName" id="custName" type="text" placeholder="客户名称" style="padding-left:8px;width:430px;" />
                                 <input class="col-xs-10 col-xs-12" name=""  id="custGroupId" type="text" style="display: none"  />
                                 <input class="col-xs-10 col-xs-12" name=""  id="customerCode" type="text"  style="display: none"  />
-                                <button type="button" class="btn btn-minier no-padding-right y-float initBtn" id="custListDivBlock"style="outline:none;color: #666 !important;" >
+                                <button type="button" class="initBtn" id="custListDivBlock"style="outline:none;" >
                                     <i class="fa fa-user l-cor bigger-130"></i>
                                 </button>
                             <#-- <span style="cursor:pointer line-height:33px;" id="custListDivBlock"><i class="ace-icon fa fa-user bigger-130 icon-pic custNameIcon" style="color:#008bca;"></i></span>-->
@@ -646,7 +638,7 @@
                             <div class="col-width-168" >
                                 <div class="col-width-168 position-relative" style="height:34px;">
                                     <input class="col-width-168 es-input" name="expectedArrivedTime" id="expectedArrivedTime" type="text" placeholder="承诺到达时间" aria-controls="dynamic-table" readonly class="laydate-icon">
-                                    <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                                    <label for="expectedArrivedTime" class="initBtn" style="height:34px;"><i class="fa fa-calendar bigger-130" ></i></label>
                                 </div>
                             </div>
                         </div>
@@ -664,23 +656,24 @@
 
             </form>
 
-            <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:360px;">
-                <div style="width:515px;margin-right:35px;float:left;">
+            <form name="orderInfoTableValidate" id="orderInfoTableValidate"  class="form-horizontal" role="form" style="min-height:250px;">
+                <div style="width:500px;margin-right:25px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">发货方信息</h4>
                     </div>
-                    <span style="cursor:pointer" id="consignorListDivBlock">
+                    <#--<span style="cursor:pointer" id="consignorListDivBlock">
                     <button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consignorselbtn">选择</button></span>
                     <label id="departure_place" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <label class="control-label" style="float:right;" for="name">出发地：</label>
+                    <label class="control-label" style="float:right;" for="name">出发地：</label>-->
                     <div id="consignorin" style="margin-top:15px;">
                         <div class="form-group" >
                             <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
-                            <div class="col-width-168 padding-15">
-                                <div class="clearfix">
+                            <div class="col-width-376 padding-15">
+                                <div class="clearfix position-relative">
                                     <input id="consignorCode" name="consignorCode" type="hidden">
                                     <input id="consignorType" name="consignorType" type="hidden">
                                     <input id="consignorName"  name="consignorName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                                  <label for="" id="consignorListDivBlock" class="initBtn"><i class="fa fa-user bigger-130"></i></label>
                                 </div>
                             </div>
                         </div>
@@ -692,16 +685,17 @@
                                     <input id="consignorContactName"   name="consignorContactName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系电话</label>
-                            <div class="col-width-168 padding-15">
-                                <div class="clearfix">
-                                    <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                          <label class="control-label col-label no-padding-right" style="margin-left:0;" for="name"><span class="w-label-icon">*</span>联系电话</label>
+                          <div class="col-width-168 padding-15">
+                            <div class="clearfix">
+                              <input id="consignorPhone" name="consignorPhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
-                                </div>
                             </div>
+                          </div>
                         </div>
+                       <#-- <div class="form-group" >
+
+                        </div>-->
                         <div class="form-group" >
                             <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>地址选择</label>
                             <div class="col-width-376 padding-15">
@@ -724,23 +718,23 @@
                 </div>
 
 
-                <div style="width:460px;float:left;">
+                <div style="width:500px;float:left;">
                     <div class="page-header">
                         <h4 style="font-size: 14px;font-family:'微软雅黑'">收货方信息</h4>
                     </div>
-                    <span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
+                    <#--<span style="cursor:pointer" id="consigneeListDivBlock"><button type="button" class="btn btn-white btn-info btn-bold btn-interval" id="consigneeselbtn">选择</button></span>
                     <label id="" class="control-label" style="float:right;" for="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <label id="destination" class="control-label" style="float:right;" for="name"></label>
-                    <label class="control-label" style="float:right;" for="name">目的地：</label>
+                    <label class="control-label" style="float:right;" for="name">目的地：</label>-->
                     <div id="consignorout" style="margin-top:15px;">
                         <div class="form-group" >
                             <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>名称</label>
-                            <div class="col-width-168 padding-15">
-                                <div class="clearfix">
+                            <div class="col-width-376 padding-15">
+                                <div class="clearfix position-relative">
                                     <input id="consigneeCode" name="consigneeCode" type="hidden">
                                     <input id="consigneeType" name="consigneeType" type="hidden">
                                     <input id="consigneeName"  name="consigneeName" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
-
+                                    <label for="" id="consigneeListDivBlock" class="initBtn"><i class="fa fa-user bigger-130"></i></label>
                                 </div>
                             </div>
                         </div>
@@ -753,16 +747,17 @@
 
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group" >
-                            <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>联系电话</label>
-                            <div class="col-width-168 padding-15">
-                                <div class="clearfix">
-                                    <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
+                          <label class="control-label col-label no-padding-right" style="margin-left:0;" for="name"><span class="w-label-icon">*</span>联系电话</label>
+                          <div class="col-width-168 padding-15">
+                            <div class="clearfix">
+                              <input id="consigneePhone" name="consigneePhone" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" >
 
-                                </div>
                             </div>
+                          </div>
                         </div>
+                       <#-- <div class="form-group" >
+
+                        </div>-->
                         <div class="form-group" >
                             <label class="control-label col-label no-padding-right" for="name"><span class="w-label-icon">*</span>地址选择</label>
                             <div class="col-width-376 padding-15">
@@ -895,7 +890,7 @@
 
             <form id="orderFinanceChargeFormValidate" method="post" class="form-horizontal" role="form">
                 <div class="form-group" id="transBusinessTypeDiv" style="line-height:34px;">
-                    <div style="width:242px;float:left;margin-left:45px;" >
+                    <div style="width:242px;float:left;margin-left:51px;" >
                         <label class="col-label" for="name" style="float:left;">费用总计</label>
                         <div class="col-width-100 padding-15" style="width:130px">
                             <input id="serviceCharge" value="0" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
@@ -948,7 +943,7 @@
 
                     <div style="width:400px;">
                         <label class=" col-label col-float" for="name" >结算方式</label>
-                        <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:0;margin-right:15px;">现结</label>
+                        <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:5px;margin-right:15px;">现结</label>
                         <div style="float:left;width:130px;">
                             <div class="col-float" style="width:100px;margin-right:15px;">
                                 <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="0">
@@ -3651,25 +3646,30 @@
       });
     }
 
+    $(".laytime_").click(function(){
+      laydate({istime: false, format: 'YYYY-MM-DD',isclear: true,istoday: true,min: laydate.now(-30),max: laydate.now()});
+      toggleScroller();
+    });
+    $("body").click(function(){
+      toggleScroller();
+    });
 
-
-    setInterval(function(){
-        if($("#laydate_box").length>0){
-          if($("#laydate_box").is(":hidden")){
-            $("#Overflow").css({
-              'overflow':'auto'
-            })
-          }else{
-            $("#Overflow").css({
-              'overflow':'hidden'
-            })
-          }
-        }else{
+    function toggleScroller(){
+      if($("#laydate_box").length>0){
+        if($("#laydate_box").is(":hidden")){
           $("#Overflow").css({
             'overflow':'auto'
           })
+        }else{
+          $("#Overflow").css({
+            'overflow':'hidden'
+          })
         }
-    },0)
-
+      }else{
+        $("#Overflow").css({
+          'overflow':'auto'
+        })
+      }
+    }
 
 </script>

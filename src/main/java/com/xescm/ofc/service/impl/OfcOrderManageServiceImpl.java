@@ -431,7 +431,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
                      rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
                     if (rmcPickup != null){
-                        if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseCode()).equals("") && !PubUtils.isSEmptyOrNull(ofcTransplanInfo.getBaseId())){
+                        if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseCode()).equals("")){
                             ofcTransplanInfo.setBaseId(rmcPickup.getBaseCode());
                         }
                         if(!PubUtils.trimAndNullAsEmpty(rmcPickup.getBaseName()).equals("")){

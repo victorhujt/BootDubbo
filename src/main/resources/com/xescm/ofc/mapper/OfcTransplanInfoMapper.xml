@@ -63,7 +63,6 @@
     <result column="two_distribution" property="twoDistribution" jdbcType="VARCHAR" />
   </resultMap>
 
-
   <resultMap id="ofcTransplanInfoVoResultMap" type="com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo" >
     <!--
       WARNING - @mbg.generated
