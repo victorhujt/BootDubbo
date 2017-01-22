@@ -7,12 +7,12 @@ import com.xescm.ofc.enums.DmsCallbackStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -52,27 +52,27 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             if(PubUtils.isSEmptyOrNull(transCode) || PubUtils.isSEmptyOrNull(dmsCallbackStatus) || null == operTime || PubUtils.isSEmptyOrNull(description)){
                 throw new BusinessException("DMS回传状态信息不完整!");
             }
-//            String orderCode = ofcDistributionBasicInfoService.getKabanOrderCodeByTransCode(transCode);
             String orderCode = ofcDistributionBasicInfoService.getLastedKabanOrderCodeByTransCode(transCode);
             if(PubUtils.isSEmptyOrNull(orderCode)){
                 throw new BusinessException("没有查到所属订单");
             }
+
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
-            ofcTransplanInfo.setOrderCode(orderCode);//SO161210000047
-            ofcTransplanInfo.setBusinessType("602");
+            ofcTransplanInfo.setOrderCode(orderCode);
+            ofcTransplanInfo.setBusinessType(OrderConstConstant.WITHTHEKABAN);
             List<OfcTransplanInfo> ofcTransplanInfoList = ofcTransplanInfoService.select(ofcTransplanInfo);//去掉作废的
             if(ofcTransplanInfoList.size() < 1){
                 throw new BusinessException("查不到相应运输订单");
             }
-            String planCode = ofcTransplanInfoList.get(0).getPlanCode();
+
             //往运输单最新状态表里更新一条记录
+            String planCode = ofcTransplanInfoList.get(0).getPlanCode();
             OfcTransplanNewstatus ofcTransplanNewstatus = new OfcTransplanNewstatus();
             BeanUtils.copyProperties(ofcTransplanNewstatus,dmsTransferStatusDto);
             ofcTransplanNewstatus.setPlanCode(planCode);//运输计划单号
             ofcTransplanNewstatus.setTransportSingleLatestStatus(dmsCallbackStatus);//操作类型
             ofcTransplanNewstatus.setOperator(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getCreator()));//操作员
             ofcTransplanNewstatus.setOperUnit(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getUnit()));//操作单位
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ofcTransplanNewstatus.setTransportSingleUpdateTime(operTime);//操作时间
             ofcTransplanNewstatus.setDescription(PubUtils.trimAndNullAsEmpty(dmsTransferStatusDto.getDesp()));//描述信息
             //无论回传哪种状态, 都向运输单最新状态表里更新
@@ -80,10 +80,11 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             if(ofcTransplanNewstatusUpdateNum == 0){
                 throw new BusinessException("无法更新相应的运输单状态!");
             }
+
             //更新订单状态
             //如果运输单状态为已签收,则将对应的运输计划单状态改为已完成
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-            ofcOrderStatus.setNotes(sdf.format(operTime) + " " + description);
+            ofcOrderStatus.setNotes(DateUtils.Date2String(operTime, DateUtils.DateFormatType.TYPE1)+ " " + description);
             ofcOrderStatus.setLastedOperTime(operTime);
             if(StringUtils.equals(DmsCallbackStatusEnum.DMS_STATUS_SIGNED.getCode(),dmsCallbackStatus)){
                 Date now = new Date();
@@ -124,15 +125,15 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
                 ofcTransplanStatus.setTaskCompletionTime(operTime);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
+
                 //再查询该运输计划单是否是该该订单下最后一个待完成的运输计划单, 如果是就把订单的状态改为已完成
                 int queryResult = ofcTransplanInfoService.queryNotInvalidAndNotCompleteTransOrder(orderCode);
                 if(queryResult == 0){
-
                     ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
                     ofcOrderStatus.setLastedOperTime(now);
-                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
+                    ofcOrderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1)
                             +" "+"订单已完成");
                     OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
                     if(null == ofcFundamentalInformation){
