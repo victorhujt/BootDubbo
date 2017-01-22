@@ -352,7 +352,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 ofcDistributionBasicInfo.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
             }
             info.append("，联系电话：【").append(ofcSchedulingSingleFeedbackCondition.getTel()).append("】");
-            logger.info("###############调度状态更新信息为{}",info);
+            logger.info("###############调度状态更新信息为{}",info.toString());
             ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
 
 
@@ -365,7 +365,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
                 orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                 orderStatus.setNotes( DateUtils.Date2String(ofcSchedulingSingleFeedbackCondition.getCreateTime(), DateUtils.DateFormatType.TYPE1)
-                        +" "+info);
+                        +" "+info.toString());
                 ofcOrderStatusService.save(orderStatus);
             }
         }
