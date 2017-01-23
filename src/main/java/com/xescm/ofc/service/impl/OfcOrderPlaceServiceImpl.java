@@ -10,8 +10,8 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.enums.OrderTypeEnum;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
@@ -219,10 +219,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
             }
         }
+        String orderType = OrderConstant.WAREHOUSE_DIST_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
         ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
-        ofcFundamentalInformation.setOrderType(TRANSPORTORDER);
-        if(ofcFundamentalInformation.getOrderType().equals(TRANSPORTORDER)){
+        ofcFundamentalInformation.setOrderType(orderType);
+        if(ofcFundamentalInformation.getOrderType().equals(orderType)){
             Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
@@ -295,7 +296,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         //添加该订单的货品信息 modify by wangst 做抽象处理
         BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
         ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
-        if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){//编辑时仓配订单
+        String orderType = ofcFundamentalInformation.getOrderType();
+        if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)){//编辑时仓配订单
             if(null == ofcWarehouseInformation.getProvideTransport()){
                 ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
             }
@@ -344,7 +346,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }else if(select.size() == 0){
                 saveWarehouseMessage(ofcWarehouseInformation);
             }
-        }else if(ofcFundamentalInformation.getOrderType().equals(TRANSPORTORDER)){
+        }else if(OrderConstant.TRANSPORT_ORDER.equals(orderType)){
             Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
@@ -422,7 +424,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isOEmptyOrNull(orderType)) {
                 throw new BusinessException("您选择的订单类型编码为空!");
             }
-            if (OrderTypeEnum.WAREHOUSE_DIST_ORDER.getCode().equals(orderType)){
+            if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)){
                 if(null == ofcWarehouseInformation.getProvideTransport()){
                     ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                 }
@@ -444,7 +446,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation.setSupportCode("");
                     ofcWarehouseInformation.setSupportName("");
                 }
-            }else if(OrderTypeEnum.TRANS_ORDER.getCode().equals(orderType)){
+            }else if(OrderConstant.TRANSPORT_ORDER.equals(orderType)){
                 Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                 if(Wrapper.ERROR_CODE == wrapper.getCode()){
                     throw new BusinessException(wrapper.getMessage());
@@ -702,7 +704,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isOEmptyOrNull(orderType)) {
                 throw new BusinessException("您选择的订单类型编码为空!");
             } else {
-                if (OrderTypeEnum.WAREHOUSE_DIST_ORDER.getCode().equals(orderType)) {
+                if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {
                     if (null == ofcWarehouseInformation.getProvideTransport()) {
                         ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                     }
@@ -731,7 +733,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcWarehouseInformation.setSupportCode("");
                         ofcWarehouseInformation.setSupportName("");
                     }
-                } else if (OrderTypeEnum.TRANS_ORDER.getCode().equals(orderType)) {
+                } else if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {
                     Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                         throw new BusinessException(wrapper.getMessage());

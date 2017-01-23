@@ -5,7 +5,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
-import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
@@ -112,7 +112,7 @@ public class OfcOrderFollowRest extends BaseController{
                 }
             }*/
             //仓配订单
-            if(OrderConstConstant.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
+            if(OrderConstant.WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
                 /*rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);*/
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息

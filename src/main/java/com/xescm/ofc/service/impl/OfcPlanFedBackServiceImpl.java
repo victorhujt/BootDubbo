@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
@@ -147,9 +148,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     List<String> planCodesByOrderCode = ofcTransplanInfoService.queryPlanCodesByOrderCode(orderCode);
                     //当前所有未作废未完成的运输计划单单号
                     List<String> planCodesUncompletedByOrderCode = ofcTransplanInfoService.queryUncompletedPlanCodesByOrderCode(orderCode);
+
+                    String orderType = ofcFundamentalInformation.getOrderType();
+                    String businessType = ofcFundamentalInformation.getBusinessType();
                     //如果是卡班订单, 而且是拆三段的第三段,拆两段的第二段
-                    if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORTORDER)
-                            && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN)
+                    if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.TRANSPORT_ORDER)
+                            && PubUtils.trimAndNullAsEmpty(businessType).equals(WITHTHEKABAN)
                             && planCodesByOrderCode.size() <= 3 && planCodesByOrderCode.size() >=2){
                         String lastPlanCode = planCodesByOrderCode.get(0);
                         for(String planCode : planCodesByOrderCode){
@@ -192,8 +196,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             ofcFundamentalInformationService.update(ofcFundamentalInformation);
                         }
                         //如果是出库带运输的仓储订单(先仓储计划单, 后运输计划单)
-                    }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSEDISTRIBUTIONORDER)
-                            && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")
+                    }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.WAREHOUSE_DIST_ORDER)
+                            && PubUtils.trimAndNullAsEmpty(businessType).substring(0,2).equals("61")
                             && planCodesByOrderCode.size() == 1
                             && ofcSiloproStatusList.size() > 0){
                         //未完成的仓储运输计划单
@@ -214,9 +218,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             ofcFundamentalInformation.setFinishedTime(now);
                         }
                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
-                    }else if(ofcTransplanInfos.size() == 1
-                            && ofcFundamentalInformation.getOrderType().equals(TRANSPORTORDER)
-                            && !ofcFundamentalInformation.getBusinessType().equals(WITHTHEKABAN)){
+                    }else if(ofcTransplanInfos.size() == 1 && orderType.equals(OrderConstant.TRANSPORT_ORDER) && !businessType.equals(WITHTHEKABAN)){
                         //单个城配或干线运输单的情况, 只剩一个未完成的运输计划单
                         orderStatus=new OfcOrderStatus();
                         orderStatus.setOrderCode(orderCode);

@@ -11,9 +11,9 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
-import com.xescm.ofc.enums.OrderTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
@@ -164,12 +164,12 @@ public class OfcOrderManageRest extends BaseController{
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             //如果是运输订单,就去找收发货方联系人的信息
-            if(OrderTypeEnum.TRANS_ORDER.getCode().equals(ofcOrderDTO.getOrderType())){
+            if(OrderConstant.TRANSPORT_ORDER.equals(ofcOrderDTO.getOrderType())){
                 consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
                 consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
             }
             //仓配订单
-            if(OrderTypeEnum.WAREHOUSE_DIST_ORDER.getCode().equals(ofcOrderDTO.getOrderType())){
+            if(OrderConstant.WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
 
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息

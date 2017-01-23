@@ -4,8 +4,6 @@ package com.xescm.ofc.constant;
  * Created by ydx on 2016/10/11.
  */
 public final class OrderConstConstant {
-    public static final String TRANSPORTORDER="60";     //运输订单
-    public static final String WAREHOUSEDISTRIBUTIONORDER="61";     //仓配订单
 
     public static final String WITHTHECITY="600";       //城配
     public static final String WITHTHETRUNK="601";      //干线

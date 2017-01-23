@@ -7,7 +7,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
-import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcMobileOrderMapper;
@@ -92,7 +92,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         }
         ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.MOBILE_PRE,6));
         ofcMobileOrder.setUploadDate(new Date());
-        ofcMobileOrder.setOrderType(OrderConstConstant.TRANSPORTORDER);
+        ofcMobileOrder.setOrderType(OrderConstant.TRANSPORT_ORDER);
         ofcMobileOrder.setMobileOrderStatus(UN_TREATED);
         save(ofcMobileOrder);
         return ofcMobileOrder;
@@ -163,12 +163,13 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             }
         }
 
+        String orderType = OrderConstant.TRANSPORT_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
         orderCode=ofcFundamentalInformation.getOrderCode();
         // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
-        ofcFundamentalInformation.setOrderType(TRANSPORTORDER);
-        if(ofcFundamentalInformation.getOrderType().equals(TRANSPORTORDER)){
+        ofcFundamentalInformation.setOrderType(orderType);
+        if(ofcFundamentalInformation.getOrderType().equals(orderType)){
             Wrapper<?> wrapper =ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
