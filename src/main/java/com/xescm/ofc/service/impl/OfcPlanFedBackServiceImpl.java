@@ -126,7 +126,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     logger.info("跟踪状态已到达");
                 }
                 //当前计划单序号等于订单下计划单数量，表示最后一个计划单
-            }else if(status.equals("已签收") && (PubUtils.trimAndNullAsEmpty(programSerialNumber).equals(serialNumberCount+""))){
+            }else if(status.equals("已签收") && (PubUtils.trimAndNullAsEmpty(programSerialNumber).equals(String.valueOf(serialNumberCount)))){
                 Date now = new Date();
                 flag=checkStatus(false,statusList,"end","客户已签收");
                 if(!flag){
