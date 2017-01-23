@@ -157,7 +157,7 @@ public class OfcMobileOrderRest extends BaseController {
             }
             if(null !=ofcOrderDTO){
                 if (null == ofcOrderDTO.getProvideTransport()){
-                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
                 }
                 if (null == ofcOrderDTO.getUrgent()){
                     ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);

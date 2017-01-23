@@ -187,7 +187,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcSiloprogramInfo ofcSiloprogramInfo = new OfcSiloprogramInfo();
-                    if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSEORDERPROVIDETRANS) {
+                    if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
                         //需要提供运输
                         OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();//(PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).substring(0,2).equals("61"))
                         if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
@@ -212,7 +212,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             logger.info("仓储计划单不存在");
                             throw new BusinessException("仓储计划单不存在");
                         }
-                    } else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSEORDERNOTPROVIDETRANS) {
+                    } else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSE_NO_TRANS) {
                         logger.info("不需要提供运输");
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
@@ -1840,13 +1840,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSEDISTRIBUTIONORDER)
                         && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(SALESOUTOFTHELIBRARY)
-                        && ofcWarehouseInformation.getProvideTransport() == WAREHOUSEORDERPROVIDETRANS){            // 仓配订单
+                        && ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){            // 仓配订单
                     //000创建仓储计划单
                     OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
                     ofcSiloprogramInfo.setProgramSerialNumber("1");
                     siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getUserName());
 
-                    if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
+                    if(ofcWarehouseInformation.getProvideTransport()== WEARHOUSE_WITH_TRANS){
                         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                         ofcTransplanInfo.setProgramSerialNumber("1");
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName(),ofcFinanceInformation);

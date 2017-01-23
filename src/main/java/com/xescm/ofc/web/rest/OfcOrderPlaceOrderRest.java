@@ -117,7 +117,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcOrderDTO.setOrderTime(new Date());
             }
             if (null == ofcOrderDTO.getProvideTransport()){
-                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
             }
             if (null == ofcOrderDTO.getUrgent()){
                 ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
@@ -195,7 +195,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             }
 
             if (null == ofcOrderDTO.getProvideTransport()){
-                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
             }
             if (null == ofcOrderDTO.getUrgent()){
                 ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
