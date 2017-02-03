@@ -393,15 +393,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     OrderScreenCondition condition = new OrderScreenCondition();
                     condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
-                    OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-                    ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                    ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
-                    ofcOrderStatus.setStatusDesc("执行中");
-                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        + " " + "订单开始执行");
-                    ofcOrderStatus.setOperator(userName);
-                    ofcOrderStatus.setLastedOperTime(new Date());
-                    ofcOrderStatusService.save(ofcOrderStatus);
+                    saveOrderStatusOfImplemente(ofcTransplanInfo,userName);
                 }
                 RmcServiceCoverageForOrderVo rmcPickup=null;
                 if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")) {
@@ -583,15 +575,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
                     if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("1")){
-                        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-                        ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                        ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
-                        ofcOrderStatus.setStatusDesc("执行中");
-                        ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                                +" "+"订单开始执行");
-                        ofcOrderStatus.setOperator(userName);
-                        ofcOrderStatus.setLastedOperTime(new Date());
-                        ofcOrderStatusService.save(ofcOrderStatus);
+                        saveOrderStatusOfImplemente(ofcTransplanInfo,userName);
                     }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getNotes()).equals("")){
@@ -1120,15 +1104,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     && ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(ofcTransplanInfo.getOrderCode()).size()==0){
                                 throw new BusinessException("订单状态异常，无法变更为执行中");
                             }else {
-                                OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-                                ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                                ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
-                                ofcOrderStatus.setStatusDesc("执行中");
-                                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                                        +" "+"订单开始执行");
-                                ofcOrderStatus.setOperator(userName);
-                                ofcOrderStatus.setLastedOperTime(new Date());
-                                ofcOrderStatusService.save(ofcOrderStatus);
+                                saveOrderStatusOfImplemente(ofcTransplanInfo,userName);
                             }
                         }
                         ofcTraplanSourceStatus.setResourceConfirmation(userName);
@@ -2272,5 +2248,22 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcInfo.setBaseName(rmcPickup.getBaseName());
         ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcFundamentalInformationService.update(ofcInfo);
+    }
+
+    /**
+     * （仅用于）保存订单状态为执行中
+     * @param ofcTransplanInfo
+     * @param userName
+     */
+    public void saveOrderStatusOfImplemente(OfcTransplanInfo ofcTransplanInfo,String userName){
+        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
+        ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
+        ofcOrderStatus.setStatusDesc("执行中");
+        ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                +" "+"订单开始执行");
+        ofcOrderStatus.setOperator(userName);
+        ofcOrderStatus.setLastedOperTime(new Date());
+        ofcOrderStatusService.save(ofcOrderStatus);
     }
 }
