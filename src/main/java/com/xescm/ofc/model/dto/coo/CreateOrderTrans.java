@@ -73,7 +73,7 @@ public class CreateOrderTrans {
         if (createOrderEntity != null) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ofcOrderStatus = new OfcOrderStatus();
-            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDINGAUDIT);
+            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDING_AUDIT);
             ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setNotes(simpleDateFormat.format(new Date())+" 订单已创建");
             ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);

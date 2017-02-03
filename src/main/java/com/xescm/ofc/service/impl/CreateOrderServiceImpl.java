@@ -93,7 +93,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 String orderCode = information.getOrderCode();
                                 OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
                                 //订单已存在,获取订单的最新状态,只有待审核的才能更新
-                                if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
+                                if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                     logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
                                     addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
                                     return "";
@@ -217,11 +217,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         }
         String orderState = ofcOrderStatus.getOrderStatus();
-        if (StringUtils.equals(orderState, HASBEENCOMPLETED)) {
+        if (StringUtils.equals(orderState, HASBEEN_COMPLETED)) {
             cannelOrderVo.setReason("已完成的订单");
             cannelOrderVo.setResultCode("0");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
-        } else if (StringUtils.equals(orderState, HASBEENCANCELED)) {
+        } else if (StringUtils.equals(orderState, HASBEEN_CANCELED)) {
             cannelOrderVo.setReason("已取消的订单");
             cannelOrderVo.setResultCode("0");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);

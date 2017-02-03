@@ -5,58 +5,58 @@ package com.xescm.ofc.constant;
  */
 public final class OrderConstConstant {
 
-    public static final String WITHTHECITY="600";       //城配
-    public static final String WITHTHETRUNK="601";      //干线
-    public static final String WITHTHEKABAN="602";      //卡班
+    public static final String WITH_THE_CITY="600";       //城配
+    public static final String WITH_THE_TRUNK="601";      //干线
+    public static final String WITH_THE_KABAN="602";      //卡班
 
-    public static final String SALESOUTOFTHELIBRARY="610";      //销售出库
-    public static final String TRANSFEROUTOFTHELIBRARY="611";        //调拨出库
-    public static final String LOSSOFREPORTING="612";        //报损出库
-    public static final String OTHEROUTOFTHELIBRARY="613";       //其他出库
-    public static final String ALLOTOUTOFTHELIBRARY="614";       //分拨出库
-    public static final String PURCHASINGANDSTORAGE="620";       //采购入库
-    public static final String ALLOCATESTORAGE="621";        //调拨入库
-    public static final String RETURNWAREHOUSING="622";      //退货入库
-    public static final String PROCESSINGSTORAGE="623";      //加工入库
-    public static final String INVENTORYPROFITSTORAGE="624";      //盘盈入库
-    public static final String CIRCULATESTORAGE="625";      //流通入库
-    public static final String OTHERSTORAGE="626";      //其他入库
-    public static final String ALLOTSTORAGE="627";      //分拨入库
+    public static final String SALES_OUT_OF_THE_LIBRARY="610";      //销售出库
+    public static final String TRANSFER_OUT_OF_THE_LIBRARY="611";        //调拨出库
+    public static final String LOSS_OF_REPORTING="612";        //报损出库
+    public static final String OTHER_OUT_OF_THE_LIBRARY="613";       //其他出库
+    public static final String ALLOT_OUT_OF_THE_LIBRARY="614";       //分拨出库
+    public static final String PURCHASING_AND_STORAGE="620";       //采购入库
+    public static final String ALLOCATE_STORAGE="621";        //调拨入库
+    public static final String RETURN_WAREHOUSING="622";      //退货入库
+    public static final String PROCESSING_STORAGE="623";      //加工入库
+    public static final String INVENTORY_PROFIT_STORAGE="624";      //盘盈入库
+    public static final String CIRCULATE_STORAGE="625";      //流通入库
+    public static final String OTHER_STORAGE="626";      //其他入库
+    public static final String ALLOT_STORAGE="627";      //分拨入库
 
-    public static final String PENDINGAUDIT="10";       //待审核
-    public static final String ALREADYEXAMINE="20";     //已审核
-    public static final String IMPLEMENTATIONIN="30";       //执行中
-    public static final String HASBEENCOMPLETED="40";       //已完成
-    public static final String HASBEENCANCELED="50";       //已取消
+    public static final String PENDING_AUDIT="10";       //待审核
+    public static final String ALREADY_EXAMINE="20";     //已审核
+    public static final String IMPLEMENTATION_IN="30";       //执行中
+    public static final String HASBEEN_COMPLETED="40";       //已完成
+    public static final String HASBEEN_CANCELED="50";       //已取消
 
     public static final Integer WEARHOUSE_WITH_TRANS=1;       //仓储订单提供运输
     public static final Integer WAREHOUSE_NO_TRANS=0;       //仓储订单不提供运输
 
-    public static final Integer DISTRIBUTIONORDERURGENT=1;       //运输订单加急
-    public static final Integer DISTRIBUTIONORDERNOTURGENT=0;       //运输订单不加急
+    public static final Integer DISTRIBUTION_ORDER_URGENT=1;       //运输订单加急
+    public static final Integer DISTRIBUTION_ORDER_NOT_URGENT=0;       //运输订单不加急
 
-    public static final Integer ORDERWASABOLISHED=1;       //订单作废
-    public static final Integer ORDERWASNOTABOLISHED=0;       //订单未作废
+    public static final Integer ORDER_WAS_ABOLISHED=1;       //订单作废
+    public static final Integer ORDER_WASNOT_ABOLISHED=0;       //订单未作废
 
-    public static final String CONTACTPURPOSECONSIGNOR = "2"; //联系人用途,发货人
-    public static final String CONTACTPURPOSECONSIGNEE = "1"; //联系人用途,收货人
+    public static final String CONTACT_PURPOSE_CONSIGNOR = "2"; //联系人用途,发货人
+    public static final String CONTACT_PURPOSE_CONSIGNEE = "1"; //联系人用途,收货人
 
     /**
      * 运输计划单资源分配状态
      */
-    public static final String DAIFENPEI="10";  //待分配
-    public static final String WEIFENPEI="20";  //未分配
-    public static final String YIFENPEI="30";   //已分配
-    public static final String YIQUEDING="40";  //已确定
+    public static final String TO_BE_ASSIGNED="10";  //待分配
+    public static final String UNALLOCATED="20";  //未分配
+    public static final String ALREADY_ASSIGNED="30";   //已分配
+    public static final String ALREADY_DETERMINED="40";  //已确定
 
     /**
      * 计划单状态
      */
-    public static final String ZIYUANFENPEIZ="10";  //资源分配中
-    public static final String YITUISONG="20";  //已推送
-    public static final String RENWUZHONG="30";   //任务中
-    public static final String RENWUWANCH="40";  //任务完成
-    public static final String YIZUOFEI="50";  //已作废
+    public static final String RESOURCE_ALLOCATION="10";  //资源分配中
+    public static final String ALREADY_PUSH="20";  //已推送
+    public static final String TASK="30";   //任务中
+    public static final String TASK_ACCOMPLISHED="40";  //任务完成
+    public static final String ALREADY_CANCELLED="50";  //已作废
     /** 跨域URL */
     public static final String CROSS_DOMAIN_URL = "crossDomainUrl";
     /** OFC 绝对路径 */
@@ -79,13 +79,6 @@ public final class OrderConstConstant {
     public static final String REPORT = "REPORT";
 
 
-    //支付方式
-    public static final String FINNANCEPAYWAYCASH="6810";//现金支付
-    public static final String FINNANCEPAYWAYPOS="6820";//POS刷卡
-    public static final String FINNANCEPAYWAYWECHAT="6830";//微信
-    public static final String FINNANCEPAYWAYALIPAY="6840";//支付宝
-    public static final String FINNANCEPAYWAYBANK="6850";//银行支付
-    public static final String FINNANCEPAYWAYACCOUNT="6860";//账户结算
     /**
      * 运输中心运输计划单最新状态
      */
@@ -101,16 +94,8 @@ public final class OrderConstConstant {
     public static final String CREATE_ORDER_BYAPI = "系统对接";
 
     //是或者不是
-    public static final Integer SHI=1;      //是
-    public static final Integer FOU=0;      //否
-
-    //运输类型
-    public static final Integer LINGDAN=10;       //零担
-    public static final Integer ZHENGCHE=20;        //整车
-
-    //费用支付方
-    public static final Integer FAHUOFANG=10;       //发货方
-    public static final Integer SHOUHUOFANG=20;        //收货方
+    public static final Integer YES=1;      //是
+    public static final Integer NO=0;      //否
 
     //钉钉 订单来源
     public static  final String DING_DING = "钉钉";

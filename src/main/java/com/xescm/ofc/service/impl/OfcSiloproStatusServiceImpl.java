@@ -76,15 +76,15 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			statusCondition.setPlanCode(planCode);
 			OfcSiloproStatus infostatus=ofcSiloproStatusMapper.selectOne(statusCondition);
 			if(infostatus!=null){
-				if(ZIYUANFENPEIZ.equals(infostatus.getPlannedSingleState())){
+				if(RESOURCE_ALLOCATION.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划处于单资源分配中");
 				}
 
-				if(RENWUWANCH.equals(infostatus.getPlannedSingleState())){
+				if(TASK_ACCOMPLISHED.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经完成");
 				}
 
-				if(YIZUOFEI.equals(infostatus.getPlannedSingleState())){
+				if(ALREADY_CANCELLED.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经作废");
 				}
 			}
@@ -92,11 +92,11 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
 			OfcOrderStatus status=new OfcOrderStatus();
 			if(orderStatus!=null){
-				if(HASBEENCOMPLETED.equals(orderStatus.getOrderStatus())){
+				if(HASBEEN_COMPLETED.equals(orderStatus.getOrderStatus())){
 					throw new BusinessException("该仓储计划单对应的订单已经完成");
 				}
 
-				if(HASBEENCANCELED.equals(orderStatus.getOrderStatus())){
+				if(HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
 					throw new BusinessException("该仓储计划单对应的订单已经取消");
 				}
 
@@ -104,16 +104,16 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				ofcSiloproNewstatus.setPlanCode(planCode);
 				//仓储计划单状态任务开始
 				if(TRACE_STATUS_1.equals(traceStatus)){
-					statusCondition.setPlannedSingleState(RENWUZHONG);
+					statusCondition.setPlannedSingleState(TASK);
 					statusCondition.setPlannedStartTime(condition.getTraceTime());
-					ofcSiloproNewstatus.setJobNewStatus((RENWUZHONG));//仓储计划单最新状态
+					ofcSiloproNewstatus.setJobNewStatus((TASK));//仓储计划单最新状态
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String dateStr =format.format(condition.getTraceTime());
 					Date dateFor=format.parse(dateStr);
 					ofcSiloproNewstatus.setJobStatusUpdateTime(dateFor);//作业状态更新时间
 					ofcSiloproNewstatus.setOrderCode(infostatus.getOrderCode());
 					status.setLastedOperTime(traceTime);
-					status.setOrderStatus(IMPLEMENTATIONIN);
+					status.setOrderStatus(IMPLEMENTATION_IN);
 					status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
 							+" "+traceStatus);
 					status.setOperator("");
@@ -157,13 +157,13 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			statusCondition.setPlanCode(planCode);
 			OfcSiloproStatus sinfostatus=ofcSiloproStatusMapper.selectOne(statusCondition);
 			if(sinfostatus!=null){
-				if(ZIYUANFENPEIZ.equals(sinfostatus.getPlannedSingleState())){
+				if(RESOURCE_ALLOCATION.equals(sinfostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划处于单资源分配中");
 				}
-				if(RENWUWANCH.equals(sinfostatus.getPlannedSingleState())){
+				if(TASK_ACCOMPLISHED.equals(sinfostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经完成");
 				}
-				if(YIZUOFEI.equals(sinfostatus.getPlannedSingleState())){
+				if(ALREADY_CANCELLED.equals(sinfostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经作废");
 				}
 			}
@@ -189,15 +189,15 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}else{
 				throw new BusinessException("该仓储计划单不存在计划单详情");
 			}
-			statusCondition.setPlannedSingleState(RENWUWANCH);
+			statusCondition.setPlannedSingleState(TASK_ACCOMPLISHED);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
 				List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
 			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(condition.getBuniessType())){
 				if(transInfos!=null&&transInfos.size()>0){
 					OfcTransplanInfoVo vo=transInfos.get(0);
-					if(OrderConstConstant.RENWUWANCH.equals(vo.getPlannedSingleState())){
+					if(OrderConstConstant.TASK_ACCOMPLISHED.equals(vo.getPlannedSingleState())){
 						OfcOrderStatus status=new OfcOrderStatus();
-						status.setOrderStatus(HASBEENCOMPLETED);
+						status.setOrderStatus(HASBEEN_COMPLETED);
 						status.setOrderCode(info.getOrderCode());
 						status.setStatusDesc("已完成");
 						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
@@ -206,10 +206,10 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 						ofcOrderStatusService.save(status);
 					}else{
 						OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
-						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.TASK_ACCOMPLISHED);
 						ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
 						OfcOrderStatus status=new OfcOrderStatus();
-						status.setOrderStatus(HASBEENCOMPLETED);
+						status.setOrderStatus(HASBEEN_COMPLETED);
 						status.setOrderCode(info.getOrderCode());
 						status.setStatusDesc("已完成");
 						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
@@ -221,7 +221,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}
 				if(transInfos==null||transInfos.size()==0){
 					OfcOrderStatus status=new OfcOrderStatus();
-					status.setOrderStatus(HASBEENCOMPLETED);
+					status.setOrderStatus(HASBEEN_COMPLETED);
 					status.setOrderCode(info.getOrderCode());
 					status.setStatusDesc("已完成");
 					status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");

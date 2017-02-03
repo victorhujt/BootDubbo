@@ -105,10 +105,10 @@ public class OfcOrderFollowRest extends BaseController{
             //如果是运输订单,就去找收发货方联系人的信息
             /*if(OrderConstEnum.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
                 if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
+                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNOR,custId,authResDtoByToken);
                 }
                 if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNEE,custId,authResDtoByToken);
                 }
             }*/
             //仓配订单
@@ -118,10 +118,10 @@ public class OfcOrderFollowRest extends BaseController{
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
                 /*if(OrderConstEnum.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
                     if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                        consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNOR,custId,authResDtoByToken);
+                        consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNOR,custId,authResDtoByToken);
                     }
                     if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                        consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACTPURPOSECONSIGNEE,custId,authResDtoByToken);
+                        consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNEE,custId,authResDtoByToken);
                     }
                 }*/
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息

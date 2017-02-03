@@ -89,9 +89,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
             String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
             if(depatrueCode.equals(destinationCode)){
-                ofcFundamentalInformation.setBusinessType(WITHTHECITY);
+                ofcFundamentalInformation.setBusinessType(WITH_THE_CITY);
             }else {
-                ofcFundamentalInformation.setBusinessType(WITHTHETRUNK);
+                ofcFundamentalInformation.setBusinessType(WITH_THE_TRUNK);
             }
         }else{
             throw new BusinessException("四级地址编码为空!");
@@ -221,7 +221,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
         String orderType = OrderConstant.WAREHOUSE_DIST_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
-        ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
             Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
@@ -415,7 +415,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
             }
 
-            ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+            ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
             //添加该订单的货品信息
             BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
             ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
@@ -563,7 +563,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     private void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
+        ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
         ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
@@ -695,7 +695,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
                 ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
             }
-            ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+            ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
             //添加该订单的货品信息 modify by wangst 做抽象处理
             BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos, ofcFundamentalInformation);
             ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
@@ -741,7 +741,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
                     //运输订单
                     //设置城配
-                    ofcFundamentalInformation.setBusinessType(OrderConstConstant.WITHTHECITY);
+                    ofcFundamentalInformation.setBusinessType(OrderConstConstant.WITH_THE_CITY);
                     //保存运输信息
                     addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
                 } else {

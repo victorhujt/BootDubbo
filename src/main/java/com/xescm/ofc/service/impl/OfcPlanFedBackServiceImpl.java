@@ -131,7 +131,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 flag=checkStatus(false,statusList,"end","客户已签收");
                 if(!flag){
                     ofcTransplanNewstatus.setTransportSingleLatestStatus(YIQIANSHOU);
-                    ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
+                    ofcTransplanStatus.setPlannedSingleState(TASK_ACCOMPLISHED);
                     ofcTransplanStatus.setTaskCompletionTime(traceTime);
                     orderStatus.setLastedOperTime(traceTime);
                     orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1) +" "+"客户已签收");
@@ -153,7 +153,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     String businessType = ofcFundamentalInformation.getBusinessType();
                     //如果是卡班订单, 而且是拆三段的第三段,拆两段的第二段
                     if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.TRANSPORT_ORDER)
-                            && PubUtils.trimAndNullAsEmpty(businessType).equals(WITHTHEKABAN)
+                            && PubUtils.trimAndNullAsEmpty(businessType).equals(WITH_THE_KABAN)
                             && planCodesByOrderCode.size() <= 3 && planCodesByOrderCode.size() >=2){
                         String lastPlanCode = planCodesByOrderCode.get(0);
                         for(String planCode : planCodesByOrderCode){
@@ -171,7 +171,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     if(ofcTransplanStatusService.select(ofcTransplanStatusOther) != null
                                             && ofcTransplanStatusService.select(ofcTransplanStatusOther).size() > 0){
                                         ofcTransplanStatusOther = ofcTransplanStatusService.select(ofcTransplanStatusOther).get(0);
-                                        ofcTransplanStatusOther.setPlannedSingleState(RENWUWANCH);
+                                        ofcTransplanStatusOther.setPlannedSingleState(TASK_ACCOMPLISHED);
                                         ofcTransplanStatusOther.setTaskCompletionTime(traceTime);
                                         int i = ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatusOther);
                                         if(i < 1){
@@ -185,7 +185,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
                             orderStatus=new OfcOrderStatus();
                             orderStatus.setOrderCode(orderCode);
-                            orderStatus.setOrderStatus(HASBEENCOMPLETED);
+                            orderStatus.setOrderStatus(HASBEEN_COMPLETED);
                             orderStatus.setLastedOperTime(now);
                             orderStatus.setStatusDesc("已完成");
                             orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) +" "+"订单已完成");
@@ -203,13 +203,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         //未完成的仓储运输计划单
                         OfcSiloproStatus ofcSiloproStatus = ofcSiloproStatusList.get(0);
                         //改其状态为已完成,
-                        ofcSiloproStatus.setPlannedSingleState(RENWUWANCH);
+                        ofcSiloproStatus.setPlannedSingleState(TASK_ACCOMPLISHED);
                         ofcSiloproStatus.setTaskCompletionTime(traceTime);
                         ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
                         //改订单状态为已完成.
                         orderStatus=new OfcOrderStatus();
                         orderStatus.setOrderCode(orderCode);
-                        orderStatus.setOrderStatus(HASBEENCOMPLETED);
+                        orderStatus.setOrderStatus(HASBEEN_COMPLETED);
                         orderStatus.setLastedOperTime(now);
                         orderStatus.setStatusDesc("已完成");
                         orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) +" "+"订单已完成");
@@ -218,11 +218,11 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             ofcFundamentalInformation.setFinishedTime(now);
                         }
                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
-                    }else if(ofcTransplanInfos.size() == 1 && orderType.equals(OrderConstant.TRANSPORT_ORDER) && !businessType.equals(WITHTHEKABAN)){
+                    }else if(ofcTransplanInfos.size() == 1 && orderType.equals(OrderConstant.TRANSPORT_ORDER) && !businessType.equals(WITH_THE_KABAN)){
                         //单个城配或干线运输单的情况, 只剩一个未完成的运输计划单
                         orderStatus=new OfcOrderStatus();
                         orderStatus.setOrderCode(orderCode);
-                        orderStatus.setOrderStatus(HASBEENCOMPLETED);
+                        orderStatus.setOrderStatus(HASBEEN_COMPLETED);
                         orderStatus.setLastedOperTime(now);
                         orderStatus.setStatusDesc("已完成");
                         orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1)
@@ -303,7 +303,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
             ofcTransplanStatus.setPlanCode(transPortNo);
             ofcTransplanStatus.setTaskStartTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
-            ofcTransplanStatus.setPlannedSingleState(RENWUZHONG);
+            ofcTransplanStatus.setPlannedSingleState(TASK);
             ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
 
             //更新车牌号、司机姓名、联系电话
@@ -314,9 +314,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             StringBuilder info=new StringBuilder("订单");
             String tag="";
             if((ofcFundamentalInformation!=null
-                    && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITHTHEKABAN))
+                    && PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITH_THE_KABAN))
                     && (ofcTransplanInfo!=null
-                    && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITHTHEKABAN))){
+                    && !PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITH_THE_KABAN))){
                 if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("1")){
                     info.append("上门提货");
                     tag="上门提货";

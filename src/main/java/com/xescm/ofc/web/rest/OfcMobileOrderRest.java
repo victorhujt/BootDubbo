@@ -160,7 +160,7 @@ public class OfcMobileOrderRest extends BaseController {
                     ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
                 }
                 if (null == ofcOrderDTO.getUrgent()){
-                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
+                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
                 }
                 if(null == ofcOrderDTO.getOrderTime()){
                     throw new BusinessException("请选择订单日期！");

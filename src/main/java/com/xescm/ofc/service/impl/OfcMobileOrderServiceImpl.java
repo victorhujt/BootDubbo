@@ -84,7 +84,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
                 OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");
                 if(orderStatus!=null){
-                    if(!HASBEENCANCELED.equals(orderStatus.getOrderStatus())){
+                    if(!HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
                         throw  new BusinessException("运输单号重复");
                     }
                 }
@@ -167,7 +167,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
         orderCode=ofcFundamentalInformation.getOrderCode();
         // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
             Wrapper<?> wrapper =ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
@@ -180,9 +180,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
                 String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
                     /*if(depatrueCode.equals(destinationCode)){
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHECITY);
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_CITY);
                     }else {
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITHTHETRUNK);
+                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_TRUNK);
                     }*/
             }else{
                 throw new BusinessException("四级地址编码为空!");
@@ -236,7 +236,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
+            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
             ofcOrderStatus.setStatusDesc("待审核");
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());

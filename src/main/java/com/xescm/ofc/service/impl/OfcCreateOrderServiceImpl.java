@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
-import static com.xescm.ofc.constant.OrderConstConstant.PENDINGAUDIT;
+import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
 
 @Service
 public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
@@ -237,7 +237,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
             //订单已存在,获取订单的最新状态,只有待审核的才能更新
-            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
+            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                 logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);
                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
             }
@@ -298,7 +298,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
+        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
         logger.info("自动审核操作：" + wrapper.getCode());
     }
 

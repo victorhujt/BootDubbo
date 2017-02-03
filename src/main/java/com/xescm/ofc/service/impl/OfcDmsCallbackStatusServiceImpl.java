@@ -59,7 +59,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
 
             OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
             ofcTransplanInfo.setOrderCode(orderCode);
-            ofcTransplanInfo.setBusinessType(OrderConstConstant.WITHTHEKABAN);
+            ofcTransplanInfo.setBusinessType(OrderConstConstant.WITH_THE_KABAN);
             List<OfcTransplanInfo> ofcTransplanInfoList = ofcTransplanInfoService.select(ofcTransplanInfo);//去掉作废的
             if(ofcTransplanInfoList.size() < 1){
                 throw new BusinessException("查不到相应运输订单");
@@ -110,9 +110,9 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                         throw new BusinessException("没有查到该计划单下运输计划单状态");
                     }
                     OfcTransplanStatus ofcTransplanStatusPickUp = ofcTransplanStatusPickUpList.get(0);
-                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.RENWUWANCH)
-                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.YIZUOFEI)){
-                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+                    if(!StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.TASK_ACCOMPLISHED)
+                            && !StringUtils.equals(ofcTransplanStatusPickUp.getPlannedSingleState(),OrderConstConstant.ALREADY_CANCELLED)){
+                        ofcTransplanStatusPickUp.setPlannedSingleState(OrderConstConstant.TASK_ACCOMPLISHED);
                         ofcTransplanStatusPickUp.setTaskCompletionTime(operTime);
                         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatusPickUp);
                     }
@@ -122,7 +122,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 ofcTransplanStatus.setPlanCode(planCode);
                 ofcTransplanStatus.setOrderCode(orderCode);
                 ofcTransplanStatus.setPlannedCompletionTime(operTime);
-                ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+                ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.TASK_ACCOMPLISHED);
                 ofcTransplanStatus.setTaskCompletionTime(operTime);
                 ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
 
@@ -130,7 +130,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 int queryResult = ofcTransplanInfoService.queryNotInvalidAndNotCompleteTransOrder(orderCode);
                 if(queryResult == 0){
                     ofcOrderStatusService.save(ofcOrderStatus);
-                    ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
+                    ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEEN_COMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
                     ofcOrderStatus.setLastedOperTime(now);
                     ofcOrderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1)

@@ -165,8 +165,8 @@ public class OfcOrderManageRest extends BaseController{
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             //如果是运输订单,就去找收发货方联系人的信息
             if(OrderConstant.TRANSPORT_ORDER.equals(ofcOrderDTO.getOrderType())){
-                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
-                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
+                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
+                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
             }
             //仓配订单
             if(OrderConstant.WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
@@ -174,8 +174,8 @@ public class OfcOrderManageRest extends BaseController{
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
                 if(OrderConstConstant.WEARHOUSE_WITH_TRANS == ofcOrderDTO.getProvideTransport()){
-                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
-                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
+                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
+                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
                 }
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
                 if("62".equals(businessTypeHead)){
