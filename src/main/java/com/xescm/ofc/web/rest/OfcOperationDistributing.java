@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.restcontroller;
+package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

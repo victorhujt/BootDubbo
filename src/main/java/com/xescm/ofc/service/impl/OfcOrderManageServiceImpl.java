@@ -1685,7 +1685,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 卡班订单自动审核: 有二次配送
+     * 卡班订单自动审核: 只有二次配送
      * @param ofcFundamentalInformation
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo
@@ -1743,7 +1743,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 卡班订单自动审核: 有上门取货
+     * 卡班订单自动审核: 只有上门取货
      * @param ofcFundamentalInformation
      * @param goodsDetailsList
      * @param ofcDistributionBasicInfo

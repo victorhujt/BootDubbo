@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
