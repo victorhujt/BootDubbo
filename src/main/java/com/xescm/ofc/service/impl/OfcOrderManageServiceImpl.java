@@ -743,7 +743,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.error("分拣中心已存在您所输入的运输单号,请重新输入!");
             throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
         }
-        //更新运输计划单状态为已推送, 略过, 因为只更新不记录
+        //更新运输计划单状态为已推送, 略, 盖因只更新不记录尔
         //一旦向DMS推送过去, 就更新运输计划单状态为执行中
         OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
         ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
@@ -1036,7 +1036,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     *
+     * 调用CSC返回收发货人信息
      * @param contactCompanyName
      * @param contactName
      * @param purpose
@@ -1081,6 +1081,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
+     * 调用CSC返回供应商信息
      * @param supportName
      * @param supportContactName
      * @param customerCode
@@ -1128,7 +1129,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     public String planUpdate(String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userName) {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         if(!PubUtils.trimAndNullAsEmpty(planCode).equals("")){
-            String[] planCodeList=planCode.split("@");
+            String[] planCodeList=planCode.split("@");//批量更新，计划单编号以@分隔
             //List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<OfcTransplanInfo>();
             List<OfcTransplanInfo> ofcTransplanInfoList = new ArrayList<>();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
