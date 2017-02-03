@@ -70,12 +70,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
- * Created by ydx on 2016/10/12.
+ * <p>Title:    .订单编辑 </p>
+ * <p>Description TODO </p>
+ * <p>Company:    http://www.hnxianyi.com </p>
+ *
+ * @author       杨东旭;
+ * @CreateDate   2016/10/12
  */
 @Service
 @Transactional
@@ -142,10 +148,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 订单审核和反审核
-     * @param orderCode
-     * @param orderStatus
-     * @param reviewTag
-     * @param authResDtoByToken
+     * @param orderCode     订单编号
+     * @param orderStatus      订单状态
+     * @param reviewTag     审核标记
+     * @param authResDtoByToken     权限token
      * @return
      */
     @Override
@@ -191,7 +197,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcSiloprogramInfo ofcSiloprogramInfo = new OfcSiloprogramInfo();
-                    if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
+                    if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)) {
                         //需要提供运输
                         OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();//(PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).substring(0,2).equals("61"))
                         if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
@@ -216,7 +222,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             logger.info("仓储计划单不存在");
                             throw new BusinessException("仓储计划单不存在");
                         }
-                    } else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSE_NO_TRANS) {
+                    } else if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), WAREHOUSE_NO_TRANS)) {
                         logger.info("不需要提供运输");
                         //不需要提供运输
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
@@ -262,16 +268,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 创建运输计划单-干线、城配
-     * @param ofcTransplanInfo
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
+     * @param ofcTransplanInfo      计划单基本信息
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
      */
-    private void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userName,OfcFinanceInformation ofcFinanceInformation){
+    private void transPlanCreate(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,String userName,OfcFinanceInformation ofcFinanceInformation) throws BusinessException {
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
         OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
         OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
-        OfcPlannedDetail ofcPlannedDetail=null;
+        AtomicReference<OfcPlannedDetail> ofcPlannedDetail= new AtomicReference<>(null);
         try {
             BeanUtils.copyProperties(ofcTransplanInfo, ofcFundamentalInformation);
             BeanUtils.copyProperties(ofcTransplanInfo, ofcDistributionBasicInfo);
@@ -290,9 +296,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String, List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             //保存计划单明细
-            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter,ofcPlannedDetail,ofcTransplanInfo);
+            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter, ofcPlannedDetail.get(),ofcTransplanInfo);
             if (ofcPlannedDetailList.size() > 0) {
-                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(), ofcPlannedDetailList);
+                ofcPlannedDetailMap.put(ofcPlannedDetail.get().getPlanCode(), ofcPlannedDetailList);
             }
             RmcCompanyLineQO rmcCompanyLineQO = new RmcCompanyLineQO();
             if (!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
@@ -318,16 +324,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             rmcCompanyLineQO.setBeginCityName(ofcTransplanInfo.getDepartureCity());
             rmcCompanyLineQO.setArriveCityName(ofcTransplanInfo.getDestinationCity());
-            Wrapper<List<RmcCompanyLineVo>> companyList = null;
+            AtomicReference<Wrapper<List<RmcCompanyLineVo>>> companyList = new AtomicReference<>(null);
             try {
-                companyList = companySelByApi(rmcCompanyLineQO);
+                companyList.set(companySelByApi(rmcCompanyLineQO));
 
             } catch (Exception ex) {
-                throw new BusinessException(companyList.getMessage(), ex);
+                throw new BusinessException("服务商查询发生错误", ex);
             }
 
-            if (companyList.getCode() == 200
-                && !CollectionUtils.isEmpty(companyList.getResult())) {
+            if (companyList.get().getCode() == 200
+                && !CollectionUtils.isEmpty(companyList.get().getResult())) {
                 /**
                  * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
                  */
@@ -380,7 +386,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanInfo.setCustCode(ofcFundamentalInformation.getCustCode());
                 }
 
-                RmcCompanyLineVo rmcCompanyLineVo = companyList.getResult().get(0);
+                RmcCompanyLineVo rmcCompanyLineVo = companyList.get().getResult().get(0);
                 ofcTraplanSourceStatus.setServiceProviderName(rmcCompanyLineVo.getCompanyName());
                 ofcTraplanSourceStatus.setServiceProviderContact(rmcCompanyLineVo.getContactName());
                 ofcTraplanSourceStatus.setServiceProviderContactPhone(rmcCompanyLineVo.getCompanyPhone());
@@ -453,10 +459,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
                 logger.debug("计划单资源状态保存成功");
             } else {
-                if (CollectionUtils.isEmpty(companyList.getResult())) {
+                if (CollectionUtils.isEmpty(companyList.get().getResult())) {
                     throw new BusinessException("没有查询到相关服务商!");
                 }
-                throw new BusinessException(companyList.getMessage());
+                throw new BusinessException(companyList.get().getMessage());
             }
 
 
@@ -2195,11 +2201,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 保存计划单明细
-     * @param iter
-     * @param ofcPlannedDetail
-     * @param ofcTransplanInfo
-     * @return
+     * <p>Title:    .保存</p>
+     * <p>Description 计划单明细</p>
+     *
+     * @param iter     循环变量
+     * @param ofcPlannedDetail      计划单明细
+     * @param ofcTransplanInfo      计划单基本信息
+     * @author        杨东旭
+     * @CreateDate
+     * @return        List<OfcPlannedDetail>
      */
     public List<OfcPlannedDetail> savePlannedDetail(Iterator<OfcGoodsDetailsInfo> iter,OfcPlannedDetail ofcPlannedDetail,OfcTransplanInfo ofcTransplanInfo){
         List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
@@ -2231,9 +2241,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * 更新订单的大区和基地
-     * @param rmcPickup
-     * @param ofcFundamentalInformation
+     * <p>Title:    .更新 </p>
+     * <p>Description 订单的大区和基地</p>
+     *
+     * @param rmcPickup     区域覆盖返回
+     * @param ofcFundamentalInformation     订单基本信息
+     * @author        杨东旭
+     * @CreateDate
+     * @return        void
      */
     public void updateOrderAreaAndBase(RmcServiceCoverageForOrderVo rmcPickup,OfcFundamentalInformation ofcFundamentalInformation){
         OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
@@ -2251,9 +2266,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * （仅用于）保存订单状态为执行中
-     * @param ofcTransplanInfo
-     * @param userName
+     * <p>Title:    .仅用于 </p>
+     * <p>Description 保存订单状态为执行中</p>
+     *
+     * @param ofcTransplanInfo  计划单基本信息
+     * @param userName  用户名
+     * @author        杨东旭
+     * @CreateDate
+     * @return        void
      */
     public void saveOrderStatusOfImplemente(OfcTransplanInfo ofcTransplanInfo,String userName){
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
