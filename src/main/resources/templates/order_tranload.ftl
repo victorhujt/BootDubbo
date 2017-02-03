@@ -1240,7 +1240,7 @@
   function seleGoods(obj) {
     $("#goodsSelectListTbody").html("");
     $("#pageBarDivGoods").hide();
-    $(obj).attr("id","yangdongxushinanshen");
+    $(obj).attr("id","temporaryVariable");
     $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
 //    $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
     confirmGood()
@@ -2678,7 +2678,7 @@
     $("#goodsListDivNoneTop").click(function(){
 
       $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-      $("#yangdongxushinanshen").attr("id","goodCodeSel");
+      $("#temporaryVariable").attr("id","goodCodeSel");
       $("#typeSel").attr("id","");
 
     });
@@ -2686,7 +2686,7 @@
     $("#goodsListDivNoneBottom").click(function(){
 
       $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-      $("#yangdongxushinanshen").attr("id","goodCodeSel");
+      $("#temporaryVariable").attr("id","goodCodeSel");
       $("#typeSel").attr("id","");
 
     });
@@ -2706,14 +2706,14 @@
           $("#typeSel").val(typeID);
           $("#typeSel").trigger("chosen:updated");
           goodsTypeParentChange($("#typeSel"));
-          //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
-          $("#yangdongxushinanshen").attr("id","goodCodeSel");
+          //$("#temporaryVariable").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+          $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+          $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+          $("#temporaryVariable").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+          $("#temporaryVariable").parent().parent().find("td").eq(4).find("input").val(goodsName);
+          $("#temporaryVariable").parent().parent().find("td").eq(5).find("input").val(specification);
+          $("#temporaryVariable").parent().parent().find("td").eq(6).find("input").val(unit);
+          $("#temporaryVariable").attr("id","goodCodeSel");
           goodsInfoListDiv="true";
         }
       });
@@ -2721,7 +2721,7 @@
         alert("请至少选择一行");
       }else{
         $("#goodsListDiv").fadeOut(0);
-        $("#yangdongxushinanshen").attr("id","goodCodeSel");
+        $("#temporaryVariable").attr("id","goodCodeSel");
         $("#typeSel").attr("id","");
       }
     });*/
@@ -3069,21 +3069,21 @@
             $("#typeSel").val(typeID);
             $("#typeSel").trigger("chosen:updated");
             goodsTypeParentChange($("#typeSel"));
-            //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
-            $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            //$("#temporaryVariable").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+            $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+            $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+            $("#temporaryVariable").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+            $("#temporaryVariable").parent().parent().find("td").eq(4).find("input").val(goodsName);
+            $("#temporaryVariable").parent().parent().find("td").eq(5).find("input").val(specification);
+            $("#temporaryVariable").parent().parent().find("td").eq(6).find("input").val(unit);
+            $("#temporaryVariable").attr("id","goodCodeSel");
             goodsInfoListDiv="true";
           }
         });
     if(goodsInfoListDiv==""){
       alert("请至少选择一行");
     }else{
-      $("#yangdongxushinanshen").attr("id","goodCodeSel");
+      $("#temporaryVariable").attr("id","goodCodeSel");
       $("#typeSel").attr("id","");
       layer.close(adoptModalIndex);
       return false;
