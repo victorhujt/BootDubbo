@@ -65,6 +65,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -287,28 +288,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTraplanSourceStatus.setResourceAllocationStatus(TO_BE_ASSIGNED);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String, List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
-            List<OfcPlannedDetail> ofcPlannedDetailList = new ArrayList<>();
-            while (iter.hasNext()) {
-
-                ofcPlannedDetail = new OfcPlannedDetail();
-                //保存计划单明细
-                ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
-                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                    continue;
-                }*/
-                if((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
-                        || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0 )
-                        || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
-                    BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
-                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
-                    BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
-                    ofcPlannedDetailList.add(ofcPlannedDetail);
-                    ofcPlannedDetailService.save(ofcPlannedDetail);
-                }
-
-                logger.debug("计划单明细保存成功");
-            }
+            //保存计划单明细
+            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter,ofcPlannedDetail,ofcTransplanInfo);
             if (ofcPlannedDetailList.size() > 0) {
                 ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(), ofcPlannedDetailList);
             }
@@ -458,18 +439,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             if(StringUtils.equals(ofcFundamentalInformation.getOrderSource(),DING_DING)
                                     || StringUtils.equals(ofcFundamentalInformation.getCustCode(), CreateOrderApiConstant.XEBEST_CUST_CODE)
                                     || StringUtils.equals(ofcFundamentalInformation.getCustCode(), CreateOrderApiConstant.XEBEST_CUST_CODE_TEST)){
-                                OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
-                                UamGroupDto dto=new UamGroupDto();
-                                dto.setSerialNo(rmcPickup.getSerialNo());
-                                OfcGroupVo vo=ofcOrderManageOperService.queryAreaMsgByBase(dto);
-                                if(vo!=null){
-                                    ofcInfo.setAreaCode(vo.getSerialNo());
-                                    ofcInfo.setAreaName(vo.getGroupName());
-                                }
-                                ofcInfo.setBaseCode(rmcPickup.getSerialNo());
-                                ofcInfo.setBaseName(rmcPickup.getBaseName());
-                                ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                                ofcFundamentalInformationService.update(ofcInfo);
+                                //更新订单的大区和基地
+                                updateOrderAreaAndBase(rmcPickup,ofcFundamentalInformation);
                             }
                         }
                     }
@@ -540,28 +511,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcTraplanSourceStatus.setResourceAllocationStatus(TO_BE_ASSIGNED);
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
-            List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
-            while(iter.hasNext())
-            {
-                ofcPlannedDetail=new OfcPlannedDetail();
-                //保存计划单明细
-                ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
-                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                    continue;
-                }*/
-                if((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
-                        || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0 )
-                        || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
-                    BeanUtils.copyProperties(ofcPlannedDetail,ofcTransplanInfo);
-                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
-                    BeanUtils.copyProperties(ofcPlannedDetail,ofcGoodsDetailsInfo);
-                    ofcPlannedDetailList.add(ofcPlannedDetail);
-                    ofcPlannedDetailService.save(ofcPlannedDetail);
-                }
-
-                logger.debug("计划单明细保存成功");
-            }
+            //保存计划单明细
+            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter,ofcPlannedDetail,ofcTransplanInfo);
             if(ofcPlannedDetailList.size()>0){
                 ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
             }
@@ -743,7 +694,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.error("分拣中心已存在您所输入的运输单号,请重新输入!");
             throw new BusinessException("分拣中心已存在您所输入的运输单号,请重新输入!");
         }
-        //更新运输计划单状态为已推送, 略, 盖因只更新不记录尔
+        //更新运输计划单状态为已推送, 略, 因只更新不记录
         //一旦向DMS推送过去, 就更新运输计划单状态为执行中
         OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
         ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
@@ -1506,18 +1457,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(rmcPickup!=null){
             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderSource())){
                 if(DING_DING.equals(ofcFundamentalInformation.getOrderSource())){
-                    OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
-                    UamGroupDto dto=new UamGroupDto();
-                    dto.setSerialNo(rmcPickup.getSerialNo());
-                    OfcGroupVo vo=ofcOrderManageOperService.queryAreaMsgByBase(dto);
-                    if(vo!=null){
-                        ofcInfo.setAreaCode(vo.getSerialNo());
-                        ofcInfo.setAreaName(vo.getGroupName());
-                    }
-                    ofcInfo.setBaseCode(rmcPickup.getSerialNo());
-                    ofcInfo.setBaseName(rmcPickup.getBaseName());
-                    ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                    ofcFundamentalInformationService.update(ofcInfo);
+                    //更新订单的大区和基地
+                    updateOrderAreaAndBase(rmcPickup,ofcFundamentalInformation);
                 }
             }
         }
@@ -2055,30 +1996,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             rmcServiceCoverageForOrderVo.setIsPickup(1);
             rmcServiceCoverageForOrderVo.setIsDispatch(2);//取货不配送
             logger.info("#################################取货不配送,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcPickupList = rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(rmcPickupList!=null && PubUtils.isNotNullAndBiggerSize(rmcPickupList.getResult(), 0)){
-                logger.info("#####################接口返回数据为：{}###########################",rmcPickupList.getResult().get(0).toString());
-                return rmcPickupList.getResult().get(0);
-            }else {
-                logger.info("#####################接口返回数据为：{}###########################","");
-                return null;
-            }
         }else if(PubUtils.trimAndNullAsEmpty(tag).equals("TwoDistribution")){
             rmcServiceCoverageForOrderVo.setIsPickup(2);
             rmcServiceCoverageForOrderVo.setIsDispatch(1);//配送不提货
             logger.info("#################################配送不提货,调用区域覆盖接口#######################");
-            Wrapper<List<RmcServiceCoverageForOrderVo>> rmcRecipientList = rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
-            if(rmcRecipientList!=null && PubUtils.isNotNullAndBiggerSize(rmcRecipientList.getResult(), 0)){
-                logger.info("#####################接口返回数据为：{}###########################",rmcRecipientList.getResult().get(0).toString());
-                return rmcRecipientList.getResult().get(0);
-            }else{
-                logger.info("#####################接口返回数据为：{}###########################","");
-                return null;
-            }
         }else{
             throw new BusinessException("缺少提货或配送标志位");
         }
-
+        Wrapper<List<RmcServiceCoverageForOrderVo>> rmcServiceCoverageList = rmcServiceCoverageEdasService.queryServiceCoverageListForOrder(rmcServiceCoverageForOrderVo);
+        if(rmcServiceCoverageList!=null && PubUtils.isNotNullAndBiggerSize(rmcServiceCoverageList.getResult(), 0)){
+            logger.info("#####################接口返回数据为：{}###########################",rmcServiceCoverageList.getResult().get(0).toString());
+            return rmcServiceCoverageList.getResult().get(0);
+        }else {
+            logger.info("#####################接口返回数据为：{}###########################","");
+            return null;
+        }
     }
 
     /**
@@ -2285,5 +2217,61 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.error("结算中心暂时不支持该类型的订单");
             throw new BusinessException("结算中心暂时不支持该类型的订单");
         }
+    }
+
+    /**
+     * 保存计划单明细
+     * @param iter
+     * @param ofcPlannedDetail
+     * @param ofcTransplanInfo
+     * @return
+     */
+    public List<OfcPlannedDetail> savePlannedDetail(Iterator<OfcGoodsDetailsInfo> iter,OfcPlannedDetail ofcPlannedDetail,OfcTransplanInfo ofcTransplanInfo){
+        List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
+        while (iter.hasNext()) {
+            ofcPlannedDetail = new OfcPlannedDetail();
+            //保存计划单明细
+            ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
+            if((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
+                    || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0 )
+                    || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+                try {
+                    BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
+                    BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
+                    ofcPlannedDetailList.add(ofcPlannedDetail);
+                } catch (IllegalAccessException e) {
+                    logger.error("保存计划单明细实体失败:{}",e);
+                    throw new BusinessException("保存计划单明细实体失败！");
+                } catch (InvocationTargetException e) {
+                    logger.error("复制计划单实体属性失败:{}",e);
+                    throw new BusinessException("复制计划单实体属性失败！");
+                }
+                ofcPlannedDetailService.save(ofcPlannedDetail);
+            }
+            logger.debug("计划单明细保存成功");
+        }
+        return ofcPlannedDetailList;
+    }
+
+    /**
+     * 更新订单的大区和基地
+     * @param rmcPickup
+     * @param ofcFundamentalInformation
+     */
+    public void updateOrderAreaAndBase(RmcServiceCoverageForOrderVo rmcPickup,OfcFundamentalInformation ofcFundamentalInformation){
+        OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
+        UamGroupDto dto=new UamGroupDto();
+        dto.setSerialNo(rmcPickup.getSerialNo());
+        OfcGroupVo vo=ofcOrderManageOperService.queryAreaMsgByBase(dto);
+        if(vo!=null){
+            ofcInfo.setAreaCode(vo.getSerialNo());
+            ofcInfo.setAreaName(vo.getGroupName());
+        }
+        ofcInfo.setBaseCode(rmcPickup.getSerialNo());
+        ofcInfo.setBaseName(rmcPickup.getBaseName());
+        ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        ofcFundamentalInformationService.update(ofcInfo);
     }
 }
