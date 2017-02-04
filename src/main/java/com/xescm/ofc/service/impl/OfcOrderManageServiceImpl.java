@@ -88,55 +88,55 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private static final Logger logger = LoggerFactory.getLogger(OfcOrderManageServiceImpl.class);
 
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private CscSupplierEdasService cscSupplierEdasService;
-    @Autowired
+    @Resource
     private OfcPlannedDetailService ofcPlannedDetailService;
-    @Autowired
+    @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
-    @Autowired
+    @Resource
     private OfcTransplanStatusService ofcTransplanStatusService;
-    @Autowired
+    @Resource
     private OfcTransplanNewstatusService ofcTransplanNewstatusService;
-    @Autowired
+    @Resource
     private OfcTraplanSourceStatusService ofcTraplanSourceStatusService;
-    @Autowired
+    @Resource
     private OfcSiloprogramInfoService ofcSiloprogramInfoService;
-    @Autowired
+    @Resource
     private OfcSiloproNewstatusService ofcSiloproNewstatusService;
-    @Autowired
+    @Resource
     private OfcSiloproSourceStatusService ofcSiloproSourceStatusService;
-    @Autowired
+    @Resource
     private OfcSiloproStatusService ofcSiloproStatusService;
-    @Autowired
+    @Resource
     private RmcServiceCoverageEdasService rmcServiceCoverageEdasService;
-    @Autowired
+    @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
     private CodeGenUtils codeGenUtils;
-    @Autowired
+    @Resource
     private EpcOrderCancelEdasService epcOrderCancelEdasService;
-    @Autowired
+    @Resource
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
-    @Autowired
+    @Resource
     private EpcOfc2DmsEdasService epcOfc2DmsEdasService;
     @Autowired
     private DefaultMqProducer defaultMqProducer;
-    @Autowired
+    @Resource
     private CscContactEdasService cscContactEdasService;
     @Resource
     private AcOrderEdasService acOrderEdasService;
@@ -152,7 +152,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param orderStatus      订单状态
      * @param reviewTag     审核标记
      * @param authResDtoByToken     权限token
-     * @return
+     * @return  String
      */
     @Override
     public String orderAudit(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken){
@@ -485,10 +485,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 创建运输计划单-卡班
-     * @param ofcTransplanInfo
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
+     * @param ofcTransplanInfo      计划单基本信息
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
      */
     private void transPlanCreateKaBan(OfcTransplanInfo ofcTransplanInfo,OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcFinanceInformation ofcFinanceInformation,String userName){
         OfcTraplanSourceStatus ofcTraplanSourceStatus=new OfcTraplanSourceStatus();
