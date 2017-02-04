@@ -63,7 +63,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
@@ -72,9 +71,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
-import static org.springframework.util.CollectionUtils.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * <p>Title:    .订单编辑 </p>
@@ -674,7 +674,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             logger.error("订单中心向DMS推送卡班订单, 实体转换异常,{}",e);
         }
         Wrapper<?> wrapper = epcOfc2DmsEdasService.addDistributionBasicInfo(ofcDistributionBasicInfoDtoEpc);
-        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+        if(ERROR_CODE == wrapper.getCode()){
             logger.error("向分拣中心推送卡班订单失败");
             throw new BusinessException("向分拣中心推送卡班订单失败");
         }else if(Objects.equals("100101", String.format("%d", wrapper.getCode()))){
@@ -991,7 +991,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             if(null == listWrapper.getResult()){
                 throw new BusinessException("接口返回结果为null");
             }
-            if(Wrapper.ERROR_CODE == listWrapper.getCode()){
+            if(ERROR_CODE == listWrapper.getCode()){
                 throw new BusinessException(listWrapper.getMessage());
             }
         }catch (Exception ex){
@@ -1035,7 +1035,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(listWrapper.getResult().size() < 1){
             throw new BusinessException("没有查到该供应商的信息!");
         }
-        if(String.valueOf(Wrapper.ERROR_CODE).equals(listWrapper.getCode())){
+        if(Objects.equals(ERROR_CODE, listWrapper.getCode())){
             throw new BusinessException("查询供应商信息错误!");
         }
         return listWrapper.getResult().get(0);
@@ -1129,13 +1129,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     *
-     * @param rmcCompanyLineQO
-     * @return
+     * 查询服务商
+     * @param rmcCompanyLineQO      服务商实体
+     * @return      RmcCompanyLineVo
      */
     @Override
     public Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO) {
-        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists=new Wrapper<List<RmcCompanyLineVo>>();
+        new Wrapper<List<RmcCompanyLineVo>>();
+        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists;
         try{
             rmcCompanyLists = rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
         }catch (Exception ex){
@@ -1147,12 +1148,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * OFC向TFC推送运输计划单(卡班除外)
-     * @param ofcTransplanInfoList
-     * @param ofcPlannedDetailMap
-     * @param userName
+     * @param ofcTransplanInfoList      计划单列表
+     * @param ofcPlannedDetailMap       计划单明细Map
+     * @param userName      用户名
      */
     private void ofcTransplanInfoToTfc(List<OfcTransplanInfo> ofcTransplanInfoList, Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap,String userName, Map<String, String> custOrderCodes) {
-        List<TransportDTO> transportDTOList = new ArrayList<>();
         try{
             for(OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList){
                 TransportDTO transportDTO = null;
@@ -1161,10 +1161,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     List<OfcPlannedDetail> ofcPlannedDetail = ofcPlannedDetailMap.get(planCode);
                     transportDTO = createOfcTransplanInfoToTfc(ofcTransplanInfo, ofcPlannedDetail, userName, custOrderCodes.get(planCode));
                 }
-                transportDTOList.add(transportDTO);
-                String json = JacksonUtil.toJsonWithFormat(transportDTO);
-                logger.info("###################推送TFC的最终JSON为{}",json);
-                defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
+                if (transportDTO != null) {
+                    String json = JacksonUtil.toJsonWithFormat(transportDTO);
+                    logger.info("###################推送TFC的最终JSON为{}",json);
+                    defaultMqProducer.toSendTfcTransPlanMQ(json,ofcTransplanInfo.getPlanCode());
+                }
                 OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
                 ofcTransplanStatus.setPlannedSingleState(ALREADY_PUSH);
@@ -1177,11 +1178,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 拼装TFC运输订单实体类
-     * @param ofcTransplanInfo
-     * @param ofcPlannedDetail
-     * @param userName
-     * @param custOrderCode
-     * @return
+     * @param ofcTransplanInfo      运输计划单基本信息
+     * @param ofcPlannedDetail      计划单明细
+     * @param userName      用户名
+     * @param custOrderCode     客户订单编号
+     * @return      TransportDTO
      */
     private TransportDTO createOfcTransplanInfoToTfc(OfcTransplanInfo ofcTransplanInfo, List<OfcPlannedDetail> ofcPlannedDetail,String userName, String custOrderCode) {
         TransportDTO transportDTO = new TransportDTO();
@@ -1299,14 +1300,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 运输开单自动审核
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param orderStatus
-     * @param reviewTag
-     * @param authResDtoByToken
-     * @return
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcFinanceInformation     费用明细
+     * @param orderStatus       订单状态
+     * @param reviewTag     审核标记
+     * @param authResDtoByToken     token
+     * @return      String
      */
     @Override
     public String orderAuditByTrans(OfcFundamentalInformation ofcFundamentalInformation,List<OfcGoodsDetailsInfo> goodsDetailsList,
@@ -1355,11 +1356,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      *  卡班类型订单自动审核
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcTransplanInfo
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcFinanceInformation     费用明细
+     * @param ofcTransplanInfo      运输计划单基本信息
      */
     private void kabanAutoReview(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation, OfcTransplanInfo ofcTransplanInfo) {
         RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
@@ -1402,7 +1403,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()).equals("")) {
             ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
         }
-        RmcServiceCoverageForOrderVo rmcPickup=null;
+        RmcServiceCoverageForOrderVo rmcPickup;
         if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(YES.toString())
                 && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(NO.toString())) {
             //需要上门提货
@@ -1435,13 +1436,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 卡班订单自动审核: 没有上门取货和二次配送
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcTransplanInfo
-     * @param rmcServiceCoverageForOrderVo
-     * @return
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcFinanceInformation     费用明细
+     * @param ofcTransplanInfo      运输计划单基本
+     * @param rmcServiceCoverageForOrderVo      区域覆盖vo
+     * @return      RmcServiceCoverageForOrderVo
      */
     private RmcServiceCoverageForOrderVo kabanAuditWithoutBoth(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation, OfcTransplanInfo ofcTransplanInfo, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo) {
         RmcServiceCoverageForOrderVo rmcPickup;//使用发货地省市区街道 获取覆范围的提货类型的【发货TC库编码】,传入计划单信息的【基地ID】字段, 计划单序号为1
@@ -1462,13 +1463,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 卡班订单自动审核: 有上门取货和二次配送
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcTransplanInfo
-     * @param rmcServiceCoverageForOrderVo
-     * @return
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcFinanceInformation     费用明细
+     * @param ofcTransplanInfo      运输计划单基本
+     * @param rmcServiceCoverageForOrderVo      区域覆盖vo
+     * @return      RmcServiceCoverageForOrderVo
      */
     private RmcServiceCoverageForOrderVo kabanAuditWithBoth(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation, OfcTransplanInfo ofcTransplanInfo, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo) {
         RmcServiceCoverageForOrderVo rmcPickup;//调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
@@ -1597,13 +1598,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 卡班订单自动审核: 只有二次配送
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcTransplanInfo
-     * @param rmcServiceCoverageForOrderVo
-     * @return
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcFinanceInformation     费用明细
+     * @param ofcTransplanInfo      运输计划单基本
+     * @param rmcServiceCoverageForOrderVo      区域覆盖vo
+     * @return      RmcServiceCoverageForOrderVo
      */
     private RmcServiceCoverageForOrderVo kabanAuditWithTwoDistri(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation, OfcTransplanInfo ofcTransplanInfo, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo) {
         RmcServiceCoverageForOrderVo rmcPickup;//调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
@@ -1655,13 +1656,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 卡班订单自动审核: 只有上门取货
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcTransplanInfo
-     * @param rmcServiceCoverageForOrderVo
-     * @return
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcFinanceInformation     费用明细
+     * @param ofcTransplanInfo      运输计划单基本
+     * @param rmcServiceCoverageForOrderVo      区域覆盖vo
+     * @return      RmcServiceCoverageForOrderVo
      */
     private RmcServiceCoverageForOrderVo kabanAuditWithPickup(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation, OfcTransplanInfo ofcTransplanInfo, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo) {
         //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
@@ -1707,15 +1708,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 城配开单自动审核
-     * @param ofcFundamentalInformation
-     * @param goodsDetailsList
-     * @param ofcDistributionBasicInfo
-     * @param ofcWarehouseInformation
-     * @param ofcFinanceInformation
-     * @param orderStatus
-     * @param reviewTag
-     * @param authResDtoByToken
-     * @return
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param goodsDetailsList      货品明细
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcWarehouseInformation       仓储基本信息
+     * @param orderStatus       订单状态
+     * @param reviewTag     审核标记
+     * @param authResDtoByToken     token
+     * @return      Wrapper
      */
     @Override
     public Wrapper<?> orderAutoAuditFromOperation(OfcFundamentalInformation ofcFundamentalInformation,
@@ -1755,13 +1755,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }
                 }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.WAREHOUSE_DIST_ORDER)
                         && PubUtils.trimAndNullAsEmpty(businessType).equals(SALES_OUT_OF_THE_LIBRARY)
-                        && ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){            // 仓配订单
+                        && Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){            // 仓配订单
                     //000创建仓储计划单
                     OfcSiloprogramInfo ofcSiloprogramInfo=new OfcSiloprogramInfo();
                     ofcSiloprogramInfo.setProgramSerialNumber("1");
                     siloProCreate(ofcSiloprogramInfo,ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation,ofcDistributionBasicInfo,authResDtoByToken.getUserName());
 
-                    if(ofcWarehouseInformation.getProvideTransport()== WEARHOUSE_WITH_TRANS){
+                    if(Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){
                         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                         ofcTransplanInfo.setProgramSerialNumber("1");
                         transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName(),ofcFinanceInformation);
@@ -1788,8 +1788,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 发送到仓储中心
-     * @param info
-     * @param planDetails
+     * @param info      仓库发送vo
+     * @param planDetails       计划单明细
      */
     private void sendToWhc(OfcSiloprogramInfoVo info,OfcWarehouseInformation ofcWarehouseInformation,List<OfcPlannedDetail> planDetails,OfcDistributionBasicInfo disInfo,OfcFinanceInformation finfo,OfcFundamentalInformation fuInfo,AuthResDto authResDtoByToken){
         try {
@@ -1877,7 +1877,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else if(OFC_WHC_IN_TYPE.equals(businessType)){
                 tag=documentType;
                 WhcInStock wp=new WhcInStock();
-                List<WhcInStockDetails> detailList=new ArrayList<WhcInStockDetails>();
+                List<WhcInStockDetails> detailList=new ArrayList<>();
                 wp.setOrderNo(info.getOrderCode());//订单编号
                 wp.setWhcBillno("");//入库单号
                 wp.setBillType(documentType);//入库单类型
@@ -1954,9 +1954,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 调用区域覆盖接口
-     * @param rmcServiceCoverageForOrderVo
-     * @param tag
-     * @return
+     * @param rmcServiceCoverageForOrderVo      区域覆盖vo
+     * @param tag     判断是上门提货还是二次配送
+     * @return      RmcServiceCoverageForOrderVo
      */
     @Override
     public RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String tag){
@@ -1984,11 +1984,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 根据仓库编码获取仓库信息
-     * @param wareHouseCode
-     * @return
+     * @param wareHouseCode     仓库编码
+     * @return      RmcWarehouseRespDto
      */
     private RmcWarehouseRespDto getWareHouseByCodeToPlan(String wareHouseCode){
-        OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         RmcWarehouseDto rmcWarehouse=new RmcWarehouseDto();
         if(!PubUtils.trimAndNullAsEmpty(wareHouseCode).equals("")){
             rmcWarehouse.setWarehouseCode(wareHouseCode);
@@ -2001,9 +2000,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     * @param ofcTransplanInfo
-     * @param rmcWarehouse
-     * @return
+     * @param ofcTransplanInfo      运输计划单基本信息
+     * @param rmcWarehouse      仓库
+     * @return      OfcTransplanInfo
      */
     private OfcTransplanInfo copyDarturePlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){
@@ -2053,9 +2052,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      *
-     * @param ofcTransplanInfo
-     * @param rmcWarehouse
-     * @return
+     * @param ofcTransplanInfo      运输计划单基本信息
+     * @param rmcWarehouse      仓库
+     * @return      OfcTransplanInfo
      */
     private OfcTransplanInfo copyDestinationPlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){
@@ -2105,9 +2104,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      *
-     * @param planeCode
-     * @param rmcServiceCoverageForOrderVo
-     * @return
+     * @param planeCode     计划单编号
+     * @param rmcServiceCoverageForOrderVo      区域覆盖vo
+     * @return      RmcServiceCoverageForOrderVo
      */
     @Override
     public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
@@ -2138,10 +2137,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 订单信息推送结算中心
-     * @param ofcFundamentalInformation
-     * @param ofcFinanceInformation
-     * @param ofcDistributionBasicInfo
-     * @param ofcGoodsDetailsInfos
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param ofcFinanceInformation     费用基本信息
+     * @param ofcDistributionBasicInfo      运输基本信息
+     * @param ofcGoodsDetailsInfos      货品明细
      */
     @Override
     public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
@@ -2178,7 +2177,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 logger.error("订单信息推送结算中心 转换异常, {}", e);
             }
             Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
-            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+            if(ERROR_CODE == wrapper.getCode()){
                 logger.error(wrapper.getMessage());
                 throw new BusinessException(wrapper.getMessage());
             }
@@ -2196,10 +2195,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcPlannedDetail      计划单明细
      * @param ofcTransplanInfo      计划单基本信息
      * @author        杨东旭
-     * @CreateDate
+     * @CreateDate    2017/2/3
      * @return        List<OfcPlannedDetail>
      */
-    public List<OfcPlannedDetail> savePlannedDetail(Iterator<OfcGoodsDetailsInfo> iter,OfcPlannedDetail ofcPlannedDetail,OfcTransplanInfo ofcTransplanInfo){
+    private List<OfcPlannedDetail> savePlannedDetail(Iterator<OfcGoodsDetailsInfo> iter,OfcPlannedDetail ofcPlannedDetail,OfcTransplanInfo ofcTransplanInfo){
         List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
         while (iter.hasNext()) {
             ofcPlannedDetail = new OfcPlannedDetail();
@@ -2235,10 +2234,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param rmcPickup     区域覆盖返回
      * @param ofcFundamentalInformation     订单基本信息
      * @author        杨东旭
-     * @CreateDate
+     * @CreateDate    2017/2/3
      * @return        void
      */
-    public void updateOrderAreaAndBase(RmcServiceCoverageForOrderVo rmcPickup,OfcFundamentalInformation ofcFundamentalInformation){
+    private void updateOrderAreaAndBase(RmcServiceCoverageForOrderVo rmcPickup,OfcFundamentalInformation ofcFundamentalInformation){
         OfcFundamentalInformation ofcInfo=new OfcFundamentalInformation();
         UamGroupDto dto=new UamGroupDto();
         dto.setSerialNo(rmcPickup.getSerialNo());
@@ -2263,7 +2262,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @CreateDate
      * @return        void
      */
-    public void saveOrderStatusOfImplemente(OfcTransplanInfo ofcTransplanInfo,String userName){
+    private void saveOrderStatusOfImplemente(OfcTransplanInfo ofcTransplanInfo, String userName){
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
         ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
