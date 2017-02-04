@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.xescm.ofc.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
