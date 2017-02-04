@@ -36,12 +36,16 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             String orderCode = null;
             String custOrderCode = null;
             String transCode = null;
-            if (followTag.equals("orderCode")) {
-                orderCode = code;
-            } else if (followTag.equals("custOrderCode")) {
-                custOrderCode = code;
-            } else if (followTag.equals("transCode")) {
-                transCode = code;
+            switch (followTag) {
+                case "orderCode":
+                    orderCode = code;
+                    break;
+                case "custOrderCode":
+                    custOrderCode = code;
+                    break;
+                case "transCode":
+                    transCode = code;
+                    break;
             }
             // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String, String> mapperMap = new HashMap<>();
@@ -61,12 +65,16 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             String custOrderCode = null;
             String transCode = null;
 
-            if (followTag.equals("orderCode")) {
-                orderCode = code;
-            } else if (followTag.equals("custOrderCode")) {
-                custOrderCode = code;
-            } else if (followTag.equals("transCode")) {
-                transCode = code;
+            switch (followTag) {
+                case "orderCode":
+                    orderCode = code;
+                    break;
+                case "custOrderCode":
+                    custOrderCode = code;
+                    break;
+                case "transCode":
+                    transCode = code;
+                    break;
             }
             // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String, String> mapperMap = new HashMap<>();

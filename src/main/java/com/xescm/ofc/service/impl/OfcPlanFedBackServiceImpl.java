@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,21 +30,21 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Transactional
 public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private static final Logger logger = LoggerFactory.getLogger(OfcPlanFedBackServiceImpl.class);
-    @Autowired
+    @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
-    @Autowired
+    @Resource
     private OfcTransplanStatusService ofcTransplanStatusService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private OfcTransplanNewstatusService ofcTransplanNewstatusService;
-    @Autowired
+    @Resource
     private OfcTraplanSourceStatusService ofcTraplanSourceStatusService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcSiloproStatusService ofcSiloproStatusService ;
     @Autowired
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
@@ -51,9 +52,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     /**
      * 运输计划单状态反馈
-     * @param ofcPlanFedBackCondition
-     * @param userName
-     * @return
+     * @param ofcPlanFedBackCondition      反馈实体
+     * @param userName      用户名
+     * @return      list
      */
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> planFedBack(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
@@ -94,17 +95,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             //当前非作废未完成的运输计划单的LIST
             List<OfcTransplanInfo> ofcTransplanInfos=ofcTransplanInfoMapper.ofcTransplanInfoScreenList(mapperMap);
 
-            String destination=new StringBuilder(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationProvince()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationCity()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationDistrict()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationTown()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getReceivingCustomerAddress())).toString();
+            String destination= new StringBuilder().append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationProvince())).append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationCity())).append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationDistrict())).append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getDestinationTown())).append(PubUtils.trimAndNullAsEmpty(ofcTransplanInfot.getReceivingCustomerAddress())).toString();
             logger.info("######发货方目的地为：{}",destination);
 
             OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
             List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
             String orstatus=orderStatus.getNotes();
-            boolean flag=false;
+            boolean flag;
             if(status.equals("已发运")){
                 flag=checkStatus(false,statusList,"start",DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 +" "+"车辆已发运，发往目的地：");
@@ -262,9 +259,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     /**
      * TFC调度单状态反馈
-     * @param ofcSchedulingSingleFeedbackCondition
-     * @param userName
-     * @return
+     * @param ofcSchedulingSingleFeedbackCondition      反馈实体
+     * @param userName      用户名
+     * @return      List
      */
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedback(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
@@ -347,7 +344,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
 
             //保存订单状态日志
-            boolean flag = false;
+            boolean flag;
             List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
             flag=checkStatus(false,statusList,"start", DateUtils.Date2String(ofcSchedulingSingleFeedbackCondition.getCreateTime(), DateUtils.DateFormatType.TYPE1)
                     +" 订单"+tag+"调度完成");

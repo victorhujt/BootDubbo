@@ -35,7 +35,7 @@ public class OfcPlanScreenServiceImpl extends BaseService<OfcPlanScreenResult> i
             ofcPlanScreenCondition.getResourceAllocationStatues().remove(ofcPlanScreenCondition.getResourceAllocationStatues().size()-1);
             ofcPlanScreenCondition.getResourceAllocationStatues().add(str);
             for(int i = 0; i< ofcPlanScreenCondition.getResourceAllocationStatues().size(); i++){
-                ofcPlanScreenCondition.setResourceAllocationStatus(ofcPlanScreenCondition.getResourceAllocationStatues().get(i).toString());
+                ofcPlanScreenCondition.setResourceAllocationStatus(ofcPlanScreenCondition.getResourceAllocationStatues().get(i));
                 ofcPlanScreenResults.addAll(ofcPlanScreenMapper.planScreen(ofcPlanScreenCondition));
             }
         }else {

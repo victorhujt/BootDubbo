@@ -21,15 +21,6 @@ public class OfcOrderScreenServiceImpl extends BaseService<OrderScreenResult> im
 
     @Override
     public List<OrderScreenResult> orderScreen(OrderScreenCondition orderScreenCondition) {
-
-        if (orderScreenCondition == null){
-
-        }
-        List<OrderScreenResult> orderSearchResults = ofcOrderScreenMapper.orderScreen(orderScreenCondition);
-        if(orderSearchResults == null){
-
-        }
-        return orderSearchResults;
-
+        return ofcOrderScreenMapper.orderScreen(orderScreenCondition);
     }
 }
