@@ -229,15 +229,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         ofcSiloprogramInfo.setProgramSerialNumber("1");
                         String planCode = siloProCreate(ofcSiloprogramInfo, ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo, authResDtoByToken.getUserName());
                         //仓储计划单生成以后通过MQ推送到仓储中心
-                        List<OfcSiloprogramInfoVo> infos = ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode, RESOURCE_ALLOCATION);
+                        List<OfcSiloprogramInfoVo> ofcSiloprogramInfoVoList = ofcSiloprogramInfoService.ofcSiloprogramAndResourceInfo(orderCode, RESOURCE_ALLOCATION);
                         if (StringUtils.isEmpty(planCode)) {
                             logger.info("仓储计划单号不能为空");
                             throw new BusinessException("仓储计划单号不能为空");
                         }
                         List<OfcPlannedDetail> pds = ofcPlannedDetailService.planDetailsScreenList(planCode, "planCode");
-                        if (infos != null && infos.size() > 0) {
+                        if (ofcSiloprogramInfoVoList != null && ofcSiloprogramInfoVoList.size() > 0) {
                             logger.info("开始推送到仓储计划单");
-                                sendToWhc(infos.get(0), ofcWarehouseInformation, pds, ofcDistributionBasicInfo, ofcFinanceInformation, ofcFundamentalInformation, authResDtoByToken);
+                                sendToWhc(ofcSiloprogramInfoVoList.get(0), ofcWarehouseInformation, pds, ofcDistributionBasicInfo, ofcFinanceInformation, ofcFundamentalInformation, authResDtoByToken);
                         } else {
                             logger.info("仓储计划单不存在");
                             throw new BusinessException("仓储计划单号不能为空");
