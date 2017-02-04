@@ -10,9 +10,9 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -22,24 +22,24 @@ import java.util.List;
 @Service
 public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusService {
 
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private OfcTransplanStatusService ofcTransplanStatusService;
-    @Autowired
+    @Resource
     private OfcTransplanNewstatusService ofcTransplanNewstatusService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
 
     /**
      * 接收分拣中心回传的状态,并更新相应的运输计划单和订单的状态
-     * @param dmsTransferStatusDto
+     * @param dmsTransferStatusDto      DMS回传实体
      */
     @Override
     public void receiveDmsCallbackStatus(DmsTransferStatusDto dmsTransferStatusDto) {

@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -49,9 +50,9 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    @Autowired
+    @Resource
     private CscContactEdasService cscContactEdasService;
-    @Autowired
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
 
 

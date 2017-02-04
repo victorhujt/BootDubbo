@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * Created by hujintao on 2016/12/17.
  */
@@ -18,7 +20,7 @@ public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implem
     @Autowired
     private CodeGenUtils codeGenUtils;
 
-    @Autowired
+    @Resource
     private OfcOssManagerService ofcOssManagerService;
 
     @Override

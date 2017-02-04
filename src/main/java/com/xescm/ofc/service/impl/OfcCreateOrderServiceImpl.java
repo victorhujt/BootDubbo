@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,31 +47,31 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private CscCustomerEdasService cscCustomerEdasService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private CscWarehouseEdasService cscWarehouseEdasService;
-    @Autowired
+    @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Autowired
+    @Resource
     private CscSupplierEdasService cscSupplierEdasService;
-    @Autowired
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Autowired
+    @Resource
     private RmcAddressEdasService rmcAddressEdasService;
     @Autowired
     private OfcCreateOrderMapper createOrdersMapper;
@@ -82,7 +83,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     @Transactional
     public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
-        ResultModel resultModel = null;
+        ResultModel resultModel;
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
         String custName = createOrderEntity.getCustName();
@@ -129,12 +130,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             return resultModel;
         }
         //校验：店铺编码，获取该客户下的店铺编码
-        String storeCode = createOrderEntity.getStoreCode();
+        String storeCode;
         //店铺名称
-        String storeName = null;
+        String storeName;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerCode(custCode);
-        Wrapper<List<CscStorevo>> cscStoreVoList = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(storeDto);
+        Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
         if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
             logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
@@ -212,14 +213,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * 否则不进行操作
      * 保存或更新订单后调用自动审核的方法
      *
-     * @param ofcFundamentalInformation
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcWarehouseInformation
-     * @param ofcGoodsDetailsInfoList
-     * @param ofcOrderStatus
-     * @return
-     * @throws BusinessException
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param ofcDistributionBasicInfo      运输单基本信息
+     * @param ofcFinanceInformation         费用明细
+     * @param ofcWarehouseInformation       仓储信息
+     * @param ofcGoodsDetailsInfoList       货品明细
+     * @param ofcOrderStatus        订单状态
+     * @return      ResultModel
+     * @throws BusinessException    异常
      */
     @Transactional
     private ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
@@ -284,11 +285,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     /**
      * 自动审核
-     * @param ofcFundamentalInformation
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcWarehouseInformation
-     * @param ofcGoodsDetailsInfoList
+     * @param ofcFundamentalInformation     订单基本
+     * @param ofcDistributionBasicInfo      运输
+     * @param ofcFinanceInformation         费用明细
+     * @param ofcWarehouseInformation       仓储信息
+     * @param ofcGoodsDetailsInfoList       货品明细
      */
     private void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
                            OfcDistributionBasicInfo ofcDistributionBasicInfo,
@@ -305,8 +306,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     /**
      * 根据省市区名称获取编码
      *
-     * @param addressDto
-     * @return
+     * @param addressDto    地址实体
+     * @return  Map
      */
     public Map<String, String> getAddressCode(RmcAddressNameVo addressDto) {
         if (StringUtils.isBlank(addressDto.getProvinceName())
@@ -332,8 +333,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     /**
      * 根据省市区名称获取编码
      * 补历史订单临时使用
-     * @param addressDto
-     * @return
+     * @param addressDto    地址实体
+     * @return      Map
      */
     public Map<String, String> getAddressCodeTemp(RmcAddressNameVo addressDto) {
         if (StringUtils.isBlank(addressDto.getProvinceName())
