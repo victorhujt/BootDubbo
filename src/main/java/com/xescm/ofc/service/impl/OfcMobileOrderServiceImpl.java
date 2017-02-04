@@ -16,6 +16,7 @@ import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -230,7 +230,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             }
 
             //保存订单状态日志
-            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
             notes.append(" 订单已创建");
             notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());

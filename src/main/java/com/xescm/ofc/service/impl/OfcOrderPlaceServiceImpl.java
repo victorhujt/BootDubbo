@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -239,7 +238,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             throw new BusinessException("您选择的订单类型系统无法识别!");
         }
 
-        notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
         notes.append(" 订单已创建");
         notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
         notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());

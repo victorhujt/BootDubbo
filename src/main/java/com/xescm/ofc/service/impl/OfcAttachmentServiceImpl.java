@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.ATTACHMENT_PRE;
 
 /**
  * Created by hujintao on 2016/12/17.
@@ -20,12 +20,12 @@ public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implem
     @Autowired
     private CodeGenUtils codeGenUtils;
 
-    @Resource
+    @Autowired
     private OfcOssManagerService ofcOssManagerService;
 
     @Override
     public OfcAttachment saveAttachment(OfcAttachment attachment) {
-        attachment.setSerialNo(codeGenUtils.getNewWaterCode("AT",6));
+        attachment.setSerialNo(codeGenUtils.getNewWaterCode(ATTACHMENT_PRE,6));
         save(attachment);
         return attachment;
     }
