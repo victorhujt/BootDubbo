@@ -549,9 +549,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             if((companyList.get() != null) && (companyList.get().getCode() == 200)
                     && !isEmpty(companyList.get().getResult())){
-                /**
-                 * 平台类型。1、线下；2、天猫3、京东；4、鲜易网
-                 */
+                //平台类型。1、线下；2、天猫3、京东；4、鲜易网
                 if("4".equals(ofcFundamentalInformation.getPlatformType())){
                     ofcTransplanInfo.setSingleSourceOfTransport(OrderSourceEnum.XEBEST.getCode());
                 }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()).equals("100003")){
@@ -739,15 +737,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             for (OfcGoodsDetailsInfo aGoodsDetailsList : goodsDetailsList) {
                 //保存计划单明细
                 ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = aGoodsDetailsList;
-                /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                    continue;
-                }*/
-                if ((ofcGoodsDetailsInfo.getQuantity() != null && ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) != 0)
-                        || (ofcGoodsDetailsInfo.getWeight() != null && ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) != 0)
-                        || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0)) {
-                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
-                    BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
+                if (((aGoodsDetailsList.getQuantity() != null) && (aGoodsDetailsList.getQuantity().compareTo(new BigDecimal(0)) != 0))
+                        || ((aGoodsDetailsList.getWeight() != null) && (aGoodsDetailsList.getWeight().compareTo(new BigDecimal(0)) != 0))
+                        || ((aGoodsDetailsList.getCubage() != null) && (aGoodsDetailsList.getCubage().compareTo(new BigDecimal(0)) != 0))) {
+                    aGoodsDetailsList.setGoodsCode(aGoodsDetailsList.getGoodsCode().split("@")[0]);
+                    BeanUtils.copyProperties(ofcPlannedDetail, aGoodsDetailsList);
                     BeanUtils.copyProperties(ofcPlannedDetail, ofcSiloprogramInfo);
                     ofcPlannedDetailService.save(ofcPlannedDetail);
                 }
@@ -776,51 +770,50 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 计划单取消
-     * @param orderCode
-     * @param userName
+     * @param orderCode     订单编号
+     * @param userName      用户名
      */
     private void planCancle(String orderCode,String userName){
         logger.info("==> orderCode={}",orderCode);
         logger.info("==> userName={}",userName);
         List<OfcTransplanInfo> ofcTransplanInfoList=ofcTransplanInfoService.ofcTransplanInfoScreenList(orderCode);
-        for(int i=0;i<ofcTransplanInfoList.size();i++){
-            OfcTransplanInfo ofcTransplanInfo = ofcTransplanInfoList.get(i);
-            if(ofcTransplanInfo!=null){
-                OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
+        for (OfcTransplanInfo ofcTransplanInfo : ofcTransplanInfoList) {
+            if (ofcTransplanInfo != null) {
+                OfcTransplanStatus ofcTransplanStatus = new OfcTransplanStatus();
                 ofcTransplanStatus.setPlanCode(ofcTransplanInfo.getPlanCode());
-                ofcTransplanStatus=ofcTransplanStatusService.selectOne(ofcTransplanStatus);
-                if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITH_THE_KABAN)){
+                ofcTransplanStatus = ofcTransplanStatusService.selectOne(ofcTransplanStatus);
+                if (!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITH_THE_KABAN)) {
                     try {
                         //defaultMqProducer.toSendMQTfcCancelPlanOrder(JacksonUtil.toJsonWithFormat(ofcTransplanInfo.getPlanCode()));
                         TransportNoDTO transportNoDTO = new TransportNoDTO();
                         transportNoDTO.setTransportNo(ofcTransplanInfo.getPlanCode());
                         Wrapper response = epcOrderCancelEdasService.cancelTransport(transportNoDTO);
-                        if(response == null) {
+                        if (response == null) {
                             logger.error("调用epc接口出现异常!取消订单失败!{}", "epc返回的订单取消状态为空");
                             throw new BusinessException("您无法取消!");
                         }
-                        if(Response.ERROR_CODE == response.getCode()){
+                        if (Response.ERROR_CODE == response.getCode()) {
                             //运单号不存在,没有发现该订单
                             //该订单已经取消, 取消失败
-                            logger.error("您无法取消,请联系管理员!{}",response.getResult());
-                            throw new BusinessException("您无法取消,{}",response.getResult().toString());
+                            logger.error("您无法取消,请联系管理员!{}", response.getResult());
+                            throw new BusinessException("您无法取消,{}", response.getResult().toString());
                         }
                     } catch (BusinessException ex) {
                         throw ex;
-                    } catch (Exception ex){
-                        logger.error("运输计划单调用TFC取消端口出现异常{}",ex.getMessage(),ex);
-                        throw new BusinessException("运输计划单调用TFC取消端口出现异常{}",ex.getMessage(),ex);
+                    } catch (Exception ex) {
+                        logger.error("运输计划单调用TFC取消端口出现异常{}", ex.getMessage(), ex);
+                        throw new BusinessException("运输计划单调用TFC取消端口出现异常{}", ex.getMessage(), ex);
                     }
                     if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(TASK)
-                            || PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(TASK_ACCOMPLISHED)){
+                            || PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(TASK_ACCOMPLISHED)) {
                         throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
                     }
                 }
-                if(PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(ALREADY_CANCELLED)){
+                if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(ALREADY_CANCELLED)) {
                     throw new BusinessException("状态错误，该计划单已作废");
                 }/*else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals(ALREADY_PUSH)){
                 throw new BusinessException("其是运输计划单，需调用【配送中心】运单取消接口");
-                }*/else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")){
+                }*/ else if (PubUtils.trimAndNullAsEmpty(ofcTransplanStatus.getPlannedSingleState()).equals("")) {
                     throw new BusinessException("状态有误");
                 }
                 ofcTransplanInfo.setVoidPersonnel(userName);
@@ -835,51 +828,51 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
         }
         List<OfcSiloprogramInfo> ofcSiloprogramInfoList=ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(orderCode);
-        for(int i=0;i<ofcSiloprogramInfoList.size();i++){
-            OfcSiloprogramInfo ofcSiloprogramInfo=ofcSiloprogramInfoList.get(i);
-            Wrapper response=null;
-            OfcSiloproStatus ofcSiloproStatus=new OfcSiloproStatus();
+        for (OfcSiloprogramInfo ofcSiloprogramInfo : ofcSiloprogramInfoList) {
+            Wrapper response = null;
+            OfcSiloproStatus ofcSiloproStatus = new OfcSiloproStatus();
             ofcSiloproStatus.setPlanCode(ofcSiloprogramInfo.getPlanCode());
-            ofcSiloproStatus=ofcSiloproStatusService.selectOne(ofcSiloproStatus);
-            if(PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(ALREADY_CANCELLED)){
+            ofcSiloproStatus = ofcSiloproStatusService.selectOne(ofcSiloproStatus);
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(ALREADY_CANCELLED)) {
                 throw new BusinessException("状态错误，该计划单已作废");
             }
             if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(TASK)
-                    || PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(TASK_ACCOMPLISHED)){
+                    || PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(TASK_ACCOMPLISHED)) {
                 throw new BusinessException("该订单状态已在作业中或已完成，无法取消");
             }
-             if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")){
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals("")) {
                 throw new BusinessException("状态有误");
             }
 
-            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(ALREADY_PUSH)){
+            if (PubUtils.trimAndNullAsEmpty(ofcSiloproStatus.getPlannedSingleState()).equals(ALREADY_PUSH)) {
                 try {
-                    OfcCancelOrderDTO dto=new OfcCancelOrderDTO();
+                    OfcCancelOrderDTO dto = new OfcCancelOrderDTO();
                     dto.setOrderNo(ofcSiloprogramInfo.getPlanCode());
                     dto.setOrderType(ofcSiloprogramInfo.getDocumentType());
-                    if(OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                    if (OFC_WHC_IN_TYPE.equals(ofcSiloprogramInfo.getBusinessType())) {
                         dto.setBillType(ORDER_TYPE_IN);
-                    }else if(OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())){
+                    } else if (OFC_WHC_OUT_TYPE.equals(ofcSiloprogramInfo.getBusinessType())) {
                         dto.setBillType(ORDER_TYPE_OUT);
                     }
                     dto.setCustomerID(ofcSiloprogramInfo.getCustCode());
                     dto.setWarehouseID(ofcSiloprogramInfo.getWarehouseCode());
                     dto.setReason("");
-                    logger.info("==> 仓储计划单号{}开始取消,业务类型为{}",ofcSiloprogramInfo.getPlanCode(),ofcSiloprogramInfo.getDocumentType());
-                     response=whcOrderCancelEdasService.cancelOrder(dto);
+                    logger.info("==> 仓储计划单号{}开始取消,业务类型为{}", ofcSiloprogramInfo.getPlanCode(), ofcSiloprogramInfo.getDocumentType());
+                    response = whcOrderCancelEdasService.cancelOrder(dto);
                 } catch (Exception e) {
-                    logger.error("仓储计划单调用WHC取消端口出现异常{}",e.getMessage(),e);
-                    throw new BusinessException("仓储计划单调用WHC取消端口出现异常{}",e);
+                    logger.error("仓储计划单调用WHC取消端口出现异常{}", e.getMessage(), e);
+                    throw new BusinessException("仓储计划单调用WHC取消端口出现异常{}", e);
                 }
-                if(response==null){
+                if (null != response) {
+                    if (Response.ERROR_CODE == response.getCode()) {
+                        logger.error("仓储计划单调用WHC响应状态码{}", response.getCode());
+                        throw new BusinessException(response.getMessage());
+                    }
+                } else {
                     throw new BusinessException("仓储计划单调用WHC取消端口出现异常");
                 }
-                if(Response.ERROR_CODE == response.getCode()){
-                    logger.error("仓储计划单调用WHC响应状态码{}",response.getCode());
-                    throw new BusinessException(response.getMessage());
-                }
             }
-            if(Response.SUCCESS_CODE==response.getCode()){
+            if (Response.SUCCESS_CODE == (response != null ? response.getCode() : 0)) {
                 ofcSiloprogramInfo.setVoidPersonnel(userName);
                 ofcSiloprogramInfo.setVoidTime(new Date());
                 //OfcTransplanNewstatus ofcTransplanNewstatus=new OfcTransplanNewstatus();
@@ -895,10 +888,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 订单删除
-     * @param orderCode
-     * @param orderStatus
-     * @param authResDtoByToken
-     * @return
+     * @param orderCode     订单编号
+     * @param orderStatus       订单状态
+     * @param authResDtoByToken     权限token
+     * @return      String
      */
     @Override
     public String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
@@ -918,10 +911,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 客户中心订单取消
-     * @param orderCode
-     * @param orderStatus
-     * @param authResDtoByToken
-     * @return
+     * @param orderCode     订单编号
+     * @param orderStatus       订单状态
+     * @param authResDtoByToken     权限token
+     * @return      String
      */
     @Override
     public String orderCancel(String orderCode,String orderStatus, AuthResDto authResDtoByToken) {
@@ -961,8 +954,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 cancelOfcOrderDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 cancelOfcOrderDto.setTransCode(ofcDistributionBasicInfo.getTransCode());
                 Wrapper<?> wrapper = acOrderEdasService.cancelOfcOrder(cancelOfcOrderDto);
-//                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
-                if(wrapper == null) {
+                //                Wrapper<?> wrapper = feignPushOrderApiClient.cancelOfcOrder(cancelOfcOrderDto);
+                if(null != wrapper) {
                     logger.info("取消订单推送到结算中心,code:{},message:{},返回信息:{},", wrapper.getCode(), wrapper.getMessage(), ToStringBuilder.reflectionToString(wrapper.getResult()));
                 }
             }
@@ -975,17 +968,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 调用CSC返回收发货人信息
-     * @param contactCompanyName
-     * @param contactName
-     * @param purpose
-     * @param customerCode
-     * @param authResDtoByToken
-     * @return
+     * @param contactCompanyName      发货人
+     * @param contactName   发货方联系人
+     * @param purpose       收/发货方
+     * @param customerCode     客户编号
+     * @param authResDtoByToken     权限token
+     * @return      CscContantAndCompanyResponseDto
      */
     @Override
     public CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String customerCode, AuthResDto authResDtoByToken) {
         //Map<String,Object> map = new HashMap<String,Object>();
-        Map<String,Object> map = new HashMap<>();
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContactDto(new CscContactDto());
         cscContantAndCompanyDto.setCscContactCompanyDto(new CscContactCompanyDto());
@@ -993,7 +985,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscContantAndCompanyDto.getCscContactDto().setContactName(contactName);
         cscContantAndCompanyDto.getCscContactCompanyDto().setContactCompanyName(contactCompanyName);
         cscContantAndCompanyDto.setCustomerCode(customerCode);
-        Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper = null;
+        Wrapper<List<CscContantAndCompanyResponseDto>> listWrapper;
         try {
             listWrapper = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
             if(null == listWrapper.getResult()){
@@ -1014,17 +1006,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         listWrapper.getResult().get(0);
         listWrapper.getResult().get(0);
-        CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = listWrapper.getResult().get(0);
-        return cscContantAndCompanyResponseDto;
+        return listWrapper.getResult().get(0);
     }
 
     /**
      * 调用CSC返回供应商信息
-     * @param supportName
-     * @param supportContactName
-     * @param customerCode
-     * @param authResDtoByToken
-     * @return
+     * @param supportName       供应商
+     * @param supportContactName    供应商联系人
+     * @param customerCode      客户编号
+     * @param authResDtoByToken     权限token
+     * @return      CscSupplierInfoDto
      */
     @Override
     public CscSupplierInfoDto getSupportMessage(String supportName, String supportContactName, String customerCode, AuthResDto authResDtoByToken) {
@@ -1032,7 +1023,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         cscSupplierInfoDto.setSupplierName(supportName);
         cscSupplierInfoDto.setContactName(supportContactName);
         cscSupplierInfoDto.setCustomerCode(customerCode);
-        Wrapper<List<CscSupplierInfoDto>> listWrapper = null;
+        Wrapper<List<CscSupplierInfoDto>> listWrapper;
         try {
             listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
             if(null == listWrapper.getResult()){
@@ -1047,21 +1038,20 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if(String.valueOf(Wrapper.ERROR_CODE).equals(listWrapper.getCode())){
             throw new BusinessException("查询供应商信息错误!");
         }
-        CscSupplierInfoDto result = listWrapper.getResult().get(0);
-        return result;
+        return listWrapper.getResult().get(0);
     }
 
 
 
     /**
      * 计划单更新
-     * @param planCode
-     * @param planStatus
-     * @param serviceProviderName
-     * @param serviceProviderContact
-     * @param serviceProviderContactPhone
-     * @param userName
-     * @return
+     * @param planCode      计划单编号
+     * @param planStatus    计划单状态
+     * @param serviceProviderName       服务商
+     * @param serviceProviderContact        服务商联系人
+     * @param serviceProviderContactPhone       服务商联系电话
+     * @param userName      用户名
+     * @return      String
      */
     @Override
     public String planUpdate(String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,String userName) {
