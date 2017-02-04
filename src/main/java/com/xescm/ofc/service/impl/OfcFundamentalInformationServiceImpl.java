@@ -20,14 +20,12 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
 
     @Override
     public String getOrderCodeByCustOrderCode(String custOrderCode) {
-        String orderCode = ofcFundamentalInformationMapper.getOrderCodeByCustOrderCode(custOrderCode);
-        return orderCode;
+        return ofcFundamentalInformationMapper.getOrderCodeByCustOrderCode(custOrderCode);
     }
 
     @Override
     public int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation) {
-        int result =  ofcFundamentalInformationMapper.checkCustOrderCode(ofcFundamentalInformation);
-        return result;
+        return ofcFundamentalInformationMapper.checkCustOrderCode(ofcFundamentalInformation);
     }
 
     @Override
@@ -52,9 +50,9 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
 
     /**
      * 根据客户订单编号与客户编号查询不是已经取消的订单
-     * @param custOrderCode
-     * @param custCode
-     * @return
+     * @param custOrderCode     客户订单编号
+     * @param custCode      客户编号
+     * @return  OfcFundamentalInformation
      */
     public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode){
         OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();

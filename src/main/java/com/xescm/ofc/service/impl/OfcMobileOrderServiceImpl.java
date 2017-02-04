@@ -176,17 +176,17 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             }
 
             //运输订单
-            if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) && ofcDistributionBasicInfo.getDeparturePlaceCode().length() > 12){
-                String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
-                String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
-                    /*if(depatrueCode.equals(destinationCode)){
+            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) || ofcDistributionBasicInfo.getDeparturePlaceCode().length() <= 12) {
+                throw new BusinessException("四级地址编码为空!");
+            } /*else {
+                //String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
+                //String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
+                    *//*if(depatrueCode.equals(destinationCode)){
                         ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_CITY);
                     }else {
                         ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_TRUNK);
-                    }*/
-            }else{
-                throw new BusinessException("四级地址编码为空!");
-            }
+                    }*//*
+            }*/
             try {
                 //添加基本信息
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
@@ -259,22 +259,22 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     private List<String> getOssUrls(String[] serialNos) throws UnsupportedEncodingException {
         List<String> urls=new ArrayList<>();
-        for (int i = 0; i <serialNos.length ; i++) {
-            OfcAttachment record=new OfcAttachment();
-            record.setSerialNo(serialNos[i]);
-            OfcAttachment result=ofcAttachmentService.selectOne(record);
-            if(result!=null&&!PubUtils.isSEmptyOrNull(result.getPath())&&!PubUtils.isSEmptyOrNull(result.getName())){
-                URL url=null;
+        for (String serialNo : serialNos) {
+            OfcAttachment record = new OfcAttachment();
+            record.setSerialNo(serialNo);
+            OfcAttachment result = ofcAttachmentService.selectOne(record);
+            if (result != null && !PubUtils.isSEmptyOrNull(result.getPath()) && !PubUtils.isSEmptyOrNull(result.getName())) {
+                URL url = null;
                 //重试5次
-                for(int count=0;count<5;count++){
-                    url=ofcOssManagerService.getFileURL(result.getPath()+result.getName());//获取图片在oss的路径
-                    if(url!=null){
+                for (int count = 0; count < 5; count++) {
+                    url = ofcOssManagerService.getFileURL(result.getPath() + result.getName());//获取图片在oss的路径
+                    if (url != null) {
                         break;
                     }
                 }
-                if(url!=null){
-                    String urlStr=url.toString().replace("vpc100-","");
-                    if(!urls.contains(urlStr)){
+                if (url != null) {
+                    String urlStr = url.toString().replace("vpc100-", "");
+                    if (!urls.contains(urlStr)) {
                         urls.add(urlStr);
                     }
                 }
