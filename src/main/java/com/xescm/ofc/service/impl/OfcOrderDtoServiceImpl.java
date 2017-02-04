@@ -9,10 +9,10 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
 import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -22,32 +22,36 @@ import java.lang.reflect.InvocationTargetException;
 @Service
 @Transactional
 public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     @Override
     public OfcOrderDTO orderDtoSelect(String code, String dtoTag) {
-        String orderCode = null;
-        String custOrderCode =null;
-        String transCode = null;
+        String orderCode="";
+        String custOrderCode;
+        String transCode;
         if(!PubUtils.trimAndNullAsEmpty(code).equals("")){
-            if(dtoTag.equals("orderCode")){
-                orderCode = code;
-            }else if(dtoTag.equals("custOrderCode")){
-                custOrderCode = code;
-                //然后拿着这个custOrderCode去数据库, 找到对应的OrderCode
-                orderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(custOrderCode);
-            }else if(dtoTag.equals("transCode")){
-                transCode = code;
-                //然后拿着这个transCode数据库关联基本列表, 找到对应的OrderCode,
-                ///BUG
-                orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
+            switch (dtoTag) {
+                case "orderCode":
+                    orderCode = code;
+                    break;
+                case "custOrderCode":
+                    custOrderCode = code;
+                    //然后拿着这个custOrderCode去数据库, 找到对应的OrderCode
+                    orderCode = ofcFundamentalInformationService.getOrderCodeByCustOrderCode(custOrderCode);
+                    break;
+                case "transCode":
+                    transCode = code;
+                    //然后拿着这个transCode数据库关联基本列表, 找到对应的OrderCode,
+                    ///BUG
+                    orderCode = ofcDistributionBasicInfoService.getOrderCodeByTransCode(transCode);
+                    break;
             }
             if(PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
                 throw new BusinessException("找不到该订单编号");
@@ -67,12 +71,10 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getOrderCode())){
                         BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
                     }
-                } catch (IllegalAccessException e) {
-                    throw new BusinessException(e.getMessage(), e);
-                } catch (InvocationTargetException e) {
-                    throw new BusinessException(e.getMessage(), e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new BusinessException("实体转换失败", e);
                 } catch (BusinessException ex){
-                    throw new BusinessException(ex.getMessage(), ex);
+                    throw new BusinessException("查询订单失败", ex);
                 }catch (Exception ex){
                     throw new BusinessException(ex.getMessage(), ex);
                 }

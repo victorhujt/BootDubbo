@@ -11,10 +11,10 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +24,11 @@ import java.util.List;
 @Service
 @Transactional
 public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouseInformation> implements OfcWarehouseInformationService{
-    @Autowired
+    @Resource
     private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
-    @Autowired
+    @Resource
     private CscWarehouseEdasService cscWarehouseEdasService;
-    @Autowired
+    @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     @Override
