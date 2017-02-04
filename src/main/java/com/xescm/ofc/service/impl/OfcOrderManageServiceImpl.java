@@ -2000,6 +2000,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
+     * 拷贝方法，用于将仓库实体中的对应信息拷贝入运输计划单中的发货方信息
      * @param ofcTransplanInfo      运输计划单基本信息
      * @param rmcWarehouse      仓库
      * @return      OfcTransplanInfo
@@ -2051,7 +2052,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     *
+     * 拷贝方法，用于将仓库实体中的对应信息拷贝入运输计划单中的收货方信息
      * @param ofcTransplanInfo      运输计划单基本信息
      * @param rmcWarehouse      仓库
      * @return      OfcTransplanInfo
@@ -2103,15 +2104,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
-     *
-     * @param planeCode     计划单编号
+     * 拷贝方法，用于将四级地址编码split操作后分别存入区域覆盖VO中对应的字段
+     * @param addressCode     地址编号，为以逗号分隔的四级地址
      * @param rmcServiceCoverageForOrderVo      区域覆盖vo
      * @return      RmcServiceCoverageForOrderVo
      */
     @Override
-    public RmcServiceCoverageForOrderVo copyDestinationPlace(String planeCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
+    public RmcServiceCoverageForOrderVo copyDestinationPlace(String addressCode,RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo){
         rmcServiceCoverageForOrderVo=new RmcServiceCoverageForOrderVo();
-        String address[]=planeCode.split(",");
+        String address[]=addressCode.split(",");
         if(address.length>=1){
             if(!PubUtils.trimAndNullAsEmpty(address[0]).equals("")){
                 rmcServiceCoverageForOrderVo.setProvinceCode(address[0]);
