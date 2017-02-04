@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -107,8 +108,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         BigDecimal goodsAmountCount = new BigDecimal(0);
         for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
             if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                if((ofcGoodsDetails.getWeight() != null && ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) != 0 ) || (ofcGoodsDetails.getCubage() != null && ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) != 0 )){
-                }else{
+                if ((ofcGoodsDetails.getWeight() == null || ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetails.getCubage() == null || ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) == 0)) {
                     continue;
                 }
             }
@@ -302,7 +302,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
             }
             //仓配单需要运输
-            if(ofcWarehouseInformation.getProvideTransport()== WEARHOUSE_WITH_TRANS){
+            if(Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){
                 Wrapper<?> wrapper =ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                 if(Wrapper.ERROR_CODE == wrapper.getCode()){
                     throw new BusinessException(wrapper.getMessage());
@@ -315,11 +315,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
                 if(select.size() > 0){//有运输信息
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
-                }else if (select.size() == 0){
-                    addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
-                }
+                }else if (select.size() == 0) addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
             //仓配单不需要运输,需要将属于该订单的运输信息删除
-            }else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSE_NO_TRANS){
+            }else if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), WAREHOUSE_NO_TRANS)){
                 ofcFundamentalInformation.setSecCustCode("");
                 ofcFundamentalInformation.setSecCustName("");
                 ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -329,7 +327,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
             //入库
             if("62".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
-
+                logger.info("这是入库");
             }
             //出库
             if("61".equals(ofcFundamentalInformation.getBusinessType().substring(0,2))){//如果是入库才有供应商信息
@@ -428,7 +426,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 if(null == ofcWarehouseInformation.getProvideTransport()){
                     ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                 }
-                if(ofcWarehouseInformation.getProvideTransport()== WEARHOUSE_WITH_TRANS){
+                if(Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){
                     Wrapper<?> wrapper =ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if(Wrapper.ERROR_CODE == wrapper.getCode()){
                         throw new BusinessException(wrapper.getMessage());
@@ -439,7 +437,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
                 String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0,2);
                 if("62".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿才是入库
-
+                    logger.info("这儿才是入库");
                 }
                 ofcWarehouseInformationService.save(ofcWarehouseInformation);
                 if("61".equals(businessTypeHead)){//如果是入库才有供应商信息//这儿是出库
@@ -484,9 +482,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     /**
      * 校验当前登录用户的身份信息,并存放大区和基地信息
-     * @param authResDtoByToken
-     * @param ofcFundamentalInformation
-     * @return
+     * @param authResDtoByToken     token
+     * @param ofcFundamentalInformation     订单基本信息
+     * @return  OfcFundamentalInformation
      */
     @Override
     public OfcFundamentalInformation getAreaAndBaseMsg(AuthResDto authResDtoByToken, OfcFundamentalInformation ofcFundamentalInformation) {
@@ -536,9 +534,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     /**
      * 根据客户编号和客户订单号校验重复
-     * @param custOrderCode
-     * @param custCode
-     * @return
+     * @param custOrderCode     客户订单编号
+     * @param custCode      客户编号
+     * @return  boolean
      */
     private boolean checkOrderCode (String custOrderCode, String custCode) {
         boolean isDup = false;
@@ -584,7 +582,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * 更新财务信息
      * @param ofcFinanceInformation 财务信息
      * @param ofcFundamentalInformation 订单基本信息
-     * @return
+     * @return      OfcFinanceInformation
      */
     private OfcFinanceInformation upFinanceInformation(OfcFinanceInformation ofcFinanceInformation
             ,OfcFundamentalInformation ofcFundamentalInformation){
@@ -708,12 +706,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if (null == ofcWarehouseInformation.getProvideTransport()) {
                         ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                     }
-                    if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
+                    if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)) {
                         String consingneeSerialNo = cscContantAndCompanyDtoConsignee.getCscContactDto().getSerialNo();
                         if (null == consingneeSerialNo) {
                             throw new BusinessException("该收货方联系人编码为空");
                         }
-                        cscContantAndCompanyDtoConsignee.getCscContactDto().setSerialNo(consingneeSerialNo.split("\\@")[0]);
+                        cscContantAndCompanyDtoConsignee.getCscContactDto().setSerialNo(consingneeSerialNo.split("@")[0]);
                         Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                         if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                             throw new BusinessException(wrapper.getMessage());
@@ -725,8 +723,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     upOfcWarehouseInformation(ofcWarehouseInformation, ofcFundamentalInformation);
                     String businessTypeHead = ofcFundamentalInformation.getBusinessType().substring(0, 2);
                     if ("62".equals(businessTypeHead)) {//如果是入库才有供应商信息//这儿才是入库
-
-
+                        logger.info("这儿才是入库");
                     }
                     ofcWarehouseInformationService.save(ofcWarehouseInformation);
                     if ("61".equals(businessTypeHead)) {//如果是入库才有供应商信息//这儿是出库
