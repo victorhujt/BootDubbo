@@ -2268,8 +2268,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
         ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
         ofcOrderStatus.setStatusDesc("执行中");
-        ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                +" "+"订单开始执行");
+        ofcOrderStatus.setNotes(new StringBuilder()
+                .append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
+                .append(" ").append("订单开始执行").toString());
         ofcOrderStatus.setOperator(userName);
         ofcOrderStatus.setLastedOperTime(new Date());
         ofcOrderStatusService.save(ofcOrderStatus);
