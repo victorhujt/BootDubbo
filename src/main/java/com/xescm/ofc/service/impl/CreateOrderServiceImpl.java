@@ -4,6 +4,7 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,17 +45,17 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private CodeGenUtils codeGenUtils;
-    @Autowired
+    @Resource
     private OfcCreateOrderErrorLogService ofcCreateOrderErrorLogService;
-    @Autowired
+    @Resource
     private OfcCreateOrderService ofcCreateOrderService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Autowired
     private OfcCreateOrderMapper ofcCreateOrderMapper;
@@ -68,7 +70,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * 创单api  custOrderCode与typeId是相同的
      *
      * @param data 传入的json格式的字符串
-     * @throws Exception
+     * @throws Exception    异常
      */
     public String createOrder(String data) throws Exception {
         logger.info("订单中心创建订单接口开始");
@@ -169,7 +171,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                           String custOrderCode, String orderCode,
                                           ResultModel resultModel,
                                           List<CreateOrderResult> createOrderResultList) {
-        reason = resultModel.getDesc();
+        if(PubUtils.trimAndNullAsEmpty(reason).equals("")) reason = resultModel.getDesc();
         CreateOrderResult createOrderResult = new CreateOrderResult(result, reason, custOrderCode, orderCode);
         createOrderResultList.add(createOrderResult);
     }
@@ -187,8 +189,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * 状态已经已完成：订单已完成，无法取消
      * 状态是待审核，直接删除订单
      *
-     * @param cancelOrderDto
-     * @return
+     * @param cancelOrderDto    取消实体
+     * @return     CannelOrderVo
      */
     @Transactional
     @Override
