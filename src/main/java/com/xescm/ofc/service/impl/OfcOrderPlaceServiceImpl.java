@@ -39,6 +39,7 @@ import java.util.Objects;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 
 /**
  * 订单下单相关处理Service
@@ -218,7 +219,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
             }
         }
-        String orderType = OrderConstant.WAREHOUSE_DIST_ORDER;
+        String orderType = TRANSPORT_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(orderType);
@@ -343,7 +344,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             }else if(select.size() == 0){
                 saveWarehouseMessage(ofcWarehouseInformation);
             }
-        }else if(OrderConstant.TRANSPORT_ORDER.equals(orderType)){
+        }else if(TRANSPORT_ORDER.equals(orderType)){
             Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
@@ -443,7 +444,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     ofcWarehouseInformation.setSupportCode("");
                     ofcWarehouseInformation.setSupportName("");
                 }
-            }else if(OrderConstant.TRANSPORT_ORDER.equals(orderType)){
+            }else if(TRANSPORT_ORDER.equals(orderType)){
                 Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                 if(Wrapper.ERROR_CODE == wrapper.getCode()){
                     throw new BusinessException(wrapper.getMessage());
@@ -729,7 +730,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                         ofcWarehouseInformation.setSupportCode("");
                         ofcWarehouseInformation.setSupportName("");
                     }
-                } else if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {
+                } else if (TRANSPORT_ORDER.equals(orderType)) {
                     Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                         throw new BusinessException(wrapper.getMessage());

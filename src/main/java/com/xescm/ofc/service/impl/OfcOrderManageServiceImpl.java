@@ -1337,6 +1337,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         kabanAutoReview(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation, ofcTransplanInfo);
                     }
                 }else {
+                    logger.info("订单类型为{}",ofcFundamentalInformation.getOrderType());
                     throw new BusinessException("订单类型有误");
                 }
                 logger.debug("计划单创建成功");
