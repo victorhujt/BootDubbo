@@ -45,7 +45,7 @@ import java.util.List;
 @Controller
 public class OfcMobileOrderRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OfcMobileOrderService ofcMobileOrderService;
 
     @Resource

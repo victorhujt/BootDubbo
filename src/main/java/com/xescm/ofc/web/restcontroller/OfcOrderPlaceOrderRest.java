@@ -32,12 +32,12 @@ import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -45,25 +45,26 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2016/10/8.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderPlaceOrderRest extends BaseController{
 
-    @Autowired
+    @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Autowired
+    @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
-    @Autowired
+    @Resource
     private CscSupplierEdasService cscSupplierEdasService;
-    @Autowired
+    @Resource
     private CscContactEdasService cscContactEdasService;
 
     /**

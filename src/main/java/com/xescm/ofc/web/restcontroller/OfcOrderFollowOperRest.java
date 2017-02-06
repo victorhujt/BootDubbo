@@ -11,12 +11,12 @@ import com.xescm.ofc.service.OrderFollowOperService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -27,9 +27,9 @@ import java.util.*;
 @Controller
 public class OfcOrderFollowOperRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OrderFollowOperService orderFollowOperService;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
 
     @RequestMapping(value = "/orderFollowOpera")

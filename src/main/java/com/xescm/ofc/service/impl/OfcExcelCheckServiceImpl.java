@@ -343,7 +343,6 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }catch (IllegalStateException ex){
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量不是数字格式!");
                             }catch (Exception ex){//这里的Exception再放小点, 等报错的时候看看报的是什么异常
-                                checkPass = false;
                                 logger.error("Excel导入异常,{}",ex);
                                 throw new BusinessException("Excel导入异常");
 

@@ -11,22 +11,23 @@ import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcPlanScreenService;
 import com.xescm.ofc.web.controller.BaseController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcPlanScreenRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OfcPlanScreenService ofcPlanScreenService;
 
     @RequestMapping(value = "/queryPlanPageByCondition", method=RequestMethod.POST)

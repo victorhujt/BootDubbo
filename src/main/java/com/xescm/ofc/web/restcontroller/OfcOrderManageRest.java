@@ -24,7 +24,6 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
@@ -39,24 +39,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by ydx on 2016/10/11.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderManageRest extends BaseController{
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcOrderDtoService ofcOrderDtoService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Autowired
+    @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
 
     /**
@@ -70,7 +71,7 @@ public class OfcOrderManageRest extends BaseController{
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
         logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
@@ -128,7 +129,7 @@ public class OfcOrderManageRest extends BaseController{
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(),ex);
             //
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
@@ -186,9 +187,7 @@ public class OfcOrderManageRest extends BaseController{
             queryStoreDto.setCustomerCode(customerCode);
             storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
-        }catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
         }
         if (ofcOrderDTO!=null){

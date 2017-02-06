@@ -19,19 +19,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderScreenRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OfcOrderScreenService ofcOrderScreenService;
 
     @RequestMapping(value = "/orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageSize}")

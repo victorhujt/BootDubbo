@@ -19,7 +19,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import java.util.List;
 /**
  * 运营 订单管理
@@ -37,26 +37,26 @@ import java.util.List;
 @Controller
 public class OfcOrderManageOperaRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private PlanAndStorageService planAndStorageService;
-    @Autowired
+    @Resource
     private OfcBatchOrderVoService ofcBatchOrderVoService;
-    @Autowired
-    private OrderFollowOperService orderFollowOperService;
+//    @Resource
+//    private OrderFollowOperService orderFollowOperService;
 
     /**
      * 查询订单
@@ -168,7 +168,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
     }
 
@@ -180,8 +180,8 @@ public class OfcOrderManageOperaRest extends BaseController {
      */
     @RequestMapping(value = "/orderDetailPageByCode/{orderCode}", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode,Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_detail_opera");
         try {
-            ModelAndView modelAndView = new ModelAndView("order_detail_opera");
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号为空");
             }
@@ -199,7 +199,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
-            List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
+//            List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
 //            ofcOrderStatusList = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatusList);
             //最新订单状态
             ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
@@ -238,13 +238,10 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("storageList", storageList);
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
             setDefaultModel(model);
-            return modelAndView;
-        } catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
-        } catch (Exception ex) {
+        }catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
         }
-        return null;
+        return modelAndView;
     }
 
     private String defalutString(String str) {
@@ -267,9 +264,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcBatchOrderVo ofcBatchOrderVo = ofcBatchOrderVoService.queryByBatchNumber(orderBatchCode);
             modelAndView.addObject("ofcBatchOrderVo", ofcBatchOrderVo);
             modelAndView.addObject("orderBatchNumber", orderBatchCode);
-        } catch (BusinessException ex) {
-            logger.error("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
-        } catch (Exception ex) {
+        }catch (Exception ex) {
             logger.error("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
         }
         setDefaultModel(model);
