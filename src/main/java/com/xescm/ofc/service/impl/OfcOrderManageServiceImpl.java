@@ -297,7 +297,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             //保存计划单明细
             List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter, ofcPlannedDetail.get(),ofcTransplanInfo);
             if (ofcPlannedDetailList.size() > 0) {
-                ofcPlannedDetailMap.put(ofcPlannedDetail.get().getPlanCode(), ofcPlannedDetailList);
+                ofcPlannedDetailMap.put(ofcPlannedDetailList.get(0).getPlanCode(), ofcPlannedDetailList);
             }
             RmcCompanyLineQO rmcCompanyLineQO = new RmcCompanyLineQO();
             if (!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
@@ -511,8 +511,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             //保存计划单明细
             List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter, ofcPlannedDetail.get(),ofcTransplanInfo);
-            if(ofcPlannedDetailList.size()>0){
-                ofcPlannedDetailMap.put(ofcPlannedDetail.get().getPlanCode(),ofcPlannedDetailList);
+            if(PubUtils.isNotNullAndBiggerSize(ofcPlannedDetailList,0)){
+                ofcPlannedDetailMap.put(ofcPlannedDetailList.get(0).getPlanCode(),ofcPlannedDetailList);
             }
             RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
             if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
