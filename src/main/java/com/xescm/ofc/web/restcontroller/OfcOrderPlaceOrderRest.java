@@ -43,6 +43,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -69,13 +70,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     /**
      * 编辑
-     * @param ofcOrderDTOStr
-     * @param orderGoodsListStr
-     * @param cscContantAndCompanyDtoConsignorStr
-     * @param cscContantAndCompanyDtoConsigneeStr
-     * @param cscSupplierInfoDtoStr
-     * @param tag
-     * @return
+     * @param ofcOrderDTOStr      orderDto的json
+     * @param orderGoodsListStr     货品列表json
+     * @param cscContantAndCompanyDtoConsignorStr       发货方json
+     * @param cscContantAndCompanyDtoConsigneeStr       收货方json
+     * @param cscSupplierInfoDtoStr     供应商json
+     * @param tag   各种下单方式标记
+     * @return      Wrapper
      */
     @RequestMapping("/orderEdit")
     @ResponseBody
@@ -83,7 +84,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        String result = null;
+        String result;
         if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
             logger.debug("订单中心编辑入参实体出现异常ofcOrderDTOJson={}", ofcOrderDTOStr);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心编辑入参实体出现异常ofcOrderDTOJson");
@@ -144,7 +145,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
      * @param cscSupplierInfoDtoStr                 供应商信息
      * @param tag           标识下单、编辑、运输开单
-     * @return
+     * @return      Wrapper
      */
     @RequestMapping("/orderPlaceCon")
     @ResponseBody
@@ -313,7 +314,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
         logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
-        Wrapper<PageInfo<CscContantAndCompanyResponseDto>> result=null;
+        AtomicReference<Wrapper<PageInfo<CscContantAndCompanyResponseDto>>> result= new AtomicReference<>(null);
         try {
             CscContantAndCompanyDto csc = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -324,8 +325,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
             csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
             csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
-            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
-            result = cscReceivingInfoList;
+            result.set(cscContactEdasService.queryCscReceivingInfoListWithPage(csc));
             /*
             csc.getCscContact().setPurpose("3");
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
@@ -334,7 +334,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         } catch (Exception ex) {
             logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
         }
-        return result;
+        return result.get();
     }
 
 

@@ -37,10 +37,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
+ * <p>Title:    .订单管理 </p>
+ * <p>Description TODO </p>
+ * <p>Company:    http://www.hnxianyi.com </p>
  *
- * Created by ydx on 2016/10/11.
+ * @author        杨东旭
+ * @CreateDate    2016/10/11
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
@@ -62,8 +67,10 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单审核/反审核
-     * @param
-     * @return
+     * @param orderCode  订单编号
+     * @param orderStatus   订单状态
+     * @param reviewTag     审核标记
+     * @return      Wrapper
      */
     @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
     @ResponseBody
@@ -79,7 +86,7 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单审核反审核出现未知异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
@@ -87,7 +94,7 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单删除
-     * @param orderCode
+     * @param orderCode     订单编号
      * @return com.xescm.uam.utils.wrap.Wrapper;
      */
     @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
@@ -111,8 +118,8 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单取消
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return      Wrapper
      */
     @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
     @ResponseBody
@@ -127,7 +134,7 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(),ex);
+            logger.error("订单中心订单管理订单取消出现未知异常:{}", ex.getMessage(),ex);
             //
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
@@ -136,9 +143,9 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 进入订单编辑
-     * @param orderCode
-     * @param dtotag
-     * @return
+     * @param orderCode    订单编号
+     * @param dtotag    标记
+     * @return  String
      */
     @RequestMapping(value = "/getOrderDetailByCode/{orderCode}/{dtotag}")
     public String getOrderDetailByCode(Model model, @PathVariable String orderCode, @PathVariable String dtotag, Map<String,Object> map){
@@ -174,7 +181,7 @@ public class OfcOrderManageRest extends BaseController{
 
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
-                if(OrderConstConstant.WEARHOUSE_WITH_TRANS == ofcOrderDTO.getProvideTransport()){
+                if(Objects.equals(OrderConstConstant.WEARHOUSE_WITH_TRANS, ofcOrderDTO.getProvideTransport())){
                     consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
                     consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
                 }
@@ -185,7 +192,7 @@ public class OfcOrderManageRest extends BaseController{
             }
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerCode(customerCode);
-            storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
+            storeByCustomerId = cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
@@ -207,8 +214,8 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单删除货品
-     * @param ofcGoodsDetailsInfo
-     * @return
+     * @param ofcGoodsDetailsInfo   货品明细
+     * @return  void
      */
     @RequestMapping("/goodsDelete")
     public void goodsDelete( OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
@@ -271,8 +278,12 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 计划单修改
-     * @param
-     * @return
+     * @param planCode  计划单编号
+     * @param planStatus    计划单状态
+     * @param serviceProviderName   服务商
+     * @param serviceProviderContact    服务商联系人
+     * @param serviceProviderContactPhone   服务商联系电话
+     * @return  Wrapper
      */
     @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
     @ResponseBody

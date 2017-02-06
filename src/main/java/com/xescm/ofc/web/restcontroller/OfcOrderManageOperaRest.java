@@ -61,8 +61,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 查询订单
      *
-     * @param page
-     * @param form
+     * @param page  分页
+     * @param form      查询实体
      * @return Object
      */
     @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
@@ -86,10 +86,10 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 审核与反审核订单
      *
-     * @param orderCode
-     * @param orderStatus
-     * @param reviewTag
-     * @return
+     * @param orderCode     订单编号
+     * @param orderStatus       订单状态
+     * @param reviewTag     审核标记
+     * @return      Wrapper
      */
     @RequestMapping(value = "/orderOrNotAuditOper", method = RequestMethod.POST)
     @ResponseBody
@@ -119,8 +119,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 订单删除
      *
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return  Wrapper
      */
     @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
     @ResponseBody
@@ -146,9 +146,8 @@ public class OfcOrderManageOperaRest extends BaseController {
 
     /**
      * 订单取消
-     *
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return  Wrapper
      */
     @RequestMapping(value = "/orderCancelOper", method = RequestMethod.POST)
     @ResponseBody
@@ -175,8 +174,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 订单详情
      *
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return      ModelAndView
      */
     @RequestMapping(value = "/orderDetailPageByCode/{orderCode}", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode,Model model) {
@@ -251,8 +250,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 订单批次查询
      *
-     * @param orderBatchCode
-     * @return
+     * @param orderBatchCode    订单批次号
+     * @return      ModelAndView
      */
     @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode,Model model) {
@@ -275,8 +274,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 根据批次号查询订单
      *
-     * @param page
-     * @param form
+     * @param page  分页
+     * @param form  查询实体
      * @return Object
      */
     @RequestMapping(value = "queryOrderByOrderBatchNumber", method = {RequestMethod.POST})
@@ -304,7 +303,7 @@ public class OfcOrderManageOperaRest extends BaseController {
     /**
      * 根据订单编号查询货品信息
      *
-     * @param orderCode
+     * @param orderCode 订单编号
      * @return Object
      */
     @RequestMapping(value = "queryGoodsInfoByOrderCode", method = {RequestMethod.POST})
