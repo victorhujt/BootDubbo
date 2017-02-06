@@ -13,6 +13,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 
 /**
+ *
  * Created by hujintao on 2016/12/17.
  */
 public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {

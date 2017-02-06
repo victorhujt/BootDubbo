@@ -7,6 +7,7 @@ import com.xescm.ofc.utils.MyMapper;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 public interface OfcPlanScreenMapper extends MyMapper<OfcPlanScreenResult> {

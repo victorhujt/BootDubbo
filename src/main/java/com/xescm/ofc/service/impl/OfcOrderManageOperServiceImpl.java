@@ -16,27 +16,28 @@ import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by hiyond on 2016/11/24.
  */
 @Service
 public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService {
 
-    @Autowired
+    @Resource
     private UamGroupEdasService uamGroupEdasService;
-    @Autowired
+    @Resource
     private OfcOrderScreenMapper ofcOrderScreenMapper;
-    @Autowired
+    @Resource
     private OfcOrderOperMapper ofcOrderOperMapper;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
 
     @Override

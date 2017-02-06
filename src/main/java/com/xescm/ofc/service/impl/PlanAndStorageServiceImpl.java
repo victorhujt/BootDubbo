@@ -6,15 +6,17 @@ import com.xescm.ofc.service.PlanAndStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ *
  * Created by hiyond on 2016/11/25.
  */
 @Service
 public class PlanAndStorageServiceImpl implements PlanAndStorageService {
 
-    @Autowired
+    @Resource
     private PlanAndStorageMapper planAndStorageMapper;
 
     @Override

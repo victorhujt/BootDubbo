@@ -35,6 +35,7 @@ import java.util.List;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
+ *
  * Created by hujintao on 2016/12/12.
  */
 @Service
@@ -45,12 +46,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     @Resource
     private OfcOssManagerService ofcOssManagerService;
-
     @Resource
     private OfcMobileOrderMapper ofcMobileOrderMapper;
-
-
-
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
     @Resource
@@ -61,14 +58,12 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     private OfcFinanceInformationService ofcFinanceInformationService;
     @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-
     @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
     private OfcMerchandiserService ofcMerchandiserService;
     @Resource
     private CodeGenUtils codeGenUtils;
-
     @Resource
     private OfcAttachmentService ofcAttachmentService;
 

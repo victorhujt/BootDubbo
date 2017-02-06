@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ *
  * Created by wangsongtao on 2016/12/27.
  */
 @Service
@@ -23,7 +25,7 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    @Autowired
+    @Resource
     private CreateOrderService createOrderService;
 
     @Override

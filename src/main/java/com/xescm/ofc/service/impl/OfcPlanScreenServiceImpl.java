@@ -7,19 +7,20 @@ import com.xescm.ofc.mapper.OfcPlanScreenMapper;
 import com.xescm.ofc.service.OfcPlanScreenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 public class OfcPlanScreenServiceImpl extends BaseService<OfcPlanScreenResult> implements OfcPlanScreenService {
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
+    @Resource
     private OfcPlanScreenMapper ofcPlanScreenMapper;
 
     @Override

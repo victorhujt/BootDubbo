@@ -5,15 +5,16 @@ import com.xescm.ofc.domain.OfcPlannedDetail;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcPlannedDetailMapper;
 import com.xescm.ofc.service.OfcPlannedDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
@@ -21,7 +22,7 @@ import java.util.Map;
 
 public class OfcPlannedDetailServiceImpl extends BaseService<OfcPlannedDetail> implements OfcPlannedDetailService {
 
-    @Autowired
+    @Resource
     private OfcPlannedDetailMapper ofcPlannedDetailMapper;
 
     @Override

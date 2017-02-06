@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +56,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcCreateOrderService ofcCreateOrderService;
     @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcCreateOrderMapper ofcCreateOrderMapper;
 
 
