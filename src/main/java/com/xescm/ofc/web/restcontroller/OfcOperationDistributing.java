@@ -26,11 +26,9 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,25 +46,28 @@ import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_CONSIGNEE;
 import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_GOODS;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 
-/*
+/**
+* <p>Title: . </p>
+* <p>Description TODO </p>
+* <p>Company: http://www.hnxianyi.com </p>
 *
- * Created by lyh on 2016/11/19.
- */
-
+* @Author <a href="lyhluo@163.com"/>罗迎豪</a>
+* @CreateDate 2016/11/19
+*/
 @RequestMapping(value = "/ofc/distributing",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOperationDistributing extends BaseController{
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private OfcOperationDistributingService ofcOperationDistributingService;
-    @Autowired
+    @Resource
     private CscCustomerEdasService cscCustomerEdasService;
-    @Autowired
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Autowired
+    @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
-    @Autowired
+    @Resource
     private StringRedisTemplate rt;
     @Resource
     private CodeGenUtils codeGenUtils;
@@ -80,7 +81,7 @@ public class OfcOperationDistributing extends BaseController{
     @ResponseBody
     public Wrapper<?> placeOrdersListCon(String orderLists){
         logger.info("城配开单确认下单==> orderLists={}", orderLists);
-        String resultMessage = null;
+        String resultMessage;
         try{
             if(PubUtils.isSEmptyOrNull(orderLists)){
 
@@ -262,7 +263,7 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
      * @param paramHttpServletRequest
-     * @return
+     * @return 根据不同结果返回不同泛型
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody

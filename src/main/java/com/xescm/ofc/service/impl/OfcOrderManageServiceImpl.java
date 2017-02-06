@@ -60,19 +60,18 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.SILOPROGRAMINFO_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -135,7 +134,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
     @Resource
     private EpcOfc2DmsEdasService epcOfc2DmsEdasService;
-    @Autowired
+    @Resource
     private DefaultMqProducer defaultMqProducer;
     @Resource
     private CscContactEdasService cscContactEdasService;
@@ -248,8 +247,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
                     ofcOrderStatus.setStatusDesc("执行中");
-                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        + " " + "订单开始执行");
+                    ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+ " " + "订单开始执行");
                 } else {
                     throw new BusinessException("订单类型有误");
                 }
@@ -713,7 +711,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcWarehouseInformation);
             BeanUtils.copyProperties(ofcSiloprogramInfo,ofcFundamentalInformation);
-            ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode("WP",6));
+            ofcSiloprogramInfo.setPlanCode(codeGenUtils.getNewWaterCode(SILOPROGRAMINFO_PRE,6));
             planCode=ofcSiloprogramInfo.getPlanCode();
             ofcSiloprogramInfo.setDocumentType(ofcSiloprogramInfo.getBusinessType());
             if (PubUtils.trimAndNullAsEmpty(ofcSiloprogramInfo.getDocumentType()).substring(0,2).equals("61")){
@@ -927,7 +925,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setOrderStatus(HASBEEN_CANCELED);
             ofcOrderStatus.setStatusDesc("已取消");
-            notes.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
             notes.append(" 订单已取消");
             notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
@@ -1186,9 +1184,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      */
     private TransportDTO createOfcTransplanInfoToTfc(OfcTransplanInfo ofcTransplanInfo, List<OfcPlannedDetail> ofcPlannedDetail,String userName, String custOrderCode) {
         TransportDTO transportDTO = new TransportDTO();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         transportDTO.setTransportNo(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getPlanCode()));//运输单号
-        transportDTO.setCreateTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getCreationTime())));//运输单生成时间
+        transportDTO.setCreateTime(PubUtils.trimAndNullAsEmpty( DateUtils.Date2String(ofcTransplanInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1)));//运输单生成时间
         transportDTO.setBillType(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()));//运输单类型
         transportDTO.setCustomerCode(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getCustCode()));//客户编码(委托方代码)
         transportDTO.setCustomerName(PubUtils.trimAndNullAsEmpty(userName));//客户名称（委托方名称）
@@ -1196,11 +1193,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         transportDTO.setFromTransportName(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()));//运输单产生机构
         transportDTO.setCustomerOrderCode(PubUtils.trimAndNullAsEmpty(custOrderCode));
         if (!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getPickupTime())) {
-            simpleDateFormat.format(ofcTransplanInfo.getPickupTime());
-            transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getPickupTime())));//预计发货时间
+            transportDTO.setExpectedShipmentTime(PubUtils.trimAndNullAsEmpty(DateUtils.Date2String(ofcTransplanInfo.getPickupTime(), DateUtils.DateFormatType.TYPE1)));//预计发货时间
         }
         if (!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getExpectedArrivedTime())) {
-            transportDTO.setExpectedArriveTime(PubUtils.trimAndNullAsEmpty(simpleDateFormat.format(ofcTransplanInfo.getExpectedArrivedTime())));//预计到达时间//$$$
+            transportDTO.setExpectedArriveTime(PubUtils.trimAndNullAsEmpty(DateUtils.Date2String(ofcTransplanInfo.getExpectedArrivedTime(), DateUtils.DateFormatType.TYPE1)));//预计到达时间//$$$
         }
         if (!PubUtils.isOEmptyOrNull(ofcTransplanInfo.getWeight())) {
             transportDTO.setWeight(ofcTransplanInfo.getWeight().doubleValue());//重量
@@ -1323,7 +1319,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 String userName = authResDtoByToken.getUserName();
                 ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +" "+"订单审核完成");
+                ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) +" "+"订单审核完成");
                 ofcOrderStatus.setOperator(userName);
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
@@ -1735,7 +1731,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 String userName = authResDtoByToken.getUserName();
                 ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
-                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +" "+"订单审核完成");
+                ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) +" "+"订单审核完成");
                 ofcOrderStatus.setOperator(userName);
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
@@ -2269,7 +2265,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
         ofcOrderStatus.setStatusDesc("执行中");
         ofcOrderStatus.setNotes(new StringBuilder()
-                .append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
+                .append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1))
                 .append(" ").append("订单开始执行").toString());
         ofcOrderStatus.setOperator(userName);
         ofcOrderStatus.setLastedOperTime(new Date());

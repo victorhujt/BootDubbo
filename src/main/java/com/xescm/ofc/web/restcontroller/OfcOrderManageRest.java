@@ -136,7 +136,7 @@ public class OfcOrderManageRest extends BaseController{
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现未知异常:{}", ex.getMessage(),ex);
             //
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
@@ -194,10 +194,8 @@ public class OfcOrderManageRest extends BaseController{
             queryStoreDto.setCustomerCode(customerCode);
             storeByCustomerId = cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
-        }catch (BusinessException ex) {
+        } catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
-        }catch (Exception ex) {
-            logger.error("订单中心订单管理订单编辑出现未知异常:{}", ex.getMessage(), ex);
         }
         if (ofcOrderDTO!=null){
             map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);

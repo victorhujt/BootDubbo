@@ -12,4 +12,9 @@ public class GenCodePreffixConstant {
     public static final String BATCH_PRE = "BN";
     //钉钉录单前缀
     public static final String MOBILE_PRE = "SN";
+    //附件编号的前缀
+    public static final String ATTACHMENT_PRE = "AT";
+    //仓储计划单编号的前缀
+    public static final String SILOPROGRAMINFO_PRE  ="WP";
+
 }

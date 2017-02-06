@@ -55,8 +55,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     private PlanAndStorageService planAndStorageService;
     @Resource
     private OfcBatchOrderVoService ofcBatchOrderVoService;
-    @Resource
-    private OrderFollowOperService orderFollowOperService;
+//    @Resource
+//    private OrderFollowOperService orderFollowOperService;
 
     /**
      * 查询订单
@@ -166,8 +166,8 @@ public class OfcOrderManageOperaRest extends BaseController {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现未知的异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
     }
 
@@ -179,8 +179,8 @@ public class OfcOrderManageOperaRest extends BaseController {
      */
     @RequestMapping(value = "/orderDetailPageByCode/{orderCode}", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView orderDetailByOrderCode(@PathVariable String orderCode,Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_detail_opera");
         try {
-            ModelAndView modelAndView = new ModelAndView("order_detail_opera");
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号为空");
             }
@@ -198,7 +198,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             List<OfcOrderStatus> ofcOrderStatusList = ofcOrderStatusService.select(ofcOrderStatus);
-            //List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
+//            List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
 //            ofcOrderStatusList = SortOrderStatusUtils.sortOrderStatus(ofcOrderStatusList);
             //最新订单状态
             ofcOrderStatus = ofcOrderStatusService.queryLastUpdateOrderByOrderCode(orderCode);
@@ -237,13 +237,10 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("storageList", storageList);
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
             setDefaultModel(model);
-            return modelAndView;
-        } catch (BusinessException ex) {
+        }catch (Exception ex) {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
-        } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现未知的异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
         }
-        return null;
+        return modelAndView;
     }
 
     private String defalutString(String str) {
@@ -266,10 +263,8 @@ public class OfcOrderManageOperaRest extends BaseController {
             OfcBatchOrderVo ofcBatchOrderVo = ofcBatchOrderVoService.queryByBatchNumber(orderBatchCode);
             modelAndView.addObject("ofcBatchOrderVo", ofcBatchOrderVo);
             modelAndView.addObject("orderBatchNumber", orderBatchCode);
-        } catch (BusinessException ex) {
+        }catch (Exception ex) {
             logger.error("订单批次号查询出错：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
-        } catch (Exception ex) {
-            logger.error("订单批次号查询出错啦：orderBatchCode{},{}", orderBatchCode, ex.getMessage(), ex);
         }
         setDefaultModel(model);
         return modelAndView;

@@ -15,13 +15,13 @@ import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.web.controller.BaseController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,19 +29,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by lyh on 2016/10/12.
  * 订单追踪
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderFollowRest extends BaseController{
-    @Autowired
+    @Resource
     private OfcOrderDtoService ofcOrderDtoService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
 
     /*@RequestMapping(value = "/orderFollowCon/{code}/{followTag}",method = RequestMethod.GET)
