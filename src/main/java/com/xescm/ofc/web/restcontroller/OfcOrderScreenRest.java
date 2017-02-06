@@ -12,13 +12,13 @@ import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcOrderScreenService;
 import com.xescm.ofc.web.controller.BaseController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,7 @@ import java.util.Map;
 @Controller
 public class OfcOrderScreenRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OfcOrderScreenService ofcOrderScreenService;
 
     @RequestMapping(value = "/orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageSize}")
@@ -59,12 +59,13 @@ public class OfcOrderScreenRest extends BaseController {
         map.put("totalNum", pageInfo.getTotal());
         map.put("currPage", currPage);
         map.put("pageSize",pageSize);
-        if (tag.equals("screen")) {
-            return "order_screen";
-        } else if (tag.equals("manage")) {
-            return "order_manage";
-        } else {
-            return "error";
+        switch (tag) {
+            case "screen":
+                return "order_screen";
+            case "manage":
+                return "order_manage";
+            default:
+                return "error";
         }
     }
 
