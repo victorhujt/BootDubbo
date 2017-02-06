@@ -4,19 +4,20 @@ import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.service.OfcOrderScreenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcOrderScreenServiceImpl extends BaseService<OrderScreenResult> implements OfcOrderScreenService {
-    @Autowired
+    @Resource
     private OfcOrderScreenMapper ofcOrderScreenMapper;
 
     @Override

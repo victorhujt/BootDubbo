@@ -7,22 +7,23 @@ import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
     private static final Logger logger = LoggerFactory.getLogger(OfcOrderStatusServiceImpl.class);
-    @Autowired
+    @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
 
     @Override

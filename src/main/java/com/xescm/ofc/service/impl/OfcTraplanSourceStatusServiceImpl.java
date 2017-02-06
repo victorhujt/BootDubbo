@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
+
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcTraplanSourceStatusServiceImpl extends BaseService<OfcTraplanSourceStatus> implements OfcTraplanSourceStatusService {
-    @Autowired
+    @Resource
     private OfcTraplanSourceStatusMapper ofcTraplanSourceStatusMapper;
 
     public int updateByPlanCode(Object key){

@@ -10,7 +10,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +23,7 @@ import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
@@ -46,7 +46,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
     private OfcSiloproStatusService ofcSiloproStatusService ;
-    @Autowired
+    @Resource
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
 
 

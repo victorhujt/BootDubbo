@@ -9,13 +9,14 @@ import com.xescm.ofc.service.OfcOssManagerService;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.net.URL;
 import java.util.Date;
 
 /**
+ *
  * Created by hujintao on 2016/12/18.
  */
 @Service
@@ -23,7 +24,7 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private OSSConfigureConfig ossConfigure;
     @Override
     public URL getFileURL(String filePath) {

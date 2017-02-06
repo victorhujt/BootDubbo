@@ -6,21 +6,23 @@ import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcOssManagerService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ATTACHMENT_PRE;
 
 /**
+ *
  * Created by hujintao on 2016/12/17.
  */
 @Service
 public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implements OfcAttachmentService {
 
-    @Autowired
+    @Resource
     private CodeGenUtils codeGenUtils;
 
-    @Autowired
+    @Resource
     private OfcOssManagerService ofcOssManagerService;
 
     @Override

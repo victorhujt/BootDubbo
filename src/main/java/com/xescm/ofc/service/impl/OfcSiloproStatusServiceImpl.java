@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -21,29 +22,30 @@ import java.util.List;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> implements OfcSiloproStatusService {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
+    @Resource
     private OfcSiloproStatusMapper ofcSiloproStatusMapper;
     
-    @Autowired
+    @Resource
     private OfcSiloprogramInfoService ofcSiloprogramInfoService;
     
-    @Autowired
+    @Resource
     private OfcSiloproNewstatusService ofcSiloproNewstatusService;
 
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
 
-	@Autowired
+	@Resource
 	private OfcPlannedDetailService ofcPlannedDetailService;
-	@Autowired
+	@Resource
 	private OfcTransplanInfoService ofcTransplanInfoService;
-	@Autowired
+	@Resource
 	private OfcTransplanStatusService ofcTransplanStatusService;
 
     public int updateByPlanCode(Object key){
@@ -246,7 +248,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}else if(OFC_WHC_OUT_TYPE.equals(businessType)){
 				statusDesc="出库单已创建";
 			}
-	}else if(statusCode.equals(TRACE_STATUS_2)){
+		}else if(statusCode.equals(TRACE_STATUS_2)){
 			if(OFC_WHC_IN_TYPE.equals(businessType)){
 				statusDesc="部分收货";
 

@@ -11,7 +11,10 @@ import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
-import com.xescm.csc.provider.*;
+import com.xescm.csc.provider.CscCustomerEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscStoreEdasService;
+import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -30,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,13 +69,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private CscWarehouseEdasService cscWarehouseEdasService;
     @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Resource
-    private CscSupplierEdasService cscSupplierEdasService;
+//    @Resource
+//    private CscSupplierEdasService cscSupplierEdasService;
     @Resource
     private CscGoodsEdasService cscGoodsEdasService;
     @Resource
     private RmcAddressEdasService rmcAddressEdasService;
-    @Autowired
+    @Resource
     private OfcCreateOrderMapper createOrdersMapper;
 
     @Override

@@ -8,18 +8,20 @@ import com.xescm.ofc.service.OrderFollowOperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ *
  * Created by hiyond on 2016/11/24.
  */
 @Service
 public class OrderFollowOperServiceImpl implements OrderFollowOperService {
 
-    @Autowired
+    @Resource
     private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
 
-    @Autowired
+    @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
 
     @Override
