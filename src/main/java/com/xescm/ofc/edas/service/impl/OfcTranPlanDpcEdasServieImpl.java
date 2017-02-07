@@ -3,6 +3,7 @@ package com.xescm.ofc.edas.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto;
+import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcUpdateReqDto;
 import com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDto;
 import com.xescm.ofc.edas.service.OfcTranPlanDpcEdasServie;
 import com.xescm.ofc.service.OfcTransplanInfoService;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by wangsongtao on 2016/12/27.
@@ -45,6 +48,16 @@ public class OfcTranPlanDpcEdasServieImpl implements OfcTranPlanDpcEdasServie{
             logger.error("任务单查询接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }*/
+        return null;
+    }
+
+    @Override
+    public int batchUpdateTransPlan(List<TranPlanOfcUpdateReqDto> list) {
+        return 0;
+    }
+
+    @Override
+    public TranPlanOfcRespDto tranPlanSelByCode(String s) {
         return null;
     }
 }
