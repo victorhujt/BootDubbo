@@ -5,6 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
+    <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
     <result column="urgent" property="urgent" jdbcType="INTEGER" />
     <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
@@ -38,7 +39,6 @@
     <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR" />
     <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
     <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
-    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="plate_number" jdbcType="VARCHAR" property="plateNumber" />
     <result column="driver_name" jdbcType="VARCHAR" property="driverName" />
     <result column="contact_number" jdbcType="VARCHAR" property="contactNumber" />
