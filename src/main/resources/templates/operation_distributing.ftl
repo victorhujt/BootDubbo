@@ -372,7 +372,7 @@
     历史订单选择
   </button>
 
-  <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="to_operation_distributing_excel">
+  <button class="btn btn-white btn-info btn-bold btn-interval tp-1" id="toOperationDistributingExcel">
     <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
     <span hidden="true" id = "excelImportTag">${(excelImportTag)!}</span>
     <span hidden="true" id = "customerCodeFromExcelImport">${(custIdFromExcelImport)!}</span>
@@ -1591,7 +1591,7 @@
     });
   }
 
-  $("#to_operation_distributing_excel").click(function () {
+  $("#toOperationDistributingExcel").click(function () {
     var custChosen = $("#custName").val();
     var customerCode = $("#customerCode").val();
     if(StringUtil.isEmpty(custChosen)){

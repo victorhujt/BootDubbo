@@ -197,7 +197,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcMerchandiser 开单员
      * @param ofcOrderStatus 订单状态
      */
-    private void orderPlaceTagTransPlace(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
+    private void orderPlaceTagTransPlace(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken
+            , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
+            , OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation
+            , OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
         StringBuilder notes = new StringBuilder();
         // 校验当前客户的客户订单号是否重复
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
@@ -272,6 +275,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
             ofcMerchandiserService.save(ofcMerchandiser);
         }
+        //推结算
+        ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
         ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
                 "review",authResDtoByToken);
     }
@@ -390,7 +395,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcMerchandiser 开单员
      * @param ofcOrderStatus 订单状态
      */
-    private void orderPlaceTagPlace(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
+    private void orderPlaceTagPlace(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, String custId
+            , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
+            , OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo
+            , OfcWarehouseInformation ofcWarehouseInformation, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
         StringBuilder notes = new StringBuilder();
         int custOrderCode = 0;
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
@@ -470,6 +478,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
                 ofcMerchandiserService.save(ofcMerchandiser);
             }
+            //推结算
+            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                 //进行自动审核
                 ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
@@ -757,6 +767,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (ofcMerchandiserService.select(ofcMerchandiser).size() == 0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
                 ofcMerchandiserService.save(ofcMerchandiser);
             }
+            //推结算
+            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
             if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
                 //进行自动审核
                 ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
