@@ -73,7 +73,7 @@
                     <label class="control-label col-label no-padding-right" for="name">订单批次号</label>
                     <div class="w-width-220 col-float">
                         <div class="clearfix">
-                            <input id="orderBatchNumber" readonly="readonly" style="color: #000" name="orderTime"
+                            <input id="orderBatchNumber" readonly="readonly" name="orderTime"
                                    type="text"
                                    class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
                         </div>
@@ -170,7 +170,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label col-label no-padding-right" for="name">收货地址</label>
-                    <div class="col-xs-6">
+                    <div class="col-xs-6" style="width:542px;">
                         <div class="clearfix">
                             <input id="destinationPlace" readonly="readonly"  type="text" class="form-control input-sm">
                         </div>
