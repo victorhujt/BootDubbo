@@ -2,6 +2,7 @@ package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  *
  * Created by hiyond on 2016/11/15.
  */
+@Component
 public interface OfcCreateOrderMapper {
 
     /**

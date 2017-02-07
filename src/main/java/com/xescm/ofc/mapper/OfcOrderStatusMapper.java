@@ -3,10 +3,12 @@ package com.xescm.ofc.mapper;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
     int deleteByOrderCode(Object key);
 
