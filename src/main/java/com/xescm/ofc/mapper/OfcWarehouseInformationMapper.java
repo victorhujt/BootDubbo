@@ -2,9 +2,9 @@ package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.utils.MyMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public interface OfcWarehouseInformationMapper extends MyMapper<OfcWarehouseInformation> {
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);

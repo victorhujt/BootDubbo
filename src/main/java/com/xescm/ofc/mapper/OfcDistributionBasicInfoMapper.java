@@ -1,15 +1,15 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public interface OfcDistributionBasicInfoMapper extends MyMapper<OfcDistributionBasicInfo> {
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
