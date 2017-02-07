@@ -192,7 +192,7 @@ public class OfcOrderManageRest extends BaseController{
             }
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerCode(customerCode);
-            storeByCustomerId = cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
+            storeByCustomerId = (Wrapper<List<CscStorevo>>) cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);

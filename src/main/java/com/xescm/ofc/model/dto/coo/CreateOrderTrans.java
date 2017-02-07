@@ -71,11 +71,15 @@ public class CreateOrderTrans {
 
     public OfcOrderStatus getOfcOrderStatus() throws BusinessException {
         if (createOrderEntity != null) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDING_AUDIT);
             ofcOrderStatus.setOrderCode(orderCode);
-            ofcOrderStatus.setNotes(simpleDateFormat.format(new Date())+" 订单已创建");
+            StringBuilder notes = new StringBuilder();
+            notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
+            notes.append(" 订单已创建");
+            notes.append(" 操作人: ").append(CREATE_ORDER_BYAPI);
+            notes.append(" 操作单位: ").append(CREATE_ORDER_BYAPI);
+            ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);
             ofcOrderStatus.setLastedOperTime(nowDate);
         }
