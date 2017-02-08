@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.PlanAndStorage;
 import com.xescm.ofc.mapper.PlanAndStorageMapper;
 import com.xescm.ofc.service.PlanAndStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

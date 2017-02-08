@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.xescm.ofc.domain.OfcTransplanStatus;
 import com.xescm.ofc.mapper.OfcTransplanStatusMapper;
 import com.xescm.ofc.service.OfcTransplanStatusService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
