@@ -26,7 +26,6 @@ import com.xescm.epc.edas.dto.TransportNoDTO;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.BusinessTypeEnum;
@@ -2325,7 +2324,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             BeanUtils.copyProperties(acOrderStatusDto,ofcOrderStatus);
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
             if(null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE ){
-                logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}",integerWrapper.getMessage());
+                logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}"
+                        ,integerWrapper == null ? "integerWrapper 为null" : integerWrapper.getMessage());
                 throw new BusinessException("订单状态推结算中心异常");
             }
         } catch (Exception e) {
@@ -2346,7 +2346,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         try {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderPlanCode(acPlanDto);
             if(null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE ){
-                logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) 异常, {}",integerWrapper.getMessage());
+                logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) 异常, {}"
+                        ,integerWrapper == null ? "integerWrapper 为null" : integerWrapper.getMessage());
                 throw new BusinessException("订单计划单推结算中心异常");
             }
         } catch (Exception e) {

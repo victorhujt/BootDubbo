@@ -20,8 +20,6 @@ import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +40,6 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 @Transactional
 public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  implements OfcMobileOrderService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OfcOrderManageServiceImpl.class);
 
     @Resource
     private OfcOssManagerService ofcOssManagerService;

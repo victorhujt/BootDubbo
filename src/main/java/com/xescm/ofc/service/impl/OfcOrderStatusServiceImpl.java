@@ -22,7 +22,6 @@ import java.util.Map;
 @Service
 @Transactional
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
-    private static final Logger logger = LoggerFactory.getLogger(OfcOrderStatusServiceImpl.class);
     @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
 
