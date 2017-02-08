@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- *
+ * 我要下单
  * Created by lyh on 2016/10/8.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
@@ -138,7 +138,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     *
+     * 订单中心下单
      * @param ofcOrderDTOStr        订单基本信息、收发货方信息
      * @param orderGoodsListStr     货品信息
      * @param cscContantAndCompanyDtoConsignorStr   发货人信息
@@ -225,10 +225,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
 
-
-
     /**
      * 货品筛选(调用客户中心API)
+     * @param cscGoods 货品筛选条件
+     * @param response HttpServletResponse
      */
     @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
     @ApiImplicitParams({
@@ -253,6 +253,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     /**
      * 运营中心货品筛选(调用客户中心API)
+     * @param cscGoods 货品筛选条件
+     * @param customerCode 客户编码
+     * @return
      */
     @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
     @ResponseBody
@@ -280,6 +283,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
 
+    /**
+     * 下单收发货方筛选
+     * @param cscContantAndCompanyDto 收发货方筛选条件
+     * @param customerCode 客户编码
+     * @param response HttpServletResponse
+     */
     @ApiOperation(value="下单收发货方筛选", notes="根据查询条件筛选收发货方")
     @ApiImplicitParams({
     })
@@ -308,6 +317,12 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
     }
 
+    /**
+     * 下单收发货方筛选
+     * @param cscContantAndCompanyDto 收发货方筛选条件
+     * @param customerCode 客户编码
+     * @return
+     */
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
     public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
@@ -340,6 +355,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     /**
      * 供应商筛选(调用客户中心API)
+     * @param cscSupplierInfoDto 供应商筛选条件
+     * @param response HttpServletResponse
+     * @throws InvocationTargetException
      */
     @ApiOperation(value="下单供应商筛选", notes="根据查询条件筛选供应商")
     @ApiImplicitParams({
@@ -361,9 +379,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
     }
-        /*
-        校验客户订单编号
-         */
+
+    /**
+     * 校验客户订单编号
+     * @param custOrderCode 客户订单编号
+     * @param selfCustOrderCode 校验用客户订单编号
+     * @return
+     */
     @RequestMapping(value = "/checkCustOrderCode",method = RequestMethod.POST)
     @ResponseBody
     public boolean checkCustOrderCode(String custOrderCode, String selfCustOrderCode){
@@ -386,8 +408,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return flag;
     }
 
-        /*
-    校验运输单号
+    /**
+     * 校验运输单号
+     * @param transCode 运输单号
+     * @param selfTransCode 校验用运输单号
+     * @return
      */
     @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
     @ResponseBody
@@ -412,7 +437,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     * 货品筛选(调用客户中心API)
+     * 货品类别(调用客户中心API)
      */
     @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
     @ApiImplicitParams({

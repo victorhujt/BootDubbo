@@ -35,41 +35,12 @@ public class OfcOrderScreenRest extends BaseController {
     @Resource
     private OfcOrderScreenService ofcOrderScreenService;
 
-    @RequestMapping(value = "/orderScreenByCondition/{orderScreenConditionJSON}/{tag}/{currPage}/{pageSize}")
-    public String orderScreenByCondition(@PathVariable String orderScreenConditionJSON, Map<String,Object> map,@PathVariable("tag") String tag, @PathVariable("currPage") String currPagePath, @PathVariable("pageSize") String pageSizePath) throws IOException {
-        logger.debug("==>订单中心订单查询条件 orderScreenCondition={}", orderScreenConditionJSON);
-        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
-        OrderScreenCondition orderScreenCondition;
-        try {
-            if(PubUtils.isSEmptyOrNull(orderScreenConditionJSON)){
-                orderScreenConditionJSON = JacksonUtil.toJsonWithFormat(new OrderScreenCondition());
-            }
-            orderScreenCondition = JacksonUtil.parseJsonWithFormat(orderScreenConditionJSON, OrderScreenCondition.class);
-        } catch (Exception e) {
-            logger.error("订单查询转换Json异常{}",e);
-            throw new BusinessException("订单查询转换Json异常",e);
-        }
-        int pageSize = Integer.parseInt(pageSizePath);
-        int currPage = Integer.parseInt(currPagePath);
-        PageHelper.startPage(currPage,pageSize);
-        List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-        PageInfo<OrderScreenResult> pageInfo = new PageInfo<>(orderScreenResults);
-        pageInfo.setPageSize(pageSize);
-        map.put("orderList", pageInfo.getList());
-        map.put("totalPage", pageInfo.getPages());
-        map.put("totalNum", pageInfo.getTotal());
-        map.put("currPage", currPage);
-        map.put("pageSize",pageSize);
-        switch (tag) {
-            case "screen":
-                return "order_screen";
-            case "manage":
-                return "order_manage";
-            default:
-                return "error";
-        }
-    }
-
+    /**
+     * 订单条件查询
+     * @param page
+     * @param orderScreenCondition
+     * @return
+     */
     @RequestMapping(value = "/queryOrderPageByCondition", method=RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page,  OrderScreenCondition orderScreenCondition) {

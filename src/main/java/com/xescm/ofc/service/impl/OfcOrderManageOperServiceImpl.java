@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 运营中心订单管理
  * Created by hiyond on 2016/11/24.
  */
 @Service
@@ -46,14 +46,13 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     }
 
     /**
-     *
-     * @param authResDto
-     * @param form
+     * 订单管理筛选，以及后端权限校验
+     * @param authResDto 当前登录用户信息
+     * @param form 查询条件
      * @return
      */
     @Override
     public List<OrderSearchOperResult> queryOrderList(AuthResDto authResDto,OrderOperForm form) {
-        //订单管理筛选后端权限校验
         if(null == authResDto || null == form){
             throw new BusinessException("订单管理筛选后端权限校验入参有误");
         }
@@ -103,11 +102,22 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         return orderSearchOperResults;
     }
 
+    /**
+     * 根据订单批次号查询订单
+     * @param orderBatchNumber 订单批次号
+     * @return
+     */
     @Override
     public List<OrderSearchOperResult> queryOrderByOrderBatchNumber(String orderBatchNumber) {
         return ofcOrderOperMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
     }
 
+    /**
+     * 订单跟踪根据不同方式查询订单
+     * @param code 编码
+     * @param searchType 类型
+     * @return
+     */
     @Override
     public List<OrderFollowOperResult> queryOrder(String code, String searchType) {
         return ofcOrderOperMapper.queryOrder(code, searchType);
@@ -115,7 +125,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 根据当前登录用户, 加载大区基地
-     * @param authResDto
+     * @param authResDto 当前登录用户
      * @return
      */
     @Override
@@ -164,8 +174,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 根据登录用户获取大区, 基地
-     * @param uamGroupDto
-     * @param identity
+     * @param uamGroupDto 组织实体对象
+     * @param identity 身份标志位
      * @return
      */
     private Map<String, List<OfcGroupVo>> getGroupMsg(UamGroupDto uamGroupDto, String identity){
@@ -245,7 +255,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 获取当前大区下的所有基地
-     * @param uamGroupDto
+     * @param uamGroupDto 组织实体对象
      */
     public List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto) {
         if(null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())){
@@ -273,7 +283,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 根据所选基地反查大区
-     * @param uamGroupDto
+     * @param uamGroupDto 组织实体对象
      * @return
      */
     @Override
@@ -299,7 +309,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 校验UamGroupEdas返回结果
-     * @param allGroupByType
+     * @param allGroupByType 查询当前登录用户组织信息UamGroupEdas返回结果
      */
     public void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType) {
         if(null == allGroupByType){

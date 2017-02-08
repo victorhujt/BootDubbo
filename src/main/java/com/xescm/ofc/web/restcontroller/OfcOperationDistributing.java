@@ -114,7 +114,7 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据选择的客户查询仓库
      * @param customerCode 客户编码
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
     @ResponseBody
@@ -131,7 +131,7 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 查询货品一级种类
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
@@ -153,7 +153,7 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 根据货品一级种类查询货品二级小类
      * @param goodsType 货品一级类别
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
     @ResponseBody
@@ -177,7 +177,7 @@ public class OfcOperationDistributing extends BaseController{
     /**
      * 查询货品列表
      * @param cscGoodsApiDto 前端查询条件
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
@@ -233,7 +233,7 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * Excel导入,上传,展示Sheet页
-     * @param paramHttpServletRequest
+     * @param paramHttpServletRequest HttpServletRequest
      * @return
      */
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
@@ -262,7 +262,7 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
-     * @param paramHttpServletRequest
+     * @param paramHttpServletRequest HttpServletRequest
      * @return 根据不同结果返回不同泛型
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
