@@ -2320,6 +2320,10 @@
     $("#orderPlaceConTableBtn").click(function () {
       $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
       $("#goodsInfoListDiv tr td div.has-error").remove();
+
+      $("input[name='goodsName']").each(function(){
+          checkGoods(this,50,"长度不能大于50");
+      });
       $("select[name='chargingWays']").each(function(){
         if($(this).val()=="01"){
           var value=onlyNumber($(this).parent().next().next().children().val());
@@ -2950,6 +2954,22 @@
       $(obj).val(value);
       $(obj).parent().find("div").remove();
     }
+  }
+  function checkGoods(obj,length,msg){
+      debugger;
+      if($(obj).length>length){
+          $(obj).css("border-color","#dd5a43")
+          if($(obj).parent().children().length<2){
+              $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+              $(obj).parent().removeClass('has-info').addClass('has-error');
+              $(obj).val("");
+          }else{
+              $(obj).val("");
+          }
+      }else{
+          $(obj).css("border-color","#cacaca")
+          $(obj).parent().find("div").remove();
+      }
   }
   //验证开单员不为空
   $(".es-list").click(function(){
