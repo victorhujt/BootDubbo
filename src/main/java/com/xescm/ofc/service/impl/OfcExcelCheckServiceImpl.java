@@ -42,7 +42,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- *
+ * 城配开单Excel导入校验
  * Created by lyh on 2016/12/16.
  */
 @Service

@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * <p>Title:    .订单管理 </p>
+ * <p>Title:    .客户中心 订单管理 </p>
  * <p>Description TODO </p>
  * <p>Company:    http://www.hnxianyi.com </p>
  *
@@ -309,6 +309,11 @@ public class OfcOrderManageRest extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
 
+    /**
+     * 服务商筛选
+     * @param planCode 计划单编号
+     * @param response ServletResponse
+     */
     @ApiOperation(value="服务商筛选", notes="根据查询条件筛选服务商")
     @ApiImplicitParams({
             //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),

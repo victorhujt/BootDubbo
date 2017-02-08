@@ -21,7 +21,7 @@ import java.util.*;
 
 /**
  * Created by lyh on 2016/10/12.
- * 订单追踪
+ * 运营中心订单追踪
  */
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
@@ -37,6 +37,13 @@ public class OfcOrderFollowOperRest extends BaseController {
         return "order_follow_opera";
     }
 
+    /**
+     * 运营中心订单追踪
+     * @param code 编码
+     * @param searchType 追踪类型
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/orderFollowOperSearch", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderFollowOperSearch(String code, String searchType) throws Exception {

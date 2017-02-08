@@ -137,7 +137,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String storeName;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerCode(custCode);
-        Wrapper<List<CscStorevo>> cscStoreVoList = (Wrapper<List<CscStorevo>>) cscStoreEdasService.getStoreByCustomerId(storeDto);
+        Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
         if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
             logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);

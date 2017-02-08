@@ -3,6 +3,7 @@ package com.xescm.ofc.mapper;
 import com.xescm.ofc.domain.OfcPlanScreenCondition;
 import com.xescm.ofc.domain.OfcPlanScreenResult;
 import com.xescm.ofc.utils.MyMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
  *
  * Created by lyh on 2016/10/10.
  */
+
+@Repository
 public interface OfcPlanScreenMapper extends MyMapper<OfcPlanScreenResult> {
     /**
      * 订单查询结果来自于

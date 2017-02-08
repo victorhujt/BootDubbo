@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- *
+ * 运输计划单分配
  * Created by lyh on 2016/10/10.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})

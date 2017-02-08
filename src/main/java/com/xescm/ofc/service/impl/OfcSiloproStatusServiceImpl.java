@@ -47,6 +47,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 	private OfcTransplanInfoService ofcTransplanInfoService;
 	@Resource
 	private OfcTransplanStatusService ofcTransplanStatusService;
+	@Resource
+	private OfcOrderManageService ofcOrderManageService;
 
     public int updateByPlanCode(Object key){
 
@@ -193,44 +195,48 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}
 			statusCondition.setPlannedSingleState(TASK_ACCOMPLISHED);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-				List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
+			List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
 			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(condition.getBuniessType())){
 				if(transInfos!=null&&transInfos.size()>0){
 					OfcTransplanInfoVo vo=transInfos.get(0);
+					OfcOrderStatus status=new OfcOrderStatus();
 					if(OrderConstConstant.TASK_ACCOMPLISHED.equals(vo.getPlannedSingleState())){
-						OfcOrderStatus status=new OfcOrderStatus();
 						status.setOrderStatus(HASBEEN_COMPLETED);
 						status.setOrderCode(info.getOrderCode());
 						status.setStatusDesc("已完成");
 						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
 						status.setLastedOperTime(new Date());
 						status.setOperator("");
-						ofcOrderStatusService.save(status);
 					}else{
 						OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
 						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.TASK_ACCOMPLISHED);
 						ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-						OfcOrderStatus status=new OfcOrderStatus();
 						status.setOrderStatus(HASBEEN_COMPLETED);
 						status.setOrderCode(info.getOrderCode());
 						status.setStatusDesc("已完成");
 						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
 						status.setLastedOperTime(new Date());
 						status.setOperator("");
-						ofcOrderStatusService.save(status);
+					}
+					ofcOrderStatusService.save(status);
+					if(StringUtils.equals(status.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)){
+						//订单中心--订单状态推结算中心(执行中和已完成)
+						ofcOrderManageService.pullOfcOrderStatus(status);
 					}
 				}
 			}
-				if(transInfos==null||transInfos.size()==0){
-					OfcOrderStatus status=new OfcOrderStatus();
-					status.setOrderStatus(HASBEEN_COMPLETED);
-					status.setOrderCode(info.getOrderCode());
-					status.setStatusDesc("已完成");
-					status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
-					status.setLastedOperTime(new Date());
-					status.setOperator("");
-					ofcOrderStatusService.save(status);
-				}
+			if(transInfos==null||transInfos.size()==0){
+				OfcOrderStatus status=new OfcOrderStatus();
+				status.setOrderStatus(HASBEEN_COMPLETED);
+				status.setOrderCode(info.getOrderCode());
+				status.setStatusDesc("已完成");
+				status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+				status.setLastedOperTime(new Date());
+				status.setOperator("");
+				ofcOrderStatusService.save(status);
+				//订单中心--订单状态推结算中心(执行中和已完成)
+				ofcOrderManageService.pullOfcOrderStatus(status);
+			}
 		} catch (Exception e) {
 			logger.error("ofcWarehouseFeedBackFromWhc, {}",e);
 		}
