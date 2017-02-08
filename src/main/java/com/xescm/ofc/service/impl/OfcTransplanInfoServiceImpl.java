@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 运输计划单
  * Created by lyh on 2016/10/10.
  */
 @Service
@@ -24,6 +24,12 @@ import java.util.Map;
 public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> implements OfcTransplanInfoService {
     @Resource
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
+
+    /**
+     * 根据订单号查询计划单
+     * @param orderCode 订单编号
+     * @return
+     */
     @Override
     public List<OfcTransplanInfo> ofcTransplanInfoScreenList(String orderCode) {
         if(!"".equals(PubUtils.trimAndNullAsEmpty(orderCode))){
@@ -35,6 +41,11 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         }
     }
 
+    /**
+     * 运输计划单查询
+     * @param planCode 计划单号
+     * @return
+     */
     @Override
     public List<OfcTransplanInfoVo> ofcTransplanInfoVoList(String planCode) {
         if(!"".equals(PubUtils.trimAndNullAsEmpty(planCode))){
@@ -46,6 +57,11 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         }
     }
 
+    /**
+     * 查询有效且未完成的运输计划单
+     * @param orderCode 订单编号
+     * @return
+     */
     @Override
     public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
         return ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);

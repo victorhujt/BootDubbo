@@ -30,7 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.List;
 /**
- * 运营 订单管理
+ * 运营中心 订单管理
  * Created by hiyond on 2016/11/22.
  */
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})

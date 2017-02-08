@@ -47,7 +47,7 @@ import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_GOODS;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 
 /**
-* <p>Title: . </p>
+* <p>Title: .城配开单 </p>
 * <p>Description TODO </p>
 * <p>Company: http://www.hnxianyi.com </p>
 *
