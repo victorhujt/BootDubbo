@@ -5,6 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
     <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
     <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
@@ -33,6 +34,7 @@
   <!--订单货品列表查询-->
   <select id="goodsDetailsScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
+    oos.id,
     oos.goods_code,
     oos.goods_name,
     oos.goods_spec,
@@ -87,6 +89,7 @@
 
   <select id="queryByOrderCode" resultMap="BaseResultMap">
     SELECT
+      gdi.id,
       gdi.goods_code,
       gdi.goods_name,
       gdi.goods_spec,
@@ -122,4 +125,21 @@
     WHERE
      gdi.order_code = #{orderCode}
   </select>
+
+  <update id="batchUpdateGoodsDetailInfoId" parameterType="java.util.List">
+      UPDATE ofc_goods_details_info
+      <set>
+        id = #{detail.id}
+      </set>
+      WHERE order_code = #{detail.orderCode} AND goods_code = #{detail.goodsCode} AND goods_name = #{detail.goodsName}
+      AND goods_spec = #{detail.goodsSpec} AND unit = #{detail.unit} AND quantity = #{detail.quantity} AND unit_price = #{detail.unitPrice}
+      AND production_batch = #{detail.productionBatch} AND production_time = #{detail.productionTime} AND invalid_time = #{detail.invalidTime}
+      AND notes = #{detail.notes} AND creation_time = #{detail.creationTime} AND creator = #{detail.creator} AND operator = #{detail.operator}
+      AND oper_time = #{detail.operTime} AND weight = #{detail.weight} AND cubage = #{detail.cubage} AND total_box = #{detail.totalBox}
+      AND goods_type = #{detail.goodsType} AND goods_category = #{detail.goodsCategory} AND pack = #{detail.pack}
+      AND quantity_unit_price = #{detail.quantityUnitPrice} AND weight_unit_price  = #{detail.weightUnitPrice}
+      AND volume_unit_price = #{detail.volumeUnitPrice} AND billing_weight = #{detail.billingWeight} AND charging_ways = #{detail.chargingWays}
+      AND charging_quantity = #{detail.chargingQuantity} AND charging_unit_price  = #{detail.chargingUnitPrice}
+  </update>
+
 </mapper>

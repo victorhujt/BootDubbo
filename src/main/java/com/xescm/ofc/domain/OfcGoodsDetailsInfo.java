@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,6 +14,11 @@ import java.util.Date;
 @Data
 @Table(name = "ofc_goods_details_info")
 public class OfcGoodsDetailsInfo {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    private String id;
+
     /**
      * 货品代码
      */
