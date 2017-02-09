@@ -2321,8 +2321,8 @@
       $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
       $("#goodsInfoListDiv tr td div.has-error").remove();
 
-      $("input[name='goodsName']").each(function(){
-          checkGoods(this,50,"长度不能大于50");
+      $("#goodsInfoListDiv tr input[name='goodsName']").each(function(){
+          checkGoods(this,1,"长度不能大于50");
       });
       $("select[name='chargingWays']").each(function(){
         if($(this).val()=="01"){
@@ -2957,6 +2957,8 @@
   }
   function checkGoods(obj,length,msg){
       debugger;
+      var a=$(obj).length;
+      var b=$(obj).attr("id");
       if($(obj).length>length){
           $(obj).css("border-color","#dd5a43")
           if($(obj).parent().children().length<2){
