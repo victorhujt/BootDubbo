@@ -1786,9 +1786,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
-                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITH_THE_KABAN)){//在城配下单这边没有卡班
-                        transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName(),ofcFinanceInformation);
-                    }
+//                    if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITH_THE_KABAN)){//在城配下单这边没有卡班
+                    transPlanCreate(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFundamentalInformation.getCustName(),ofcFinanceInformation);
+//                    }
                 }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.WAREHOUSE_DIST_ORDER)
                         && PubUtils.trimAndNullAsEmpty(businessType).equals(SALES_OUT_OF_THE_LIBRARY)
                         && Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){            // 仓配订单
