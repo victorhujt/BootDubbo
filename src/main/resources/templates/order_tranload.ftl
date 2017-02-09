@@ -2957,9 +2957,9 @@
   }
   function checkGoods(obj,length,msg){
       debugger;
-      var a=$(obj).length;
+      var a=$(obj).val().length;
       var b=$(obj).attr("id");
-      if($(obj).length>length){
+      if(a>length){
           $(obj).css("border-color","#dd5a43")
           if($(obj).parent().children().length<2){
               $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
