@@ -1944,17 +1944,17 @@
   function goodsInfoListDivSupple(goodsInfoListDiv){
     goodsInfoListDiv = goodsInfoListDiv+"</select></td>";
     goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-            "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text' style='min-width:80px;'/>"+
+            "<input class='col-xs-10 col-xs-6'  name='goodsCode' id='goodsCode' type='text' style='min-width:80px;' onblur='checkGoods(this,50,'长度不能大于50')'/>"+
             "<a  class='blue no-padding-right' style='display:inline-block;margin-top:5px;' id='goodCodeSel' onclick='seleGoods(this)'>选择</a>"
             +"</td>";
     goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-            "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text' style='min-width:60px;'/>"
+            "<input class='col-xs-12'  name='goodsName' id='goodsName' type='text' style='min-width:60px;' onblur='checkGoodsName(this)'/>"
             +"</td>";
     goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-            "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text'/>"
+            "<input class='col-xs-12'  name='goodsSpec' id='goodsSpec' type='text' onblur='checkGoods(this,50,'长度不能大于50')'/>"
             +"</td>";
     goodsInfoListDiv = goodsInfoListDiv + "<td>"+
-            "<input class='col-xs-12'  name='unit' id='unit' type='text'/>"
+            "<input class='col-xs-12'  name='unit' id='unit' type='text' onblur='checkGoods(this,10,'长度不能大于10')'/>"
             +"</td>";
     goodsInfoListDiv = goodsInfoListDiv + "<td>"+
             "<select  id='pack' class='chosen-select form-control' name='pack' style='width:80px;'>"+
@@ -2320,6 +2320,19 @@
     $("#orderPlaceConTableBtn").click(function () {
       $("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
       $("#goodsInfoListDiv tr td div.has-error").remove();
+
+      $("#goodsInfoListDiv tr input[name='goodsName']").each(function(){
+          checkGoodsName(this);
+      });
+      $("#goodsInfoListDiv tr input[name='goodsCode']").each(function(){
+          checkGoods(this,50,"长度不能大于50");
+      });
+      $("#goodsInfoListDiv tr input[name='goodsSpec']").each(function(){
+          checkGoods(this,10,"长度不能大于50");
+      });
+      $("#goodsInfoListDiv tr input[name='unit']").each(function(){
+          checkGoods(this,10,"长度不能大于10");
+      });
       $("select[name='chargingWays']").each(function(){
         if($(this).val()=="01"){
           var value=onlyNumber($(this).parent().next().next().children().val());
@@ -2934,7 +2947,7 @@
 
   }
 
-  //货品行校验数据并提示
+  //货品行校验金额数据并提示
   function checkValue(obj,value,msg){
     if(value==""){
       $(obj).css("border-color","#dd5a43")
@@ -2950,6 +2963,43 @@
       $(obj).val(value);
       $(obj).parent().find("div").remove();
     }
+  }
+  function checkGoodsName(obj) {
+      if($(obj).val().length>50 || $(obj).val().length==0){
+          $(obj).css("border-color","#dd5a43");
+          if($(obj).parent().children().length<2){
+              var msg = "货品名称必输,长度小于50";
+              $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+              $(obj).parent().removeClass('has-info').addClass('has-error');
+              $(obj).val("");
+          }else{
+              $(obj).val("");
+          }
+      }else{
+          $(obj).css("border-color","#cacaca")
+          $(obj).parent().find("div").remove();
+      }
+  }
+  /*货品行校验长度*/
+  function checkGoods(obj,length,msg){
+      var count=2;
+      var name=$(obj).attr("name");
+      if($(obj).val().length>length){
+          $(obj).css("border-color","#dd5a43")
+          if(name=="goodsCode"){
+              count=3;
+          }
+          if($(obj).parent().children().length<count){
+              $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>"+msg+"</div>").insertAfter($(obj));
+              $(obj).parent().removeClass('has-info').addClass('has-error');
+              $(obj).val("");
+          }else{
+              $(obj).val("");
+          }
+      }else{
+          $(obj).css("border-color","#cacaca")
+          $(obj).parent().find("div").remove();
+      }
   }
   //验证开单员不为空
   $(".es-list").click(function(){
