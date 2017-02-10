@@ -39,11 +39,11 @@
                 <input class="col-xs-12 form-control input-sm " aria-controls="dynamic-table" style="height: 34px"/>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="consignorStartIndexDiv">
             <#--<label class="control-label col-label no-padding-right padding"  for="name">发货方起始位置</label>-->
                 <label class="control-label col-label no-padding-right padding" for="name" style="width: 84px;margin-left: 9px;">发货方起始位置</label>
             <div class="col-xs-3">
-                <input class="col-xs-3 form-control input-sm " style="height: 34px" aria-controls="dynamic-table"/><span>*确认模版中第一个发货方称的位置处于第几列</span>
+                <input class="col-xs-3 form-control input-sm " id="consignorStartIndex" onkeyup="this.value=this.value.replace(/\D/g,'')" onpause="return false" onkeydown="this.value=this.value.replace(/\D/g,'')" style="height: 34px" aria-controls="dynamic-table"/><span>*确认模版中第一个发货方称的位置处于第几列</span>
             </div>
         </div>
         <div class="form-group" style="margin-top:20px;">
@@ -56,17 +56,94 @@
                         <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">映射列名</th>
                     </tr>
                     </thead>
-                    <tbody id="templatesConfigTbody">
-                    <tr>
-                        <td>1</td>
-                        <td>货品编码</td>
-                        <td><input /></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>货品名称</td>
-                        <td><input/></td>
-                    </tr>
+                    <tbody id="acrossTemplatesConfigTbody">
+                        <tr>
+                            <td>1</td>
+                            <td>货品编码</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>货品名称</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>规格</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>单位</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>单价</td>
+                            <td><input /></td>
+                        </tr>
+                    </tbody>
+                    <tbody id="broadwiseTemplatesConfigTbody" hidden>
+                        <tr>
+                            <td>1</td>
+                            <td>客户订单号</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>订单日期</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>收货方名称</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>联系人</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>联系电话</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>地址</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>货品编码</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>货品名称</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>规格</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>单位</td>
+                            <td><input /></td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>数量</td>
+                            <td><input/></td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>单价</td>
+                            <td><input /></td>
+                        </tr>
                     </tbody>
                 </table>
                 <input id="historyUrl" value="${historyUrl!""}" hidden/>
@@ -103,5 +180,19 @@
     function delTemplates(obj) {
         xescm.common.loadPage("/ofc/distributing/toTemplatesoper");
     }
+
+    $("input[name=templatesType]").change(function () {
+        var templatesType = $("input[name=templatesType]:checked").val();
+        if(templatesType == "MODEL_TYPE_ACROSS"){
+            $("#consignorStartIndexDiv").show();
+            $("#acrossTemplatesConfigTbody").show();
+            $("#broadwiseTemplatesConfigTbody").hide();
+        }else if(templatesType == "MODEL_TYPE_BORADWISE"){
+            $("#consignorStartIndexDiv").hide();
+            $("#acrossTemplatesConfigTbody").hide();
+            $("#broadwiseTemplatesConfigTbody").show();
+        }
+    })
+
 
 </script>
