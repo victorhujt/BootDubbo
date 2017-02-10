@@ -1344,7 +1344,7 @@
         }else if((!(/^([1-9][\d]{0,7}|0)(\.[\d]{1,3})?$/.test(value)) && $(obj).val()!="") || $(obj).val()=="0"){
             $(obj).css("border-color","#dd5a43");
             if($(obj).parent().children().length<2){
-                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入金额</div>").insertAfter($(obj));
+                $("<div id='price-error' class='help-block has-error'><i class='fa fa-times-circle w-error-icon bigger-130'></i>只允许输入数字</div>").insertAfter($(obj));
                 $(obj).parent().removeClass('has-info').addClass('has-error');
                 $(obj).val("");
                 countQuantityOrWeightOrCubageCheck();
@@ -2325,6 +2325,8 @@
           checkGoodsName(this);
       });
       $("#goodsInfoListDiv tr input[name='goodsCode']").each(function(){
+          var value = $(this).val().replace(/[^a-zA-Z0-9]/g,"");
+          $(this).val(value);
           checkGoods(this,50,"长度不能大于50");
       });
       $("#goodsInfoListDiv tr input[name='goodsSpec']").each(function(){
