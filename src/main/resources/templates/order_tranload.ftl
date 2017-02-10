@@ -2328,7 +2328,7 @@
           checkGoods(this,50,"长度不能大于50");
       });
       $("#goodsInfoListDiv tr input[name='goodsSpec']").each(function(){
-          checkGoods(this,10,"长度不能大于50");
+          checkGoods(this,50,"长度不能大于50");
       });
       $("#goodsInfoListDiv tr input[name='unit']").each(function(){
           checkGoods(this,10,"长度不能大于10");
