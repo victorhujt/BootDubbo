@@ -2,7 +2,6 @@ package com.xescm.ofc.edas.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.ofc.edas.model.dto.dpc.req.DpcAllowPlanCodeReqDto;
 import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto;
 import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcUpdateReqDto;
 import com.xescm.ofc.edas.model.dto.dpc.resp.TranPlanOfcRespDto;
@@ -62,8 +61,4 @@ public class OfcTranPlanDpcEdasServieImpl implements OfcTranPlanDpcEdasServie{
         return null;
     }
 
-    @Override
-    public Wrapper<DpcAllowPlanCodeReqDto> selectAllowPlanCodeList(DpcAllowPlanCodeReqDto dpcAllowPlanCodeReqDto) {
-        return null;
-    }
 }
