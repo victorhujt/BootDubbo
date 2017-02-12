@@ -38,8 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
-import static com.xescm.ofc.constant.OrderConstConstant.PENDINGAUDIT;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 @Service
 public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
@@ -122,6 +121,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
             return resultModel;
         }
+        //校验卡班类型订单是否有上门提货和二次配送两个字段
+        if(StringUtils.equals(TRANSPORTORDER,orderType) && StringUtils.equals(WITHTHEKABAN,businessType)
+                && (PubUtils.isSEmptyOrNull(createOrderEntity.getTwoDistribution()) || PubUtils.isSEmptyOrNull(createOrderEntity.getPickUpGoods()))){
+            logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
+            return new ResultModel(ResultModel.ResultEnum.CODE_0010);
+        }
+
         //check 数量、重量、体积 三选一不能为空
         resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
@@ -368,7 +374,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-//        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
         String wrapper = ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,ofcGoodsDetailsInfoList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDto);
         logger.info("自动审核操作：{}",wrapper);
     }
