@@ -31,7 +31,6 @@
             <select class="chosen-select col-xs-2 col-sm-12" id="followTag" name="followTag">
                 <option value="orderCode">订单编号</option>
                 <option value="transCode">运输单号</option>
-                <option value="planCode">计划单编号</option>
                 <option value="custOrderCode">客户订单编号</option>
             </select>
         </div>
