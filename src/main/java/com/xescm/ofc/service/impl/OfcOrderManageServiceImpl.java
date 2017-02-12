@@ -1469,7 +1469,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                             if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()).equals("")) {
                                 ofcTransplanInfo.setDestinationTown(ofcDistributionBasicInfo.getDestinationTowns());
                             }
-                        RmcServiceCoverageForOrderVo rmcPickup=null;
+                            RmcServiceCoverageForOrderVo rmcPickup=null;
                             if (PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getPickUpGoods()).equals(SHI.toString())
                                     && PubUtils.trimAndNullAsEmpty(ofcFinanceInformation.getTwoDistribution()).equals(FOU.toString())) {
                                 //调用资源中心获取TC仓覆盖接口，传值【类型】、【地址编码】分别对应为【提货】、【发货地地址编码】。
@@ -1706,6 +1706,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                                 transPlanCreateKaBan(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFinanceInformation,ofcFundamentalInformation.getCustName());
                             } else {
+                                logger.error("订单信息是否上门提货或是否二次配送传值有误，请检查");
                                 throw new BusinessException("订单信息是否上门提货或是否二次配送传值有误，请检查");
                             }
                         //订单来源为钉钉录单时

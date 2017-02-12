@@ -325,7 +325,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 //            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList,ofcOrderStatus);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -342,7 +342,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -358,17 +358,19 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param ofcFinanceInformation
      * @param ofcWarehouseInformation
      * @param ofcGoodsDetailsInfoList
+     * @param ofcOrderStatus
      */
     public void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
                            OfcDistributionBasicInfo ofcDistributionBasicInfo,
                            OfcFinanceInformation ofcFinanceInformation,
                            OfcWarehouseInformation ofcWarehouseInformation,
-                           List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList) {
+                           List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList, OfcOrderStatus ofcOrderStatus) {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
-        logger.info("自动审核操作：" + wrapper.getCode());
+//        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
+        String wrapper = ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,ofcGoodsDetailsInfoList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDto);
+        logger.info("自动审核操作：{}",wrapper);
     }
 
     /**
