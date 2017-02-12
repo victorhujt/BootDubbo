@@ -126,20 +126,22 @@
      gdi.order_code = #{orderCode}
   </select>
 
-  <update id="batchUpdateGoodsDetailInfoId" parameterType="java.util.List">
-      UPDATE ofc_goods_details_info
-      <set>
-        id = #{detail.id}
-      </set>
-      WHERE order_code = #{detail.orderCode} AND goods_code = #{detail.goodsCode} AND goods_name = #{detail.goodsName}
-      AND goods_spec = #{detail.goodsSpec} AND unit = #{detail.unit} AND quantity = #{detail.quantity} AND unit_price = #{detail.unitPrice}
-      AND production_batch = #{detail.productionBatch} AND production_time = #{detail.productionTime} AND invalid_time = #{detail.invalidTime}
-      AND notes = #{detail.notes} AND creation_time = #{detail.creationTime} AND creator = #{detail.creator} AND operator = #{detail.operator}
-      AND oper_time = #{detail.operTime} AND weight = #{detail.weight} AND cubage = #{detail.cubage} AND total_box = #{detail.totalBox}
-      AND goods_type = #{detail.goodsType} AND goods_category = #{detail.goodsCategory} AND pack = #{detail.pack}
-      AND quantity_unit_price = #{detail.quantityUnitPrice} AND weight_unit_price  = #{detail.weightUnitPrice}
-      AND volume_unit_price = #{detail.volumeUnitPrice} AND billing_weight = #{detail.billingWeight} AND charging_ways = #{detail.chargingWays}
-      AND charging_quantity = #{detail.chargingQuantity} AND charging_unit_price  = #{detail.chargingUnitPrice}
-  </update>
+  <!-- 批量插入订单明细表主键id -->
+  <insert id="batchInsertGoodsDetail" parameterType="java.util.List">
+
+      INSERT INTO ofc_goods_details_info_copy (id, goods_code, goods_name, goods_spec, unit, quantity, unit_price, production_batch,
+      production_time, invalid_time, order_code, notes, creation_time, creator, operator, oper_time, weight, cubage, total_box,
+      goods_category, pack, quantity_unit_price, weight_unit_price, volume_unit_price, billing_weight, goods_type, charging_ways,
+      charging_quantity, charging_unit_price)
+      VALUES
+    <foreach collection="details" item="detail" index="index" open="" close="" separator=",">
+      (#{detail.id}, #{detail.goodsCode}, #{detail.goodsName}, #{detail.goodsSpec}, #{detail.unit}, #{detail.quantity},
+      #{detail.unitPrice}, #{detail.productionBatch}, #{detail.productionTime}, #{detail.invalidTime}, #{detail.orderCode},
+      #{detail.notes}, #{detail.creationTime}, #{detail.creator}, #{detail.operator}, #{detail.operTime}, #{detail.weight},
+      #{detail.cubage}, #{detail.totalBox}, #{detail.goodsCategory}, #{detail.pack}, #{detail.quantityUnitPrice}, #{detail.weightUnitPrice},
+      #{detail.volumeUnitPrice}, #{detail.billingWeight}, #{detail.goodsType}, #{detail.chargingWays}, #{detail.chargingQuantity},
+      #{detail.chargingUnitPrice})
+    </foreach>
+  </insert>
 
 </mapper>

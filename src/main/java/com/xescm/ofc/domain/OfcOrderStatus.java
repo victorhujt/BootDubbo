@@ -5,12 +5,22 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Data
 @Table(name = "ofc_order_status")
 public class OfcOrderStatus {
+
+    /**
+     * ID 主键
+     */
+    @Id
+    @GeneratedValue(generator = "UUID")
+    private String id;
+
     /**
      * 订单编号
      */
@@ -47,5 +57,11 @@ public class OfcOrderStatus {
      */
     private String operator;
 
-
+    /**
+     * 创建时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS",timezone = "GMT+8")
+    @Column(name = "creation_time")
+    private String creationTime;
 }
