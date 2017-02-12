@@ -203,19 +203,20 @@
                     <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
                            aria-describedby="dynamic-table_info">
                         <thead>
-                        <tr role="row">
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Clicks: activate to sort column ascending">订单编号
-                            </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Clicks: activate to sort column ascending">客户订单编号
-                            </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Clicks: activate to sort column ascending">运输单号
-                            </th>
-                            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
-                                aria-label="Clicks: activate to sort column ascending">客户名称
-                            </th>
+                            <tr role="row">
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                    aria-label="Clicks: activate to sort column ascending">订单编号
+                                </th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                    aria-label="Clicks: activate to sort column ascending">客户订单编号
+                                </th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                    aria-label="Clicks: activate to sort column ascending">运输单号
+                                </th>
+                                <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                                    aria-label="Clicks: activate to sort column ascending">客户名称
+                                </th>
+                            </tr>
                         </thead>
                         <tbody id="selectOrderTbody">
                         </tbody>

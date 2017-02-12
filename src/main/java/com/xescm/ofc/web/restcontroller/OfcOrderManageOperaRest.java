@@ -208,16 +208,6 @@ public class OfcOrderManageOperaRest extends BaseController {
 //            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
-            //相关计划单
-            List<PlanAndStorage> storageList = planAndStorageService.queryPlanAndStorage(orderCode, "");
-            for (PlanAndStorage planAndStorage : storageList) {
-                String resourceAllocationStatus = ResourceEnum.getDescByCode(planAndStorage.getResourceAllocationStatus());
-                planAndStorage.setResourceAllocationStatus(resourceAllocationStatus);
-                String pl = PlanEnum.getDescByCode(planAndStorage.getPlannedSingleState());
-                planAndStorage.setPlannedSingleState(pl);
-                String businessType = BusinessTypeEnum.getBusinessTypeDescByCode(planAndStorage.getBusinessType());
-                planAndStorage.setBusinessType(businessType);
-            }
             if (ofcFinanceInformation != null) {
                 ofcFinanceInformation.setPickUpGoods(defalutString(ofcFinanceInformation.getPickUpGoods()));
                 ofcFinanceInformation.setTwoDistribution(defalutString(ofcFinanceInformation.getTwoDistribution()));
@@ -234,7 +224,6 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("ofcGoodsDetailsInfoList", ofcGoodsDetailsInfoList);
             modelAndView.addObject("ofcOrderStatusList", ofcOrderStatusList);
 
-            modelAndView.addObject("storageList", storageList);
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
             setDefaultModel(model);
         }catch (Exception ex) {
