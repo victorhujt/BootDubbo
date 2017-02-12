@@ -235,13 +235,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             ofcOrderStatusService.save(ofcOrderStatus);
 
             //运输开单自动审核
-            String code=ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
-                    "review",authResDtoByToken);
+            String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
+                    null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
 
-            if(!"".equals(PubUtils.trimAndNullAsEmpty(code))){
-                if(code.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
-                    return orderCode;
-                }
+            if(!PubUtils.isSEmptyOrNull(code) && code.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
+                return orderCode;
             }
         }else{
             throw new BusinessException("您选择的订单类型系统无法识别!");

@@ -277,8 +277,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
         //推结算
         ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
-        ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
-                "review",authResDtoByToken);
+        String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
+                null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+        if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
+            throw new BusinessException("自动审核操作失败!");
+        }
     }
 
     /**
@@ -482,8 +485,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                 //进行自动审核
-                ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
-                        ofcWarehouseInformation,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
+                String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
+                        ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+                if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
+                    throw new BusinessException("自动审核操作失败!");
+                }
             }
         }else{
             throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
@@ -767,13 +773,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (ofcMerchandiserService.select(ofcMerchandiser).size() == 0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
                 ofcMerchandiserService.save(ofcMerchandiser);
             }
-            //推结算
-            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
             if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
                 //进行自动审核
-                ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
+                String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
                     ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+                if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
+                    throw new BusinessException("自动审核操作失败!");
+                }
             }
+            //城配开单订单推结算中心
+            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
         }
     }
 }
